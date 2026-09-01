@@ -1,0 +1,310 @@
+"""
+Configuration dataclasses for all Lucia Core Phase 1 modules.
+
+Each config's __post_init__ validates all fields and raises ValueError
+identifying the invalid parameter and its acceptable range. This ensures
+no module starts in a partially configured state (Requirements 10.6–10.8).
+"""
+
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+from typing import List, Optional
+
+
+# ---------------------------------------------------------------------------
+# StimulusProcessor config
+# ---------------------------------------------------------------------------
+
+@dataclass
+class StimulusConfig:
+    """
+    Configuration for StimulusProcessor.
+
+    Fields:
+        vector_dim:  dimensionality of output Stimulus_Vector (>= 3, default 16)
+        char_limit:  max characters processed before truncation (default 4096)
+    """
+
+    vector_dim: int = 16
+    char_limit: int = 4096
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.vector_dim, int) or self.vector_dim < 3:
+            raise ValueError(
+                f"StimulusConfig.vector_dim must be an integer >= 3, got {self.vector_dim!r}"
+            )
+        if not isinstance(self.char_limit, int) or self.char_limit < 1:
+            raise ValueError(
+                f"StimulusConfig.char_limit must be a positive integer, got {self.char_limit!r}"
+            )
+
+
+# ---------------------------------------------------------------------------
+# EmotionCore config
+# ---------------------------------------------------------------------------
+
+@dataclass
+class EmotionConfig:
+    """
+    Configuration for EmotionCore.
+
+    Fields:
+        loop_cadence_ms:   Fast_Loop tick interval in milliseconds (100–500, default 200)
+        hidden_dim:        LNN hidden state dimensionality (>= 1, default 32)
+        resting_baseline:  initial PAD state (pleasure, arousal, dominance) each in [-1, 1]
+        ode_step_size:     time span for each ODE solve call ((0.0, 1.0], default 0.1)
+    """
+
+    loop_cadence_ms: int = 200
+    hidden_dim: int = 32
+    resting_baseline: tuple = (0.1, 0.0, 0.0)
+    ode_step_size: float = 0.1
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.loop_cadence_ms, int) or not (100 <= self.loop_cadence_ms <= 500):
+            raise ValueError(
+                f"EmotionConfig.loop_cadence_ms must be an integer in [100, 500], "
+                f"got {self.loop_cadence_ms!r}"
+            )
+        if not isinstance(self.hidden_dim, int) or self.hidden_dim < 1:
+            raise ValueError(
+                f"EmotionConfig.hidden_dim must be an integer >= 1, got {self.hidden_dim!r}"
+            )
+        if (
+            not isinstance(self.resting_baseline, (tuple, list))
+            or len(self.resting_baseline) != 3
+        ):
+            raise ValueError(
+                "EmotionConfig.resting_baseline must be a tuple of 3 floats (pleasure, arousal, dominance)"
+            )
+        for i, v in enumerate(self.resting_baseline):
+            if not (-1.0 <= float(v) <= 1.0):
+                raise ValueError(
+                    f"EmotionConfig.resting_baseline[{i}]={v} must be in [-1.0, 1.0]"
+                )
+        if not (0.0 < self.ode_step_size <= 1.0):
+            raise ValueError(
+                f"EmotionConfig.ode_step_size must be in (0.0, 1.0], got {self.ode_step_size!r}"
+            )
+
+
+# ---------------------------------------------------------------------------
+# HomeostaticEngine config
+# ---------------------------------------------------------------------------
+
+@dataclass
+class HomeostaticConfig:
+    """
+    Configuration for HomeostaticEngine.
+
+    All threshold values can be overridden while preserving the documented
+    default values. Each field corresponds directly to a threshold used in
+    Requirement 3.2–3.9.
+    """
+
+    # max_tokens thresholds
+    cognitive_load_high: float = 0.75    # above this → max_tokens <= 80
+    cognitive_load_low: float = 0.30     # below this (with energy_high) → max_tokens >= 300
+    cognitive_load_very_high: float = 0.80   # above this (with energy_very_low) → latency >= 400
+    cognitive_load_for_latency: float = 0.40  # below this (with energy_high) → latency = 0, depth = 3
+
+    # temperature thresholds
+    arousal_high: float = 0.70           # above this → temperature > 0.85
+    arousal_low: float = 0.30            # below this (with stability_high) → temperature < 0.65
+
+    # energy thresholds
+    energy_high: float = 0.70            # above this → max_tokens >= 300, latency=0, depth=3
+    energy_very_low: float = 0.20        # at or below this → reasoning_depth = 0
+    energy_low: float = 0.30             # below this (with cognitive_load_very_high) → latency >= 400
+
+    # stability threshold
+    stability_high: float = 0.70         # above this (with arousal_low) → temperature < 0.65
+
+    def __post_init__(self) -> None:
+        _thresholds = {
+            "cognitive_load_high": (self.cognitive_load_high, 0.0, 1.0),
+            "cognitive_load_low": (self.cognitive_load_low, 0.0, 1.0),
+            "cognitive_load_very_high": (self.cognitive_load_very_high, 0.0, 1.0),
+            "cognitive_load_for_latency": (self.cognitive_load_for_latency, 0.0, 1.0),
+            "arousal_high": (self.arousal_high, 0.0, 1.0),
+            "arousal_low": (self.arousal_low, 0.0, 1.0),
+            "energy_high": (self.energy_high, 0.0, 1.0),
+            "energy_very_low": (self.energy_very_low, 0.0, 1.0),
+            "energy_low": (self.energy_low, 0.0, 1.0),
+            "stability_high": (self.stability_high, 0.0, 1.0),
+        }
+        for name, (val, lo, hi) in _thresholds.items():
+            if not (lo <= val <= hi):
+                raise ValueError(
+                    f"HomeostaticConfig.{name}={val} must be in [{lo}, {hi}]"
+                )
+
+
+# ---------------------------------------------------------------------------
+# LLMBackend config
+# ---------------------------------------------------------------------------
+
+@dataclass
+class LLMConfig:
+    """
+    Configuration for LLMBackend.
+
+    Fields:
+        model_path:        path to the GGUF model file (required)
+        n_gpu_layers:      number of layers to offload to GPU (>= 0, default 32)
+        n_ctx:             context window size in tokens (default 4096)
+        timeout_seconds:   generation timeout in seconds (>= 1, default 30.0)
+        verbose:           enable llama.cpp verbose output (default False)
+    """
+
+    model_path: str = ""
+    n_gpu_layers: int = 32
+    n_ctx: int = 4096
+    timeout_seconds: float = 30.0
+    verbose: bool = False
+
+    def __post_init__(self) -> None:
+        if not self.model_path:
+            raise ValueError("LLMConfig.model_path is required and must be non-empty")
+        if not isinstance(self.n_gpu_layers, int) or self.n_gpu_layers < 0:
+            raise ValueError(
+                f"LLMConfig.n_gpu_layers must be an integer >= 0, got {self.n_gpu_layers!r}"
+            )
+        if not isinstance(self.n_ctx, int) or self.n_ctx < 1:
+            raise ValueError(
+                f"LLMConfig.n_ctx must be a positive integer, got {self.n_ctx!r}"
+            )
+        if self.timeout_seconds < 1.0:
+            raise ValueError(
+                f"LLMConfig.timeout_seconds must be >= 1.0, got {self.timeout_seconds!r}"
+            )
+
+
+# ---------------------------------------------------------------------------
+# BoundaryLayer config
+# ---------------------------------------------------------------------------
+
+@dataclass
+class BoundaryConfig:
+    """
+    Configuration for BoundaryLayer.
+
+    Fields:
+        patterns:          initial set of regex patterns (max 50; excess silently dropped)
+        log_file_path:     optional path for persistent Soft_Block event log
+        fallback_string:   substitute returned when regeneration also fails (default "[...]")
+    """
+
+    patterns: List[str] = field(default_factory=list)
+    log_file_path: Optional[str] = None
+    fallback_string: str = "[...]"
+
+    def __post_init__(self) -> None:
+        # Silently cap to first 50 (Requirement 7.1)
+        if len(self.patterns) > 50:
+            self.patterns = self.patterns[:50]
+
+
+# ---------------------------------------------------------------------------
+# OrchestratorConfig
+# ---------------------------------------------------------------------------
+
+@dataclass
+class OrchestratorConfig:
+    """
+    Top-level configuration for the Orchestrator.
+
+    All required fields must be present; missing or out-of-range values raise
+    ValueError at initialization time (Requirements 10.6–10.7).
+
+    Fields:
+        model_path:           path to the GGUF model file (required)
+        n_gpu_layers:         GPU layers to offload (>= 0, default 32)
+        loop_cadence_ms:      Emotion_Core Fast_Loop cadence ms (100–500, default 200)
+        resting_baseline:     initial PAD state tuple (default (0.1, 0.0, 0.0))
+        max_history_turns:    max conversation turns kept (>= 1, default 10)
+        fallback_response:    returned on error / degraded state (default "[...]")
+        llm_timeout_seconds:  LLM generation timeout >= 1.0 (default 30.0)
+        system_preamble:      static system prompt prefix (default "")
+        boundary_patterns:    extra patterns for BoundaryLayer (default [])
+        n_ctx:                LLM context window (default 4096)
+        hidden_dim:           LNN hidden state dim (>= 1, default 32)
+        ode_step_size:        ODE time step (0.0, 1.0] (default 0.1)
+        n_gpu_layers_llm:     alias kept for clarity — same as n_gpu_layers
+    """
+
+    model_path: str = ""
+    n_gpu_layers: int = 32
+    loop_cadence_ms: int = 200
+    resting_baseline: tuple = (0.1, 0.0, 0.0)
+    max_history_turns: int = 10
+    fallback_response: str = "[...]"
+    llm_timeout_seconds: float = 30.0
+    system_preamble: str = ""
+    boundary_patterns: List[str] = field(default_factory=list)
+    n_ctx: int = 4096
+    hidden_dim: int = 32
+    ode_step_size: float = 0.1
+
+    def __post_init__(self) -> None:
+        if not self.model_path:
+            raise ValueError("OrchestratorConfig.model_path is required and must be non-empty")
+        if not isinstance(self.n_gpu_layers, int) or self.n_gpu_layers < 0:
+            raise ValueError(
+                f"OrchestratorConfig.n_gpu_layers must be >= 0, got {self.n_gpu_layers!r}"
+            )
+        if not isinstance(self.loop_cadence_ms, int) or not (100 <= self.loop_cadence_ms <= 500):
+            raise ValueError(
+                f"OrchestratorConfig.loop_cadence_ms must be in [100, 500], "
+                f"got {self.loop_cadence_ms!r}"
+            )
+        if not isinstance(self.hidden_dim, int) or self.hidden_dim < 1:
+            raise ValueError(
+                f"OrchestratorConfig.hidden_dim must be >= 1, got {self.hidden_dim!r}"
+            )
+        if not (0.0 < self.ode_step_size <= 1.0):
+            raise ValueError(
+                f"OrchestratorConfig.ode_step_size must be in (0.0, 1.0], "
+                f"got {self.ode_step_size!r}"
+            )
+        if not isinstance(self.max_history_turns, int) or self.max_history_turns < 1:
+            raise ValueError(
+                f"OrchestratorConfig.max_history_turns must be >= 1, got {self.max_history_turns!r}"
+            )
+        if self.llm_timeout_seconds < 1.0:
+            raise ValueError(
+                f"OrchestratorConfig.llm_timeout_seconds must be >= 1.0, "
+                f"got {self.llm_timeout_seconds!r}"
+            )
+        if not isinstance(self.resting_baseline, (tuple, list)) or len(self.resting_baseline) != 3:
+            raise ValueError(
+                "OrchestratorConfig.resting_baseline must be a tuple of 3 floats"
+            )
+        for i, v in enumerate(self.resting_baseline):
+            if not (-1.0 <= float(v) <= 1.0):
+                raise ValueError(
+                    f"OrchestratorConfig.resting_baseline[{i}]={v} must be in [-1.0, 1.0]"
+                )
+
+    def to_stimulus_config(self) -> StimulusConfig:
+        return StimulusConfig(vector_dim=16, char_limit=4096)
+
+    def to_emotion_config(self) -> EmotionConfig:
+        return EmotionConfig(
+            loop_cadence_ms=self.loop_cadence_ms,
+            hidden_dim=self.hidden_dim,
+            resting_baseline=self.resting_baseline,
+            ode_step_size=self.ode_step_size,
+        )
+
+    def to_llm_config(self) -> LLMConfig:
+        return LLMConfig(
+            model_path=self.model_path,
+            n_gpu_layers=self.n_gpu_layers,
+            n_ctx=self.n_ctx,
+            timeout_seconds=self.llm_timeout_seconds,
+        )
+
+    def to_boundary_config(self) -> BoundaryConfig:
+        return BoundaryConfig(patterns=list(self.boundary_patterns))
