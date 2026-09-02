@@ -56,3 +56,41 @@ class TestChatHistoryStore:
         assert "Tell me about Philia" in md
         assert "✨ **Lucia**" in md
         assert "Philia is deep friendship." in md
+
+    def test_corrupted_turns_as_string_handled_gracefully(self, tmp_path):
+        import json
+        history_file = tmp_path / "chat_history.json"
+        corrupted_data = {
+            "version": 1,
+            "sessions": [
+                {
+                    "id": "session_test",
+                    "turns": "this_is_a_string_instead_of_a_list"
+                }
+            ]
+        }
+        with open(history_file, "w", encoding="utf-8") as f:
+            json.dump(corrupted_data, f)
+
+        store = ChatHistoryStore(file_path=str(history_file))
+        store._current_session_id = "session_test"
+
+        # Appending should not crash with AttributeError: 'str' object has no attribute 'append'
+        turn = store.append_turn("user", "Hello again")
+        assert turn["content"] == "Hello again"
+        assert len(store.get_history()) == 1
+
+    def test_corrupted_sessions_as_string_handled_gracefully(self, tmp_path):
+        import json
+        history_file = tmp_path / "chat_history.json"
+        corrupted_data = {
+            "version": 1,
+            "sessions": "invalid_sessions_string"
+        }
+        with open(history_file, "w", encoding="utf-8") as f:
+            json.dump(corrupted_data, f)
+
+        store = ChatHistoryStore(file_path=str(history_file))
+        turn = store.append_turn("user", "Hello")
+        assert turn["content"] == "Hello"
+        assert len(store.get_history()) == 1

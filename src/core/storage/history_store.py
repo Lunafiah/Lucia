@@ -46,7 +46,10 @@ class ChatHistoryStore:
     def _read_data(self) -> Dict[str, Any]:
         try:
             with open(self.file_path, "r", encoding="utf-8") as f:
-                return json.load(f)
+                data = json.load(f)
+                if isinstance(data, dict):
+                    return data
+                return {"version": 1, "metadata": {}, "sessions": []}
         except Exception as e:
             logger.error("Failed to read chat history: %s", e)
             return {"version": 1, "metadata": {}, "sessions": []}
@@ -75,12 +78,18 @@ class ChatHistoryStore:
 
         with self._lock:
             data = self._read_data()
+            if not isinstance(data, dict):
+                data = {"version": 1, "metadata": {}, "sessions": []}
+
             sessions = data.setdefault("sessions", [])
+            if not isinstance(sessions, list):
+                sessions = []
+                data["sessions"] = sessions
 
             # Find active session or create it
             active_session = None
             for s in sessions:
-                if s.get("id") == self._current_session_id:
+                if isinstance(s, dict) and s.get("id") == self._current_session_id:
                     active_session = s
                     break
 
@@ -92,6 +101,9 @@ class ChatHistoryStore:
                 }
                 sessions.append(active_session)
 
+            if not isinstance(active_session.get("turns"), list):
+                active_session["turns"] = []
+
             active_session["turns"].append(turn)
             self._write_data(data)
 
@@ -102,8 +114,13 @@ class ChatHistoryStore:
         with self._lock:
             data = self._read_data()
             all_turns = []
-            for s in data.get("sessions", []):
-                all_turns.extend(s.get("turns", []))
+            sessions = data.get("sessions", []) if isinstance(data, dict) else []
+            if isinstance(sessions, list):
+                for s in sessions:
+                    if isinstance(s, dict):
+                        turns = s.get("turns", [])
+                        if isinstance(turns, list):
+                            all_turns.extend(turns)
             return all_turns[-limit:]
 
     def new_session(self) -> str:
@@ -111,7 +128,13 @@ class ChatHistoryStore:
         with self._lock:
             self._current_session_id = self._generate_session_id()
             data = self._read_data()
-            data.setdefault("sessions", []).append({
+            if not isinstance(data, dict):
+                data = {"version": 1, "metadata": {}, "sessions": []}
+            sessions = data.setdefault("sessions", [])
+            if not isinstance(sessions, list):
+                sessions = []
+                data["sessions"] = sessions
+            sessions.append({
                 "id": self._current_session_id,
                 "created_at": datetime.now().isoformat(),
                 "turns": []
@@ -149,17 +172,25 @@ class ChatHistoryStore:
             ""
         ]
 
-        for s in data.get("sessions", []):
-            lines.append(f"## Session: `{s.get('id', 'unknown')}` ({s.get('created_at', '')})")
-            lines.append("")
-            for turn in s.get("turns", []):
-                role_label = "👤 **User**" if turn.get("role") == "user" else "✨ **Lucia**"
-                ts = turn.get("created_at", "")
-                content = turn.get("content", "")
-                lines.append(f"{role_label} *({ts})*:")
-                lines.append(f"> {content}")
+        sessions = data.get("sessions", []) if isinstance(data, dict) else []
+        if isinstance(sessions, list):
+            for s in sessions:
+                if not isinstance(s, dict):
+                    continue
+                lines.append(f"## Session: `{s.get('id', 'unknown')}` ({s.get('created_at', '')})")
                 lines.append("")
-            lines.append("---")
-            lines.append("")
+                turns = s.get("turns", [])
+                if isinstance(turns, list):
+                    for turn in turns:
+                        if not isinstance(turn, dict):
+                            continue
+                        role_label = "👤 **User**" if turn.get("role") == "user" else "✨ **Lucia**"
+                        ts = turn.get("created_at", "")
+                        content = turn.get("content", "")
+                        lines.append(f"{role_label} *({ts})*:")
+                        lines.append(f"> {content}")
+                        lines.append("")
+                lines.append("---")
+                lines.append("")
 
         return "\n".join(lines)
