@@ -220,6 +220,72 @@ async def get_state(response: Response) -> StateSnapshot:
     )
 
 
+from fastapi.responses import JSONResponse, Response
+from src.core.voice.voice_engine import VoiceEngine, VoiceEngineConfig
+
+_voice_engine: VoiceEngine = VoiceEngine()
+
+
+class SynthesizeRequest(BaseModel):
+    text: str
+    rate: Optional[str] = None
+    volume: Optional[str] = None
+    pitch: Optional[str] = None
+
+
+class SelectModelRequest(BaseModel):
+    model_name: str
+
+
+@app.post("/voice/synthesize")
+async def synthesize_voice(req: SynthesizeRequest) -> Response:
+    """
+    Synthesize spoken audio for the given text using current voice/RVC settings.
+    """
+    if not req.text.strip():
+        return Response(content=b"", media_type="audio/mpeg")
+    try:
+        audio_data = await _voice_engine.synthesize_speech(
+            req.text, rate=req.rate, volume=req.volume, pitch=req.pitch
+        )
+        return Response(content=audio_data, media_type="audio/mpeg")
+    except Exception as exc:
+        logger.exception("Voice synthesis failed: %s", exc)
+        return JSONResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            content={"error": str(exc)},
+        )
+
+
+@app.get("/voice/models")
+async def get_voice_models() -> Dict[str, Any]:
+    """
+    Return discovered RVC models and current active model configuration.
+    """
+    return {
+        "models": _voice_engine.get_available_models(),
+        "active_model": _voice_engine._config.active_rvc_model,
+        "base_voice": _voice_engine._config.base_voice,
+    }
+
+
+@app.post("/voice/select-model")
+async def select_voice_model(req: SelectModelRequest) -> Dict[str, Any]:
+    """
+    Select active RVC model or 'default'.
+    """
+    success = _voice_engine.set_active_model(req.model_name)
+    if not success:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"RVC Model '{req.model_name}' not found",
+        )
+    return {
+        "status": "ok",
+        "active_model": _voice_engine._config.active_rvc_model,
+    }
+
+
 @app.get("/health")
 async def health_check() -> Dict[str, str]:
     """

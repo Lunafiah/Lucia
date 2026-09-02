@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="index.css">
   <link rel="stylesheet" href="chat/chat.css">
   <link rel="stylesheet" href="debug/panel.css">
+  <link rel="stylesheet" href="avatar/avatar.css">
 </head>
 <body>
   <!-- Splash Screen / Loading Overlay -->
@@ -71,8 +72,32 @@
       </footer>
     </main>
 
-    <!-- Right Column: Live Emotion Debug Panel -->
+    <!-- Right Column: Live Emotion & Avatar Presence Panel -->
     <aside id="debug-pane" class="debug-pane">
+      <!-- Live Avatar Stage -->
+      <div class="avatar-stage-container">
+        <div class="avatar-top-bar">
+          <div class="avatar-status-badge">
+            <span class="status-dot"></span>
+            <span>Presence</span>
+          </div>
+          <div class="avatar-controls">
+            <select id="voice-model-select" class="voice-select" title="Select Voice Model">
+              <option value="default">Lucia Base Voice</option>
+            </select>
+            <button id="voice-mute-btn" class="voice-mute-btn" title="Toggle Voice (Mute/Unmute)">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="avatar-canvas-wrapper">
+          <canvas id="avatar-canvas"></canvas>
+        </div>
+      </div>
+
       <header class="debug-header">
         <h3>Emotional Telemetry</h3>
         <span class="live-pulse">LIVE (500ms)</span>
@@ -214,6 +239,9 @@
   </div>
 
   <!-- Scripts -->
+  <script src="avatar/expression-mapper.js"></script>
+  <script src="avatar/lip-sync.js"></script>
+  <script src="avatar/avatar.js"></script>
   <script type="module" src="chat/chat.js"></script>
   <script type="module" src="debug/panel.js"></script>
 </body>

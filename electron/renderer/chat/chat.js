@@ -23,8 +23,70 @@ class ChatController {
     this.stateLabel = document.getElementById('companion-state-label');
     this.hardwareBadge = document.getElementById('hardware-badge');
 
+    // Voice & Avatar Presence
+    this.voiceModelSelect = document.getElementById('voice-model-select');
+    this.voiceMuteBtn = document.getElementById('voice-mute-btn');
+    this.isVoiceMuted = false;
+
+    // Initialize Canvas Avatar
+    const canvas = document.getElementById('avatar-canvas');
+    if (canvas && typeof AvatarRenderer !== 'undefined') {
+      window.avatarRenderer = new AvatarRenderer(canvas);
+    }
+
     this._setupEventListeners();
+    this._setupVoiceControls();
     this._setupBackendListeners();
+  }
+
+  _setupVoiceControls() {
+    if (this.voiceMuteBtn) {
+      this.voiceMuteBtn.addEventListener('click', () => {
+        this.isVoiceMuted = !this.isVoiceMuted;
+        this.voiceMuteBtn.classList.toggle('muted', this.isVoiceMuted);
+        if (this.isVoiceMuted && window.avatarRenderer) {
+          window.avatarRenderer.lipSync.stop();
+        }
+      });
+    }
+
+    if (this.voiceModelSelect) {
+      this.voiceModelSelect.addEventListener('change', async (e) => {
+        const modelName = e.target.value;
+        try {
+          await fetch('http://127.0.0.1:8765/voice/select-model', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ model_name: modelName }),
+          });
+          console.log(`[voice] Selected model: ${modelName}`);
+        } catch (err) {
+          console.error('[voice] Failed to select voice model:', err);
+        }
+      });
+    }
+  }
+
+  async _loadVoiceModels() {
+    if (!this.voiceModelSelect) return;
+    try {
+      const res = await fetch('http://127.0.0.1:8765/voice/models');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.models && data.models.length > 0) {
+          this.voiceModelSelect.innerHTML = '';
+          data.models.forEach((m) => {
+            const opt = document.createElement('option');
+            opt.value = m.name;
+            opt.textContent = m.name === 'default' ? 'Lucia Base Voice' : `RVC: ${m.name}`;
+            if (m.is_active) opt.selected = true;
+            this.voiceModelSelect.appendChild(opt);
+          });
+        }
+      }
+    } catch (err) {
+      console.warn('[voice] Could not load voice models:', err);
+    }
   }
 
   _setupEventListeners() {
@@ -54,6 +116,7 @@ class ChatController {
       window.lucia.on('backend:ready', async () => {
         console.log('[chat] Backend ready event received');
         this.transitionTo(State.READY);
+        this._loadVoiceModels();
 
         // Fetch hardware profile info for the badge
         try {
@@ -150,6 +213,23 @@ class ChatController {
 
       if (response && response.response) {
         this.appendMessage('companion', response.response);
+
+        // Synthesize and play voice if not muted
+        if (!this.isVoiceMuted && window.avatarRenderer) {
+          try {
+            const voiceRes = await fetch('http://127.0.0.1:8765/voice/synthesize', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ text: response.response }),
+            });
+            if (voiceRes.ok) {
+              const audioBlob = await voiceRes.blob();
+              window.avatarRenderer.speak(audioBlob);
+            }
+          } catch (vErr) {
+            console.warn('[voice] Voice synthesis playback error:', vErr);
+          }
+        }
       } else {
         this.appendMessage('error', 'Received empty response from companion.');
       }

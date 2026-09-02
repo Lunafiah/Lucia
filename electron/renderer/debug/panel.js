@@ -88,11 +88,15 @@ class EmotionDebugPanel {
   renderSnapshot(snap) {
     if (!snap) return;
 
-    // 1. PAD Bars
+    // 1. PAD Bars & Avatar Expression
     if (snap.pad) {
       this._updatePADBar(this.pFill, this.pVal, snap.pad.pleasure);
       this._updatePADBar(this.aFill, this.aVal, snap.pad.arousal);
       this._updatePADBar(this.dFill, this.dVal, snap.pad.dominance);
+
+      if (window.avatarRenderer && typeof window.avatarRenderer.updateEmotion === 'function') {
+        window.avatarRenderer.updateEmotion(snap.pad);
+      }
     }
 
     // 2. Somatic Markers
