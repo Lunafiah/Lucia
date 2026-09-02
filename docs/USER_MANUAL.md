@@ -60,7 +60,37 @@ Lucia/
 
 ---
 
-## 3. Launching & Packaging Lucia
+## 3. Setting Up Avatar Models (2D Sprites, Live2D, 3D VRM)
+
+Lucia includes a built-in 60 FPS interactive Canvas rig out-of-the-box. If you want to use custom 2D expressions, Live2D, or 3D VRM character models, place them in the **`models/avatar/`** directory:
+
+### Structure:
+```
+Lucia/
+└── models/
+    └── avatar/
+        ├── sprites/                 # 2D Expression PNG Sets
+        │   └── my_character/
+        │       ├── idle.png         (Default resting pose)
+        │       ├── smile.png        (High pleasure / warmth)
+        │       ├── blush.png        (Pleasure + high arousal)
+        │       ├── speaking.png     (Open mouth for lip-sync)
+        │       └── thinking.png     (Reflection / load)
+        │
+        ├── live2d/                  # Live2D Cubism Models
+        │   └── my_character/
+        │       ├── my_character.model3.json
+        │       ├── my_character.moc3
+        │       ├── textures/
+        │       └── motions/
+        │
+        └── vrm/                     # 3D Humanoid VRM Models
+            └── my_character.vrm
+```
+
+---
+
+## 4. Launching & Packaging Lucia
 
 ### Option A: Direct Double-Click Launcher (`Start-Lucia.bat`) (Recommended)
 Simply double-click **`Start-Lucia.bat`** in the project root. It will automatically check dependencies and launch the companion window.
@@ -81,7 +111,7 @@ The packaged binary will be generated in `electron/dist/`.
 
 ---
 
-## 4. Desktop Presence Modes & Global Shortcuts
+## 5. Desktop Presence Modes & Global Shortcuts
 
 * **Minimize to System Tray**: Closing or minimizing the main window sends Lucia to your Windows notification tray. Her limbic Fast Loop keeps ticking continuously in the background!
 * **Global Hotkey (`Ctrl + Shift + L`)**: Press `Ctrl + Shift + L` from anywhere in Windows (while coding, gaming, or browsing) to instantly summon or hide Lucia.
@@ -89,7 +119,7 @@ The packaged binary will be generated in `electron/dist/`.
 
 ---
 
-## 5. Desktop Interface Guide
+## 6. Desktop Interface Guide
 
 ```
 ┌───────────────────────────────────────────────┬──────────────────────────────────────────────┐
@@ -139,7 +169,7 @@ The packaged binary will be generated in `electron/dist/`.
 
 ---
 
-## 5. Configuration & Customization
+## 7. Configuration & Customization
 
 All primary options can be configured in [`config/ui.json`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/config/ui.json):
 
@@ -169,7 +199,7 @@ All primary options can be configured in [`config/ui.json`](file:///c:/Users/Lun
 
 ---
 
-## 6. Frequently Asked Questions (FAQ)
+## 8. Frequently Asked Questions (FAQ)
 
 **Q: Can Lucia run completely offline without internet?**  
 **A:** Yes! The LLM, continuous emotion ODE, memory decay, active inference, RVC voice conversion, and avatar rendering run 100% locally on your laptop.
