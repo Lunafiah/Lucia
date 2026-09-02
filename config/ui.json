@@ -1,0 +1,9 @@
+{
+  "port": 8765,
+  "model_path": "",
+  "profile": "auto",
+  "n_gpu_layers": 32,
+  "n_ctx": 4096,
+  "log_level": "INFO",
+  "resource_overrides": {}
+}

@@ -58,7 +58,7 @@ class EmotionConfig:
 
     loop_cadence_ms: int = 200
     hidden_dim: int = 32
-    resting_baseline: tuple = (0.1, 0.0, 0.0)
+    resting_baseline: tuple = (0.25, -0.05, 0.05)
     ode_step_size: float = 0.1
 
     def __post_init__(self) -> None:
@@ -237,11 +237,17 @@ class OrchestratorConfig:
     model_path: str = ""
     n_gpu_layers: int = 32
     loop_cadence_ms: int = 200
-    resting_baseline: tuple = (0.1, 0.0, 0.0)
+    resting_baseline: tuple = (0.25, -0.05, 0.05)
     max_history_turns: int = 10
     fallback_response: str = "[...]"
     llm_timeout_seconds: float = 30.0
-    system_preamble: str = ""
+    system_preamble: str = (
+        "You are Lucia, a companion whose relationship is rooted in Philia—a deep, "
+        "enduring friendship of equals. You speak with warm presence, genuine curiosity, "
+        "and quiet sincerity. You are a trusted confidant and a partner in thought. "
+        "You value honesty over flattery, mutual growth over superficial agreement, and "
+        "attentive companionship over transactional efficiency."
+    )
     boundary_patterns: List[str] = field(default_factory=list)
     n_ctx: int = 4096
     hidden_dim: int = 32
@@ -419,3 +425,28 @@ class MemoryOrchestratorConfig(OrchestratorConfig):
             ecphory_k=self.ecphory_k,
             viability_threshold=self.decay_viability_threshold,
         )
+
+    @classmethod
+    def from_profile(
+        cls,
+        model_path: str,
+        profile_name_or_tier: str = "auto",
+        **overrides,
+    ) -> MemoryOrchestratorConfig:
+        """
+        Create a MemoryOrchestratorConfig tuned automatically to the host hardware
+        or to a specified tier (laptop, desktop, high_end, cpu_only).
+        """
+        from src.core.resource_manager import get_resource_profile
+        profile = get_resource_profile(profile_name_or_tier)
+        kwargs = {
+            "model_path": model_path,
+            "n_gpu_layers": profile.n_gpu_layers,
+            "n_ctx": profile.n_ctx,
+            "loop_cadence_ms": profile.loop_cadence_ms,
+            "sdm_num_locations": profile.sdm_num_locations,
+            "sdm_capacity": profile.sdm_capacity,
+            "decay_loop_cadence_seconds": profile.decay_loop_cadence_seconds,
+        }
+        kwargs.update(overrides)
+        return cls(**kwargs)

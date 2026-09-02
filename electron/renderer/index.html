@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:;">
+  <title>Lucia — AI Companion</title>
+  <link rel="stylesheet" href="index.css">
+  <link rel="stylesheet" href="chat/chat.css">
+  <link rel="stylesheet" href="debug/panel.css">
+</head>
+<body>
+  <!-- Splash Screen / Loading Overlay -->
+  <div id="splash" class="splash-overlay">
+    <div class="splash-card">
+      <div class="splash-glow"></div>
+      <div class="lucia-logo">
+        <span class="logo-sparkle">✦</span>
+        <h1>Lucia</h1>
+      </div>
+      <p class="splash-subtitle">Continuous Affective Companion</p>
+      <div class="splash-spinner"></div>
+      <p id="splash-status" class="splash-status">Awakening neural core & loading model...</p>
+    </div>
+  </div>
+
+  <!-- Main Application Container -->
+  <div class="app-layout">
+    <!-- Left Column: Chat Window -->
+    <main id="chat-pane" class="chat-pane">
+      <header class="chat-header">
+        <div class="companion-identity">
+          <div class="avatar-ring">
+            <span class="avatar-letter">L</span>
+            <span id="companion-status-dot" class="status-dot"></span>
+          </div>
+          <div class="identity-text">
+            <h2>Lucia</h2>
+            <span id="companion-state-label" class="state-label">Connecting...</span>
+          </div>
+        </div>
+        <div class="header-right">
+          <div id="hardware-badge" class="hardware-badge">Auto</div>
+        </div>
+      </header>
+
+      <!-- Message Feed -->
+      <section id="chat-messages" class="chat-messages">
+        <div class="system-welcome-card">
+          <div class="welcome-icon">✨</div>
+          <h3>Welcome to Lucia</h3>
+          <p>Her emotional state and memories evolve dynamically with every turn.</p>
+        </div>
+      </section>
+
+      <!-- Input Area -->
+      <footer class="chat-input-container">
+        <div class="input-wrapper">
+          <textarea
+            id="chat-input"
+            rows="1"
+            placeholder="Type a message... (Shift+Enter for new line)"
+            disabled
+          ></textarea>
+          <button id="send-btn" class="send-btn" disabled aria-label="Send message">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </footer>
+    </main>
+
+    <!-- Right Column: Live Emotion Debug Panel -->
+    <aside id="debug-pane" class="debug-pane">
+      <header class="debug-header">
+        <h3>Emotional Telemetry</h3>
+        <span class="live-pulse">LIVE (500ms)</span>
+      </header>
+
+      <div class="debug-scroll-content">
+        <!-- Section: PAD Dimensions -->
+        <section class="debug-section">
+          <div class="section-title">
+            <span>PAD Attractor State</span>
+            <small class="dim-range">[-1.0, 1.0]</small>
+          </div>
+
+          <!-- Pleasure Bar -->
+          <div class="meter-group">
+            <div class="meter-labels">
+              <span class="meter-name">Pleasure (P)</span>
+              <span id="pad-p-val" class="meter-val">+0.25</span>
+            </div>
+            <div class="pad-bar-track">
+              <div class="pad-center-mark"></div>
+              <div id="pad-p-fill" class="pad-bar-fill"></div>
+            </div>
+          </div>
+
+          <!-- Arousal Bar -->
+          <div class="meter-group">
+            <div class="meter-labels">
+              <span class="meter-name">Arousal (A)</span>
+              <span id="pad-a-val" class="meter-val">-0.05</span>
+            </div>
+            <div class="pad-bar-track">
+              <div class="pad-center-mark"></div>
+              <div id="pad-a-fill" class="pad-bar-fill"></div>
+            </div>
+          </div>
+
+          <!-- Dominance Bar -->
+          <div class="meter-group">
+            <div class="meter-labels">
+              <span class="meter-name">Dominance (D)</span>
+              <span id="pad-d-val" class="meter-val">+0.05</span>
+            </div>
+            <div class="pad-bar-track">
+              <div class="pad-center-mark"></div>
+              <div id="pad-d-fill" class="pad-bar-fill"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section: Somatic Homeostasis -->
+        <section class="debug-section">
+          <div class="section-title">
+            <span>Somatic Homeostasis</span>
+            <small class="dim-range">[0.0, 1.0]</small>
+          </div>
+
+          <div class="meter-group">
+            <div class="meter-labels">
+              <span class="meter-name">Stability</span>
+              <span id="somatic-stability-val" class="meter-val">0.00</span>
+            </div>
+            <div class="progress-bar-track">
+              <div id="somatic-stability-fill" class="progress-bar-fill fill-stability"></div>
+            </div>
+          </div>
+
+          <div class="meter-group">
+            <div class="meter-labels">
+              <span class="meter-name">Energy</span>
+              <span id="somatic-energy-val" class="meter-val">0.00</span>
+            </div>
+            <div class="progress-bar-track">
+              <div id="somatic-energy-fill" class="progress-bar-fill fill-energy"></div>
+            </div>
+          </div>
+
+          <div class="meter-group">
+            <div class="meter-labels">
+              <span class="meter-name">Cognitive Load</span>
+              <span id="somatic-load-val" class="meter-val">0.00</span>
+            </div>
+            <div class="progress-bar-track">
+              <div id="somatic-load-fill" class="progress-bar-fill fill-load"></div>
+            </div>
+          </div>
+
+          <div class="meter-group">
+            <div class="meter-labels">
+              <span class="meter-name">Tension</span>
+              <span id="somatic-tension-val" class="meter-val">0.00</span>
+            </div>
+            <div class="progress-bar-track">
+              <div id="somatic-tension-fill" class="progress-bar-fill fill-tension"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section: Behavioral Constraints -->
+        <section class="debug-section">
+          <div class="section-title">
+            <span>Behavioral Conditioning</span>
+          </div>
+          <div class="constraints-grid">
+            <div class="constraint-chip">
+              <span class="chip-label">Max Tokens</span>
+              <span id="constraint-tokens" class="chip-val">150</span>
+            </div>
+            <div class="constraint-chip">
+              <span class="chip-label">Temperature</span>
+              <span id="constraint-temp" class="chip-val">0.75</span>
+            </div>
+            <div class="constraint-chip">
+              <span class="chip-label">Latency</span>
+              <span id="constraint-latency" class="chip-val">0 ms</span>
+            </div>
+            <div class="constraint-chip">
+              <span class="chip-label">Reasoning Depth</span>
+              <span id="constraint-depth" class="chip-val">k = 1</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section: Memory Subsystem -->
+        <section class="debug-section">
+          <div class="section-title">
+            <span>Affective Memory (SDM)</span>
+          </div>
+          <div class="memory-card">
+            <div class="memory-stat">
+              <span class="stat-number" id="memory-trace-count">0</span>
+              <span class="stat-desc">Active Traces</span>
+            </div>
+            <div class="memory-type-badge">Kanerva SDM + Resonance</div>
+          </div>
+        </section>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Scripts -->
+  <script type="module" src="chat/chat.js"></script>
+  <script type="module" src="debug/panel.js"></script>
+</body>
+</html>

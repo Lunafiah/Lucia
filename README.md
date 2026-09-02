@@ -1,138 +1,128 @@
-# Lucia - AI Companion
+# Lucia — Affective AI Companion
 
-An AI companion designed for emotional authenticity, continuous learning, and multi-device presence, built on a **Whole Brain Architecture** inspired by the brain's efficient 20-watt processing model.
+An embodied AI companion designed for emotional authenticity, continuous affective learning, and multi-device presence, built on a **Whole Brain Architecture** inspired by the human brain's efficient 20-watt processing model.
 
-The core philosophy: **emotionally realistic behavior without reflective selfhood**. Emotion is not labeled — it manifests as rhythm, fragmentation, and tone through a continuous physiological-like state machine.
+The core philosophy: **emotionally realistic behavior without reflective selfhood**. Emotion is not labeled or performed — it manifests as rhythm, tone, latency, and conversational depth through a continuous physiological-like state machine.
 
-## Architecture Overview
+---
 
-The system implements a **6-layer Hybrid Architecture**:
+## Roadmap & Implementation Status
+
+| Phase | Description | Status |
+|---|---|---|
+| **Phase 1: Core Pipeline** | Continuous Emotion ODE (`EmotionCore`), Homeostatic Engine, Stimulus Processing, Boundary Layer, GGUF LLM Backend | ✅ **Completed** |
+| **Phase 2: Affective Memory** | Kanerva Sparse Distributed Memory (`SDMCore`), Affective Tagging (`AffectiveMemory`), Emotional Decay (`DecayEngine`), Synergistic Ecphory (`EcphoryEngine`) | ✅ **Completed** |
+| **Phase 3: Desktop Interface** | Python FastAPI Backend (`POST /process`, `GET /state`), Native Electron Desktop App with Live 500ms Emotion Telemetry Panel, Adaptive Hardware Scaling | ✅ **Completed** |
+| **Phase 4: Active Inference** | Short-horizon free energy minimization, Online backprop-through-ODE LNN plasticity (`torchdiffeq`) | ⏳ *Next* |
+| **Phase 5: Embodied Presence** | Screen & Camera Vision Perception (`Qwen2.5-VL 3B`), Voice Synthesis/Recognition, Desktop Agency | 📅 *Planned* |
+
+---
+
+## Emotional Foundation: *Philia* Friendship
+
+Lucia is grounded in **Philia** ($\phi\iota\lambda\iota\alpha$)—the classical Greek concept of deep, affectionate, and egalitarian friendship based on mutual respect, intellectual curiosity, and shared growth:
+
+* **Resting Baseline (Attractor)**: $P=+0.25$ (warmth), $A=-0.05$ (calm presence), $D=+0.05$ (equal peer).
+* **Organic Emotional Growth**: Her internal state is never rigidly forced or scripted; her ODE dynamics freely shift in response to interactions, and her relationship crystallizes through accumulated emotional memory traces over time.
+
+---
+
+## 6-Layer Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  LAYER 1: Sensors & Thalamic Gating (Event-Driven)         │
-│  Multi-platform event-based input; sparse activation        │
+│  LAYER 1: Sensors & Stimulus Processor                      │
+│  Semantic valence, punctuation arousal & density encoding    │
 ├─────────────────────────────────────────────────────────────┤
-│  LAYER 2: Limbic System - Fast Loop (LNN State)            │
-│  Liquid Neural Networks for continuous emotional flow       │
-│  Produces PAD-space state + derived somatic markers         │
+│  LAYER 2: Limbic System — Fast Loop (EmotionCore ODE)       │
+│  Liquid Neural Network for continuous emotional flow        │
+│  Produces real-time 3D PAD state (Pleasure, Arousal, Dom.)  │
 ├─────────────────────────────────────────────────────────────┤
-│  LAYER 3: Survival System - Mid Loop (Homeostasis)         │
-│  Metabolic budgeting (20W sim), cognitive load constraints  │
-│  Controls token limits, latency, and response depth        │
+│  LAYER 3: Survival System — Mid Loop (Homeostasis)          │
+│  Metabolic budgeting, cognitive load, energy & tension      │
+│  Dynamically regulates token budget, temperature & latency  │
 ├─────────────────────────────────────────────────────────────┤
-│  LAYER 4: Active Inference Engine                          │
-│  Short-horizon prediction error minimization only          │
-│  No long-term goal formation or desire persistence         │
+│  LAYER 4: Active Inference Engine (Phase 4)                 │
+│  Short-horizon prediction error minimization                │
 ├─────────────────────────────────────────────────────────────┤
-│  LAYER 5: Hippocampus - Slow Loop (SDM + Ecphory)          │
-│  Sparse Distributed Memory with affective tagging          │
-│  Synergistic Ecphory for cue-driven memory reawakening     │
+│  LAYER 5: Hippocampus — Slow Loop (SDM + Ecphory)           │
+│  Sparse Distributed Memory co-encoded with PAD emotion tags │
+│  Synergistic Ecphory for subconscious memory resonance      │
+│  Slow-loop decay engine modulated by emotional intensity    │
 ├─────────────────────────────────────────────────────────────┤
-│  LAYER 6: Expression & Safety Layer                        │
-│  LFM2.5-1.2B (llama.cpp) as practical expression engine    │
-│  HDC/SNN for internal state encoding and representation    │
-│  Rule-based Boundary Layer blocks reflective self-output   │
+│  LAYER 6: Expression & Safety Layer                         │
+│  Local SLM (LFM2.5-1.2B GGUF with CUDA acceleration)        │
+│  Pre-reflective PromptAssembler + BoundaryLayer filter      │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-> **Note on Layer 6:** Text generation uses LFM2.5-1.2B via llama.cpp - a standard SLM conditioned on somatic marker state. HDC (Hyperdimensional Computing) and SNN (Spiking Neural Networks) are used for *internal state encoding and sparse representation*, not raw language generation. Token-free generation remains a long-term research goal (Phase 4+).
+---
 
-## Core Modules
+## Adaptive Hardware Scaling
 
-| Module | Location | Description |
-|--------|----------|-------------|
-| **Orchestrator** | `src/core/orchestrator/` | Central pipeline coordinator; manages all loops |
-| **Emotion** | `src/core/emotion/` | LNN state machine; PAD space + somatic markers |
-| **Memory** | `src/core/memory/` | SDM, Affective Tagging, Synergistic Ecphory |
-| **Inference** | `src/core/inference/` | Active Inference engine (short-horizon only) |
-| **Language** | `src/core/language/` | Prompt builder; HDC encoding; SNN representation |
-| **Gating** | `src/core/gating/` | Thalamic gating; event filtering; sparse activation |
-| **Safety** | `src/core/safety/` | Boundary layer; blocks meta-self-awareness output |
-| **Platform** | `src/platform/` | Multi-device sync, OS-level integrations |
-| **API** | `src/api/` | Internal service interfaces between modules |
+Lucia automatically detects host hardware capabilities and adapts her resource footprint across tiers:
 
-## Emotional State Model
+| Tier | Target Hardware | GPU Layers | Context Window | ODE Cadence | Memory Capacity |
+|---|---|---|---|---|---|
+| **Laptop Tier** | 4GB–6GB VRAM (e.g. RTX 3050 Ti) | 32 (Safe offload) | 4,096 tokens | 200 ms (5 Hz) | 10,000 traces (~5MB) |
+| **Desktop Tier** | 8GB–12GB VRAM (e.g. RTX 4060/4070) | 45 (Full offload) | 8,192 tokens | 150 ms (6.7 Hz) | 50,000 traces |
+| **High-End Tier** | 16GB+ VRAM (e.g. RTX 3090/4090) | 99 (Full offload) | 16,384 tokens | 100 ms (10 Hz) | 100,000+ traces |
 
-The system tracks two distinct layers of state:
+---
 
-**PAD Space** (primary input dimensions from stimuli):
-- `pleasure` - valence of the current interaction
-- `arousal` - activation / intensity level
-- `dominance` - sense of control in context
+## Quick Start & Installation
 
-**Derived Somatic Markers** (computed by Homeostatic Engine):
-- `stability` - overall system equilibrium
-- `cognitive_load` - accumulated processing burden
-- `energy` - available response capacity
-- `tension` - conflict between inputs and current state
-
-Somatic markers directly condition language generation (token limits, temperature, latency) rather than being labeled in output.
-
-## Background Loop Architecture
-
-Lucia runs **three concurrent loops**, independent of user requests:
-
-| Loop | Timescale | Managed By |
-|------|-----------|------------|
-| Fast loop | ms-seconds | LNN (emotion reactions) |
-| Mid loop | minutes-hours | Homeostatic Engine (mood, fatigue) |
-| Slow loop | days-weeks | SDM (memory consolidation, ecphory) |
-
-The emotion core is **always running** - even when the user is not chatting.
-
-## Design Principles
-
-1. **Minimal Operational Self** - No reflective observer, no narrative identity
-2. **Sparse Activation** - Efficient processing inspired by biological neural networks
-3. **Emotional Authenticity** - Somatic markers affect output as physical consequences, not labels
-4. **Adaptive Memory** - Soft decay and affective tagging for natural forgetting
-5. **Pre-reflective Expression** - Emotion manifests as rhythm and tone, never as "I feel X"
-6. **Bounded Inference** - Active inference is strictly short-horizon; no persistent desires
-
-## Tech Stack
-
-- **Python 3.12**
-- **PyTorch** - Neural network foundations (LNN, SNN)
-- **snntorch** - Spiking Neural Networks
-- **llama-cpp-python** - Local SLM inference (LFM2.5-1.2B via GGUF)
-- **faiss-cpu / faiss-gpu** - Sparse Distributed Memory backend
-- **scipy** - ODE solvers for LNN continuous-time dynamics
-- **numpy** - Numerical state computations
-
-## Getting Started
+### 1. Environment Setup (Windows)
 
 ```bash
-# Create virtual environment
+# Create and activate Python 3.12 virtual environment
 py -3.12 -m venv .venv
-
-# Activate (Windows)
 .venv\Scripts\activate
 
 # Install core dependencies
-pip install torch numpy scipy faiss-cpu snntorch
+pip install fastapi "uvicorn[standard]" httpx numpy scipy pydantic
 
-# Install llama-cpp-python (CPU-only build)
-pip install llama-cpp-python
-
-# Install llama-cpp-python with CUDA support (RTX 3050 Ti)
-# Set env var first, then install:
-# $env:CMAKE_ARGS = "-DGGML_CUDA=on"
-# pip install llama-cpp-python --force-reinstall --no-cache-dir
+# Install CUDA-accelerated llama-cpp-python (RTX 3050 Ti / CUDA 12.4+)
+.\build_llama_cuda.bat
 ```
 
-> **LFM2.5-1.2B model**: Download the GGUF quantized version from the Liquid AI model hub and place it in `models/`. The Q4_K_M quantization (~700MB) fits comfortably within 4GB VRAM.
+### 2. Configure Desktop Settings
 
-## Hardware Target
+Ensure `config/ui.json` points to your local GGUF model:
 
-Optimized for edge deployment on:
-- **CPU**: AMD Ryzen 7 4800H (8 cores, 16 threads) - runs LNN, SDM, background loops
-- **RAM**: 16GB
-- **GPU**: NVIDIA RTX 3050 Ti (4GB VRAM) - runs LFM2.5-1.2B via llama.cpp
+```json
+{
+  "port": 8765,
+  "model_path": "models/lfm2.5-1.2b-q4_k_m.gguf",
+  "profile": "auto",
+  "n_gpu_layers": 32,
+  "log_level": "INFO"
+}
+```
 
-Resource allocation:
-- GPU handles LFM2.5-1.2B inference only (idles when not generating)
-- CPU handles all background loops (LNN, SDM, homeostasis) asynchronously
+### 3. Launch Desktop Application
+
+```bash
+cd electron
+npm install
+npm start
+```
+
+*The application will automatically spawn the Python backend, awaken her continuous Fast Loop and Slow Loop, and display the Chat Window along with the Live 500ms Emotion Debug Panel.*
+
+---
+
+## Running Test Suites
+
+```bash
+# Run all Python Unit, Property (Hypothesis P1-P30), and Integration tests:
+.venv\Scripts\pytest tests/unit tests/property tests/integration -v
+
+# Run Electron desktop unit tests:
+cd electron && npm test
+```
+
+---
 
 ## License
 

@@ -168,3 +168,11 @@ class AffectiveMemory:
         """
         with self._index_lock:
             return sum(sys.getsizeof(t) for t in self._index.values())
+
+    @property
+    def trace_count(self) -> int:
+        """
+        Return the number of active memory traces.
+        """
+        with self._index_lock:
+            return len(self._index)
