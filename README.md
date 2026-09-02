@@ -6,6 +6,7 @@ The core philosophy: **emotionally realistic behavior without reflective selfhoo
 
 📖 **Documentation**:
 * [System Architecture Specification](docs/ARCHITECTURE.md) — Detailed 6-layer cognitive & limbic architecture.
+* [Deep Component Mechanism Specification](docs/MECHANISM.md) — Comprehensive explanation of every mathematical formula, memory lifecycle, and data flow.
 * [User & Operation Manual](docs/USER_MANUAL.md) — Step-by-step launch, RVC voice setup, and interface manual.
 
 ---
