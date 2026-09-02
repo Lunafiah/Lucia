@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="chat/chat.css">
   <link rel="stylesheet" href="debug/panel.css">
   <link rel="stylesheet" href="avatar/avatar.css">
+  <link rel="stylesheet" href="journal/journal.css">
 </head>
 <body>
   <!-- Splash Screen / Loading Overlay -->
@@ -41,6 +42,9 @@
           </div>
         </div>
         <div class="header-right">
+          <button id="open-journal-btn" class="header-action-btn" title="Companion Journal & History" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: #c4b5fd; padding: 4px 10px; border-radius: 8px; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+            <span>📖 Journal</span>
+          </button>
           <div id="hardware-badge" class="hardware-badge">Auto</div>
         </div>
       </header>
@@ -82,6 +86,7 @@
             <span>Presence</span>
           </div>
           <div class="avatar-controls">
+            <input type="range" id="voice-volume-slider" min="0" max="1" step="0.05" value="1" class="volume-slider" title="Master Voice Volume" />
             <select id="voice-model-select" class="voice-select" title="Select Voice Model">
               <option value="default">Lucia Base Voice</option>
             </select>
@@ -118,8 +123,8 @@
               <span id="pad-p-val" class="meter-val">+0.25</span>
             </div>
             <div class="pad-bar-track">
-              <div class="pad-center-mark"></div>
-              <div id="pad-p-fill" class="pad-bar-fill"></div>
+              <div class="pad-bar-midpoint"></div>
+              <div id="pad-p-fill" class="pad-bar-fill pleasure"></div>
             </div>
           </div>
 
@@ -130,8 +135,8 @@
               <span id="pad-a-val" class="meter-val">-0.05</span>
             </div>
             <div class="pad-bar-track">
-              <div class="pad-center-mark"></div>
-              <div id="pad-a-fill" class="pad-bar-fill"></div>
+              <div class="pad-bar-midpoint"></div>
+              <div id="pad-a-fill" class="pad-bar-fill arousal"></div>
             </div>
           </div>
 
@@ -142,56 +147,60 @@
               <span id="pad-d-val" class="meter-val">+0.05</span>
             </div>
             <div class="pad-bar-track">
-              <div class="pad-center-mark"></div>
-              <div id="pad-d-fill" class="pad-bar-fill"></div>
+              <div class="pad-bar-midpoint"></div>
+              <div id="pad-d-fill" class="pad-bar-fill dominance"></div>
             </div>
           </div>
         </section>
 
-        <!-- Section: Somatic Homeostasis -->
+        <!-- Section: Somatic Markers -->
         <section class="debug-section">
           <div class="section-title">
-            <span>Somatic Homeostasis</span>
+            <span>Somatic Markers</span>
             <small class="dim-range">[0.0, 1.0]</small>
           </div>
 
+          <!-- Stability -->
           <div class="meter-group">
             <div class="meter-labels">
               <span class="meter-name">Stability</span>
-              <span id="somatic-stability-val" class="meter-val">0.00</span>
+              <span id="somatic-stability-val" class="meter-val">100%</span>
             </div>
             <div class="progress-bar-track">
-              <div id="somatic-stability-fill" class="progress-bar-fill fill-stability"></div>
+              <div id="somatic-stability-fill" class="progress-bar-fill stability" style="width: 100%;"></div>
             </div>
           </div>
 
+          <!-- Energy -->
           <div class="meter-group">
             <div class="meter-labels">
               <span class="meter-name">Energy</span>
-              <span id="somatic-energy-val" class="meter-val">0.00</span>
+              <span id="somatic-energy-val" class="meter-val">100%</span>
             </div>
             <div class="progress-bar-track">
-              <div id="somatic-energy-fill" class="progress-bar-fill fill-energy"></div>
+              <div id="somatic-energy-fill" class="progress-bar-fill energy" style="width: 100%;"></div>
             </div>
           </div>
 
+          <!-- Load -->
           <div class="meter-group">
             <div class="meter-labels">
               <span class="meter-name">Cognitive Load</span>
-              <span id="somatic-load-val" class="meter-val">0.00</span>
+              <span id="somatic-load-val" class="meter-val">0%</span>
             </div>
             <div class="progress-bar-track">
-              <div id="somatic-load-fill" class="progress-bar-fill fill-load"></div>
+              <div id="somatic-load-fill" class="progress-bar-fill load" style="width: 0%;"></div>
             </div>
           </div>
 
+          <!-- Tension -->
           <div class="meter-group">
             <div class="meter-labels">
               <span class="meter-name">Tension</span>
-              <span id="somatic-tension-val" class="meter-val">0.00</span>
+              <span id="somatic-tension-val" class="meter-val">0%</span>
             </div>
             <div class="progress-bar-track">
-              <div id="somatic-tension-fill" class="progress-bar-fill fill-tension"></div>
+              <div id="somatic-tension-fill" class="progress-bar-fill tension" style="width: 0%;"></div>
             </div>
           </div>
         </section>
@@ -204,19 +213,37 @@
           <div class="constraints-grid">
             <div class="constraint-chip">
               <span class="chip-label">Max Tokens</span>
-              <span id="constraint-tokens" class="chip-val">150</span>
+              <span id="constraint-tokens" class="chip-val">512</span>
             </div>
             <div class="constraint-chip">
               <span class="chip-label">Temperature</span>
-              <span id="constraint-temp" class="chip-val">0.75</span>
+              <span id="constraint-temp" class="chip-val">0.70</span>
             </div>
             <div class="constraint-chip">
-              <span class="chip-label">Latency</span>
-              <span id="constraint-latency" class="chip-val">0 ms</span>
+              <span class="chip-label">Latency (ms)</span>
+              <span id="constraint-latency" class="chip-val">0</span>
             </div>
             <div class="constraint-chip">
-              <span class="chip-label">Reasoning Depth</span>
-              <span id="constraint-depth" class="chip-val">k = 1</span>
+              <span class="chip-label">Reasoning</span>
+              <span id="constraint-depth" class="chip-val">k=1</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section: Stability Telemetry -->
+        <section class="debug-section">
+          <div class="section-title">
+            <span>Limbic Stability (LSI)</span>
+            <small id="stability-status-badge" class="dim-range" style="color: #10b981;">NOMINAL</small>
+          </div>
+          <div class="meter-group">
+            <div class="meter-labels">
+              <span class="meter-name">Stability Score</span>
+              <span id="telemetry-lsi-val" class="meter-val">100%</span>
+            </div>
+            <div class="meter-labels" style="margin-top: 6px;">
+              <span class="meter-name" style="font-size: 0.75rem; color: #64748b;">Fast-Loop Jitter</span>
+              <span id="telemetry-jitter-val" class="meter-val" style="font-size: 0.75rem; color: #94a3b8;">0.0ms</span>
             </div>
           </div>
         </section>
@@ -238,10 +265,47 @@
     </aside>
   </div>
 
+  <!-- Companion Journal Modal -->
+  <div id="journal-modal" class="journal-modal">
+    <div class="journal-card">
+      <div class="journal-header">
+        <h2>📖 Companion Journal & Relationship</h2>
+        <button id="close-journal-btn" class="journal-close-btn">&times;</button>
+      </div>
+
+      <div class="journal-stats-grid">
+        <div class="stat-box">
+          <div class="stat-label">Total Turns</div>
+          <div id="journal-total-turns" class="stat-value">0</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Limbic Health</div>
+          <div id="journal-lsi-score" class="stat-value">100%</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Memory Traces</div>
+          <div id="journal-memory-count" class="stat-value">0</div>
+        </div>
+      </div>
+
+      <p style="font-size: 0.85rem; color: #94a3b8; margin: 0; line-height: 1.5;">
+        Lucia's subconscious affective memories grow continuously with every shared moment. Clear Screen starts a new topic without deleting her long-term memories.
+      </p>
+
+      <div class="journal-actions">
+        <button id="clear-history-btn" class="journal-btn" style="color: #f87171;">Clear Screen</button>
+        <button id="export-history-btn" class="journal-btn primary">Export Chat (.md)</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Scripts -->
+  <script src="audio/audio-router.js"></script>
+  <script src="avatar/avatar-registry.js"></script>
   <script src="avatar/expression-mapper.js"></script>
   <script src="avatar/lip-sync.js"></script>
   <script src="avatar/avatar.js"></script>
+  <script src="journal/journal.js"></script>
   <script type="module" src="chat/chat.js"></script>
   <script type="module" src="debug/panel.js"></script>
 </body>

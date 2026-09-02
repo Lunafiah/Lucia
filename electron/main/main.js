@@ -3,9 +3,15 @@ const path = require('path');
 const fs = require('fs');
 const { ProcessManager } = require('./process-manager');
 const { registerHandlers } = require('./ipc-bridge');
+const TrayManager = require('./tray-manager');
+const HotkeyManager = require('./hotkey-manager');
+const MascotWindowManager = require('./mascot-window');
 
 let mainWindow = null;
 let processManager = null;
+let trayManager = null;
+let hotkeyManager = null;
+let mascotManager = null;
 
 const rootDir = path.resolve(__dirname, '../../');
 const configPath = path.join(rootDir, 'config', 'ui.json');
@@ -20,7 +26,8 @@ function loadConfig() {
     model_path: '',
     profile: 'auto',
     n_gpu_layers: 32,
-    log_level: 'INFO'
+    log_level: 'INFO',
+    minimize_to_tray: true,
   };
 
   try {
@@ -77,15 +84,21 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
-      preload: path.join(__dirname, '../preload/preload.js')
-    }
+      preload: path.join(__dirname, '../preload/preload.js'),
+    },
   });
 
   const rendererHtml = path.join(__dirname, '../renderer/index.html');
   mainWindow.loadFile(rendererHtml);
 
-  mainWindow.on('close', () => {
-    saveWindowState();
+  mainWindow.on('close', (e) => {
+    if (!app.isQuitting) {
+      e.preventDefault();
+      saveWindowState();
+      mainWindow.hide();
+    } else {
+      saveWindowState();
+    }
   });
 
   mainWindow.on('closed', () => {
@@ -102,6 +115,22 @@ app.whenReady().then(async () => {
   // Create renderer window
   createWindow();
 
+  // Initialize Desktop Presence Modes
+  mascotManager = new MascotWindowManager(mainWindow);
+
+  trayManager = new TrayManager(mainWindow, {
+    onToggleMascot: () => mascotManager.toggle(),
+    onToggleMute: (isMuted) => {
+      if (mainWindow && !mainWindow.isDestroyed()) {
+        mainWindow.webContents.send('voice:mute-toggled', { isMuted });
+      }
+    },
+  });
+  trayManager.init();
+
+  hotkeyManager = new HotkeyManager(mainWindow, 'CommandOrControl+Shift+L');
+  hotkeyManager.register();
+
   // Start the Python backend process
   processManager = new ProcessManager(config, () => mainWindow);
   try {
@@ -112,6 +141,11 @@ app.whenReady().then(async () => {
 });
 
 app.on('before-quit', async (e) => {
+  app.isQuitting = true;
+  if (hotkeyManager) hotkeyManager.unregister();
+  if (trayManager) trayManager.destroy();
+  if (mascotManager) mascotManager.destroy();
+
   if (processManager) {
     e.preventDefault();
     await processManager.stop();
@@ -121,7 +155,7 @@ app.on('before-quit', async (e) => {
 });
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
+  if (process.platform !== 'darwin' && app.isQuitting) {
     app.quit();
   }
 });

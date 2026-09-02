@@ -72,6 +72,7 @@ class VoiceEngine:
         self._models_dir.mkdir(parents=True, exist_ok=True)
 
         self._available_models: Dict[str, RVCModelInfo] = {}
+        self._cache: Dict[str, bytes] = {}
         self._scan_rvc_models()
 
     def _scan_rvc_models(self) -> None:
@@ -171,7 +172,11 @@ class VoiceEngine:
 
         speech_rate = rate or self._config.speech_rate
         speech_volume = volume or self._config.speech_volume
-        pitch_str = pitch or f"{self._config.pitch_shift:+d}Hz" if self._config.pitch_shift != 0 else "+0Hz"
+        pitch_str = pitch or (f"{self._config.pitch_shift:+d}Hz" if self._config.pitch_shift != 0 else "+0Hz")
+
+        cache_key = f"{clean_text.lower()}|{self._config.active_rvc_model}|{speech_rate}|{speech_volume}|{pitch_str}"
+        if cache_key in self._cache:
+            return self._cache[cache_key]
 
         communicate = edge_tts.Communicate(
             clean_text,
@@ -195,6 +200,12 @@ class VoiceEngine:
         ):
             model_info = self._available_models[self._config.active_rvc_model]
             raw_audio = self._apply_rvc_conversion(raw_audio, model_info)
+
+        # Cache short frequently-spoken phrases (under 200 chars)
+        if len(clean_text) <= 200 and len(raw_audio) > 0:
+            if len(self._cache) > 100:
+                self._cache.pop(next(iter(self._cache)))
+            self._cache[cache_key] = raw_audio
 
         return raw_audio
 

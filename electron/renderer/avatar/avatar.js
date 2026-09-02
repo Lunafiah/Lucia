@@ -290,6 +290,23 @@ class AvatarRenderer {
 
     ctx.restore();
   }
+
+  setVolume(vol) {
+    if (this.lipSync) {
+      this.lipSync.setVolume(vol);
+    }
+  }
+
+  destroy() {
+    this.stop();
+    if (this.lipSync && this.lipSync.currentAudio) {
+      this.lipSync.currentAudio.pause();
+    }
+  }
+}
+
+if (typeof window !== "undefined" && window.avatarRegistry) {
+  window.avatarRegistry.register("canvas", AvatarRenderer);
 }
 
 if (typeof module !== "undefined" && module.exports) {

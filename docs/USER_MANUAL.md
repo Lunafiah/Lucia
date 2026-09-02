@@ -60,33 +60,43 @@ Lucia/
 
 ---
 
-## 3. Launching Lucia
+## 3. Launching & Packaging Lucia
 
-### Option A: One-Click Desktop Launch (Recommended)
-Start the complete application (Electron desktop app + automatic Python background server):
+### Option A: Direct Double-Click Launcher (`Start-Lucia.bat`) (Recommended)
+Simply double-click **`Start-Lucia.bat`** in the project root. It will automatically check dependencies and launch the companion window.
 
+### Option B: npm start (Developer Mode)
 ```powershell
 cd electron
 npm start
 ```
 
-### Option B: Standalone Backend Mode (Headless API)
-If you want to run the FastAPI backend server independently on port 8765:
-
+### Option C: Building Standalone `Lucia.exe`
+To package Lucia into an installer (`Lucia-Setup.exe`) or portable `.exe` using `electron-builder`:
 ```powershell
-.\.venv\Scripts\python.exe -m src.api.server --port 8765 --model-path "models/LFM2.5-1.2B-Instruct-Q4_K_M.gguf"
+cd electron
+npm run build:win
 ```
+The packaged binary will be generated in `electron/dist/`.
 
 ---
 
-## 4. Desktop Interface Guide
+## 4. Desktop Presence Modes & Global Shortcuts
+
+* **Minimize to System Tray**: Closing or minimizing the main window sends Lucia to your Windows notification tray. Her limbic Fast Loop keeps ticking continuously in the background!
+* **Global Hotkey (`Ctrl + Shift + L`)**: Press `Ctrl + Shift + L` from anywhere in Windows (while coding, gaming, or browsing) to instantly summon or hide Lucia.
+* **Floating Mascot Mode**: Right-click Lucia's system tray icon and select **Floating Mascot Mode** to switch to a compact Always-on-Top floating avatar window.
+
+---
+
+## 5. Desktop Interface Guide
 
 ```
 ┌───────────────────────────────────────────────┬──────────────────────────────────────────────┐
 │                  CHAT PANE                    │            PRESENCE & TELEMETRY              │
 ├───────────────────────────────────────────────┼──────────────────────────────────────────────┤
-│ ✦ Lucia (Active & Mindful)         [Laptop]  │  ┌────────────────────────────────────────┐  │
-│                                               │  │ 🟢 Presence   [RVC: my_character ▼] 🔊 │  │
+│ ✦ Lucia (Active & Mindful) [📖 Journal][Auto] │  ┌────────────────────────────────────────┐  │
+│                                               │  │ 🟢 Presence [Volume ━●━] [RVC ▼] 🔊   │  │
 │ ┌───────────────────────────────────────────┐ │  │                                        │  │
 │ │ ✨ Welcome to Lucia                       │ │  │          🎭 [LIVE CANVAS AVATAR]       │  │
 │ └───────────────────────────────────────────┘ │  │     (Eye blinks, gaze, lip-sync, blush)│  │
@@ -97,9 +107,9 @@ If you want to run the FastAPI backend server independently on port 8765:
 │          🔊 [Speaks aloud in RVC voice]       │  • Arousal   (A) [===|============] -0.04    │
 │          🎭 [Avatar lip-syncs & smiles]       │  • Dominance (D) [=======|========] +0.08    │
 │                                               │                                              │
-│ ┌───────────────────────────────────────┬───┐ │  SOMATIC & MEMORY METERS                     │
-│ │ Type your message here...             │ ➤ │ │  • Stability: 95%   • Energy: 100%           │
-│ └───────────────────────────────────────┴───┘ │  • Active SDM Traces: 14                    │
+│ ┌───────────────────────────────────────┬───┐ │  LIMBIC STABILITY & HEALTH (LSI)             │
+│ │ Type your message here...             │ ➤ │ │  • Stability Score: 100% (NOMINAL)           │
+│ └───────────────────────────────────────┴───┘ │  • Fast-Loop Jitter: 0.2ms                   │
 └───────────────────────────────────────────────┴──────────────────────────────────────────────┘
 ```
 

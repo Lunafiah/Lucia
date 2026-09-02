@@ -26,6 +26,7 @@ class ChatController {
     // Voice & Avatar Presence
     this.voiceModelSelect = document.getElementById('voice-model-select');
     this.voiceMuteBtn = document.getElementById('voice-mute-btn');
+    this.volumeSlider = document.getElementById('voice-volume-slider');
     this.isVoiceMuted = false;
 
     // Initialize Canvas Avatar
@@ -40,6 +41,17 @@ class ChatController {
   }
 
   _setupVoiceControls() {
+    if (this.volumeSlider) {
+      this.volumeSlider.addEventListener('input', (e) => {
+        const vol = parseFloat(e.target.value);
+        if (window.audioRouter) {
+          window.audioRouter.setVolume(vol);
+        } else if (window.avatarRenderer) {
+          window.avatarRenderer.setVolume(vol);
+        }
+      });
+    }
+
     if (this.voiceMuteBtn) {
       this.voiceMuteBtn.addEventListener('click', () => {
         this.isVoiceMuted = !this.isVoiceMuted;
@@ -89,6 +101,35 @@ class ChatController {
     }
   }
 
+  async _restoreHistory() {
+    try {
+      const res = await fetch('http://127.0.0.1:8765/history');
+      if (res.ok) {
+        const data = await res.json();
+        const turns = data.turns || [];
+        if (turns.length > 0) {
+          // Clear default welcome card if history exists
+          this.messagesContainer.innerHTML = '';
+          turns.forEach((t) => {
+            this.appendMessage(t.role, t.content);
+          });
+        }
+      }
+    } catch (err) {
+      console.warn('[chat] Could not restore chat history:', err);
+    }
+  }
+
+  clearMessages() {
+    this.messagesContainer.innerHTML = `
+      <div class="system-welcome-card">
+        <div class="welcome-icon">✨</div>
+        <h3>Welcome to Lucia</h3>
+        <p>Her emotional state and memories evolve dynamically with every turn.</p>
+      </div>
+    `;
+  }
+
   _setupEventListeners() {
     this.inputArea.addEventListener('input', () => {
       this._autoResizeInput();
@@ -117,6 +158,7 @@ class ChatController {
         console.log('[chat] Backend ready event received');
         this.transitionTo(State.READY);
         this._loadVoiceModels();
+        this._restoreHistory();
 
         // Fetch hardware profile info for the badge
         try {
@@ -127,6 +169,15 @@ class ChatController {
             }
           }
         } catch (e) {}
+      });
+
+      window.lucia.on('voice:mute-toggled', (data) => {
+        if (data && typeof data.isMuted === 'boolean') {
+          this.isVoiceMuted = data.isMuted;
+          if (this.voiceMuteBtn) {
+            this.voiceMuteBtn.classList.toggle('muted', this.isVoiceMuted);
+          }
+        }
       });
 
       window.lucia.on('backend:error', (data) => {

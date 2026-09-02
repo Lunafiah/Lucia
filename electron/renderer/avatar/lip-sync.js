@@ -10,6 +10,8 @@ class LipSyncProcessor {
     this.dataArray = null;
     this.isPlaying = false;
     this.currentAudio = null;
+    this.volume = 1.0;
+    this.gainNode = null;
 
     // Smooth interpolated values
     this.mouthOpen = 0.0;
@@ -24,7 +26,16 @@ class LipSyncProcessor {
         this.analyser = this.audioContext.createAnalyser();
         this.analyser.fftSize = 256;
         this.dataArray = new Uint8Array(this.analyser.frequencyBinCount);
+        this.gainNode = this.audioContext.createGain();
+        this.gainNode.gain.value = this.volume;
       }
+    }
+  }
+
+  setVolume(vol) {
+    this.volume = Math.max(0.0, Math.min(1.0, vol));
+    if (this.gainNode && this.audioContext) {
+      this.gainNode.gain.setValueAtTime(this.volume, this.audioContext.currentTime);
     }
   }
 
@@ -52,7 +63,8 @@ class LipSyncProcessor {
 
     const source = this.audioContext.createMediaElementSource(audio);
     source.connect(this.analyser);
-    this.analyser.connect(this.audioContext.destination);
+    this.analyser.connect(this.gainNode);
+    this.gainNode.connect(this.audioContext.destination);
 
     this.isPlaying = true;
 

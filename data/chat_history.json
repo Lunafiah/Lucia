@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "metadata": {
+    "created_at": "2026-09-02T17:31:06.320376"
+  },
+  "sessions": [
+    {
+      "id": "session_20260902_173106",
+      "created_at": "2026-09-02T17:31:06.320376",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Hello Lucia!",
+          "timestamp": 1788345067.7192366,
+          "created_at": "2026-09-02T17:31:07.719236",
+          "metadata": {}
+        },
+        {
+          "role": "companion",
+          "content": "Hello from Lucia!",
+          "timestamp": 1788345067.7222412,
+          "created_at": "2026-09-02T17:31:07.722241",
+          "metadata": {}
+        }
+      ]
+    },
+    {
+      "id": "session_20260902_173600",
+      "created_at": "2026-09-02T17:36:07.847139",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Hello Lucia!",
+          "timestamp": 1788345367.8471396,
+          "created_at": "2026-09-02T17:36:07.847139",
+          "metadata": {}
+        },
+        {
+          "role": "companion",
+          "content": "Hello from Lucia!",
+          "timestamp": 1788345367.8496006,
+          "created_at": "2026-09-02T17:36:07.849600",
+          "metadata": {}
+        }
+      ]
+    }
+  ]
+}

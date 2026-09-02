@@ -35,9 +35,16 @@ import uvicorn
 from src.core.config import MemoryOrchestratorConfig
 from src.core.models import BehavioralConstraints, SomaticMarkers
 from src.core.orchestrator.orchestrator import MemoryAugmentedOrchestrator
+from src.core.plugins.hook_bus import HookBus
 from src.core.resource_manager import ResourceProfile, get_resource_profile
+from src.core.storage.history_store import ChatHistoryStore
+from src.core.telemetry.stability_evaluator import StabilityEvaluator
 
 logger = logging.getLogger("lucia.api")
+
+_hook_bus = HookBus()
+_history_store = ChatHistoryStore()
+_stability_evaluator = StabilityEvaluator()
 
 
 # ---------------------------------------------------------------------------
@@ -152,10 +159,22 @@ async def process_turn(req: ProcessRequest) -> Dict[str, str]:
         )
 
     call_id = uuid.uuid4().hex
+    _hook_bus.emit("on_turn_start", req.input)
+    _history_store.append_turn("user", req.input)
+
     loop = asyncio.get_running_loop()
 
     try:
         response_text = await loop.run_in_executor(None, orch.process, req.input)
+
+        # Update stability metrics
+        if hasattr(orch, "_affective_memory") and orch._affective_memory is not None:
+            _stability_evaluator.update_sdm_count(orch._affective_memory.trace_count)
+
+        # Store turn in history
+        _history_store.append_turn("companion", response_text)
+        _hook_bus.emit("on_turn_completed", {"user": req.input, "response": response_text})
+
         return {"response": response_text, "call_id": call_id}
     except Exception as exc:
         logger.exception("Exception processing turn (call_id=%s): %s", call_id, exc)
@@ -284,6 +303,53 @@ async def select_voice_model(req: SelectModelRequest) -> Dict[str, Any]:
         "status": "ok",
         "active_model": _voice_engine._config.active_rvc_model,
     }
+
+
+@app.get("/telemetry/stability")
+async def get_stability_telemetry() -> Dict[str, Any]:
+    """
+    Return composite Limbic Stability Index (LSI), tick jitter, and ODE variance.
+    """
+    return _stability_evaluator.get_snapshot().to_dict()
+
+
+@app.get("/history")
+async def get_chat_history(limit: int = 50) -> Dict[str, Any]:
+    """
+    Return recent conversation turns across active and past sessions.
+    """
+    return {"turns": _history_store.get_history(limit=limit)}
+
+
+@app.post("/history/new-session")
+async def new_chat_session() -> Dict[str, Any]:
+    """
+    Start a fresh conversation session without deleting older history.
+    """
+    session_id = _history_store.new_session()
+    return {"status": "ok", "session_id": session_id}
+
+
+@app.delete("/history")
+async def clear_chat_history() -> Dict[str, Any]:
+    """
+    Clear all conversation history logs.
+    """
+    _history_store.clear_history()
+    return {"status": "ok", "message": "History cleared"}
+
+
+@app.get("/history/export")
+async def export_chat_history() -> Response:
+    """
+    Export full conversation history as a formatted Markdown file.
+    """
+    md_content = _history_store.export_markdown()
+    return Response(
+        content=md_content,
+        media_type="text/markdown",
+        headers={"Content-Disposition": "attachment; filename=lucia_chat_history.md"},
+    )
 
 
 @app.get("/health")

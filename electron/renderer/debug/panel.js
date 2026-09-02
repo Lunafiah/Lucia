@@ -38,6 +38,12 @@ class EmotionDebugPanel {
     // Memory elements
     this.memoryTraceCount = document.getElementById('memory-trace-count');
 
+    // Stability Telemetry elements
+    this.lsiVal = document.getElementById('telemetry-lsi-val');
+    this.jitterVal = document.getElementById('telemetry-jitter-val');
+    this.statusBadge = document.getElementById('stability-status-badge');
+    this.tickCounter = 0;
+
     this._setupBackendListeners();
   }
 
@@ -78,6 +84,25 @@ class EmotionDebugPanel {
     try {
       const snapshot = await window.lucia.state.get();
       this.renderSnapshot(snapshot);
+
+      // Poll stability telemetry every 4 ticks (~2.0 seconds)
+      this.tickCounter = (this.tickCounter + 1) % 4;
+      if (this.tickCounter === 0) {
+        try {
+          const res = await fetch('http://127.0.0.1:8765/telemetry/stability');
+          if (res.ok) {
+            const sData = await res.json();
+            if (this.lsiVal) this.lsiVal.textContent = `${Math.round((sData.lsi || 0) * 100)}%`;
+            if (this.jitterVal) this.jitterVal.textContent = `${sData.fast_loop_jitter_mean_ms || 0}ms`;
+            if (this.statusBadge) {
+              const st = (sData.status || 'nominal').toUpperCase();
+              this.statusBadge.textContent = st;
+              this.statusBadge.style.color = st === 'NOMINAL' ? '#10b981' : (st === 'RECOVERING' ? '#f59e0b' : '#ef4444');
+            }
+          }
+        } catch (sErr) {}
+      }
+
       this.showStaleIndicator(false);
     } catch (err) {
       // Show subtle stale indicator without wiping out existing values

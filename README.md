@@ -19,6 +19,7 @@ The core philosophy: **emotionally realistic behavior without reflective selfhoo
 | **Phase 3: Desktop Interface** | Python FastAPI Backend (`POST /process`, `GET /state`), Native Electron Desktop App with Live 500ms Emotion Telemetry Panel, Adaptive Hardware Scaling | ✅ **Completed** |
 | **Phase 4: Active Inference** | Short-horizon free energy minimization (`ActiveInferenceEngine`), Online backprop-through-ODE LNN plasticity (`LNNTrainer`, `torchdiffeq`), 10-step cognitive pipeline (`InferencePipelineOrchestrator`) | ✅ **Completed** |
 | **Phase 5: Embodied Presence** | Direct RVC Voice Model Pipeline (`VoiceEngine`), Real-time Desktop Avatar with 500ms PAD Expression Mapping & 60 FPS Web Audio Lip-Syncing | ✅ **Completed** |
+| **Phase 6: Refinement & QoL** | Standalone Packaging (`Lucia.exe`), System Tray & Mascot Modes, Global Hotkey, Chat Persistence, Limbic Stability Evaluator (`LSI`) & Extensibility Hook Bus | ✅ **Completed** |
 
 ---
 
