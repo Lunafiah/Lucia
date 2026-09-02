@@ -5,8 +5,8 @@ An embodied AI companion designed for emotional authenticity, continuous affecti
 The core philosophy: **emotionally realistic behavior without reflective selfhood**. Emotion is not labeled or performed — it manifests as rhythm, tone, latency, and conversational depth through a continuous physiological-like state machine.
 
 📖 **Documentation**:
-* [System Architecture Specification](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/ARCHITECTURE.md) — Detailed 6-layer cognitive & limbic architecture.
-* [User & Operation Manual](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/USER_MANUAL.md) — Step-by-step launch, RVC voice setup, and interface manual.
+* [System Architecture Specification](docs/ARCHITECTURE.md) — Detailed 6-layer cognitive & limbic architecture.
+* [User & Operation Manual](docs/USER_MANUAL.md) — Step-by-step launch, RVC voice setup, and interface manual.
 
 ---
 
@@ -36,7 +36,7 @@ Lucia is grounded in **Philia** ($\phi\iota\lambda\iota\alpha$)—the classical 
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │  LAYER 1: Sensors & Stimulus Processor                      │
-│  Semantic valence, punctuation arousal & density encoding    │
+│  Semantic valence, punctuation arousal & density encoding   │
 ├─────────────────────────────────────────────────────────────┤
 │  LAYER 2: Limbic System — Fast Loop (EmotionCore ODE)       │
 │  Liquid Neural Network for continuous emotional flow        │

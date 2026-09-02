@@ -1,0 +1,171 @@
+# Lucia — User & Operation Manual
+
+> **Step-by-step guide to installing, configuring, running, and interacting with Lucia.**
+
+---
+
+## 1. Prerequisites & Installation
+
+### System Requirements
+* **OS**: Windows 10/11 (x64)
+* **GPU**: NVIDIA GPU (e.g. RTX 3050 Ti Laptop or higher) with CUDA support
+* **RAM**: 8GB+ RAM
+* **Software**:
+  * Python 3.10+ (Recommended: Python 3.12 in `.venv`)
+  * Node.js 18+ & npm
+
+### Setup Steps
+
+1. **Activate Python Virtual Environment & Install Dependencies**:
+   ```powershell
+   # In project root
+   .\.venv\Scripts\Activate.ps1
+   pip install -r requirements.txt
+   ```
+
+2. **Install Electron Frontend Dependencies**:
+   ```powershell
+   cd electron
+   npm install
+   cd ..
+   ```
+
+3. **Check LLM Model Placement**:
+   Place your GGUF model in the `models/` directory (e.g. `models/LFM2.5-1.2B-Instruct-Q4_K_M.gguf`).
+
+---
+
+## 2. Setting Up Your RVC Character Voice Models
+
+Lucia features a **direct, self-contained RVC voice engine**—no third-party software or cloud subscriptions needed.
+
+### Adding Your Voice Models:
+Copy your character folder from `C:\Users\Lunafiah\ultimate-rvc\models\rvc\voice_models\` into `models/voice/rvc/`:
+
+```
+Lucia/
+└── models/
+    └── voice/
+        └── rvc/
+            ├── my_character/
+            │   ├── my_character.pth
+            │   └── my_character.index
+            └── another_character/
+                ├── voice.pth
+                └── voice.index
+```
+
+* Each subfolder name will automatically appear as a selectable voice in the application's top-right voice dropdown.
+* If no custom model is selected, Lucia automatically uses her high-quality built-in female base voice (`en-US-AnaNeural`).
+
+---
+
+## 3. Launching Lucia
+
+### Option A: One-Click Desktop Launch (Recommended)
+Start the complete application (Electron desktop app + automatic Python background server):
+
+```powershell
+cd electron
+npm start
+```
+
+### Option B: Standalone Backend Mode (Headless API)
+If you want to run the FastAPI backend server independently on port 8765:
+
+```powershell
+.\.venv\Scripts\python.exe -m src.api.server --port 8765 --model-path "models/LFM2.5-1.2B-Instruct-Q4_K_M.gguf"
+```
+
+---
+
+## 4. Desktop Interface Guide
+
+```
+┌───────────────────────────────────────────────┬──────────────────────────────────────────────┐
+│                  CHAT PANE                    │            PRESENCE & TELEMETRY              │
+├───────────────────────────────────────────────┼──────────────────────────────────────────────┤
+│ ✦ Lucia (Active & Mindful)         [Laptop]  │  ┌────────────────────────────────────────┐  │
+│                                               │  │ 🟢 Presence   [RVC: my_character ▼] 🔊 │  │
+│ ┌───────────────────────────────────────────┐ │  │                                        │  │
+│ │ ✨ Welcome to Lucia                       │ │  │          🎭 [LIVE CANVAS AVATAR]       │  │
+│ └───────────────────────────────────────────┘ │  │     (Eye blinks, gaze, lip-sync, blush)│  │
+│                                               │  └────────────────────────────────────────┘  │
+│ [You]: Hello Lucia!                           │                                              │
+│                                               │  EMOTIONAL TELEMETRY (LIVE 500ms)            │
+│ [Lucia]: Hi! It's so nice to talk with you.   │  • Pleasure  (P) [=======|========] +0.32    │
+│          🔊 [Speaks aloud in RVC voice]       │  • Arousal   (A) [===|============] -0.04    │
+│          🎭 [Avatar lip-syncs & smiles]       │  • Dominance (D) [=======|========] +0.08    │
+│                                               │                                              │
+│ ┌───────────────────────────────────────┬───┐ │  SOMATIC & MEMORY METERS                     │
+│ │ Type your message here...             │ ➤ │ │  • Stability: 95%   • Energy: 100%           │
+│ └───────────────────────────────────────┴───┘ │  • Active SDM Traces: 14                    │
+└───────────────────────────────────────────────┴──────────────────────────────────────────────┘
+```
+
+### 1. The Interactive Avatar Stage
+* **Voice Model Selector**: Click the dropdown at the top right of the avatar to switch between the default voice and any discovered RVC models.
+* **Mute Toggle**: Click the speaker icon (`🔊`) to instantly mute or unmute her spoken voice.
+* **Cursor Gaze Tracking**: Move your mouse anywhere on screen—Lucia’s eyes and head subtly follow your cursor.
+* **Dynamic Emotions**: As her internal Pleasure ($P$) increases, her cheeks softly blush pink and her mouth curves into a warm smile.
+* **60 FPS Lip-Syncing**: When speaking, her mouth accurately opens and articulates matching the audio frequency formants.
+
+### 2. The Chat Window
+* **Sending Messages**: Type your message and press `Enter` (or click `➤`).
+* **Multi-Line**: Press `Shift + Enter` to insert a new line without sending.
+* **Typing Indicator**: Shows animated pulsing dots while her brain reflects and generates responses.
+
+### 3. Emotional Telemetry Panel (Real-Time 500ms)
+* **PAD Attractor State**:
+  * **Pleasure ($P$)**: Mood valence from $-1.0$ (distressed) to $+1.0$ (joyful/warm).
+  * **Arousal ($A$)**: Physiological energy from $-1.0$ (calm/sleepy) to $+1.0$ (excited/alert).
+  * **Dominance ($D$)**: Social agency from $-1.0$ (submissive/shy) to $+1.0$ (confident/assertive).
+* **Somatic Markers**:
+  * **Stability**: Resistance against emotional turbulence.
+  * **Energy**: Available conversational vitality (recharges during pauses).
+  * **Cognitive Load & Tension**: Internal processing pressure.
+* **Behavioral Conditioning**: Shows live adjustments to Token Budget, LLM Temperature, Simulated Latency, and Reasoning Depth.
+* **Affective Memory**: Live counter of accumulated emotional memory traces stored in Sparse Distributed Memory.
+
+---
+
+## 5. Configuration & Customization
+
+All primary options can be configured in [`config/ui.json`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/config/ui.json):
+
+```json
+{
+  "api": {
+    "host": "127.0.0.1",
+    "port": 8765,
+    "startupTimeoutMs": 30000
+  },
+  "model": {
+    "path": "models/LFM2.5-1.2B-Instruct-Q4_K_M.gguf",
+    "profile": "auto"
+  },
+  "presence": {
+    "voice": {
+      "active_model": "default",
+      "models_dir": "models/voice/rvc",
+      "pitch_shift": 0
+    }
+  }
+}
+```
+
+* **`model.profile`**: Set to `"laptop"` (optimized for 4GB VRAM), `"desktop"`, `"high_end"`, or `"auto"`.
+* **`presence.voice.pitch_shift`**: Adjust pitch in semitones (e.g. `+2` for higher tone, `-2` for deeper tone, `0` for natural default).
+
+---
+
+## 6. Frequently Asked Questions (FAQ)
+
+**Q: Can Lucia run completely offline without internet?**  
+**A:** Yes! The LLM, continuous emotion ODE, memory decay, active inference, RVC voice conversion, and avatar rendering run 100% locally on your laptop.
+
+**Q: Does voice synthesis slow down text generation or overload my GPU?**  
+**A:** No. Voice synthesis executes in quick, lightweight bursts ($\sim 150\text{MB}$ memory) that never compete with your LLM token generation.
+
+**Q: How do I backup Lucia’s memories?**  
+**A:** Her memory traces and learned LNN plasticity are saved within the project. You can copy the workspace or commit changes to Git to preserve her developmental journey.

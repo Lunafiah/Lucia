@@ -6,11 +6,10 @@ models/*.gguf.metadata
 models/CACHEDIR.TAG
 
 # ──────────────────────────────────────────────
-# Specs & docs — markdown files and tooling metadata
+# Specs & metadata
 # ──────────────────────────────────────────────
 .kiro/specs/**/*.md
 .kiro/specs/**/.config.kiro
-docs/*.md
 
 # ──────────────────────────────────────────────
 # Generated / local UI config
