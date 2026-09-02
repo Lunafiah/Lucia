@@ -86,21 +86,37 @@ pip install fastapi "uvicorn[standard]" httpx numpy scipy pydantic
 .\build_llama_cuda.bat
 ```
 
-### 2. Configure Desktop Settings
+### 2. Configure Desktop Settings & Assets
 
-Ensure `config/ui.json` points to your local GGUF model:
+Ensure `config/ui.json` points to your local model and optional avatar/voice directories:
 
 ```json
 {
   "port": 8765,
-  "model_path": "models/lfm2.5-1.2b-q4_k_m.gguf",
+  "model_path": "models/LFM2.5-1.2B-Instruct-Q4_K_M.gguf",
+  "voice_path": "models/voice/",
+  "avatar_path": "assets/avatar/",
   "profile": "auto",
   "n_gpu_layers": 32,
   "log_level": "INFO"
 }
 ```
 
-### 3. Launch Desktop Application
+### 3. Model & Avatar Assets Directory Layout
+
+```
+Lucia/
+├── models/
+│   ├── LFM2.5-1.2B-Instruct-Q4_K_M.gguf        # Active Language Model (GGUF)
+│   └── voice/                                  # Local TTS Models (Kokoro / Piper ONNX)
+└── assets/
+    └── avatar/
+        ├── live2d/                             # Live2D Cubism (*.model3.json, *.moc3)
+        ├── vrm/                                # 3D VRM / VRoid (*.vrm)
+        └── sprites/                            # 2D Emotion Sprite Sheets (*.png)
+```
+
+### 4. Launch Desktop Application
 
 ```bash
 cd electron
