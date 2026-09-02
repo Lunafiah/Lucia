@@ -147,3 +147,31 @@ class TestLLMGenerate:
         backend = LLMBackend(_make_llm_config())
         backend.shutdown()
         assert backend.is_ready() is False
+
+
+# ---------------------------------------------------------------------------
+# Phase 2: MemoryAugmentedOrchestrator GPU Smoke Test
+# ---------------------------------------------------------------------------
+
+class TestMemoryAugmentedOrchestratorGPU:
+    def test_phase2_smoke_test_with_gpu(self):
+        """End-to-end memory pipeline with real GPU model."""
+        from src.core.config import MemoryOrchestratorConfig
+        from src.core.orchestrator.orchestrator import MemoryAugmentedOrchestrator
+
+        config = MemoryOrchestratorConfig(
+            model_path=MODEL_PATH,
+            n_gpu_layers=32,
+            n_ctx=2048,
+            loop_cadence_ms=100,
+            decay_loop_cadence_seconds=60,
+        )
+        orch = MemoryAugmentedOrchestrator(config)
+        try:
+            resp = orch.process("Hello, I am testing the memory system.")
+            assert isinstance(resp, str)
+            assert len(resp.strip()) > 0
+            traces = orch._affective_memory.get_all_traces()
+            assert len(traces) == 1
+        finally:
+            orch.shutdown()

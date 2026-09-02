@@ -1,25 +1,39 @@
 """
 PromptAssembler — builds the Conditioned_Prompt from somatic markers,
-behavioral constraints, and conversation history.
+behavioral constraints, conversation history, and optional memory echo vector.
 
-Section order (Requirement 5.1):
+Section order:
   1. System preamble
   2. [SOMATIC STATE]  — numeric key-value pairs only, no prose emotional labels
-  3. [REASONING]      — omitted when reasoning_depth == 0
-  4. [CONVERSATION]   — trimmed to max 10 turns or token budget
+  3. [MEMORY ECHO]     — numeric key-value pairs only (Phase 2, omitted if None)
+  4. [REASONING]       — omitted when reasoning_depth == 0
+  5. [CONVERSATION]    — trimmed to max 10 turns or token budget
 
-Requirements: 5.1–5.8
+Requirements: Phase 1 (5.1–5.8), Phase 2 (11.2–11.4, 12.1, 12.5, 16.3)
 """
 
 from __future__ import annotations
 
-from typing import List, Tuple, Union
+from typing import List, Optional, Tuple, Union
+
+import numpy as np
 
 from src.core.errors import AssemblyError
 from src.core.models import BehavioralConstraints, SomaticMarkers
 
 # Section separator (Requirement 5.1)
 _SEP = "\n\n---\n\n"
+
+FORBIDDEN_RECALL_PHRASES = [
+    "I remember",
+    "I recall",
+    "last time",
+    "you mentioned",
+    "you said",
+    "I know from before",
+    "previously you",
+    "my memory",
+]
 
 
 def _estimate_tokens(text: str) -> int:
@@ -43,6 +57,8 @@ class PromptAssembler:
         history: List[Tuple[str, str]],
         system_preamble: str = "",
         n_ctx: int = 4096,
+        *,
+        echo_vector: Optional[np.ndarray] = None,
     ) -> Union[str, AssemblyError]:
         """
         Build the Conditioned_Prompt string.
@@ -59,6 +75,8 @@ class PromptAssembler:
             Static system prompt prefix.
         n_ctx : int
             LLM context window token limit. Used for overflow detection.
+        echo_vector : np.ndarray | None, optional
+            Echo_Vector synthesized by EcphoryEngine (Phase 2).
 
         Returns
         -------
@@ -66,7 +84,7 @@ class PromptAssembler:
             The assembled prompt.
         AssemblyError
             If the preamble + somatic state section alone exceeds n_ctx
-            (Requirement 5.8).
+            (Requirement 5.8) or if forbidden phrases appear.
         """
         # --- Section 1: system preamble ---
         preamble_section = system_preamble.strip()
@@ -80,11 +98,21 @@ class PromptAssembler:
             f"tension: {somatic.tension:.6f}"
         )
 
-        # --- Section 3: reasoning trace (Requirement 5.4, 5.5) ---
+        # --- Section 3: memory echo (Phase 2) ---
+        echo_section = ""
+        if echo_vector is not None:
+            try:
+                echo_section = self._encode_echo_section(echo_vector)
+            except AssemblyError as err:
+                return err
+
+        # --- Section 4: reasoning trace (Requirement 5.4, 5.5) ---
         reasoning_section = self._build_reasoning_section(constraints.reasoning_depth)
 
-        # --- Check preamble alone fits (Requirement 5.8) ---
+        # --- Check preamble + somatic + echo fits (Requirement 5.8) ---
         base_parts = [preamble_section, somatic_section]
+        if echo_section:
+            base_parts.append(echo_section)
         if reasoning_section:
             base_parts.append(reasoning_section)
         base_prompt = _SEP.join(p for p in base_parts if p)
@@ -94,11 +122,13 @@ class PromptAssembler:
                 f"(~{_estimate_tokens(base_prompt)} tokens > {n_ctx})"
             )
 
-        # --- Section 4: conversation history (Requirement 5.3, 5.7) ---
+        # --- Section 5: conversation history (Requirement 5.3, 5.7) ---
         history_section = self._build_history_section(history, constraints, n_ctx, base_prompt)
 
         # --- Assemble all sections ---
         all_sections = [preamble_section, somatic_section]
+        if echo_section:
+            all_sections.append(echo_section)
         if reasoning_section:
             all_sections.append(reasoning_section)
         all_sections.append(history_section)
@@ -109,6 +139,23 @@ class PromptAssembler:
     # ------------------------------------------------------------------
     # Private helpers
     # ------------------------------------------------------------------
+
+    def _encode_echo_section(self, echo_vector: np.ndarray) -> str:
+        """
+        Encode Echo_Vector as lines of `echo_{i}: {val:.6f}` under [MEMORY ECHO].
+        Validates that no forbidden recall phrases appear.
+        """
+        lines = ["[MEMORY ECHO]"]
+        for i, val in enumerate(echo_vector):
+            lines.append(f"echo_{i}: {float(val):.6f}")
+        section = "\n".join(lines)
+
+        for phrase in FORBIDDEN_RECALL_PHRASES:
+            if phrase.lower() in section.lower():
+                raise AssemblyError(
+                    f"[MEMORY ECHO] section contains forbidden recall phrase: '{phrase}'"
+                )
+        return section
 
     def _build_reasoning_section(self, reasoning_depth: int) -> str:
         """

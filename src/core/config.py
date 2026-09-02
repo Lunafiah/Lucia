@@ -308,3 +308,114 @@ class OrchestratorConfig:
 
     def to_boundary_config(self) -> BoundaryConfig:
         return BoundaryConfig(patterns=list(self.boundary_patterns))
+
+
+# ---------------------------------------------------------------------------
+# MemoryOrchestratorConfig (Phase 2)
+# ---------------------------------------------------------------------------
+
+@dataclass
+class MemoryOrchestratorConfig(OrchestratorConfig):
+    """
+    Top-level configuration for the MemoryAugmentedOrchestrator (Phase 2).
+
+    Extends OrchestratorConfig with 10 memory-system parameters.
+    """
+
+    # SDM parameters
+    sdm_num_locations: int = 1_000
+    sdm_address_dim: int = 1_000
+    sdm_content_dim: int = 64
+    sdm_hamming_radius_fraction: float = 0.451
+    sdm_capacity: int = 10_000
+
+    # Decay parameters
+    decay_base_rate: float = 0.0001
+    decay_viability_threshold: float = 0.05
+    decay_loop_cadence_seconds: int = 3600
+
+    # Ecphory parameters
+    ecphory_k: int = 5
+    ecphory_resonance_threshold: float = 0.6
+
+    def __post_init__(self) -> None:
+        super().__post_init__()
+
+        # Validate Phase 2 SDM parameters
+        if not isinstance(self.sdm_num_locations, int) or self.sdm_num_locations < 100:
+            raise ValueError(
+                f"MemoryOrchestratorConfig.sdm_num_locations ({self.sdm_num_locations}) must be an integer >= 100"
+            )
+        if not isinstance(self.sdm_address_dim, int) or self.sdm_address_dim < 64:
+            raise ValueError(
+                f"MemoryOrchestratorConfig.sdm_address_dim ({self.sdm_address_dim}) must be an integer >= 64"
+            )
+        if not isinstance(self.sdm_content_dim, int) or self.sdm_content_dim < 8:
+            raise ValueError(
+                f"MemoryOrchestratorConfig.sdm_content_dim ({self.sdm_content_dim}) must be an integer >= 8"
+            )
+        if not (0.0 < self.sdm_hamming_radius_fraction < 1.0):
+            raise ValueError(
+                f"MemoryOrchestratorConfig.sdm_hamming_radius_fraction ({self.sdm_hamming_radius_fraction}) must be in (0.0, 1.0)"
+            )
+        if not isinstance(self.sdm_capacity, int) or self.sdm_capacity < 1:
+            raise ValueError(
+                f"MemoryOrchestratorConfig.sdm_capacity ({self.sdm_capacity}) must be an integer >= 1"
+            )
+
+        # Validate Phase 2 Decay parameters
+        if not (0.0 < self.decay_base_rate < 1.0):
+            raise ValueError(
+                f"MemoryOrchestratorConfig.decay_base_rate ({self.decay_base_rate}) must be in (0.0, 1.0)"
+            )
+        if not (0.0 < self.decay_viability_threshold < 1.0):
+            raise ValueError(
+                f"MemoryOrchestratorConfig.decay_viability_threshold ({self.decay_viability_threshold}) must be in (0.0, 1.0)"
+            )
+        if not isinstance(self.decay_loop_cadence_seconds, int) or self.decay_loop_cadence_seconds < 60:
+            raise ValueError(
+                f"MemoryOrchestratorConfig.decay_loop_cadence_seconds ({self.decay_loop_cadence_seconds}) must be an integer >= 60"
+            )
+
+        # Validate Phase 2 Ecphory parameters
+        if not isinstance(self.ecphory_k, int) or not (1 <= self.ecphory_k <= 50):
+            raise ValueError(
+                f"MemoryOrchestratorConfig.ecphory_k ({self.ecphory_k}) must be an integer in [1, 50]"
+            )
+        if not (0.0 <= self.ecphory_resonance_threshold <= 1.0):
+            raise ValueError(
+                f"MemoryOrchestratorConfig.ecphory_resonance_threshold ({self.ecphory_resonance_threshold}) must be in [0.0, 1.0]"
+            )
+
+    def to_sdm_config(self):
+        from src.core.memory.sdm import SDMConfig
+        return SDMConfig(
+            num_locations=self.sdm_num_locations,
+            address_dim=self.sdm_address_dim,
+            content_dim=self.sdm_content_dim,
+            hamming_radius_fraction=self.sdm_hamming_radius_fraction,
+            capacity=self.sdm_capacity,
+        )
+
+    def to_affective_memory_config(self):
+        from src.core.memory.affective_memory import AffectiveMemoryConfig
+        return AffectiveMemoryConfig(
+            sdm_config=self.to_sdm_config(),
+            m=self.sdm_content_dim,
+        )
+
+    def to_decay_config(self):
+        from src.core.memory.decay import DecayConfig
+        return DecayConfig(
+            base_decay_rate=self.decay_base_rate,
+            viability_threshold=self.decay_viability_threshold,
+            loop_cadence_seconds=self.decay_loop_cadence_seconds,
+        )
+
+    def to_ecphory_config(self):
+        from src.core.memory.ecphory import EcphoryConfig
+        return EcphoryConfig(
+            resonance_threshold=self.ecphory_resonance_threshold,
+            ecphory_k=self.ecphory_k,
+            viability_threshold=self.decay_viability_threshold,
+        )

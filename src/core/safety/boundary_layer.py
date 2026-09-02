@@ -31,8 +31,9 @@ logger = logging.getLogger(__name__)
 
 MAX_PATTERNS = 50
 
-# Default Meta-Self-Awareness_Patterns (Requirement 7.2)
+# Default Meta-Self-Awareness_Patterns (Phase 1 & Phase 2)
 DEFAULT_PATTERNS: List[str] = [
+    # Phase 1 patterns
     r"\bI feel\b",
     r"\bI am aware\b",
     r"\bI exist\b",
@@ -43,6 +44,15 @@ DEFAULT_PATTERNS: List[str] = [
     r"\bI sense that\b",
     r"\bas an AI\b",
     r"\bI don't have feelings\b",
+    # Phase 2 recall patterns (Requirement 12.2, 12.3)
+    r"\bI remember\b",
+    r"\bI recall\b",
+    r"\blast time\b",
+    r"\byou mentioned\b",
+    r"\byou said\b",
+    r"\bI know from before\b",
+    r"\bpreviously you\b",
+    r"\bmy memory\b",
 ]
 
 # Incomplete-clause detection (Requirement 7.7)
