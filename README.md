@@ -13,8 +13,8 @@ The core philosophy: **emotionally realistic behavior without reflective selfhoo
 | **Phase 1: Core Pipeline** | Continuous Emotion ODE (`EmotionCore`), Homeostatic Engine, Stimulus Processing, Boundary Layer, GGUF LLM Backend | ✅ **Completed** |
 | **Phase 2: Affective Memory** | Kanerva Sparse Distributed Memory (`SDMCore`), Affective Tagging (`AffectiveMemory`), Emotional Decay (`DecayEngine`), Synergistic Ecphory (`EcphoryEngine`) | ✅ **Completed** |
 | **Phase 3: Desktop Interface** | Python FastAPI Backend (`POST /process`, `GET /state`), Native Electron Desktop App with Live 500ms Emotion Telemetry Panel, Adaptive Hardware Scaling | ✅ **Completed** |
-| **Phase 4: Active Inference** | Short-horizon free energy minimization, Online backprop-through-ODE LNN plasticity (`torchdiffeq`) | ⏳ *Next* |
-| **Phase 5: Embodied Presence** | Screen & Camera Vision Perception (`Qwen2.5-VL 3B`), Voice Synthesis/Recognition, Desktop Agency | 📅 *Planned* |
+| **Phase 4: Active Inference** | Short-horizon free energy minimization (`ActiveInferenceEngine`), Online backprop-through-ODE LNN plasticity (`LNNTrainer`, `torchdiffeq`), 10-step cognitive pipeline (`InferencePipelineOrchestrator`) | ✅ **Completed** |
+| **Phase 5: Embodied Presence** | Screen & Camera Vision Perception (`Qwen2.5-VL 3B`), Voice Synthesis/Recognition (RVC / Kokoro), 2D/3D Avatar (Live2D / VRM), Desktop Agency | ⏳ *Next* |
 
 ---
 

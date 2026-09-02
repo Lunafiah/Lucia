@@ -95,6 +95,9 @@ class EmotionCore:
         self._pad_snapshot: PADState = self._pad_resting
         self._state_lock = threading.Lock()
 
+        # Phase 4: Training lock for atomic weight updates
+        self._train_lock = threading.Lock()
+
         # Pending stimulus (protected by _stimulus_lock)
         self._pending_stimulus: Optional[np.ndarray] = None
         self._stimulus_lock = threading.Lock()
@@ -169,13 +172,21 @@ class EmotionCore:
         """
         Advance the hidden state by one ODE integration step.
 
-        Uses scipy solve_ivp with RK45.  Intermediate values are clamped to
+        Uses scipy solve_ivp with RK45. Intermediate values are clamped to
         [-1.0, 1.0] within the RHS to prevent blow-up (Requirement 1.4).
         """
+        with self._train_lock:
+            W_tau = self.W_tau.copy()
+            U_tau = self.U_tau.copy()
+            b_tau = self.b_tau.copy()
+            W_f = self.W_f.copy()
+            U_f = self.U_f.copy()
+            b_f = self.b_f.copy()
+
         def rhs(t: float, y: np.ndarray) -> np.ndarray:
             y_c = np.clip(y, -1.0, 1.0)  # intermediate clamp
-            tau = softplus(self.W_tau @ y_c + self.U_tau @ x + self.b_tau)
-            f   = np.tanh(self.W_f   @ y_c + self.U_f   @ x + self.b_f)
+            tau = softplus(W_tau @ y_c + U_tau @ x + b_tau)
+            f = np.tanh(W_f @ y_c + U_f @ x + b_f)
             return (-y_c + f) / tau
 
         result = solve_ivp(
