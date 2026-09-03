@@ -15,8 +15,9 @@ class AvatarRenderer {
     this.currentLive2DModel = null;
     this.baseModelsPath = null;
     this.mascotScale = 1.0;
-    // Zoom pivot in normalized [0..1] coords relative to canvas size
-    this.zoomOrigin = { nx: 0.5, ny: 0.4 }; // default: center-upper (near face)
+    this.pan = { x: 0, y: 0 };
+    this.isDraggingModel = false;
+    this.dragStart = { x: 0, y: 0 };
     this.activeEngine = "canvas";
     this.activeModel = "default";
     this.sprites = null;
@@ -69,34 +70,63 @@ class AvatarRenderer {
 
     window.addEventListener("resize", () => this.resize());
 
-    // Cursor-anchored Zoom — zoom pivots around where the mouse pointer is
+    // Interactive Zoom (Mouse Wheel - clean uniform zoom)
     const wrapper = (this.canvas && this.canvas.parentElement) || (this.live2dCanvas && this.live2dCanvas.parentElement);
     if (wrapper) {
       wrapper.addEventListener(
         "wheel",
         (e) => {
           e.preventDefault();
-
-          // Record zoom pivot from current mouse position inside the wrapper
-          const rect = wrapper.getBoundingClientRect();
-          const relX = (e.clientX - rect.left) / (rect.width || 1);
-          const relY = (e.clientY - rect.top) / (rect.height || 1);
-          this.zoomOrigin = {
-            nx: Math.max(0, Math.min(1, relX)),
-            ny: Math.max(0, Math.min(1, relY)),
-          };
-
           const delta = e.deltaY < 0 ? 0.08 : -0.08;
-          this.mascotScale = Math.max(0.25, Math.min(4.0, (this.mascotScale || 1.0) + delta));
-
-          // For Live2D: reposition immediately
+          this.mascotScale = Math.max(0.3, Math.min(4.0, (this.mascotScale || 1.0) + delta));
           if (this.activeEngine === "live2d") {
             this._repositionLive2DModel();
           }
-          // 2D canvas: handled per-frame in _render
         },
         { passive: false }
       );
+
+      // Mouse drag to move/pan model in main mode
+      wrapper.addEventListener("mousedown", (e) => {
+        const isMascot = typeof document !== "undefined" && document.body.classList.contains("mascot-mode");
+        if (!isMascot && e.button === 0) {
+          this.isDraggingModel = true;
+          this.dragStart = {
+            x: e.clientX - this.pan.x,
+            y: e.clientY - this.pan.y,
+          };
+          wrapper.style.cursor = "grabbing";
+        }
+      });
+
+      window.addEventListener("mousemove", (e) => {
+        if (this.isDraggingModel) {
+          this.pan.x = e.clientX - this.dragStart.x;
+          this.pan.y = e.clientY - this.dragStart.y;
+          if (this.activeEngine === "live2d") {
+            this._repositionLive2DModel();
+          }
+        }
+      });
+
+      window.addEventListener("mouseup", () => {
+        if (this.isDraggingModel) {
+          this.isDraggingModel = false;
+          if (wrapper) wrapper.style.cursor = "grab";
+        }
+      });
+
+      // Double-click to reset model position & zoom in main mode
+      wrapper.addEventListener("dblclick", () => {
+        const isMascot = typeof document !== "undefined" && document.body.classList.contains("mascot-mode");
+        if (!isMascot) {
+          this.pan = { x: 0, y: 0 };
+          this.mascotScale = 1.0;
+          if (this.activeEngine === "live2d") {
+            this._repositionLive2DModel();
+          }
+        }
+      });
     }
   }
 
@@ -299,28 +329,20 @@ class AvatarRenderer {
       ctx.fill();
     }
 
-    // 2. Cursor-anchored scale & center
+    // 2. Scale & Center Sprite (Honoring mascotScale zoom & mouse pan!)
     const userZoom = this.mascotScale || 1.0;
     const naturalW = activeSprite.naturalWidth;
     const naturalH = activeSprite.naturalHeight;
-
-    // Base scale so sprite fills the stage at zoom=1
     const baseScale = Math.min((w * 0.95) / naturalW, (h * 0.95) / naturalH);
+    const scale = baseScale * userZoom;
+    const drawW = naturalW * scale;
+    const drawH = naturalH * scale;
 
-    // Pivot point in canvas pixels
-    const pivotX = (this.zoomOrigin.nx || 0.5) * w;
-    const pivotY = (this.zoomOrigin.ny || 0.4) * h;
+    const drawX = (w - drawW) / 2 + this.mouse.x * 6 + this.pan.x;
+    const drawY = h - drawH + breath + this.mouse.y * 4 + this.pan.y;
 
-    // Unzoomed draw position (centered horizontally, bottom-anchored vertically)
-    const baseDrawX = (w - naturalW * baseScale) / 2 + this.mouse.x * 6;
-    const baseDrawY = h - naturalH * baseScale + breath + this.mouse.y * 4;
-
-    // Apply zoom around pivot
     ctx.save();
-    ctx.translate(pivotX, pivotY);
-    ctx.scale(userZoom, userZoom);
-    ctx.translate(-pivotX, -pivotY);
-    ctx.drawImage(activeSprite, baseDrawX, baseDrawY, naturalW * baseScale, naturalH * baseScale);
+    ctx.drawImage(activeSprite, drawX, drawY, drawW, drawH);
     ctx.restore();
   }
 
@@ -334,23 +356,12 @@ class AvatarRenderer {
     const lipMetrics = this.lipSync.update();
 
     const userZoom = this.mascotScale || 1.0;
-
-    // Cursor-anchored zoom pivot
-    const pivotX = (this.zoomOrigin.nx || 0.5) * w;
-    const pivotY = (this.zoomOrigin.ny || 0.4) * h;
-
-    // Base center of the face at zoom=1
-    const baseCenterX = w / 2 + this.mouse.x * 6;
-    const baseCenterY = h / 2 + breath + this.mouse.y * 4;
-    const headRadius = Math.min(w, h) * 0.3;
+    const centerX = w / 2 + this.mouse.x * 6 + this.pan.x;
+    const centerY = h / 2 + breath + this.mouse.y * 4 + this.pan.y;
+    const headRadius = Math.min(w, h) * 0.3 * userZoom;
 
     ctx.save();
-    // Zoom around pivot
-    ctx.translate(pivotX, pivotY);
-    ctx.scale(userZoom, userZoom);
-    ctx.translate(-pivotX, -pivotY);
-
-    ctx.translate(baseCenterX, baseCenterY);
+    ctx.translate(centerX, centerY);
     ctx.rotate((this.currentExpression.headTilt * Math.PI) / 180);
 
     // 1. Ambient Background Halo
@@ -605,18 +616,9 @@ class AvatarRenderer {
     const baseScale = Math.min((stageW * 0.95) / (naturalW || 2000), (stageH * 0.95) / (naturalH || 2000));
     const scale = baseScale * userZoom;
 
-    // Cursor-anchored pivot in stage pixels
-    const pivotX = (this.zoomOrigin.nx || 0.5) * stageW;
-    const pivotY = (this.zoomOrigin.ny || 0.4) * stageH;
-
-    // Base position at zoom=1 (centered horizontally, bottom-anchored vertically)
-    const baseX = (stageW - (naturalW || 2000) * baseScale) / 2;
-    const baseY = stageH - (naturalH || 2000) * baseScale;
-
-    // Zoomed position: zoom around pivot
     model.scale.set(scale);
-    model.x = pivotX + (baseX - pivotX) * userZoom;
-    model.y = pivotY + (baseY - pivotY) * userZoom;
+    model.x = (stageW - (naturalW || 2000) * scale) / 2 + this.pan.x;
+    model.y = (stageH - (naturalH || 2000) * scale) + this.pan.y;
   }
 
   _loadSpriteSet(model) {
@@ -663,91 +665,168 @@ class AvatarRenderer {
 
   /**
    * Wire mascot toolbar button events.
-   * Called once after DOM is ready.
+   * Floating dock positioned underneath the model.
    */
   _setupMascotToolbar() {
     const get = (id) => document.getElementById(id);
     let _activePopup = null;
 
-    const togglePopup = (popupEl) => {
-      if (!popupEl) return;
-      if (_activePopup && _activePopup !== popupEl) {
-        _activePopup.style.display = "none";
-      }
-      const showing = popupEl.style.display !== "none";
-      popupEl.style.display = showing ? "none" : "block";
-      _activePopup = showing ? null : popupEl;
-    };
-
-    // --- Chat button ---
-    const chatBtn = get("mascot-chat-btn");
-    const chatPopup = get("mascot-chat-popup");
-    if (chatBtn && chatPopup) {
-      chatBtn.addEventListener("click", (e) => { e.stopPropagation(); togglePopup(chatPopup); });
+    const toolbar = get("mascot-toolbar");
+    if (toolbar) {
+      toolbar.addEventListener("click", (e) => e.stopPropagation());
+      toolbar.addEventListener("dblclick", (e) => e.stopPropagation());
+      toolbar.addEventListener("mousedown", (e) => e.stopPropagation());
     }
 
-    const sendBtn = get("mascot-chat-send-btn");
+    const allButtons = [
+      get("mascot-chat-btn"),
+      get("mascot-model-btn"),
+      get("mascot-voice-btn"),
+      get("mascot-mic-btn"),
+      get("mascot-close-btn"),
+    ].filter(Boolean);
+
+    const closeAllPopups = () => {
+      [get("mascot-chat-popup"), get("mascot-model-popup"), get("mascot-voice-popup")].forEach((p) => {
+        if (p) p.style.display = "none";
+      });
+      allButtons.forEach((b) => {
+        if (b && b.id !== "mascot-mic-btn") b.classList.remove("active");
+      });
+      _activePopup = null;
+    };
+
+    const togglePopup = (btnEl, popupEl) => {
+      if (!popupEl) return;
+      const isShowing = popupEl.style.display === "flex" || popupEl.style.display === "block";
+      closeAllPopups();
+      if (!isShowing) {
+        popupEl.style.display = "flex";
+        if (btnEl) btnEl.classList.add("active");
+        _activePopup = popupEl;
+      }
+    };
+
+    // --- 1. Chat button & popup ---
+    const chatBtn = get("mascot-chat-btn");
+    const chatPopup = get("mascot-chat-popup");
     const chatInput = get("mascot-chat-input");
-    if (sendBtn && chatInput) {
-      const sendMsg = () => {
-        const text = (chatInput.value || "").trim();
-        if (!text) return;
-        // Relay to main window chat via IPC
-        if (window.lucia && window.lucia.window && window.lucia.window.sendMessage) {
-          window.lucia.window.sendMessage(text);
+    const chatSendBtn = get("mascot-chat-send-btn");
+    if (chatBtn && chatPopup) {
+      chatBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        togglePopup(chatBtn, chatPopup);
+        if (chatPopup.style.display !== "none" && chatInput) {
+          setTimeout(() => chatInput.focus(), 50);
         }
-        chatInput.value = "";
-        if (chatPopup) chatPopup.style.display = "none";
-        _activePopup = null;
-      };
-      sendBtn.addEventListener("click", sendMsg);
-      chatInput.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMsg(); }
       });
     }
 
-    // --- Model button ---
+    const sendMascotMessage = () => {
+      if (!chatInput) return;
+      const text = chatInput.value.trim();
+      if (!text) return;
+      if (window.chatController && typeof window.chatController.sendMessage === "function") {
+        window.chatController.sendMessage(text);
+      }
+      chatInput.value = "";
+      closeAllPopups();
+    };
+
+    if (chatSendBtn) {
+      chatSendBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        sendMascotMessage();
+      });
+    }
+
+    if (chatInput) {
+      chatInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          sendMascotMessage();
+        }
+      });
+    }
+
+    // --- 2. Model button & popup ---
     const modelBtn = get("mascot-model-btn");
     const modelPopup = get("mascot-model-popup");
     const mascotEngineSelect = get("mascot-engine-select");
     const mascotAvatarSelect = get("mascot-avatar-select");
+
+    const syncMascotModelDropdown = () => {
+      const curEngine = mascotEngineSelect ? mascotEngineSelect.value : (this.activeEngine || "canvas");
+      const modelsData = (window.chatController && window.chatController.avatarModelsData) || {};
+      let list = [];
+      if (curEngine === "sprites") list = modelsData.sprites || [];
+      else if (curEngine === "live2d") list = modelsData.live2d || [];
+      else if (curEngine === "vrm") list = modelsData.vrm || [];
+
+      if (mascotAvatarSelect) {
+        mascotAvatarSelect.innerHTML = "";
+        if (list.length === 0) {
+          const opt = document.createElement("option");
+          opt.value = "default";
+          opt.textContent = "Default Lucia (Procedural)";
+          mascotAvatarSelect.appendChild(opt);
+        } else {
+          list.forEach((m) => {
+            const opt = document.createElement("option");
+            opt.value = m;
+            opt.textContent = m;
+            mascotAvatarSelect.appendChild(opt);
+          });
+        }
+        mascotAvatarSelect.value = this.activeModel || "default";
+      }
+    };
+
     if (modelBtn && modelPopup) {
       modelBtn.addEventListener("click", (e) => {
         e.stopPropagation();
-        // Sync options from main selects
-        const mainEngine = get("avatar-engine-select");
-        const mainModel = get("avatar-model-select");
-        if (mainEngine && mascotEngineSelect) mascotEngineSelect.value = mainEngine.value;
-        if (mainModel && mascotAvatarSelect) {
-          mascotAvatarSelect.innerHTML = mainModel.innerHTML;
-          mascotAvatarSelect.value = mainModel.value;
+        if (mascotEngineSelect) {
+          mascotEngineSelect.value = this.activeEngine || "canvas";
         }
-        togglePopup(modelPopup);
-      });
-    }
-    if (mascotEngineSelect) {
-      mascotEngineSelect.addEventListener("change", () => {
-        const mainEngine = get("avatar-engine-select");
-        if (mainEngine) {
-          mainEngine.value = mascotEngineSelect.value;
-          mainEngine.dispatchEvent(new Event("change"));
-        }
-      });
-    }
-    if (mascotAvatarSelect) {
-      mascotAvatarSelect.addEventListener("change", () => {
-        const mainModel = get("avatar-model-select");
-        if (mainModel) {
-          mainModel.value = mascotAvatarSelect.value;
-          mainModel.dispatchEvent(new Event("change"));
-        }
+        syncMascotModelDropdown();
+        togglePopup(modelBtn, modelPopup);
       });
     }
 
-    // --- Voice button ---
+    if (mascotEngineSelect) {
+      mascotEngineSelect.addEventListener("change", (e) => {
+        e.stopPropagation();
+        const eng = mascotEngineSelect.value;
+        const mainEngine = get("avatar-engine-select");
+        if (mainEngine) {
+          mainEngine.value = eng;
+        }
+        if (window.chatController && typeof window.chatController._updateAvatarModelDropdown === "function") {
+          window.chatController._updateAvatarModelDropdown(eng);
+        }
+        syncMascotModelDropdown();
+      });
+    }
+
+    if (mascotAvatarSelect) {
+      mascotAvatarSelect.addEventListener("change", (e) => {
+        e.stopPropagation();
+        const mod = mascotAvatarSelect.value;
+        const eng = mascotEngineSelect ? mascotEngineSelect.value : (this.activeEngine || "canvas");
+        const mainModel = get("avatar-model-select");
+        if (mainModel) mainModel.value = mod;
+        localStorage.setItem("lucia_avatar_engine", eng);
+        localStorage.setItem("lucia_avatar_model", mod);
+        this.setEngine(eng, mod);
+      });
+    }
+
+    // --- 3. Voice button & popup ---
     const voiceBtn = get("mascot-voice-btn");
     const voicePopup = get("mascot-voice-popup");
     const mascotVoiceSelect = get("mascot-voice-select");
+    const mascotVolSlider = get("mascot-volume-slider");
+
     if (voiceBtn && voicePopup) {
       voiceBtn.addEventListener("click", (e) => {
         e.stopPropagation();
@@ -756,11 +835,17 @@ class AvatarRenderer {
           mascotVoiceSelect.innerHTML = mainVoice.innerHTML;
           mascotVoiceSelect.value = mainVoice.value;
         }
-        togglePopup(voicePopup);
+        const mainVol = get("voice-volume-slider");
+        if (mainVol && mascotVolSlider) {
+          mascotVolSlider.value = mainVol.value;
+        }
+        togglePopup(voiceBtn, voicePopup);
       });
     }
+
     if (mascotVoiceSelect) {
-      mascotVoiceSelect.addEventListener("change", () => {
+      mascotVoiceSelect.addEventListener("change", (e) => {
+        e.stopPropagation();
         const mainVoice = get("voice-model-select");
         if (mainVoice) {
           mainVoice.value = mascotVoiceSelect.value;
@@ -769,18 +854,34 @@ class AvatarRenderer {
       });
     }
 
-    // --- Mic button ---
+    if (mascotVolSlider) {
+      mascotVolSlider.addEventListener("input", (e) => {
+        e.stopPropagation();
+        const val = parseFloat(e.target.value);
+        const mainVol = get("voice-volume-slider");
+        if (mainVol) mainVol.value = val;
+        if (window.audioRouter) window.audioRouter.setVolume(val);
+        else this.setVolume(val);
+      });
+    }
+
+    // --- 4. Mic button ---
     const micBtn = get("mascot-mic-btn");
     if (micBtn) {
       micBtn.addEventListener("click", (e) => {
         e.stopPropagation();
         const mainMic = get("mic-btn");
-        if (mainMic) mainMic.click();
-        micBtn.classList.toggle("mascot-tool-btn--danger");
+        if (mainMic) {
+          mainMic.click();
+          setTimeout(() => {
+            const isCall = mainMic.classList.contains("active-call");
+            micBtn.classList.toggle("active", isCall);
+          }, 50);
+        }
       });
     }
 
-    // --- Close button ---
+    // --- 5. Close button (return to full window) ---
     const closeBtn = get("mascot-close-btn");
     if (closeBtn) {
       closeBtn.addEventListener("click", (e) => {
@@ -791,12 +892,9 @@ class AvatarRenderer {
       });
     }
 
-    // Dismiss popups when clicking on canvas
-    document.addEventListener("click", () => {
-      if (_activePopup) {
-        _activePopup.style.display = "none";
-        _activePopup = null;
-      }
+    // Close any popup when clicking outside on the avatar or desktop
+    window.addEventListener("click", () => {
+      closeAllPopups();
     });
   }
 }

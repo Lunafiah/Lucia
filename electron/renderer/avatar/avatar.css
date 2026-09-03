@@ -137,6 +137,12 @@
   width: 100%;
   overflow: hidden;
   min-height: 300px;
+  cursor: grab;
+  user-select: none;
+}
+
+.avatar-canvas-wrapper:active {
+  cursor: grabbing;
 }
 
 #avatar-canvas, #avatar-live2d-canvas {
@@ -151,154 +157,200 @@
 }
 
 /* --------------------------------------------------------------------------
-   Mascot Toolbar — Left-edge vertical panel
+   Mascot Toolbar — Horizontal Bottom Floating Dock (underneath the model)
    -------------------------------------------------------------------------- */
 #mascot-toolbar {
-  display: none; /* only visible in mascot-mode via body.mascot-mode */
+  display: none; /* Only visible in mascot-mode via body.mascot-mode */
   position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 100;
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 0;
-}
-
-.mascot-toolbar-inner {
-  display: flex;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  background: rgba(10, 14, 26, 0.82);
-  border: 1px solid rgba(139, 92, 246, 0.25);
-  border-left: none;
-  border-radius: 0 12px 12px 0;
-  padding: 10px 6px;
-  backdrop-filter: blur(16px);
-  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4);
-  opacity: 0;
-  transform: translateX(-110%);
-  transition: opacity 0.22s ease, transform 0.22s ease;
+  -webkit-app-region: no-drag !important;
+  pointer-events: auto !important;
 }
 
-#mascot-toolbar:hover .mascot-toolbar-inner {
-  opacity: 1;
-  transform: translateX(0);
+.mascot-toolbar-dock {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  background: rgba(13, 17, 30, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  border-radius: 20px;
+  padding: 6px 14px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 16px rgba(168, 85, 247, 0.2);
+  -webkit-app-region: no-drag !important;
+  pointer-events: auto !important;
+  transition: all 0.25s ease;
+}
+
+.mascot-toolbar-dock:hover {
+  border-color: rgba(168, 85, 247, 0.65);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7), 0 0 24px rgba(168, 85, 247, 0.35);
 }
 
 .mascot-tool-btn {
   width: 36px;
   height: 36px;
-  border-radius: 8px;
-  background: transparent;
-  border: none;
-  color: #94a3b8;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #cbd5e1;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.18s, color 0.18s;
-  -webkit-app-region: no-drag;
+  transition: all 0.2s ease;
+  -webkit-app-region: no-drag !important;
+  pointer-events: auto !important;
 }
 
 .mascot-tool-btn:hover {
-  background: rgba(139, 92, 246, 0.2);
-  color: #e2e8f0;
+  background: rgba(168, 85, 247, 0.25);
+  border-color: rgba(168, 85, 247, 0.6);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);
+}
+
+.mascot-tool-btn.active {
+  background: rgba(168, 85, 247, 0.35);
+  border-color: #a855f7;
+  color: #f3e8ff;
+  box-shadow: 0 0 12px rgba(168, 85, 247, 0.4);
 }
 
 .mascot-tool-btn--danger:hover {
-  background: rgba(239, 68, 68, 0.2);
-  color: #f87171;
+  background: rgba(239, 68, 68, 0.25);
+  border-color: rgba(239, 68, 68, 0.6);
+  color: #fca5a5;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
 
 .mascot-tool-divider {
-  width: 24px;
-  height: 1px;
-  background: rgba(255, 255, 255, 0.1);
-  margin: 4px 0;
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.15);
+  margin: 0 2px;
 }
 
-/* Popups */
+/* Popups — Floating smoothly ABOVE the dock */
 .mascot-popup {
   position: absolute;
-  left: 52px;
-  top: 0;
-  background: rgba(10, 14, 26, 0.92);
-  border: 1px solid rgba(139, 92, 246, 0.3);
-  border-radius: 10px;
-  padding: 12px;
-  min-width: 180px;
-  backdrop-filter: blur(20px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-  -webkit-app-region: no-drag;
+  bottom: 56px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(13, 17, 30, 0.94);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(168, 85, 247, 0.45);
+  border-radius: 14px;
+  padding: 14px 16px;
+  min-width: 230px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.7), 0 0 20px rgba(168, 85, 247, 0.25);
+  -webkit-app-region: no-drag !important;
+  pointer-events: auto !important;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  animation: popupSlideUp 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes popupSlideUp {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 8px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.mascot-popup-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #f1f5f9;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 6px;
+}
+
+.mascot-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .mascot-popup-label {
   font-size: 0.68rem;
-  color: #64748b;
+  color: #94a3b8;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 5px;
+  letter-spacing: 0.6px;
+  font-weight: 500;
 }
 
 .mascot-popup-select {
   width: 100%;
   background: rgba(30, 41, 59, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   color: #f8fafc;
-  padding: 5px 8px;
-  border-radius: 6px;
-  font-size: 0.78rem;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 0.8rem;
   outline: none;
   cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.mascot-popup-select:hover, .mascot-popup-select:focus {
+  border-color: #a855f7;
 }
 
 .mascot-chat-popup {
-  min-width: 220px;
+  min-width: 260px;
 }
 
 .mascot-chat-textarea {
   width: 100%;
   background: rgba(30, 41, 59, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   color: #f8fafc;
-  padding: 8px;
-  border-radius: 6px;
+  padding: 8px 10px;
+  border-radius: 8px;
   font-size: 0.82rem;
   outline: none;
   resize: none;
   font-family: inherit;
   box-sizing: border-box;
-  margin-top: 4px;
+}
+
+.mascot-chat-textarea:focus {
+  border-color: #a855f7;
 }
 
 .mascot-send-btn {
-  margin-top: 8px;
-  width: 100%;
-  padding: 7px;
-  background: rgba(139, 92, 246, 0.3);
-  border: 1px solid rgba(139, 92, 246, 0.5);
-  color: #e2e8f0;
-  border-radius: 6px;
+  padding: 8px;
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.4), rgba(99, 102, 241, 0.4));
+  border: 1px solid rgba(168, 85, 247, 0.6);
+  color: #f8fafc;
+  border-radius: 8px;
   font-size: 0.82rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: background 0.18s;
+  transition: all 0.2s ease;
 }
 
 .mascot-send-btn:hover {
-  background: rgba(139, 92, 246, 0.5);
-}
-
-/* Trigger zone — invisible strip on left edge to activate toolbar on hover */
-.mascot-toolbar::before {
-  content: '';
-  position: absolute;
-  left: -6px;
-  top: -60px;
-  bottom: -60px;
-  width: 18px;
-  background: transparent;
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.7), rgba(99, 102, 241, 0.7));
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
 }
 
 /* --------------------------------------------------------------------------
@@ -367,4 +419,6 @@ body.mascot-mode .avatar-canvas-wrapper {
   width: 100vw !important;
   min-height: 100vh !important;
   background: transparent !important;
+  cursor: grab !important;
 }
+

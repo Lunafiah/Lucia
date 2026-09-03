@@ -578,8 +578,8 @@ class ChatController {
     }
   }
 
-  async sendMessage() {
-    const text = this.inputArea.value.trim();
+  async sendMessage(customText = null) {
+    const text = (customText !== null ? customText : this.inputArea.value).trim();
     if (!text) return;
 
     // Discord Mode: pause recognition while processing & speaking to avoid speaker-to-mic feedback loop
@@ -588,8 +588,10 @@ class ChatController {
 
     // Append user message bubble
     this.appendMessage('user', text);
-    this.inputArea.value = '';
-    this._autoResizeInput();
+    if (customText === null) {
+      this.inputArea.value = '';
+      this._autoResizeInput();
+    }
 
     this.transitionTo(State.SENDING);
 
