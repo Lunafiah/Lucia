@@ -28,100 +28,8 @@
 
   <!-- Main Application Container -->
   <div class="app-layout">
-    <!-- Left Column: Chat Window -->
-    <main id="chat-pane" class="chat-pane">
-      <header class="chat-header">
-        <div class="companion-identity">
-          <div class="avatar-ring">
-            <span class="avatar-letter">L</span>
-            <span id="companion-status-dot" class="status-dot"></span>
-          </div>
-          <div class="identity-text">
-            <h2>Lucia</h2>
-            <span id="companion-state-label" class="state-label">Connecting...</span>
-          </div>
-        </div>
-        <div class="header-right">
-          <button id="open-profile-btn" class="header-action-btn" title="Companion Profile & Birthday" style="color: #fbcfe8;">
-            <span>🎂 <span id="birthday-badge-text">Day 1</span></span>
-          </button>
-          <button id="open-journal-btn" class="header-action-btn" title="Companion Journal & History" style="color: #c4b5fd;">
-            <span>📖 Journal</span>
-          </button>
-          <button id="toggle-mascot-btn" class="header-action-btn" title="Toggle Desktop Mascot Mode (Always on top)" style="color: #93c5fd;">
-            <span>🐾 Mascot</span>
-          </button>
-          <div id="hardware-badge" class="hardware-badge">Auto</div>
-        </div>
-      </header>
-
-      <!-- Message Feed -->
-      <section id="chat-messages" class="chat-messages">
-        <div class="system-welcome-card">
-          <div class="welcome-icon">✨</div>
-          <h3>Welcome to Lucia</h3>
-          <p>Her emotional state and memories evolve dynamically with every turn.</p>
-        </div>
-      </section>
-
-      <!-- Input Area -->
-      <footer class="chat-input-container">
-        <div class="input-wrapper">
-          <textarea
-            id="chat-input"
-            rows="1"
-            placeholder="Type a message... (Shift+Enter for new line)"
-            disabled
-          ></textarea>
-          <button id="mic-btn" class="mic-btn" title="Voice Input (Speech-to-Text)" disabled aria-label="Microphone Voice Input">
-            🎙️
-          </button>
-          <button id="send-btn" class="send-btn" disabled aria-label="Send message">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
-        </div>
-      </footer>
-    </main>
-
-    <!-- Right Column: Live Emotion & Avatar Presence Panel -->
+    <!-- Left Column: Live Emotional Telemetry Panel -->
     <aside id="debug-pane" class="debug-pane">
-      <!-- Live Avatar Stage -->
-      <div class="avatar-stage-container">
-        <div class="avatar-top-bar">
-          <div class="avatar-status-badge">
-            <span class="status-dot"></span>
-            <span>Presence</span>
-          </div>
-          <div class="avatar-controls">
-            <select id="avatar-engine-select" class="voice-select" title="Avatar Engine">
-              <option value="canvas">🎨 2D Canvas</option>
-              <option value="sprites">🖼️ 2D Sprites</option>
-              <option value="live2d">🎬 Live2D</option>
-              <option value="vrm">🌐 3D VRM</option>
-            </select>
-            <select id="avatar-model-select" class="voice-select" title="Avatar Model">
-              <option value="default">Default Lucia</option>
-            </select>
-            <input type="range" id="voice-volume-slider" min="0" max="1" step="0.05" value="1" class="volume-slider" title="Master Voice Volume" />
-            <select id="voice-model-select" class="voice-select" title="Select Voice Model">
-              <option value="default">Lucia Base Voice</option>
-            </select>
-            <button id="voice-mute-btn" class="voice-mute-btn" title="Toggle Voice (Mute/Unmute)">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-              </svg>
-            </button>
-          </div>
-        </div>
-        <div class="avatar-canvas-wrapper">
-          <canvas id="avatar-canvas"></canvas>
-          <canvas id="avatar-live2d-canvas" style="display: none; position: absolute; inset: 0; width: 100%; height: 100%;"></canvas>
-        </div>
-      </div>
-
       <header class="debug-header">
         <h3>Emotional Telemetry</h3>
         <span class="live-pulse">LIVE (500ms)</span>
@@ -282,6 +190,100 @@
         </section>
       </div>
     </aside>
+
+    <!-- Center Column: Chat Window -->
+    <main id="chat-pane" class="chat-pane">
+      <header class="chat-header">
+        <div class="companion-identity">
+          <div class="avatar-ring">
+            <span class="avatar-letter">L</span>
+            <span id="companion-status-dot" class="status-dot"></span>
+          </div>
+          <div class="identity-text">
+            <h2>Lucia</h2>
+            <span id="companion-state-label" class="state-label">Connecting...</span>
+          </div>
+        </div>
+        <div class="header-right">
+          <button id="open-profile-btn" class="header-action-btn" title="Companion Profile & Birthday" style="color: #fbcfe8;">
+            <span>🎂 <span id="birthday-badge-text">Day 1</span></span>
+          </button>
+          <button id="open-journal-btn" class="header-action-btn" title="Companion Journal & History" style="color: #c4b5fd;">
+            <span>📖 Journal</span>
+          </button>
+          <button id="toggle-mascot-btn" class="header-action-btn" title="Toggle Desktop Mascot Mode (Always on top)" style="color: #93c5fd;">
+            <span>🐾 Mascot</span>
+          </button>
+          <div id="hardware-badge" class="hardware-badge">Auto</div>
+        </div>
+      </header>
+
+      <!-- Message Feed -->
+      <section id="chat-messages" class="chat-messages">
+        <div class="system-welcome-card">
+          <div class="welcome-icon">✨</div>
+          <h3>Welcome to Lucia</h3>
+          <p>Her emotional state and memories evolve dynamically with every turn.</p>
+        </div>
+      </section>
+
+      <!-- Input Area -->
+      <footer class="chat-input-container">
+        <div class="input-wrapper">
+          <textarea
+            id="chat-input"
+            rows="1"
+            placeholder="Type a message... (Shift+Enter for new line)"
+            disabled
+          ></textarea>
+          <button id="mic-btn" class="mic-btn" title="Voice Input (Speech-to-Text)" disabled aria-label="Microphone Voice Input">
+            🎙️
+          </button>
+          <button id="send-btn" class="send-btn" disabled aria-label="Send message">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </footer>
+    </main>
+
+    <!-- Right Column: Dedicated Full-Height Avatar Stage -->
+    <section id="avatar-pane" class="avatar-pane">
+      <div class="avatar-stage-container">
+        <div class="avatar-top-bar">
+          <div class="avatar-status-badge">
+            <span class="status-dot"></span>
+            <span>Presence</span>
+          </div>
+          <div class="avatar-controls">
+            <select id="avatar-engine-select" class="voice-select" title="Avatar Engine">
+              <option value="canvas">🎨 2D Canvas</option>
+              <option value="sprites">🖼️ 2D Sprites</option>
+              <option value="live2d">🎬 Live2D</option>
+              <option value="vrm">🌐 3D VRM</option>
+            </select>
+            <select id="avatar-model-select" class="voice-select" title="Avatar Model">
+              <option value="default">Default Lucia</option>
+            </select>
+            <input type="range" id="voice-volume-slider" min="0" max="1" step="0.05" value="1" class="volume-slider" title="Master Voice Volume" />
+            <select id="voice-model-select" class="voice-select" title="Select Voice Model">
+              <option value="default">Lucia Base Voice</option>
+            </select>
+            <button id="voice-mute-btn" class="voice-mute-btn" title="Toggle Voice (Mute/Unmute)">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="avatar-canvas-wrapper">
+          <canvas id="avatar-canvas"></canvas>
+          <canvas id="avatar-live2d-canvas" style="display: none; position: absolute; inset: 0; width: 100%; height: 100%;"></canvas>
+        </div>
+      </div>
+    </section>
   </div>
 
   <!-- Companion Journal Modal -->

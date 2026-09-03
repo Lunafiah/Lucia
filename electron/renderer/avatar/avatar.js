@@ -2,6 +2,7 @@
  * AvatarRenderer — 60 FPS Interactive Canvas Avatar for Lucia.
  * Connects live PAD emotion telemetry, Web Audio lip-syncing, natural blinking,
  * breathing cycles, and cursor gaze following.
+ * Supports 2D Canvas procedural face, 2D Sprites (Columbina), and Live2D Cubism 4 (Hoshino Ai).
  */
 
 class AvatarRenderer {
@@ -12,6 +13,11 @@ class AvatarRenderer {
     this.lipSync = new LipSyncProcessor();
     this.pixiApp = null;
     this.currentLive2DModel = null;
+    this.baseModelsPath = null;
+    this.mascotScale = 1.0;
+    this.activeEngine = "canvas";
+    this.activeModel = "default";
+    this.sprites = null;
 
     // Emotion & physics state
     this.currentExpression = ExpressionMapper.mapPADToExpression({
@@ -35,51 +41,61 @@ class AvatarRenderer {
 
     this._bindEvents();
     if (this.canvas) {
-      this.resize();
+      setTimeout(() => this.resize(), 50);
       this.start();
     }
   }
 
   _bindEvents() {
     window.addEventListener("mousemove", (e) => {
-      if (!this.canvas) return;
-      const rect = this.canvas.getBoundingClientRect();
+      const activeEl = this.activeEngine === "live2d" ? this.live2dCanvas : this.canvas;
+      if (!activeEl) return;
+      const rect = activeEl.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
 
       // Normalized gaze in [-1, 1]
-      this.mouse.targetX = Math.max(-1, Math.min(1, (e.clientX - centerX) / (rect.width / 2)));
-      this.mouse.targetY = Math.max(-1, Math.min(1, (e.clientY - centerY) / (rect.height / 2)));
+      this.mouse.targetX = Math.max(-1, Math.min(1, (e.clientX - centerX) / (rect.width / 2 || 1)));
+      this.mouse.targetY = Math.max(-1, Math.min(1, (e.clientY - centerY) / (rect.height / 2 || 1)));
     });
 
     window.addEventListener("resize", () => this.resize());
+
+    // Interactive Zoom / Scaling (Mouse Wheel)
+    const wrapper = (this.canvas && this.canvas.parentElement) || (this.live2dCanvas && this.live2dCanvas.parentElement);
+    if (wrapper) {
+      wrapper.addEventListener(
+        "wheel",
+        (e) => {
+          e.preventDefault();
+          const delta = e.deltaY < 0 ? 0.08 : -0.08;
+          this.mascotScale = Math.max(0.4, Math.min(3.5, (this.mascotScale || 1.0) + delta));
+          this.resize();
+        },
+        { passive: false }
+      );
+    }
   }
 
   resize() {
-    if (this.canvas && this.canvas.parentElement) {
-      const rect = this.canvas.parentElement.getBoundingClientRect();
-      const dpr = window.devicePixelRatio || 1;
-      this.canvas.width = rect.width * dpr;
-      this.canvas.height = rect.height * dpr;
-      if (this.ctx) this.ctx.scale(dpr, dpr);
-      this.width = rect.width;
-      this.height = rect.height;
+    const wrapper = (this.canvas && this.canvas.parentElement) || (this.live2dCanvas && this.live2dCanvas.parentElement);
+    if (!wrapper) return;
+
+    const rect = wrapper.getBoundingClientRect();
+    if (rect.width <= 0 || rect.height <= 0) return;
+
+    const dpr = window.devicePixelRatio || 1;
+    this.width = rect.width;
+    this.height = rect.height;
+
+    if (this.canvas) {
+      this.canvas.width = Math.floor(rect.width * dpr);
+      this.canvas.height = Math.floor(rect.height * dpr);
     }
 
-    if (this.pixiApp && this.live2dCanvas && this.live2dCanvas.parentElement) {
-      const pRect = this.live2dCanvas.parentElement.getBoundingClientRect();
-      this.pixiApp.renderer.resize(pRect.width, pRect.height);
-
-      if (this.currentLive2DModel) {
-        const stageW = pRect.width || 300;
-        const stageH = pRect.height || 250;
-        const naturalW = this.currentLive2DModel.internalModel ? this.currentLive2DModel.internalModel.width : this.currentLive2DModel.width;
-        const naturalH = this.currentLive2DModel.internalModel ? this.currentLive2DModel.internalModel.height : this.currentLive2DModel.height;
-        const scale = Math.min((stageW * 0.92) / (naturalW || 2000), (stageH * 0.92) / (naturalH || 2000));
-        this.currentLive2DModel.scale.set(scale);
-        this.currentLive2DModel.x = (stageW - (naturalW || 2000) * scale) / 2;
-        this.currentLive2DModel.y = stageH - (naturalH || 2000) * scale;
-      }
+    if (this.pixiApp && this.live2dCanvas) {
+      this.pixiApp.renderer.resize(rect.width, rect.height);
+      this._repositionLive2DModel();
     }
   }
 
@@ -129,8 +145,8 @@ class AvatarRenderer {
     exp.glowColor = target.glowColor;
 
     // Smooth mouse gaze
-    this.mouse.x += (this.mouse.targetX - this.mouse.x) * 0.05;
-    this.mouse.y += (this.mouse.targetY - this.mouse.y) * 0.05;
+    this.mouse.x += (this.mouse.targetX - this.mouse.x) * 0.06;
+    this.mouse.y += (this.mouse.targetY - this.mouse.y) * 0.06;
 
     // Blink cycle
     if (now >= this.nextBlinkTime && !this.isBlinking) {
@@ -150,15 +166,15 @@ class AvatarRenderer {
     // Live2D continuous parameter update (gaze & lipsync)
     if (this.currentLive2DModel && this.currentLive2DModel.internalModel) {
       try {
-        if (typeof this.currentLive2DModel.focus === 'function') {
+        if (typeof this.currentLive2DModel.focus === "function") {
           this.currentLive2DModel.focus(this.mouse.x, -this.mouse.y);
         }
 
         const core = this.currentLive2DModel.internalModel.coreModel;
-        if (core && typeof core.setParameterValueById === 'function') {
+        if (core && typeof core.setParameterValueById === "function") {
           const mouthOpen = this.lipSync ? this.lipSync.getMouthOpen() : 0;
           if (mouthOpen > 0.04) {
-            core.setParameterValueById('ParamMouthOpenY', Math.min(1.0, mouthOpen * 2.0));
+            core.setParameterValueById("ParamMouthOpenY", Math.min(1.0, mouthOpen * 2.0));
           }
         }
       } catch (e) {
@@ -168,79 +184,55 @@ class AvatarRenderer {
   }
 
   _render(now) {
-    if (!this.ctx || !this.width) return;
+    if (!this.ctx) return;
+    if (!this.width || !this.height) {
+      this.resize();
+      if (!this.width || !this.height) return;
+    }
     const ctx = this.ctx;
     const w = this.width;
     const h = this.height;
+    const dpr = window.devicePixelRatio || 1;
 
+    // Reset canvas transform every frame to prevent accumulation or drift
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, w, h);
 
-    if (this.activeEngine === 'sprites' && this._hasLoadedSprites()) {
-      this._renderSprite(now);
-    } else if (this.activeEngine === 'live2d') {
-      this._renderLive2D(now);
+    if (this.activeEngine === "sprites") {
+      if (this._hasLoadedSprites()) {
+        this._renderSprite(now);
+      } else {
+        this._renderLoadingSprite(now);
+      }
+    } else if (this.activeEngine === "live2d") {
+      // Live2D is rendered via PIXI WebGL on #avatar-live2d-canvas
     } else {
       this._renderProcedural(now);
     }
   }
 
-  _renderLive2D(now) {
+  _renderLoadingSprite(now) {
     const ctx = this.ctx;
     const w = this.width;
     const h = this.height;
     const time = (now - this.startTime) / 1000;
-    const pulse = 0.5 + 0.5 * Math.sin(time * 2.5);
-
-    // Glowing stage background
-    const bgGrad = ctx.createRadialGradient(w / 2, h / 2, 20, w / 2, h / 2, w * 0.6);
-    bgGrad.addColorStop(0, "rgba(236, 72, 153, 0.25)"); // Hoshino Ai Magenta glow
-    bgGrad.addColorStop(1, "rgba(0, 0, 0, 0)");
-    ctx.fillStyle = bgGrad;
-    ctx.beginPath();
-    ctx.arc(w / 2, h / 2, w * 0.6, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Live2D Holographic Card Box
-    const cardW = Math.min(w * 0.88, 260);
-    const cardH = 135;
-    const cardX = (w - cardW) / 2;
-    const cardY = (h - cardH) / 2;
+    const pulse = 0.5 + 0.5 * Math.sin(time * 3);
 
     ctx.save();
-    ctx.fillStyle = "rgba(15, 23, 42, 0.85)";
-    ctx.strokeStyle = `rgba(236, 72, 153, ${0.4 + pulse * 0.4})`;
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.roundRect(cardX, cardY, cardW, cardH, 12);
-    ctx.fill();
-    ctx.stroke();
-
-    // Header badge
-    ctx.fillStyle = "#ec4899";
-    ctx.font = "bold 13px system-ui, sans-serif";
+    ctx.fillStyle = `rgba(148, 163, 184, ${0.4 + pulse * 0.4})`;
+    ctx.font = "bold 14px system-ui, sans-serif";
     ctx.textAlign = "center";
-    ctx.fillText("🎬 Live2D Cubism 4 Detected", w / 2, cardY + 28);
-
-    // Model name
-    ctx.fillStyle = "#f8fafc";
-    ctx.font = "bold 15px system-ui, sans-serif";
-    ctx.fillText(this.activeModel || "HoshinoAi", w / 2, cardY + 54);
-
-    // Subtitle / file info
-    ctx.fillStyle = "#94a3b8";
-    ctx.font = "11px system-ui, sans-serif";
-    ctx.fillText("Hoshino_Ai.moc3 & 8192 Texture", w / 2, cardY + 76);
-
-    // Status
-    ctx.fillStyle = "#38bdf8";
-    ctx.font = "italic 11px system-ui, sans-serif";
-    ctx.fillText("⚡ WebGL Cubism Runtime Loading...", w / 2, cardY + 102);
-
+    ctx.fillText(`🖼️ Loading ${this.activeModel || "Sprite"}...`, w / 2, h / 2);
     ctx.restore();
   }
 
   _hasLoadedSprites() {
-    return !!(this.sprites && this.sprites.idle && this.sprites.idle.complete && this.sprites.idle.naturalWidth > 0);
+    return !!(
+      this.sprites &&
+      this.sprites.idle &&
+      (this.sprites.idle.complete || this.sprites.idle._isLoaded) &&
+      this.sprites.idle.naturalWidth > 0
+    );
   }
 
   _renderSprite(now) {
@@ -248,41 +240,48 @@ class AvatarRenderer {
     const w = this.width;
     const h = this.height;
     const time = (now - this.startTime) / 1000;
-    const breath = Math.sin((time * Math.PI * 2) / (this.currentExpression.breathingPeriod || 3.5)) * 3;
+    const breath = Math.sin((time * Math.PI * 2) / (this.currentExpression.breathingPeriod || 3.5)) * 4;
     const lipMetrics = this.lipSync.update();
 
     let activeSprite = this.sprites.idle;
-    if (lipMetrics.mouthOpen > 0.12 && this.sprites.speaking && this.sprites.speaking.complete) {
+    if (lipMetrics.mouthOpen > 0.12 && this.sprites.speaking && (this.sprites.speaking.complete || this.sprites.speaking._isLoaded)) {
       activeSprite = this.sprites.speaking;
-    } else if (this.currentExpression.blush > 0.35 && this.sprites.blush && this.sprites.blush.complete) {
+    } else if (this.currentExpression.blush > 0.35 && this.sprites.blush && (this.sprites.blush.complete || this.sprites.blush._isLoaded)) {
       activeSprite = this.sprites.blush;
-    } else if (this.currentExpression.smile > 0.35 && this.sprites.smile && this.sprites.smile.complete) {
+    } else if (this.currentExpression.smile > 0.35 && this.sprites.smile && (this.sprites.smile.complete || this.sprites.smile._isLoaded)) {
       activeSprite = this.sprites.smile;
-    } else if (this.currentExpression.frown > 0.35 && this.sprites.sad && this.sprites.sad.complete) {
+    } else if (this.currentExpression.frown > 0.35 && this.sprites.sad && (this.sprites.sad.complete || this.sprites.sad._isLoaded)) {
       activeSprite = this.sprites.sad;
-    } else if (this.currentExpression.browAngle < -0.3 && this.sprites.angry && this.sprites.angry.complete) {
+    } else if (this.currentExpression.browAngle < -0.3 && this.sprites.angry && (this.sprites.angry.complete || this.sprites.angry._isLoaded)) {
       activeSprite = this.sprites.angry;
-    } else if (this.currentExpression.eyeOpen < 0.6 && this.sprites.relaxed && this.sprites.relaxed.complete) {
+    } else if (this.currentExpression.eyeOpen < 0.6 && this.sprites.relaxed && (this.sprites.relaxed.complete || this.sprites.relaxed._isLoaded)) {
       activeSprite = this.sprites.relaxed;
     }
 
-    if (!activeSprite || !activeSprite.complete || activeSprite.naturalWidth === 0) {
+    if (!activeSprite || (!activeSprite.complete && !activeSprite._isLoaded) || activeSprite.naturalWidth === 0) {
       activeSprite = this.sprites.idle;
     }
 
-    // 1. Ambient Background Halo
-    const halo = ctx.createRadialGradient(w / 2, h / 2, w * 0.15, w / 2, h / 2, w * 0.6);
-    halo.addColorStop(0, this.currentExpression.glowColor || "rgba(168, 85, 247, 0.25)");
-    halo.addColorStop(1, "rgba(0, 0, 0, 0)");
-    ctx.fillStyle = halo;
-    ctx.beginPath();
-    ctx.arc(w / 2, h / 2, w * 0.6, 0, Math.PI * 2);
-    ctx.fill();
+    if (!activeSprite || activeSprite.naturalWidth === 0) return;
 
-    // 2. Scale & Center Sprite
+    // 1. Ambient Background Halo (subtle, only in normal window mode)
+    const isMascot = typeof document !== "undefined" && document.body.classList.contains("mascot-mode");
+    if (!isMascot) {
+      const halo = ctx.createRadialGradient(w / 2, h * 0.45, w * 0.1, w / 2, h * 0.45, w * 0.55);
+      halo.addColorStop(0, this.currentExpression.glowColor || "rgba(168, 85, 247, 0.2)");
+      halo.addColorStop(1, "rgba(0, 0, 0, 0)");
+      ctx.fillStyle = halo;
+      ctx.beginPath();
+      ctx.arc(w / 2, h * 0.45, w * 0.55, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // 2. Scale & Center Sprite (Honoring mascotScale zoom!)
+    const userZoom = this.mascotScale || 1.0;
     const naturalW = activeSprite.naturalWidth;
     const naturalH = activeSprite.naturalHeight;
-    const scale = Math.min((w * 0.92) / naturalW, (h * 0.92) / naturalH);
+    const baseScale = Math.min((w * 0.95) / naturalW, (h * 0.95) / naturalH);
+    const scale = baseScale * userZoom;
     const drawW = naturalW * scale;
     const drawH = naturalH * scale;
 
@@ -303,22 +302,26 @@ class AvatarRenderer {
     const breath = Math.sin((time * Math.PI * 2) / this.currentExpression.breathingPeriod) * 4;
     const lipMetrics = this.lipSync.update();
 
+    const userZoom = this.mascotScale || 1.0;
     const centerX = w / 2 + this.mouse.x * 6;
-    const centerY = h / 2 - 10 + breath + this.mouse.y * 4;
-    const headRadius = Math.min(w, h) * 0.32;
+    const centerY = h / 2 + breath + this.mouse.y * 4;
+    const headRadius = Math.min(w, h) * 0.3 * userZoom;
 
     ctx.save();
     ctx.translate(centerX, centerY);
     ctx.rotate((this.currentExpression.headTilt * Math.PI) / 180);
 
     // 1. Ambient Background Halo
-    const halo = ctx.createRadialGradient(0, 0, headRadius * 0.4, 0, 0, headRadius * 1.5);
-    halo.addColorStop(0, this.currentExpression.glowColor);
-    halo.addColorStop(1, "rgba(0, 0, 0, 0)");
-    ctx.fillStyle = halo;
-    ctx.beginPath();
-    ctx.arc(0, 0, headRadius * 1.5, 0, Math.PI * 2);
-    ctx.fill();
+    const isMascot = typeof document !== "undefined" && document.body.classList.contains("mascot-mode");
+    if (!isMascot) {
+      const halo = ctx.createRadialGradient(0, 0, headRadius * 0.4, 0, 0, headRadius * 1.5);
+      halo.addColorStop(0, this.currentExpression.glowColor);
+      halo.addColorStop(1, "rgba(0, 0, 0, 0)");
+      ctx.fillStyle = halo;
+      ctx.beginPath();
+      ctx.arc(0, 0, headRadius * 1.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
 
     // 2. Neck & Shoulders
     ctx.fillStyle = "#1e1b4b";
@@ -363,7 +366,7 @@ class AvatarRenderer {
       ctx.save();
       ctx.translate(eyeX, eyeY);
 
-      // Sclera (Eye White)
+      // Sclera
       ctx.fillStyle = "#ffffff";
       ctx.beginPath();
       ctx.ellipse(0, 0, eyeWidth, eyeHeight * blinkMul, 0, 0, Math.PI * 2);
@@ -372,70 +375,69 @@ class AvatarRenderer {
       ctx.lineWidth = 1.5;
       ctx.stroke();
 
-      if (blinkMul > 0.2) {
-        // Iris
-        const irisX = this.mouse.x * 4;
-        const irisY = this.mouse.y * 3;
-        const irisGrad = ctx.createRadialGradient(irisX, irisY, 2, irisX, irisY, eyeWidth * 0.8);
-        irisGrad.addColorStop(0, "#c084fc");
-        irisGrad.addColorStop(0.7, "#7c3aed");
-        irisGrad.addColorStop(1, "#4c1d95");
+      // Iris & Pupil (Follows Mouse Gaze)
+      if (blinkMul > 0.3) {
+        const pupilRadius = eyeWidth * 0.6;
+        const gazeOffsetX = this.mouse.x * (eyeWidth - pupilRadius) * 0.8;
+        const gazeOffsetY = this.mouse.y * (eyeHeight * blinkMul - pupilRadius) * 0.8;
+
+        const irisGrad = ctx.createRadialGradient(
+          gazeOffsetX,
+          gazeOffsetY,
+          pupilRadius * 0.2,
+          gazeOffsetX,
+          gazeOffsetY,
+          pupilRadius
+        );
+        irisGrad.addColorStop(0, "#818cf8");
+        irisGrad.addColorStop(0.7, "#4338ca");
+        irisGrad.addColorStop(1, "#312e81");
 
         ctx.fillStyle = irisGrad;
         ctx.beginPath();
-        ctx.arc(irisX, irisY, eyeWidth * 0.65 * blinkMul, 0, Math.PI * 2);
+        ctx.arc(gazeOffsetX, gazeOffsetY, pupilRadius, 0, Math.PI * 2);
         ctx.fill();
 
-        // Pupil
-        ctx.fillStyle = "#1e1b4b";
+        // Catchlight (anime eye sparkle)
+        ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
         ctx.beginPath();
-        ctx.arc(irisX, irisY, eyeWidth * 0.3 * blinkMul, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Specular highlight
-        ctx.fillStyle = "#ffffff";
-        ctx.beginPath();
-        ctx.arc(irisX - eyeWidth * 0.2, irisY - eyeHeight * 0.2 * blinkMul, eyeWidth * 0.18, 0, Math.PI * 2);
+        ctx.arc(gazeOffsetX - pupilRadius * 0.35, gazeOffsetY - pupilRadius * 0.35, pupilRadius * 0.3, 0, Math.PI * 2);
         ctx.fill();
       }
 
-      // Eyelash Line
-      ctx.strokeStyle = "#334155";
-      ctx.lineWidth = 3;
-      ctx.beginPath();
-      ctx.arc(0, -eyeHeight * 0.5 * blinkMul, eyeWidth * 1.1, Math.PI * 0.85, Math.PI * 2.15);
-      ctx.stroke();
+      ctx.restore();
 
+      // Eyebrow
+      const browY = eyeY - eyeHeight * 1.1;
+      const browAngle = this.currentExpression.browAngle * side;
+      ctx.save();
+      ctx.translate(eyeX, browY);
+      ctx.rotate(browAngle);
+      ctx.strokeStyle = "#78350f";
+      ctx.lineWidth = 2.5;
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.moveTo(-eyeWidth * 0.9, 0);
+      ctx.quadraticCurveTo(0, -eyeHeight * 0.25, eyeWidth * 0.9, 0);
+      ctx.stroke();
       ctx.restore();
     });
 
-    // 6. Eyebrows
-    [-1, 1].forEach((side) => {
-      const browX = side * eyeSpacing;
-      const browY = eyeY - headRadius * 0.35 + side * this.currentExpression.browAngle * 8;
-      ctx.strokeStyle = "#64748b";
-      ctx.lineWidth = 3;
-      ctx.beginPath();
-      ctx.moveTo(browX - headRadius * 0.15, browY + 3);
-      ctx.quadraticCurveTo(browX, browY - 4, browX + headRadius * 0.15, browY + (side === -1 ? 2 : 2));
-      ctx.stroke();
-    });
-
-    // 7. Dynamic Mouth & Lip-Sync
+    // 6. Mouth & Lip-sync
     const mouthY = headRadius * 0.45;
-    const mouthOpen = Math.max(lipMetrics.open, this.currentExpression.smile * 0.15);
-    const mouthWidth = headRadius * 0.28 * lipMetrics.width;
+    const mouthWidth = headRadius * 0.35;
+    const mouthOpen = Math.max(lipMetrics.mouthOpen, 0.05);
 
-    ctx.fillStyle = "#dc2626";
-    ctx.strokeStyle = "#7f1d1d";
-    ctx.lineWidth = 2;
+    ctx.strokeStyle = "#991b1b";
+    ctx.fillStyle = "#991b1b";
+    ctx.lineWidth = 2.5;
+    ctx.lineCap = "round";
 
-    if (mouthOpen > 0.08) {
-      // Speaking / Open Mouth
+    if (mouthOpen > 0.15) {
+      // Open Speaking Mouth
       ctx.beginPath();
-      ctx.ellipse(0, mouthY, mouthWidth, headRadius * 0.22 * mouthOpen, 0, 0, Math.PI * 2);
+      ctx.ellipse(0, mouthY, mouthWidth * (0.8 + mouthOpen * 0.4), headRadius * 0.18 * mouthOpen, 0, 0, Math.PI * 2);
       ctx.fill();
-      ctx.stroke();
 
       // Teeth
       ctx.fillStyle = "#ffffff";
@@ -465,15 +467,21 @@ class AvatarRenderer {
     this.activeModel = model || "default";
     console.log(`[avatar] Switched engine to: ${this.activeEngine}, model: ${this.activeModel}`);
 
-    if (this.activeEngine === 'live2d') {
-      if (this.canvas) this.canvas.style.display = 'none';
-      if (this.live2dCanvas) this.live2dCanvas.style.display = 'block';
+    if (this.activeEngine === "live2d") {
+      if (this.canvas) this.canvas.style.display = "none";
+      if (this.live2dCanvas) {
+        this.live2dCanvas.style.display = "block";
+      }
+      this.resize();
       await this._loadLive2DModel(this.activeModel);
     } else {
-      if (this.live2dCanvas) this.live2dCanvas.style.display = 'none';
-      if (this.canvas) this.canvas.style.display = 'block';
+      if (this.live2dCanvas) this.live2dCanvas.style.display = "none";
+      if (this.canvas) {
+        this.canvas.style.display = "block";
+      }
+      this.resize();
 
-      if (this.activeEngine === 'sprites') {
+      if (this.activeEngine === "sprites") {
         this._loadSpriteSet(this.activeModel);
       } else {
         this.sprites = null;
@@ -482,7 +490,7 @@ class AvatarRenderer {
   }
 
   async _loadLive2DModel(modelName) {
-    if (!modelName || modelName === 'default') {
+    if (!modelName || modelName === "default") {
       if (this.currentLive2DModel && this.pixiApp) {
         this.pixiApp.stage.removeChild(this.currentLive2DModel);
         this.currentLive2DModel.destroy();
@@ -491,20 +499,20 @@ class AvatarRenderer {
       return;
     }
 
-    if (typeof PIXI === 'undefined' || !PIXI.live2d || !PIXI.live2d.Live2DModel) {
-      console.warn('[live2d] Pixi.js or Live2D Cubism runtime not loaded yet');
+    if (typeof PIXI === "undefined" || !PIXI.live2d || !PIXI.live2d.Live2DModel) {
+      console.warn("[live2d] Pixi.js or Live2D Cubism runtime not loaded yet");
       return;
     }
 
-    if (!this.live2dCanvas && typeof document !== 'undefined') {
+    if (!this.live2dCanvas && typeof document !== "undefined") {
       this.live2dCanvas = document.getElementById("avatar-live2d-canvas");
     }
 
-    if (!this.pixiApp && this.live2dCanvas && this.live2dCanvas.parentElement) {
-      const parent = this.live2dCanvas.parentElement;
-      const initialW = parent ? parent.clientWidth : 300;
-      const initialH = parent ? parent.clientHeight : 250;
+    const parent = this.live2dCanvas ? this.live2dCanvas.parentElement : null;
+    const initialW = parent ? parent.clientWidth : 400;
+    const initialH = parent ? parent.clientHeight : 600;
 
+    if (!this.pixiApp && this.live2dCanvas) {
       this.pixiApp = new PIXI.Application({
         view: this.live2dCanvas,
         autoDensity: true,
@@ -516,8 +524,15 @@ class AvatarRenderer {
     }
 
     let modelPath = `../../models/avatar/live2d/${modelName}/${modelName}.model3.json`;
-    if (modelName === 'HoshinoAi') {
+    if (modelName === "HoshinoAi") {
       modelPath = `../../models/avatar/live2d/HoshinoAi/Hoshino_Ai.model3.json`;
+    }
+    if (this.baseModelsPath) {
+      if (modelName === "HoshinoAi") {
+        modelPath = `file:///${this.baseModelsPath}/models/avatar/live2d/HoshinoAi/Hoshino_Ai.model3.json`;
+      } else {
+        modelPath = `file:///${this.baseModelsPath}/models/avatar/live2d/${modelName}/${modelName}.model3.json`;
+      }
     }
 
     try {
@@ -530,19 +545,7 @@ class AvatarRenderer {
 
       const model = await PIXI.live2d.Live2DModel.from(modelPath, { autoInteract: true });
       this.currentLive2DModel = model;
-
-      const parent = this.live2dCanvas.parentElement;
-      const stageW = parent ? parent.clientWidth : 300;
-      const stageH = parent ? parent.clientHeight : 250;
-
-      const naturalW = model.internalModel ? model.internalModel.width : model.width;
-      const naturalH = model.internalModel ? model.internalModel.height : model.height;
-      const scale = Math.min((stageW * 0.92) / (naturalW || 2000), (stageH * 0.92) / (naturalH || 2000));
-
-      model.scale.set(scale);
-      model.x = (stageW - (naturalW || 2000) * scale) / 2;
-      model.y = stageH - (naturalH || 2000) * scale;
-
+      this._repositionLive2DModel();
       this.pixiApp.stage.addChild(model);
       console.log(`[live2d] Model ${modelName} successfully loaded into Pixi stage!`);
     } catch (err) {
@@ -550,20 +553,48 @@ class AvatarRenderer {
     }
   }
 
+  _repositionLive2DModel() {
+    if (!this.currentLive2DModel || !this.live2dCanvas || !this.live2dCanvas.parentElement) return;
+    const parent = this.live2dCanvas.parentElement;
+    const stageW = parent.clientWidth || 400;
+    const stageH = parent.clientHeight || 600;
+
+    const model = this.currentLive2DModel;
+    const naturalW = model.internalModel ? model.internalModel.width : model.width;
+    const naturalH = model.internalModel ? model.internalModel.height : model.height;
+    const userZoom = this.mascotScale || 1.0;
+
+    const baseScale = Math.min((stageW * 0.95) / (naturalW || 2000), (stageH * 0.95) / (naturalH || 2000));
+    const scale = baseScale * userZoom;
+
+    model.scale.set(scale);
+    model.x = (stageW - (naturalW || 2000) * scale) / 2;
+    model.y = stageH - (naturalH || 2000) * scale;
+  }
+
   _loadSpriteSet(model) {
-    if (!model || model === 'default') {
+    if (!model || model === "default") {
       this.sprites = null;
       return;
     }
     this.sprites = {};
     const emotionKeys = [
-      'idle', 'speaking', 'smile', 'blush', 'excited',
-      'relaxed', 'thinking', 'concerned', 'sad', 'angry'
+      "idle", "speaking", "smile", "blush", "excited",
+      "relaxed", "thinking", "concerned", "sad", "angry",
     ];
     emotionKeys.forEach((key) => {
       const img = new Image();
-      // Relative path from index.html (electron/renderer/) to models/avatar/sprites/<model>/<key>.png
-      img.src = `../../models/avatar/sprites/${model}/${key}.png`;
+      img.onload = () => {
+        img._isLoaded = true;
+      };
+      img.onerror = (e) => {
+        console.warn(`[avatar] Failed to load sprite ${key} for ${model}:`, e);
+      };
+      if (this.baseModelsPath) {
+        img.src = `file:///${this.baseModelsPath}/models/avatar/sprites/${model}/${key}.png`;
+      } else {
+        img.src = `../../models/avatar/sprites/${model}/${key}.png`;
+      }
       this.sprites[key] = img;
     });
   }
@@ -572,6 +603,14 @@ class AvatarRenderer {
     this.stop();
     if (this.lipSync && this.lipSync.currentAudio) {
       this.lipSync.currentAudio.pause();
+    }
+    if (this.currentLive2DModel) {
+      this.currentLive2DModel.destroy();
+      this.currentLive2DModel = null;
+    }
+    if (this.pixiApp) {
+      this.pixiApp.destroy(true, { children: true });
+      this.pixiApp = null;
     }
   }
 }

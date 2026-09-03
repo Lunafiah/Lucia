@@ -23,17 +23,20 @@ class MascotWindowManager {
     }
 
     this.mascotWindow = new BrowserWindow({
-      width: 240,
-      height: 300,
+      width: 380,
+      height: 540,
+      minWidth: 180,
+      minHeight: 220,
       frame: false,
       transparent: true,
       alwaysOnTop: true,
-      resizable: false,
+      resizable: true,
       skipTaskbar: true,
       webPreferences: {
         preload: path.join(__dirname, '../preload/preload.js'),
         contextIsolation: true,
         nodeIntegration: false,
+        webSecurity: false,
       },
     });
 

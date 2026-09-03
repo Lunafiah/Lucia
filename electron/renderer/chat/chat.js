@@ -73,8 +73,9 @@ class ChatController {
     if (urlParams.get('mode') === 'mascot') {
       document.body.classList.add('mascot-mode');
       if (this.splashOverlay) this.splashOverlay.style.display = 'none';
-      if (canvas) {
-        canvas.addEventListener('dblclick', () => {
+      const wrapper = document.querySelector('.avatar-canvas-wrapper') || document.body;
+      if (wrapper) {
+        wrapper.addEventListener('dblclick', () => {
           if (window.lucia && window.lucia.window && window.lucia.window.toggleMascot) {
             window.lucia.window.toggleMascot();
           }
@@ -167,6 +168,8 @@ class ChatController {
       this.avatarModelSelect.addEventListener('change', (e) => {
         const model = e.target.value;
         const engine = this.avatarEngineSelect ? this.avatarEngineSelect.value : 'canvas';
+        localStorage.setItem('lucia_avatar_engine', engine);
+        localStorage.setItem('lucia_avatar_model', model);
         if (window.avatarRenderer && window.avatarRenderer.setEngine) {
           window.avatarRenderer.setEngine(engine, model);
         }
@@ -186,15 +189,22 @@ class ChatController {
 
       if (data) {
         this.avatarModelsData = data;
-        const currentEngine = this.avatarEngineSelect ? this.avatarEngineSelect.value : 'canvas';
-        this._updateAvatarModelDropdown(currentEngine);
+        if (window.avatarRenderer && data.basePath) {
+          window.avatarRenderer.baseModelsPath = data.basePath;
+        }
+        const savedEngine = localStorage.getItem('lucia_avatar_engine') || (this.avatarEngineSelect ? this.avatarEngineSelect.value : 'canvas');
+        const savedModel = localStorage.getItem('lucia_avatar_model') || null;
+        if (this.avatarEngineSelect) {
+          this.avatarEngineSelect.value = savedEngine;
+        }
+        this._updateAvatarModelDropdown(savedEngine, savedModel);
       }
     } catch (err) {
       console.warn('[avatar] Could not load avatar models:', err);
     }
   }
 
-  _updateAvatarModelDropdown(engine) {
+  _updateAvatarModelDropdown(engine, targetModel = null) {
     if (!this.avatarModelSelect) return;
     this.avatarModelSelect.innerHTML = '';
 
@@ -213,14 +223,17 @@ class ChatController {
         const opt = document.createElement('option');
         opt.value = m;
         opt.textContent = m;
-        if (idx === 0) opt.selected = true;
+        if (targetModel ? m === targetModel : idx === 0) opt.selected = true;
         this.avatarModelSelect.appendChild(opt);
       });
     }
 
+    const selectedModel = this.avatarModelSelect.value;
+    localStorage.setItem('lucia_avatar_engine', engine);
+    localStorage.setItem('lucia_avatar_model', selectedModel);
+
     // Trigger engine/model switch on avatarRenderer immediately
     if (window.avatarRenderer && window.avatarRenderer.setEngine) {
-      const selectedModel = this.avatarModelSelect.value;
       window.avatarRenderer.setEngine(engine, selectedModel);
     }
   }

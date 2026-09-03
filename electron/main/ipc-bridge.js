@@ -31,6 +31,7 @@ function registerHandlers(port = 8765, isPreview = false, getMascotManager = nul
     const rootDir = path.resolve(__dirname, '../../');
     const baseDir = path.join(rootDir, 'models', 'avatar');
     const result = {
+      basePath: rootDir.replace(/\\/g, '/'),
       engines: ['canvas', 'sprites', 'live2d', 'vrm'],
       sprites: [],
       live2d: [],
