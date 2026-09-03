@@ -6,7 +6,7 @@ const { contextBridge, ipcRenderer } = require('electron');
  * Requirements: Phase 3 (5.3, 10.1, 10.4)
  */
 
-const ALLOWED_CHANNELS = ['backend:ready', 'backend:error'];
+const ALLOWED_CHANNELS = ['backend:ready', 'backend:error', 'voice:mute-toggled'];
 
 contextBridge.exposeInMainWorld('lucia', {
   chat: {
@@ -22,6 +22,10 @@ contextBridge.exposeInMainWorld('lucia', {
   },
   system: {
     getProfile: () => ipcRenderer.invoke('profile:get')
+  },
+  models: {
+    getAvatars: () => ipcRenderer.invoke('models:get-avatars'),
+    getVoices: () => ipcRenderer.invoke('models:get-voices')
   },
   on: (channel, listener) => {
     if (!ALLOWED_CHANNELS.includes(channel)) {

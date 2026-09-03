@@ -136,6 +136,73 @@ class AvatarRenderer {
 
     ctx.clearRect(0, 0, w, h);
 
+    if (this.activeEngine === 'sprites' && this._hasLoadedSprites()) {
+      this._renderSprite(now);
+    } else {
+      this._renderProcedural(now);
+    }
+  }
+
+  _hasLoadedSprites() {
+    return !!(this.sprites && this.sprites.idle && this.sprites.idle.complete && this.sprites.idle.naturalWidth > 0);
+  }
+
+  _renderSprite(now) {
+    const ctx = this.ctx;
+    const w = this.width;
+    const h = this.height;
+    const time = (now - this.startTime) / 1000;
+    const breath = Math.sin((time * Math.PI * 2) / (this.currentExpression.breathingPeriod || 3.5)) * 3;
+    const lipMetrics = this.lipSync.update();
+
+    let activeSprite = this.sprites.idle;
+    if (lipMetrics.mouthOpen > 0.12 && this.sprites.speaking && this.sprites.speaking.complete) {
+      activeSprite = this.sprites.speaking;
+    } else if (this.currentExpression.blush > 0.35 && this.sprites.blush && this.sprites.blush.complete) {
+      activeSprite = this.sprites.blush;
+    } else if (this.currentExpression.smile > 0.35 && this.sprites.smile && this.sprites.smile.complete) {
+      activeSprite = this.sprites.smile;
+    } else if (this.currentExpression.frown > 0.35 && this.sprites.sad && this.sprites.sad.complete) {
+      activeSprite = this.sprites.sad;
+    } else if (this.currentExpression.browAngle < -0.3 && this.sprites.angry && this.sprites.angry.complete) {
+      activeSprite = this.sprites.angry;
+    } else if (this.currentExpression.eyeOpen < 0.6 && this.sprites.relaxed && this.sprites.relaxed.complete) {
+      activeSprite = this.sprites.relaxed;
+    }
+
+    if (!activeSprite || !activeSprite.complete || activeSprite.naturalWidth === 0) {
+      activeSprite = this.sprites.idle;
+    }
+
+    // 1. Ambient Background Halo
+    const halo = ctx.createRadialGradient(w / 2, h / 2, w * 0.15, w / 2, h / 2, w * 0.6);
+    halo.addColorStop(0, this.currentExpression.glowColor || "rgba(168, 85, 247, 0.25)");
+    halo.addColorStop(1, "rgba(0, 0, 0, 0)");
+    ctx.fillStyle = halo;
+    ctx.beginPath();
+    ctx.arc(w / 2, h / 2, w * 0.6, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 2. Scale & Center Sprite
+    const naturalW = activeSprite.naturalWidth;
+    const naturalH = activeSprite.naturalHeight;
+    const scale = Math.min((w * 0.92) / naturalW, (h * 0.92) / naturalH);
+    const drawW = naturalW * scale;
+    const drawH = naturalH * scale;
+
+    const drawX = (w - drawW) / 2 + this.mouse.x * 6;
+    const drawY = h - drawH + breath + this.mouse.y * 4;
+
+    ctx.save();
+    ctx.drawImage(activeSprite, drawX, drawY, drawW, drawH);
+    ctx.restore();
+  }
+
+  _renderProcedural(now) {
+    const ctx = this.ctx;
+    const w = this.width;
+    const h = this.height;
+
     const time = (now - this.startTime) / 1000;
     const breath = Math.sin((time * Math.PI * 2) / this.currentExpression.breathingPeriod) * 4;
     const lipMetrics = this.lipSync.update();
@@ -301,6 +368,30 @@ class AvatarRenderer {
     this.activeEngine = engine || "canvas";
     this.activeModel = model || "default";
     console.log(`[avatar] Switched engine to: ${this.activeEngine}, model: ${this.activeModel}`);
+
+    if (this.activeEngine === 'sprites') {
+      this._loadSpriteSet(this.activeModel);
+    } else {
+      this.sprites = null;
+    }
+  }
+
+  _loadSpriteSet(model) {
+    if (!model || model === 'default') {
+      this.sprites = null;
+      return;
+    }
+    this.sprites = {};
+    const emotionKeys = [
+      'idle', 'speaking', 'smile', 'blush', 'excited',
+      'relaxed', 'thinking', 'concerned', 'sad', 'angry'
+    ];
+    emotionKeys.forEach((key) => {
+      const img = new Image();
+      // Relative path from index.html (electron/renderer/) to models/avatar/sprites/<model>/<key>.png
+      img.src = `../../models/avatar/sprites/${model}/${key}.png`;
+      this.sprites[key] = img;
+    });
   }
 
   destroy() {

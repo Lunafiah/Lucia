@@ -108,19 +108,23 @@ class ChatController {
   async _loadVoiceModels() {
     if (!this.voiceModelSelect) return;
     try {
-      const res = await fetch('http://127.0.0.1:8765/voice/models');
-      if (res.ok) {
-        const data = await res.json();
-        if (data.models && data.models.length > 0) {
-          this.voiceModelSelect.innerHTML = '';
-          data.models.forEach((m) => {
-            const opt = document.createElement('option');
-            opt.value = m.name;
-            opt.textContent = m.name === 'default' ? 'Lucia Base Voice' : `RVC: ${m.name}`;
-            if (m.is_active) opt.selected = true;
-            this.voiceModelSelect.appendChild(opt);
-          });
-        }
+      let data = null;
+      if (window.lucia && window.lucia.models && window.lucia.models.getVoices) {
+        data = await window.lucia.models.getVoices();
+      } else {
+        const res = await fetch('http://127.0.0.1:8765/voice/models');
+        if (res.ok) data = await res.json();
+      }
+
+      if (data && data.models && data.models.length > 0) {
+        this.voiceModelSelect.innerHTML = '';
+        data.models.forEach((m) => {
+          const opt = document.createElement('option');
+          opt.value = m.name;
+          opt.textContent = m.name === 'default' ? 'Lucia Base Voice' : (m.description || `RVC: ${m.name}`);
+          if (m.is_active) opt.selected = true;
+          this.voiceModelSelect.appendChild(opt);
+        });
       }
     } catch (err) {
       console.warn('[voice] Could not load voice models:', err);
@@ -132,10 +136,6 @@ class ChatController {
       this.avatarEngineSelect.addEventListener('change', (e) => {
         const engine = e.target.value;
         this._updateAvatarModelDropdown(engine);
-        if (window.avatarRenderer && window.avatarRenderer.setEngine) {
-          const model = this.avatarModelSelect ? this.avatarModelSelect.value : 'default';
-          window.avatarRenderer.setEngine(engine, model);
-        }
       });
     }
 
@@ -152,9 +152,16 @@ class ChatController {
 
   async _loadAvatarModels() {
     try {
-      const res = await fetch('http://127.0.0.1:8765/models/avatar');
-      if (res.ok) {
-        this.avatarModelsData = await res.json();
+      let data = null;
+      if (window.lucia && window.lucia.models && window.lucia.models.getAvatars) {
+        data = await window.lucia.models.getAvatars();
+      } else {
+        const res = await fetch('http://127.0.0.1:8765/models/avatar');
+        if (res.ok) data = await res.json();
+      }
+
+      if (data) {
+        this.avatarModelsData = data;
         const currentEngine = this.avatarEngineSelect ? this.avatarEngineSelect.value : 'canvas';
         this._updateAvatarModelDropdown(currentEngine);
       }
@@ -166,22 +173,32 @@ class ChatController {
   _updateAvatarModelDropdown(engine) {
     if (!this.avatarModelSelect) return;
     this.avatarModelSelect.innerHTML = '';
-    const defaultOpt = document.createElement('option');
-    defaultOpt.value = 'default';
-    defaultOpt.textContent = 'Default Lucia';
-    this.avatarModelSelect.appendChild(defaultOpt);
 
     let modelsList = [];
     if (engine === 'sprites') modelsList = this.avatarModelsData.sprites || [];
     else if (engine === 'live2d') modelsList = this.avatarModelsData.live2d || [];
     else if (engine === 'vrm') modelsList = this.avatarModelsData.vrm || [];
 
-    modelsList.forEach((m) => {
-      const opt = document.createElement('option');
-      opt.value = m;
-      opt.textContent = m;
-      this.avatarModelSelect.appendChild(opt);
-    });
+    if (modelsList.length === 0) {
+      const defaultOpt = document.createElement('option');
+      defaultOpt.value = 'default';
+      defaultOpt.textContent = 'Default Lucia (Procedural)';
+      this.avatarModelSelect.appendChild(defaultOpt);
+    } else {
+      modelsList.forEach((m, idx) => {
+        const opt = document.createElement('option');
+        opt.value = m;
+        opt.textContent = m;
+        if (idx === 0) opt.selected = true;
+        this.avatarModelSelect.appendChild(opt);
+      });
+    }
+
+    // Trigger engine/model switch on avatarRenderer immediately
+    if (window.avatarRenderer && window.avatarRenderer.setEngine) {
+      const selectedModel = this.avatarModelSelect.value;
+      window.avatarRenderer.setEngine(engine, selectedModel);
+    }
   }
 
   _setupSpeechRecognition() {

@@ -1,4 +1,6 @@
 const { ipcMain } = require('electron');
+const fs = require('fs');
+const path = require('path');
 
 let pendingChat = Promise.resolve();
 
@@ -11,6 +13,72 @@ let pendingChat = Promise.resolve();
  */
 function registerHandlers(port = 8765, isPreview = false) {
   const baseUrl = `http://127.0.0.1:${port}`;
+
+  // models:get-avatars IPC handler (direct fs scan, works in both live and preview)
+  ipcMain.handle('models:get-avatars', async () => {
+    const rootDir = path.resolve(__dirname, '../../');
+    const baseDir = path.join(rootDir, 'models', 'avatar');
+    const result = {
+      engines: ['canvas', 'sprites', 'live2d', 'vrm'],
+      sprites: [],
+      live2d: [],
+      vrm: []
+    };
+
+    try {
+      const spritesDir = path.join(baseDir, 'sprites');
+      if (fs.existsSync(spritesDir)) {
+        result.sprites = fs.readdirSync(spritesDir, { withFileTypes: true })
+          .filter(d => d.isDirectory() && !d.name.startsWith('.') && d.name !== '__pycache__')
+          .map(d => d.name);
+      }
+
+      const live2dDir = path.join(baseDir, 'live2d');
+      if (fs.existsSync(live2dDir)) {
+        result.live2d = fs.readdirSync(live2dDir, { withFileTypes: true })
+          .filter(d => d.isDirectory() && !d.name.startsWith('.'))
+          .map(d => d.name);
+      }
+
+      const vrmDir = path.join(baseDir, 'vrm');
+      if (fs.existsSync(vrmDir)) {
+        result.vrm = fs.readdirSync(vrmDir, { withFileTypes: true })
+          .filter(f => f.isFile() && f.name.toLowerCase().endsWith('.vrm'))
+          .map(f => f.name);
+      }
+    } catch (err) {
+      console.warn('[ipc-bridge] Failed to scan avatar models:', err);
+    }
+
+    return result;
+  });
+
+  // models:get-voices IPC handler
+  ipcMain.handle('models:get-voices', async () => {
+    const rootDir = path.resolve(__dirname, '../../');
+    const rvcDir = path.join(rootDir, 'models', 'voice', 'rvc');
+    const models = [
+      { name: 'default', is_active: true, description: 'Lucia Base Voice (en-US-AnaNeural)' }
+    ];
+
+    try {
+      if (fs.existsSync(rvcDir)) {
+        const subdirs = fs.readdirSync(rvcDir, { withFileTypes: true })
+          .filter(d => d.isDirectory() && !d.name.startsWith('.'));
+        subdirs.forEach(d => {
+          models.push({
+            name: d.name,
+            is_active: false,
+            description: `RVC: ${d.name}`
+          });
+        });
+      }
+    } catch (err) {
+      console.warn('[ipc-bridge] Failed to scan voice models:', err);
+    }
+
+    return { models, active_model: 'default' };
+  });
 
   // chat:send IPC handler (serialized queue)
   ipcMain.handle('chat:send', async (_event, { input }) => {
