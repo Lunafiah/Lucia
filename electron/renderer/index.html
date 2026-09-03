@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; connect-src 'self' http://127.0.0.1:* ws://127.0.0.1:*;">
   <title>Lucia — AI Companion</title>
   <link rel="stylesheet" href="index.css">
   <link rel="stylesheet" href="chat/chat.css">
@@ -118,6 +118,7 @@
         </div>
         <div class="avatar-canvas-wrapper">
           <canvas id="avatar-canvas"></canvas>
+          <canvas id="avatar-live2d-canvas" style="display: none; position: absolute; inset: 0; width: 100%; height: 100%;"></canvas>
         </div>
       </div>
 
@@ -353,6 +354,11 @@
       </div>
     </div>
   </div>
+
+  <!-- Live2D Cubism Core & PixiJS WebGL Libraries -->
+  <script src="libs/live2dcubismcore.min.js"></script>
+  <script src="libs/pixi.min.js"></script>
+  <script src="libs/cubism4.min.js"></script>
 
   <!-- Scripts -->
   <script src="audio/audio-router.js"></script>

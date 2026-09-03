@@ -8,7 +8,10 @@ class AvatarRenderer {
   constructor(canvasElement) {
     this.canvas = canvasElement;
     this.ctx = canvasElement ? canvasElement.getContext("2d") : null;
+    this.live2dCanvas = typeof document !== "undefined" ? document.getElementById("avatar-live2d-canvas") : null;
     this.lipSync = new LipSyncProcessor();
+    this.pixiApp = null;
+    this.currentLive2DModel = null;
 
     // Emotion & physics state
     this.currentExpression = ExpressionMapper.mapPADToExpression({
@@ -53,14 +56,31 @@ class AvatarRenderer {
   }
 
   resize() {
-    if (!this.canvas) return;
-    const rect = this.canvas.parentElement.getBoundingClientRect();
-    const dpr = window.devicePixelRatio || 1;
-    this.canvas.width = rect.width * dpr;
-    this.canvas.height = rect.height * dpr;
-    this.ctx.scale(dpr, dpr);
-    this.width = rect.width;
-    this.height = rect.height;
+    if (this.canvas && this.canvas.parentElement) {
+      const rect = this.canvas.parentElement.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      this.canvas.width = rect.width * dpr;
+      this.canvas.height = rect.height * dpr;
+      if (this.ctx) this.ctx.scale(dpr, dpr);
+      this.width = rect.width;
+      this.height = rect.height;
+    }
+
+    if (this.pixiApp && this.live2dCanvas && this.live2dCanvas.parentElement) {
+      const pRect = this.live2dCanvas.parentElement.getBoundingClientRect();
+      this.pixiApp.renderer.resize(pRect.width, pRect.height);
+
+      if (this.currentLive2DModel) {
+        const stageW = pRect.width || 300;
+        const stageH = pRect.height || 250;
+        const naturalW = this.currentLive2DModel.internalModel ? this.currentLive2DModel.internalModel.width : this.currentLive2DModel.width;
+        const naturalH = this.currentLive2DModel.internalModel ? this.currentLive2DModel.internalModel.height : this.currentLive2DModel.height;
+        const scale = Math.min((stageW * 0.92) / (naturalW || 2000), (stageH * 0.92) / (naturalH || 2000));
+        this.currentLive2DModel.scale.set(scale);
+        this.currentLive2DModel.x = (stageW - (naturalW || 2000) * scale) / 2;
+        this.currentLive2DModel.y = stageH - (naturalH || 2000) * scale;
+      }
+    }
   }
 
   /**
@@ -124,6 +144,25 @@ class AvatarRenderer {
         this.blinkProgress = 0;
         this.isBlinking = false;
         this.nextBlinkTime = now + 2500 + Math.random() * 3500;
+      }
+    }
+
+    // Live2D continuous parameter update (gaze & lipsync)
+    if (this.currentLive2DModel && this.currentLive2DModel.internalModel) {
+      try {
+        if (typeof this.currentLive2DModel.focus === 'function') {
+          this.currentLive2DModel.focus(this.mouse.x, -this.mouse.y);
+        }
+
+        const core = this.currentLive2DModel.internalModel.coreModel;
+        if (core && typeof core.setParameterValueById === 'function') {
+          const mouthOpen = this.lipSync ? this.lipSync.getMouthOpen() : 0;
+          if (mouthOpen > 0.04) {
+            core.setParameterValueById('ParamMouthOpenY', Math.min(1.0, mouthOpen * 2.0));
+          }
+        }
+      } catch (e) {
+        // ignore tick errors
       }
     }
   }
@@ -421,15 +460,93 @@ class AvatarRenderer {
     }
   }
 
-  setEngine(engine, model = "default") {
+  async setEngine(engine, model = "default") {
     this.activeEngine = engine || "canvas";
     this.activeModel = model || "default";
     console.log(`[avatar] Switched engine to: ${this.activeEngine}, model: ${this.activeModel}`);
 
-    if (this.activeEngine === 'sprites') {
-      this._loadSpriteSet(this.activeModel);
+    if (this.activeEngine === 'live2d') {
+      if (this.canvas) this.canvas.style.display = 'none';
+      if (this.live2dCanvas) this.live2dCanvas.style.display = 'block';
+      await this._loadLive2DModel(this.activeModel);
     } else {
-      this.sprites = null;
+      if (this.live2dCanvas) this.live2dCanvas.style.display = 'none';
+      if (this.canvas) this.canvas.style.display = 'block';
+
+      if (this.activeEngine === 'sprites') {
+        this._loadSpriteSet(this.activeModel);
+      } else {
+        this.sprites = null;
+      }
+    }
+  }
+
+  async _loadLive2DModel(modelName) {
+    if (!modelName || modelName === 'default') {
+      if (this.currentLive2DModel && this.pixiApp) {
+        this.pixiApp.stage.removeChild(this.currentLive2DModel);
+        this.currentLive2DModel.destroy();
+        this.currentLive2DModel = null;
+      }
+      return;
+    }
+
+    if (typeof PIXI === 'undefined' || !PIXI.live2d || !PIXI.live2d.Live2DModel) {
+      console.warn('[live2d] Pixi.js or Live2D Cubism runtime not loaded yet');
+      return;
+    }
+
+    if (!this.live2dCanvas && typeof document !== 'undefined') {
+      this.live2dCanvas = document.getElementById("avatar-live2d-canvas");
+    }
+
+    if (!this.pixiApp && this.live2dCanvas && this.live2dCanvas.parentElement) {
+      const parent = this.live2dCanvas.parentElement;
+      const initialW = parent ? parent.clientWidth : 300;
+      const initialH = parent ? parent.clientHeight : 250;
+
+      this.pixiApp = new PIXI.Application({
+        view: this.live2dCanvas,
+        autoDensity: true,
+        antialias: true,
+        backgroundAlpha: 0,
+        width: initialW,
+        height: initialH,
+      });
+    }
+
+    let modelPath = `../../models/avatar/live2d/${modelName}/${modelName}.model3.json`;
+    if (modelName === 'HoshinoAi') {
+      modelPath = `../../models/avatar/live2d/HoshinoAi/Hoshino_Ai.model3.json`;
+    }
+
+    try {
+      console.log(`[live2d] Loading Cubism 4 model from: ${modelPath}`);
+      if (this.currentLive2DModel && this.pixiApp) {
+        this.pixiApp.stage.removeChild(this.currentLive2DModel);
+        this.currentLive2DModel.destroy();
+        this.currentLive2DModel = null;
+      }
+
+      const model = await PIXI.live2d.Live2DModel.from(modelPath, { autoInteract: true });
+      this.currentLive2DModel = model;
+
+      const parent = this.live2dCanvas.parentElement;
+      const stageW = parent ? parent.clientWidth : 300;
+      const stageH = parent ? parent.clientHeight : 250;
+
+      const naturalW = model.internalModel ? model.internalModel.width : model.width;
+      const naturalH = model.internalModel ? model.internalModel.height : model.height;
+      const scale = Math.min((stageW * 0.92) / (naturalW || 2000), (stageH * 0.92) / (naturalH || 2000));
+
+      model.scale.set(scale);
+      model.x = (stageW - (naturalW || 2000) * scale) / 2;
+      model.y = stageH - (naturalH || 2000) * scale;
+
+      this.pixiApp.stage.addChild(model);
+      console.log(`[live2d] Model ${modelName} successfully loaded into Pixi stage!`);
+    } catch (err) {
+      console.error(`[live2d] Failed to load model ${modelName}:`, err);
     }
   }
 
