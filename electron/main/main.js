@@ -108,12 +108,27 @@ function createWindow() {
 
 app.whenReady().then(async () => {
   const config = loadConfig();
+  const isPreview = process.argv.includes('--preview') || process.env.LUCIA_PREVIEW === 'true';
 
   // Register main IPC handlers
-  registerHandlers(config.port);
+  registerHandlers(config.port, isPreview);
 
   // Create renderer window
   createWindow();
+
+  if (isPreview) {
+    console.log('[main] Running in UI PREVIEW MODE (Python backend skipped, 0% GPU/CPU used)');
+    if (mainWindow) {
+      mainWindow.setTitle('Lucia — UI Preview Mode (Offline)');
+      mainWindow.webContents.on('did-finish-load', () => {
+        setTimeout(() => {
+          if (mainWindow && !mainWindow.isDestroyed()) {
+            mainWindow.webContents.send('backend:ready');
+          }
+        }, 500);
+      });
+    }
+  }
 
   // Initialize Desktop Presence Modes
   mascotManager = new MascotWindowManager(mainWindow);
@@ -131,12 +146,14 @@ app.whenReady().then(async () => {
   hotkeyManager = new HotkeyManager(mainWindow, 'CommandOrControl+Shift+L');
   hotkeyManager.register();
 
-  // Start the Python backend process
-  processManager = new ProcessManager(config, () => mainWindow);
-  try {
-    await processManager.start();
-  } catch (err) {
-    console.error('[main] Failed to start backend process:', err);
+  if (!isPreview) {
+    // Start the Python backend process
+    processManager = new ProcessManager(config, () => mainWindow);
+    try {
+      await processManager.start();
+    } catch (err) {
+      console.error('[main] Failed to start backend process:', err);
+    }
   }
 });
 

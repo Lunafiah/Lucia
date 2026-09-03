@@ -5,6 +5,7 @@
   "main": "main/main.js",
   "scripts": {
     "start": "electron .",
+    "preview": "electron . --preview",
     "test": "jest",
     "build:win": "electron-builder --win --x64"
   },

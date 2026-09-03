@@ -4,15 +4,24 @@ let pendingChat = Promise.resolve();
 
 /**
  * Registers all IPC handlers in the Electron main process.
- * Proxies chat requests and state telemetry to the localhost FastAPI server.
+ * Proxies chat requests and state telemetry to the localhost FastAPI server,
+ * or serves mock responses when in UI Preview Mode.
  *
  * Requirements: Phase 3 (5.1–5.6)
  */
-function registerHandlers(port = 8765) {
+function registerHandlers(port = 8765, isPreview = false) {
   const baseUrl = `http://127.0.0.1:${port}`;
 
   // chat:send IPC handler (serialized queue)
   ipcMain.handle('chat:send', async (_event, { input }) => {
+    if (isPreview) {
+      // Mock response for UI Preview
+      return {
+        response: `[UI Preview]: Lucia's brain is sleeping (0% GPU/CPU). You typed: "${input}".`,
+        call_id: 'preview_call'
+      };
+    }
+
     // Chain onto pendingChat so only one chat request is in-flight at a time
     const execute = async () => {
       try {
@@ -54,6 +63,17 @@ function registerHandlers(port = 8765) {
 
   // state:get IPC handler (concurrent allowed, 2s timeout)
   ipcMain.handle('state:get', async () => {
+    if (isPreview) {
+      return {
+        pad: { pleasure: 0.25, arousal: -0.05, dominance: 0.05 },
+        somatic: { stability: 0.95, cognitive_load: 0.1, energy: 1.0, tension: 0.05 },
+        constraints: { max_tokens: 150, temperature: 0.75, latency_ms: 0, reasoning_depth: 1 },
+        memory_trace_count: 14,
+        timestamp: Date.now(),
+        profile: 'Preview Mode'
+      };
+    }
+
     try {
       const response = await fetch(`${baseUrl}/state`, {
         method: 'GET',
@@ -77,6 +97,16 @@ function registerHandlers(port = 8765) {
 
   // profile:get IPC handler
   ipcMain.handle('profile:get', async () => {
+    if (isPreview) {
+      return {
+        tier: 'preview',
+        name: 'UI Preview',
+        description: 'Stand-alone UI Design & Mock Preview Mode',
+        vram_mb: 0,
+        n_gpu_layers: 0
+      };
+    }
+
     try {
       const response = await fetch(`${baseUrl}/system/profile`, {
         method: 'GET',
