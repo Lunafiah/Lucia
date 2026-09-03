@@ -68,6 +68,36 @@
   color: var(--text-secondary);
 }
 
+.header-right {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+
+.header-action-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 5px 11px;
+  border-radius: 8px;
+  font-size: 0.76rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.header-action-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.24);
+  transform: translateY(-1px);
+}
+
 .hardware-badge {
   font-size: 0.75rem;
   padding: 4px 10px;
@@ -75,6 +105,7 @@
   border: 1px solid var(--border-color);
   border-radius: 20px;
   color: var(--text-secondary);
+  white-space: nowrap;
 }
 
 /* --------------------------------------------------------------------------

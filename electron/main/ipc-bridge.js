@@ -11,8 +11,20 @@ let pendingChat = Promise.resolve();
  *
  * Requirements: Phase 3 (5.1–5.6)
  */
-function registerHandlers(port = 8765, isPreview = false) {
+function registerHandlers(port = 8765, isPreview = false, getMascotManager = null) {
   const baseUrl = `http://127.0.0.1:${port}`;
+
+  // window:toggle-mascot IPC handler
+  ipcMain.handle('window:toggle-mascot', async () => {
+    if (getMascotManager) {
+      const manager = typeof getMascotManager === 'function' ? getMascotManager() : getMascotManager;
+      if (manager && manager.toggle) {
+        manager.toggle();
+        return true;
+      }
+    }
+    return false;
+  });
 
   // models:get-avatars IPC handler (direct fs scan, works in both live and preview)
   ipcMain.handle('models:get-avatars', async () => {

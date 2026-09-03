@@ -58,6 +58,30 @@ class ChatController {
       window.avatarRenderer = new AvatarRenderer(canvas);
     }
 
+    // Mascot Mode Toggle Button
+    const mascotBtn = document.getElementById('toggle-mascot-btn');
+    if (mascotBtn) {
+      mascotBtn.addEventListener('click', () => {
+        if (window.lucia && window.lucia.window && window.lucia.window.toggleMascot) {
+          window.lucia.window.toggleMascot();
+        }
+      });
+    }
+
+    // Mascot Mode Window Detection (e.g. ?mode=mascot)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('mode') === 'mascot') {
+      document.body.classList.add('mascot-mode');
+      if (this.splashOverlay) this.splashOverlay.style.display = 'none';
+      if (canvas) {
+        canvas.addEventListener('dblclick', () => {
+          if (window.lucia && window.lucia.window && window.lucia.window.toggleMascot) {
+            window.lucia.window.toggleMascot();
+          }
+        });
+      }
+    }
+
     this._setupEventListeners();
     this._setupVoiceControls();
     this._setupAvatarControls();
@@ -121,7 +145,7 @@ class ChatController {
         data.models.forEach((m) => {
           const opt = document.createElement('option');
           opt.value = m.name;
-          opt.textContent = m.name === 'default' ? 'Lucia Base Voice' : (m.description || `RVC: ${m.name}`);
+          opt.textContent = m.name === 'default' ? '🎙️ Base Voice (Default)' : `🎙️ ${m.name} (RVC)`;
           if (m.is_active) opt.selected = true;
           this.voiceModelSelect.appendChild(opt);
         });

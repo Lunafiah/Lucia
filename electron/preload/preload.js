@@ -27,6 +27,9 @@ contextBridge.exposeInMainWorld('lucia', {
     getAvatars: () => ipcRenderer.invoke('models:get-avatars'),
     getVoices: () => ipcRenderer.invoke('models:get-voices')
   },
+  window: {
+    toggleMascot: () => ipcRenderer.invoke('window:toggle-mascot')
+  },
   on: (channel, listener) => {
     if (!ALLOWED_CHANNELS.includes(channel)) {
       console.warn(`[preload] Ignored subscription to unauthorized channel: ${channel}`);

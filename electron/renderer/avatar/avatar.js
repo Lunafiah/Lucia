@@ -138,9 +138,66 @@ class AvatarRenderer {
 
     if (this.activeEngine === 'sprites' && this._hasLoadedSprites()) {
       this._renderSprite(now);
+    } else if (this.activeEngine === 'live2d') {
+      this._renderLive2D(now);
     } else {
       this._renderProcedural(now);
     }
+  }
+
+  _renderLive2D(now) {
+    const ctx = this.ctx;
+    const w = this.width;
+    const h = this.height;
+    const time = (now - this.startTime) / 1000;
+    const pulse = 0.5 + 0.5 * Math.sin(time * 2.5);
+
+    // Glowing stage background
+    const bgGrad = ctx.createRadialGradient(w / 2, h / 2, 20, w / 2, h / 2, w * 0.6);
+    bgGrad.addColorStop(0, "rgba(236, 72, 153, 0.25)"); // Hoshino Ai Magenta glow
+    bgGrad.addColorStop(1, "rgba(0, 0, 0, 0)");
+    ctx.fillStyle = bgGrad;
+    ctx.beginPath();
+    ctx.arc(w / 2, h / 2, w * 0.6, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Live2D Holographic Card Box
+    const cardW = Math.min(w * 0.88, 260);
+    const cardH = 135;
+    const cardX = (w - cardW) / 2;
+    const cardY = (h - cardH) / 2;
+
+    ctx.save();
+    ctx.fillStyle = "rgba(15, 23, 42, 0.85)";
+    ctx.strokeStyle = `rgba(236, 72, 153, ${0.4 + pulse * 0.4})`;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(cardX, cardY, cardW, cardH, 12);
+    ctx.fill();
+    ctx.stroke();
+
+    // Header badge
+    ctx.fillStyle = "#ec4899";
+    ctx.font = "bold 13px system-ui, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("🎬 Live2D Cubism 4 Detected", w / 2, cardY + 28);
+
+    // Model name
+    ctx.fillStyle = "#f8fafc";
+    ctx.font = "bold 15px system-ui, sans-serif";
+    ctx.fillText(this.activeModel || "HoshinoAi", w / 2, cardY + 54);
+
+    // Subtitle / file info
+    ctx.fillStyle = "#94a3b8";
+    ctx.font = "11px system-ui, sans-serif";
+    ctx.fillText("Hoshino_Ai.moc3 & 8192 Texture", w / 2, cardY + 76);
+
+    // Status
+    ctx.fillStyle = "#38bdf8";
+    ctx.font = "italic 11px system-ui, sans-serif";
+    ctx.fillText("⚡ WebGL Cubism Runtime Loading...", w / 2, cardY + 102);
+
+    ctx.restore();
   }
 
   _hasLoadedSprites() {

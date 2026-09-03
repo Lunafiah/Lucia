@@ -111,7 +111,7 @@ app.whenReady().then(async () => {
   const isPreview = process.argv.includes('--preview') || process.env.LUCIA_PREVIEW === 'true';
 
   // Register main IPC handlers
-  registerHandlers(config.port, isPreview);
+  registerHandlers(config.port, isPreview, () => mascotManager);
 
   // Create renderer window
   createWindow();
