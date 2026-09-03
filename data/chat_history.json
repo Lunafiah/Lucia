@@ -43,6 +43,26 @@
           "metadata": {}
         }
       ]
+    },
+    {
+      "id": "session_20260903_093803",
+      "created_at": "2026-09-03T09:38:09.867586",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Hello Lucia!",
+          "timestamp": 1788403089.8670697,
+          "created_at": "2026-09-03T09:38:09.867069",
+          "metadata": {}
+        },
+        {
+          "role": "companion",
+          "content": "Hello from Lucia!",
+          "timestamp": 1788403089.8700285,
+          "created_at": "2026-09-03T09:38:09.870028",
+          "metadata": {}
+        }
+      ]
     }
   ]
 }

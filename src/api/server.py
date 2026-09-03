@@ -352,6 +352,116 @@ async def export_chat_history() -> Response:
     )
 
 
+class ProfileUpdateRequest(BaseModel):
+    user_name: Optional[str] = None
+    companion_name: Optional[str] = None
+    is_onboarded: Optional[bool] = None
+    birthday: Optional[str] = None
+    pronouns: Optional[str] = None
+
+
+@app.get("/models/avatar")
+async def get_avatar_models() -> Dict[str, Any]:
+    """
+    Discover all custom avatar models in models/avatar/ (sprites, live2d, vrm).
+    """
+    base_dir = Path("models/avatar")
+    sprites = []
+    live2d = []
+    vrm = []
+
+    try:
+        sprites_dir = base_dir / "sprites"
+        if sprites_dir.exists() and sprites_dir.is_dir():
+            sprites = [d.name for d in sprites_dir.iterdir() if d.is_dir()]
+
+        live2d_dir = base_dir / "live2d"
+        if live2d_dir.exists() and live2d_dir.is_dir():
+            live2d = [d.name for d in live2d_dir.iterdir() if d.is_dir()]
+
+        vrm_dir = base_dir / "vrm"
+        if vrm_dir.exists() and vrm_dir.is_dir():
+            vrm = [f.name for f in vrm_dir.iterdir() if f.is_file() and f.suffix.lower() == ".vrm"]
+    except Exception as e:
+        logger.error("Failed to scan avatar models: %s", e)
+
+    return {
+        "engines": ["canvas", "sprites", "live2d", "vrm"],
+        "sprites": sprites,
+        "live2d": live2d,
+        "vrm": vrm,
+    }
+
+
+def _get_profile_file() -> Path:
+    p = Path("data/profile.json")
+    p.parent.mkdir(parents=True, exist_ok=True)
+    if not p.exists():
+        initial = {
+            "version": 1,
+            "user_name": "Friend",
+            "companion_name": "Lucia",
+            "born_at": datetime.now().isoformat(),
+            "is_onboarded": False,
+            "pronouns": "they/them",
+            "avatar_engine": "canvas",
+            "avatar_model": "default"
+        }
+        with open(p, "w", encoding="utf-8") as f:
+            json.dump(initial, f, indent=2, ensure_ascii=False)
+    return p
+
+
+@app.get("/profile")
+async def get_profile() -> Dict[str, Any]:
+    """
+    Return current user/companion profile and awakening status.
+    """
+    p = _get_profile_file()
+    try:
+        with open(p, "r", encoding="utf-8") as f:
+            data = json.load(f)
+            if isinstance(data, dict):
+                return data
+    except Exception as e:
+        logger.error("Failed to read profile: %s", e)
+    return {"version": 1, "user_name": "Friend", "companion_name": "Lucia", "is_onboarded": False}
+
+
+@app.post("/profile")
+async def update_profile(req: ProfileUpdateRequest) -> Dict[str, Any]:
+    """
+    Update profile fields (user name, companion name, onboarding status).
+    """
+    p = _get_profile_file()
+    try:
+        with open(p, "r", encoding="utf-8") as f:
+            data = json.load(f)
+            if not isinstance(data, dict):
+                data = {}
+    except Exception:
+        data = {}
+
+    if req.user_name is not None:
+        data["user_name"] = req.user_name.strip()
+    if req.companion_name is not None:
+        data["companion_name"] = req.companion_name.strip()
+    if req.is_onboarded is not None:
+        data["is_onboarded"] = req.is_onboarded
+    if req.birthday is not None:
+        data["birthday"] = req.birthday
+    if req.pronouns is not None:
+        data["pronouns"] = req.pronouns
+
+    try:
+        with open(p, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
+    except Exception as e:
+        logger.error("Failed to save profile: %s", e)
+
+    return {"status": "ok", "profile": data}
+
+
 @app.get("/health")
 async def health_check() -> Dict[str, str]:
     """

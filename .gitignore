@@ -1,9 +1,13 @@
 # ──────────────────────────────────────────────
-# Models (large GGUF files — never commit)
+# Models (large GGUF/PTH/INDEX files — never commit)
 # ──────────────────────────────────────────────
 models/*.gguf
 models/*.gguf.metadata
 models/CACHEDIR.TAG
+models/voice/rvc/**/*.pth
+models/voice/rvc/**/*.index
+models/avatar/**/*.vrm
+models/avatar/**/*.moc3
 
 # ──────────────────────────────────────────────
 # Specs & metadata

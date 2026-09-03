@@ -44,18 +44,21 @@
 .avatar-controls {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .voice-select {
   background: rgba(30, 41, 59, 0.8);
   border: 1px solid rgba(255, 255, 255, 0.15);
   color: #f8fafc;
-  padding: 3px 8px;
+  padding: 3px 6px;
   border-radius: 6px;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   outline: none;
   cursor: pointer;
+  max-width: 110px;
 }
 
 .voice-mute-btn {

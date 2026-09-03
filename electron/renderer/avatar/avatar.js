@@ -297,6 +297,12 @@ class AvatarRenderer {
     }
   }
 
+  setEngine(engine, model = "default") {
+    this.activeEngine = engine || "canvas";
+    this.activeModel = model || "default";
+    console.log(`[avatar] Switched engine to: ${this.activeEngine}, model: ${this.activeModel}`);
+  }
+
   destroy() {
     this.stop();
     if (this.lipSync && this.lipSync.currentAudio) {

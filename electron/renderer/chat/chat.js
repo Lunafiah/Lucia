@@ -29,6 +29,27 @@ class ChatController {
     this.volumeSlider = document.getElementById('voice-volume-slider');
     this.isVoiceMuted = false;
 
+    // Avatar Controls
+    this.avatarEngineSelect = document.getElementById('avatar-engine-select');
+    this.avatarModelSelect = document.getElementById('avatar-model-select');
+    this.avatarModelsData = { engines: ['canvas', 'sprites', 'live2d', 'vrm'], sprites: [], live2d: [], vrm: [] };
+
+    // Speech-to-Text Microphone
+    this.micBtn = document.getElementById('mic-btn');
+    this.isListening = false;
+    this.recognition = null;
+
+    // Profile & Awakening Modal
+    this.openProfileBtn = document.getElementById('open-profile-btn');
+    this.closeProfileBtn = document.getElementById('close-profile-btn');
+    this.saveProfileBtn = document.getElementById('save-profile-btn');
+    this.profileModal = document.getElementById('profile-modal');
+    this.userNameInput = document.getElementById('profile-user-name-input');
+    this.companionNameInput = document.getElementById('profile-companion-name-input');
+    this.birthdayBadgeText = document.getElementById('birthday-badge-text');
+    this.profileBornDateDisplay = document.getElementById('profile-born-date-display');
+    this.profileDaysCountDisplay = document.getElementById('profile-days-count-display');
+
     // Initialize Canvas Avatar
     const canvas = document.getElementById('avatar-canvas');
     if (canvas && typeof AvatarRenderer !== 'undefined') {
@@ -37,6 +58,9 @@ class ChatController {
 
     this._setupEventListeners();
     this._setupVoiceControls();
+    this._setupAvatarControls();
+    this._setupSpeechRecognition();
+    this._setupProfileControls();
     this._setupBackendListeners();
   }
 
@@ -101,6 +125,212 @@ class ChatController {
     }
   }
 
+  _setupAvatarControls() {
+    if (this.avatarEngineSelect) {
+      this.avatarEngineSelect.addEventListener('change', (e) => {
+        const engine = e.target.value;
+        this._updateAvatarModelDropdown(engine);
+        if (window.avatarRenderer && window.avatarRenderer.setEngine) {
+          const model = this.avatarModelSelect ? this.avatarModelSelect.value : 'default';
+          window.avatarRenderer.setEngine(engine, model);
+        }
+      });
+    }
+
+    if (this.avatarModelSelect) {
+      this.avatarModelSelect.addEventListener('change', (e) => {
+        const model = e.target.value;
+        const engine = this.avatarEngineSelect ? this.avatarEngineSelect.value : 'canvas';
+        if (window.avatarRenderer && window.avatarRenderer.setEngine) {
+          window.avatarRenderer.setEngine(engine, model);
+        }
+      });
+    }
+  }
+
+  async _loadAvatarModels() {
+    try {
+      const res = await fetch('http://127.0.0.1:8765/models/avatar');
+      if (res.ok) {
+        this.avatarModelsData = await res.json();
+        const currentEngine = this.avatarEngineSelect ? this.avatarEngineSelect.value : 'canvas';
+        this._updateAvatarModelDropdown(currentEngine);
+      }
+    } catch (err) {
+      console.warn('[avatar] Could not load avatar models:', err);
+    }
+  }
+
+  _updateAvatarModelDropdown(engine) {
+    if (!this.avatarModelSelect) return;
+    this.avatarModelSelect.innerHTML = '';
+    const defaultOpt = document.createElement('option');
+    defaultOpt.value = 'default';
+    defaultOpt.textContent = 'Default Lucia';
+    this.avatarModelSelect.appendChild(defaultOpt);
+
+    let modelsList = [];
+    if (engine === 'sprites') modelsList = this.avatarModelsData.sprites || [];
+    else if (engine === 'live2d') modelsList = this.avatarModelsData.live2d || [];
+    else if (engine === 'vrm') modelsList = this.avatarModelsData.vrm || [];
+
+    modelsList.forEach((m) => {
+      const opt = document.createElement('option');
+      opt.value = m;
+      opt.textContent = m;
+      this.avatarModelSelect.appendChild(opt);
+    });
+  }
+
+  _setupSpeechRecognition() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      this.recognition = new SpeechRecognition();
+      this.recognition.continuous = false;
+      this.recognition.interimResults = false;
+      this.recognition.lang = 'vi-VN';
+
+      this.recognition.onstart = () => {
+        this.isListening = true;
+        if (this.micBtn) {
+          this.micBtn.classList.add('listening');
+          this.micBtn.title = 'Listening... Click to stop';
+        }
+      };
+
+      this.recognition.onresult = (event) => {
+        if (event.results && event.results.length > 0) {
+          const text = event.results[0][0].transcript;
+          if (text) {
+            const currentVal = this.inputArea.value;
+            this.inputArea.value = currentVal ? `${currentVal} ${text}` : text;
+            this._autoResizeInput();
+            this._updateSendButtonState();
+            this.inputArea.focus();
+          }
+        }
+      };
+
+      this.recognition.onerror = (err) => {
+        console.warn('[speech] Recognition error:', err);
+        this._stopListening();
+      };
+
+      this.recognition.onend = () => {
+        this._stopListening();
+      };
+
+      if (this.micBtn) {
+        this.micBtn.addEventListener('click', () => {
+          if (this.isListening) {
+            this._stopListening();
+          } else {
+            this._startListening();
+          }
+        });
+      }
+    } else {
+      if (this.micBtn) {
+        this.micBtn.title = 'Speech recognition not supported in this environment';
+      }
+    }
+  }
+
+  _startListening() {
+    if (!this.recognition || this.currentState !== State.READY) return;
+    try {
+      this.recognition.start();
+    } catch (e) {
+      console.warn('[speech] Start recognition failed:', e);
+    }
+  }
+
+  _stopListening() {
+    this.isListening = false;
+    if (this.micBtn) {
+      this.micBtn.classList.remove('listening');
+      this.micBtn.title = 'Voice Input (Speech-to-Text)';
+    }
+    if (this.recognition) {
+      try {
+        this.recognition.stop();
+      } catch (e) {}
+    }
+  }
+
+  _setupProfileControls() {
+    if (this.openProfileBtn && this.profileModal) {
+      this.openProfileBtn.addEventListener('click', () => {
+        this.profileModal.classList.add('active');
+      });
+    }
+
+    if (this.closeProfileBtn && this.profileModal) {
+      this.closeProfileBtn.addEventListener('click', () => {
+        this.profileModal.classList.remove('active');
+      });
+    }
+
+    if (this.saveProfileBtn) {
+      this.saveProfileBtn.addEventListener('click', async () => {
+        const userName = this.userNameInput ? this.userNameInput.value.trim() : '';
+        const companionName = this.companionNameInput ? this.companionNameInput.value.trim() : '';
+        try {
+          const res = await fetch('http://127.0.0.1:8765/profile', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              user_name: userName || 'Friend',
+              companion_name: companionName || 'Lucia',
+              is_onboarded: true,
+            }),
+          });
+          if (res.ok) {
+            const data = await res.json();
+            this._renderProfile(data.profile);
+            if (this.profileModal) this.profileModal.classList.remove('active');
+          }
+        } catch (e) {
+          console.error('[profile] Failed to save profile:', e);
+        }
+      });
+    }
+  }
+
+  async _loadProfile() {
+    try {
+      const res = await fetch('http://127.0.0.1:8765/profile');
+      if (res.ok) {
+        const profile = await res.json();
+        this._renderProfile(profile);
+        if (!profile.is_onboarded && this.profileModal) {
+          // First Awakening onboarding popup
+          this.profileModal.classList.add('active');
+        }
+      }
+    } catch (e) {
+      console.warn('[profile] Could not load profile:', e);
+    }
+  }
+
+  _renderProfile(profile) {
+    if (!profile) return;
+    if (this.userNameInput) this.userNameInput.value = profile.user_name || '';
+    if (this.companionNameInput) this.companionNameInput.value = profile.companion_name || 'Lucia';
+
+    if (profile.born_at) {
+      const bornDate = new Date(profile.born_at);
+      const now = new Date();
+      const diffDays = Math.max(1, Math.floor((now - bornDate) / (1000 * 60 * 60 * 24)) + 1);
+
+      if (this.birthdayBadgeText) this.birthdayBadgeText.textContent = `Day ${diffDays}`;
+      if (this.profileDaysCountDisplay) this.profileDaysCountDisplay.textContent = `Day ${diffDays}`;
+      if (this.profileBornDateDisplay) {
+        this.profileBornDateDisplay.textContent = bornDate.toLocaleDateString();
+      }
+    }
+  }
+
   async _restoreHistory() {
     try {
       const res = await fetch('http://127.0.0.1:8765/history');
@@ -158,6 +388,8 @@ class ChatController {
         console.log('[chat] Backend ready event received');
         this.transitionTo(State.READY);
         this._loadVoiceModels();
+        this._loadAvatarModels();
+        this._loadProfile();
         this._restoreHistory();
 
         // Fetch hardware profile info for the badge
@@ -211,6 +443,7 @@ class ChatController {
       case State.WAITING_BACKEND:
         this.inputArea.disabled = true;
         this.sendBtn.disabled = true;
+        if (this.micBtn) this.micBtn.disabled = true;
         this.statusDot.className = 'status-dot';
         this.stateLabel.textContent = 'Awakening core...';
         break;
@@ -220,6 +453,7 @@ class ChatController {
           this.splashOverlay.classList.add('hidden');
         }
         this.inputArea.disabled = false;
+        if (this.micBtn) this.micBtn.disabled = false;
         this.statusDot.className = 'status-dot active';
         this.stateLabel.textContent = 'Active & Mindful';
         this._updateSendButtonState();
@@ -229,12 +463,14 @@ class ChatController {
       case State.SENDING:
         this.inputArea.disabled = true;
         this.sendBtn.disabled = true;
+        if (this.micBtn) this.micBtn.disabled = true;
         this.stateLabel.textContent = 'Reflecting...';
         break;
 
       case State.ERROR:
         this.inputArea.disabled = true;
         this.sendBtn.disabled = true;
+        if (this.micBtn) this.micBtn.disabled = true;
         this.statusDot.className = 'status-dot error';
         this.stateLabel.textContent = `Offline (${errorDetail})`;
         if (this.splashOverlay) {

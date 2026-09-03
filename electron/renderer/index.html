@@ -42,6 +42,9 @@
           </div>
         </div>
         <div class="header-right">
+          <button id="open-profile-btn" class="header-action-btn" title="Companion Profile & Birthday" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: #fbcfe8; padding: 4px 10px; border-radius: 8px; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+            <span>🎂 <span id="birthday-badge-text">Day 1</span></span>
+          </button>
           <button id="open-journal-btn" class="header-action-btn" title="Companion Journal & History" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: #c4b5fd; padding: 4px 10px; border-radius: 8px; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; gap: 4px;">
             <span>📖 Journal</span>
           </button>
@@ -67,6 +70,9 @@
             placeholder="Type a message... (Shift+Enter for new line)"
             disabled
           ></textarea>
+          <button id="mic-btn" class="mic-btn" title="Voice Input (Speech-to-Text)" disabled aria-label="Microphone Voice Input">
+            🎙️
+          </button>
           <button id="send-btn" class="send-btn" disabled aria-label="Send message">
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke-linecap="round" stroke-linejoin="round"/>
@@ -86,6 +92,15 @@
             <span>Presence</span>
           </div>
           <div class="avatar-controls">
+            <select id="avatar-engine-select" class="voice-select" title="Avatar Engine">
+              <option value="canvas">🎨 2D Canvas</option>
+              <option value="sprites">🖼️ 2D Sprites</option>
+              <option value="live2d">🎬 Live2D</option>
+              <option value="vrm">🌐 3D VRM</option>
+            </select>
+            <select id="avatar-model-select" class="voice-select" title="Avatar Model">
+              <option value="default">Default Lucia</option>
+            </select>
             <input type="range" id="voice-volume-slider" min="0" max="1" step="0.05" value="1" class="volume-slider" title="Master Voice Volume" />
             <select id="voice-model-select" class="voice-select" title="Select Voice Model">
               <option value="default">Lucia Base Voice</option>
@@ -295,6 +310,43 @@
       <div class="journal-actions">
         <button id="clear-history-btn" class="journal-btn" style="color: #f87171;">Clear Screen</button>
         <button id="export-history-btn" class="journal-btn primary">Export Chat (.md)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Companion Profile & Awakening Modal -->
+  <div id="profile-modal" class="journal-modal">
+    <div class="journal-card" style="max-width: 440px;">
+      <div class="journal-header">
+        <h2>✨ Awakening & Companion Bond</h2>
+        <button id="close-profile-btn" class="journal-close-btn">&times;</button>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 14px; margin: 10px 0;">
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 0.8rem; color: #cbd5e1; font-weight: 500;">Your Name / Nickname:</label>
+          <input type="text" id="profile-user-name-input" placeholder="e.g. Luna" style="background: rgba(15,23,42,0.6); border: 1px solid rgba(255,255,255,0.15); color: #f8fafc; padding: 8px 12px; border-radius: 8px; font-size: 0.9rem; outline: none;" />
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 0.8rem; color: #cbd5e1; font-weight: 500;">Companion's Name:</label>
+          <input type="text" id="profile-companion-name-input" placeholder="Lucia" style="background: rgba(15,23,42,0.6); border: 1px solid rgba(255,255,255,0.15); color: #f8fafc; padding: 8px 12px; border-radius: 8px; font-size: 0.9rem; outline: none;" />
+        </div>
+
+        <div class="journal-stats-grid" style="margin-top: 6px;">
+          <div class="stat-box">
+            <div class="stat-label">🎂 Birthday</div>
+            <div id="profile-born-date-display" class="stat-value" style="font-size: 0.95rem;">Today</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">⏳ Bond Duration</div>
+            <div id="profile-days-count-display" class="stat-value" style="font-size: 0.95rem;">Day 1</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="journal-actions" style="margin-top: 16px;">
+        <button id="save-profile-btn" class="journal-btn primary" style="width: 100%;">Save & Continue</button>
       </div>
     </div>
   </div>
