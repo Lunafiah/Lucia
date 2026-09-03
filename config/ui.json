@@ -2,7 +2,7 @@
   "port": 8765,
   "model_path": "models/LFM2.5-1.2B-Instruct-Q4_K_M.gguf",
   "voice_path": "models/voice/",
-  "avatar_path": "assets/avatar/",
+  "avatar_path": "models/avatar/",
   "profile": "auto",
   "n_gpu_layers": 32,
   "n_ctx": 4096,

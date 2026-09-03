@@ -101,7 +101,7 @@ Ensure `config/ui.json` points to your local model and optional avatar/voice dir
   "port": 8765,
   "model_path": "models/LFM2.5-1.2B-Instruct-Q4_K_M.gguf",
   "voice_path": "models/voice/",
-  "avatar_path": "assets/avatar/",
+  "avatar_path": "models/avatar/",
   "profile": "auto",
   "n_gpu_layers": 32,
   "log_level": "INFO"
@@ -112,14 +112,13 @@ Ensure `config/ui.json` points to your local model and optional avatar/voice dir
 
 ```
 Lucia/
-├── models/
-│   ├── LFM2.5-1.2B-Instruct-Q4_K_M.gguf        # Active Language Model (GGUF)
-│   └── voice/                                  # Local TTS Models (Kokoro / Piper ONNX)
-└── assets/
-    └── avatar/
+└── models/
+    ├── LFM2.5-1.2B-Instruct-Q4_K_M.gguf        # Active Language Model (GGUF)
+    ├── voice/                                  # Local TTS Models (Kokoro / Piper ONNX)
+    └── avatar/                                 # Avatar Models & Assets
         ├── live2d/                             # Live2D Cubism (*.model3.json, *.moc3)
         ├── vrm/                                # 3D VRM / VRoid (*.vrm)
-        └── sprites/                            # 2D Emotion Sprite Sheets (*.png)
+        └── sprites/                            # 2D Emotion Sprite Sets (*.png)
 ```
 
 ### 4. Launch Desktop Application

@@ -1,0 +1,107 @@
+{
+  "character": "Columbina (Damselette)",
+  "source": "Genshin Impact (Fatui Harbingers)",
+  "version": "2.0.0",
+  "resolution": "1024x1024",
+  "format": "Transparent PNG (RGBA)",
+  "generation_config": {
+    "recommended_checkpoints": [
+      "NoobAI XL vPred1.0",
+      "Animagine XL V3.1",
+      "Pony Diffusion V6 XL"
+    ],
+    "lora": {
+      "filename": "columbina_2a_naiVpred-000039.safetensors",
+      "local_path": "C:\\Users\\Lunafiah\\Downloads\\columbina_2a_naiVpred-000039.safetensors",
+      "recommended_weight": 0.8
+    },
+    "sampling": {
+      "steps": 28,
+      "sampler": "Euler a / DPM++ 2M Karras",
+      "cfg_scale": 6.0,
+      "locked_seed": 88889999,
+      "width": 1024,
+      "height": 1024
+    },
+    "base_positive_prompt": "masterpiece, best quality, highres, anime official art, 1girl, solo, columbina genshin impact, damselette, fatui harbinger, half body portrait, upper body, facing viewer, white background, simple white background, wing hair ornament, small white feather wings on head, white lace ruffled gothic dress, pale skin, dark black hair with smooth pink inner color streaks, clean gradient black to rose pink, NO fishnet texture, NO mesh pattern in hair, smooth hair coloring, solid hair color, wearing white ornate eye blindfold with lace trim, white decorative eye bandage, eyes completely covered by blindfold, no visible eyes, <lora:columbina_2a_naiVpred-000039:0.8>, cel shaded, crisp clean lines",
+    "negative_prompt": "worst quality, low quality, normal quality, blurry, bad anatomy, bad hands, missing fingers, complex background, scenery, text, watermark, signature, open eyes, visible eyes, pupils, irises, fishnet, mesh texture in hair, striped hair, grid pattern hair, jagged edges, aliasing artifacts"
+  },
+  "matting_config": {
+    "engine": "rembg (isnet-anime)",
+    "hole_filling": "scipy.ndimage.binary_fill_holes",
+    "smoothing": "gaussian_filter (sigma=1.2)",
+    "color_retention": "Zero alpha erosion on white lace, pale skin and feathers"
+  },
+  "sprites": [
+    {
+      "file": "idle.png",
+      "expression": "idle / neutral",
+      "prompt_keywords": "neutral calm expressionless, closed mouth, serene peaceful, head straight",
+      "pad_condition": { "p": 0.0, "a": -0.1, "d": 0.0 },
+      "description": "Default resting expression with serene, composed countenance and signature white lace blindfold."
+    },
+    {
+      "file": "speaking.png",
+      "expression": "speaking / talking",
+      "prompt_keywords": "open mouth, parted lips, talking, gentle calm speech, slight open expression",
+      "pad_condition": "Triggered during TTS / Audio lip-sync playback",
+      "description": "Talking state with gently parted lips for dialogue interaction."
+    },
+    {
+      "file": "smile.png",
+      "expression": "smile / warmth",
+      "prompt_keywords": "gentle warm closed-mouth smile, sweet happy expression, subtle curves up at corners",
+      "pad_condition": { "p_min": 0.3, "a_max": 0.3 },
+      "description": "Warm, gentle smile indicating high pleasure and affection."
+    },
+    {
+      "file": "excited.png",
+      "expression": "excited / joyful",
+      "prompt_keywords": "wide bright open-mouth smile showing teeth, very happy joyful excited, cheerful big grin",
+      "pad_condition": { "p_min": 0.5, "a_min": 0.4 },
+      "description": "High pleasure and high arousal with bright cheerful open smile."
+    },
+    {
+      "file": "blush.png",
+      "expression": "blush / flustered",
+      "prompt_keywords": "visible pink blush on pale cheeks, shy embarrassed flustered, cute slight closed-mouth smile, head slightly tilted shyly",
+      "pad_condition": { "p_min": 0.4, "d_max": -0.2 },
+      "description": "Shy, flustered response with rosy blushing cheeks and subtle smile."
+    },
+    {
+      "file": "relaxed.png",
+      "expression": "relaxed / tranquil",
+      "prompt_keywords": "peaceful serene tranquil expression, soft faint subtle smile, resting calm, head gently tilted",
+      "pad_condition": { "p_min": 0.1, "a_max": -0.3 },
+      "description": "Peaceful tranquility and soft relaxation."
+    },
+    {
+      "file": "thinking.png",
+      "expression": "thinking / pondering",
+      "prompt_keywords": "one white gloved hand raised near chin thoughtfully, puzzled curious contemplative expression, head slightly tilted, closed mouth",
+      "pad_condition": "Triggered during LLM cognitive processing / reasoning",
+      "description": "Contemplative state with gloved hand near chin while processing response."
+    },
+    {
+      "file": "concerned.png",
+      "expression": "concerned / empathetic",
+      "prompt_keywords": "worried empathetic caring expression, slightly open mouth, lower lip slightly trembling, gentle concern",
+      "pad_condition": { "p_max": -0.2, "d_max": -0.1 },
+      "description": "Empathic concern with slightly open mouth and tender worry."
+    },
+    {
+      "file": "sad.png",
+      "expression": "sad / melancholic",
+      "prompt_keywords": "subtle small downturned frown, sad melancholy sorrowful grief expression, closed mouth with droop at corners, head slightly lowered",
+      "pad_condition": { "p_max": -0.4, "a_max": -0.2 },
+      "description": "Melancholic sorrow with slight downturned frown and lowered head."
+    },
+    {
+      "file": "angry.png",
+      "expression": "angry / cute pout",
+      "prompt_keywords": "cute pout, lower lip pushed out, furrowed brow visible above lace blindfold, stern determined annoyed angry expression, closed mouth pout",
+      "pad_condition": { "p_max": -0.3, "d_min": 0.4 },
+      "description": "Stern determination or cute offended pout with furrowed brow above blindfold."
+    }
+  ]
+}
