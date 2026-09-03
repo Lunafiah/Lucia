@@ -29,11 +29,11 @@ class EmotionDebugPanel {
     this.loadVal = document.getElementById('somatic-load-val');
     this.tensionVal = document.getElementById('somatic-tension-val');
 
-    // Constraints elements
-    this.constraintTokens = document.getElementById('constraint-tokens');
-    this.constraintTemp = document.getElementById('constraint-temp');
-    this.constraintLatency = document.getElementById('constraint-latency');
-    this.constraintDepth = document.getElementById('constraint-depth');
+    // Conversational State elements
+    this.convMood = document.getElementById('conv-mood-val');
+    this.convVoice = document.getElementById('conv-voice-val');
+    this.convLatency = document.getElementById('conv-latency-val');
+    this.convDepth = document.getElementById('conv-depth-val');
 
     // Memory elements
     this.memoryTraceCount = document.getElementById('memory-trace-count');
@@ -44,7 +44,11 @@ class EmotionDebugPanel {
     this.statusBadge = document.getElementById('stability-status-badge');
     this.tickCounter = 0;
 
+    // Track voice activity via lipSync polling
+    this._voiceActivityTimer = null;
+
     this._setupBackendListeners();
+    this._startVoiceActivityMonitor();
   }
 
   _setupBackendListeners() {
@@ -122,6 +126,12 @@ class EmotionDebugPanel {
       if (window.avatarRenderer && typeof window.avatarRenderer.updateEmotion === 'function') {
         window.avatarRenderer.updateEmotion(snap.pad);
       }
+
+      // Update Conversational State — Mood
+      const moodLabel = this._deriveMood(snap.pad);
+      if (this.convMood) {
+        this.convMood.textContent = moodLabel;
+      }
     }
 
     // 2. Somatic Markers
@@ -132,18 +142,55 @@ class EmotionDebugPanel {
       this._updateProgressBar(this.tensionFill, this.tensionVal, snap.somatic.tension);
     }
 
-    // 3. Behavioral Constraints
+    // 3. Conversational State — Latency & Depth
     if (snap.constraints) {
-      if (this.constraintTokens) this.constraintTokens.textContent = `${snap.constraints.max_tokens}`;
-      if (this.constraintTemp) this.constraintTemp.textContent = snap.constraints.temperature.toFixed(2);
-      if (this.constraintLatency) this.constraintLatency.textContent = `${snap.constraints.latency_ms} ms`;
-      if (this.constraintDepth) this.constraintDepth.textContent = `k = ${snap.constraints.reasoning_depth}`;
+      if (this.convLatency) this.convLatency.textContent = snap.constraints.latency_ms > 0 ? `${snap.constraints.latency_ms} ms` : '— ms';
+      if (this.convDepth) this.convDepth.textContent = `k=${snap.constraints.reasoning_depth || 1}`;
     }
 
     // 4. Memory Traces
     if (typeof snap.memory_trace_count === 'number' && this.memoryTraceCount) {
       this.memoryTraceCount.textContent = String(snap.memory_trace_count);
     }
+  }
+
+  /**
+   * Maps PAD triplet to a human-readable mood label.
+   * Based on Russell's Circumplex Model of affect.
+   */
+  _deriveMood(pad) {
+    const p = pad.pleasure || 0;
+    const a = pad.arousal || 0;
+    const d = pad.dominance || 0;
+    if (p > 0.4 && a > 0.3) return 'Excited ✨';
+    if (p > 0.4 && a < -0.1) return 'Content 😌';
+    if (p > 0.15 && Math.abs(a) < 0.2) return 'Calm 🌿';
+    if (p < -0.3 && a > 0.3) return 'Anxious 😟';
+    if (p < -0.3 && a < -0.1) return 'Sad 😔';
+    if (p < -0.2 && d > 0.2) return 'Irritated 😤';
+    if (a > 0.5) return 'Alert ⚡';
+    if (a < -0.4) return 'Drowsy 😴';
+    return 'Neutral 😶';
+  }
+
+  /**
+   * Monitors lipSync voice activity every 250ms to update Voice Activity badge.
+   */
+  _startVoiceActivityMonitor() {
+    setInterval(() => {
+      if (!this.convVoice) return;
+      const renderer = window.avatarRenderer;
+      if (renderer && renderer.lipSync && typeof renderer.lipSync.getMouthOpen === 'function') {
+        const mo = renderer.lipSync.getMouthOpen();
+        if (mo > 0.08) {
+          this.convVoice.textContent = 'Speaking 🔊';
+          this.convVoice.style.color = '#34d399';
+        } else {
+          this.convVoice.textContent = 'Silent';
+          this.convVoice.style.color = '';
+        }
+      }
+    }, 250);
   }
 
   _updatePADBar(fillElem, valElem, value) {

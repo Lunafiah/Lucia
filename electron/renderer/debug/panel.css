@@ -42,6 +42,27 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(139, 92, 246, 0.25) transparent;
+}
+
+.debug-scroll-content::-webkit-scrollbar {
+  width: 4px;
+}
+
+.debug-scroll-content::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 10px;
+}
+
+.debug-scroll-content::-webkit-scrollbar-thumb {
+  background: rgba(139, 92, 246, 0.25);
+  border-radius: 10px;
+  transition: background 0.2s;
+}
+
+.debug-scroll-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 92, 246, 0.5);
 }
 
 .debug-section {
@@ -216,4 +237,51 @@
   opacity: 0.45;
   filter: grayscale(0.6);
   pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   Conversational State Section
+   -------------------------------------------------------------------------- */
+.conv-state-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.conv-state-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 9px;
+  padding: 9px 12px;
+  transition: border-color 0.2s;
+}
+
+.conv-state-chip:hover {
+  border-color: rgba(139, 92, 246, 0.25);
+}
+
+.conv-chip-icon {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  width: 22px;
+  text-align: center;
+}
+
+.conv-chip-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex: 1;
+}
+
+.chip-val--mood {
+  color: #a78bfa;
+}
+
+.chip-val--mono {
+  font-family: monospace;
+  color: #93c5fd;
 }

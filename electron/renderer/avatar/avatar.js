@@ -15,6 +15,8 @@ class AvatarRenderer {
     this.currentLive2DModel = null;
     this.baseModelsPath = null;
     this.mascotScale = 1.0;
+    // Zoom pivot in normalized [0..1] coords relative to canvas size
+    this.zoomOrigin = { nx: 0.5, ny: 0.4 }; // default: center-upper (near face)
     this.activeEngine = "canvas";
     this.activeModel = "default";
     this.sprites = null;
@@ -44,6 +46,12 @@ class AvatarRenderer {
       setTimeout(() => this.resize(), 50);
       this.start();
     }
+    // Mascot toolbar wired up after DOM is ready
+    if (typeof document !== "undefined") {
+      document.addEventListener("DOMContentLoaded", () => this._setupMascotToolbar(), { once: true });
+      // Also try immediately in case DOM already loaded
+      if (document.readyState !== "loading") this._setupMascotToolbar();
+    }
   }
 
   _bindEvents() {
@@ -61,16 +69,31 @@ class AvatarRenderer {
 
     window.addEventListener("resize", () => this.resize());
 
-    // Interactive Zoom / Scaling (Mouse Wheel)
+    // Cursor-anchored Zoom — zoom pivots around where the mouse pointer is
     const wrapper = (this.canvas && this.canvas.parentElement) || (this.live2dCanvas && this.live2dCanvas.parentElement);
     if (wrapper) {
       wrapper.addEventListener(
         "wheel",
         (e) => {
           e.preventDefault();
+
+          // Record zoom pivot from current mouse position inside the wrapper
+          const rect = wrapper.getBoundingClientRect();
+          const relX = (e.clientX - rect.left) / (rect.width || 1);
+          const relY = (e.clientY - rect.top) / (rect.height || 1);
+          this.zoomOrigin = {
+            nx: Math.max(0, Math.min(1, relX)),
+            ny: Math.max(0, Math.min(1, relY)),
+          };
+
           const delta = e.deltaY < 0 ? 0.08 : -0.08;
-          this.mascotScale = Math.max(0.4, Math.min(3.5, (this.mascotScale || 1.0) + delta));
-          this.resize();
+          this.mascotScale = Math.max(0.25, Math.min(4.0, (this.mascotScale || 1.0) + delta));
+
+          // For Live2D: reposition immediately
+          if (this.activeEngine === "live2d") {
+            this._repositionLive2DModel();
+          }
+          // 2D canvas: handled per-frame in _render
         },
         { passive: false }
       );
@@ -276,20 +299,28 @@ class AvatarRenderer {
       ctx.fill();
     }
 
-    // 2. Scale & Center Sprite (Honoring mascotScale zoom!)
+    // 2. Cursor-anchored scale & center
     const userZoom = this.mascotScale || 1.0;
     const naturalW = activeSprite.naturalWidth;
     const naturalH = activeSprite.naturalHeight;
+
+    // Base scale so sprite fills the stage at zoom=1
     const baseScale = Math.min((w * 0.95) / naturalW, (h * 0.95) / naturalH);
-    const scale = baseScale * userZoom;
-    const drawW = naturalW * scale;
-    const drawH = naturalH * scale;
 
-    const drawX = (w - drawW) / 2 + this.mouse.x * 6;
-    const drawY = h - drawH + breath + this.mouse.y * 4;
+    // Pivot point in canvas pixels
+    const pivotX = (this.zoomOrigin.nx || 0.5) * w;
+    const pivotY = (this.zoomOrigin.ny || 0.4) * h;
 
+    // Unzoomed draw position (centered horizontally, bottom-anchored vertically)
+    const baseDrawX = (w - naturalW * baseScale) / 2 + this.mouse.x * 6;
+    const baseDrawY = h - naturalH * baseScale + breath + this.mouse.y * 4;
+
+    // Apply zoom around pivot
     ctx.save();
-    ctx.drawImage(activeSprite, drawX, drawY, drawW, drawH);
+    ctx.translate(pivotX, pivotY);
+    ctx.scale(userZoom, userZoom);
+    ctx.translate(-pivotX, -pivotY);
+    ctx.drawImage(activeSprite, baseDrawX, baseDrawY, naturalW * baseScale, naturalH * baseScale);
     ctx.restore();
   }
 
@@ -303,12 +334,23 @@ class AvatarRenderer {
     const lipMetrics = this.lipSync.update();
 
     const userZoom = this.mascotScale || 1.0;
-    const centerX = w / 2 + this.mouse.x * 6;
-    const centerY = h / 2 + breath + this.mouse.y * 4;
-    const headRadius = Math.min(w, h) * 0.3 * userZoom;
+
+    // Cursor-anchored zoom pivot
+    const pivotX = (this.zoomOrigin.nx || 0.5) * w;
+    const pivotY = (this.zoomOrigin.ny || 0.4) * h;
+
+    // Base center of the face at zoom=1
+    const baseCenterX = w / 2 + this.mouse.x * 6;
+    const baseCenterY = h / 2 + breath + this.mouse.y * 4;
+    const headRadius = Math.min(w, h) * 0.3;
 
     ctx.save();
-    ctx.translate(centerX, centerY);
+    // Zoom around pivot
+    ctx.translate(pivotX, pivotY);
+    ctx.scale(userZoom, userZoom);
+    ctx.translate(-pivotX, -pivotY);
+
+    ctx.translate(baseCenterX, baseCenterY);
     ctx.rotate((this.currentExpression.headTilt * Math.PI) / 180);
 
     // 1. Ambient Background Halo
@@ -382,12 +424,8 @@ class AvatarRenderer {
         const gazeOffsetY = this.mouse.y * (eyeHeight * blinkMul - pupilRadius) * 0.8;
 
         const irisGrad = ctx.createRadialGradient(
-          gazeOffsetX,
-          gazeOffsetY,
-          pupilRadius * 0.2,
-          gazeOffsetX,
-          gazeOffsetY,
-          pupilRadius
+          gazeOffsetX, gazeOffsetY, pupilRadius * 0.2,
+          gazeOffsetX, gazeOffsetY, pupilRadius
         );
         irisGrad.addColorStop(0, "#818cf8");
         irisGrad.addColorStop(0.7, "#4338ca");
@@ -567,9 +605,18 @@ class AvatarRenderer {
     const baseScale = Math.min((stageW * 0.95) / (naturalW || 2000), (stageH * 0.95) / (naturalH || 2000));
     const scale = baseScale * userZoom;
 
+    // Cursor-anchored pivot in stage pixels
+    const pivotX = (this.zoomOrigin.nx || 0.5) * stageW;
+    const pivotY = (this.zoomOrigin.ny || 0.4) * stageH;
+
+    // Base position at zoom=1 (centered horizontally, bottom-anchored vertically)
+    const baseX = (stageW - (naturalW || 2000) * baseScale) / 2;
+    const baseY = stageH - (naturalH || 2000) * baseScale;
+
+    // Zoomed position: zoom around pivot
     model.scale.set(scale);
-    model.x = (stageW - (naturalW || 2000) * scale) / 2;
-    model.y = stageH - (naturalH || 2000) * scale;
+    model.x = pivotX + (baseX - pivotX) * userZoom;
+    model.y = pivotY + (baseY - pivotY) * userZoom;
   }
 
   _loadSpriteSet(model) {
@@ -612,6 +659,145 @@ class AvatarRenderer {
       this.pixiApp.destroy(true, { children: true });
       this.pixiApp = null;
     }
+  }
+
+  /**
+   * Wire mascot toolbar button events.
+   * Called once after DOM is ready.
+   */
+  _setupMascotToolbar() {
+    const get = (id) => document.getElementById(id);
+    let _activePopup = null;
+
+    const togglePopup = (popupEl) => {
+      if (!popupEl) return;
+      if (_activePopup && _activePopup !== popupEl) {
+        _activePopup.style.display = "none";
+      }
+      const showing = popupEl.style.display !== "none";
+      popupEl.style.display = showing ? "none" : "block";
+      _activePopup = showing ? null : popupEl;
+    };
+
+    // --- Chat button ---
+    const chatBtn = get("mascot-chat-btn");
+    const chatPopup = get("mascot-chat-popup");
+    if (chatBtn && chatPopup) {
+      chatBtn.addEventListener("click", (e) => { e.stopPropagation(); togglePopup(chatPopup); });
+    }
+
+    const sendBtn = get("mascot-chat-send-btn");
+    const chatInput = get("mascot-chat-input");
+    if (sendBtn && chatInput) {
+      const sendMsg = () => {
+        const text = (chatInput.value || "").trim();
+        if (!text) return;
+        // Relay to main window chat via IPC
+        if (window.lucia && window.lucia.window && window.lucia.window.sendMessage) {
+          window.lucia.window.sendMessage(text);
+        }
+        chatInput.value = "";
+        if (chatPopup) chatPopup.style.display = "none";
+        _activePopup = null;
+      };
+      sendBtn.addEventListener("click", sendMsg);
+      chatInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMsg(); }
+      });
+    }
+
+    // --- Model button ---
+    const modelBtn = get("mascot-model-btn");
+    const modelPopup = get("mascot-model-popup");
+    const mascotEngineSelect = get("mascot-engine-select");
+    const mascotAvatarSelect = get("mascot-avatar-select");
+    if (modelBtn && modelPopup) {
+      modelBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        // Sync options from main selects
+        const mainEngine = get("avatar-engine-select");
+        const mainModel = get("avatar-model-select");
+        if (mainEngine && mascotEngineSelect) mascotEngineSelect.value = mainEngine.value;
+        if (mainModel && mascotAvatarSelect) {
+          mascotAvatarSelect.innerHTML = mainModel.innerHTML;
+          mascotAvatarSelect.value = mainModel.value;
+        }
+        togglePopup(modelPopup);
+      });
+    }
+    if (mascotEngineSelect) {
+      mascotEngineSelect.addEventListener("change", () => {
+        const mainEngine = get("avatar-engine-select");
+        if (mainEngine) {
+          mainEngine.value = mascotEngineSelect.value;
+          mainEngine.dispatchEvent(new Event("change"));
+        }
+      });
+    }
+    if (mascotAvatarSelect) {
+      mascotAvatarSelect.addEventListener("change", () => {
+        const mainModel = get("avatar-model-select");
+        if (mainModel) {
+          mainModel.value = mascotAvatarSelect.value;
+          mainModel.dispatchEvent(new Event("change"));
+        }
+      });
+    }
+
+    // --- Voice button ---
+    const voiceBtn = get("mascot-voice-btn");
+    const voicePopup = get("mascot-voice-popup");
+    const mascotVoiceSelect = get("mascot-voice-select");
+    if (voiceBtn && voicePopup) {
+      voiceBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const mainVoice = get("voice-model-select");
+        if (mainVoice && mascotVoiceSelect) {
+          mascotVoiceSelect.innerHTML = mainVoice.innerHTML;
+          mascotVoiceSelect.value = mainVoice.value;
+        }
+        togglePopup(voicePopup);
+      });
+    }
+    if (mascotVoiceSelect) {
+      mascotVoiceSelect.addEventListener("change", () => {
+        const mainVoice = get("voice-model-select");
+        if (mainVoice) {
+          mainVoice.value = mascotVoiceSelect.value;
+          mainVoice.dispatchEvent(new Event("change"));
+        }
+      });
+    }
+
+    // --- Mic button ---
+    const micBtn = get("mascot-mic-btn");
+    if (micBtn) {
+      micBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const mainMic = get("mic-btn");
+        if (mainMic) mainMic.click();
+        micBtn.classList.toggle("mascot-tool-btn--danger");
+      });
+    }
+
+    // --- Close button ---
+    const closeBtn = get("mascot-close-btn");
+    if (closeBtn) {
+      closeBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (window.lucia && window.lucia.window && window.lucia.window.toggleMascot) {
+          window.lucia.window.toggleMascot();
+        }
+      });
+    }
+
+    // Dismiss popups when clicking on canvas
+    document.addEventListener("click", () => {
+      if (_activePopup) {
+        _activePopup.style.display = "none";
+        _activePopup = null;
+      }
+    });
   }
 }
 

@@ -9,18 +9,44 @@
   background: transparent;
 }
 
+/* --------------------------------------------------------------------------
+   Avatar Top Bar — 2-row layout
+   -------------------------------------------------------------------------- */
 .avatar-top-bar {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 14px;
-  background: rgba(15, 23, 42, 0.65);
+  flex-direction: column;
+  gap: 0;
+  background: rgba(15, 23, 42, 0.70);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(12px);
   font-size: 0.8rem;
   color: var(--text-muted, #94a3b8);
   z-index: 10;
+  flex-shrink: 0;
+}
+
+.avatar-controls-row {
+  display: flex;
+  align-items: center;
   gap: 8px;
+  padding: 7px 14px;
+}
+
+.avatar-controls-row + .avatar-controls-row {
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+.avatar-audio-row {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.avatar-model-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
 }
 
 .avatar-status-badge {
@@ -28,6 +54,7 @@
   align-items: center;
   gap: 6px;
   font-weight: 500;
+  flex-shrink: 0;
 }
 
 .status-dot {
@@ -37,35 +64,41 @@
   background-color: #22c55e;
   box-shadow: 0 0 8px #22c55e;
   animation: pulse-glow 2s infinite ease-in-out;
+  flex-shrink: 0;
 }
 
-.avatar-controls {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-wrap: nowrap;
-  justify-content: flex-end;
-}
-
-.voice-select {
-  background: rgba(30, 41, 59, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+/* Presence selects */
+.presence-select {
+  background: rgba(30, 41, 59, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   color: #f8fafc;
   padding: 4px 8px;
   border-radius: 6px;
   font-size: 0.74rem;
   outline: none;
   cursor: pointer;
-  min-width: 120px;
-  max-width: 155px;
+  min-width: 0;
+  flex: 1;
+  max-width: 180px;
   text-overflow: ellipsis;
   white-space: nowrap;
+  transition: border-color 0.2s;
+}
+
+.presence-select:hover {
+  border-color: rgba(139, 92, 246, 0.5);
+}
+
+.presence-select--voice {
+  flex: 2;
+  max-width: unset;
 }
 
 .volume-slider {
-  width: 65px;
-  accent-color: #3b82f6;
+  width: 80px;
+  accent-color: #8b5cf6;
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 .voice-mute-btn {
@@ -73,12 +106,14 @@
   border: none;
   color: var(--text-muted, #94a3b8);
   cursor: pointer;
-  padding: 4px;
+  padding: 4px 6px;
   border-radius: 4px;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+  -webkit-app-region: no-drag;
 }
 
 .voice-mute-btn:hover {
@@ -90,6 +125,9 @@
   color: #ef4444;
 }
 
+/* --------------------------------------------------------------------------
+   Avatar Canvas Wrapper
+   -------------------------------------------------------------------------- */
 .avatar-canvas-wrapper {
   position: relative;
   flex: 1;
@@ -97,9 +135,8 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: calc(100% - 45px);
-  min-height: 400px;
   overflow: hidden;
+  min-height: 300px;
 }
 
 #avatar-canvas, #avatar-live2d-canvas {
@@ -109,14 +146,159 @@
 }
 
 @keyframes pulse-glow {
-  0%, 100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.6;
-    transform: scale(0.9);
-  }
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(0.9); }
+}
+
+/* --------------------------------------------------------------------------
+   Mascot Toolbar — Left-edge vertical panel
+   -------------------------------------------------------------------------- */
+#mascot-toolbar {
+  display: none; /* only visible in mascot-mode via body.mascot-mode */
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 0;
+}
+
+.mascot-toolbar-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: rgba(10, 14, 26, 0.82);
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  border-left: none;
+  border-radius: 0 12px 12px 0;
+  padding: 10px 6px;
+  backdrop-filter: blur(16px);
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  transform: translateX(-110%);
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+
+#mascot-toolbar:hover .mascot-toolbar-inner {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.mascot-tool-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.18s, color 0.18s;
+  -webkit-app-region: no-drag;
+}
+
+.mascot-tool-btn:hover {
+  background: rgba(139, 92, 246, 0.2);
+  color: #e2e8f0;
+}
+
+.mascot-tool-btn--danger:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+}
+
+.mascot-tool-divider {
+  width: 24px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 4px 0;
+}
+
+/* Popups */
+.mascot-popup {
+  position: absolute;
+  left: 52px;
+  top: 0;
+  background: rgba(10, 14, 26, 0.92);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 10px;
+  padding: 12px;
+  min-width: 180px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  -webkit-app-region: no-drag;
+}
+
+.mascot-popup-label {
+  font-size: 0.68rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 5px;
+}
+
+.mascot-popup-select {
+  width: 100%;
+  background: rgba(30, 41, 59, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #f8fafc;
+  padding: 5px 8px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  outline: none;
+  cursor: pointer;
+}
+
+.mascot-chat-popup {
+  min-width: 220px;
+}
+
+.mascot-chat-textarea {
+  width: 100%;
+  background: rgba(30, 41, 59, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #f8fafc;
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  outline: none;
+  resize: none;
+  font-family: inherit;
+  box-sizing: border-box;
+  margin-top: 4px;
+}
+
+.mascot-send-btn {
+  margin-top: 8px;
+  width: 100%;
+  padding: 7px;
+  background: rgba(139, 92, 246, 0.3);
+  border: 1px solid rgba(139, 92, 246, 0.5);
+  color: #e2e8f0;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: background 0.18s;
+}
+
+.mascot-send-btn:hover {
+  background: rgba(139, 92, 246, 0.5);
+}
+
+/* Trigger zone — invisible strip on left edge to activate toolbar on hover */
+.mascot-toolbar::before {
+  content: '';
+  position: absolute;
+  left: -6px;
+  top: -60px;
+  bottom: -60px;
+  width: 18px;
+  background: transparent;
 }
 
 /* --------------------------------------------------------------------------
@@ -174,6 +356,10 @@ body.mascot-mode .avatar-stage-container:active {
 
 body.mascot-mode .avatar-top-bar {
   display: none !important;
+}
+
+body.mascot-mode #mascot-toolbar {
+  display: flex !important;
 }
 
 body.mascot-mode .avatar-canvas-wrapper {
