@@ -276,20 +276,29 @@ textarea#chat-input::placeholder {
   transform: scale(1.05);
 }
 
-.mic-btn.listening {
-  background: rgba(239, 68, 68, 0.25);
-  border-color: #ef4444;
-  color: #f87171;
-  animation: mic-pulse 1.2s infinite ease-in-out;
+.mic-btn.listening,
+.mic-btn.active-call {
+  background: rgba(34, 197, 94, 0.25);
+  border-color: #22c55e;
+  color: #4ade80;
+  animation: discord-call-pulse 1.6s infinite ease-in-out;
 }
 
-@keyframes mic-pulse {
+.mic-btn.paused {
+  background: rgba(234, 179, 8, 0.2);
+  border-color: #eab308;
+  color: #fde047;
+  animation: none;
+  opacity: 0.8;
+}
+
+@keyframes discord-call-pulse {
   0%, 100% {
     transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.6);
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.6);
   }
   50% {
-    transform: scale(1.08);
-    box-shadow: 0 0 0 8px rgba(239, 68, 68, 0);
+    transform: scale(1.06);
+    box-shadow: 0 0 0 6px rgba(34, 197, 94, 0);
   }
 }

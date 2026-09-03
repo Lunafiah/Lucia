@@ -34,9 +34,11 @@ class ChatController {
     this.avatarModelSelect = document.getElementById('avatar-model-select');
     this.avatarModelsData = { engines: ['canvas', 'sprites', 'live2d', 'vrm'], sprites: [], live2d: [], vrm: [] };
 
-    // Speech-to-Text Microphone
+    // Discord-style Continuous Mic Mode
     this.micBtn = document.getElementById('mic-btn');
-    this.isListening = false;
+    this.isMicMode = false;
+    this.isSpeakingOrProcessing = false;
+    this.silenceTimer = null;
     this.recognition = null;
 
     // Profile & Awakening Modal
@@ -186,46 +188,79 @@ class ChatController {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (SpeechRecognition) {
       this.recognition = new SpeechRecognition();
-      this.recognition.continuous = false;
-      this.recognition.interimResults = false;
+      this.recognition.continuous = true;
+      this.recognition.interimResults = true;
       this.recognition.lang = 'vi-VN';
 
       this.recognition.onstart = () => {
-        this.isListening = true;
-        if (this.micBtn) {
-          this.micBtn.classList.add('listening');
-          this.micBtn.title = 'Listening... Click to stop';
+        if (this.micBtn && this.isMicMode) {
+          this.micBtn.classList.add('active-call');
+          this.micBtn.classList.remove('paused');
+          this.micBtn.title = 'Discord Voice Mode: Connected (Listening). Click to Mute';
         }
       };
 
       this.recognition.onresult = (event) => {
-        if (event.results && event.results.length > 0) {
-          const text = event.results[0][0].transcript;
-          if (text) {
-            const currentVal = this.inputArea.value;
-            this.inputArea.value = currentVal ? `${currentVal} ${text}` : text;
-            this._autoResizeInput();
-            this._updateSendButtonState();
-            this.inputArea.focus();
+        if (!this.isMicMode || this.isSpeakingOrProcessing) return;
+
+        let interimTranscript = '';
+        let finalTranscript = '';
+
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          const transcript = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            finalTranscript += transcript;
+          } else {
+            interimTranscript += transcript;
           }
+        }
+
+        const currentText = (finalTranscript || interimTranscript).trim();
+        if (currentText) {
+          this.inputArea.value = currentText;
+          this._autoResizeInput();
+          this._updateSendButtonState();
+
+          // Voice Activity Detection: auto-send after 1.3s pause of silence
+          if (this.silenceTimer) clearTimeout(this.silenceTimer);
+          this.silenceTimer = setTimeout(() => {
+            if (this.isMicMode && !this.isSpeakingOrProcessing && this._canSend()) {
+              console.log('[speech] Natural pause detected, sending voice turn automatically');
+              this.sendMessage();
+            }
+          }, 1300);
         }
       };
 
       this.recognition.onerror = (err) => {
-        console.warn('[speech] Recognition error:', err);
-        this._stopListening();
+        if (err.error !== 'no-speech') {
+          console.warn('[speech] Recognition error:', err.error);
+        }
       };
 
       this.recognition.onend = () => {
-        this._stopListening();
+        // Continuous voice connection: automatically keep listening if call mode is active
+        if (this.isMicMode && !this.isSpeakingOrProcessing) {
+          setTimeout(() => {
+            if (this.isMicMode && !this.isSpeakingOrProcessing) {
+              this._startListening();
+            }
+          }, 200);
+        }
       };
 
       if (this.micBtn) {
         this.micBtn.addEventListener('click', () => {
-          if (this.isListening) {
-            this._stopListening();
-          } else {
+          this.isMicMode = !this.isMicMode;
+          if (this.isMicMode) {
+            this.micBtn.classList.add('active-call');
+            this.micBtn.title = 'Discord Voice Mode: ON (Click to Mute / Leave Call)';
             this._startListening();
+          } else {
+            this.micBtn.classList.remove('active-call', 'paused');
+            this.micBtn.title = 'Discord Voice Mode: OFF (Click to Join Voice Chat)';
+            if (this.silenceTimer) clearTimeout(this.silenceTimer);
+            this._pauseListening();
           }
         });
       }
@@ -237,24 +272,33 @@ class ChatController {
   }
 
   _startListening() {
-    if (!this.recognition || this.currentState !== State.READY) return;
+    if (!this.recognition || this.currentState !== State.READY || this.isSpeakingOrProcessing) return;
     try {
       this.recognition.start();
     } catch (e) {
-      console.warn('[speech] Start recognition failed:', e);
+      // Ignore if already active
     }
   }
 
-  _stopListening() {
-    this.isListening = false;
-    if (this.micBtn) {
-      this.micBtn.classList.remove('listening');
-      this.micBtn.title = 'Voice Input (Speech-to-Text)';
+  _pauseListening() {
+    if (this.micBtn && this.isMicMode) {
+      this.micBtn.classList.add('paused');
     }
     if (this.recognition) {
       try {
-        this.recognition.stop();
+        this.recognition.abort();
       } catch (e) {}
+    }
+  }
+
+  _resumeListening() {
+    if (this.isMicMode && !this.isSpeakingOrProcessing) {
+      if (this.micBtn) {
+        this.micBtn.classList.remove('paused');
+      }
+      setTimeout(() => {
+        this._startListening();
+      }, 300);
     }
   }
 
@@ -484,6 +528,10 @@ class ChatController {
     const text = this.inputArea.value.trim();
     if (!text) return;
 
+    // Discord Mode: pause recognition while processing & speaking to avoid speaker-to-mic feedback loop
+    this.isSpeakingOrProcessing = true;
+    this._pauseListening();
+
     // Append user message bubble
     this.appendMessage('user', text);
     this.inputArea.value = '';
@@ -511,14 +559,30 @@ class ChatController {
             });
             if (voiceRes.ok) {
               const audioBlob = await voiceRes.blob();
-              window.avatarRenderer.speak(audioBlob);
+              window.avatarRenderer.speak(audioBlob, () => {
+                // Audio ended callback: resume listening in Discord mode
+                this.isSpeakingOrProcessing = false;
+                if (this.isMicMode) {
+                  this._resumeListening();
+                }
+              });
+            } else {
+              this.isSpeakingOrProcessing = false;
+              if (this.isMicMode) this._resumeListening();
             }
           } catch (vErr) {
             console.warn('[voice] Voice synthesis playback error:', vErr);
+            this.isSpeakingOrProcessing = false;
+            if (this.isMicMode) this._resumeListening();
           }
+        } else {
+          this.isSpeakingOrProcessing = false;
+          if (this.isMicMode) this._resumeListening();
         }
       } else {
         this.appendMessage('error', 'Received empty response from companion.');
+        this.isSpeakingOrProcessing = false;
+        if (this.isMicMode) this._resumeListening();
       }
       this.transitionTo(State.READY);
     } catch (err) {
@@ -526,6 +590,8 @@ class ChatController {
       this.removeTypingIndicator(typingIndicator);
       const errMsg = err.message || err.code || 'Failed to communicate with Lucia.';
       this.appendMessage('error', `Connection error: ${errMsg}`);
+      this.isSpeakingOrProcessing = false;
+      if (this.isMicMode) this._resumeListening();
       this.transitionTo(State.READY);
     }
   }
