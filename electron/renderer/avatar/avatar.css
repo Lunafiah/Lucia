@@ -356,6 +356,40 @@
 /* --------------------------------------------------------------------------
    Desktop Mascot Mode
    -------------------------------------------------------------------------- */
+/* Drag handle at the top of mascot window */
+.mascot-drag-handle {
+  display: none;
+}
+
+body.mascot-mode .mascot-drag-handle {
+  display: flex;
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9998;
+  width: 54px;
+  height: 14px;
+  align-items: center;
+  justify-content: center;
+  -webkit-app-region: drag !important;
+  cursor: grab;
+}
+
+.mascot-drag-pill {
+  width: 36px;
+  height: 5px;
+  background: rgba(168, 85, 247, 0.45);
+  border-radius: 999px;
+  box-shadow: 0 0 8px rgba(168, 85, 247, 0.3);
+  transition: all 0.2s ease;
+}
+
+.mascot-drag-handle:hover .mascot-drag-pill {
+  background: rgba(168, 85, 247, 0.9);
+  box-shadow: 0 0 12px rgba(168, 85, 247, 0.6);
+}
+
 body.mascot-mode {
   background: transparent !important;
   overflow: hidden !important;
@@ -398,7 +432,7 @@ body.mascot-mode .avatar-stage-container {
   box-shadow: none !important;
   margin: 0 !important;
   min-height: 100vh !important;
-  -webkit-app-region: drag;
+  -webkit-app-region: no-drag !important;
   cursor: grab;
 }
 
@@ -410,15 +444,37 @@ body.mascot-mode .avatar-top-bar {
   display: none !important;
 }
 
+/* Mascot toolbar: ALWAYS VISIBLE, high contrast, permanent bottom dock */
 body.mascot-mode #mascot-toolbar {
   display: flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  -webkit-app-region: no-drag !important;
+  bottom: 14px !important;
+  z-index: 9999 !important;
 }
 
+body.mascot-mode .mascot-toolbar-dock {
+  display: flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  -webkit-app-region: no-drag !important;
+}
+
+/* Canvas wrapper in mascot mode: no-drag allows DOM wheel zoom & smooth JS drag */
 body.mascot-mode .avatar-canvas-wrapper {
   height: 100vh !important;
   width: 100vw !important;
   min-height: 100vh !important;
   background: transparent !important;
+  -webkit-app-region: no-drag !important;
+  pointer-events: auto !important;
   cursor: grab !important;
+}
+
+body.mascot-mode .avatar-canvas-wrapper:active {
+  cursor: grabbing !important;
 }
 

@@ -26,6 +26,18 @@ function registerHandlers(port = 8765, isPreview = false, getMascotManager = nul
     return false;
   });
 
+  // window:move-mascot-by IPC handler (smooth JS window dragging without -webkit-app-region: drag wheel bug)
+  ipcMain.handle('window:move-mascot-by', async (event, { dx, dy }) => {
+    const { BrowserWindow } = require('electron');
+    const win = BrowserWindow.fromWebContents(event.sender);
+    if (win && !win.isDestroyed()) {
+      const [x, y] = win.getPosition();
+      win.setPosition(Math.round(x + (dx || 0)), Math.round(y + (dy || 0)));
+      return true;
+    }
+    return false;
+  });
+
   // models:get-avatars IPC handler (direct fs scan, works in both live and preview)
   ipcMain.handle('models:get-avatars', async () => {
     const rootDir = path.resolve(__dirname, '../../');

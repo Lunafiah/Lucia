@@ -10,6 +10,7 @@ class AvatarRenderer {
     this.canvas = canvasElement;
     this.ctx = canvasElement ? canvasElement.getContext("2d") : null;
     this.live2dCanvas = typeof document !== "undefined" ? document.getElementById("avatar-live2d-canvas") : null;
+    this.vrmCanvas = typeof document !== "undefined" ? document.getElementById("avatar-vrm-canvas") : null;
     this.lipSync = new LipSyncProcessor();
     this.pixiApp = null;
     this.currentLive2DModel = null;
@@ -18,9 +19,19 @@ class AvatarRenderer {
     this.pan = { x: 0, y: 0 };
     this.isDraggingModel = false;
     this.dragStart = { x: 0, y: 0 };
+    this.isDraggingWindow = false;
+    this.windowDragStart = { screenX: 0, screenY: 0 };
     this.activeEngine = "canvas";
     this.activeModel = "default";
     this.sprites = null;
+
+    // Three.js 3D VRM State
+    this.threeRenderer = null;
+    this.threeScene = null;
+    this.threeCamera = null;
+    this.currentVRM = null;
+    this.vrmProceduralRig = null;
+    this.threeClock = null;
 
     // Emotion & physics state
     this.currentExpression = ExpressionMapper.mapPADToExpression({
@@ -57,7 +68,12 @@ class AvatarRenderer {
 
   _bindEvents() {
     window.addEventListener("mousemove", (e) => {
-      const activeEl = this.activeEngine === "live2d" ? this.live2dCanvas : this.canvas;
+      const activeEl =
+        this.activeEngine === "live2d"
+          ? this.live2dCanvas
+          : this.activeEngine === "vrm"
+          ? this.vrmCanvas
+          : this.canvas;
       if (!activeEl) return;
       const rect = activeEl.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
@@ -70,68 +86,130 @@ class AvatarRenderer {
 
     window.addEventListener("resize", () => this.resize());
 
-    // Interactive Zoom (Mouse Wheel - clean uniform zoom)
-    const wrapper = (this.canvas && this.canvas.parentElement) || (this.live2dCanvas && this.live2dCanvas.parentElement);
-    if (wrapper) {
-      wrapper.addEventListener(
-        "wheel",
-        (e) => {
-          e.preventDefault();
-          const delta = e.deltaY < 0 ? 0.08 : -0.08;
-          this.mascotScale = Math.max(0.3, Math.min(4.0, (this.mascotScale || 1.0) + delta));
-          if (this.activeEngine === "live2d") {
-            this._repositionLive2DModel();
-          }
-        },
-        { passive: false }
-      );
+    // Universal Interactive Zoom (Mouse Wheel - clean uniform zoom for all engines)
+    const getActiveWrapper = () =>
+      (this.canvas && this.canvas.parentElement) ||
+      (this.live2dCanvas && this.live2dCanvas.parentElement) ||
+      (this.vrmCanvas && this.vrmCanvas.parentElement);
 
-      // Mouse drag to move/pan model in main mode
-      wrapper.addEventListener("mousedown", (e) => {
-        const isMascot = typeof document !== "undefined" && document.body.classList.contains("mascot-mode");
-        if (!isMascot && e.button === 0) {
+    const handleWheelZoom = (e) => {
+      const isMascot = typeof document !== "undefined" && document.body.classList.contains("mascot-mode");
+      const wrapper = getActiveWrapper();
+      const stage = document.querySelector(".avatar-stage-container") || wrapper;
+      const isOverAvatar = isMascot || (stage && stage.contains(e.target));
+      if (!isOverAvatar) return;
+
+      e.preventDefault();
+      const delta = e.deltaY < 0 ? 0.08 : -0.08;
+      this.mascotScale = Math.max(0.3, Math.min(4.0, (this.mascotScale || 1.0) + delta));
+      if (this.activeEngine === "live2d") {
+        this._repositionLive2DModel();
+      }
+    };
+
+    window.addEventListener("wheel", handleWheelZoom, { passive: false });
+
+    // Universal Mouse Drag:
+    // - In Main Mode: Left/Middle click drags the model freely (Canvas, Sprites, Live2D, 3D VRM).
+    // - In Mascot Mode: Left click drags the window across the desktop; Right-click or Shift+Left click pans model.
+    window.addEventListener("mousedown", (e) => {
+      const isMascot = typeof document !== "undefined" && document.body.classList.contains("mascot-mode");
+      const wrapper = getActiveWrapper();
+      const stage = document.querySelector(".avatar-stage-container") || wrapper;
+      if (!stage || !stage.contains(e.target)) return;
+
+      // Ignore toolbar and header clicks
+      if (
+        e.target.closest("#mascot-toolbar") ||
+        e.target.closest(".avatar-top-bar") ||
+        e.target.closest(".mascot-drag-handle")
+      ) {
+        return;
+      }
+
+      if (isMascot) {
+        if (e.button === 0 && !e.shiftKey) {
+          // Left click moves the floating mascot window
+          this.isDraggingWindow = true;
+          this.windowDragStart = { screenX: e.screenX, screenY: e.screenY };
+          if (wrapper) wrapper.style.cursor = "grabbing";
+        } else if (e.button === 2 || (e.button === 0 && e.shiftKey)) {
+          // Right click or Shift+Left click pans the model inside the window
           this.isDraggingModel = true;
           this.dragStart = {
             x: e.clientX - this.pan.x,
             y: e.clientY - this.pan.y,
           };
-          wrapper.style.cursor = "grabbing";
+          if (wrapper) wrapper.style.cursor = "move";
         }
-      });
+      } else {
+        // Main mode: Left or middle click freely pans the model
+        if (e.button === 0 || e.button === 1) {
+          this.isDraggingModel = true;
+          this.dragStart = {
+            x: e.clientX - this.pan.x,
+            y: e.clientY - this.pan.y,
+          };
+          if (wrapper) wrapper.style.cursor = "grabbing";
+        }
+      }
+    });
 
-      window.addEventListener("mousemove", (e) => {
-        if (this.isDraggingModel) {
-          this.pan.x = e.clientX - this.dragStart.x;
-          this.pan.y = e.clientY - this.dragStart.y;
-          if (this.activeEngine === "live2d") {
-            this._repositionLive2DModel();
-          }
+    window.addEventListener("mousemove", (e) => {
+      const wrapper = getActiveWrapper();
+      if (this.isDraggingWindow) {
+        const dx = e.screenX - this.windowDragStart.screenX;
+        const dy = e.screenY - this.windowDragStart.screenY;
+        this.windowDragStart.screenX = e.screenX;
+        this.windowDragStart.screenY = e.screenY;
+        if (window.lucia && window.lucia.window && window.lucia.window.moveMascotBy) {
+          window.lucia.window.moveMascotBy(dx, dy);
         }
-      });
+      } else if (this.isDraggingModel) {
+        this.pan.x = e.clientX - this.dragStart.x;
+        this.pan.y = e.clientY - this.dragStart.y;
+        if (this.activeEngine === "live2d") {
+          this._repositionLive2DModel();
+        }
+      }
+    });
 
-      window.addEventListener("mouseup", () => {
-        if (this.isDraggingModel) {
-          this.isDraggingModel = false;
-          if (wrapper) wrapper.style.cursor = "grab";
-        }
-      });
+    window.addEventListener("mouseup", () => {
+      const wrapper = getActiveWrapper();
+      this.isDraggingWindow = false;
+      this.isDraggingModel = false;
+      if (wrapper) wrapper.style.cursor = "grab";
+    });
 
-      // Double-click to reset model position & zoom in main mode
-      wrapper.addEventListener("dblclick", () => {
-        const isMascot = typeof document !== "undefined" && document.body.classList.contains("mascot-mode");
-        if (!isMascot) {
-          this.pan = { x: 0, y: 0 };
-          this.mascotScale = 1.0;
-          if (this.activeEngine === "live2d") {
-            this._repositionLive2DModel();
-          }
-        }
-      });
-    }
+    // Prevent context menu on avatar stage so right-click pan works cleanly
+    window.addEventListener("contextmenu", (e) => {
+      const wrapper = getActiveWrapper();
+      const stage = document.querySelector(".avatar-stage-container") || wrapper;
+      if (stage && stage.contains(e.target) && !e.target.closest("#mascot-toolbar")) {
+        e.preventDefault();
+      }
+    });
+
+    // Double-click to reset model position & zoom
+    window.addEventListener("dblclick", (e) => {
+      const wrapper = getActiveWrapper();
+      const stage = document.querySelector(".avatar-stage-container") || wrapper;
+      if (!stage || !stage.contains(e.target)) return;
+      if (e.target.closest("#mascot-toolbar") || e.target.closest(".avatar-top-bar")) return;
+
+      this.pan = { x: 0, y: 0 };
+      this.mascotScale = 1.0;
+      if (this.activeEngine === "live2d") {
+        this._repositionLive2DModel();
+      }
+    });
   }
 
   resize() {
-    const wrapper = (this.canvas && this.canvas.parentElement) || (this.live2dCanvas && this.live2dCanvas.parentElement);
+    const wrapper =
+      (this.canvas && this.canvas.parentElement) ||
+      (this.live2dCanvas && this.live2dCanvas.parentElement) ||
+      (this.vrmCanvas && this.vrmCanvas.parentElement);
     if (!wrapper) return;
 
     const rect = wrapper.getBoundingClientRect();
@@ -149,6 +227,12 @@ class AvatarRenderer {
     if (this.pixiApp && this.live2dCanvas) {
       this.pixiApp.renderer.resize(rect.width, rect.height);
       this._repositionLive2DModel();
+    }
+
+    if (this.threeRenderer && this.threeCamera && this.vrmCanvas) {
+      this.threeCamera.aspect = rect.width / (rect.height || 1);
+      this.threeCamera.updateProjectionMatrix();
+      this.threeRenderer.setSize(rect.width, rect.height);
     }
   }
 
@@ -237,6 +321,11 @@ class AvatarRenderer {
   }
 
   _render(now) {
+    if (this.activeEngine === "vrm") {
+      this._updateVRM(now);
+      return;
+    }
+
     if (!this.ctx) return;
     if (!this.width || !this.height) {
       this.resize();
@@ -516,26 +605,300 @@ class AvatarRenderer {
     this.activeModel = model || "default";
     console.log(`[avatar] Switched engine to: ${this.activeEngine}, model: ${this.activeModel}`);
 
+    if (!this.vrmCanvas && typeof document !== "undefined") {
+      this.vrmCanvas = document.getElementById("avatar-vrm-canvas");
+    }
+    if (!this.live2dCanvas && typeof document !== "undefined") {
+      this.live2dCanvas = document.getElementById("avatar-live2d-canvas");
+    }
+
+    if (this.canvas) this.canvas.style.display = "none";
+    if (this.live2dCanvas) this.live2dCanvas.style.display = "none";
+    if (this.vrmCanvas) this.vrmCanvas.style.display = "none";
+
     if (this.activeEngine === "live2d") {
-      if (this.canvas) this.canvas.style.display = "none";
-      if (this.live2dCanvas) {
-        this.live2dCanvas.style.display = "block";
-      }
+      if (this.live2dCanvas) this.live2dCanvas.style.display = "block";
       this.resize();
       await this._loadLive2DModel(this.activeModel);
-    } else {
-      if (this.live2dCanvas) this.live2dCanvas.style.display = "none";
-      if (this.canvas) {
-        this.canvas.style.display = "block";
-      }
+    } else if (this.activeEngine === "vrm") {
+      if (this.vrmCanvas) this.vrmCanvas.style.display = "block";
       this.resize();
-
+      await this._loadVRMModel(this.activeModel);
+    } else {
+      if (this.canvas) this.canvas.style.display = "block";
+      this.resize();
       if (this.activeEngine === "sprites") {
         this._loadSpriteSet(this.activeModel);
       } else {
         this.sprites = null;
       }
     }
+  }
+
+  _initThreeVRM() {
+    if (typeof THREE === "undefined") return;
+    if (!this.vrmCanvas && typeof document !== "undefined") {
+      this.vrmCanvas = document.getElementById("avatar-vrm-canvas");
+    }
+    if (!this.vrmCanvas || this.threeRenderer) return;
+
+    const parent = this.vrmCanvas.parentElement;
+    const w = parent ? parent.clientWidth : 400;
+    const h = parent ? parent.clientHeight : 600;
+
+    try {
+      this.threeRenderer = new THREE.WebGLRenderer({
+        canvas: this.vrmCanvas,
+        alpha: true,
+        antialias: true,
+      });
+      this.threeRenderer.setSize(w, h);
+      this.threeRenderer.setPixelRatio(window.devicePixelRatio || 1);
+      if (THREE.sRGBEncoding) {
+        this.threeRenderer.outputEncoding = THREE.sRGBEncoding;
+      }
+
+      this.threeScene = new THREE.Scene();
+      this.threeCamera = new THREE.PerspectiveCamera(30, w / (h || 1), 0.1, 20.0);
+      this.threeCamera.position.set(0, 1.35, 1.8);
+
+      const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
+      dirLight.position.set(1.0, 2.0, 1.0).normalize();
+      this.threeScene.add(dirLight);
+
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+      this.threeScene.add(ambientLight);
+
+      const rimLight = new THREE.DirectionalLight(0xa855f7, 1.0);
+      rimLight.position.set(-1.0, 1.5, -1.0).normalize();
+      this.threeScene.add(rimLight);
+
+      this.threeClock = new THREE.Clock();
+    } catch (e) {
+      console.warn("[vrm] Failed to initialize Three.js WebGL context:", e);
+    }
+  }
+
+  _create3DProceduralRig() {
+    if (!this.threeScene || typeof THREE === "undefined") return;
+    if (this.vrmProceduralRig) {
+      this.threeScene.remove(this.vrmProceduralRig);
+      this.vrmProceduralRig = null;
+    }
+
+    const group = new THREE.Group();
+    group.position.set(0, 1.35, 0);
+
+    // Head sphere with glowing aura
+    const headGeo = new THREE.SphereGeometry(0.28, 32, 32);
+    const headMat = new THREE.MeshStandardMaterial({
+      color: 0x1e1b4b,
+      emissive: 0x581c87,
+      emissiveIntensity: 0.35,
+      roughness: 0.2,
+      metalness: 0.1,
+    });
+    const head = new THREE.Mesh(headGeo, headMat);
+    head.name = "head";
+    group.add(head);
+
+    // Glowing eyes
+    const eyeGeo = new THREE.SphereGeometry(0.045, 16, 16);
+    eyeGeo.scale(1, 1.3, 0.4);
+    const eyeMat = new THREE.MeshStandardMaterial({
+      color: 0x22d3ee,
+      emissive: 0x38bdf8,
+      emissiveIntensity: 0.9,
+    });
+    const leftEye = new THREE.Mesh(eyeGeo, eyeMat);
+    leftEye.position.set(-0.095, 0.03, 0.25);
+    leftEye.name = "leftEye";
+    head.add(leftEye);
+
+    const rightEye = new THREE.Mesh(eyeGeo, eyeMat);
+    rightEye.position.set(0.095, 0.03, 0.25);
+    rightEye.name = "rightEye";
+    head.add(rightEye);
+
+    // Mouth
+    const mouthGeo = new THREE.TorusGeometry(0.04, 0.008, 8, 16, Math.PI);
+    const mouthMat = new THREE.MeshBasicMaterial({ color: 0xf43f5e });
+    const mouth = new THREE.Mesh(mouthGeo, mouthMat);
+    mouth.rotation.x = Math.PI;
+    mouth.position.set(0, -0.1, 0.26);
+    mouth.name = "mouth";
+    head.add(mouth);
+
+    // Body
+    const bodyGeo = new THREE.CylinderGeometry(0.18, 0.28, 0.45, 24);
+    const bodyMat = new THREE.MeshStandardMaterial({
+      color: 0x0f172a,
+      roughness: 0.4,
+      metalness: 0.2,
+    });
+    const body = new THREE.Mesh(bodyGeo, bodyMat);
+    body.position.set(0, -0.42, 0);
+    body.name = "body";
+    group.add(body);
+
+    // Orbital ring
+    const ringGeo = new THREE.TorusGeometry(0.42, 0.006, 16, 64);
+    const ringMat = new THREE.MeshBasicMaterial({
+      color: 0xa855f7,
+      transparent: true,
+      opacity: 0.7,
+    });
+    const ring = new THREE.Mesh(ringGeo, ringMat);
+    ring.rotation.x = Math.PI * 0.45;
+    ring.name = "orbitalRing";
+    group.add(ring);
+
+    this.vrmProceduralRig = group;
+    this.threeScene.add(group);
+  }
+
+  _animate3DProceduralRig(now, gazeX, gazeY) {
+    if (!this.vrmProceduralRig) return;
+    const time = (now - this.startTime) / 1000;
+    const breath = Math.sin(time * 2.2) * 0.02;
+
+    const head = this.vrmProceduralRig.getObjectByName("head");
+    if (head) {
+      head.rotation.y = gazeX * 0.35;
+      head.rotation.x = -gazeY * 0.25;
+      head.position.y = breath;
+
+      // Blinking
+      const leftEye = head.getObjectByName("leftEye");
+      const rightEye = head.getObjectByName("rightEye");
+      const eyeScaleY = this.isBlinking ? 0.1 : 1.0;
+      if (leftEye) leftEye.scale.y = eyeScaleY * 1.3;
+      if (rightEye) rightEye.scale.y = eyeScaleY * 1.3;
+
+      // Lip sync mouth
+      const mouth = head.getObjectByName("mouth");
+      const lipMetrics = this.lipSync ? this.lipSync.update() : { mouthOpen: 0 };
+      if (mouth) {
+        mouth.scale.set(1.0 + lipMetrics.mouthOpen * 0.5, 1.0 + lipMetrics.mouthOpen * 2.5, 1.0);
+      }
+    }
+
+    const ring = this.vrmProceduralRig.getObjectByName("orbitalRing");
+    if (ring) {
+      ring.rotation.z = time * 0.4;
+    }
+  }
+
+  async _loadVRMModel(modelName) {
+    this._initThreeVRM();
+    if (!this.threeScene) return;
+
+    if (this.currentVRM) {
+      this.threeScene.remove(this.currentVRM.scene);
+      if (typeof THREE_VRM !== "undefined" && THREE_VRM.VRMUtils) {
+        THREE_VRM.VRMUtils.deepDispose(this.currentVRM.scene);
+      }
+      this.currentVRM = null;
+    }
+    if (this.vrmProceduralRig) {
+      this.threeScene.remove(this.vrmProceduralRig);
+      this.vrmProceduralRig = null;
+    }
+
+    if (!modelName || modelName === "default") {
+      this._create3DProceduralRig();
+      return;
+    }
+
+    if (typeof THREE === "undefined" || !THREE.GLTFLoader || typeof THREE_VRM === "undefined") {
+      console.warn("[vrm] Three.js, GLTFLoader, or THREE_VRM not loaded yet");
+      this._create3DProceduralRig();
+      return;
+    }
+
+    let vrmPath = `../../models/avatar/vrm/${modelName}`;
+    if (this.baseModelsPath) {
+      vrmPath = `file:///${this.baseModelsPath}/models/avatar/vrm/${modelName}`;
+    }
+
+    const loader = new THREE.GLTFLoader();
+    try {
+      console.log(`[vrm] Loading VRM model from: ${vrmPath}`);
+      loader.load(
+        vrmPath,
+        (gltf) => {
+          THREE_VRM.VRM.from(gltf)
+            .then((vrm) => {
+              this.currentVRM = vrm;
+              this.threeScene.add(vrm.scene);
+              vrm.scene.rotation.y = Math.PI; // Face the camera
+              console.log(`[vrm] Model ${modelName} loaded into 3D scene!`);
+            })
+            .catch((e) => {
+              console.warn(`[vrm] VRM parsing failed, using 3D rig:`, e);
+              this._create3DProceduralRig();
+            });
+        },
+        undefined,
+        (err) => {
+          console.warn(`[vrm] Failed to load ${modelName}, using 3D rig:`, err);
+          this._create3DProceduralRig();
+        }
+      );
+    } catch (err) {
+      console.error("[vrm] Load exception:", err);
+      this._create3DProceduralRig();
+    }
+  }
+
+  _updateVRM(now) {
+    if (!this.threeRenderer || !this.threeCamera || !this.threeScene) return;
+
+    const delta = this.threeClock ? this.threeClock.getDelta() : 0.016;
+    const userZoom = this.mascotScale || 1.0;
+
+    // Pan & Zoom controls in 3D:
+    // - pan.x and pan.y shift camera position in world space
+    // - mascotScale shifts camera distance along Z
+    this.threeCamera.position.z = 1.8 / Math.max(0.2, userZoom);
+    this.threeCamera.position.x = -this.pan.x * 0.0035;
+    this.threeCamera.position.y = 1.35 + this.pan.y * 0.0035;
+    this.threeCamera.lookAt(this.threeCamera.position.x, 1.35, 0);
+
+    const gazeX = this.mouse.x * 0.3;
+    const gazeY = this.mouse.y * 0.2;
+
+    if (this.currentVRM) {
+      this.currentVRM.update(delta);
+
+      if (this.currentVRM.humanoid) {
+        const head = this.currentVRM.humanoid.getBoneNode(THREE_VRM.VRMSchema.HumanoidBoneName.Head);
+        if (head) {
+          head.rotation.y = gazeX;
+          head.rotation.x = -gazeY;
+        }
+      }
+
+      const lipMetrics = this.lipSync ? this.lipSync.update() : { mouthOpen: 0 };
+      if (this.currentVRM.blendShapeProxy) {
+        this.currentVRM.blendShapeProxy.setValue(
+          THREE_VRM.VRMSchema.BlendShapePresetName.A,
+          Math.min(1.0, lipMetrics.mouthOpen * 2.0)
+        );
+        this.currentVRM.blendShapeProxy.setValue(
+          THREE_VRM.VRMSchema.BlendShapePresetName.Blink,
+          this.blinkProgress
+        );
+        this.currentVRM.blendShapeProxy.setValue(
+          THREE_VRM.VRMSchema.BlendShapePresetName.Joy,
+          this.currentExpression.smile
+        );
+      }
+    } else if (this.vrmProceduralRig) {
+      this._animate3DProceduralRig(now, gazeX, gazeY);
+    }
+
+    this.threeRenderer.render(this.threeScene, this.threeCamera);
   }
 
   async _loadLive2DModel(modelName) {
@@ -661,6 +1024,16 @@ class AvatarRenderer {
       this.pixiApp.destroy(true, { children: true });
       this.pixiApp = null;
     }
+    if (this.currentVRM) {
+      if (typeof THREE_VRM !== "undefined" && THREE_VRM.VRMUtils) {
+        THREE_VRM.VRMUtils.deepDispose(this.currentVRM.scene);
+      }
+      this.currentVRM = null;
+    }
+    if (this.threeRenderer) {
+      this.threeRenderer.dispose();
+      this.threeRenderer = null;
+    }
   }
 
   /**
@@ -768,7 +1141,7 @@ class AvatarRenderer {
         if (list.length === 0) {
           const opt = document.createElement("option");
           opt.value = "default";
-          opt.textContent = "Default Lucia (Procedural)";
+          opt.textContent = curEngine === "vrm" ? "🌐 3D Lucia Hologram (Procedural)" : "Default Lucia (Procedural)";
           mascotAvatarSelect.appendChild(opt);
         } else {
           list.forEach((m) => {
@@ -781,6 +1154,12 @@ class AvatarRenderer {
         mascotAvatarSelect.value = this.activeModel || "default";
       }
     };
+
+    // Initialize dropdowns on toolbar creation
+    if (mascotEngineSelect) {
+      mascotEngineSelect.value = this.activeEngine || "canvas";
+    }
+    syncMascotModelDropdown();
 
     if (modelBtn && modelPopup) {
       modelBtn.addEventListener("click", (e) => {

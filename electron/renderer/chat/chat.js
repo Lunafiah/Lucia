@@ -52,6 +52,8 @@ class ChatController {
     this.profileBornDateDisplay = document.getElementById('profile-born-date-display');
     this.profileDaysCountDisplay = document.getElementById('profile-days-count-display');
 
+    window.chatController = this;
+
     // Initialize Canvas Avatar
     const canvas = document.getElementById('avatar-canvas');
     if (canvas && typeof AvatarRenderer !== 'undefined') {
@@ -73,6 +75,7 @@ class ChatController {
     if (urlParams.get('mode') === 'mascot') {
       document.body.classList.add('mascot-mode');
       if (this.splashOverlay) this.splashOverlay.style.display = 'none';
+      this.transitionTo(State.READY);
       const wrapper = document.querySelector('.avatar-canvas-wrapper') || document.body;
       if (wrapper) {
         wrapper.addEventListener('dblclick', () => {
@@ -89,6 +92,10 @@ class ChatController {
     this._setupSpeechRecognition();
     this._setupProfileControls();
     this._setupBackendListeners();
+
+    // Immediately scan and load models (does not require waiting for python backend)
+    this._loadAvatarModels();
+    this._loadVoiceModels();
   }
 
   _setupVoiceControls() {

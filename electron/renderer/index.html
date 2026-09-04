@@ -311,6 +311,7 @@
                 <option value="canvas">🎨 2D Canvas</option>
                 <option value="sprites">🖼️ 2D Sprites</option>
                 <option value="live2d">🎬 Live2D</option>
+                <option value="vrm">🌐 3D VRM</option>
               </select>
             </div>
             <div class="mascot-field-group">
@@ -370,9 +371,15 @@
           </div>
         </div>
 
+        <!-- Sleek drag handle for moving Mascot window if needed -->
+        <div class="mascot-drag-handle" title="Drag to move Mascot window">
+          <span class="mascot-drag-pill"></span>
+        </div>
+
         <div class="avatar-canvas-wrapper">
           <canvas id="avatar-canvas"></canvas>
           <canvas id="avatar-live2d-canvas" style="display: none; position: absolute; inset: 0; width: 100%; height: 100%;"></canvas>
+          <canvas id="avatar-vrm-canvas" style="display: none; position: absolute; inset: 0; width: 100%; height: 100%;"></canvas>
         </div>
       </div>
     </section>
@@ -453,6 +460,11 @@
   <script src="libs/live2dcubismcore.min.js"></script>
   <script src="libs/pixi.min.js"></script>
   <script src="libs/cubism4.min.js"></script>
+
+  <!-- Three.js & 3D VRM WebGL Libraries -->
+  <script src="libs/three.min.js"></script>
+  <script src="libs/GLTFLoader.js"></script>
+  <script src="libs/three-vrm.js"></script>
 
   <!-- Scripts -->
   <script src="audio/audio-router.js"></script>

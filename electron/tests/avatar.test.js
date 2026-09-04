@@ -1,3 +1,6 @@
+/**
+ * @jest-environment jsdom
+ */
 const { ExpressionMapper } = require("../renderer/avatar/expression-mapper.js");
 const { LipSyncProcessor } = require("../renderer/avatar/lip-sync.js");
 
@@ -40,5 +43,56 @@ describe("LipSyncProcessor", () => {
     const metrics = processor.update();
     expect(metrics.open).toBe(0);
     expect(metrics.isSpeaking).toBe(false);
+  });
+});
+
+describe("AvatarRenderer", () => {
+  global.ExpressionMapper = ExpressionMapper;
+  global.LipSyncProcessor = LipSyncProcessor;
+  const { AvatarRenderer } = require("../renderer/avatar/avatar.js");
+
+  const createMockCanvas = () => {
+    const canvas = document.createElement("canvas");
+    canvas.getContext = jest.fn().mockReturnValue({
+      setTransform: jest.fn(),
+      clearRect: jest.fn(),
+      save: jest.fn(),
+      restore: jest.fn(),
+      translate: jest.fn(),
+      rotate: jest.fn(),
+      scale: jest.fn(),
+      beginPath: jest.fn(),
+      arc: jest.fn(),
+      fill: jest.fn(),
+      stroke: jest.fn(),
+      moveTo: jest.fn(),
+      lineTo: jest.fn(),
+      quadraticCurveTo: jest.fn(),
+      createRadialGradient: jest.fn().mockReturnValue({ addColorStop: jest.fn() })
+    });
+    return canvas;
+  };
+
+  test("initializes with default pan (0,0) and scale (1.0)", () => {
+    const canvas = createMockCanvas();
+    const renderer = new AvatarRenderer(canvas);
+
+    expect(renderer.pan.x).toBe(0);
+    expect(renderer.pan.y).toBe(0);
+    expect(renderer.mascotScale).toBe(1.0);
+    expect(renderer.activeEngine).toBe("canvas");
+  });
+
+  test("switches engine to vrm and sprites cleanly", async () => {
+    const canvas = createMockCanvas();
+    const renderer = new AvatarRenderer(canvas);
+
+    await renderer.setEngine("sprites", "Columbina");
+    expect(renderer.activeEngine).toBe("sprites");
+    expect(renderer.activeModel).toBe("Columbina");
+
+    await renderer.setEngine("vrm", "default");
+    expect(renderer.activeEngine).toBe("vrm");
+    expect(renderer.activeModel).toBe("default");
   });
 });

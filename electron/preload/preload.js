@@ -28,7 +28,8 @@ contextBridge.exposeInMainWorld('lucia', {
     getVoices: () => ipcRenderer.invoke('models:get-voices')
   },
   window: {
-    toggleMascot: () => ipcRenderer.invoke('window:toggle-mascot')
+    toggleMascot: () => ipcRenderer.invoke('window:toggle-mascot'),
+    moveMascotBy: (dx, dy) => ipcRenderer.invoke('window:move-mascot-by', { dx, dy })
   },
   on: (channel, listener) => {
     if (!ALLOWED_CHANNELS.includes(channel)) {
