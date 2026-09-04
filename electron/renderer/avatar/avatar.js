@@ -24,6 +24,8 @@ class AvatarRenderer {
     this.activeEngine = "canvas";
     this.activeModel = "default";
     this.sprites = null;
+    this.targetFps = 60;
+    this.lastFrameTime = 0;
 
     // Three.js 3D VRM State
     this.threeRenderer = null;
@@ -86,18 +88,25 @@ class AvatarRenderer {
 
     window.addEventListener("resize", () => this.resize());
 
-    // Universal Interactive Zoom (Mouse Wheel - clean uniform zoom for all engines)
+    // Universal Interactive Zoom (Mouse Wheel - only zooms when hovering directly on model)
     const getActiveWrapper = () =>
       (this.canvas && this.canvas.parentElement) ||
       (this.live2dCanvas && this.live2dCanvas.parentElement) ||
       (this.vrmCanvas && this.vrmCanvas.parentElement);
 
     const handleWheelZoom = (e) => {
-      const isMascot = typeof document !== "undefined" && document.body.classList.contains("mascot-mode");
+      // Prevent zoom during dragging to maintain scale stability
+      if (this.isDraggingModel || this.isDraggingWindow) return;
+
+      // Ignore zoom when scrolling inside mascot toolbar or popups
+      if (e.target.closest("#mascot-toolbar") || e.target.closest(".mascot-popup")) return;
+
       const wrapper = getActiveWrapper();
       const stage = document.querySelector(".avatar-stage-container") || wrapper;
-      const isOverAvatar = isMascot || (stage && stage.contains(e.target));
-      if (!isOverAvatar) return;
+      if (!stage || !stage.contains(e.target)) return;
+
+      // STRICT REQUIREMENT: Cursor must be positioned directly on the avatar model to zoom!
+      if (!this.isCursorOverModel(e.clientX, e.clientY)) return;
 
       e.preventDefault();
       const delta = e.deltaY < 0 ? 0.08 : -0.08;
@@ -105,13 +114,15 @@ class AvatarRenderer {
       if (this.activeEngine === "live2d") {
         this._repositionLive2DModel();
       }
+      this._updateToolbarPosition();
     };
 
     window.addEventListener("wheel", handleWheelZoom, { passive: false });
 
     // Universal Mouse Drag:
-    // - In Main Mode: Left/Middle click drags the model freely (Canvas, Sprites, Live2D, 3D VRM).
-    // - In Mascot Mode: Left click drags the window across the desktop; Right-click or Shift+Left click pans model.
+    // - In Mascot Mode: Left click on the model directly drags the Mascot Window across the desktop.
+    // - Shift + Left click or Middle click freely pans the model inside the frame.
+    // - In Main Mode: Left click freely pans the model across all engines.
     window.addEventListener("mousedown", (e) => {
       const isMascot = typeof document !== "undefined" && document.body.classList.contains("mascot-mode");
       const wrapper = getActiveWrapper();
@@ -121,20 +132,19 @@ class AvatarRenderer {
       // Ignore toolbar and header clicks
       if (
         e.target.closest("#mascot-toolbar") ||
-        e.target.closest(".avatar-top-bar") ||
-        e.target.closest(".mascot-drag-handle")
+        e.target.closest(".avatar-top-bar")
       ) {
         return;
       }
 
       if (isMascot) {
         if (e.button === 0 && !e.shiftKey) {
-          // Left click moves the floating mascot window
+          // Left click on model moves the floating mascot window across the desktop
           this.isDraggingWindow = true;
           this.windowDragStart = { screenX: e.screenX, screenY: e.screenY };
           if (wrapper) wrapper.style.cursor = "grabbing";
-        } else if (e.button === 2 || (e.button === 0 && e.shiftKey)) {
-          // Right click or Shift+Left click pans the model inside the window
+        } else if (e.button === 1 || (e.button === 0 && e.shiftKey)) {
+          // Shift+Left click or Middle click pans the model inside the window
           this.isDraggingModel = true;
           this.dragStart = {
             x: e.clientX - this.pan.x,
@@ -166,11 +176,15 @@ class AvatarRenderer {
           window.lucia.window.moveMascotBy(dx, dy);
         }
       } else if (this.isDraggingModel) {
-        this.pan.x = e.clientX - this.dragStart.x;
-        this.pan.y = e.clientY - this.dragStart.y;
+        // Safe pan clamping so the model is never flung off-screen
+        const clampX = (this.width || 400) * 0.75;
+        const clampY = (this.height || 600) * 0.75;
+        this.pan.x = Math.max(-clampX, Math.min(clampX, e.clientX - this.dragStart.x));
+        this.pan.y = Math.max(-clampY, Math.min(clampY, e.clientY - this.dragStart.y));
         if (this.activeEngine === "live2d") {
           this._repositionLive2DModel();
         }
+        this._updateToolbarPosition();
       }
     });
 
@@ -234,6 +248,141 @@ class AvatarRenderer {
       this.threeCamera.updateProjectionMatrix();
       this.threeRenderer.setSize(rect.width, rect.height);
     }
+
+    this._updateToolbarPosition();
+  }
+
+  /**
+   * Calculate precise visual bounding box of the active model.
+   */
+  getModelBounds() {
+    const activeEl =
+      this.activeEngine === "live2d"
+        ? this.live2dCanvas
+        : this.activeEngine === "vrm"
+        ? this.vrmCanvas
+        : this.canvas;
+    const w = this.width || (activeEl ? activeEl.clientWidth : 380) || 380;
+    const h = this.height || (activeEl ? activeEl.clientHeight : 540) || 540;
+    const userZoom = Math.max(0.3, Math.min(4.0, this.mascotScale || 1.0));
+
+    let centerX = w / 2 + this.pan.x;
+    let bottomY = h + this.pan.y;
+    let left = centerX - 100;
+    let right = centerX + 100;
+    let top = bottomY - 300;
+    let bottom = bottomY;
+
+    if (this.activeEngine === "sprites" && this._hasLoadedSprites()) {
+      const activeSprite = this.sprites.idle;
+      const naturalW = activeSprite.naturalWidth || 400;
+      const naturalH = activeSprite.naturalHeight || 600;
+      const baseScale = Math.min((w * 0.95) / naturalW, (h * 0.95) / naturalH);
+      const scale = baseScale * userZoom;
+      const drawW = naturalW * scale;
+      const drawH = naturalH * scale;
+      const drawX = (w - drawW) / 2 + this.pan.x;
+      const drawY = h - drawH + this.pan.y;
+      left = drawX;
+      right = drawX + drawW;
+      top = drawY;
+      bottom = drawY + drawH;
+      centerX = drawX + drawW / 2;
+      bottomY = bottom;
+    } else if (this.activeEngine === "live2d" && this.currentLive2DModel) {
+      const m = this.currentLive2DModel;
+      const mw = (m.width || 400) * (m.scale ? m.scale.x : 1);
+      const mh = (m.height || 600) * (m.scale ? m.scale.y : 1);
+      left = m.x;
+      right = m.x + mw;
+      top = m.y;
+      bottom = m.y + mh;
+      centerX = m.x + mw / 2;
+      bottomY = bottom;
+    } else if (this.activeEngine === "vrm") {
+      const modelH = h * 0.75 * userZoom;
+      const modelW = modelH * 0.55;
+      centerX = w / 2 + this.pan.x;
+      bottomY = h * 0.88 + this.pan.y;
+      top = bottomY - modelH;
+      left = centerX - modelW / 2;
+      right = centerX + modelW / 2;
+      bottom = bottomY;
+    } else {
+      // Procedural 2D Canvas
+      const headRadius = Math.min(w, h) * 0.3 * userZoom;
+      centerX = w / 2 + this.pan.x;
+      const centerY = h / 2 + this.pan.y;
+      top = centerY - headRadius * 1.3;
+      bottom = centerY + headRadius * 1.8;
+      left = centerX - headRadius * 1.5;
+      right = centerX + headRadius * 1.5;
+      bottomY = bottom;
+    }
+
+    return { centerX, bottomY, left, right, top, bottom };
+  }
+
+  /**
+   * Hit test whether client coordinates are positioned over the active avatar model.
+   */
+  isCursorOverModel(clientX, clientY) {
+    const activeEl =
+      this.activeEngine === "live2d"
+        ? this.live2dCanvas
+        : this.activeEngine === "vrm"
+        ? this.vrmCanvas
+        : this.canvas;
+    if (!activeEl) return false;
+
+    const rect = activeEl.getBoundingClientRect();
+    const relX = clientX - rect.left;
+    const relY = clientY - rect.top;
+
+    const bounds = this.getModelBounds();
+    const buffer = 20; // 20px margin for easy targeting
+    return (
+      relX >= bounds.left - buffer &&
+      relX <= bounds.right + buffer &&
+      relY >= bounds.top - buffer &&
+      relY <= bounds.bottom + buffer
+    );
+  }
+
+  /**
+   * Dynamically anchor mascot toolbar dock directly beneath the model.
+   */
+  _updateToolbarPosition() {
+    const toolbar = document.getElementById("mascot-toolbar");
+    if (!toolbar) return;
+    const isMascot = typeof document !== "undefined" && document.body.classList.contains("mascot-mode");
+    if (!isMascot) return;
+
+    const bounds = this.getModelBounds();
+    const winW = window.innerWidth || 380;
+    const winH = window.innerHeight || 540;
+
+    // Anchor toolbar directly underneath the model's bottom center
+    const safeX = Math.max(120, Math.min(winW - 120, bounds.centerX));
+    const dockHeight = 52;
+    // Sit 8px below the model's bottom, clamped so dock never overflows window edge
+    const safeY = Math.max(dockHeight, Math.min(winH - dockHeight - 6, bounds.bottomY + 8));
+
+    toolbar.style.left = `${safeX}px`;
+    toolbar.style.top = `${safeY}px`;
+    toolbar.style.bottom = "auto";
+  }
+
+  /**
+   * Set target rendering framerate (e.g. 60 vs 30 FPS for battery saving).
+   */
+  setTargetFps(fps) {
+    const parsed = parseInt(fps, 10);
+    if (isNaN(parsed)) {
+      this.targetFps = 60;
+      return;
+    }
+    this.targetFps = Math.max(15, Math.min(120, parsed));
   }
 
   /**
@@ -252,9 +401,14 @@ class AvatarRenderer {
 
   start() {
     const loop = (now) => {
+      this.animationFrameId = requestAnimationFrame(loop);
+      if (this.targetFps && this.targetFps < 60) {
+        const elapsed = now - this.lastFrameTime;
+        if (elapsed < (1000 / this.targetFps) - 2) return;
+        this.lastFrameTime = now;
+      }
       this._updatePhysics(now);
       this._render(now);
-      this.animationFrameId = requestAnimationFrame(loop);
     };
     this.animationFrameId = requestAnimationFrame(loop);
   }
@@ -321,6 +475,8 @@ class AvatarRenderer {
   }
 
   _render(now) {
+    this._updateToolbarPosition();
+
     if (this.activeEngine === "vrm") {
       this._updateVRM(now);
       return;
@@ -1056,17 +1212,24 @@ class AvatarRenderer {
       get("mascot-model-btn"),
       get("mascot-voice-btn"),
       get("mascot-mic-btn"),
+      get("mascot-settings-btn"),
       get("mascot-close-btn"),
     ].filter(Boolean);
 
     const closeAllPopups = () => {
-      [get("mascot-chat-popup"), get("mascot-model-popup"), get("mascot-voice-popup")].forEach((p) => {
+      [
+        get("mascot-chat-popup"),
+        get("mascot-model-popup"),
+        get("mascot-voice-popup"),
+        get("mascot-settings-popup"),
+      ].forEach((p) => {
         if (p) p.style.display = "none";
       });
       allButtons.forEach((b) => {
         if (b && b.id !== "mascot-mic-btn") b.classList.remove("active");
       });
       _activePopup = null;
+      if (toolbar) toolbar.classList.remove("has-active-popup");
     };
 
     const togglePopup = (btnEl, popupEl) => {
@@ -1077,8 +1240,11 @@ class AvatarRenderer {
         popupEl.style.display = "flex";
         if (btnEl) btnEl.classList.add("active");
         _activePopup = popupEl;
+        if (toolbar) toolbar.classList.add("has-active-popup");
       }
     };
+
+    this._updateToolbarPosition();
 
     // --- 1. Chat button & popup ---
     const chatBtn = get("mascot-chat-btn");
@@ -1200,7 +1366,7 @@ class AvatarRenderer {
       });
     }
 
-    // --- 3. Voice button & popup ---
+    // --- 3. Voice button & popup (Audio devices, Voice model, Volume) ---
     const voiceBtn = get("mascot-voice-btn");
     const voicePopup = get("mascot-voice-popup");
     const mascotVoiceSelect = get("mascot-voice-select");
@@ -1217,6 +1383,9 @@ class AvatarRenderer {
         const mainVol = get("voice-volume-slider");
         if (mainVol && mascotVolSlider) {
           mascotVolSlider.value = mainVol.value;
+        }
+        if (window.chatController && typeof window.chatController.populateAudioDevices === "function") {
+          window.chatController.populateAudioDevices();
         }
         togglePopup(voiceBtn, voicePopup);
       });
@@ -1260,7 +1429,71 @@ class AvatarRenderer {
       });
     }
 
-    // --- 5. Close button (return to full window) ---
+    // --- 5. Settings button & popup (Opacity, Reset avatar, Journal, Full window) ---
+    const settingsBtn = get("mascot-settings-btn");
+    const settingsPopup = get("mascot-settings-popup");
+    const opacitySlider = get("mascot-opacity-slider");
+    const opacityVal = get("mascot-opacity-val");
+    const resetAvatarBtn = get("mascot-reset-avatar-btn");
+    const openJournalBtn = get("mascot-open-journal-btn");
+    const returnMainBtn = get("mascot-return-main-btn");
+
+    if (settingsBtn && settingsPopup) {
+      settingsBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        togglePopup(settingsBtn, settingsPopup);
+      });
+    }
+
+    if (opacitySlider) {
+      const savedOpacity = localStorage.getItem("lucia_mascot_opacity") || "1";
+      opacitySlider.value = savedOpacity;
+      document.body.style.opacity = savedOpacity;
+      if (opacityVal) opacityVal.textContent = Math.round(parseFloat(savedOpacity) * 100) + "%";
+
+      opacitySlider.addEventListener("input", (e) => {
+        e.stopPropagation();
+        const op = parseFloat(e.target.value);
+        document.body.style.opacity = op;
+        if (opacityVal) opacityVal.textContent = Math.round(op * 100) + "%";
+        localStorage.setItem("lucia_mascot_opacity", op);
+      });
+    }
+
+    if (resetAvatarBtn) {
+      resetAvatarBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        this.pan = { x: 0, y: 0 };
+        this.mascotScale = 1.0;
+        if (this.activeEngine === "live2d") {
+          this._repositionLive2DModel();
+        }
+        closeAllPopups();
+      });
+    }
+
+    if (openJournalBtn) {
+      openJournalBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const jm = get("journal-modal");
+        if (jm) jm.style.display = "flex";
+        if (window.chatController && typeof window.chatController._updateJournalStats === "function") {
+          window.chatController._updateJournalStats();
+        }
+        closeAllPopups();
+      });
+    }
+
+    if (returnMainBtn) {
+      returnMainBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (window.lucia && window.lucia.window && window.lucia.window.toggleMascot) {
+          window.lucia.window.toggleMascot();
+        }
+      });
+    }
+
+    // --- 6. Close button (return to full window) ---
     const closeBtn = get("mascot-close-btn");
     if (closeBtn) {
       closeBtn.addEventListener("click", (e) => {

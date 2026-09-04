@@ -213,6 +213,35 @@ function registerHandlers(port = 8765, isPreview = false, getMascotManager = nul
     }
     return { tier: 'unknown' };
   });
+
+  // profile:set IPC handler
+  ipcMain.handle('profile:set', async (_event, { profile }) => {
+    if (isPreview) {
+      return {
+        status: 'ok',
+        tier: profile,
+        name: `Preview (${profile})`,
+        description: 'Simulated Profile in UI Preview Mode',
+        vram_mb: 4096,
+        n_ctx: 2048
+      };
+    }
+
+    try {
+      const response = await fetch(`${baseUrl}/system/profile`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ profile }),
+        signal: AbortSignal.timeout(4000)
+      });
+      if (response.ok) {
+        return await response.json();
+      }
+    } catch (e) {
+      console.warn('[ipc-bridge] Failed to set profile:', e);
+    }
+    return { status: 'error' };
+  });
 }
 
 module.exports = { registerHandlers };

@@ -85,35 +85,78 @@ Prevents emotional burnout, runaway anxiety, or manic states:
 * **Synergistic Ecphory**: When Lucia enters an emotional state, the engine queries past traces and generates a subconscious **Echo Vector** that softly primes her prompt without quoting past memories mechanically.
 
 ### 3.6. Layer 6: Voice, Avatar & Embodied Presence
-* **Direct RVC Voice Engine (`src/core/voice/`)**:
-  * Loads `.pth` weights and `.index` feature files directly from `models/voice/rvc/`.
-  * Synthesizes character speech on-demand with PAD-aware emotional pitch/speed modulation.
-* **Electron Desktop Avatar (`electron/renderer/avatar/`)**:
-  * **Expression Mapper**: Maps 500ms PAD telemetry to eyebrow angles, smile curves, eye openness, and cheek blushing.
-  * **Web Audio LipSync**: Analyzes audio frequencies in real time at 60 FPS to open/close her mouth in sync with speech.
-  * **Natural Physics**: Triple-frame eye blinks, gentle breathing idle loop, and cursor gaze tracking.
+
+#### 1. Direct RVC Voice Engine (`src/core/voice/`)
+* Loads `.pth` weights and `.index` feature files directly from `models/voice/rvc/`.
+* Synthesizes character speech on-demand with PAD-aware emotional pitch/speed modulation.
+* High-frequency phrase cache ensures zero-latency playback for conversational acknowledgments.
+
+#### 2. Quad-Engine Electron Desktop Avatar (`electron/renderer/avatar/`)
+Lucia features a unified polymorphic avatar architecture supporting four rendering engines:
+* **🎨 2D Procedural Canvas**: Pure HTML5 Canvas vector rig calculating real-time quadratic bezier curves, eye openness, blush gradients, and procedural mouth articulation. Zero VRAM overhead.
+* **🖼️ 2D Expression Sprites**: High-performance PNG sprite sequencer (`idle`, `smile`, `blush`, `speaking`, `thinking`) switching based on live PAD valence/arousal thresholds and Web Audio amplitude.
+* **🎬 Live2D Cubism 4 Engine**: WebGL rendering via PixiJS and Official Cubism 4 Core (`live2dcubismcore.min.js`). Maps PAD coordinates to standard Live2D parameter IDs (`ParamEyeLOpen`, `ParamEyeROpen`, `ParamMouthOpenY`, `ParamCheek`, `ParamAngleX`, `ParamAngleY`).
+* **🌐 3D Humanoid VRM Engine**: WebGL rendering via Three.js and `@pixiv/three-vrm` with full skeletal hierarchy, natural blinking, eye gaze direction, and VRM blendshape morph targets (`happy`, `blink`, `aa`, `relaxed`). Includes a holographic procedural fallback rig when no model file is loaded.
+
+#### 3. Avatar Physics & Web Audio Lip-Sync
+* **Expression Mapper (`expression-mapper.js`)**: Maps 500ms PAD telemetry into continuous blendshape weights with smooth exponential damping ($\tau \approx 120\text{ms}$).
+* **Web Audio Lip-Sync (`lip-sync.js`)**: Real-time FFT spectrum analysis across vocal formants (200Hz–2500Hz) computing mouth aperture height and vowel width at target framerates.
+* **Smart Framerate Limiter**: Supports both 60 FPS (high fluid dynamic) and 30 FPS (energy-saving / battery mode, 50% CPU/GPU reduction).
 
 ---
 
-## 4. Concurrency & Threading Model
+## 4. Desktop & Mascot Window IPC Architecture
 
-Lucia operates with 4 non-blocking concurrent daemon threads coordinated by thread-safe locks:
+Lucia provides two presentation contexts managed by Electron:
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│                        ELECTRON MAIN PROCESS                           │
+│  • HotkeyManager (Ctrl+Shift+L)   • TrayManager (Always running core)  │
+│  • ProcessManager (FastAPI subproc) • MascotWindowManager              │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │ IPC Bridge
+           ┌────────────────────────┴────────────────────────┐
+           ▼                                                 ▼
+┌──────────────────────────────┐          ┌──────────────────────────────┐
+│     MAIN APP WINDOW (STUDIO) │          │   ALWAYS-ON-TOP MASCOT MODE  │
+│ • 3-Column Layout            │          │ • Transparent, frameless     │
+│ • Full Affective Telemetry   │          │ • Zero-chrome desktop avatar │
+│ • Interactive Chat Feed      │          │ • Model-anchored dock toolbar│
+│ • Full-Height Avatar Stage   │          │ • Mouse window drag via IPC  │
+│ • System Settings & Journal  │          │ • Smart hover-bounded zoom   │
+└──────────────────────────────┘          └──────────────────────────────┘
+```
+
+* **Smooth Mascot Window Dragging**: Window translation is handled by `window.lucia.window.moveMascotBy(dx, dy)` communicating directly with the main process. This eliminates Chromium's native `-webkit-app-region: drag` bug on Windows where touchpad dragging floods mouse wheel events and unintentionally resizes content.
+* **Model-Anchored Dynamic Dock**: The Mascot Toolbar dock mathematically binds to `getModelBounds()`, positioning itself at `centerX` and `bottomY + 8px` directly beneath the character's geometry.
+* **Hit-Tested Hover Zoom**: The wheel zoom event strictly validates `isCursorOverModel(clientX, clientY)`, ensuring zoom only occurs when the user explicitly hovers over the model itself.
+
+---
+
+## 5. Concurrency & Threading Model
+
+Lucia operates with non-blocking concurrent daemon threads coordinated by thread-safe locks:
 
 | Thread Name | Module | Cadence | Purpose | Lock Discipline |
 |---|---|---|---|---|
 | **`EmotionCore-FastLoop`** | Limbic Engine | 200ms | Solves continuous emotion ODE | Holds `_state_lock` (1ms), copies weights via `_train_lock` |
 | **`DecayEngine-SlowLoop`** | Memory Store | 60s | Applies emotional memory decay | Holds `_index_lock` |
 | **`LNN-Trainer`** | Online Plasticity | On Batch (16) | CPU Backpropagation-through-ODE | Holds `_train_lock` during weight swap ($\le 2\text{ms}$) |
-| **`Uvicorn Async Loop`** | FastAPI Server | Event-driven | Serves `/process`, `/state`, `/voice/*` | Async non-blocking I/O |
+| **`Uvicorn Async Loop`** | FastAPI Server | Event-driven | Serves `/process`, `/state`, `/system/profile`, `/voice/*` | Async non-blocking I/O |
+| **`Electron Render Thread`**| UI / Avatar | 60 / 30 FPS | WebGL & Canvas avatar rendering | RequestAnimationFrame loop |
 
 ---
 
-## 5. Hardware Scalability & Optimization
+## 6. Hardware Scalability & Dynamic Profiling
 
-Lucia features automated hardware detection (`HardwareTier`) to run smoothly across any PC specification:
+Lucia features automated hardware detection (`HardwareTier`) with real-time runtime reconfiguration via `POST /system/profile`:
 
-| Hardware Tier | Detected Specs | Model Offload | Context Size | SDM Capacity | VRAM Usage |
-|---|---|---|---|---|---|
-| **`LAPTOP`** | $< 6\text{GB}$ VRAM (e.g. RTX 3050 Ti) | 32 GPU Layers (1.2B/3B) | 2,048 tokens | 500 traces | $\approx 1.5\text{GB}$ |
-| **`DESKTOP`** | $6\text{GB} - 12\text{GB}$ VRAM (e.g. RTX 3060/4060) | Full GPU (3B/7B) | 4,096 tokens | 2,000 traces | $\approx 4.0\text{GB}$ |
-| **`HIGH_END`** | $> 12\text{GB}$ VRAM (e.g. RTX 3090/4090) | Full GPU (7B/14B) | 8,192 tokens | 10,000 traces | $\approx 8.0\text{GB}$ |
+| Hardware Tier | Detected Specs | Model Offload | Context Size | SDM Capacity | Loop Cadence | Target VRAM |
+|---|---|---|---|---|---|---|
+| **`CPU_ONLY`** | No GPU / Battery Saver | 0 layers (CPU only) | 1,024 tokens | 250 traces | 500ms | $0\text{ MB}$ |
+| **`LAPTOP`** | $< 6\text{GB}$ VRAM (e.g. RTX 3050 Ti) | 32 GPU Layers (1.2B/3B) | 2,048 tokens | 500 traces | 200ms | $\approx 1.5\text{GB}$ |
+| **`DESKTOP`** | $6\text{GB} - 12\text{GB}$ VRAM (e.g. RTX 3060/4060) | Full GPU (3B/7B) | 4,096 tokens | 2,000 traces | 150ms | $\approx 4.0\text{GB}$ |
+| **`HIGH_END`** | $> 12\text{GB}$ VRAM (e.g. RTX 3090/4090) | Full GPU (7B/14B) | 8,192 tokens | 10,000 traces | 100ms | $\approx 8.0\text{GB}$ |
+
+* **Live Dynamic Profiling**: Users can switch tiers on-the-fly from the `⚙️ Settings` UI modal, adjusting memory parameters, context windows, and compute cadence without restarting the backend process.

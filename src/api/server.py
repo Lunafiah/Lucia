@@ -494,6 +494,33 @@ async def system_profile() -> Dict[str, Any]:
     }
 
 
+@app.post("/system/profile")
+async def update_system_profile(payload: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Dynamically update the active hardware scalability profile.
+    """
+    global _resource_profile
+    profile_name = payload.get("profile", "auto")
+    try:
+        _resource_profile = get_resource_profile(profile_name)
+        logger.info("Hardware scalability profile updated to: %s (%s)", _resource_profile.name, _resource_profile.tier.value)
+        return {
+            "status": "ok",
+            "tier": _resource_profile.tier.value,
+            "name": _resource_profile.name,
+            "description": _resource_profile.description,
+            "vram_mb": _resource_profile.vram_mb,
+            "n_gpu_layers": _resource_profile.n_gpu_layers,
+            "n_ctx": _resource_profile.n_ctx,
+            "loop_cadence_ms": _resource_profile.loop_cadence_ms,
+            "sdm_capacity": _resource_profile.sdm_capacity,
+        }
+    except Exception as exc:
+        logger.error("Failed to update hardware profile to %s: %s", profile_name, exc)
+        return {"status": "error", "message": str(exc)}
+
+
+
 # ---------------------------------------------------------------------------
 # CLI & Lifespan Logic
 # ---------------------------------------------------------------------------

@@ -95,4 +95,108 @@ describe("AvatarRenderer", () => {
     expect(renderer.activeEngine).toBe("vrm");
     expect(renderer.activeModel).toBe("default");
   });
+
+  test("wheel event does not change scale while isDraggingModel is true", () => {
+    const canvas = createMockCanvas();
+    const stage = document.createElement("div");
+    stage.className = "avatar-stage-container";
+    stage.appendChild(canvas);
+    document.body.appendChild(stage);
+
+    const renderer = new AvatarRenderer(canvas);
+    renderer.isDraggingModel = true;
+    const initialScale = renderer.mascotScale;
+
+    // Simulate wheel event
+    const wheelEvent = new Event("wheel", { bubbles: true, cancelable: true });
+    wheelEvent.deltaY = -100;
+    canvas.dispatchEvent(wheelEvent);
+
+    expect(renderer.mascotScale).toBe(initialScale);
+  });
+
+  test("pan position is clamped to safe boundary on drag", () => {
+    const canvas = createMockCanvas();
+    const stage = document.createElement("div");
+    stage.className = "avatar-stage-container";
+    stage.appendChild(canvas);
+    document.body.appendChild(stage);
+
+    const renderer = new AvatarRenderer(canvas);
+    renderer.width = 400;
+    renderer.height = 600;
+    renderer.isDraggingModel = true;
+    renderer.dragStart = { x: 0, y: 0 };
+
+    // Move mouse far away (e.g. 5000px)
+    const moveEvent = new MouseEvent("mousemove", { clientX: 5000, clientY: 5000 });
+    window.dispatchEvent(moveEvent);
+
+    const maxClampX = 400 * 0.75; // 300
+    const maxClampY = 600 * 0.75; // 450
+    expect(renderer.pan.x).toBeLessThanOrEqual(maxClampX);
+    expect(renderer.pan.y).toBeLessThanOrEqual(maxClampY);
+  });
+
+  test("setTargetFps updates targetFps and clamps to valid range", () => {
+    const canvas = createMockCanvas();
+    const renderer = new AvatarRenderer(canvas);
+
+    renderer.setTargetFps(30);
+    expect(renderer.targetFps).toBe(30);
+
+    renderer.setTargetFps(60);
+    expect(renderer.targetFps).toBe(60);
+
+    renderer.setTargetFps(5); // Clamps to minimum 15
+    expect(renderer.targetFps).toBe(15);
+
+    renderer.setTargetFps(240); // Clamps to maximum 120
+    expect(renderer.targetFps).toBe(120);
+  });
+
+  test("getModelBounds returns valid bounds and centers on canvas", () => {
+    const canvas = createMockCanvas();
+    canvas.getBoundingClientRect = jest.fn().mockReturnValue({
+      left: 0,
+      top: 0,
+      width: 400,
+      height: 600
+    });
+
+    const renderer = new AvatarRenderer(canvas);
+    renderer.width = 400;
+    renderer.height = 600;
+
+    const bounds = renderer.getModelBounds();
+    expect(bounds).toHaveProperty("centerX");
+    expect(bounds).toHaveProperty("bottomY");
+    expect(bounds).toHaveProperty("left");
+    expect(bounds).toHaveProperty("right");
+    expect(bounds).toHaveProperty("top");
+    expect(bounds).toHaveProperty("bottom");
+
+    expect(bounds.centerX).toBeCloseTo(200, 0);
+    expect(bounds.bottomY).toBeGreaterThan(bounds.top);
+  });
+
+  test("isCursorOverModel detects whether coordinates are inside model bounds", () => {
+    const canvas = createMockCanvas();
+    canvas.getBoundingClientRect = jest.fn().mockReturnValue({
+      left: 0,
+      top: 0,
+      width: 400,
+      height: 600
+    });
+
+    const renderer = new AvatarRenderer(canvas);
+    renderer.width = 400;
+    renderer.height = 600;
+
+    // Center coordinates should be over the model
+    expect(renderer.isCursorOverModel(200, 300)).toBe(true);
+
+    // Far away coordinates should not be over the model
+    expect(renderer.isCursorOverModel(1000, 1000)).toBe(false);
+  });
 });

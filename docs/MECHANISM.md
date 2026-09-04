@@ -214,20 +214,63 @@ Lucia strictly separates **subconscious affective memory (SDM)** from **literal 
 
 ---
 
-### Component 8: 60 FPS Desktop Avatar & Web Audio Lip-Sync (`electron/renderer/avatar/`)
+### Component 8: Quad-Engine Desktop Avatar & Web Audio Lip-Sync (`electron/renderer/avatar/`)
 
-1. **Expression Mapping (`expression-mapper.js`)**:
-   * Translates 500ms PAD telemetry into facial blendshapes:
-     * High Pleasure $\rightarrow$ Warm smile curve, soft cheek blushing.
-     * High Arousal $\rightarrow$ Alert, wide-open eyes and raised eyebrows.
-     * Low Arousal $\rightarrow$ Relaxed, gentle eyelid droop.
-2. **60 FPS Web Audio Lip-Sync (`lip-sync.js`)**:
-   * Connects an `AudioContext` & `AnalyserNode` frequency analyzer to voice playback.
-   * Analyzes vocal formants (bins 2–32, ~200Hz–2500Hz) to drive mouth height and vowel width in real time.
-3. **Physics & Animation Rig (`avatar.js`)**:
-   * Triple-frame eye blinking every 3–6 seconds.
-   * Gentle sinusoidal breathing idle cycle.
-   * Cursor gaze tracking (eyes and head subtly track user mouse movements).
+#### 1. Polymorphic 4-Engine Architecture
+Lucia provides a polymorphic avatar rendering pipeline dynamically managed by `AvatarRenderer`:
+* **🎨 2D Procedural Canvas Engine**:
+  * Calculates real-time vector contours: eyebrows via quadratic bezier curves, smile geometry via parabolic arc math ($y = y_0 + \text{smile} \cdot k \cdot (x - x_0)^2$), cheek blush via radial gradients with dynamic opacity $\alpha = \text{clamp}(0, 0.8, \text{blush})$, and eyes with parametric vertical compression for blinks:
+    $$h_{eye} = h_0 \cdot \max(0.05, 1.0 - \text{blinkProgress})$$
+* **🖼️ 2D Expression Sprites Engine**:
+  * Evaluates state machine priority on every frame:
+    $$\text{State} = \begin{cases} \text{"thinking"} & \text{if awaiting backend response} \\ \text{"speaking"} & \text{if lip-sync mouth aperture } > 0.08 \\ \text{"blush"} & \text{if } P > 0.40 \land A > 0.10 \\ \text{"smile"} & \text{if } P > 0.30 \\ \text{"idle"} & \text{otherwise} \end{cases}$$
+* **🎬 Live2D Cubism 4 Engine**:
+  * Utilizes PixiJS and Official Cubism Core (`live2dcubismcore.min.js`). Maps normalized mouse coordinates and PAD variables into standard Cubism parameter IDs:
+    * `ParamAngleX`, `ParamAngleY` $\leftarrow \text{mouse.x} \cdot 30^\circ, \text{mouse.y} \cdot 30^\circ$
+    * `ParamEyeLOpen`, `ParamEyeROpen` $\leftarrow \text{clamp}(0, 1.2, \text{eyeOpen} \cdot (1 - \text{blinkProgress}))$
+    * `ParamMouthOpenY` $\leftarrow \text{lipSync.mouthOpen}$
+    * `ParamCheek` $\leftarrow \text{clamp}(0, 1, \text{blush})$
+* **🌐 3D Humanoid VRM Engine**:
+  * Built on Three.js and `@pixiv/three-vrm`. Updates head bone quaternions using spherical linear interpolation (SLERP) toward cursor gaze vectors.
+  * Drives facial blendshape morph targets (`happy`, `aa`, `blink`, `relaxed`) on the VRM Expression Manager. Includes an emergency holographic procedural rig if external VRM assets are unavailable.
+
+#### 2. Visual Model Bounds Computation (`getModelBounds()`)
+To anchor UI elements (such as the mascot toolbar dock) and hit-test user interactions, `AvatarRenderer` computes the visual bounding box across all active engines:
+* **Sprites Engine**:
+  $$\text{scale} = \min\left(\frac{W_{canvas} \cdot 0.95}{W_{natural}}, \frac{H_{canvas} \cdot 0.95}{H_{natural}}\right) \cdot \text{mascotScale}$$
+  $$\text{left} = \frac{W - W_{draw}}{2} + \text{pan}_x, \quad \text{top} = H - H_{draw} + \text{pan}_y$$
+  $$\text{bottomY} = \text{top} + H_{draw}, \quad \text{centerX} = \text{left} + \frac{W_{draw}}{2}$$
+* **Live2D Engine**:
+  $$\text{left} = M_x, \quad \text{right} = M_x + W_{model}, \quad \text{centerX} = M_x + \frac{W_{model}}{2}, \quad \text{bottomY} = M_y + H_{model}$$
+* **3D VRM Engine**:
+  $$H_{model} = H_{canvas} \cdot 0.75 \cdot \text{mascotScale}, \quad W_{model} = H_{model} \cdot 0.55$$
+  $$\text{bottomY} = H_{canvas} \cdot 0.88 + \text{pan}_y, \quad \text{top} = \text{bottomY} - H_{model}, \quad \text{centerX} = \frac{W_{canvas}}{2} + \text{pan}_x$$
+* **Procedural Canvas Engine**:
+  $$R_{head} = \min(W_{canvas}, H_{canvas}) \cdot 0.30 \cdot \text{mascotScale}$$
+  $$\text{centerX} = \frac{W_{canvas}}{2} + \text{pan}_x, \quad \text{bottomY} = \frac{H_{canvas}}{2} + \text{pan}_y + R_{head} \cdot 1.8$$
+
+#### 3. Dynamic Toolbar Dock Anchoring
+In Mascot Mode, the floating toolbar dock mathematically anchors directly beneath the character's feet:
+$$\text{safeX} = \text{clamp}(120, W_{window} - 120, \text{bounds.centerX})$$
+$$\text{safeY} = \text{clamp}(H_{dock}, H_{window} - H_{dock} - 6, \text{bounds.bottomY} + 8)$$
+This keeps the control pill attached directly to the character regardless of panning or zoom levels.
+
+#### 4. Hit-Tested Hover Zoom & Drag Isolation
+To eliminate accidental zooming when moving the mascot window via trackpad or mouse gestures:
+* **Cursor Hit-Testing (`isCursorOverModel`)**:
+  $$\text{isOverModel} = (x_{cursor} \ge \text{bounds.left}) \land (x_{cursor} \le \text{bounds.right}) \land (y_{cursor} \ge \text{bounds.top}) \land (y_{cursor} \le \text{bounds.bottom})$$
+* **Zoom Guard**: `handleWheelZoom` is strictly aborted if `isDraggingWindow` is true or if `!isCursorOverModel(clientX, clientY)`.
+
+#### 5. Adaptive Framerate Throttling
+Supports runtime energy conservation:
+$$\Delta t = t_{now} - t_{lastFrame}$$
+$$\text{if } \Delta t < \left(\frac{1000}{\text{targetFps}} - 2\text{ms}\right) \implies \text{skip render frame}$$
+* At 60 FPS: ultra-fluid rendering for high-end immersion.
+* At 30 FPS: 50% reduction in rendering load for laptop battery preservation.
+
+#### 6. 60 FPS Web Audio Lip-Sync (`lip-sync.js`)
+* Connects an `AudioContext` & `AnalyserNode` frequency analyzer to voice playback.
+* Analyzes vocal formants (bins 2–32, ~200Hz–2500Hz) to drive mouth height and vowel width in real time.
 
 ---
 

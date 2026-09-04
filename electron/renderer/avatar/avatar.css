@@ -353,43 +353,55 @@
   box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
 }
 
-/* --------------------------------------------------------------------------
-   Desktop Mascot Mode
-   -------------------------------------------------------------------------- */
-/* Drag handle at the top of mascot window */
-.mascot-drag-handle {
-  display: none;
+.mascot-audio-popup,
+.mascot-settings-popup {
+  min-width: 250px;
 }
 
-body.mascot-mode .mascot-drag-handle {
+.mascot-popup-action-btn {
+  width: 100%;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  cursor: pointer;
   display: flex;
-  position: absolute;
-  top: 8px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 9998;
-  width: 54px;
-  height: 14px;
   align-items: center;
   justify-content: center;
-  -webkit-app-region: drag !important;
-  cursor: grab;
-}
-
-.mascot-drag-pill {
-  width: 36px;
-  height: 5px;
-  background: rgba(168, 85, 247, 0.45);
-  border-radius: 999px;
-  box-shadow: 0 0 8px rgba(168, 85, 247, 0.3);
+  gap: 6px;
   transition: all 0.2s ease;
 }
 
-.mascot-drag-handle:hover .mascot-drag-pill {
-  background: rgba(168, 85, 247, 0.9);
-  box-shadow: 0 0 12px rgba(168, 85, 247, 0.6);
+.mascot-popup-action-btn:hover {
+  background: rgba(168, 85, 247, 0.25);
+  border-color: rgba(168, 85, 247, 0.6);
+  color: #ffffff;
 }
 
+.mascot-popup-action-btn.primary {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.4), rgba(99, 102, 241, 0.4));
+  border-color: rgba(168, 85, 247, 0.6);
+}
+
+.mascot-popup-action-btn.primary:hover {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.7), rgba(99, 102, 241, 0.7));
+  box-shadow: 0 0 14px rgba(168, 85, 247, 0.4);
+}
+
+.mascot-drag-btn {
+  cursor: grab !important;
+}
+
+.mascot-drag-btn:active {
+  cursor: grabbing !important;
+}
+
+/* --------------------------------------------------------------------------
+   Desktop Mascot Mode
+   -------------------------------------------------------------------------- */
 body.mascot-mode {
   background: transparent !important;
   overflow: hidden !important;
@@ -444,15 +456,24 @@ body.mascot-mode .avatar-top-bar {
   display: none !important;
 }
 
-/* Mascot toolbar: ALWAYS VISIBLE, high contrast, permanent bottom dock */
+/* Mascot toolbar: Dynamically anchored directly beneath model, reveals on hover or active popup */
 body.mascot-mode #mascot-toolbar {
   display: flex !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-  pointer-events: auto !important;
-  -webkit-app-region: no-drag !important;
-  bottom: 14px !important;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(8px);
+  transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 9999 !important;
+  -webkit-app-region: no-drag !important;
+}
+
+body.mascot-mode .avatar-stage-container:hover #mascot-toolbar,
+body.mascot-mode #mascot-toolbar:hover,
+body.mascot-mode #mascot-toolbar.has-active-popup,
+body.mascot-mode #mascot-toolbar.is-visible {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  transform: translateX(-50%) translateY(0) !important;
 }
 
 body.mascot-mode .mascot-toolbar-dock {

@@ -21,7 +21,8 @@ contextBridge.exposeInMainWorld('lucia', {
     get: () => ipcRenderer.invoke('state:get')
   },
   system: {
-    getProfile: () => ipcRenderer.invoke('profile:get')
+    getProfile: () => ipcRenderer.invoke('profile:get'),
+    setProfile: (profile) => ipcRenderer.invoke('profile:set', { profile })
   },
   models: {
     getAvatars: () => ipcRenderer.invoke('models:get-avatars'),

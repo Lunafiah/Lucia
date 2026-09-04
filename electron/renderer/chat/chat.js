@@ -52,12 +52,34 @@ class ChatController {
     this.profileBornDateDisplay = document.getElementById('profile-born-date-display');
     this.profileDaysCountDisplay = document.getElementById('profile-days-count-display');
 
+    // System Settings & Hardware Scalability Modal
+    this.openSettingsBtn = document.getElementById('open-settings-btn');
+    this.closeSettingsBtn = document.getElementById('close-settings-btn');
+    this.settingsModal = document.getElementById('settings-modal');
+    this.settingsProfileSelect = document.getElementById('settings-profile-select');
+    this.settingsFpsSelect = document.getElementById('settings-fps-select');
+    this.settingsMascotOpacity = document.getElementById('settings-mascot-opacity');
+    this.settingsOpacityVal = document.getElementById('settings-opacity-val');
+    this.settingsActiveTier = document.getElementById('settings-active-tier');
+    this.settingsVramBudget = document.getElementById('settings-vram-budget');
+    this.settingsCtxLength = document.getElementById('settings-ctx-length');
+    this.settingsInputDeviceSelect = document.getElementById('settings-input-device-select');
+    this.settingsOutputDeviceSelect = document.getElementById('settings-output-device-select');
+    this.saveSettingsBtn = document.getElementById('save-settings-btn');
+
     window.chatController = this;
 
     // Initialize Canvas Avatar
     const canvas = document.getElementById('avatar-canvas');
     if (canvas && typeof AvatarRenderer !== 'undefined') {
       window.avatarRenderer = new AvatarRenderer(canvas);
+      const savedFps = parseInt(localStorage.getItem('lucia_target_fps') || '60', 10);
+      if (window.avatarRenderer.setTargetFps) {
+        window.avatarRenderer.setTargetFps(savedFps);
+      }
+      if (this.settingsFpsSelect) {
+        this.settingsFpsSelect.value = savedFps.toString();
+      }
     }
 
     // Mascot Mode Toggle Button
@@ -91,17 +113,35 @@ class ChatController {
     this._setupAvatarControls();
     this._setupSpeechRecognition();
     this._setupProfileControls();
+    this._setupSettingsControls();
     this._setupBackendListeners();
 
     // Immediately scan and load models (does not require waiting for python backend)
     this._loadAvatarModels();
     this._loadVoiceModels();
+    this.populateAudioDevices();
+    this._loadSystemProfile();
   }
 
   _setupVoiceControls() {
     if (this.volumeSlider) {
       this.volumeSlider.addEventListener('input', (e) => {
         const vol = parseFloat(e.target.value);
+        const mascotVol = document.getElementById('mascot-volume-slider');
+        if (mascotVol) mascotVol.value = vol;
+        if (window.audioRouter) {
+          window.audioRouter.setVolume(vol);
+        } else if (window.avatarRenderer) {
+          window.avatarRenderer.setVolume(vol);
+        }
+      });
+    }
+
+    const mascotVol = document.getElementById('mascot-volume-slider');
+    if (mascotVol) {
+      mascotVol.addEventListener('input', (e) => {
+        const vol = parseFloat(e.target.value);
+        if (this.volumeSlider) this.volumeSlider.value = vol;
         if (window.audioRouter) {
           window.audioRouter.setVolume(vol);
         } else if (window.avatarRenderer) {
@@ -123,6 +163,8 @@ class ChatController {
     if (this.voiceModelSelect) {
       this.voiceModelSelect.addEventListener('change', async (e) => {
         const modelName = e.target.value;
+        const mascotVoice = document.getElementById('mascot-voice-select');
+        if (mascotVoice) mascotVoice.value = modelName;
         try {
           await fetch('http://127.0.0.1:8765/voice/select-model', {
             method: 'POST',
@@ -135,10 +177,27 @@ class ChatController {
         }
       });
     }
+
+    const mascotVoice = document.getElementById('mascot-voice-select');
+    if (mascotVoice) {
+      mascotVoice.addEventListener('change', async (e) => {
+        const modelName = e.target.value;
+        if (this.voiceModelSelect) this.voiceModelSelect.value = modelName;
+        try {
+          await fetch('http://127.0.0.1:8765/voice/select-model', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ model_name: modelName }),
+          });
+          console.log(`[voice] Selected mascot model: ${modelName}`);
+        } catch (err) {
+          console.error('[voice] Failed to select voice model from mascot toolbar:', err);
+        }
+      });
+    }
   }
 
   async _loadVoiceModels() {
-    if (!this.voiceModelSelect) return;
     try {
       let data = null;
       if (window.lucia && window.lucia.models && window.lucia.models.getVoices) {
@@ -149,17 +208,111 @@ class ChatController {
       }
 
       if (data && data.models && data.models.length > 0) {
-        this.voiceModelSelect.innerHTML = '';
-        data.models.forEach((m) => {
-          const opt = document.createElement('option');
-          opt.value = m.name;
-          opt.textContent = m.name === 'default' ? '🎙️ Base Voice (Default)' : `🎙️ ${m.name} (RVC)`;
-          if (m.is_active) opt.selected = true;
-          this.voiceModelSelect.appendChild(opt);
-        });
+        const fillOptions = (selectEl) => {
+          if (!selectEl) return;
+          selectEl.innerHTML = '';
+          data.models.forEach((m) => {
+            const opt = document.createElement('option');
+            opt.value = m.name;
+            opt.textContent = m.name === 'default' ? '🎙️ Base Voice (Default)' : `🎙️ ${m.name} (RVC)`;
+            if (m.is_active) opt.selected = true;
+            selectEl.appendChild(opt);
+          });
+        };
+
+        if (this.voiceModelSelect) fillOptions(this.voiceModelSelect);
+        const mascotVoice = document.getElementById('mascot-voice-select');
+        if (mascotVoice) fillOptions(mascotVoice);
       }
     } catch (err) {
       console.warn('[voice] Could not load voice models:', err);
+    }
+  }
+
+  async populateAudioDevices() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+      return;
+    }
+    try {
+      let devices = await navigator.mediaDevices.enumerateDevices();
+      const hasLabels = devices.some((d) => d.label && d.label.length > 0);
+      if (!hasLabels && navigator.mediaDevices.getUserMedia) {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          stream.getTracks().forEach((t) => t.stop());
+          devices = await navigator.mediaDevices.enumerateDevices();
+        } catch (e) {
+          // Permission prompt dismissed or audio unavailable
+        }
+      }
+
+      const mascotInputSelect = document.getElementById('mascot-input-device-select');
+      const mascotOutputSelect = document.getElementById('mascot-output-device-select');
+      const settingsInputSelect = document.getElementById('settings-input-device-select');
+      const settingsOutputSelect = document.getElementById('settings-output-device-select');
+
+      const audioInputs = devices.filter((d) => d.kind === 'audioinput');
+      const audioOutputs = devices.filter((d) => d.kind === 'audiooutput');
+
+      const savedInput = localStorage.getItem('lucia_audio_input_device') || 'default';
+      const savedOutput = localStorage.getItem('lucia_audio_output_device') || 'default';
+
+      const setupInputSelect = (selectEl) => {
+        if (!selectEl) return;
+        selectEl.innerHTML = '';
+        if (audioInputs.length === 0) {
+          selectEl.innerHTML = '<option value="default">Default Microphone</option>';
+        } else {
+          audioInputs.forEach((d, idx) => {
+            const opt = document.createElement('option');
+            opt.value = d.deviceId || 'default';
+            opt.textContent = d.label || `Microphone ${idx + 1}`;
+            if (opt.value === savedInput) opt.selected = true;
+            selectEl.appendChild(opt);
+          });
+        }
+        selectEl.onchange = (e) => {
+          const val = e.target.value;
+          localStorage.setItem('lucia_audio_input_device', val);
+          if (mascotInputSelect && mascotInputSelect !== selectEl) mascotInputSelect.value = val;
+          if (settingsInputSelect && settingsInputSelect !== selectEl) settingsInputSelect.value = val;
+        };
+      };
+
+      const setupOutputSelect = (selectEl) => {
+        if (!selectEl) return;
+        selectEl.innerHTML = '';
+        if (audioOutputs.length === 0) {
+          selectEl.innerHTML = '<option value="default">Default Speaker</option>';
+        } else {
+          audioOutputs.forEach((d, idx) => {
+            const opt = document.createElement('option');
+            opt.value = d.deviceId || 'default';
+            opt.textContent = d.label || `Speaker/Headphone ${idx + 1}`;
+            if (opt.value === savedOutput) opt.selected = true;
+            selectEl.appendChild(opt);
+          });
+        }
+        selectEl.onchange = async (e) => {
+          const devId = e.target.value;
+          localStorage.setItem('lucia_audio_output_device', devId);
+          if (mascotOutputSelect && mascotOutputSelect !== selectEl) mascotOutputSelect.value = devId;
+          if (settingsOutputSelect && settingsOutputSelect !== selectEl) settingsOutputSelect.value = devId;
+          if (window.avatarRenderer && window.avatarRenderer.lipSync && window.avatarRenderer.lipSync.currentAudio) {
+            const aud = window.avatarRenderer.lipSync.currentAudio;
+            if (typeof aud.setSinkId === 'function') {
+              aud.setSinkId(devId).catch((err) => console.warn('[audio] setSinkId failed:', err));
+            }
+          }
+        };
+      };
+
+      setupInputSelect(mascotInputSelect);
+      setupInputSelect(settingsInputSelect);
+      setupOutputSelect(mascotOutputSelect);
+      setupOutputSelect(settingsOutputSelect);
+    } catch (err) {
+      console.warn('[audio] Failed to enumerate audio devices:', err);
     }
   }
 
@@ -259,6 +412,11 @@ class ChatController {
           this.micBtn.classList.remove('paused');
           this.micBtn.title = 'Discord Voice Mode: Connected (Listening). Click to Mute';
         }
+        const mascotMic = document.getElementById('mascot-mic-btn');
+        if (mascotMic && this.isMicMode) {
+          mascotMic.classList.add('active');
+          mascotMic.title = 'Microphone: Active (Listening). Click to Mute';
+        }
       };
 
       this.recognition.onresult = (event) => {
@@ -294,13 +452,19 @@ class ChatController {
       };
 
       this.recognition.onerror = (err) => {
-        if (err.error !== 'no-speech') {
+        // Critical Electron fix: 'network' error occurs when webkitSpeechRecognition
+        // fails to upload audio stream to Google cloud STT without API credentials
+        // (causing chunked_data_pipe_upload_data_stream.cc Error: -2).
+        // Must immediately cancel mic mode and break infinite onend retry loop.
+        if (err.error === 'network' || err.error === 'not-allowed' || err.error === 'service-not-allowed') {
+          this._stopMicModeGracefully(err.error);
+        } else if (err.error !== 'no-speech') {
           console.warn('[speech] Recognition error:', err.error);
         }
       };
 
       this.recognition.onend = () => {
-        // Continuous voice connection: automatically keep listening if call mode is active
+        // Continuous voice connection: only restart if call mode is still active
         if (this.isMicMode && !this.isSpeakingOrProcessing) {
           setTimeout(() => {
             if (this.isMicMode && !this.isSpeakingOrProcessing) {
@@ -313,13 +477,16 @@ class ChatController {
       if (this.micBtn) {
         this.micBtn.addEventListener('click', () => {
           this.isMicMode = !this.isMicMode;
+          const mascotMic = document.getElementById('mascot-mic-btn');
           if (this.isMicMode) {
             this.micBtn.classList.add('active-call');
             this.micBtn.title = 'Discord Voice Mode: ON (Click to Mute / Leave Call)';
+            if (mascotMic) mascotMic.classList.add('active');
             this._startListening();
           } else {
             this.micBtn.classList.remove('active-call', 'paused');
             this.micBtn.title = 'Discord Voice Mode: OFF (Click to Join Voice Chat)';
+            if (mascotMic) mascotMic.classList.remove('active');
             if (this.silenceTimer) clearTimeout(this.silenceTimer);
             this._pauseListening();
           }
@@ -330,6 +497,26 @@ class ChatController {
         this.micBtn.title = 'Speech recognition not supported in this environment';
       }
     }
+  }
+
+  _stopMicModeGracefully(reason = 'network') {
+    this.isMicMode = false;
+    if (this.silenceTimer) clearTimeout(this.silenceTimer);
+    if (this.recognition) {
+      try {
+        this.recognition.abort();
+      } catch (e) {}
+    }
+    if (this.micBtn) {
+      this.micBtn.classList.remove('active-call', 'paused');
+      this.micBtn.title = 'Voice Input unavailable (Cloud speech requires Google API credentials in Electron)';
+    }
+    const mascotMic = document.getElementById('mascot-mic-btn');
+    if (mascotMic) {
+      mascotMic.classList.remove('active');
+      mascotMic.title = 'Voice Input unavailable (Cloud speech requires Google API credentials)';
+    }
+    console.warn(`[speech] Speech recognition stopped (${reason}). In standalone Electron, cloud STT requires Google Cloud speech API credentials or local Whisper.`);
   }
 
   _startListening() {
@@ -436,6 +623,155 @@ class ChatController {
     }
   }
 
+  _setupSettingsControls() {
+    if (this.openSettingsBtn && this.settingsModal) {
+      this.openSettingsBtn.addEventListener('click', () => {
+        this.settingsModal.classList.add('active');
+        this._loadSystemProfile();
+      });
+    }
+
+    if (this.closeSettingsBtn && this.settingsModal) {
+      this.closeSettingsBtn.addEventListener('click', () => {
+        this.settingsModal.classList.remove('active');
+      });
+    }
+
+    if (this.settingsModal) {
+      this.settingsModal.addEventListener('click', (e) => {
+        if (e.target === this.settingsModal) {
+          this.settingsModal.classList.remove('active');
+        }
+      });
+    }
+
+    // Mascot Opacity Slider in Settings Modal
+    if (this.settingsMascotOpacity) {
+      const savedOpacity = localStorage.getItem('lucia_mascot_opacity') || '1';
+      this.settingsMascotOpacity.value = savedOpacity;
+      if (this.settingsOpacityVal) {
+        this.settingsOpacityVal.textContent = `${Math.round(parseFloat(savedOpacity) * 100)}%`;
+      }
+
+      this.settingsMascotOpacity.addEventListener('input', (e) => {
+        const val = e.target.value;
+        if (this.settingsOpacityVal) {
+          this.settingsOpacityVal.textContent = `${Math.round(parseFloat(val) * 100)}%`;
+        }
+        localStorage.setItem('lucia_mascot_opacity', val);
+
+        const mascotOpacitySlider = document.getElementById('mascot-opacity-slider');
+        const mascotOpacityVal = document.getElementById('mascot-opacity-val');
+        if (mascotOpacitySlider) mascotOpacitySlider.value = val;
+        if (mascotOpacityVal) mascotOpacityVal.textContent = `${Math.round(parseFloat(val) * 100)}%`;
+
+        if (document.body.classList.contains('mascot-mode')) {
+          document.body.style.opacity = val;
+        }
+      });
+    }
+
+    // Save & Apply Settings Button
+    if (this.saveSettingsBtn) {
+      this.saveSettingsBtn.addEventListener('click', async () => {
+        const selectedProfile = this.settingsProfileSelect ? this.settingsProfileSelect.value : 'auto';
+        const selectedFps = parseInt(this.settingsFpsSelect ? this.settingsFpsSelect.value : '60', 10);
+
+        // Apply Framerate Limit
+        localStorage.setItem('lucia_target_fps', selectedFps);
+        if (window.avatarRenderer && window.avatarRenderer.setTargetFps) {
+          window.avatarRenderer.setTargetFps(selectedFps);
+        }
+
+        // Apply Hardware Optimization Profile
+        await this._applySystemProfile(selectedProfile);
+
+        // Feedback
+        const origText = this.saveSettingsBtn.textContent;
+        this.saveSettingsBtn.textContent = '✓ Settings Saved!';
+        this.saveSettingsBtn.style.background = '#10b981';
+        setTimeout(() => {
+          this.saveSettingsBtn.textContent = origText;
+          this.saveSettingsBtn.style.background = '';
+          if (this.settingsModal) this.settingsModal.classList.remove('active');
+        }, 800);
+      });
+    }
+  }
+
+  async _loadSystemProfile() {
+    try {
+      let data = null;
+      if (window.lucia && window.lucia.system && window.lucia.system.getProfile) {
+        data = await window.lucia.system.getProfile();
+      } else {
+        const res = await fetch('http://127.0.0.1:8765/system/profile');
+        if (res.ok) data = await res.json();
+      }
+
+      if (data && data.name) {
+        if (this.hardwareBadge) {
+          this.hardwareBadge.textContent = data.name;
+        }
+        if (this.settingsActiveTier) {
+          this.settingsActiveTier.textContent = data.name;
+        }
+        if (this.settingsVramBudget && data.vram_mb !== undefined) {
+          this.settingsVramBudget.textContent = data.vram_mb > 0 ? `~${data.vram_mb} MB` : 'CPU Only';
+        }
+        if (this.settingsCtxLength && data.n_ctx) {
+          this.settingsCtxLength.textContent = `${data.n_ctx.toLocaleString()} tokens`;
+        }
+      }
+
+      const savedProfile = localStorage.getItem('lucia_hardware_profile');
+      if (savedProfile && this.settingsProfileSelect) {
+        this.settingsProfileSelect.value = savedProfile;
+      } else if (data && data.tier && this.settingsProfileSelect) {
+        const matchingOpt = Array.from(this.settingsProfileSelect.options).find(o => o.value === data.tier);
+        if (matchingOpt) {
+          this.settingsProfileSelect.value = data.tier;
+        }
+      }
+    } catch (err) {
+      console.warn('[settings] Failed to load hardware profile:', err);
+    }
+  }
+
+  async _applySystemProfile(profileName) {
+    try {
+      localStorage.setItem('lucia_hardware_profile', profileName);
+      let data = null;
+      if (window.lucia && window.lucia.system && window.lucia.system.setProfile) {
+        data = await window.lucia.system.setProfile(profileName);
+      } else {
+        const res = await fetch('http://127.0.0.1:8765/system/profile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ profile: profileName })
+        });
+        if (res.ok) data = await res.json();
+      }
+
+      if (data) {
+        if (this.hardwareBadge && data.name) {
+          this.hardwareBadge.textContent = data.name;
+        }
+        if (this.settingsActiveTier && data.name) {
+          this.settingsActiveTier.textContent = data.name;
+        }
+        if (this.settingsVramBudget && data.vram_mb !== undefined) {
+          this.settingsVramBudget.textContent = data.vram_mb > 0 ? `~${data.vram_mb} MB` : 'CPU Only';
+        }
+        if (this.settingsCtxLength && data.n_ctx) {
+          this.settingsCtxLength.textContent = `${data.n_ctx.toLocaleString()} tokens`;
+        }
+      }
+    } catch (err) {
+      console.error('[settings] Failed to apply hardware profile:', err);
+    }
+  }
+
   async _restoreHistory() {
     try {
       const res = await fetch('http://127.0.0.1:8765/history');
@@ -497,15 +833,8 @@ class ChatController {
         this._loadProfile();
         this._restoreHistory();
 
-        // Fetch hardware profile info for the badge
-        try {
-          if (window.lucia.system && window.lucia.system.getProfile) {
-            const profile = await window.lucia.system.getProfile();
-            if (profile && profile.name) {
-              this.hardwareBadge.textContent = profile.name;
-            }
-          }
-        } catch (e) {}
+        // Fetch hardware profile info and update badge & settings
+        this._loadSystemProfile();
       });
 
       window.lucia.on('voice:mute-toggled', (data) => {
