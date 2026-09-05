@@ -27,12 +27,290 @@
   </div>
 
   <!-- Main Application Container -->
-  <div class="app-layout">
-    <!-- Left Column: Live Emotional Telemetry Panel -->
-    <aside id="debug-pane" class="debug-pane">
+  <div id="lucia-app" class="lucia-app app-layout">
+    <!-- Global Companion Navigation Header (Phase 7.1) -->
+    <header id="lucia-header" class="lucia-nav-header">
+      <div class="nav-brand-section">
+        <span class="nav-sparkle">✦</span>
+        <h1 class="nav-title">Lucia</h1>
+        <div class="nav-presence-badge" id="nav-presence-badge" title="Companion Status">
+          <span id="companion-status-dot" class="presence-dot"></span>
+          <span id="companion-state-label" class="presence-label">Present</span>
+        </div>
+      </div>
+
+      <nav class="nav-tabs" aria-label="Primary Navigation">
+        <button id="nav-talk-btn" class="nav-tab-btn active" title="Conversation with Lucia">
+          <span class="tab-icon">💬</span>
+          <span class="tab-text">Talk</span>
+        </button>
+        <button id="open-journal-btn" class="nav-tab-btn" title="Companion Journal & Shared History">
+          <span class="tab-icon">📖</span>
+          <span class="tab-text">Journal</span>
+        </button>
+        <button id="open-memories-btn" class="nav-tab-btn" title="Lucia's Memories of You">
+          <span class="tab-icon">🧠</span>
+          <span class="tab-text">Memories</span>
+        </button>
+        <button id="toggle-mascot-btn" class="nav-tab-btn nav-tab-btn--presence" title="Toggle Desktop Presence (Mascot Mode)">
+          <span class="tab-icon">🐾</span>
+          <span class="tab-text">Presence</span>
+        </button>
+      </nav>
+
+      <div class="nav-actions-section">
+        <button id="toggle-diagnostics-btn" class="nav-action-btn" title="Toggle Diagnostics Drawer (Ctrl+Shift+D)">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+          </svg>
+          <span>Diagnostics</span>
+        </button>
+        <button id="open-profile-btn" class="nav-action-btn" title="Companion Profile & Birthday">
+          <span>🎂</span> <span id="birthday-badge-text">Day 1</span>
+        </button>
+        <button id="open-settings-btn" class="nav-action-btn" title="System Settings">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Workspace Stage (Talk + Avatar Stage) -->
+    <div id="main-stage" class="main-stage">
+      <!-- Center Column: Chat Window -->
+      <main id="chat-pane" class="chat-pane">
+        <header class="chat-header">
+          <div class="companion-identity">
+            <div class="identity-text">
+              <h2>Talk with Lucia</h2>
+              <span class="state-label">Living alongside you in quiet presence</span>
+            </div>
+          </div>
+        </header>
+
+        <!-- Message Feed -->
+        <section id="chat-messages" class="chat-messages">
+          <div class="system-welcome-card">
+            <div class="welcome-icon">✨</div>
+            <h3>Welcome to Lucia</h3>
+            <p>Her emotional state and memories evolve dynamically with every turn.</p>
+          </div>
+        </section>
+
+        <!-- Input Area (Talk Input Dock) -->
+        <footer class="chat-input-container">
+          <div class="input-wrapper talk-input-dock">
+            <button id="clear-screen-btn" class="chat-tool-btn" title="Clear view (Lucia keeps all memories)" aria-label="Clear Screen">
+              <span class="tool-icon">🍃</span>
+            </button>
+            <textarea
+              id="chat-input"
+              rows="1"
+              placeholder="Talk with Lucia... (Shift+Enter for new line)"
+              disabled
+            ></textarea>
+            <button id="mic-btn" class="mic-btn" title="Voice Input (Speech-to-Text)" disabled aria-label="Microphone Voice Input">
+              🎙️
+            </button>
+            <button id="send-btn" class="send-btn" disabled aria-label="Send message">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        </footer>
+      </main>
+
+      <!-- Right Column: Dedicated Full-Height Avatar Stage -->
+      <section id="avatar-pane" class="avatar-pane">
+        <div class="avatar-stage-container">
+          <div class="avatar-top-bar">
+            <!-- Row 1: Presence status + Engine/Model selectors -->
+            <div class="avatar-controls-row">
+              <div class="avatar-status-badge">
+                <span class="status-dot"></span>
+                <span>Appearance</span>
+              </div>
+              <div class="avatar-model-controls">
+                <select id="avatar-engine-select" class="presence-select" title="Avatar Engine">
+                  <option value="canvas">🎨 2D Canvas</option>
+                  <option value="sprites">🖼️ 2D Sprites</option>
+                  <option value="live2d">🎬 Live2D</option>
+                  <option value="vrm">🌐 3D VRM</option>
+                </select>
+                <select id="avatar-model-select" class="presence-select" title="Avatar Model">
+                  <option value="default">Default Lucia</option>
+                </select>
+              </div>
+            </div>
+            <!-- Row 2: Voice / Audio controls -->
+            <div class="avatar-controls-row avatar-audio-row">
+              <select id="voice-model-select" class="presence-select presence-select--voice" title="Select Voice Model">
+                <option value="default">— Choose a voice —</option>
+              </select>
+              <input type="range" id="voice-volume-slider" min="0" max="1" step="0.05" value="1" class="volume-slider" title="Master Voice Volume" />
+              <button id="voice-mute-btn" class="voice-mute-btn" title="Toggle Voice (Mute/Unmute)">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                  <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Mascot Mode Toolbar (Bottom Floating Dock under the model) -->
+          <div id="mascot-toolbar" class="mascot-toolbar">
+            <!-- Model picker popup -->
+            <div id="mascot-model-popup" class="mascot-popup" style="display: none;">
+              <div class="mascot-popup-header">
+                <span class="mascot-popup-icon">🎬</span>
+                <span>Switch Model</span>
+              </div>
+              <div class="mascot-field-group">
+                <label class="mascot-popup-label">Engine</label>
+                <select id="mascot-engine-select" class="mascot-popup-select">
+                  <option value="canvas">🎨 2D Canvas</option>
+                  <option value="sprites">🖼️ 2D Sprites</option>
+                  <option value="live2d">🎬 Live2D</option>
+                  <option value="vrm">🌐 3D VRM</option>
+                </select>
+              </div>
+              <div class="mascot-field-group">
+                <label class="mascot-popup-label">Model</label>
+                <select id="mascot-avatar-select" class="mascot-popup-select">
+                  <option value="default">Default Lucia</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Voice & Audio Device picker popup -->
+            <div id="mascot-voice-popup" class="mascot-popup mascot-audio-popup" style="display: none;">
+              <div class="mascot-popup-header">
+                <span class="mascot-popup-icon">🔊</span>
+                <span>Audio & Voice Settings</span>
+              </div>
+              <div class="mascot-field-group">
+                <label class="mascot-popup-label">🎙️ Microphone (Input)</label>
+                <select id="mascot-input-device-select" class="mascot-popup-select">
+                  <option value="default">Default Microphone</option>
+                </select>
+              </div>
+              <div class="mascot-field-group">
+                <label class="mascot-popup-label">🔊 Speaker (Output)</label>
+                <select id="mascot-output-device-select" class="mascot-popup-select">
+                  <option value="default">Default Speaker</option>
+                </select>
+              </div>
+              <div class="mascot-field-group">
+                <label class="mascot-popup-label">🎙️ Voice Model</label>
+                <select id="mascot-voice-select" class="mascot-popup-select">
+                  <option value="default">— Choose a voice —</option>
+                </select>
+              </div>
+              <div class="mascot-field-group">
+                <label class="mascot-popup-label">Master Volume</label>
+                <input type="range" id="mascot-volume-slider" min="0" max="1" step="0.05" value="1" class="volume-slider" style="width: 100%;" />
+              </div>
+            </div>
+
+            <!-- UI Settings popup -->
+            <div id="mascot-settings-popup" class="mascot-popup mascot-settings-popup" style="display: none;">
+              <div class="mascot-popup-header">
+                <span class="mascot-popup-icon">⚙️</span>
+                <span>UI & Mascot Settings</span>
+              </div>
+              <div class="mascot-field-group">
+                <label class="mascot-popup-label">Model Zoom Scale</label>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <input type="range" id="mascot-zoom-slider" min="0.4" max="2.5" step="0.05" value="1" class="volume-slider" style="flex: 1;" />
+                  <span id="mascot-zoom-val" style="font-size: 0.75rem; color: #38bdf8; font-family: monospace; min-width: 36px;">100%</span>
+                </div>
+              </div>
+              <div class="mascot-field-group">
+                <label class="mascot-popup-label">Mascot Window Opacity</label>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <input type="range" id="mascot-opacity-slider" min="0.3" max="1" step="0.05" value="1" class="volume-slider" style="flex: 1;" />
+                  <span id="mascot-opacity-val" style="font-size: 0.75rem; color: #a855f7; font-family: monospace; min-width: 36px;">100%</span>
+                </div>
+              </div>
+              <div class="mascot-field-group" style="margin-top: 6px;">
+                <button id="mascot-reset-avatar-btn" class="mascot-popup-action-btn">
+                  ↺ Reset Avatar Position & Zoom
+                </button>
+              </div>
+            </div>
+
+            <!-- Quick Talk in Mascot mode -->
+            <div id="mascot-chat-popup" class="mascot-popup mascot-chat-popup" style="display: none;">
+              <div class="mascot-popup-header">
+                <span class="mascot-popup-icon">💬</span>
+                <span>Quick Talk</span>
+              </div>
+              <div id="mascot-chat-last-reply" class="mascot-chat-last-reply" style="display: none;">
+                <span class="mascot-reply-text"></span>
+              </div>
+              <textarea id="mascot-chat-input" class="mascot-chat-textarea" rows="2" placeholder="Talk to Lucia... (Enter to send)"></textarea>
+              <button id="mascot-chat-send-btn" class="mascot-send-btn">Send ➤</button>
+            </div>
+
+            <!-- Horizontal Dock Pill (underneath model) -->
+            <div class="mascot-toolbar-dock">
+              <button class="mascot-tool-btn" id="mascot-chat-btn" title="Quick Chat">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              </button>
+              <button class="mascot-tool-btn" id="mascot-model-btn" title="Switch Model">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+              </button>
+              <button class="mascot-tool-btn" id="mascot-voice-btn" title="Audio & Voice Settings">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+              </button>
+              <button class="mascot-tool-btn" id="mascot-mic-btn" title="Toggle Microphone">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8"/></svg>
+              </button>
+              <button class="mascot-tool-btn" id="mascot-settings-btn" title="UI Settings">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+              </button>
+              <div class="mascot-tool-divider"></div>
+              <button class="mascot-tool-btn mascot-tool-btn--danger" id="mascot-close-btn" title="Exit Mascot Mode">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="avatar-stage-viewport">
+            <div id="avatar-ambient-glow" class="avatar-ambient-glow"></div>
+            <div class="avatar-canvas-wrapper">
+              <canvas id="avatar-canvas"></canvas>
+              <canvas id="avatar-live2d-canvas" style="display: none; position: absolute; inset: 0; width: 100%; height: 100%;"></canvas>
+              <canvas id="avatar-vrm-canvas" style="display: none; position: absolute; inset: 0; width: 100%; height: 100%;"></canvas>
+            </div>
+          </div>
+
+          <!-- Organic Emotional Status Pill (Phase 7.2) -->
+          <div id="avatar-organic-status" class="organic-status-badge" title="Lucia's Felt Presence">
+            <span class="status-sparkle">✦</span>
+            <span class="status-text" id="avatar-status-text">Lucia feels peaceful</span>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Slide-out Diagnostics Drawer (Phase 7.1 Progressive Disclosure) -->
+    <div id="diagnostics-backdrop" class="diagnostics-backdrop"></div>
+    <aside id="debug-pane" class="debug-pane diagnostics-drawer">
       <header class="debug-header">
-        <h3>Emotional Telemetry</h3>
-        <span class="live-pulse">LIVE (500ms)</span>
+        <div class="debug-header-title">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+          </svg>
+          <h3>System Diagnostics</h3>
+        </div>
+        <div class="debug-header-actions">
+          <span class="live-pulse">LIVE (500ms)</span>
+          <button id="close-diagnostics-btn" class="diagnostics-close-btn" title="Close Diagnostics">&times;</button>
+        </div>
       </header>
 
       <div class="debug-scroll-content">
@@ -109,7 +387,7 @@
             </div>
           </div>
 
-          <!-- Load -->
+          <!-- Cognitive Load -->
           <div class="meter-group">
             <div class="meter-labels">
               <span class="meter-name">Cognitive Load</span>
@@ -132,57 +410,45 @@
           </div>
         </section>
 
-        <!-- Section: Conversational State -->
+        <!-- Section: Conversational Feedback & Physiological Parameters -->
         <section class="debug-section">
           <div class="section-title">
-            <span>Conversational State</span>
+            <span>Conversational Dynamics</span>
           </div>
-          <div class="conv-state-grid">
-            <div class="conv-state-chip">
-              <span class="conv-chip-icon">🎭</span>
-              <div class="conv-chip-body">
-                <span class="chip-label">Current Mood</span>
-                <span id="conv-mood-val" class="chip-val chip-val--mood">Calm</span>
-              </div>
+          <div class="telemetry-grid">
+            <div class="telemetry-item">
+              <span class="telemetry-label">Inferred Mood</span>
+              <span id="conv-mood-val" class="telemetry-value">Neutral</span>
             </div>
-            <div class="conv-state-chip">
-              <span class="conv-chip-icon">🔊</span>
-              <div class="conv-chip-body">
-                <span class="chip-label">Voice Activity</span>
-                <span id="conv-voice-val" class="chip-val">Silent</span>
-              </div>
+            <div class="telemetry-item">
+              <span class="telemetry-label">Speaking Status</span>
+              <span id="conv-voice-val" class="telemetry-value">Quiet</span>
             </div>
-            <div class="conv-state-chip">
-              <span class="conv-chip-icon">⚡</span>
-              <div class="conv-chip-body">
-                <span class="chip-label">Response Time</span>
-                <span id="conv-latency-val" class="chip-val chip-val--mono">— ms</span>
-              </div>
+            <div class="telemetry-item">
+              <span class="telemetry-label">Latency Offset</span>
+              <span id="conv-latency-val" class="telemetry-value">+0ms</span>
             </div>
-            <div class="conv-state-chip">
-              <span class="conv-chip-icon">🧠</span>
-              <div class="conv-chip-body">
-                <span class="chip-label">Reasoning Depth</span>
-                <span id="conv-depth-val" class="chip-val chip-val--mono">k=1</span>
-              </div>
+            <div class="telemetry-item">
+              <span class="telemetry-label">Depth / Tokens</span>
+              <span id="conv-depth-val" class="telemetry-value">Normal</span>
             </div>
           </div>
         </section>
 
-        <!-- Section: Stability Telemetry -->
+        <!-- Section: Stability Evaluator (LSI Telemetry) -->
         <section class="debug-section">
           <div class="section-title">
-            <span>Limbic Stability (LSI)</span>
-            <small id="stability-status-badge" class="dim-range" style="color: #10b981;">NOMINAL</small>
+            <span>Stability Evaluator (LSI)</span>
+            <span id="stability-status-badge" class="telemetry-badge badge-stable">STABLE</span>
           </div>
-          <div class="meter-group">
-            <div class="meter-labels">
-              <span class="meter-name">Stability Score</span>
-              <span id="telemetry-lsi-val" class="meter-val">100%</span>
+          <div class="telemetry-grid">
+            <div class="telemetry-item">
+              <span class="telemetry-label">LSI Score</span>
+              <span id="telemetry-lsi-val" class="telemetry-value" style="color: #4ade80;">1.000</span>
             </div>
-            <div class="meter-labels" style="margin-top: 6px;">
-              <span class="meter-name" style="font-size: 0.75rem; color: #64748b;">Fast-Loop Jitter</span>
-              <span id="telemetry-jitter-val" class="meter-val" style="font-size: 0.75rem; color: #94a3b8;">0.0ms</span>
+            <div class="telemetry-item">
+              <span class="telemetry-label">PAD Jitter</span>
+              <span id="telemetry-jitter-val" class="telemetry-value">0.000</span>
             </div>
           </div>
         </section>
@@ -202,262 +468,70 @@
         </section>
       </div>
     </aside>
-
-    <!-- Center Column: Chat Window -->
-    <main id="chat-pane" class="chat-pane">
-      <header class="chat-header">
-        <div class="companion-identity">
-          <div class="avatar-ring">
-            <span class="avatar-letter">L</span>
-            <span id="companion-status-dot" class="status-dot"></span>
-          </div>
-          <div class="identity-text">
-            <h2>Lucia</h2>
-            <span id="companion-state-label" class="state-label">Connecting...</span>
-          </div>
-        </div>
-        <div class="header-right">
-          <button id="open-profile-btn" class="header-action-btn" title="Companion Profile & Birthday" style="color: #fbcfe8;">
-            <span>🎂 <span id="birthday-badge-text">Day 1</span></span>
-          </button>
-          <button id="open-journal-btn" class="header-action-btn" title="Companion Journal & History" style="color: #c4b5fd;">
-            <span>📖 Journal</span>
-          </button>
-          <button id="open-settings-btn" class="header-action-btn" title="System Settings & Hardware Scalability" style="color: #a78bfa;">
-            <span>⚙️ Settings</span>
-          </button>
-          <button id="toggle-mascot-btn" class="header-action-btn" title="Toggle Desktop Mascot Mode (Always on top)" style="color: #93c5fd;">
-            <span>🐾 Mascot</span>
-          </button>
-          <div id="hardware-badge" class="hardware-badge">Auto</div>
-        </div>
-      </header>
-
-      <!-- Message Feed -->
-      <section id="chat-messages" class="chat-messages">
-        <div class="system-welcome-card">
-          <div class="welcome-icon">✨</div>
-          <h3>Welcome to Lucia</h3>
-          <p>Her emotional state and memories evolve dynamically with every turn.</p>
-        </div>
-      </section>
-
-      <!-- Input Area -->
-      <footer class="chat-input-container">
-        <div class="input-wrapper">
-          <textarea
-            id="chat-input"
-            rows="1"
-            placeholder="Type a message... (Shift+Enter for new line)"
-            disabled
-          ></textarea>
-          <button id="mic-btn" class="mic-btn" title="Voice Input (Speech-to-Text)" disabled aria-label="Microphone Voice Input">
-            🎙️
-          </button>
-          <button id="send-btn" class="send-btn" disabled aria-label="Send message">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
-        </div>
-      </footer>
-    </main>
-
-    <!-- Right Column: Dedicated Full-Height Avatar Stage -->
-    <section id="avatar-pane" class="avatar-pane">
-      <div class="avatar-stage-container">
-        <div class="avatar-top-bar">
-          <!-- Row 1: Presence status + Engine/Model selectors -->
-          <div class="avatar-controls-row">
-            <div class="avatar-status-badge">
-              <span class="status-dot"></span>
-              <span>Presence</span>
-            </div>
-            <div class="avatar-model-controls">
-              <select id="avatar-engine-select" class="presence-select" title="Avatar Engine">
-                <option value="canvas">🎨 2D Canvas</option>
-                <option value="sprites">🖼️ 2D Sprites</option>
-                <option value="live2d">🎬 Live2D</option>
-                <option value="vrm">🌐 3D VRM</option>
-              </select>
-              <select id="avatar-model-select" class="presence-select" title="Avatar Model">
-                <option value="default">Default Lucia</option>
-              </select>
-            </div>
-          </div>
-          <!-- Row 2: Voice / Audio controls -->
-          <div class="avatar-controls-row avatar-audio-row">
-            <select id="voice-model-select" class="presence-select presence-select--voice" title="Select Voice Model">
-              <option value="default">— Choose a voice —</option>
-            </select>
-            <input type="range" id="voice-volume-slider" min="0" max="1" step="0.05" value="1" class="volume-slider" title="Master Voice Volume" />
-            <button id="voice-mute-btn" class="voice-mute-btn" title="Toggle Voice (Mute/Unmute)">
-              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
-                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-              </svg>
-            </button>
-          </div>
-        </div>
-
-        <!-- Mascot Mode Toolbar (Bottom Floating Dock under the model) -->
-        <div id="mascot-toolbar" class="mascot-toolbar">
-          <!-- Model picker popup -->
-          <div id="mascot-model-popup" class="mascot-popup" style="display: none;">
-            <div class="mascot-popup-header">
-              <span class="mascot-popup-icon">🎬</span>
-              <span>Switch Model</span>
-            </div>
-            <div class="mascot-field-group">
-              <label class="mascot-popup-label">Engine</label>
-              <select id="mascot-engine-select" class="mascot-popup-select">
-                <option value="canvas">🎨 2D Canvas</option>
-                <option value="sprites">🖼️ 2D Sprites</option>
-                <option value="live2d">🎬 Live2D</option>
-                <option value="vrm">🌐 3D VRM</option>
-              </select>
-            </div>
-            <div class="mascot-field-group">
-              <label class="mascot-popup-label">Model</label>
-              <select id="mascot-avatar-select" class="mascot-popup-select">
-                <option value="default">Default Lucia</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- Voice & Audio Device picker popup -->
-          <div id="mascot-voice-popup" class="mascot-popup mascot-audio-popup" style="display: none;">
-            <div class="mascot-popup-header">
-              <span class="mascot-popup-icon">🔊</span>
-              <span>Audio & Voice Settings</span>
-            </div>
-            <div class="mascot-field-group">
-              <label class="mascot-popup-label">🎙️ Microphone (Input)</label>
-              <select id="mascot-input-device-select" class="mascot-popup-select">
-                <option value="default">Default Microphone</option>
-              </select>
-            </div>
-            <div class="mascot-field-group">
-              <label class="mascot-popup-label">🔊 Speaker (Output)</label>
-              <select id="mascot-output-device-select" class="mascot-popup-select">
-                <option value="default">Default Speaker</option>
-              </select>
-            </div>
-            <div class="mascot-field-group">
-              <label class="mascot-popup-label">🎙️ Voice Model</label>
-              <select id="mascot-voice-select" class="mascot-popup-select">
-                <option value="default">— Choose a voice —</option>
-              </select>
-            </div>
-            <div class="mascot-field-group">
-              <label class="mascot-popup-label">Master Volume</label>
-              <input type="range" id="mascot-volume-slider" min="0" max="1" step="0.05" value="1" class="volume-slider" style="width: 100%;" />
-            </div>
-          </div>
-
-          <!-- UI Settings popup -->
-          <div id="mascot-settings-popup" class="mascot-popup mascot-settings-popup" style="display: none;">
-            <div class="mascot-popup-header">
-              <span class="mascot-popup-icon">⚙️</span>
-              <span>UI & Mascot Settings</span>
-            </div>
-            <div class="mascot-field-group">
-              <label class="mascot-popup-label">Mascot Window Opacity</label>
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <input type="range" id="mascot-opacity-slider" min="0.3" max="1" step="0.05" value="1" class="volume-slider" style="flex: 1;" />
-                <span id="mascot-opacity-val" style="font-size: 0.75rem; color: #a855f7; font-family: monospace; min-width: 36px;">100%</span>
-              </div>
-            </div>
-            <div class="mascot-field-group" style="margin-top: 6px;">
-              <button id="mascot-reset-avatar-btn" class="mascot-popup-action-btn">
-                ↺ Reset Avatar Position & Zoom
-              </button>
-            </div>
-            <div class="mascot-field-group">
-              <button id="mascot-open-journal-btn" class="mascot-popup-action-btn">
-                📖 Open Journal & Memories
-              </button>
-            </div>
-            <div class="mascot-field-group">
-              <button id="mascot-return-main-btn" class="mascot-popup-action-btn primary">
-                🖥️ Return to Main Window
-              </button>
-            </div>
-          </div>
-
-          <!-- Mini chat popup -->
-          <div id="mascot-chat-popup" class="mascot-popup mascot-chat-popup" style="display: none;">
-            <div class="mascot-popup-header">
-              <span class="mascot-popup-icon">💬</span>
-              <span>Quick Message</span>
-            </div>
-            <textarea id="mascot-chat-input" class="mascot-chat-textarea" rows="2" placeholder="Talk to Lucia... (Enter to send)"></textarea>
-            <button id="mascot-chat-send-btn" class="mascot-send-btn">Send ➤</button>
-          </div>
-
-          <!-- Horizontal Dock Pill (underneath model) -->
-          <div class="mascot-toolbar-dock">
-            <button class="mascot-tool-btn" id="mascot-chat-btn" title="Quick Chat">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            </button>
-            <button class="mascot-tool-btn" id="mascot-model-btn" title="Switch Model">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-            </button>
-            <button class="mascot-tool-btn" id="mascot-voice-btn" title="Audio & Voice Settings">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-            </button>
-            <button class="mascot-tool-btn" id="mascot-mic-btn" title="Toggle Microphone">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8"/></svg>
-            </button>
-            <button class="mascot-tool-btn" id="mascot-settings-btn" title="UI Settings">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-            </button>
-            <div class="mascot-tool-divider"></div>
-            <button class="mascot-tool-btn mascot-tool-btn--danger" id="mascot-close-btn" title="Exit Mascot Mode">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
-            </button>
-          </div>
-        </div>
-
-        <div class="avatar-canvas-wrapper">
-          <canvas id="avatar-canvas"></canvas>
-          <canvas id="avatar-live2d-canvas" style="display: none; position: absolute; inset: 0; width: 100%; height: 100%;"></canvas>
-          <canvas id="avatar-vrm-canvas" style="display: none; position: absolute; inset: 0; width: 100%; height: 100%;"></canvas>
-        </div>
-      </div>
-    </section>
   </div>
 
-  <!-- Companion Journal Modal -->
+  <!-- Companion Journal Modal (Our Journal) -->
   <div id="journal-modal" class="journal-modal">
     <div class="journal-card">
       <div class="journal-header">
-        <h2>📖 Companion Journal & Relationship</h2>
-        <button id="close-journal-btn" class="journal-close-btn">&times;</button>
+        <div class="journal-title-wrap">
+          <span class="journal-title-icon">📖</span>
+          <h2>Our Journal</h2>
+        </div>
+        <button id="close-journal-btn" class="journal-close-btn" aria-label="Close Journal">&times;</button>
       </div>
 
-      <div class="journal-stats-grid">
-        <div class="stat-box">
-          <div class="stat-label">Total Turns</div>
-          <div id="journal-total-turns" class="stat-value">0</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-label">Limbic Health</div>
-          <div id="journal-lsi-score" class="stat-value">100%</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-label">Memory Traces</div>
-          <div id="journal-memory-count" class="stat-value">0</div>
-        </div>
+      <!-- Life Marker Banner (Philia Non-Gamified) -->
+      <div class="journal-life-banner">
+        <span class="banner-sparkle">✦</span>
+        <span id="journal-life-meta">Day 1 with Lucia • 0 Shared Moments • Born Today</span>
       </div>
 
-      <p style="font-size: 0.85rem; color: #94a3b8; margin: 0; line-height: 1.5;">
-        Lucia's subconscious affective memories grow continuously with every shared moment. Clear Screen starts a new topic without deleting her long-term memories.
-      </p>
+      <!-- Timeline Feed (Presentation-only milestones) -->
+      <div id="journal-timeline" class="journal-timeline">
+        <div class="timeline-empty-state">No journal entries yet. Shared moments with Lucia will appear here.</div>
+      </div>
 
       <div class="journal-actions">
-        <button id="clear-history-btn" class="journal-btn" style="color: #f87171;">Clear Screen</button>
-        <button id="export-history-btn" class="journal-btn primary">Export Chat (.md)</button>
+        <button id="reset-journal-view-btn" class="journal-btn secondary" title="Reset Journal timeline view">Reset View</button>
+        <button id="export-journal-btn" class="journal-btn primary">Export Journal (.md)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subconscious Affective Memories Modal -->
+  <div id="memories-modal" class="journal-modal">
+    <div class="journal-card memories-modal-card">
+      <div class="journal-header">
+        <div class="journal-title-wrap">
+          <span class="journal-title-icon">🧠</span>
+          <div>
+            <h2>Memories</h2>
+            <p class="journal-subtitle">Subconscious recollections that shape Lucia's understanding of you</p>
+          </div>
+        </div>
+        <button id="close-memories-btn" class="journal-close-btn" aria-label="Close Memories">&times;</button>
+      </div>
+
+      <!-- Category Filter Pills -->
+      <div class="memories-category-bar">
+        <button class="memories-category-pill active" data-category="moments">
+          <span class="pill-icon">♡</span> Moments
+        </button>
+        <button class="memories-category-pill" data-category="people">
+          <span class="pill-icon">✦</span> People
+        </button>
+        <button class="memories-category-pill" data-category="places">
+          <span class="pill-icon">◌</span> Places
+        </button>
+        <button class="memories-category-pill" data-category="enduring">
+          <span class="pill-icon">∞</span> Enduring
+        </button>
+      </div>
+
+      <!-- Memories Grid Feed -->
+      <div id="memories-grid" class="memories-grid">
+        <!-- Memory cards or honest empty state dynamically rendered -->
       </div>
     </div>
   </div>
@@ -510,7 +584,10 @@
       <div class="settings-modal-body" style="display: flex; flex-direction: column; gap: 16px; margin: 12px 0;">
         <!-- Section 1: Hardware Scalability -->
         <div class="settings-section">
-          <div class="settings-section-title">⚡ Hardware Scalability & Optimization Profile</div>
+          <div class="settings-section-title" style="display: flex; align-items: center; justify-content: space-between;">
+            <span>⚡ Hardware Scalability & Optimization Profile</span>
+            <span id="hardware-badge" class="hardware-badge">Auto</span>
+          </div>
           <p class="settings-section-desc">
             Dynamically adjusts model offload, VRAM allocation, context length, and background cadence for your GPU/CPU.
           </p>

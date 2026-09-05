@@ -255,11 +255,13 @@ $$\text{safeX} = \text{clamp}(120, W_{window} - 120, \text{bounds.centerX})$$
 $$\text{safeY} = \text{clamp}(H_{dock}, H_{window} - H_{dock} - 6, \text{bounds.bottomY} + 8)$$
 This keeps the control pill attached directly to the character regardless of panning or zoom levels.
 
-#### 4. Hit-Tested Hover Zoom & Drag Isolation
+#### 4. Hit-Tested Hover Zoom, Inertia Cooldown & Drag Isolation
 To eliminate accidental zooming when moving the mascot window via trackpad or mouse gestures:
 * **Cursor Hit-Testing (`isCursorOverModel`)**:
   $$\text{isOverModel} = (x_{cursor} \ge \text{bounds.left}) \land (x_{cursor} \le \text{bounds.right}) \land (y_{cursor} \ge \text{bounds.top}) \land (y_{cursor} \le \text{bounds.bottom})$$
-* **Zoom Guard**: `handleWheelZoom` is strictly aborted if `isDraggingWindow` is true or if `!isCursorOverModel(clientX, clientY)`.
+* **Trackpad Drag Inertia Cooldown**: When releasing the drag (`mouseup`), `lastWindowDragEndTime = Date.now()` is set. Any residual momentum wheel events received within $800\text{ms}$ are discarded:
+  $$\text{if } (t_{now} - t_{dragEnd} < 800\text{ms}) \implies \text{discard wheel zoom}$$
+* **Aero Snap Prevention & Bounds Guard**: Mascot window configuration sets `maximizable: false`, `fullscreenable: false`, and `resizable: false` to prevent Windows Aero Snap from maximizing transparent canvas views. Double-clicking or resetting invokes `window:reset-mascot-bounds` to unmaximize and enforce $380 \times 540$ dimensions.
 
 #### 5. Adaptive Framerate Throttling
 Supports runtime energy conservation:
@@ -271,6 +273,13 @@ $$\text{if } \Delta t < \left(\frac{1000}{\text{targetFps}} - 2\text{ms}\right) 
 #### 6. 60 FPS Web Audio Lip-Sync (`lip-sync.js`)
 * Connects an `AudioContext` & `AnalyserNode` frequency analyzer to voice playback.
 * Analyzes vocal formants (bins 2–32, ~200Hz–2500Hz) to drive mouth height and vowel width in real time.
+
+#### 7. Offline Speech-to-Text & VAD Pipeline (`src/core/voice/stt_engine.py`)
+To eliminate Chromium's proprietary cloud requirement and `chunked_data_pipe_upload_data_stream.cc` network failure in standalone Electron:
+* **Local Web Audio VAD**: Analyzes microphone input frequency bin averages at 100ms intervals. Detects speech when volume $> 14$ and finalizes utterances after $1.2\text{s}$ of subsequent silence.
+* **MediaRecorder Opus/WebM Chunking**: Audio is streamed into in-memory chunks without writing temporary browser files.
+* **Offline `faster-whisper` Engine**: Dispatches audio bytes to `POST /voice/transcribe`, running local CTranslate2 Whisper model with auto-detected hardware acceleration (FP16 on CUDA, INT8 on CPU) and Silero VAD filtering.
+* **Speaker-to-Mic Echo Loop Prevention**: Voice recording is automatically suspended during Lucia's speech synthesis playback and resumed upon completion.
 
 ---
 

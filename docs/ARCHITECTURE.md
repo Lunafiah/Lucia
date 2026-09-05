@@ -44,7 +44,8 @@ Lucia's internal limbic state is centered around **Philia** ($\phi\iota\lambda\i
 │  LAYER 6: MULTIMODAL EXPRESSION & EMBODIED PRESENCE                     │
 │  • Local SLM (LFM2.5-1.2B GGUF with CUDA GPU acceleration)              │
 │  • Self-contained RVC Voice Synthesis Engine (models/voice/rvc/)        │
-│  • 60 FPS Interactive Canvas Avatar with Web Audio Lip-Sync             │
+│  • Self-contained Offline faster-whisper STT Engine (POST /voice/transcribe) │
+│  • 60 FPS Interactive Canvas/Live2D/VRM Avatar with Web Audio Lip-Sync  │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -129,8 +130,11 @@ Lucia provides two presentation contexts managed by Electron:
 ```
 
 * **Smooth Mascot Window Dragging**: Window translation is handled by `window.lucia.window.moveMascotBy(dx, dy)` communicating directly with the main process. This eliminates Chromium's native `-webkit-app-region: drag` bug on Windows where touchpad dragging floods mouse wheel events and unintentionally resizes content.
+* **Trackpad Inertia Cooldown (800ms)**: When releasing the model after dragging, an 800ms cooldown suppresses residual touchpad momentum wheel events, preventing the avatar from blowing up in size after dragging.
+* **Aero Snap Prevention & Window Reset**: The Mascot BrowserWindow sets `maximizable: false`, `fullscreenable: false`, and `resizable: false` to prevent Windows Aero Snap from accidentally maximizing the transparent window to 1920×1080 when dragged near screen edges. Double-clicking or clicking Reset triggers `window:reset-mascot-bounds` to unmaximize and reset dimensions to standard 380×540.
 * **Model-Anchored Dynamic Dock**: The Mascot Toolbar dock mathematically binds to `getModelBounds()`, positioning itself at `centerX` and `bottomY + 8px` directly beneath the character's geometry.
 * **Hit-Tested Hover Zoom**: The wheel zoom event strictly validates `isCursorOverModel(clientX, clientY)`, ensuring zoom only occurs when the user explicitly hovers over the model itself.
+* **Offline Speech-to-Text (`faster-whisper`)**: Continuous voice recording utilizes frontend `MediaRecorder` + Web Audio VAD with local transcription via `POST /voice/transcribe`, eliminating Chromium's chunked upload pipe errors (`webkitSpeechRecognition`) and operating with zero third-party cloud keys.
 
 ---
 

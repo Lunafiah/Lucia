@@ -30,7 +30,10 @@ class MascotWindowManager {
       frame: false,
       transparent: true,
       alwaysOnTop: true,
-      resizable: true,
+      resizable: false,
+      maximizable: false,
+      fullscreenable: false,
+      hasShadow: false,
       skipTaskbar: true,
       webPreferences: {
         preload: path.join(__dirname, '../preload/preload.js'),

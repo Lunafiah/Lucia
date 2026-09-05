@@ -1,27 +1,104 @@
 /* ==========================================================================
    Lucia Desktop UI — Core Design System & Layout (index.css)
+   Phase 7.1: Information Architecture & Design Token System
    ========================================================================== */
 
 :root {
-  --bg-main: #0d0d17;
-  --bg-pane: #131322;
-  --bg-card: rgba(26, 26, 46, 0.7);
-  --bg-input: #1b1b2f;
-  --border-color: rgba(255, 255, 255, 0.08);
-  --border-focus: #7c4dff;
+  /* ------------------------------------------------------------------------
+     Design Tokens (Phase 7.1 Standard)
+     ------------------------------------------------------------------------ */
+  /* Surface & Background Hierarchy */
+  --lucia-bg-canvas: #090910;
+  --lucia-bg-room: radial-gradient(circle at 50% 30%, #16152b 0%, #090910 100%);
+  --lucia-surface-glass-subtle: rgba(22, 20, 42, 0.45);
+  --lucia-surface-glass-card: rgba(26, 23, 50, 0.65);
+  --lucia-surface-glass-modal: rgba(18, 16, 36, 0.92);
+  --lucia-surface-input: rgba(14, 13, 28, 0.75);
 
-  --accent-primary: #8a2be2;
-  --accent-glow: rgba(138, 43, 226, 0.35);
-  --accent-secondary: #00e5ff;
-  --accent-positive: #00e676;
+  /* Specular & Border Strokes */
+  --lucia-border-subtle: rgba(255, 255, 255, 0.06);
+  --lucia-border-medium: rgba(255, 255, 255, 0.12);
+  --lucia-border-highlight: rgba(192, 132, 252, 0.35);
+
+  /* Accent & Emotional Resonance Palette */
+  --lucia-accent-amethyst: #a855f7;
+  --lucia-accent-violet: #8b5cf6;
+  --lucia-accent-rose: #ec4899;
+  --lucia-accent-amber: #f59e0b;
+  --lucia-accent-cyan: #38bdf8;
+  --lucia-accent-emerald: #10b981;
+
+  /* Text & Readability (WCAG AA Compliant) */
+  --lucia-text-primary: #f8fafc;
+  --lucia-text-secondary: #cbd5e1;
+  --lucia-text-muted: #94a3b8;
+  --lucia-text-faint: #64748b;
+
+  /* Typography Scale */
+  --lucia-font-display: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --lucia-font-dialogue: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --lucia-font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+
+  --lucia-text-xs: 0.75rem;    /* 12px */
+  --lucia-text-sm: 0.84rem;    /* 13.5px */
+  --lucia-text-base: 0.938rem; /* 15px */
+  --lucia-text-lg: 1.063rem;   /* 17px */
+  --lucia-text-xl: 1.25rem;    /* 20px */
+  --lucia-text-2xl: 1.625rem;  /* 26px */
+  --lucia-text-3xl: 2.125rem;  /* 34px */
+
+  /* Spacing Scale (4px Base Grid) */
+  --lucia-space-1: 0.25rem;  /* 4px */
+  --lucia-space-2: 0.5rem;   /* 8px */
+  --lucia-space-3: 0.75rem;  /* 12px */
+  --lucia-space-4: 1rem;     /* 16px */
+  --lucia-space-5: 1.25rem;  /* 20px */
+  --lucia-space-6: 1.5rem;   /* 24px */
+  --lucia-space-8: 2rem;     /* 32px */
+  --lucia-space-10: 2.5rem;  /* 40px */
+  --lucia-space-12: 3rem;    /* 48px */
+
+  /* Elevation & Glass Shadows */
+  --lucia-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --lucia-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45), 0 0 1px rgba(255, 255, 255, 0.1);
+  --lucia-shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(168, 85, 247, 0.15);
+  --lucia-shadow-glow: 0 0 30px rgba(168, 85, 247, 0.25);
+
+  /* Micro-Interaction Timings */
+  --lucia-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --lucia-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --lucia-trans-fast: 160ms var(--lucia-ease-out);
+  --lucia-trans-normal: 280ms var(--lucia-ease-out);
+  --lucia-trans-slow: 450ms var(--lucia-ease-out);
+
+  /* Border Radii */
+  --lucia-radius-sm: 6px;
+  --lucia-radius-md: 10px;
+  --lucia-radius-lg: 16px;
+  --lucia-radius-pill: 9999px;
+
+  /* ------------------------------------------------------------------------
+     Backward Compatibility Layer (Existing Components)
+     ------------------------------------------------------------------------ */
+  --bg-main: var(--lucia-bg-canvas);
+  --bg-pane: #121020;
+  --bg-card: var(--lucia-surface-glass-card);
+  --bg-input: var(--lucia-surface-input);
+  --border-color: var(--lucia-border-subtle);
+  --border-focus: var(--lucia-accent-amethyst);
+
+  --accent-primary: var(--lucia-accent-violet);
+  --accent-glow: var(--lucia-shadow-glow);
+  --accent-secondary: var(--lucia-accent-cyan);
+  --accent-positive: var(--lucia-accent-emerald);
   --accent-negative: #ff5252;
-  --accent-warn: #ffd740;
+  --accent-warn: var(--lucia-accent-amber);
 
-  --text-primary: #f0f0f8;
-  --text-secondary: #9a9ab5;
-  --text-muted: #5e5e78;
+  --text-primary: var(--lucia-text-primary);
+  --text-secondary: var(--lucia-text-secondary);
+  --text-muted: var(--lucia-text-muted);
 
-  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-family: var(--lucia-font-dialogue);
 }
 
 * {
@@ -31,35 +108,216 @@
 }
 
 body {
-  font-family: var(--font-family);
-  background-color: var(--bg-main);
-  color: var(--text-primary);
+  font-family: var(--lucia-font-dialogue);
+  background-color: var(--lucia-bg-canvas);
+  color: var(--lucia-text-primary);
   height: 100vh;
   overflow: hidden;
   user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Allow text selection in text-heavy companion surfaces (Chat, Journal, Memories, Diagnostics, Settings) */
+.chat-pane,
+.chat-messages,
+.message-bubble,
+.message-card,
+.message-text,
+.message-content,
+.system-welcome-card,
+.journal-modal,
+.journal-card,
+.debug-scroll-content,
+.telemetry-grid,
+.telemetry-item,
+.meter-labels,
+.settings-modal-body,
+input,
+textarea {
+  user-select: text !important;
+  -webkit-user-select: text !important;
 }
 
 /* --------------------------------------------------------------------------
-   App Layout
+   App Layout Hierarchy
    -------------------------------------------------------------------------- */
+.lucia-app,
 .app-layout {
   display: flex;
+  flex-direction: column;
   height: 100vh;
   width: 100vw;
   overflow: hidden;
+  position: relative;
+  background: var(--lucia-bg-room);
 }
 
-.debug-pane {
-  width: 270px;
-  min-width: 240px;
-  max-width: 310px;
-  background-color: var(--bg-pane);
+/* --------------------------------------------------------------------------
+   Global Companion Navigation Header (Phase 7.1)
+   -------------------------------------------------------------------------- */
+.lucia-nav-header {
+  height: 48px;
+  min-height: 48px;
   display: flex;
-  flex-direction: column;
-  border-right: 1px solid var(--border-color);
-  box-shadow: 2px 0 15px rgba(0, 0, 0, 0.25);
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--lucia-space-4);
+  background: var(--lucia-surface-glass-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--lucia-border-subtle);
+  z-index: 50;
+  user-select: none;
+}
+
+.nav-brand-section {
+  display: flex;
+  align-items: center;
+  gap: var(--lucia-space-3);
+}
+
+.nav-sparkle {
+  color: var(--lucia-accent-amethyst);
+  font-size: 1.1rem;
+  animation: pulseGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes pulseGlow {
+  0% { transform: scale(0.95); opacity: 0.7; filter: drop-shadow(0 0 2px rgba(168, 85, 247, 0.4)); }
+  100% { transform: scale(1.1); opacity: 1; filter: drop-shadow(0 0 8px rgba(168, 85, 247, 0.8)); }
+}
+
+.nav-title {
+  font-family: var(--lucia-font-display);
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  background: linear-gradient(135deg, var(--lucia-text-primary) 0%, #c4b5fd 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0;
+}
+
+.nav-presence-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  background: rgba(168, 85, 247, 0.1);
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  border-radius: var(--lucia-radius-pill);
+  font-size: var(--lucia-text-xs);
+  color: #d8b4fe;
+  transition: all var(--lucia-trans-fast);
+}
+
+.presence-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--lucia-accent-emerald);
+  box-shadow: 0 0 8px var(--lucia-accent-emerald);
+}
+
+.presence-dot.connecting {
+  background-color: var(--lucia-accent-amber);
+  box-shadow: 0 0 8px var(--lucia-accent-amber);
+}
+
+.presence-dot.error {
+  background-color: #ef4444;
+  box-shadow: 0 0 8px #ef4444;
+}
+
+.presence-label {
+  font-weight: 500;
+}
+
+.nav-tabs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(10, 10, 20, 0.5);
+  padding: 3px;
+  border-radius: var(--lucia-radius-pill);
+  border: 1px solid var(--lucia-border-subtle);
+}
+
+.nav-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border-radius: var(--lucia-radius-pill);
+  border: none;
+  background: transparent;
+  color: var(--lucia-text-muted);
+  font-family: var(--lucia-font-dialogue);
+  font-size: var(--lucia-text-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--lucia-trans-fast);
+}
+
+.nav-tab-btn:hover {
+  color: var(--lucia-text-primary);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.nav-tab-btn.active {
+  color: #ffffff;
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.4), rgba(139, 92, 246, 0.4));
+  border: 1px solid rgba(168, 85, 247, 0.5);
+  box-shadow: 0 2px 10px rgba(168, 85, 247, 0.25);
+}
+
+.nav-actions-section {
+  display: flex;
+  align-items: center;
+  gap: var(--lucia-space-2);
+}
+
+.nav-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px;
+  border-radius: var(--lucia-radius-md);
+  border: 1px solid var(--lucia-border-subtle);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--lucia-text-secondary);
+  font-family: var(--lucia-font-dialogue);
+  font-size: var(--lucia-text-xs);
+  cursor: pointer;
+  transition: all var(--lucia-trans-fast);
+}
+
+.nav-action-btn:hover {
+  background: rgba(168, 85, 247, 0.15);
+  border-color: rgba(168, 85, 247, 0.35);
+  color: var(--lucia-text-primary);
+}
+
+.hardware-badge {
+  padding: 3px 8px;
+  border-radius: var(--lucia-radius-sm);
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  color: #7dd3fc;
+  font-size: var(--lucia-text-xs);
+  font-family: var(--lucia-font-mono);
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   Main Companion Stage (Talk + Avatar Stage)
+   -------------------------------------------------------------------------- */
+.main-stage {
+  display: flex;
+  flex: 1;
+  height: calc(100vh - 48px);
   overflow: hidden;
-  z-index: 5;
+  position: relative;
 }
 
 .chat-pane {
@@ -67,8 +325,8 @@ body {
   min-width: 380px;
   display: flex;
   flex-direction: column;
-  background-color: var(--bg-main);
-  border-right: 1px solid var(--border-color);
+  background: transparent;
+  border-right: 1px solid var(--lucia-border-subtle);
   position: relative;
   overflow: hidden;
 }
@@ -82,6 +340,90 @@ body {
   background: radial-gradient(circle at 50% 25%, #181c38 0%, #0d0f1e 100%);
   position: relative;
   overflow: hidden;
+}
+
+/* --------------------------------------------------------------------------
+   Diagnostics Drawer (Slide-out Telemetry Inspection)
+   -------------------------------------------------------------------------- */
+.diagnostics-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 998;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--lucia-trans-normal);
+}
+
+.diagnostics-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.debug-pane.diagnostics-drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 330px;
+  max-width: 85vw;
+  z-index: 999;
+  background: var(--lucia-surface-glass-modal);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-right: 1px solid var(--lucia-border-highlight);
+  box-shadow: var(--lucia-shadow-lg);
+  transform: translateX(-100%);
+  transition: transform var(--lucia-trans-normal);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.debug-pane.diagnostics-drawer.open {
+  transform: translateX(0);
+}
+
+.debug-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--lucia-border-subtle);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.debug-header-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--lucia-text-primary);
+  font-size: var(--lucia-text-sm);
+  font-weight: 600;
+}
+
+.debug-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.diagnostics-close-btn {
+  background: none;
+  border: none;
+  color: var(--lucia-text-muted);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 4px;
+  border-radius: var(--lucia-radius-sm);
+  transition: color var(--lucia-trans-fast);
+}
+
+.diagnostics-close-btn:hover {
+  color: #ffffff;
 }
 
 /* --------------------------------------------------------------------------
@@ -154,4 +496,20 @@ body {
 .splash-status {
   color: var(--text-muted);
   font-size: 0.85rem;
+}
+
+/* --------------------------------------------------------------------------
+   Mascot Mode Overrides for Navigation
+   -------------------------------------------------------------------------- */
+body.mascot-mode .lucia-nav-header {
+  display: none !important;
+}
+
+body.mascot-mode .main-stage {
+  height: 100vh !important;
+}
+
+body.mascot-mode .diagnostics-backdrop,
+body.mascot-mode .debug-pane {
+  display: none !important;
 }

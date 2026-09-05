@@ -38,6 +38,20 @@ function registerHandlers(port = 8765, isPreview = false, getMascotManager = nul
     return false;
   });
 
+  // window:reset-mascot-bounds IPC handler (restores standard 380x540 window and cancels any OS maximize)
+  ipcMain.handle('window:reset-mascot-bounds', async (event) => {
+    const { BrowserWindow } = require('electron');
+    const win = BrowserWindow.fromWebContents(event.sender);
+    if (win && !win.isDestroyed()) {
+      if (win.isMaximized()) {
+        win.unmaximize();
+      }
+      win.setSize(380, 540);
+      return true;
+    }
+    return false;
+  });
+
   // models:get-avatars IPC handler (direct fs scan, works in both live and preview)
   ipcMain.handle('models:get-avatars', async () => {
     const rootDir = path.resolve(__dirname, '../../');

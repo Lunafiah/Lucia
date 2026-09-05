@@ -49,6 +49,7 @@ class EmotionDebugPanel {
 
     this._setupBackendListeners();
     this._startVoiceActivityMonitor();
+    this._setupDrawerControls();
   }
 
   _setupBackendListeners() {
@@ -219,6 +220,56 @@ class EmotionDebugPanel {
     const clamped = Math.max(0.0, Math.min(1.0, value));
     valElem.textContent = clamped.toFixed(2);
     fillElem.style.width = `${clamped * 100}%`;
+  }
+
+  _setupDrawerControls() {
+    this.toggleBtn = document.getElementById('toggle-diagnostics-btn');
+    this.closeBtn = document.getElementById('close-diagnostics-btn');
+    this.backdrop = document.getElementById('diagnostics-backdrop');
+
+    if (this.toggleBtn) {
+      this.toggleBtn.addEventListener('click', () => this.toggleDrawer());
+    }
+    if (this.closeBtn) {
+      this.closeBtn.addEventListener('click', () => this.closeDrawer());
+    }
+    if (this.backdrop) {
+      this.backdrop.addEventListener('click', () => this.closeDrawer());
+    }
+
+    // Shortcut: Ctrl+Shift+D or Cmd+Shift+D toggles diagnostics; Escape closes if open
+    window.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'D' || e.key === 'd')) {
+        e.preventDefault();
+        this.toggleDrawer();
+      } else if (e.key === 'Escape' && this.isDrawerOpen()) {
+        this.closeDrawer();
+      }
+    });
+  }
+
+  isDrawerOpen() {
+    return this.debugPane && this.debugPane.classList.contains('open');
+  }
+
+  openDrawer() {
+    if (this.debugPane) this.debugPane.classList.add('open');
+    if (this.backdrop) this.backdrop.classList.add('open');
+    if (this.toggleBtn) this.toggleBtn.classList.add('active');
+  }
+
+  closeDrawer() {
+    if (this.debugPane) this.debugPane.classList.remove('open');
+    if (this.backdrop) this.backdrop.classList.remove('open');
+    if (this.toggleBtn) this.toggleBtn.classList.remove('active');
+  }
+
+  toggleDrawer() {
+    if (this.isDrawerOpen()) {
+      this.closeDrawer();
+    } else {
+      this.openDrawer();
+    }
   }
 
   showStaleIndicator(isStale) {

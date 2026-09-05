@@ -21,6 +21,7 @@ class AvatarRenderer {
     this.dragStart = { x: 0, y: 0 };
     this.isDraggingWindow = false;
     this.windowDragStart = { screenX: 0, screenY: 0 };
+    this.lastWindowDragEndTime = 0;
     this.activeEngine = "canvas";
     this.activeModel = "default";
     this.sprites = null;
@@ -95,8 +96,14 @@ class AvatarRenderer {
       (this.vrmCanvas && this.vrmCanvas.parentElement);
 
     const handleWheelZoom = (e) => {
-      // Prevent zoom during dragging to maintain scale stability
-      if (this.isDraggingModel || this.isDraggingWindow) return;
+      // Prevent zoom during dragging or during 800ms trackpad inertia cooldown after dragging
+      if (
+        this.isDraggingModel ||
+        this.isDraggingWindow ||
+        (Date.now() - (this.lastWindowDragEndTime || 0) < 800)
+      ) {
+        return;
+      }
 
       // Ignore zoom when scrolling inside mascot toolbar or popups
       if (e.target.closest("#mascot-toolbar") || e.target.closest(".mascot-popup")) return;
@@ -115,6 +122,12 @@ class AvatarRenderer {
         this._repositionLive2DModel();
       }
       this._updateToolbarPosition();
+
+      // Sync zoom slider in UI Settings popup if open
+      const zoomSlider = document.getElementById("mascot-zoom-slider");
+      const zoomVal = document.getElementById("mascot-zoom-val");
+      if (zoomSlider) zoomSlider.value = this.mascotScale;
+      if (zoomVal) zoomVal.textContent = `${Math.round(this.mascotScale * 100)}%`;
     };
 
     window.addEventListener("wheel", handleWheelZoom, { passive: false });
@@ -190,6 +203,9 @@ class AvatarRenderer {
 
     window.addEventListener("mouseup", () => {
       const wrapper = getActiveWrapper();
+      if (this.isDraggingWindow) {
+        this.lastWindowDragEndTime = Date.now();
+      }
       this.isDraggingWindow = false;
       this.isDraggingModel = false;
       if (wrapper) wrapper.style.cursor = "grab";
@@ -204,7 +220,7 @@ class AvatarRenderer {
       }
     });
 
-    // Double-click to reset model position & zoom
+    // Double-click to reset model position, zoom & window bounds
     window.addEventListener("dblclick", (e) => {
       const wrapper = getActiveWrapper();
       const stage = document.querySelector(".avatar-stage-container") || wrapper;
@@ -213,8 +229,16 @@ class AvatarRenderer {
 
       this.pan = { x: 0, y: 0 };
       this.mascotScale = 1.0;
+      const zoomSlider = document.getElementById("mascot-zoom-slider");
+      const zoomVal = document.getElementById("mascot-zoom-val");
+      if (zoomSlider) zoomSlider.value = 1.0;
+      if (zoomVal) zoomVal.textContent = "100%";
       if (this.activeEngine === "live2d") {
         this._repositionLive2DModel();
+      }
+      this._updateToolbarPosition();
+      if (window.lucia && window.lucia.window && window.lucia.window.resetMascotBounds) {
+        window.lucia.window.resetMascotBounds();
       }
     });
   }
@@ -1429,9 +1453,11 @@ class AvatarRenderer {
       });
     }
 
-    // --- 5. Settings button & popup (Opacity, Reset avatar, Journal, Full window) ---
+    // --- 5. Settings button & popup (Zoom, Opacity, Reset avatar, Journal, Full window) ---
     const settingsBtn = get("mascot-settings-btn");
     const settingsPopup = get("mascot-settings-popup");
+    const zoomSlider = get("mascot-zoom-slider");
+    const zoomVal = get("mascot-zoom-val");
     const opacitySlider = get("mascot-opacity-slider");
     const opacityVal = get("mascot-opacity-val");
     const resetAvatarBtn = get("mascot-reset-avatar-btn");
@@ -1442,6 +1468,22 @@ class AvatarRenderer {
       settingsBtn.addEventListener("click", (e) => {
         e.stopPropagation();
         togglePopup(settingsBtn, settingsPopup);
+      });
+    }
+
+    if (zoomSlider) {
+      zoomSlider.value = this.mascotScale || 1.0;
+      if (zoomVal) zoomVal.textContent = `${Math.round((this.mascotScale || 1.0) * 100)}%`;
+
+      zoomSlider.addEventListener("input", (e) => {
+        e.stopPropagation();
+        const scale = parseFloat(e.target.value);
+        this.mascotScale = scale;
+        if (zoomVal) zoomVal.textContent = `${Math.round(scale * 100)}%`;
+        if (this.activeEngine === "live2d") {
+          this._repositionLive2DModel();
+        }
+        this._updateToolbarPosition();
       });
     }
 
@@ -1465,8 +1507,14 @@ class AvatarRenderer {
         e.stopPropagation();
         this.pan = { x: 0, y: 0 };
         this.mascotScale = 1.0;
+        if (zoomSlider) zoomSlider.value = 1.0;
+        if (zoomVal) zoomVal.textContent = "100%";
         if (this.activeEngine === "live2d") {
           this._repositionLive2DModel();
+        }
+        this._updateToolbarPosition();
+        if (window.lucia && window.lucia.window && window.lucia.window.resetMascotBounds) {
+          window.lucia.window.resetMascotBounds();
         }
         closeAllPopups();
       });

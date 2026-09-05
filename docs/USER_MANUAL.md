@@ -164,7 +164,7 @@ The packaged binary will be generated in `electron/dist/`.
   * **⚙️ System Settings**: Adjust Hardware Scalability tiers, target framerates, and audio hardware.
   * **🐾 Mascot Mode**: Switch instantly to the floating desktop mascot.
   * **Hardware Badge**: Shows the currently active scalability tier (e.g. `Auto`, `Laptop Balanced`, `Desktop Performance`).
-* **Continuous Microphone Input (`🎙️`)**: Click the mic icon to activate Discord-style hands-free voice interaction. Lucia listens automatically, pauses recognition while she speaks, and resumes listening when finished.
+* **Continuous Microphone Input (`🎙️`)**: Click the mic icon to activate hands-free continuous voice interaction powered by offline `faster-whisper` and Web Audio VAD. Lucia records spoken audio locally, pauses during her replies to eliminate echo feedback, and transcribes voice turns completely offline without third-party cloud keys.
 
 ### 3. The Right Column: Full-Height Avatar Stage
 * **Engine Selector**: Switch seamlessly between `🎨 2D Canvas`, `🖼️ 2D Sprites`, `🎬 Live2D`, and `🌐 3D VRM`.
@@ -194,16 +194,16 @@ In Mascot Mode, Lucia becomes a frameless, transparent, Always-on-Top companion 
 ### Key Mascot Features:
 1. **Direct Model Dragging**: Click and drag the character model with your mouse to move the mascot window anywhere across your screens.
 2. **Dynamic Model-Anchored Toolbar**: The floating toolbar dock automatically sticks directly beneath the character's feet (`getModelBounds()`), adjusting smoothly regardless of how you zoom or position the character.
-3. **Smart Hover Zoom**: Scroll wheel to zoom in or out **only functions when your cursor is positioned directly over the avatar model**. This prevents touchpad gesture scrolling from accidentally blowing up the character size while dragging.
+3. **Smart Hover Zoom**: Scroll wheel to zoom in or out **only functions when your cursor is positioned directly over the avatar model**, with an 800ms cooldown after dragging to prevent touchpad inertial momentum from blowing up character size.
 4. **Shift-Drag to Pan**: Hold `Shift` while left-clicking (or use middle-click) to freely pan the avatar within the mascot frame.
-5. **Double-Click Reset**: Double-click the avatar to instantly restore default 1.0× scale and center position.
+5. **Double-Click Reset**: Double-click the avatar (or click Reset Avatar in Settings) to instantly restore default 1.0× scale, center pan position, and reset mascot window boundaries back to standard 380×540 unmaximized bounds.
 
 ### Mascot Toolbar Controls:
 * **💬 Quick Chat**: Opens an inline chat popup allowing you to type messages and receive spoken answers without opening the main window.
 * **🎬 Model Switcher**: Swap avatar engine (Canvas, Sprites, Live2D, VRM) and model directly on your desktop.
 * **🔊 Audio & Voice**: Select your microphone and speaker devices, adjust master volume, and choose RVC voice models.
-* **🎙️ Toggle Mic**: Turn hands-free continuous voice input on or off.
-* **⚙️ UI Settings**: Adjust mascot window opacity (30%–100%), reset model position, open journal, or return to the main window.
+* **🎙️ Toggle Mic**: Turn hands-free continuous voice input on or off (powered by local faster-whisper STT).
+* **⚙️ UI Settings**: Adjust avatar scale slider (30%–400%), mascot window opacity (30%–100%), reset model & window bounds, open journal, or return to the main window.
 * **✕ Exit**: Close mascot mode and return to main window.
 
 ---

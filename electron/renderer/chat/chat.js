@@ -34,12 +34,19 @@ class ChatController {
     this.avatarModelSelect = document.getElementById('avatar-model-select');
     this.avatarModelsData = { engines: ['canvas', 'sprites', 'live2d', 'vrm'], sprites: [], live2d: [], vrm: [] };
 
-    // Discord-style Continuous Mic Mode
+    // Discord-style Continuous Mic Mode (Local Whisper STT + MediaRecorder + Web Audio VAD)
     this.micBtn = document.getElementById('mic-btn');
     this.isMicMode = false;
     this.isSpeakingOrProcessing = false;
     this.silenceTimer = null;
-    this.recognition = null;
+    this.mediaRecorder = null;
+    this.audioStream = null;
+    this.audioChunks = [];
+    this.audioContext = null;
+    this.analyser = null;
+    this.vadInterval = null;
+    this.hasSpoken = false;
+    this.silenceStartTime = 0;
 
     // Profile & Awakening Modal
     this.openProfileBtn = document.getElementById('open-profile-btn');
@@ -66,6 +73,12 @@ class ChatController {
     this.settingsInputDeviceSelect = document.getElementById('settings-input-device-select');
     this.settingsOutputDeviceSelect = document.getElementById('settings-output-device-select');
     this.saveSettingsBtn = document.getElementById('save-settings-btn');
+
+    // Sub-Phase 7.2: Organic Status & Clear Screen
+    this.clearScreenBtn = document.getElementById('clear-screen-btn');
+    this.organicStatusLabel = document.getElementById('avatar-status-text');
+    this.audioCache = new Map();
+    this.currentPAD = { pleasure: 0.2, arousal: 0, dominance: 0.05 };
 
     window.chatController = this;
 
@@ -111,7 +124,7 @@ class ChatController {
     this._setupEventListeners();
     this._setupVoiceControls();
     this._setupAvatarControls();
-    this._setupSpeechRecognition();
+    this._setupAudioRecording();
     this._setupProfileControls();
     this._setupSettingsControls();
     this._setupBackendListeners();
@@ -276,6 +289,15 @@ class ChatController {
           localStorage.setItem('lucia_audio_input_device', val);
           if (mascotInputSelect && mascotInputSelect !== selectEl) mascotInputSelect.value = val;
           if (settingsInputSelect && settingsInputSelect !== selectEl) settingsInputSelect.value = val;
+          if (this.audioStream) {
+            try {
+              this.audioStream.getTracks().forEach((t) => t.stop());
+            } catch (e) {}
+            this.audioStream = null;
+            if (this.isMicMode && !this.isSpeakingOrProcessing) {
+              this._startListening();
+            }
+          }
         };
       };
 
@@ -398,144 +420,205 @@ class ChatController {
     }
   }
 
-  _setupSpeechRecognition() {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (SpeechRecognition) {
-      this.recognition = new SpeechRecognition();
-      this.recognition.continuous = true;
-      this.recognition.interimResults = true;
-      this.recognition.lang = 'vi-VN';
-
-      this.recognition.onstart = () => {
-        if (this.micBtn && this.isMicMode) {
-          this.micBtn.classList.add('active-call');
-          this.micBtn.classList.remove('paused');
-          this.micBtn.title = 'Discord Voice Mode: Connected (Listening). Click to Mute';
-        }
+  _setupAudioRecording() {
+    if (this.micBtn) {
+      this.micBtn.addEventListener('click', async () => {
+        this.isMicMode = !this.isMicMode;
         const mascotMic = document.getElementById('mascot-mic-btn');
-        if (mascotMic && this.isMicMode) {
-          mascotMic.classList.add('active');
-          mascotMic.title = 'Microphone: Active (Listening). Click to Mute';
+        if (this.isMicMode) {
+          this.micBtn.classList.add('active-call');
+          this.micBtn.title = 'Discord Voice Mode: ON (Click to Mute / Leave Call)';
+          if (mascotMic) {
+            mascotMic.classList.add('active');
+            mascotMic.title = 'Microphone: Active (Listening). Click to Mute';
+          }
+          await this._startListening();
+        } else {
+          this.micBtn.classList.remove('active-call', 'paused');
+          this.micBtn.title = 'Discord Voice Mode: OFF (Click to Join Voice Chat)';
+          if (mascotMic) {
+            mascotMic.classList.remove('active');
+            mascotMic.title = 'Toggle Microphone';
+          }
+          if (this.silenceTimer) clearTimeout(this.silenceTimer);
+          this._stopMicModeGracefully('user-stopped');
+        }
+      });
+    }
+  }
+
+  async _startListening() {
+    if (!this.isMicMode || this.currentState !== State.READY || this.isSpeakingOrProcessing) return;
+
+    try {
+      if (!this.audioStream || !this.audioStream.active) {
+        const audioDeviceId = localStorage.getItem('lucia_audio_input_device') || 'default';
+        const constraints = {
+          audio: audioDeviceId && audioDeviceId !== 'default'
+            ? { deviceId: { exact: audioDeviceId } }
+            : true
+        };
+        this.audioStream = await navigator.mediaDevices.getUserMedia(constraints);
+      }
+
+      if (!this.audioContext) {
+        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (this.audioContext.state === 'suspended') {
+        await this.audioContext.resume();
+      }
+
+      if (!this.analyser) {
+        const source = this.audioContext.createMediaStreamSource(this.audioStream);
+        this.analyser = this.audioContext.createAnalyser();
+        this.analyser.fftSize = 512;
+        source.connect(this.analyser);
+      }
+
+      this.audioChunks = [];
+      this.hasSpoken = false;
+      this.silenceStartTime = 0;
+
+      let mimeType = 'audio/webm;codecs=opus';
+      if (!MediaRecorder.isTypeSupported(mimeType)) {
+        mimeType = MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : '';
+      }
+
+      this.mediaRecorder = mimeType
+        ? new MediaRecorder(this.audioStream, { mimeType })
+        : new MediaRecorder(this.audioStream);
+
+      this.mediaRecorder.ondataavailable = (e) => {
+        if (e.data && e.data.size > 0) {
+          this.audioChunks.push(e.data);
         }
       };
 
-      this.recognition.onresult = (event) => {
-        if (!this.isMicMode || this.isSpeakingOrProcessing) return;
-
-        let interimTranscript = '';
-        let finalTranscript = '';
-
-        for (let i = event.resultIndex; i < event.results.length; ++i) {
-          const transcript = event.results[i][0].transcript;
-          if (event.results[i].isFinal) {
-            finalTranscript += transcript;
-          } else {
-            interimTranscript += transcript;
+      this.mediaRecorder.onstop = async () => {
+        const chunks = this.audioChunks;
+        this.audioChunks = [];
+        if (chunks.length > 0 && this.hasSpoken) {
+          const mime = (this.mediaRecorder && this.mediaRecorder.mimeType) || 'audio/webm';
+          const audioBlob = new Blob(chunks, { type: mime });
+          await this._transcribeAndSendAudio(audioBlob);
+        } else {
+          // No speech detected, restart recording loop if still in voice mode
+          if (this.isMicMode && !this.isSpeakingOrProcessing) {
+            setTimeout(() => this._startListening(), 100);
           }
         }
+      };
 
-        const currentText = (finalTranscript || interimTranscript).trim();
-        if (currentText) {
-          this.inputArea.value = currentText;
+      this.mediaRecorder.start(250);
+
+      if (this.micBtn) {
+        this.micBtn.classList.remove('paused');
+      }
+
+      this._startVAD();
+    } catch (err) {
+      console.error('[voice] Error accessing microphone:', err);
+      this._stopMicModeGracefully('mic-permission-denied');
+    }
+  }
+
+  _startVAD() {
+    if (this.vadInterval) clearInterval(this.vadInterval);
+    const dataArray = new Uint8Array(this.analyser.frequencyBinCount);
+
+    this.vadInterval = setInterval(() => {
+      if (!this.isMicMode || this.isSpeakingOrProcessing || !this.mediaRecorder || this.mediaRecorder.state !== 'recording') {
+        return;
+      }
+
+      this.analyser.getByteFrequencyData(dataArray);
+      let sum = 0;
+      for (let i = 0; i < dataArray.length; i++) {
+        sum += dataArray[i];
+      }
+      const avgVolume = sum / dataArray.length;
+
+      // Volume threshold for speech detection (typically 12-18 on 0-255 scale)
+      if (avgVolume > 14) {
+        this.hasSpoken = true;
+        this.silenceStartTime = 0;
+      } else if (this.hasSpoken) {
+        const now = Date.now();
+        if (!this.silenceStartTime) {
+          this.silenceStartTime = now;
+        } else if (now - this.silenceStartTime > 1200) {
+          // 1.2s silence detected after user finished speaking -> finalize utterance
+          console.log('[voice] Voice pause detected (>1.2s), stopping recording to transcribe');
+          if (this.vadInterval) {
+            clearInterval(this.vadInterval);
+            this.vadInterval = null;
+          }
+          if (this.mediaRecorder && this.mediaRecorder.state === 'recording') {
+            this.mediaRecorder.stop();
+          }
+        }
+      }
+    }, 100);
+  }
+
+  async _transcribeAndSendAudio(audioBlob) {
+    if (!audioBlob || audioBlob.size < 1000) {
+      if (this.isMicMode && !this.isSpeakingOrProcessing) {
+        this._startListening();
+      }
+      return;
+    }
+
+    try {
+      this.isSpeakingOrProcessing = true;
+      if (this.micBtn) this.micBtn.classList.add('paused');
+
+      const formData = new FormData();
+      formData.append('file', audioBlob, 'speech.webm');
+
+      const res = await fetch('http://127.0.0.1:8765/voice/transcribe', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        const text = (data.text || '').trim();
+        if (text) {
+          console.log(`[voice] Transcribed text: "${text}"`);
+          this.inputArea.value = text;
           this._autoResizeInput();
           this._updateSendButtonState();
-
-          // Voice Activity Detection: auto-send after 1.3s pause of silence
-          if (this.silenceTimer) clearTimeout(this.silenceTimer);
-          this.silenceTimer = setTimeout(() => {
-            if (this.isMicMode && !this.isSpeakingOrProcessing && this._canSend()) {
-              console.log('[speech] Natural pause detected, sending voice turn automatically');
-              this.sendMessage();
-            }
-          }, 1300);
+          await this.sendMessage(text);
+        } else {
+          console.log('[voice] Empty transcription');
+          this.isSpeakingOrProcessing = false;
+          if (this.isMicMode) this._resumeListening();
         }
-      };
-
-      this.recognition.onerror = (err) => {
-        // Critical Electron fix: 'network' error occurs when webkitSpeechRecognition
-        // fails to upload audio stream to Google cloud STT without API credentials
-        // (causing chunked_data_pipe_upload_data_stream.cc Error: -2).
-        // Must immediately cancel mic mode and break infinite onend retry loop.
-        if (err.error === 'network' || err.error === 'not-allowed' || err.error === 'service-not-allowed') {
-          this._stopMicModeGracefully(err.error);
-        } else if (err.error !== 'no-speech') {
-          console.warn('[speech] Recognition error:', err.error);
-        }
-      };
-
-      this.recognition.onend = () => {
-        // Continuous voice connection: only restart if call mode is still active
-        if (this.isMicMode && !this.isSpeakingOrProcessing) {
-          setTimeout(() => {
-            if (this.isMicMode && !this.isSpeakingOrProcessing) {
-              this._startListening();
-            }
-          }, 200);
-        }
-      };
-
-      if (this.micBtn) {
-        this.micBtn.addEventListener('click', () => {
-          this.isMicMode = !this.isMicMode;
-          const mascotMic = document.getElementById('mascot-mic-btn');
-          if (this.isMicMode) {
-            this.micBtn.classList.add('active-call');
-            this.micBtn.title = 'Discord Voice Mode: ON (Click to Mute / Leave Call)';
-            if (mascotMic) mascotMic.classList.add('active');
-            this._startListening();
-          } else {
-            this.micBtn.classList.remove('active-call', 'paused');
-            this.micBtn.title = 'Discord Voice Mode: OFF (Click to Join Voice Chat)';
-            if (mascotMic) mascotMic.classList.remove('active');
-            if (this.silenceTimer) clearTimeout(this.silenceTimer);
-            this._pauseListening();
-          }
-        });
+      } else {
+        console.warn('[voice] Transcribe endpoint returned status:', res.status);
+        this.isSpeakingOrProcessing = false;
+        if (this.isMicMode) this._resumeListening();
       }
-    } else {
-      if (this.micBtn) {
-        this.micBtn.title = 'Speech recognition not supported in this environment';
-      }
-    }
-  }
-
-  _stopMicModeGracefully(reason = 'network') {
-    this.isMicMode = false;
-    if (this.silenceTimer) clearTimeout(this.silenceTimer);
-    if (this.recognition) {
-      try {
-        this.recognition.abort();
-      } catch (e) {}
-    }
-    if (this.micBtn) {
-      this.micBtn.classList.remove('active-call', 'paused');
-      this.micBtn.title = 'Voice Input unavailable (Cloud speech requires Google API credentials in Electron)';
-    }
-    const mascotMic = document.getElementById('mascot-mic-btn');
-    if (mascotMic) {
-      mascotMic.classList.remove('active');
-      mascotMic.title = 'Voice Input unavailable (Cloud speech requires Google API credentials)';
-    }
-    console.warn(`[speech] Speech recognition stopped (${reason}). In standalone Electron, cloud STT requires Google Cloud speech API credentials or local Whisper.`);
-  }
-
-  _startListening() {
-    if (!this.recognition || this.currentState !== State.READY || this.isSpeakingOrProcessing) return;
-    try {
-      this.recognition.start();
-    } catch (e) {
-      // Ignore if already active
+    } catch (err) {
+      console.error('[voice] Failed to transcribe audio:', err);
+      this.isSpeakingOrProcessing = false;
+      if (this.isMicMode) this._resumeListening();
     }
   }
 
   _pauseListening() {
+    if (this.vadInterval) {
+      clearInterval(this.vadInterval);
+      this.vadInterval = null;
+    }
+    if (this.mediaRecorder && this.mediaRecorder.state === 'recording') {
+      try {
+        this.mediaRecorder.stop();
+      } catch (e) {}
+    }
     if (this.micBtn && this.isMicMode) {
       this.micBtn.classList.add('paused');
-    }
-    if (this.recognition) {
-      try {
-        this.recognition.abort();
-      } catch (e) {}
     }
   }
 
@@ -546,8 +629,37 @@ class ChatController {
       }
       setTimeout(() => {
         this._startListening();
-      }, 300);
+      }, 200);
     }
+  }
+
+  _stopMicModeGracefully(reason = 'stopped') {
+    this.isMicMode = false;
+    if (this.vadInterval) {
+      clearInterval(this.vadInterval);
+      this.vadInterval = null;
+    }
+    if (this.mediaRecorder && this.mediaRecorder.state === 'recording') {
+      try {
+        this.mediaRecorder.stop();
+      } catch (e) {}
+    }
+    if (this.audioStream) {
+      try {
+        this.audioStream.getTracks().forEach((t) => t.stop());
+      } catch (e) {}
+      this.audioStream = null;
+    }
+    if (this.micBtn) {
+      this.micBtn.classList.remove('active-call', 'paused');
+      this.micBtn.title = 'Discord Voice Mode: OFF (Click to Join Voice Chat)';
+    }
+    const mascotMic = document.getElementById('mascot-mic-btn');
+    if (mascotMic) {
+      mascotMic.classList.remove('active');
+      mascotMic.title = 'Toggle Microphone';
+    }
+    console.warn(`[voice] Voice recording stopped: ${reason}`);
   }
 
   _setupProfileControls() {
@@ -791,14 +903,51 @@ class ChatController {
     }
   }
 
+  clearScreen() {
+    if (!this.messagesContainer) return;
+    this.messagesContainer.innerHTML = '';
+    const notice = document.createElement('div');
+    notice.className = 'clear-screen-notice';
+    notice.innerHTML = '✦ Screen cleared • Memories and emotional bond remain untouched';
+    this.messagesContainer.appendChild(notice);
+  }
+
   clearMessages() {
-    this.messagesContainer.innerHTML = `
-      <div class="system-welcome-card">
-        <div class="welcome-icon">✨</div>
-        <h3>Welcome to Lucia</h3>
-        <p>Her emotional state and memories evolve dynamically with every turn.</p>
-      </div>
-    `;
+    this.clearScreen();
+  }
+
+  mapPADToStatusText(pad = null, state = null) {
+    if (this.isSpeakingOrProcessing) return 'Lucia is speaking gently...';
+    if (this.isMicMode) return 'Lucia is listening warmly...';
+
+    const st = state !== null && state !== undefined ? state : this.currentState;
+    if (st === State.SENDING) return 'Lucia is contemplating...';
+    if (st === State.ERROR) return 'Lucia is resting';
+    if (!pad && st === State.WAITING_BACKEND) return 'Lucia is awakening...';
+
+    const pState = pad || this.currentPAD || {};
+    const { pleasure = 0, arousal = 0, dominance = 0 } = pState;
+
+    if (pleasure > 0.35) return 'Lucia feels happy and connected';
+    if (pleasure < -0.25) return 'Lucia feels tender and reflective';
+    if (arousal > 0.35) return 'Lucia is alert and engaged';
+    if (arousal < -0.2) return 'Lucia feels quiet and serene';
+    if (dominance > 0.3) return 'Lucia feels grounded and confident';
+    if (pleasure > 0.1) return 'Lucia feels warm and gentle';
+    return 'Lucia feels peaceful';
+  }
+
+  updateOrganicStatus(pad = null) {
+    if (pad) {
+      this.currentPAD = pad;
+    }
+    const statusText = this.mapPADToStatusText(pad ? this.currentPAD : null);
+    if (this.organicStatusLabel) {
+      this.organicStatusLabel.textContent = statusText;
+    }
+    if (this.stateLabel) {
+      this.stateLabel.textContent = statusText;
+    }
   }
 
   _setupEventListeners() {
@@ -821,6 +970,12 @@ class ChatController {
         this.sendMessage();
       }
     });
+
+    if (this.clearScreenBtn) {
+      this.clearScreenBtn.addEventListener('click', () => {
+        this.clearScreen();
+      });
+    }
   }
 
   _setupBackendListeners() {
@@ -879,7 +1034,7 @@ class ChatController {
         this.sendBtn.disabled = true;
         if (this.micBtn) this.micBtn.disabled = true;
         this.statusDot.className = 'status-dot';
-        this.stateLabel.textContent = 'Awakening core...';
+        this.updateOrganicStatus();
         break;
 
       case State.READY:
@@ -889,7 +1044,7 @@ class ChatController {
         this.inputArea.disabled = false;
         if (this.micBtn) this.micBtn.disabled = false;
         this.statusDot.className = 'status-dot active';
-        this.stateLabel.textContent = 'Active & Mindful';
+        this.updateOrganicStatus();
         this._updateSendButtonState();
         this.inputArea.focus();
         break;
@@ -898,7 +1053,7 @@ class ChatController {
         this.inputArea.disabled = true;
         this.sendBtn.disabled = true;
         if (this.micBtn) this.micBtn.disabled = true;
-        this.stateLabel.textContent = 'Reflecting...';
+        this.updateOrganicStatus();
         break;
 
       case State.ERROR:
@@ -907,6 +1062,9 @@ class ChatController {
         if (this.micBtn) this.micBtn.disabled = true;
         this.statusDot.className = 'status-dot error';
         this.stateLabel.textContent = `Offline (${errorDetail})`;
+        if (this.organicStatusLabel) {
+          this.organicStatusLabel.textContent = 'Lucia is resting';
+        }
         if (this.splashOverlay) {
           document.getElementById('splash-status').textContent = `Startup error: ${errorDetail}`;
         }
@@ -918,7 +1076,7 @@ class ChatController {
     const text = (customText !== null ? customText : this.inputArea.value).trim();
     if (!text) return;
 
-    // Discord Mode: pause recognition while processing & speaking to avoid speaker-to-mic feedback loop
+    // Voice Mode: pause listening while processing & speaking to avoid speaker-to-mic feedback loop
     this.isSpeakingOrProcessing = true;
     this._pauseListening();
 
@@ -951,29 +1109,36 @@ class ChatController {
             });
             if (voiceRes.ok) {
               const audioBlob = await voiceRes.blob();
+              if (!this.audioCache) this.audioCache = new Map();
+              this.audioCache.set(response.response, audioBlob);
               window.avatarRenderer.speak(audioBlob, () => {
                 // Audio ended callback: resume listening in Discord mode
                 this.isSpeakingOrProcessing = false;
+                this.updateOrganicStatus();
                 if (this.isMicMode) {
                   this._resumeListening();
                 }
               });
             } else {
               this.isSpeakingOrProcessing = false;
+              this.updateOrganicStatus();
               if (this.isMicMode) this._resumeListening();
             }
           } catch (vErr) {
             console.warn('[voice] Voice synthesis playback error:', vErr);
             this.isSpeakingOrProcessing = false;
+            this.updateOrganicStatus();
             if (this.isMicMode) this._resumeListening();
           }
         } else {
           this.isSpeakingOrProcessing = false;
+          this.updateOrganicStatus();
           if (this.isMicMode) this._resumeListening();
         }
       } else {
         this.appendMessage('error', 'Received empty response from companion.');
         this.isSpeakingOrProcessing = false;
+        this.updateOrganicStatus();
         if (this.isMicMode) this._resumeListening();
       }
       this.transitionTo(State.READY);
@@ -983,8 +1148,50 @@ class ChatController {
       const errMsg = err.message || err.code || 'Failed to communicate with Lucia.';
       this.appendMessage('error', `Connection error: ${errMsg}`);
       this.isSpeakingOrProcessing = false;
+      this.updateOrganicStatus();
       if (this.isMicMode) this._resumeListening();
       this.transitionTo(State.READY);
+    }
+  }
+
+  async _replayVoice(text, replayBtn) {
+    if (!window.avatarRenderer) return;
+    try {
+      if (replayBtn) replayBtn.classList.add('playing');
+      this.isSpeakingOrProcessing = true;
+      this.updateOrganicStatus();
+
+      const onEnded = () => {
+        this.isSpeakingOrProcessing = false;
+        if (replayBtn) replayBtn.classList.remove('playing');
+        this.updateOrganicStatus();
+      };
+
+      const cachedBlob = this.audioCache && this.audioCache.get(text);
+      if (cachedBlob) {
+        window.avatarRenderer.speak(cachedBlob, onEnded);
+        return;
+      }
+
+      const voiceRes = await fetch('http://127.0.0.1:8765/voice/synthesize', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text }),
+      });
+
+      if (voiceRes.ok) {
+        const audioBlob = await voiceRes.blob();
+        if (!this.audioCache) this.audioCache = new Map();
+        this.audioCache.set(text, audioBlob);
+        window.avatarRenderer.speak(audioBlob, onEnded);
+      } else {
+        onEnded();
+      }
+    } catch (err) {
+      console.warn('[voice] Replay playback error:', err);
+      this.isSpeakingOrProcessing = false;
+      if (replayBtn) replayBtn.classList.remove('playing');
+      this.updateOrganicStatus();
     }
   }
 
@@ -994,11 +1201,39 @@ class ChatController {
 
     const bubble = document.createElement('div');
     bubble.className = 'message-bubble';
-    bubble.textContent = content;
+
+    if (type === 'companion') {
+      const header = document.createElement('div');
+      header.className = 'companion-bubble-header';
+      header.innerHTML = '<span class="bubble-sender"><span class="sender-sparkle">✦</span> Lucia</span>';
+      bubble.appendChild(header);
+
+      const textEl = document.createElement('div');
+      textEl.className = 'bubble-text';
+      textEl.textContent = content;
+      bubble.appendChild(textEl);
+
+      const footer = document.createElement('div');
+      footer.className = 'companion-bubble-footer';
+
+      const replayBtn = document.createElement('button');
+      replayBtn.className = 'audio-replay-btn';
+      replayBtn.innerHTML = '<span class="replay-icon">🔊</span> Replay';
+      replayBtn.title = 'Replay voice';
+      replayBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this._replayVoice(content, replayBtn);
+      });
+      footer.appendChild(replayBtn);
+      bubble.appendChild(footer);
+    } else {
+      bubble.textContent = content;
+    }
 
     row.appendChild(bubble);
     this.messagesContainer.appendChild(row);
     this.scrollToBottom();
+    return row;
   }
 
   showTypingIndicator() {
@@ -1008,11 +1243,11 @@ class ChatController {
     const bubble = document.createElement('div');
     bubble.className = 'message-bubble';
 
-    const dots = document.createElement('div');
-    dots.className = 'typing-dots';
-    dots.innerHTML = '<span></span><span></span><span></span>';
+    const twinkle = document.createElement('div');
+    twinkle.className = 'typing-twinkle';
+    twinkle.innerHTML = '<span class="twinkle-star">✦</span><span class="twinkle-star">✦</span><span class="twinkle-star">✦</span>';
 
-    bubble.appendChild(dots);
+    bubble.appendChild(twinkle);
     row.appendChild(bubble);
     this.messagesContainer.appendChild(row);
     this.scrollToBottom();
@@ -1035,3 +1270,7 @@ class ChatController {
 document.addEventListener('DOMContentLoaded', () => {
   window.chatController = new ChatController();
 });
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { ChatController, State };
+}

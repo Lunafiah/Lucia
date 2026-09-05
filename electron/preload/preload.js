@@ -30,7 +30,8 @@ contextBridge.exposeInMainWorld('lucia', {
   },
   window: {
     toggleMascot: () => ipcRenderer.invoke('window:toggle-mascot'),
-    moveMascotBy: (dx, dy) => ipcRenderer.invoke('window:move-mascot-by', { dx, dy })
+    moveMascotBy: (dx, dy) => ipcRenderer.invoke('window:move-mascot-by', { dx, dy }),
+    resetMascotBounds: () => ipcRenderer.invoke('window:reset-mascot-bounds')
   },
   on: (channel, listener) => {
     if (!ALLOWED_CHANNELS.includes(channel)) {

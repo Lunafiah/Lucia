@@ -6,8 +6,13 @@ models/*.gguf.metadata
 models/CACHEDIR.TAG
 models/voice/rvc/**/*.pth
 models/voice/rvc/**/*.index
+models/voice/whisper/
 models/avatar/**/*.vrm
 models/avatar/**/*.moc3
+
+# Runtime Data
+data/
+
 
 # ──────────────────────────────────────────────
 # Specs & metadata

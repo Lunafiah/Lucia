@@ -27,10 +27,12 @@ _PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")
 if _PROJECT_ROOT not in sys.path:
     sys.path.insert(0, _PROJECT_ROOT)
 
-from fastapi import FastAPI, HTTPException, Request, Response, status
+from fastapi import FastAPI, File, HTTPException, Request, Response, UploadFile, status
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 import uvicorn
+
+from src.core.voice.stt_engine import get_stt_engine
 
 from src.core.config import MemoryOrchestratorConfig
 from src.core.models import BehavioralConstraints, SomaticMarkers
@@ -303,6 +305,37 @@ async def select_voice_model(req: SelectModelRequest) -> Dict[str, Any]:
         "status": "ok",
         "active_model": _voice_engine._config.active_rvc_model,
     }
+
+
+@app.post("/voice/transcribe")
+async def transcribe_audio(
+    req: Request,
+    file: Optional[UploadFile] = File(None),
+) -> Dict[str, Any]:
+    """
+    Transcribe spoken audio to text using self-contained offline faster-whisper.
+    Accepts either multipart/form-data upload or raw audio body.
+    """
+    try:
+        audio_bytes = b""
+        if file is not None:
+            audio_bytes = await file.read()
+        elif req is not None:
+            audio_bytes = await req.body()
+
+        if not audio_bytes:
+            return {"status": "ok", "text": ""}
+
+        engine = get_stt_engine()
+        loop = asyncio.get_running_loop()
+        text = await loop.run_in_executor(None, engine.transcribe_bytes, audio_bytes)
+        return {"status": "ok", "text": text}
+    except Exception as exc:
+        logger.exception("Voice transcription failed: %s", exc)
+        return JSONResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            content={"status": "error", "error": str(exc), "text": ""},
+        )
 
 
 @app.get("/telemetry/stability")

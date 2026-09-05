@@ -11,6 +11,10 @@ llama-cpp-python>=0.2.70
 hypothesis>=6.90.0
 pytest>=8.0.0
 
+# Phase 3: Voice & STT Engine
+faster-whisper>=1.0.0
+python-multipart>=0.0.9
+
 # Phase 4: Active Inference & Neural Plasticity (CPU-only)
 torch>=2.0.0
 torchdiffeq>=0.2.4

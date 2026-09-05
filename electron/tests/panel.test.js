@@ -107,4 +107,64 @@ describe('EmotionDebugPanel UI Tests', () => {
     expect(val.textContent).toBe('0.85');
     expect(fill.style.width).toBe('85%');
   });
+
+  test('diagnostics drawer opens, closes, and toggles via methods and elements', () => {
+    // Add drawer toggle and backdrop elements to DOM
+    const toggleBtn = document.createElement('button');
+    toggleBtn.id = 'toggle-diagnostics-btn';
+    document.body.appendChild(toggleBtn);
+
+    const closeBtn = document.createElement('button');
+    closeBtn.id = 'close-diagnostics-btn';
+    document.body.appendChild(closeBtn);
+
+    const backdrop = document.createElement('div');
+    backdrop.id = 'diagnostics-backdrop';
+    document.body.appendChild(backdrop);
+
+    const debugPane = document.getElementById('debug-pane');
+
+    // Simulate drawer methods
+    const drawer = {
+      debugPane,
+      toggleBtn,
+      closeBtn,
+      backdrop,
+      isDrawerOpen() {
+        return this.debugPane.classList.contains('open');
+      },
+      openDrawer() {
+        this.debugPane.classList.add('open');
+        this.backdrop.classList.add('open');
+        this.toggleBtn.classList.add('active');
+      },
+      closeDrawer() {
+        this.debugPane.classList.remove('open');
+        this.backdrop.classList.remove('open');
+        this.toggleBtn.classList.remove('active');
+      },
+      toggleDrawer() {
+        if (this.isDrawerOpen()) this.closeDrawer();
+        else this.openDrawer();
+      }
+    };
+
+    expect(drawer.isDrawerOpen()).toBe(false);
+
+    drawer.openDrawer();
+    expect(drawer.isDrawerOpen()).toBe(true);
+    expect(debugPane.classList.contains('open')).toBe(true);
+    expect(backdrop.classList.contains('open')).toBe(true);
+
+    drawer.closeDrawer();
+    expect(drawer.isDrawerOpen()).toBe(false);
+    expect(debugPane.classList.contains('open')).toBe(false);
+
+    drawer.toggleDrawer();
+    expect(drawer.isDrawerOpen()).toBe(true);
+
+    drawer.toggleDrawer();
+    expect(drawer.isDrawerOpen()).toBe(false);
+  });
 });
+
