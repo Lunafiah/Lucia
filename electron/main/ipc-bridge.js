@@ -1,6 +1,7 @@
 const { ipcMain } = require('electron');
 const fs = require('fs');
 const path = require('path');
+const { syncMascotWindowPreset, getMascotPreset } = require('./mascot-constants.js');
 
 let pendingChat = Promise.resolve();
 
@@ -26,19 +27,66 @@ function registerHandlers(port = 8765, isPreview = false, getMascotManager = nul
     return false;
   });
 
-  // window:move-mascot-by IPC handler (smooth JS window dragging without -webkit-app-region: drag wheel bug)
-  ipcMain.handle('window:move-mascot-by', async (event, { dx, dy }) => {
+  // window:set-ignore-mouse-events IPC handler (transparent area click-through)
+  ipcMain.handle('window:set-ignore-mouse-events', async (event, { ignore, forward }) => {
     const { BrowserWindow } = require('electron');
     const win = BrowserWindow.fromWebContents(event.sender);
     if (win && !win.isDestroyed()) {
-      const [x, y] = win.getPosition();
-      win.setPosition(Math.round(x + (dx || 0)), Math.round(y + (dy || 0)));
+      win.setIgnoreMouseEvents(Boolean(ignore), { forward: Boolean(forward) });
       return true;
     }
     return false;
   });
 
-  // window:reset-mascot-bounds IPC handler (restores standard 380x540 window and cancels any OS maximize)
+  // window:move-mascot-by IPC handler (smooth JS window dragging without -webkit-app-region: drag wheel bug)
+  ipcMain.handle('window:move-mascot-by', async (event, { dx, dy }) => {
+    const { BrowserWindow } = require('electron');
+    const win = BrowserWindow.fromWebContents(event.sender);
+    if (win && !win.isDestroyed()) {
+      if (win.isMaximized()) {
+        win.unmaximize();
+      }
+      const [x, y] = win.getPosition();
+      // Ensure target dimensions are strictly anchored to canonical preset (never win.getSize() which suffers from Windows DPI rounding)
+      const canonical = syncMascotWindowPreset(win, win._mascotPreset);
+      win.setBounds({
+        x: Math.round(x + (dx || 0)),
+        y: Math.round(y + (dy || 0)),
+        width: canonical.width,
+        height: canonical.height
+      });
+      return true;
+    }
+    return false;
+  });
+
+  // window:set-mascot-preset IPC handler (discrete zoom with bottom-center/feet anchor preservation)
+  ipcMain.handle('window:set-mascot-preset', async (event, { preset }) => {
+    const { BrowserWindow } = require('electron');
+    const win = BrowserWindow.fromWebContents(event.sender);
+    if (win && !win.isDestroyed()) {
+      if (win.isMaximized()) {
+        win.unmaximize();
+      }
+      const [curX, curY] = win.getPosition();
+      // Use previous target dimensions if available, falling back to canonical preset
+      const prevCanonical = getMascotPreset(win._mascotPreset);
+      const curW = win._mascotTargetWidth || prevCanonical.width;
+      const curH = win._mascotTargetHeight || prevCanonical.height;
+
+      // Atomically update win metadata to new preset so it never diverges
+      const target = syncMascotWindowPreset(win, preset);
+
+      // Calculate new position preserving the bottom-center (feet) screen coordinate:
+      const newX = Math.round(curX + (curW - target.width) / 2);
+      const newY = Math.round(curY + (curH - target.height));
+      win.setBounds({ x: newX, y: newY, width: target.width, height: target.height });
+      return { preset: target.key, width: target.width, height: target.height, x: newX, y: newY };
+    }
+    return null;
+  });
+
+  // window:reset-mascot-bounds IPC handler (restores standard 380x540 window with feet anchor and cancels any OS maximize)
   ipcMain.handle('window:reset-mascot-bounds', async (event) => {
     const { BrowserWindow } = require('electron');
     const win = BrowserWindow.fromWebContents(event.sender);
@@ -46,7 +94,17 @@ function registerHandlers(port = 8765, isPreview = false, getMascotManager = nul
       if (win.isMaximized()) {
         win.unmaximize();
       }
-      win.setSize(380, 540);
+      const [curX, curY] = win.getPosition();
+      const prevCanonical = getMascotPreset(win._mascotPreset);
+      const curW = win._mascotTargetWidth || prevCanonical.width;
+      const curH = win._mascotTargetHeight || prevCanonical.height;
+
+      // Atomically reset win metadata to canonical 'normal'
+      const canonical = syncMascotWindowPreset(win, 'normal');
+
+      const newX = Math.round(curX + (curW - canonical.width) / 2);
+      const newY = Math.round(curY + (curH - canonical.height));
+      win.setBounds({ x: newX, y: newY, width: canonical.width, height: canonical.height });
       return true;
     }
     return false;

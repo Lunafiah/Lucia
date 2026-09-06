@@ -5,6 +5,13 @@
  * Supports 2D Canvas procedural face, 2D Sprites (Columbina), and Live2D Cubism 4 (Hoshino Ai).
  */
 
+const MASCOT_PRESETS = {
+  small: { key: "small", scale: 0.75, width: 285, height: 405, label: "Small" },
+  normal: { key: "normal", scale: 1.0, width: 380, height: 540, label: "Normal" },
+  comfort: { key: "comfort", scale: 1.25, width: 475, height: 675, label: "Comfort" }
+};
+const MASCOT_PRESET_ORDER = ["small", "normal", "comfort"];
+
 class AvatarRenderer {
   constructor(canvasElement) {
     this.canvas = canvasElement;
@@ -16,6 +23,9 @@ class AvatarRenderer {
     this.currentLive2DModel = null;
     this.baseModelsPath = null;
     this.mascotScale = 1.0;
+    this.currentPreset = "normal";
+    this.mascotInteractionState = 0; // 0: PASS_THROUGH, 1: HOVER_MODEL, 2: HOVER_UI, 3: ACTIVE_INTERACTION
+    this._lastIgnoreState = null;
     this.pan = { x: 0, y: 0 };
     this.isDraggingModel = false;
     this.dragStart = { x: 0, y: 0 };
@@ -69,8 +79,65 @@ class AvatarRenderer {
     }
   }
 
+  /**
+   * Set discrete interaction state (0: PASS_THROUGH, 1: HOVER_MODEL, 2: HOVER_UI, 3: ACTIVE_INTERACTION)
+   * Only triggers IPC window:set-ignore-mouse-events when crossing the boundary between pass-through and interactive.
+   */
+  _setInteractionState(newState) {
+    if (this.mascotInteractionState === newState) return;
+    this.mascotInteractionState = newState;
+
+    const isMascot = typeof document !== "undefined" && document.body.classList.contains("mascot-mode");
+    if (!isMascot) {
+      if (this._lastIgnoreState !== false) {
+        this._lastIgnoreState = false;
+        if (window.lucia && window.lucia.window && window.lucia.window.setIgnoreMouseEvents) {
+          window.lucia.window.setIgnoreMouseEvents(false);
+        }
+      }
+      return;
+    }
+
+    const shouldIgnore = (newState === 0);
+    if (this._lastIgnoreState !== shouldIgnore) {
+      this._lastIgnoreState = shouldIgnore;
+      if (window.lucia && window.lucia.window && window.lucia.window.setIgnoreMouseEvents) {
+        window.lucia.window.setIgnoreMouseEvents(shouldIgnore, { forward: true });
+      }
+    }
+  }
+
+  /**
+   * Set discrete zoom preset (small, normal, comfort) preserving feet anchor.
+   */
+  setZoomPreset(presetKey) {
+    if (!MASCOT_PRESETS[presetKey]) return;
+    this.currentPreset = presetKey;
+    const preset = MASCOT_PRESETS[presetKey];
+    this.mascotScale = preset.scale;
+
+    if (typeof document !== "undefined") {
+      ["small", "normal", "comfort"].forEach((k) => {
+        const btn = document.getElementById(`btn-scale-${k}`);
+        if (btn) btn.classList.toggle("active", k === presetKey);
+      });
+    }
+
+    // Immediately synchronize and clamp renderer dimensions to the canonical preset
+    this.resize();
+
+    if (this.activeEngine === "live2d") {
+      this._repositionLive2DModel();
+    }
+    this._updateToolbarPosition();
+
+    if (window.lucia && window.lucia.window && window.lucia.window.setMascotPreset) {
+      window.lucia.window.setMascotPreset(presetKey);
+    }
+  }
+
   _bindEvents() {
-    window.addEventListener("mousemove", (e) => {
+    const onGazeMove = (e) => {
       const activeEl =
         this.activeEngine === "live2d"
           ? this.live2dCanvas
@@ -85,17 +152,19 @@ class AvatarRenderer {
       // Normalized gaze in [-1, 1]
       this.mouse.targetX = Math.max(-1, Math.min(1, (e.clientX - centerX) / (rect.width / 2 || 1)));
       this.mouse.targetY = Math.max(-1, Math.min(1, (e.clientY - centerY) / (rect.height / 2 || 1)));
-    });
+    };
 
-    window.addEventListener("resize", () => this.resize());
+    const onResize = () => this.resize();
 
-    // Universal Interactive Zoom (Mouse Wheel - only zooms when hovering directly on model)
     const getActiveWrapper = () =>
       (this.canvas && this.canvas.parentElement) ||
       (this.live2dCanvas && this.live2dCanvas.parentElement) ||
       (this.vrmCanvas && this.vrmCanvas.parentElement);
 
-    const handleWheelZoom = (e) => {
+    const onWheel = (e) => {
+      // REQUIRE Ctrl + Wheel to prevent accidental trackpad zoom
+      if (!e.ctrlKey) return;
+
       // Prevent zoom during dragging or during 800ms trackpad inertia cooldown after dragging
       if (
         this.isDraggingModel ||
@@ -105,68 +174,77 @@ class AvatarRenderer {
         return;
       }
 
-      // Ignore zoom when scrolling inside mascot toolbar or popups
-      if (e.target.closest("#mascot-toolbar") || e.target.closest(".mascot-popup")) return;
+      // Ignore zoom when scrolling inside mascot toolbar, flyout, or popover
+      if (
+        e.target &&
+        typeof e.target.closest === "function" &&
+        (e.target.closest("#mascot-toolbar") ||
+          e.target.closest("#mascot-quick-talk-flyout") ||
+          e.target.closest("#mascot-presence-popover"))
+      ) {
+        return;
+      }
 
       const wrapper = getActiveWrapper();
-      const stage = document.querySelector(".avatar-stage-container") || wrapper;
-      if (!stage || !stage.contains(e.target)) return;
+      if (!wrapper || !e.target || !(e.target instanceof Node) || !wrapper.contains(e.target)) return;
 
       // STRICT REQUIREMENT: Cursor must be positioned directly on the avatar model to zoom!
       if (!this.isCursorOverModel(e.clientX, e.clientY)) return;
 
       e.preventDefault();
-      const delta = e.deltaY < 0 ? 0.08 : -0.08;
-      this.mascotScale = Math.max(0.3, Math.min(4.0, (this.mascotScale || 1.0) + delta));
-      if (this.activeEngine === "live2d") {
-        this._repositionLive2DModel();
-      }
-      this._updateToolbarPosition();
 
-      // Sync zoom slider in UI Settings popup if open
-      const zoomSlider = document.getElementById("mascot-zoom-slider");
-      const zoomVal = document.getElementById("mascot-zoom-val");
-      if (zoomSlider) zoomSlider.value = this.mascotScale;
-      if (zoomVal) zoomVal.textContent = `${Math.round(this.mascotScale * 100)}%`;
+      const isMascot = typeof document !== "undefined" && document.body.classList.contains("mascot-mode");
+      if (isMascot) {
+        const currentIndex = MASCOT_PRESET_ORDER.indexOf(this.currentPreset);
+        if (e.deltaY < 0) {
+          // Zoom in
+          if (currentIndex < MASCOT_PRESET_ORDER.length - 1) {
+            this.setZoomPreset(MASCOT_PRESET_ORDER[currentIndex + 1]);
+          }
+        } else if (e.deltaY > 0) {
+          // Zoom out
+          if (currentIndex > 0) {
+            this.setZoomPreset(MASCOT_PRESET_ORDER[currentIndex - 1]);
+          }
+        }
+      } else {
+        const delta = e.deltaY < 0 ? 0.08 : -0.08;
+        this.mascotScale = Math.max(0.3, Math.min(4.0, (this.mascotScale || 1.0) + delta));
+        if (this.activeEngine === "live2d") {
+          this._repositionLive2DModel();
+        }
+        this._updateToolbarPosition();
+      }
     };
 
-    window.addEventListener("wheel", handleWheelZoom, { passive: false });
-
-    // Universal Mouse Drag:
-    // - In Mascot Mode: Left click on the model directly drags the Mascot Window across the desktop.
-    // - Shift + Left click or Middle click freely pans the model inside the frame.
-    // - In Main Mode: Left click freely pans the model across all engines.
-    window.addEventListener("mousedown", (e) => {
+    const onMouseDown = (e) => {
       const isMascot = typeof document !== "undefined" && document.body.classList.contains("mascot-mode");
       const wrapper = getActiveWrapper();
-      const stage = document.querySelector(".avatar-stage-container") || wrapper;
-      if (!stage || !stage.contains(e.target)) return;
+      if (!wrapper || !e.target || !(e.target instanceof Node) || !wrapper.contains(e.target)) return;
 
       // Ignore toolbar and header clicks
       if (
-        e.target.closest("#mascot-toolbar") ||
-        e.target.closest(".avatar-top-bar")
+        e.target &&
+        typeof e.target.closest === "function" &&
+        (e.target.closest("#mascot-toolbar") ||
+          e.target.closest(".avatar-top-bar") ||
+          e.target.closest("#mascot-quick-talk-flyout") ||
+          e.target.closest("#mascot-presence-popover"))
       ) {
         return;
       }
 
       if (isMascot) {
-        if (e.button === 0 && !e.shiftKey) {
-          // Left click on model moves the floating mascot window across the desktop
+        if (e.button === 0) {
+          e.preventDefault();
+          this._setInteractionState(3); // ACTIVE_INTERACTION
           this.isDraggingWindow = true;
+          this.isDraggingModel = false;
           this.windowDragStart = { screenX: e.screenX, screenY: e.screenY };
           if (wrapper) wrapper.style.cursor = "grabbing";
-        } else if (e.button === 1 || (e.button === 0 && e.shiftKey)) {
-          // Shift+Left click or Middle click pans the model inside the window
-          this.isDraggingModel = true;
-          this.dragStart = {
-            x: e.clientX - this.pan.x,
-            y: e.clientY - this.pan.y,
-          };
-          if (wrapper) wrapper.style.cursor = "move";
         }
+        return;
       } else {
-        // Main mode: Left or middle click freely pans the model
         if (e.button === 0 || e.button === 1) {
           this.isDraggingModel = true;
           this.dragStart = {
@@ -176,9 +254,30 @@ class AvatarRenderer {
           if (wrapper) wrapper.style.cursor = "grabbing";
         }
       }
-    });
+    };
 
-    window.addEventListener("mousemove", (e) => {
+    const onMouseMove = (e) => {
+      const isMascot = typeof document !== "undefined" && document.body.classList.contains("mascot-mode");
+
+      // Update interaction state machine
+      if (isMascot) {
+        if (this.isDraggingWindow || this.isDraggingModel) {
+          this._setInteractionState(3); // ACTIVE_INTERACTION
+        } else if (
+          e.target &&
+          typeof e.target.closest === "function" &&
+          (e.target.closest("#mascot-toolbar") ||
+            e.target.closest("#mascot-quick-talk-flyout") ||
+            e.target.closest("#mascot-presence-popover"))
+        ) {
+          this._setInteractionState(2); // HOVER_UI
+        } else if (this.isCursorOverModel(e.clientX, e.clientY)) {
+          this._setInteractionState(1); // HOVER_MODEL
+        } else {
+          this._setInteractionState(0); // PASS_THROUGH
+        }
+      }
+
       const wrapper = getActiveWrapper();
       if (this.isDraggingWindow) {
         const dx = e.screenX - this.windowDragStart.screenX;
@@ -188,8 +287,8 @@ class AvatarRenderer {
         if (window.lucia && window.lucia.window && window.lucia.window.moveMascotBy) {
           window.lucia.window.moveMascotBy(dx, dy);
         }
+        return;
       } else if (this.isDraggingModel) {
-        // Safe pan clamping so the model is never flung off-screen
         const clampX = (this.width || 400) * 0.75;
         const clampY = (this.height || 600) * 0.75;
         this.pan.x = Math.max(-clampX, Math.min(clampX, e.clientX - this.dragStart.x));
@@ -199,9 +298,9 @@ class AvatarRenderer {
         }
         this._updateToolbarPosition();
       }
-    });
+    };
 
-    window.addEventListener("mouseup", () => {
+    const onMouseUp = (e) => {
       const wrapper = getActiveWrapper();
       if (this.isDraggingWindow) {
         this.lastWindowDragEndTime = Date.now();
@@ -209,30 +308,72 @@ class AvatarRenderer {
       this.isDraggingWindow = false;
       this.isDraggingModel = false;
       if (wrapper) wrapper.style.cursor = "grab";
-    });
 
-    // Prevent context menu on avatar stage so right-click pan works cleanly
-    window.addEventListener("contextmenu", (e) => {
+      const isMascot = typeof document !== "undefined" && document.body.classList.contains("mascot-mode");
+      if (isMascot) {
+        if (
+          e.target &&
+          typeof e.target.closest === "function" &&
+          (e.target.closest("#mascot-toolbar") ||
+            e.target.closest("#mascot-quick-talk-flyout") ||
+            e.target.closest("#mascot-presence-popover"))
+        ) {
+          this._setInteractionState(2);
+        } else if (this.isCursorOverModel(e.clientX, e.clientY)) {
+          this._setInteractionState(1);
+        } else {
+          this._setInteractionState(0);
+        }
+      }
+    };
+
+    const onMouseLeave = () => {
+      const isMascot = typeof document !== "undefined" && document.body.classList.contains("mascot-mode");
+      if (isMascot && !this.isDraggingWindow && !this.isDraggingModel) {
+        this._setInteractionState(0);
+      }
+    };
+
+    const onContextMenu = (e) => {
       const wrapper = getActiveWrapper();
-      const stage = document.querySelector(".avatar-stage-container") || wrapper;
-      if (stage && stage.contains(e.target) && !e.target.closest("#mascot-toolbar")) {
+      if (!wrapper || !e.target || !(e.target instanceof Node) || !wrapper.contains(e.target)) return;
+      if (e.target && typeof e.target.closest === "function" && e.target.closest("#mascot-toolbar")) {
         e.preventDefault();
       }
-    });
+    };
 
-    // Double-click to reset model position, zoom & window bounds
-    window.addEventListener("dblclick", (e) => {
+    const onDblClick = (e) => {
       const wrapper = getActiveWrapper();
-      const stage = document.querySelector(".avatar-stage-container") || wrapper;
-      if (!stage || !stage.contains(e.target)) return;
-      if (e.target.closest("#mascot-toolbar") || e.target.closest(".avatar-top-bar")) return;
+      if (!wrapper || !e.target || !(e.target instanceof Node) || !wrapper.contains(e.target)) return;
+      if (
+        e.target &&
+        typeof e.target.closest === "function" &&
+        (e.target.closest("#mascot-toolbar") ||
+          e.target.closest(".avatar-top-bar") ||
+          e.target.closest("#mascot-quick-talk-flyout") ||
+          e.target.closest("#mascot-presence-popover"))
+      ) {
+        return;
+      }
+
+      // STRICT HIT TEST: must double-click avatar body
+      if (!this.isCursorOverModel(e.clientX, e.clientY)) return;
 
       this.pan = { x: 0, y: 0 };
-      this.mascotScale = 1.0;
-      const zoomSlider = document.getElementById("mascot-zoom-slider");
-      const zoomVal = document.getElementById("mascot-zoom-val");
-      if (zoomSlider) zoomSlider.value = 1.0;
-      if (zoomVal) zoomVal.textContent = "100%";
+      this.setZoomPreset("normal");
+
+      // Close open overlays
+      const flyout = document.getElementById("mascot-quick-talk-flyout");
+      const popover = document.getElementById("mascot-presence-popover");
+      if (flyout) flyout.style.display = "none";
+      if (popover) popover.style.display = "none";
+      const toolbar = document.getElementById("mascot-toolbar");
+      if (toolbar) toolbar.classList.remove("has-active-popup");
+      const quickTalkBtn = document.getElementById("mascot-quick-talk-btn");
+      if (quickTalkBtn) quickTalkBtn.classList.remove("active");
+      const menuBtn = document.getElementById("mascot-presence-menu-btn");
+      if (menuBtn) menuBtn.classList.remove("active");
+
       if (this.activeEngine === "live2d") {
         this._repositionLive2DModel();
       }
@@ -240,37 +381,71 @@ class AvatarRenderer {
       if (window.lucia && window.lucia.window && window.lucia.window.resetMascotBounds) {
         window.lucia.window.resetMascotBounds();
       }
-    });
+    };
+
+    this._eventListeners = {
+      gaze: onGazeMove,
+      resize: onResize,
+      wheel: onWheel,
+      mousedown: onMouseDown,
+      mousemove: onMouseMove,
+      mouseup: onMouseUp,
+      mouseleave: onMouseLeave,
+      contextmenu: onContextMenu,
+      dblclick: onDblClick,
+    };
+
+    window.addEventListener("mousemove", onGazeMove);
+    window.addEventListener("resize", onResize);
+    window.addEventListener("wheel", onWheel, { passive: false });
+    window.addEventListener("mousedown", onMouseDown);
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("mouseup", onMouseUp);
+    window.addEventListener("mouseleave", onMouseLeave);
+    window.addEventListener("contextmenu", onContextMenu);
+    window.addEventListener("dblclick", onDblClick);
   }
 
   resize() {
-    const wrapper =
-      (this.canvas && this.canvas.parentElement) ||
-      (this.live2dCanvas && this.live2dCanvas.parentElement) ||
-      (this.vrmCanvas && this.vrmCanvas.parentElement);
-    if (!wrapper) return;
+    const isMascot = typeof document !== "undefined" && document.body.classList.contains("mascot-mode");
+    const dpr = (typeof window !== "undefined" && window.devicePixelRatio) || 1;
 
-    const rect = wrapper.getBoundingClientRect();
-    if (rect.width <= 0 || rect.height <= 0) return;
+    let targetWidth, targetHeight;
+    if (isMascot) {
+      const preset = MASCOT_PRESETS[this.currentPreset] || MASCOT_PRESETS.normal;
+      targetWidth = preset.width;
+      targetHeight = preset.height;
+      this.pan = { x: 0, y: 0 };
+    } else {
+      const wrapper =
+        (this.canvas && this.canvas.parentElement) ||
+        (this.live2dCanvas && this.live2dCanvas.parentElement) ||
+        (this.vrmCanvas && this.vrmCanvas.parentElement);
+      if (!wrapper) return;
 
-    const dpr = window.devicePixelRatio || 1;
-    this.width = rect.width;
-    this.height = rect.height;
+      const rect = wrapper.getBoundingClientRect();
+      if (rect.width <= 0 || rect.height <= 0) return;
+      targetWidth = rect.width;
+      targetHeight = rect.height;
+    }
+
+    this.width = targetWidth;
+    this.height = targetHeight;
 
     if (this.canvas) {
-      this.canvas.width = Math.floor(rect.width * dpr);
-      this.canvas.height = Math.floor(rect.height * dpr);
+      this.canvas.width = Math.floor(targetWidth * dpr);
+      this.canvas.height = Math.floor(targetHeight * dpr);
     }
 
     if (this.pixiApp && this.live2dCanvas) {
-      this.pixiApp.renderer.resize(rect.width, rect.height);
+      this.pixiApp.renderer.resize(targetWidth, targetHeight);
       this._repositionLive2DModel();
     }
 
     if (this.threeRenderer && this.threeCamera && this.vrmCanvas) {
-      this.threeCamera.aspect = rect.width / (rect.height || 1);
+      this.threeCamera.aspect = targetWidth / (targetHeight || 1);
       this.threeCamera.updateProjectionMatrix();
-      this.threeRenderer.setSize(rect.width, rect.height);
+      this.threeRenderer.setSize(targetWidth, targetHeight);
     }
 
     this._updateToolbarPosition();
@@ -280,18 +455,22 @@ class AvatarRenderer {
    * Calculate precise visual bounding box of the active model.
    */
   getModelBounds() {
+    const isMascot = typeof document !== "undefined" && document.body.classList.contains("mascot-mode");
     const activeEl =
       this.activeEngine === "live2d"
         ? this.live2dCanvas
         : this.activeEngine === "vrm"
         ? this.vrmCanvas
         : this.canvas;
-    const w = this.width || (activeEl ? activeEl.clientWidth : 380) || 380;
-    const h = this.height || (activeEl ? activeEl.clientHeight : 540) || 540;
-    const userZoom = Math.max(0.3, Math.min(4.0, this.mascotScale || 1.0));
+    const preset = isMascot ? (MASCOT_PRESETS[this.currentPreset] || MASCOT_PRESETS.normal) : null;
+    const w = isMascot ? preset.width : (this.width || (activeEl ? activeEl.clientWidth : 380) || 380);
+    const h = isMascot ? preset.height : (this.height || (activeEl ? activeEl.clientHeight : 540) || 540);
+    const userZoom = isMascot ? 1.0 : Math.max(0.3, Math.min(4.0, this.mascotScale || 1.0));
+    const panX = isMascot ? 0 : this.pan.x;
+    const panY = isMascot ? 0 : this.pan.y;
 
-    let centerX = w / 2 + this.pan.x;
-    let bottomY = h + this.pan.y;
+    let centerX = w / 2 + panX;
+    let bottomY = h + panY;
     let left = centerX - 100;
     let right = centerX + 100;
     let top = bottomY - 300;
@@ -305,8 +484,8 @@ class AvatarRenderer {
       const scale = baseScale * userZoom;
       const drawW = naturalW * scale;
       const drawH = naturalH * scale;
-      const drawX = (w - drawW) / 2 + this.pan.x;
-      const drawY = h - drawH + this.pan.y;
+      const drawX = (w - drawW) / 2 + panX;
+      const drawY = h - drawH + panY;
       left = drawX;
       right = drawX + drawW;
       top = drawY;
@@ -326,8 +505,8 @@ class AvatarRenderer {
     } else if (this.activeEngine === "vrm") {
       const modelH = h * 0.75 * userZoom;
       const modelW = modelH * 0.55;
-      centerX = w / 2 + this.pan.x;
-      bottomY = h * 0.88 + this.pan.y;
+      centerX = w / 2 + panX;
+      bottomY = h * 0.88 + panY;
       top = bottomY - modelH;
       left = centerX - modelW / 2;
       right = centerX + modelW / 2;
@@ -335,8 +514,8 @@ class AvatarRenderer {
     } else {
       // Procedural 2D Canvas
       const headRadius = Math.min(w, h) * 0.3 * userZoom;
-      centerX = w / 2 + this.pan.x;
-      const centerY = h / 2 + this.pan.y;
+      centerX = w / 2 + panX;
+      const centerY = h / 2 + panY;
       top = centerY - headRadius * 1.3;
       bottom = centerY + headRadius * 1.8;
       left = centerX - headRadius * 1.5;
@@ -383,8 +562,9 @@ class AvatarRenderer {
     if (!isMascot) return;
 
     const bounds = this.getModelBounds();
-    const winW = window.innerWidth || 380;
-    const winH = window.innerHeight || 540;
+    const preset = MASCOT_PRESETS[this.currentPreset] || MASCOT_PRESETS.normal;
+    const winW = preset.width;
+    const winH = preset.height;
 
     // Anchor toolbar directly underneath the model's bottom center
     const safeX = Math.max(120, Math.min(winW - 120, bounds.centerX));
@@ -599,7 +779,9 @@ class AvatarRenderer {
     }
 
     // 2. Scale & Center Sprite (Honoring mascotScale zoom & mouse pan!)
-    const userZoom = this.mascotScale || 1.0;
+    const userZoom = isMascot ? 1.0 : (this.mascotScale || 1.0);
+    const panX = isMascot ? 0 : this.pan.x;
+    const panY = isMascot ? 0 : this.pan.y;
     const naturalW = activeSprite.naturalWidth;
     const naturalH = activeSprite.naturalHeight;
     const baseScale = Math.min((w * 0.95) / naturalW, (h * 0.95) / naturalH);
@@ -607,8 +789,8 @@ class AvatarRenderer {
     const drawW = naturalW * scale;
     const drawH = naturalH * scale;
 
-    const drawX = (w - drawW) / 2 + this.mouse.x * 6 + this.pan.x;
-    const drawY = h - drawH + breath + this.mouse.y * 4 + this.pan.y;
+    const drawX = (w - drawW) / 2 + this.mouse.x * 6 + panX;
+    const drawY = h - drawH + breath + this.mouse.y * 4 + panY;
 
     ctx.save();
     ctx.drawImage(activeSprite, drawX, drawY, drawW, drawH);
@@ -624,9 +806,12 @@ class AvatarRenderer {
     const breath = Math.sin((time * Math.PI * 2) / this.currentExpression.breathingPeriod) * 4;
     const lipMetrics = this.lipSync.update();
 
-    const userZoom = this.mascotScale || 1.0;
-    const centerX = w / 2 + this.mouse.x * 6 + this.pan.x;
-    const centerY = h / 2 + breath + this.mouse.y * 4 + this.pan.y;
+    const isMascot = typeof document !== "undefined" && document.body.classList.contains("mascot-mode");
+    const userZoom = isMascot ? 1.0 : (this.mascotScale || 1.0);
+    const panX = isMascot ? 0 : this.pan.x;
+    const panY = isMascot ? 0 : this.pan.y;
+    const centerX = w / 2 + this.mouse.x * 6 + panX;
+    const centerY = h / 2 + breath + this.mouse.y * 4 + panY;
     const headRadius = Math.min(w, h) * 0.3 * userZoom;
 
     ctx.save();
@@ -634,7 +819,6 @@ class AvatarRenderer {
     ctx.rotate((this.currentExpression.headTilt * Math.PI) / 180);
 
     // 1. Ambient Background Halo
-    const isMascot = typeof document !== "undefined" && document.body.classList.contains("mascot-mode");
     if (!isMascot) {
       const halo = ctx.createRadialGradient(0, 0, headRadius * 0.4, 0, 0, headRadius * 1.5);
       halo.addColorStop(0, this.currentExpression.glowColor);
@@ -1035,14 +1219,17 @@ class AvatarRenderer {
     if (!this.threeRenderer || !this.threeCamera || !this.threeScene) return;
 
     const delta = this.threeClock ? this.threeClock.getDelta() : 0.016;
-    const userZoom = this.mascotScale || 1.0;
+    const isMascot = typeof document !== "undefined" && document.body.classList.contains("mascot-mode");
+    const userZoom = isMascot ? 1.0 : (this.mascotScale || 1.0);
+    const panX = isMascot ? 0 : this.pan.x;
+    const panY = isMascot ? 0 : this.pan.y;
 
     // Pan & Zoom controls in 3D:
     // - pan.x and pan.y shift camera position in world space
     // - mascotScale shifts camera distance along Z
     this.threeCamera.position.z = 1.8 / Math.max(0.2, userZoom);
-    this.threeCamera.position.x = -this.pan.x * 0.0035;
-    this.threeCamera.position.y = 1.35 + this.pan.y * 0.0035;
+    this.threeCamera.position.x = -panX * 0.0035;
+    this.threeCamera.position.y = 1.35 + panY * 0.0035;
     this.threeCamera.lookAt(this.threeCamera.position.x, 1.35, 0);
 
     const gazeX = this.mouse.x * 0.3;
@@ -1146,22 +1333,33 @@ class AvatarRenderer {
   }
 
   _repositionLive2DModel() {
-    if (!this.currentLive2DModel || !this.live2dCanvas || !this.live2dCanvas.parentElement) return;
-    const parent = this.live2dCanvas.parentElement;
-    const stageW = parent.clientWidth || 400;
-    const stageH = parent.clientHeight || 600;
+    if (!this.currentLive2DModel) return;
+    const isMascot = typeof document !== "undefined" && document.body.classList.contains("mascot-mode");
+    let stageW, stageH;
+    if (isMascot) {
+      const preset = MASCOT_PRESETS[this.currentPreset] || MASCOT_PRESETS.normal;
+      stageW = preset.width;
+      stageH = preset.height;
+    } else {
+      if (!this.live2dCanvas || !this.live2dCanvas.parentElement) return;
+      const parent = this.live2dCanvas.parentElement;
+      stageW = parent.clientWidth || 400;
+      stageH = parent.clientHeight || 600;
+    }
 
     const model = this.currentLive2DModel;
     const naturalW = model.internalModel ? model.internalModel.width : model.width;
     const naturalH = model.internalModel ? model.internalModel.height : model.height;
-    const userZoom = this.mascotScale || 1.0;
+    const userZoom = isMascot ? 1.0 : (this.mascotScale || 1.0);
+    const panX = isMascot ? 0 : this.pan.x;
+    const panY = isMascot ? 0 : this.pan.y;
 
     const baseScale = Math.min((stageW * 0.95) / (naturalW || 2000), (stageH * 0.95) / (naturalH || 2000));
     const scale = baseScale * userZoom;
 
     model.scale.set(scale);
-    model.x = (stageW - (naturalW || 2000) * scale) / 2 + this.pan.x;
-    model.y = (stageH - (naturalH || 2000) * scale) + this.pan.y;
+    model.x = (stageW - (naturalW || 2000) * scale) / 2 + panX;
+    model.y = (stageH - (naturalH || 2000) * scale) + panY;
   }
 
   _loadSpriteSet(model) {
@@ -1193,6 +1391,18 @@ class AvatarRenderer {
 
   destroy() {
     this.stop();
+    if (this._eventListeners) {
+      window.removeEventListener("mousemove", this._eventListeners.gaze);
+      window.removeEventListener("resize", this._eventListeners.resize);
+      window.removeEventListener("wheel", this._eventListeners.wheel);
+      window.removeEventListener("mousedown", this._eventListeners.mousedown);
+      window.removeEventListener("mousemove", this._eventListeners.mousemove);
+      window.removeEventListener("mouseup", this._eventListeners.mouseup);
+      window.removeEventListener("mouseleave", this._eventListeners.mouseleave);
+      window.removeEventListener("contextmenu", this._eventListeners.contextmenu);
+      window.removeEventListener("dblclick", this._eventListeners.dblclick);
+      this._eventListeners = null;
+    }
     if (this.lipSync && this.lipSync.currentAudio) {
       this.lipSync.currentAudio.pause();
     }
@@ -1217,298 +1427,188 @@ class AvatarRenderer {
   }
 
   /**
-   * Wire mascot toolbar button events.
-   * Floating dock positioned underneath the model.
+   * Wire mascot floating dock, Quick Talk flyout, and Presence popover.
+   * Floating dock positioned underneath the model's feet.
    */
   _setupMascotToolbar() {
+    if (typeof document === "undefined") return;
+    if (this._mascotToolbarInitialized) return;
+    this._mascotToolbarInitialized = true;
     const get = (id) => document.getElementById(id);
-    let _activePopup = null;
 
     const toolbar = get("mascot-toolbar");
-    if (toolbar) {
-      toolbar.addEventListener("click", (e) => e.stopPropagation());
-      toolbar.addEventListener("dblclick", (e) => e.stopPropagation());
-      toolbar.addEventListener("mousedown", (e) => e.stopPropagation());
-    }
+    const quickTalkBtn = get("mascot-quick-talk-btn");
+    const voiceMicBtn = get("mascot-voice-mic-btn");
+    const presenceMenuBtn = get("mascot-presence-menu-btn");
 
-    const allButtons = [
-      get("mascot-chat-btn"),
-      get("mascot-model-btn"),
-      get("mascot-voice-btn"),
-      get("mascot-mic-btn"),
-      get("mascot-settings-btn"),
-      get("mascot-close-btn"),
-    ].filter(Boolean);
+    const quickTalkFlyout = get("mascot-quick-talk-flyout");
+    const quickTalkClose = get("mascot-quick-talk-close");
+    const quickTalkInput = get("mascot-quick-talk-input");
+    const quickTalkSendBtn = get("mascot-quick-talk-send-btn");
 
-    const closeAllPopups = () => {
-      [
-        get("mascot-chat-popup"),
-        get("mascot-model-popup"),
-        get("mascot-voice-popup"),
-        get("mascot-settings-popup"),
-      ].forEach((p) => {
-        if (p) p.style.display = "none";
-      });
-      allButtons.forEach((b) => {
-        if (b && b.id !== "mascot-mic-btn") b.classList.remove("active");
-      });
-      _activePopup = null;
-      if (toolbar) toolbar.classList.remove("has-active-popup");
-    };
+    const presencePopover = get("mascot-presence-popover");
+    const presenceClose = get("mascot-presence-close");
+    const appearanceSelect = get("mascot-appearance-select");
+    const btnScaleSmall = get("btn-scale-small");
+    const btnScaleNormal = get("btn-scale-normal");
+    const btnScaleComfort = get("btn-scale-comfort");
+    const returnStudioBtn = get("mascot-return-studio-btn");
+    const resetBoundsBtn = get("mascot-reset-bounds-btn");
 
-    const togglePopup = (btnEl, popupEl) => {
-      if (!popupEl) return;
-      const isShowing = popupEl.style.display === "flex" || popupEl.style.display === "block";
-      closeAllPopups();
-      if (!isShowing) {
-        popupEl.style.display = "flex";
-        if (btnEl) btnEl.classList.add("active");
-        _activePopup = popupEl;
-        if (toolbar) toolbar.classList.add("has-active-popup");
+    // Prevent clicks/drags in dock or overlays from bubbling to window drag
+    [toolbar, quickTalkFlyout, presencePopover].forEach((el) => {
+      if (el) {
+        el.addEventListener("click", (e) => e.stopPropagation());
+        el.addEventListener("dblclick", (e) => e.stopPropagation());
+        el.addEventListener("mousedown", (e) => e.stopPropagation());
       }
+    });
+
+    const closeAllOverlays = () => {
+      if (quickTalkFlyout) quickTalkFlyout.style.display = "none";
+      if (presencePopover) presencePopover.style.display = "none";
+      if (quickTalkBtn) quickTalkBtn.classList.remove("active");
+      if (presenceMenuBtn) presenceMenuBtn.classList.remove("active");
+      if (toolbar) toolbar.classList.remove("has-active-popup");
     };
 
     this._updateToolbarPosition();
 
-    // --- 1. Chat button & popup ---
-    const chatBtn = get("mascot-chat-btn");
-    const chatPopup = get("mascot-chat-popup");
-    const chatInput = get("mascot-chat-input");
-    const chatSendBtn = get("mascot-chat-send-btn");
-    if (chatBtn && chatPopup) {
-      chatBtn.addEventListener("click", (e) => {
+    // --- 1. Quick Talk Speech Bubble Flyout ---
+    if (quickTalkBtn && quickTalkFlyout) {
+      quickTalkBtn.addEventListener("click", (e) => {
         e.stopPropagation();
-        togglePopup(chatBtn, chatPopup);
-        if (chatPopup.style.display !== "none" && chatInput) {
-          setTimeout(() => chatInput.focus(), 50);
+        const isOpen = quickTalkFlyout.style.display === "flex" || quickTalkFlyout.style.display === "block";
+        closeAllOverlays();
+        if (!isOpen) {
+          quickTalkFlyout.style.display = "flex";
+          quickTalkBtn.classList.add("active");
+          if (toolbar) toolbar.classList.add("has-active-popup");
+          if (quickTalkInput) {
+            setTimeout(() => quickTalkInput.focus(), 50);
+          }
         }
       });
     }
 
-    const sendMascotMessage = () => {
-      if (!chatInput) return;
-      const text = chatInput.value.trim();
+    const sendQuickTalk = () => {
+      if (!quickTalkInput) return;
+      const text = quickTalkInput.value.trim();
       if (!text) return;
       if (window.chatController && typeof window.chatController.sendMessage === "function") {
         window.chatController.sendMessage(text);
       }
-      chatInput.value = "";
-      closeAllPopups();
+      quickTalkInput.value = "";
     };
 
-    if (chatSendBtn) {
-      chatSendBtn.addEventListener("click", (e) => {
+    if (quickTalkSendBtn) {
+      quickTalkSendBtn.addEventListener("click", (e) => {
         e.stopPropagation();
-        sendMascotMessage();
+        sendQuickTalk();
       });
     }
 
-    if (chatInput) {
-      chatInput.addEventListener("keydown", (e) => {
+    if (quickTalkInput) {
+      quickTalkInput.addEventListener("keydown", (e) => {
         if (e.key === "Enter" && !e.shiftKey) {
           e.preventDefault();
-          sendMascotMessage();
+          sendQuickTalk();
         }
       });
     }
 
-    // --- 2. Model button & popup ---
-    const modelBtn = get("mascot-model-btn");
-    const modelPopup = get("mascot-model-popup");
-    const mascotEngineSelect = get("mascot-engine-select");
-    const mascotAvatarSelect = get("mascot-avatar-select");
-
-    const syncMascotModelDropdown = () => {
-      const curEngine = mascotEngineSelect ? mascotEngineSelect.value : (this.activeEngine || "canvas");
-      const modelsData = (window.chatController && window.chatController.avatarModelsData) || {};
-      let list = [];
-      if (curEngine === "sprites") list = modelsData.sprites || [];
-      else if (curEngine === "live2d") list = modelsData.live2d || [];
-      else if (curEngine === "vrm") list = modelsData.vrm || [];
-
-      if (mascotAvatarSelect) {
-        mascotAvatarSelect.innerHTML = "";
-        if (list.length === 0) {
-          const opt = document.createElement("option");
-          opt.value = "default";
-          opt.textContent = curEngine === "vrm" ? "🌐 3D Lucia Hologram (Procedural)" : "Default Lucia (Procedural)";
-          mascotAvatarSelect.appendChild(opt);
-        } else {
-          list.forEach((m) => {
-            const opt = document.createElement("option");
-            opt.value = m;
-            opt.textContent = m;
-            mascotAvatarSelect.appendChild(opt);
-          });
-        }
-        mascotAvatarSelect.value = this.activeModel || "default";
-      }
-    };
-
-    // Initialize dropdowns on toolbar creation
-    if (mascotEngineSelect) {
-      mascotEngineSelect.value = this.activeEngine || "canvas";
-    }
-    syncMascotModelDropdown();
-
-    if (modelBtn && modelPopup) {
-      modelBtn.addEventListener("click", (e) => {
+    if (quickTalkClose) {
+      quickTalkClose.addEventListener("click", (e) => {
         e.stopPropagation();
-        if (mascotEngineSelect) {
-          mascotEngineSelect.value = this.activeEngine || "canvas";
-        }
-        syncMascotModelDropdown();
-        togglePopup(modelBtn, modelPopup);
+        closeAllOverlays();
       });
     }
 
-    if (mascotEngineSelect) {
-      mascotEngineSelect.addEventListener("change", (e) => {
-        e.stopPropagation();
-        const eng = mascotEngineSelect.value;
-        const mainEngine = get("avatar-engine-select");
-        if (mainEngine) {
-          mainEngine.value = eng;
-        }
-        if (window.chatController && typeof window.chatController._updateAvatarModelDropdown === "function") {
-          window.chatController._updateAvatarModelDropdown(eng);
-        }
-        syncMascotModelDropdown();
-      });
-    }
-
-    if (mascotAvatarSelect) {
-      mascotAvatarSelect.addEventListener("change", (e) => {
-        e.stopPropagation();
-        const mod = mascotAvatarSelect.value;
-        const eng = mascotEngineSelect ? mascotEngineSelect.value : (this.activeEngine || "canvas");
-        const mainModel = get("avatar-model-select");
-        if (mainModel) mainModel.value = mod;
-        localStorage.setItem("lucia_avatar_engine", eng);
-        localStorage.setItem("lucia_avatar_model", mod);
-        this.setEngine(eng, mod);
-      });
-    }
-
-    // --- 3. Voice button & popup (Audio devices, Voice model, Volume) ---
-    const voiceBtn = get("mascot-voice-btn");
-    const voicePopup = get("mascot-voice-popup");
-    const mascotVoiceSelect = get("mascot-voice-select");
-    const mascotVolSlider = get("mascot-volume-slider");
-
-    if (voiceBtn && voicePopup) {
-      voiceBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        const mainVoice = get("voice-model-select");
-        if (mainVoice && mascotVoiceSelect) {
-          mascotVoiceSelect.innerHTML = mainVoice.innerHTML;
-          mascotVoiceSelect.value = mainVoice.value;
-        }
-        const mainVol = get("voice-volume-slider");
-        if (mainVol && mascotVolSlider) {
-          mascotVolSlider.value = mainVol.value;
-        }
-        if (window.chatController && typeof window.chatController.populateAudioDevices === "function") {
-          window.chatController.populateAudioDevices();
-        }
-        togglePopup(voiceBtn, voicePopup);
-      });
-    }
-
-    if (mascotVoiceSelect) {
-      mascotVoiceSelect.addEventListener("change", (e) => {
-        e.stopPropagation();
-        const mainVoice = get("voice-model-select");
-        if (mainVoice) {
-          mainVoice.value = mascotVoiceSelect.value;
-          mainVoice.dispatchEvent(new Event("change"));
-        }
-      });
-    }
-
-    if (mascotVolSlider) {
-      mascotVolSlider.addEventListener("input", (e) => {
-        e.stopPropagation();
-        const val = parseFloat(e.target.value);
-        const mainVol = get("voice-volume-slider");
-        if (mainVol) mainVol.value = val;
-        if (window.audioRouter) window.audioRouter.setVolume(val);
-        else this.setVolume(val);
-      });
-    }
-
-    // --- 4. Mic button ---
-    const micBtn = get("mascot-mic-btn");
-    if (micBtn) {
-      micBtn.addEventListener("click", (e) => {
+    // --- 2. Voice Mic Button (Direct Discord-style toggle) ---
+    if (voiceMicBtn) {
+      voiceMicBtn.addEventListener("click", (e) => {
         e.stopPropagation();
         const mainMic = get("mic-btn");
         if (mainMic) {
           mainMic.click();
-          setTimeout(() => {
-            const isCall = mainMic.classList.contains("active-call");
-            micBtn.classList.toggle("active", isCall);
-          }, 50);
         }
       });
     }
 
-    // --- 5. Settings button & popup (Zoom, Opacity, Reset avatar, Journal, Full window) ---
-    const settingsBtn = get("mascot-settings-btn");
-    const settingsPopup = get("mascot-settings-popup");
-    const zoomSlider = get("mascot-zoom-slider");
-    const zoomVal = get("mascot-zoom-val");
-    const opacitySlider = get("mascot-opacity-slider");
-    const opacityVal = get("mascot-opacity-val");
-    const resetAvatarBtn = get("mascot-reset-avatar-btn");
-    const openJournalBtn = get("mascot-open-journal-btn");
-    const returnMainBtn = get("mascot-return-main-btn");
-
-    if (settingsBtn && settingsPopup) {
-      settingsBtn.addEventListener("click", (e) => {
+    // --- 3. Presence Menu Popover ---
+    if (presenceMenuBtn && presencePopover) {
+      presenceMenuBtn.addEventListener("click", (e) => {
         e.stopPropagation();
-        togglePopup(settingsBtn, settingsPopup);
-      });
-    }
-
-    if (zoomSlider) {
-      zoomSlider.value = this.mascotScale || 1.0;
-      if (zoomVal) zoomVal.textContent = `${Math.round((this.mascotScale || 1.0) * 100)}%`;
-
-      zoomSlider.addEventListener("input", (e) => {
-        e.stopPropagation();
-        const scale = parseFloat(e.target.value);
-        this.mascotScale = scale;
-        if (zoomVal) zoomVal.textContent = `${Math.round(scale * 100)}%`;
-        if (this.activeEngine === "live2d") {
-          this._repositionLive2DModel();
+        const isOpen = presencePopover.style.display === "flex" || presencePopover.style.display === "block";
+        closeAllOverlays();
+        if (!isOpen) {
+          if (appearanceSelect) {
+            appearanceSelect.value = this.activeEngine || "canvas";
+          }
+          ["small", "normal", "comfort"].forEach((k) => {
+            const btn = get(`btn-scale-${k}`);
+            if (btn) btn.classList.toggle("active", k === this.currentPreset);
+          });
+          presencePopover.style.display = "flex";
+          presenceMenuBtn.classList.add("active");
+          if (toolbar) toolbar.classList.add("has-active-popup");
         }
-        this._updateToolbarPosition();
       });
     }
 
-    if (opacitySlider) {
-      const savedOpacity = localStorage.getItem("lucia_mascot_opacity") || "1";
-      opacitySlider.value = savedOpacity;
-      document.body.style.opacity = savedOpacity;
-      if (opacityVal) opacityVal.textContent = Math.round(parseFloat(savedOpacity) * 100) + "%";
-
-      opacitySlider.addEventListener("input", (e) => {
+    if (presenceClose) {
+      presenceClose.addEventListener("click", (e) => {
         e.stopPropagation();
-        const op = parseFloat(e.target.value);
-        document.body.style.opacity = op;
-        if (opacityVal) opacityVal.textContent = Math.round(op * 100) + "%";
-        localStorage.setItem("lucia_mascot_opacity", op);
+        closeAllOverlays();
       });
     }
 
-    if (resetAvatarBtn) {
-      resetAvatarBtn.addEventListener("click", (e) => {
+    // Appearance change (strictly renderer/clothing - Invariant 1)
+    if (appearanceSelect) {
+      appearanceSelect.addEventListener("change", (e) => {
+        e.stopPropagation();
+        const eng = appearanceSelect.value;
+        const mainEngine = get("avatar-engine-select");
+        if (mainEngine) {
+          mainEngine.value = eng;
+          mainEngine.dispatchEvent(new Event("change"));
+        }
+        localStorage.setItem("lucia_avatar_engine", eng);
+        this.setEngine(eng, "default");
+      });
+    }
+
+    // Segmented Scale Presets (Small 0.75x, Normal 1.00x, Comfort 1.25x)
+    [
+      { btn: btnScaleSmall, preset: "small" },
+      { btn: btnScaleNormal, preset: "normal" },
+      { btn: btnScaleComfort, preset: "comfort" },
+    ].forEach(({ btn, preset }) => {
+      if (btn) {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          this.setZoomPreset(preset);
+        });
+      }
+    });
+
+    // Return to Studio action
+    if (returnStudioBtn) {
+      returnStudioBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        closeAllOverlays();
+        if (window.lucia && window.lucia.window && window.lucia.window.toggleMascot) {
+          window.lucia.window.toggleMascot();
+        }
+      });
+    }
+
+    // Reset Scale action
+    if (resetBoundsBtn) {
+      resetBoundsBtn.addEventListener("click", (e) => {
         e.stopPropagation();
         this.pan = { x: 0, y: 0 };
-        this.mascotScale = 1.0;
-        if (zoomSlider) zoomSlider.value = 1.0;
-        if (zoomVal) zoomVal.textContent = "100%";
+        this.setZoomPreset("normal");
         if (this.activeEngine === "live2d") {
           this._repositionLive2DModel();
         }
@@ -1516,45 +1616,20 @@ class AvatarRenderer {
         if (window.lucia && window.lucia.window && window.lucia.window.resetMascotBounds) {
           window.lucia.window.resetMascotBounds();
         }
-        closeAllPopups();
+        closeAllOverlays();
       });
     }
 
-    if (openJournalBtn) {
-      openJournalBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        const jm = get("journal-modal");
-        if (jm) jm.style.display = "flex";
-        if (window.chatController && typeof window.chatController._updateJournalStats === "function") {
-          window.chatController._updateJournalStats();
-        }
-        closeAllPopups();
-      });
-    }
-
-    if (returnMainBtn) {
-      returnMainBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        if (window.lucia && window.lucia.window && window.lucia.window.toggleMascot) {
-          window.lucia.window.toggleMascot();
-        }
-      });
-    }
-
-    // --- 6. Close button (return to full window) ---
-    const closeBtn = get("mascot-close-btn");
-    if (closeBtn) {
-      closeBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        if (window.lucia && window.lucia.window && window.lucia.window.toggleMascot) {
-          window.lucia.window.toggleMascot();
-        }
-      });
-    }
-
-    // Close any popup when clicking outside on the avatar or desktop
-    window.addEventListener("click", () => {
-      closeAllPopups();
+    // Outside click closes overlays
+    window.addEventListener("click", (e) => {
+      if (!e.target || typeof e.target.closest !== "function") return;
+      if (
+        !e.target.closest("#mascot-toolbar") &&
+        !e.target.closest("#mascot-quick-talk-flyout") &&
+        !e.target.closest("#mascot-presence-popover")
+      ) {
+        closeAllOverlays();
+      }
     });
   }
 }
@@ -1564,5 +1639,5 @@ if (typeof window !== "undefined" && window.avatarRegistry) {
 }
 
 if (typeof module !== "undefined" && module.exports) {
-  module.exports = { AvatarRenderer };
+  module.exports = { AvatarRenderer, MASCOT_PRESETS, MASCOT_PRESET_ORDER };
 }

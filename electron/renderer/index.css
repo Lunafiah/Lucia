@@ -507,9 +507,19 @@ body.mascot-mode .lucia-nav-header {
 
 body.mascot-mode .main-stage {
   height: 100vh !important;
+  width: 100vw !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+body.mascot-mode #chat-pane,
+body.mascot-mode .avatar-top-bar,
+body.mascot-mode #avatar-organic-status {
+  display: none !important;
 }
 
 body.mascot-mode .diagnostics-backdrop,
 body.mascot-mode .debug-pane {
   display: none !important;
 }
+

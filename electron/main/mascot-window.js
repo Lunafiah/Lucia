@@ -5,6 +5,7 @@
 
 const { BrowserWindow } = require('electron');
 const path = require('path');
+const { syncMascotWindowPreset, getMascotPreset } = require('./mascot-constants.js');
 
 class MascotWindowManager {
   /**
@@ -22,9 +23,10 @@ class MascotWindowManager {
       return;
     }
 
+    const initialPreset = getMascotPreset('normal');
     this.mascotWindow = new BrowserWindow({
-      width: 380,
-      height: 540,
+      width: initialPreset.width,
+      height: initialPreset.height,
       minWidth: 180,
       minHeight: 220,
       frame: false,
@@ -42,6 +44,8 @@ class MascotWindowManager {
         webSecurity: false,
       },
     });
+
+    syncMascotWindowPreset(this.mascotWindow, 'normal');
 
     // Load mascot html or index with query param
     this.mascotWindow.loadFile(path.join(__dirname, '../renderer/index.html'), {

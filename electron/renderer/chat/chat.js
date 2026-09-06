@@ -424,7 +424,7 @@ class ChatController {
     if (this.micBtn) {
       this.micBtn.addEventListener('click', async () => {
         this.isMicMode = !this.isMicMode;
-        const mascotMic = document.getElementById('mascot-mic-btn');
+        const mascotMic = document.getElementById('mascot-voice-mic-btn') || document.getElementById('mascot-mic-btn');
         if (this.isMicMode) {
           this.micBtn.classList.add('active-call');
           this.micBtn.title = 'Discord Voice Mode: ON (Click to Mute / Leave Call)';
@@ -654,7 +654,7 @@ class ChatController {
       this.micBtn.classList.remove('active-call', 'paused');
       this.micBtn.title = 'Discord Voice Mode: OFF (Click to Join Voice Chat)';
     }
-    const mascotMic = document.getElementById('mascot-mic-btn');
+    const mascotMic = document.getElementById('mascot-voice-mic-btn') || document.getElementById('mascot-mic-btn');
     if (mascotMic) {
       mascotMic.classList.remove('active');
       mascotMic.title = 'Toggle Microphone';
@@ -1226,6 +1226,14 @@ class ChatController {
       });
       footer.appendChild(replayBtn);
       bubble.appendChild(footer);
+
+      // Sync latest reply into Mascot Quick Talk flyout
+      const mascotReplyText = document.getElementById('mascot-quick-talk-reply-text');
+      const mascotLatest = document.getElementById('mascot-quick-talk-latest');
+      if (mascotReplyText && mascotLatest) {
+        mascotReplyText.textContent = content;
+        mascotLatest.style.display = 'block';
+      }
     } else {
       bubble.textContent = content;
     }
