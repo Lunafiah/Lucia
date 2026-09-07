@@ -162,7 +162,16 @@ class AffectiveMemory:
             self._sdm.delete(trace_id)
             self._index.pop(trace_id, None)
 
+    def clear(self) -> None:
+        """
+        Clear all stored memory traces and reset the underlying SDM store.
+        """
+        with self._index_lock:
+            self._sdm.clear()
+            self._index.clear()
+
     def index_memory_usage_bytes(self) -> int:
+
         """
         Return the approximate memory usage in bytes of the index dict.
         """

@@ -89,6 +89,15 @@ class HomeostaticEngine:
         # Deplete energy (Requirement 2.4)
         self._energy = max(0.0, self._energy - _ENERGY_DEPLETION_PER_INPUT)
 
+    def reset(self) -> None:
+        """
+        Reset rolling homeostatic state, energy level, and cached constraints to baseline.
+        """
+        self._energy = 1.0
+        self._input_timestamps.clear()
+        self._last_input_time = None
+        self._last_constraints = None
+
     # ------------------------------------------------------------------
     # Public: compute somatic markers
     # ------------------------------------------------------------------

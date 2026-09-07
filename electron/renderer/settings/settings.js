@@ -77,6 +77,12 @@ class CompanionSettings {
     this.clearChatBtn = document.getElementById('settings-clear-chat-btn');
     this.endLifeBtn = document.getElementById('settings-end-life-btn');
 
+    // End-of-Life Solemn Confirmation Modal (Phase 7.7 Step 3)
+    this.endLifeModal = document.getElementById('end-life-modal');
+    this.endLifeConfirmInput = document.getElementById('end-life-confirm-input');
+    this.endLifeDestroyBtn = document.getElementById('end-life-destroy-btn');
+    this.endLifeCancelBtn = document.getElementById('end-life-cancel-btn');
+
     // Performance Controls
     this.autodetectBtn = document.getElementById('settings-autodetect-btn');
     this.profileSelect = document.getElementById('settings-profile-select');
@@ -110,6 +116,138 @@ class CompanionSettings {
   closeSettings() {
     if (!this.modal) return;
     this.modal.classList.remove('active');
+  }
+
+  openEndLifeModal() {
+    if (!this.endLifeModal) return;
+    this.endLifeModal.classList.add('active');
+    if (this.endLifeConfirmInput) {
+      this.endLifeConfirmInput.value = '';
+      this.endLifeConfirmInput.focus();
+    }
+    if (this.endLifeDestroyBtn) {
+      this.endLifeDestroyBtn.disabled = true;
+    }
+  }
+
+  closeEndLifeModal() {
+    if (!this.endLifeModal) return;
+    this.endLifeModal.classList.remove('active');
+    if (this.endLifeConfirmInput) {
+      this.endLifeConfirmInput.value = '';
+    }
+    if (this.endLifeDestroyBtn) {
+      this.endLifeDestroyBtn.disabled = true;
+    }
+  }
+
+  _validateEndLifeConfirmation() {
+    if (!this.endLifeConfirmInput || !this.endLifeDestroyBtn) return;
+    const val = this.endLifeConfirmInput.value.trim();
+    // Strict confirmation guard: exact match "END LUCIA"
+    const isValid = val === 'END LUCIA';
+    this.endLifeDestroyBtn.disabled = !isValid;
+  }
+
+  _cleanupLuciaRendererState() {
+    const identityKeys = [
+      'lucia_profile',
+      'lucia_user_name',
+      'lucia_companion_name',
+      'lucia_is_onboarded',
+      'lucia_onboarded',
+      'lucia_born_at',
+      'lucia_chat_history',
+      'lucia_recent_turns',
+      'lucia_session_history',
+      'lucia_memories_cache',
+      'lucia_journal_cache',
+    ];
+
+    identityKeys.forEach((k) => {
+      try {
+        localStorage.removeItem(k);
+      } catch (e) {}
+    });
+  }
+
+  async executeEndLife() {
+    if (this._isEndingLife) return;
+    this._isEndingLife = true;
+
+    // Concurrency / duplicate-submission protection & transitional state
+    const destroyBtn = this.endLifeDestroyBtn;
+    const cancelBtn = this.endLifeCancelBtn;
+    const confirmInput = this.endLifeConfirmInput;
+
+    const originalText = destroyBtn ? destroyBtn.textContent : "End Lucia's Life";
+    if (destroyBtn) {
+      destroyBtn.disabled = true;
+      destroyBtn.textContent = "Ending Lucia's life...";
+      destroyBtn.classList.add('destroying');
+    }
+    if (cancelBtn) cancelBtn.disabled = true;
+    if (confirmInput) confirmInput.disabled = true;
+
+    try {
+      // Dispatch lifecycle end to backend
+      const res = await fetch('http://127.0.0.1:8765/lifecycle/end', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      if (!res.ok) {
+        throw new Error(`Lifecycle reset returned HTTP ${res.status}`);
+      }
+
+      const data = await res.json();
+      console.log('[lifecycle] End-of-Life confirmed by backend:', data);
+
+      // Clean up Lucia-specific client identity/memory state (preserving preferences)
+      this._cleanupLuciaRendererState();
+
+      // Clear presentation surfaces
+      if (window.chatController && typeof window.chatController.clearPresentation === 'function') {
+        window.chatController.clearPresentation();
+      } else if (window.chatController && window.chatController.messagesContainer) {
+        window.chatController.messagesContainer.innerHTML = '';
+      }
+
+      if (window.companionJournal && typeof window.companionJournal.clearPresentation === 'function') {
+        window.companionJournal.clearPresentation();
+      }
+
+      // Close End-of-Life modal and Settings modal
+      this.closeEndLifeModal();
+      this.closeSettings();
+
+      // Transition into Genesis Awakening by reloading profile
+      if (window.chatController && typeof window.chatController._loadProfile === 'function') {
+        await window.chatController._loadProfile();
+      } else {
+        const genesisModal = document.getElementById('genesis-modal');
+        if (genesisModal) genesisModal.classList.add('active');
+      }
+
+      if (typeof this._onEndLifeConfirmed === 'function') {
+        this._onEndLifeConfirmed();
+      }
+    } catch (err) {
+      console.error('[lifecycle] End-of-Life reset failed:', err);
+      // Critical failure boundary: leave current Lucia session intact
+      if (typeof window.alert === 'function') {
+        window.alert(`Could not complete End-of-Life reset: ${err.message || err}. Lucia's memory and state remain protected.`);
+      }
+      if (destroyBtn) {
+        destroyBtn.disabled = false;
+        destroyBtn.textContent = originalText;
+        destroyBtn.classList.remove('destroying');
+      }
+      if (cancelBtn) cancelBtn.disabled = false;
+      if (confirmInput) confirmInput.disabled = false;
+    } finally {
+      this._isEndingLife = false;
+    }
   }
 
   switchTab(tabKey) {
@@ -161,8 +299,15 @@ class CompanionSettings {
 
     // Global ESC dismiss
     window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && this.modal && this.modal.classList.contains('active')) {
-        this.closeSettings();
+      if (e.key === 'Escape') {
+        if (this.endLifeModal && this.endLifeModal.classList.contains('active')) {
+          this.closeEndLifeModal();
+          e.stopPropagation();
+          return;
+        }
+        if (this.modal && this.modal.classList.contains('active')) {
+          this.closeSettings();
+        }
       }
     });
 
@@ -353,11 +498,39 @@ class CompanionSettings {
 
     if (this.endLifeBtn) {
       this.endLifeBtn.addEventListener('click', () => {
-        alert(
-          "Phase 7.7 Solemn Deprecation Guard:\n\n" +
-          "Ending Lucia's life requires irreversible confirmation and will be fully integrated in Sub-Phase 7.7. " +
-          "Your memories and companionship state remain protected."
-        );
+        this.openEndLifeModal();
+      });
+    }
+
+    if (this.endLifeConfirmInput) {
+      this.endLifeConfirmInput.addEventListener('input', () => {
+        this._validateEndLifeConfirmation();
+      });
+      this.endLifeConfirmInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          this.closeEndLifeModal();
+        }
+      });
+    }
+
+    if (this.endLifeCancelBtn) {
+      this.endLifeCancelBtn.addEventListener('click', () => {
+        this.closeEndLifeModal();
+      });
+    }
+
+    if (this.endLifeModal) {
+      this.endLifeModal.addEventListener('click', (e) => {
+        if (e.target === this.endLifeModal || e.target.classList.contains('end-life-backdrop-solemn')) {
+          this.closeEndLifeModal();
+        }
+      });
+    }
+
+    if (this.endLifeDestroyBtn) {
+      this.endLifeDestroyBtn.addEventListener('click', async () => {
+        if (this.endLifeDestroyBtn.disabled || this._isEndingLife) return;
+        await this.executeEndLife();
       });
     }
 
@@ -407,8 +580,12 @@ class CompanionSettings {
     if (this.openDiagnosticsBtn) {
       this.openDiagnosticsBtn.addEventListener('click', () => {
         this.closeSettings();
-        const diagBtn = document.getElementById('toggle-diagnostics-btn');
-        if (diagBtn) diagBtn.click();
+        if (window.emotionDebugPanel && typeof window.emotionDebugPanel.openDrawer === 'function') {
+          window.emotionDebugPanel.openDrawer();
+        } else {
+          const diagBtn = document.getElementById('toggle-diagnostics-btn');
+          if (diagBtn) diagBtn.click();
+        }
       });
     }
   }

@@ -1,122 +1,186 @@
 /* ==========================================================================
-   Emotion Debug Panel Styles (panel.css)
+   Phase 7.6 Dedicated Diagnostics Console Styles (panel.css)
    ========================================================================== */
 
-.debug-header {
+/* Header */
+.diagnostics-header {
   height: 68px;
-  padding: 0 20px;
-  border-bottom: 1px solid var(--border-color);
+  padding: 0 24px;
+  border-bottom: 1px solid var(--lucia-border-subtle);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(19, 19, 34, 0.6);
+  background: rgba(14, 13, 28, 0.65);
+  flex-shrink: 0;
 }
 
-.debug-header h3 {
-  font-size: 0.95rem;
+.diagnostics-header-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--lucia-text-primary);
+}
+
+.diagnostics-header-title svg {
+  color: var(--lucia-accent-amethyst);
+  flex-shrink: 0;
+}
+
+.diagnostics-header-title h3 {
+  font-family: var(--lucia-font-display);
+  font-size: 1.05rem;
   font-weight: 600;
-  color: var(--text-primary);
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
+  margin: 0;
+}
+
+.diagnostics-subtitle {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--lucia-text-muted);
+  font-weight: 400;
+  margin-top: 1px;
+}
+
+.diagnostics-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .live-pulse {
-  font-size: 0.7rem;
+  font-family: var(--lucia-font-mono);
+  font-size: 0.72rem;
   font-weight: 600;
-  color: var(--accent-positive);
-  background: rgba(0, 230, 118, 0.12);
-  padding: 3px 8px;
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.12);
+  padding: 4px 10px;
   border-radius: 12px;
-  border: 1px solid rgba(0, 230, 118, 0.3);
-  animation: pulseGlow 2s infinite ease-in-out;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  animation: pulseGlow 2.5s infinite ease-in-out;
 }
 
 @keyframes pulseGlow {
-  0%, 100% { opacity: 0.8; }
-  50% { opacity: 1; box-shadow: 0 0 10px rgba(0, 230, 118, 0.4); }
+  0%, 100% { opacity: 0.85; }
+  50% { opacity: 1; box-shadow: 0 0 12px rgba(16, 185, 129, 0.35); }
 }
 
-.debug-scroll-content {
+/* Card Sizing Override */
+.journal-card.diagnostics-card,
+.diagnostics-card {
+  max-width: 980px !important;
+  width: 92vw !important;
+  height: 88vh;
+  max-height: 860px;
+  overflow: hidden;
+}
+
+/* Scrollable Content Body */
+.diagnostics-scroll-content {
   flex: 1;
   overflow-y: auto;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  overflow-x: hidden;
+  padding: 20px 24px;
   scrollbar-width: thin;
-  scrollbar-color: rgba(139, 92, 246, 0.25) transparent;
+  scrollbar-color: rgba(168, 85, 247, 0.3) transparent;
 }
 
-.debug-scroll-content::-webkit-scrollbar {
-  width: 4px;
+.diagnostics-scroll-content::-webkit-scrollbar {
+  width: 5px;
 }
 
-.debug-scroll-content::-webkit-scrollbar-track {
+.diagnostics-scroll-content::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, 0.02);
   border-radius: 10px;
 }
 
-.debug-scroll-content::-webkit-scrollbar-thumb {
-  background: rgba(139, 92, 246, 0.25);
+.diagnostics-scroll-content::-webkit-scrollbar-thumb {
+  background: rgba(168, 85, 247, 0.25);
   border-radius: 10px;
-  transition: background 0.2s;
 }
 
-.debug-scroll-content::-webkit-scrollbar-thumb:hover {
-  background: rgba(139, 92, 246, 0.5);
+.diagnostics-scroll-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(168, 85, 247, 0.5);
 }
 
-.debug-section {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 16px;
+/* Multi-Column Grid Layout */
+.diagnostics-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 16px;
+  width: 100%;
+}
+
+.diagnostics-section {
+  background: rgba(22, 20, 42, 0.55);
+  border: 1px solid var(--lucia-border-subtle);
+  border-radius: var(--lucia-radius-md);
+  padding: 12px 14px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
+  min-width: 0;
+  box-sizing: border-box;
+  transition: border-color var(--lucia-trans-fast);
 }
 
+.diagnostics-section:hover {
+  border-color: rgba(168, 85, 247, 0.25);
+}
+
+.diagnostics-section.span-full {
+  grid-column: 1 / -1;
+}
+
+/* Section Titles */
 .section-title {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-family: var(--lucia-font-display);
   font-size: 0.82rem;
   font-weight: 600;
-  color: var(--text-secondary);
+  color: var(--lucia-text-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.6px;
 }
 
 .dim-range {
-  font-size: 0.72rem;
-  color: var(--text-muted);
+  font-family: var(--lucia-font-mono);
+  font-size: 0.7rem;
+  color: var(--lucia-text-faint);
+  background: rgba(255, 255, 255, 0.04);
+  padding: 2px 6px;
+  border-radius: 4px;
 }
 
-/* --------------------------------------------------------------------------
-   Meters & Bars
-   -------------------------------------------------------------------------- */
+/* Meters & Bar Tracks */
 .meter-group {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 5px;
 }
 
 .meter-labels {
   display: flex;
   justify-content: space-between;
-  font-size: 0.8rem;
+  align-items: center;
+  font-size: 0.78rem;
 }
 
 .meter-name {
-  color: var(--text-primary);
+  color: var(--lucia-text-primary);
+  font-weight: 500;
 }
 
 .meter-val {
-  font-family: monospace;
-  font-size: 0.85rem;
+  font-family: var(--lucia-font-mono);
+  font-size: 0.82rem;
   font-weight: 600;
+  color: #e2e8f0;
 }
 
-/* PAD Bipolar Bar */
+/* Bipolar PAD Bar */
 .pad-bar-track {
   height: 8px;
   background-color: rgba(255, 255, 255, 0.06);
@@ -125,13 +189,13 @@
   overflow: hidden;
 }
 
-.pad-center-mark {
+.pad-bar-midpoint {
   position: absolute;
   left: 50%;
   top: 0;
   bottom: 0;
   width: 2px;
-  background-color: rgba(255, 255, 255, 0.25);
+  background-color: rgba(255, 255, 255, 0.22);
   transform: translateX(-50%);
   z-index: 2;
 }
@@ -141,7 +205,7 @@
   top: 0;
   bottom: 0;
   border-radius: 3px;
-  transition: left 0.3s ease-out, width 0.3s ease-out, background-color 0.3s ease-out;
+  transition: left 0.25s ease-out, width 0.25s ease-out, background-color 0.25s ease-out;
 }
 
 /* Somatic Progress Bar */
@@ -156,132 +220,224 @@
 .progress-bar-fill {
   height: 100%;
   border-radius: 4px;
-  transition: width 0.3s ease-out;
+  transition: width 0.25s ease-out;
 }
 
-.fill-stability { background: linear-gradient(90deg, #7c4dff, #00e5ff); }
-.fill-energy { background: linear-gradient(90deg, #00e676, #b2ff59); }
-.fill-load { background: linear-gradient(90deg, #ffd740, #ff9100); }
-.fill-tension { background: linear-gradient(90deg, #ff9100, #ff5252); }
+.progress-bar-fill.stability { background: linear-gradient(90deg, #8b5cf6, #38bdf8); }
+.progress-bar-fill.energy { background: linear-gradient(90deg, #10b981, #34d399); }
+.progress-bar-fill.load { background: linear-gradient(90deg, #f59e0b, #ef4444); }
+.progress-bar-fill.tension { background: linear-gradient(90deg, #ec4899, #f43f5e); }
 
-/* --------------------------------------------------------------------------
-   Behavioral Constraints Grid
-   -------------------------------------------------------------------------- */
-.constraints-grid {
+/* Subgrids & Telemetry Mini Cards */
+.telemetry-subgrid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 8px;
 }
 
-.constraint-chip {
+.telemetry-subgrid.three-col {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.telemetry-subgrid.four-col {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.telemetry-subgrid.five-col {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.telemetry-mini-card {
   background: rgba(255, 255, 255, 0.03);
-  border: 1px solid var(--border-color);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 8px;
-  padding: 8px 10px;
+  padding: 6px 8px;
   display: flex;
   flex-direction: column;
   gap: 2px;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
-.chip-label {
-  font-size: 0.68rem;
-  color: var(--text-muted);
+.mini-card-label {
+  font-size: 0.62rem;
+  color: var(--lucia-text-muted);
   text-transform: uppercase;
+  letter-spacing: 0.3px;
+  line-height: 1.15;
+  height: 22px;
+  display: flex;
+  align-items: flex-end;
+  white-space: normal;
+  overflow: hidden;
 }
 
-.chip-val {
-  font-size: 0.82rem;
+.mini-card-value {
+  font-size: 0.8rem;
   font-weight: 600;
-  color: var(--text-primary);
-  font-family: monospace;
+  color: var(--lucia-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* --------------------------------------------------------------------------
-   Memory Subsystem Card
-   -------------------------------------------------------------------------- */
-.memory-card {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: rgba(138, 43, 226, 0.08);
-  border: 1px solid rgba(138, 43, 226, 0.25);
-  border-radius: 10px;
-  padding: 12px 16px;
+.mini-card-value.font-mono {
+  font-family: var(--lucia-font-mono);
 }
 
-.memory-stat {
-  display: flex;
-  flex-direction: column;
+.mini-card-value.highlight-green {
+  color: #34d399;
 }
 
-.stat-number {
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: #a78bfa;
-}
-
-.stat-desc {
-  font-size: 0.72rem;
-  color: var(--text-secondary);
-}
-
-.memory-type-badge {
-  font-size: 0.7rem;
-  background: rgba(138, 43, 226, 0.2);
-  padding: 4px 8px;
-  border-radius: 6px;
-  color: #d8b4fe;
-}
-
-.stale-overlay {
-  opacity: 0.45;
-  filter: grayscale(0.6);
-  pointer-events: none;
-}
-
-/* --------------------------------------------------------------------------
-   Conversational State Section
-   -------------------------------------------------------------------------- */
-.conv-state-grid {
-  display: flex;
-  flex-direction: column;
+/* Big Stats Row (Memory) */
+.telemetry-stat-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
 }
 
-.conv-state-chip {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 9px;
-  padding: 9px 12px;
-  transition: border-color 0.2s;
-}
-
-.conv-state-chip:hover {
-  border-color: rgba(139, 92, 246, 0.25);
-}
-
-.conv-chip-icon {
-  font-size: 1.1rem;
-  flex-shrink: 0;
-  width: 22px;
-  text-align: center;
-}
-
-.conv-chip-body {
+.memory-big-stat {
+  background: rgba(168, 85, 247, 0.06);
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  border-radius: 8px;
+  padding: 6px 8px;
   display: flex;
   flex-direction: column;
-  gap: 1px;
-  flex: 1;
+  align-items: center;
+  text-align: center;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
-.chip-val--mood {
-  color: #a78bfa;
+.big-stat-number {
+  font-family: var(--lucia-font-mono);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #c084fc;
 }
 
-.chip-val--mono {
-  font-family: monospace;
-  color: #93c5fd;
+.big-stat-label {
+  font-size: 0.68rem;
+  color: var(--lucia-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-top: 2px;
+}
+
+/* Badges */
+.memory-type-badge {
+  font-size: 0.7rem;
+  background: rgba(168, 85, 247, 0.15);
+  padding: 3px 8px;
+  border-radius: 6px;
+  color: #d8b4fe;
+  border: 1px solid rgba(168, 85, 247, 0.3);
+}
+
+.telemetry-badge {
+  font-family: var(--lucia-font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.5px;
+}
+
+.badge-stable {
+  background: rgba(16, 185, 129, 0.12);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.hardware-tier-badge {
+  font-family: var(--lucia-font-mono);
+  font-size: 0.7rem;
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+/* Footer */
+.diagnostics-footer {
+  height: 54px;
+  padding: 0 24px;
+  border-top: 1px solid var(--lucia-border-subtle);
+  background: rgba(14, 13, 28, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.diagnostics-runtime-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  color: var(--lucia-text-muted);
+}
+
+.diagnostics-runtime-info code {
+  font-family: var(--lucia-font-mono);
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.1);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.runtime-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.runtime-dot.live {
+  background: #10b981;
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.6);
+}
+
+.runtime-dot.stale {
+  background: #f59e0b;
+  box-shadow: 0 0 6px rgba(245, 158, 11, 0.6);
+}
+
+.diagnostics-status-label {
+  font-family: var(--lucia-font-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  transition: color 0.2s ease;
+}
+
+.diagnostics-status-label.live {
+  color: #34d399;
+}
+
+.diagnostics-status-label.stale {
+  color: #f59e0b;
+}
+
+.diagnostics-sep {
+  color: var(--lucia-border-light);
+  font-size: 0.7rem;
+}
+
+/* Stale Disconnected Overlay */
+.stale-overlay {
+  opacity: 0.65;
+  filter: grayscale(0.4);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .diagnostics-grid {
+    grid-template-columns: 1fr;
+  }
+  .telemetry-subgrid.four-col,
+  .telemetry-subgrid.five-col {
+    grid-template-columns: 1fr 1fr;
+  }
 }

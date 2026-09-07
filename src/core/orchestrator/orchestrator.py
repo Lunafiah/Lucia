@@ -141,6 +141,15 @@ class Orchestrator:
         self._llm_backend.shutdown()
         logger.info("Orchestrator: shut down.")
 
+    def reset_lifecycle(self) -> None:
+        """
+        Reset dialogue state, homeostatic engine, and emotion core to resting baseline.
+        """
+        self._degraded = False
+        self._history.clear()
+        self._homeostatic_engine.reset()
+        self._emotion_core.reset_to_resting()
+
     def is_healthy(self) -> bool:
         """Return False when in Degraded_State or after shutdown()."""
         return not self._degraded and not getattr(self, "_shutdown", False) and self._llm_backend.is_ready()
@@ -401,6 +410,13 @@ class MemoryAugmentedOrchestrator(Orchestrator):
         )
 
         return safe_response
+
+    def reset_lifecycle(self) -> None:
+        """
+        Extend Orchestrator reset by clearing affective memory traces and SDM state.
+        """
+        super().reset_lifecycle()
+        self._affective_memory.clear()
 
     def shutdown(self) -> None:
         """

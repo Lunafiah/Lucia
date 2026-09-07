@@ -357,73 +357,56 @@ textarea {
   transition: opacity var(--lucia-trans-normal);
 }
 
-.diagnostics-backdrop.open {
-  opacity: 1;
-  pointer-events: auto;
+.diagnostics-modal {
+  z-index: 1000;
 }
 
-.debug-pane.diagnostics-drawer {
-  position: fixed;
+.diagnostics-modal.open,
+.diagnostics-modal.active,
+.journal-modal.open,
+.journal-modal.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.diagnostics-backdrop-layer {
+  position: absolute;
   top: 0;
   left: 0;
+  right: 0;
   bottom: 0;
-  width: 330px;
-  max-width: 85vw;
-  z-index: 999;
-  background: var(--lucia-surface-glass-modal);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border-right: 1px solid var(--lucia-border-highlight);
-  box-shadow: var(--lucia-shadow-lg);
-  transform: translateX(-100%);
-  transition: transform var(--lucia-trans-normal);
+  z-index: 1;
+}
+
+.diagnostics-card {
+  position: relative;
+  z-index: 2;
+  max-width: 940px;
+  width: 92vw;
+  height: 86vh;
+  max-height: 840px;
+  padding: 0;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  background: var(--lucia-surface-glass-modal);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid var(--lucia-border-highlight);
+  border-radius: var(--lucia-radius-lg);
+  box-shadow: var(--lucia-shadow-lg);
+  animation: modalPopIn 260ms var(--lucia-ease-out);
 }
 
-.debug-pane.diagnostics-drawer.open {
-  transform: translateX(0);
-}
-
-.debug-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--lucia-border-subtle);
-  background: rgba(0, 0, 0, 0.2);
-}
-
-.debug-header-title {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--lucia-text-primary);
-  font-size: var(--lucia-text-sm);
-  font-weight: 600;
-}
-
-.debug-header-actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.diagnostics-close-btn {
-  background: none;
-  border: none;
-  color: var(--lucia-text-muted);
-  font-size: 1.4rem;
-  line-height: 1;
-  cursor: pointer;
-  padding: 0 4px;
-  border-radius: var(--lucia-radius-sm);
-  transition: color var(--lucia-trans-fast);
-}
-
-.diagnostics-close-btn:hover {
-  color: #ffffff;
+@keyframes modalPopIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 /* --------------------------------------------------------------------------
@@ -522,4 +505,448 @@ body.mascot-mode .diagnostics-backdrop,
 body.mascot-mode .debug-pane {
   display: none !important;
 }
+
+/* --------------------------------------------------------------------------
+   Phase 7.7: Genesis Awakening Modal
+   -------------------------------------------------------------------------- */
+.genesis-modal {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 35%, rgba(26, 22, 58, 0.94) 0%, rgba(8, 9, 18, 0.98) 100%);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9995;
+  opacity: 0;
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.genesis-modal.active {
+  display: flex !important;
+  opacity: 1;
+}
+
+.genesis-modal.fade-out {
+  opacity: 0;
+  transition: opacity 0.4s ease-out;
+  pointer-events: none;
+}
+
+.genesis-backdrop-ambient {
+  position: absolute;
+  width: 520px;
+  height: 520px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.22) 0%, rgba(99, 102, 241, 0.08) 50%, transparent 70%);
+  filter: blur(45px);
+  pointer-events: none;
+  animation: genesisAmbientPulse 8s ease-in-out infinite alternate;
+}
+
+@keyframes genesisAmbientPulse {
+  0% { transform: scale(0.92) translate(-15px, -15px); opacity: 0.6; }
+  100% { transform: scale(1.15) translate(15px, 15px); opacity: 1; }
+}
+
+.genesis-card {
+  position: relative;
+  width: 90%;
+  max-width: 460px;
+  background: linear-gradient(180deg, rgba(28, 29, 56, 0.88) 0%, rgba(15, 17, 35, 0.96) 100%);
+  border: 1px solid rgba(167, 139, 250, 0.28);
+  border-radius: 22px;
+  padding: 38px 34px 30px 34px;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.75), 0 0 45px -10px rgba(139, 92, 246, 0.25);
+  text-align: center;
+  transform: translateY(12px) scale(0.98);
+  animation: genesisCardEntrance 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes genesisCardEntrance {
+  to {
+    transform: translateY(0) scale(1);
+  }
+}
+
+.genesis-star-icon {
+  font-size: 26px;
+  color: #c4b5fd;
+  text-shadow: 0 0 16px rgba(167, 139, 250, 0.9), 0 0 30px rgba(139, 92, 246, 0.5);
+  margin-bottom: 8px;
+  animation: genesisStarTwinkle 4s ease-in-out infinite;
+}
+
+@keyframes genesisStarTwinkle {
+  0%, 100% { transform: scale(1); opacity: 0.85; filter: brightness(1); }
+  50% { transform: scale(1.12); opacity: 1; filter: brightness(1.3); }
+}
+
+.genesis-kicker {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #a78bfa;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.genesis-title {
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 12px 0;
+  background: linear-gradient(135deg, #ffffff 0%, #ede9fe 50%, #c4b5fd 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.genesis-intro-text {
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: rgba(226, 232, 240, 0.82);
+  margin: 0 0 24px 0;
+  min-height: 44px;
+}
+
+.genesis-content-body {
+  text-align: left;
+}
+
+.genesis-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.genesis-field-label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #cbd5e1;
+  letter-spacing: 0.01em;
+}
+
+.genesis-input-wrapper {
+  position: relative;
+}
+
+.genesis-text-input {
+  width: 100%;
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #f8fafc;
+  padding: 11px 14px;
+  border-radius: 10px;
+  font-size: 0.92rem;
+  outline: none;
+  box-sizing: border-box;
+  transition: all 0.25s ease;
+  font-family: inherit;
+}
+
+.genesis-text-input:focus {
+  border-color: rgba(167, 139, 250, 0.65);
+  background: rgba(15, 23, 42, 0.85);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.18);
+}
+
+.genesis-field-hint {
+  font-size: 0.72rem;
+  color: rgba(148, 163, 184, 0.65);
+  margin-top: 2px;
+}
+
+.genesis-awaken-btn {
+  position: relative;
+  width: 100%;
+  padding: 13px 20px;
+  background: linear-gradient(135deg, #7c3aed 0%, #6366f1 100%);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 8px 24px -4px rgba(124, 58, 237, 0.45);
+}
+
+.genesis-awaken-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px -4px rgba(124, 58, 237, 0.65);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.genesis-awaken-btn:active {
+  transform: translateY(0);
+}
+
+.genesis-awaken-btn.awakening {
+  opacity: 0.75;
+  cursor: wait;
+}
+
+.genesis-footnote {
+  font-size: 0.73rem;
+  color: rgba(148, 163, 184, 0.6);
+  margin-top: 18px;
+  line-height: 1.45;
+}
+
+/* -------------------------------------------------------------------------
+   Phase 7.7 Step 3: End-of-Life Solemn Confirmation Modal
+   ------------------------------------------------------------------------- */
+.end-life-modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 10005 !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.end-life-modal.active {
+  display: flex !important;
+  opacity: 1 !important;
+  pointer-events: all !important;
+  z-index: 10005 !important;
+}
+
+.end-life-backdrop-solemn {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 45%, rgba(45, 10, 15, 0.72) 0%, rgba(10, 6, 10, 0.95) 75%);
+  animation: solemnPulse 6s ease-in-out infinite alternate;
+}
+
+@keyframes solemnPulse {
+  0% {
+    opacity: 0.88;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.end-life-card {
+  position: relative;
+  width: 90%;
+  max-width: 480px;
+  background: linear-gradient(160deg, rgba(28, 16, 22, 0.95) 0%, rgba(14, 10, 15, 0.98) 100%);
+  border: 1px solid rgba(239, 68, 68, 0.28);
+  border-radius: 20px;
+  padding: 32px 30px 26px 30px;
+  text-align: center;
+  color: #f8fafc;
+  box-shadow:
+    0 24px 64px rgba(0, 0, 0, 0.85),
+    0 0 45px rgba(239, 68, 68, 0.12),
+    inset 0 1px 1px rgba(255, 255, 255, 0.08);
+  animation: solemnEntrance 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  z-index: 1;
+}
+
+@keyframes solemnEntrance {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.end-life-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.end-life-icon-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.2);
+  margin-bottom: 2px;
+}
+
+.end-life-icon {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.end-life-kicker {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #f87171;
+  text-transform: uppercase;
+}
+
+.end-life-title {
+  font-size: 1.45rem;
+  font-weight: 600;
+  margin: 0;
+  color: #fef2f2;
+  letter-spacing: -0.01em;
+}
+
+.end-life-warning-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.32);
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: #fca5a5;
+  margin-top: 2px;
+}
+
+.end-life-body {
+  text-align: left;
+  margin-bottom: 22px;
+}
+
+.end-life-lead {
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: rgba(241, 245, 249, 0.9);
+  margin: 0 0 14px 0;
+  text-align: center;
+}
+
+.end-life-consequences {
+  background: rgba(10, 6, 10, 0.55);
+  border: 1px solid rgba(239, 68, 68, 0.18);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.consequence-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: rgba(226, 232, 240, 0.85);
+}
+
+.consequence-bullet {
+  color: #ef4444;
+  font-weight: 700;
+  font-size: 0.85rem;
+  line-height: 1.3;
+  flex-shrink: 0;
+}
+
+.end-life-confirm-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.end-life-confirm-label {
+  font-size: 0.8rem;
+  color: #cbd5e1;
+}
+
+.confirm-phrase-highlight {
+  color: #ef4444;
+  font-family: var(--lucia-font-mono, monospace);
+  letter-spacing: 0.08em;
+}
+
+.end-life-input {
+  width: 100%;
+  background: rgba(15, 10, 15, 0.75);
+  border: 1px solid rgba(239, 68, 68, 0.28);
+  color: #fef2f2;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-family: var(--lucia-font-mono, monospace);
+  letter-spacing: 0.05em;
+  outline: none;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.end-life-input:focus {
+  border-color: rgba(239, 68, 68, 0.65);
+  background: rgba(20, 10, 15, 0.9);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+}
+
+.end-life-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.end-life-cancel-btn {
+  flex: 1;
+  padding: 10px 16px;
+  font-size: 0.88rem;
+}
+
+.end-life-destroy-btn {
+  flex: 1;
+  padding: 10px 16px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+  color: #ffffff;
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(220, 38, 38, 0.35);
+  transition: all 0.2s ease;
+}
+
+.end-life-destroy-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.25);
+  color: rgba(252, 165, 165, 0.6);
+  box-shadow: none;
+}
+
+.end-life-destroy-btn:not(:disabled):hover {
+  background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.55);
+}
+
+.end-life-footer-note {
+  font-size: 0.7rem;
+  color: rgba(148, 163, 184, 0.55);
+  margin-top: 14px;
+}
+
+
 

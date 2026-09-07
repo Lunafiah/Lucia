@@ -204,6 +204,15 @@ class SDMCore:
             raise KeyError(f"trace_id {trace_id} not found in SDM store")
         self._trace_addresses.pop(trace_id)
 
+    def clear(self) -> None:
+        """
+        Reset memory accumulators, trace addresses, and trace counter to initial empty state.
+        """
+        self._trace_addresses.clear()
+        self._accumulator.fill(0.0)
+        self._act_counts.fill(0)
+        self._next_id = 0
+
     def memory_usage_bytes(self) -> int:
         """Return total memory in bytes used by internal arrays."""
         return (
@@ -211,3 +220,4 @@ class SDMCore:
             + self._accumulator.nbytes
             + self._act_counts.nbytes
         )
+

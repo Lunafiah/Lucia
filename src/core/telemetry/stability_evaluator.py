@@ -85,6 +85,20 @@ class StabilityEvaluator:
         with self._lock:
             self._recovery_count += 1
 
+    def reset(self) -> None:
+        """
+        Reset rolling stability metrics and recovery counters for a new lifecycle.
+        """
+        with self._lock:
+            self._start_time = time.monotonic()
+            self._tick_times.clear()
+            self._velocities.clear()
+            self._surprises.clear()
+            self._last_tick_time = None
+            self._last_hidden_norm = None
+            self._recovery_count = 0
+            self._last_sdm_count = 0
+
     def get_snapshot(self) -> StabilitySnapshot:
         """Compute and return the current stability snapshot."""
         now = time.monotonic()

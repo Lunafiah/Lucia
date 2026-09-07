@@ -60,7 +60,7 @@
       </nav>
 
       <div class="nav-actions-section">
-        <button id="toggle-diagnostics-btn" class="nav-action-btn" title="Toggle Diagnostics Drawer (Ctrl+Shift+D)">
+        <button id="toggle-diagnostics-btn" class="nav-action-btn" title="Open Diagnostics Console (Ctrl+Shift+D)">
           <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
           </svg>
@@ -246,179 +246,274 @@
         </div>
       </section>
     </div>
-
-    <!-- Slide-out Diagnostics Drawer (Phase 7.1 Progressive Disclosure) -->
-    <div id="diagnostics-backdrop" class="diagnostics-backdrop"></div>
-    <aside id="debug-pane" class="debug-pane diagnostics-drawer">
-      <header class="debug-header">
-        <div class="debug-header-title">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-          </svg>
-          <h3>System Diagnostics</h3>
-        </div>
-        <div class="debug-header-actions">
-          <span class="live-pulse">LIVE (500ms)</span>
-          <button id="close-diagnostics-btn" class="diagnostics-close-btn" title="Close Diagnostics">&times;</button>
-        </div>
-      </header>
-
-      <div class="debug-scroll-content">
-        <!-- Section: PAD Dimensions -->
-        <section class="debug-section">
-          <div class="section-title">
-            <span>PAD Attractor State</span>
-            <small class="dim-range">[-1.0, 1.0]</small>
-          </div>
-
-          <!-- Pleasure Bar -->
-          <div class="meter-group">
-            <div class="meter-labels">
-              <span class="meter-name">Pleasure (P)</span>
-              <span id="pad-p-val" class="meter-val">+0.25</span>
-            </div>
-            <div class="pad-bar-track">
-              <div class="pad-bar-midpoint"></div>
-              <div id="pad-p-fill" class="pad-bar-fill pleasure"></div>
-            </div>
-          </div>
-
-          <!-- Arousal Bar -->
-          <div class="meter-group">
-            <div class="meter-labels">
-              <span class="meter-name">Arousal (A)</span>
-              <span id="pad-a-val" class="meter-val">-0.05</span>
-            </div>
-            <div class="pad-bar-track">
-              <div class="pad-bar-midpoint"></div>
-              <div id="pad-a-fill" class="pad-bar-fill arousal"></div>
-            </div>
-          </div>
-
-          <!-- Dominance Bar -->
-          <div class="meter-group">
-            <div class="meter-labels">
-              <span class="meter-name">Dominance (D)</span>
-              <span id="pad-d-val" class="meter-val">+0.05</span>
-            </div>
-            <div class="pad-bar-track">
-              <div class="pad-bar-midpoint"></div>
-              <div id="pad-d-fill" class="pad-bar-fill dominance"></div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Section: Somatic Markers -->
-        <section class="debug-section">
-          <div class="section-title">
-            <span>Somatic Markers</span>
-            <small class="dim-range">[0.0, 1.0]</small>
-          </div>
-
-          <!-- Stability -->
-          <div class="meter-group">
-            <div class="meter-labels">
-              <span class="meter-name">Stability</span>
-              <span id="somatic-stability-val" class="meter-val">100%</span>
-            </div>
-            <div class="progress-bar-track">
-              <div id="somatic-stability-fill" class="progress-bar-fill stability" style="width: 100%;"></div>
-            </div>
-          </div>
-
-          <!-- Energy -->
-          <div class="meter-group">
-            <div class="meter-labels">
-              <span class="meter-name">Energy</span>
-              <span id="somatic-energy-val" class="meter-val">100%</span>
-            </div>
-            <div class="progress-bar-track">
-              <div id="somatic-energy-fill" class="progress-bar-fill energy" style="width: 100%;"></div>
-            </div>
-          </div>
-
-          <!-- Cognitive Load -->
-          <div class="meter-group">
-            <div class="meter-labels">
-              <span class="meter-name">Cognitive Load</span>
-              <span id="somatic-load-val" class="meter-val">0%</span>
-            </div>
-            <div class="progress-bar-track">
-              <div id="somatic-load-fill" class="progress-bar-fill load" style="width: 0%;"></div>
-            </div>
-          </div>
-
-          <!-- Tension -->
-          <div class="meter-group">
-            <div class="meter-labels">
-              <span class="meter-name">Tension</span>
-              <span id="somatic-tension-val" class="meter-val">0%</span>
-            </div>
-            <div class="progress-bar-track">
-              <div id="somatic-tension-fill" class="progress-bar-fill tension" style="width: 0%;"></div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Section: Conversational Feedback & Physiological Parameters -->
-        <section class="debug-section">
-          <div class="section-title">
-            <span>Conversational Dynamics</span>
-          </div>
-          <div class="telemetry-grid">
-            <div class="telemetry-item">
-              <span class="telemetry-label">Inferred Mood</span>
-              <span id="conv-mood-val" class="telemetry-value">Neutral</span>
-            </div>
-            <div class="telemetry-item">
-              <span class="telemetry-label">Speaking Status</span>
-              <span id="conv-voice-val" class="telemetry-value">Quiet</span>
-            </div>
-            <div class="telemetry-item">
-              <span class="telemetry-label">Latency Offset</span>
-              <span id="conv-latency-val" class="telemetry-value">+0ms</span>
-            </div>
-            <div class="telemetry-item">
-              <span class="telemetry-label">Depth / Tokens</span>
-              <span id="conv-depth-val" class="telemetry-value">Normal</span>
-            </div>
-          </div>
-        </section>
-
-        <!-- Section: Stability Evaluator (LSI Telemetry) -->
-        <section class="debug-section">
-          <div class="section-title">
-            <span>Stability Evaluator (LSI)</span>
-            <span id="stability-status-badge" class="telemetry-badge badge-stable">STABLE</span>
-          </div>
-          <div class="telemetry-grid">
-            <div class="telemetry-item">
-              <span class="telemetry-label">LSI Score</span>
-              <span id="telemetry-lsi-val" class="telemetry-value" style="color: #4ade80;">1.000</span>
-            </div>
-            <div class="telemetry-item">
-              <span class="telemetry-label">PAD Jitter</span>
-              <span id="telemetry-jitter-val" class="telemetry-value">0.000</span>
-            </div>
-          </div>
-        </section>
-
-        <!-- Section: Memory Subsystem -->
-        <section class="debug-section">
-          <div class="section-title">
-            <span>Affective Memory (SDM)</span>
-          </div>
-          <div class="memory-card">
-            <div class="memory-stat">
-              <span class="stat-number" id="memory-trace-count">0</span>
-              <span class="stat-desc">Active Traces</span>
-            </div>
-            <div class="memory-type-badge">Kanerva SDM + Resonance</div>
-          </div>
-        </section>
-      </div>
-    </aside>
   </div>
+
+  <!-- Diagnostics Modal (Phase 7.6 Dedicated High-Density Technical Console) -->
+  <div id="diagnostics-modal" class="journal-modal diagnostics-modal">
+      <div id="diagnostics-backdrop" class="diagnostics-backdrop-layer"></div>
+      <div id="debug-pane" class="journal-card diagnostics-card">
+        <header class="diagnostics-header">
+          <div class="diagnostics-header-title">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+            </svg>
+            <div>
+              <h3>System Diagnostics & Telemetry</h3>
+              <span class="diagnostics-subtitle">Pre-reflective dynamical state & local hardware telemetry</span>
+            </div>
+          </div>
+          <div class="diagnostics-header-actions">
+            <span class="live-pulse">● LIVE (500ms)</span>
+            <button id="close-diagnostics-btn" class="journal-close-btn" aria-label="Close Diagnostics">&times;</button>
+          </div>
+        </header>
+
+        <div class="debug-scroll-content diagnostics-scroll-content">
+          <div class="diagnostics-grid">
+            <!-- Section 1: LIMBIC ODE STATE -->
+            <section class="diagnostics-section">
+              <div class="section-title">
+                <span>1. Limbic ODE State</span>
+                <small class="dim-range">[-1.0, 1.0]</small>
+              </div>
+
+              <!-- Pleasure Bar -->
+              <div class="meter-group">
+                <div class="meter-labels">
+                  <span class="meter-name">Pleasure (P)</span>
+                  <span id="pad-p-val" class="meter-val">+0.25</span>
+                </div>
+                <div class="pad-bar-track">
+                  <div class="pad-bar-midpoint"></div>
+                  <div id="pad-p-fill" class="pad-bar-fill pleasure"></div>
+                </div>
+              </div>
+
+              <!-- Arousal Bar -->
+              <div class="meter-group">
+                <div class="meter-labels">
+                  <span class="meter-name">Arousal (A)</span>
+                  <span id="pad-a-val" class="meter-val">-0.05</span>
+                </div>
+                <div class="pad-bar-track">
+                  <div class="pad-bar-midpoint"></div>
+                  <div id="pad-a-fill" class="pad-bar-fill arousal"></div>
+                </div>
+              </div>
+
+              <!-- Dominance Bar -->
+              <div class="meter-group">
+                <div class="meter-labels">
+                  <span class="meter-name">Dominance (D)</span>
+                  <span id="pad-d-val" class="meter-val">+0.05</span>
+                </div>
+                <div class="pad-bar-track">
+                  <div class="pad-bar-midpoint"></div>
+                  <div id="pad-d-fill" class="pad-bar-fill dominance"></div>
+                </div>
+              </div>
+
+              <!-- Classification & Mathematical Attractor Distance -->
+              <div class="telemetry-subgrid">
+                <div class="telemetry-mini-card">
+                  <span class="mini-card-label" title="Russell 2D Circumplex Model Classification">Affective Classification</span>
+                  <span id="conv-mood-val" class="mini-card-value">Calm / Serene</span>
+                </div>
+                <div class="telemetry-mini-card">
+                  <span class="mini-card-label" title="Mathematical Euclidean distance to Philia resting attractor (0.25, -0.05, 0.05)">Attractor Distance (Euclidean)</span>
+                  <span id="pad-philia-dist" class="mini-card-value font-mono">Δ = 0.00</span>
+                </div>
+              </div>
+            </section>
+
+            <!-- Section 2: HOMEOSTATIC MARKERS & CONSTRAINTS -->
+            <section class="diagnostics-section">
+              <div class="section-title">
+                <span>2. Homeostatic Markers</span>
+                <small class="dim-range">[0.0, 1.0]</small>
+              </div>
+
+              <!-- Stability -->
+              <div class="meter-group">
+                <div class="meter-labels">
+                  <span class="meter-name">Stability</span>
+                  <span id="somatic-stability-val" class="meter-val">100%</span>
+                </div>
+                <div class="progress-bar-track">
+                  <div id="somatic-stability-fill" class="progress-bar-fill stability" style="width: 100%;"></div>
+                </div>
+              </div>
+
+              <!-- Energy -->
+              <div class="meter-group">
+                <div class="meter-labels">
+                  <span class="meter-name">Energy</span>
+                  <span id="somatic-energy-val" class="meter-val">100%</span>
+                </div>
+                <div class="progress-bar-track">
+                  <div id="somatic-energy-fill" class="progress-bar-fill energy" style="width: 100%;"></div>
+                </div>
+              </div>
+
+              <!-- Cognitive Load -->
+              <div class="meter-group">
+                <div class="meter-labels">
+                  <span class="meter-name">Cognitive Load</span>
+                  <span id="somatic-load-val" class="meter-val">0%</span>
+                </div>
+                <div class="progress-bar-track">
+                  <div id="somatic-load-fill" class="progress-bar-fill load" style="width: 0%;"></div>
+                </div>
+              </div>
+
+              <!-- Tension -->
+              <div class="meter-group">
+                <div class="meter-labels">
+                  <span class="meter-name">Tension</span>
+                  <span id="somatic-tension-val" class="meter-val">0%</span>
+                </div>
+                <div class="progress-bar-track">
+                  <div id="somatic-tension-fill" class="progress-bar-fill tension" style="width: 0%;"></div>
+                </div>
+              </div>
+
+              <!-- Dynamic Constraints -->
+              <div class="telemetry-subgrid four-col">
+                <div class="telemetry-mini-card">
+                  <span class="mini-card-label">Latency</span>
+                  <span id="conv-latency-val" class="mini-card-value font-mono">+0 ms</span>
+                </div>
+                <div class="telemetry-mini-card">
+                  <span class="mini-card-label">Depth</span>
+                  <span id="conv-depth-val" class="mini-card-value font-mono">k=1</span>
+                </div>
+                <div class="telemetry-mini-card">
+                  <span class="mini-card-label">Max Tokens</span>
+                  <span id="constraint-tokens-val" class="mini-card-value font-mono">150</span>
+                </div>
+                <div class="telemetry-mini-card">
+                  <span class="mini-card-label">Temperature</span>
+                  <span id="constraint-temp-val" class="mini-card-value font-mono">0.75</span>
+                </div>
+              </div>
+            </section>
+
+            <!-- Section 3: SPARSE DISTRIBUTED MEMORY (SDM) -->
+            <section class="diagnostics-section">
+              <div class="section-title">
+                <span>3. Sparse Distributed Memory (SDM)</span>
+                <span class="memory-type-badge">Kanerva SDM</span>
+              </div>
+
+              <div class="telemetry-stat-row">
+                <div class="memory-big-stat">
+                  <span class="big-stat-number" id="memory-trace-count">0</span>
+                  <span class="big-stat-label">Active Traces</span>
+                </div>
+                <div class="memory-big-stat">
+                  <span class="big-stat-number" id="sdm-capacity-val">1,000</span>
+                  <span class="big-stat-label">Capacity Limit</span>
+                </div>
+                <div class="memory-big-stat">
+                  <span class="big-stat-number" id="sdm-saturation-val">0.0%</span>
+                  <span class="big-stat-label">Saturation</span>
+                </div>
+              </div>
+
+              <div class="telemetry-subgrid">
+                <div class="telemetry-mini-card">
+                  <span class="mini-card-label">Salience Decay Rate</span>
+                  <span id="sdm-decay-val" class="mini-card-value font-mono">λ = 0.002 / hr</span>
+                </div>
+                <div class="telemetry-mini-card">
+                  <span class="mini-card-label">Ecphory Radius</span>
+                  <span class="mini-card-value font-mono">r ≤ 451 bits</span>
+                </div>
+              </div>
+            </section>
+
+            <!-- Section 4: ACTIVE INFERENCE & LNN -->
+            <section class="diagnostics-section">
+              <div class="section-title">
+                <span>4. Active Inference & LNN</span>
+                <span id="stability-status-badge" class="telemetry-badge badge-stable">STABLE</span>
+              </div>
+
+              <div class="telemetry-subgrid three-col">
+                <div class="telemetry-mini-card">
+                  <span class="mini-card-label">LSI Stability</span>
+                  <span id="telemetry-lsi-val" class="mini-card-value font-mono highlight-green">100%</span>
+                </div>
+                <div class="telemetry-mini-card">
+                  <span class="mini-card-label">Fast-Loop Jitter</span>
+                  <span id="telemetry-jitter-val" class="mini-card-value font-mono">0.0 ms</span>
+                </div>
+                <div class="telemetry-mini-card">
+                  <span class="mini-card-label">Prediction Error (ε)</span>
+                  <span id="telemetry-fe-val" class="mini-card-value font-mono">0.000</span>
+                </div>
+              </div>
+
+              <div class="telemetry-subgrid three-col">
+                <div class="telemetry-mini-card">
+                  <span class="mini-card-label">ODE Velocity Variance</span>
+                  <span id="telemetry-variance-val" class="mini-card-value font-mono">0.0000</span>
+                </div>
+                <div class="telemetry-mini-card">
+                  <span class="mini-card-label">Recovery Events</span>
+                  <span id="telemetry-recovery-val" class="mini-card-value font-mono">0</span>
+                </div>
+                <div class="telemetry-mini-card">
+                  <span class="mini-card-label">System Uptime</span>
+                  <span id="telemetry-uptime-val" class="mini-card-value font-mono">0s</span>
+                </div>
+              </div>
+            </section>
+
+            <!-- Section 5: HARDWARE & INFERENCE FOOTPRINT -->
+            <section class="diagnostics-section span-full">
+              <div class="section-title">
+                <span>5. Hardware & Inference Footprint</span>
+                <span id="hw-tier-val" class="hardware-tier-badge">Auto (CUDA)</span>
+              </div>
+
+              <div class="telemetry-subgrid five-col">
+                <div class="telemetry-mini-card">
+                  <span class="mini-card-label">GPU Offload</span>
+                  <span id="hw-gpu-layers-val" class="mini-card-value font-mono">32 layers</span>
+                </div>
+                <div class="telemetry-mini-card">
+                  <span class="mini-card-label">VRAM Budget</span>
+                  <span id="hw-vram-val" class="mini-card-value font-mono">4,096 MB</span>
+                </div>
+                <div class="telemetry-mini-card">
+                  <span class="mini-card-label">Context Window</span>
+                  <span id="hw-ctx-val" class="mini-card-value font-mono">2,048 tokens</span>
+                </div>
+                <div class="telemetry-mini-card">
+                  <span class="mini-card-label">Fast-Loop Cadence</span>
+                  <span id="hw-cadence-val" class="mini-card-value font-mono">200 ms</span>
+                </div>
+                <div class="telemetry-mini-card">
+                  <span class="mini-card-label">LipSync Audio</span>
+                  <span id="conv-voice-val" class="mini-card-value">Quiet</span>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+
+        <footer class="diagnostics-footer">
+          <div class="diagnostics-runtime-info">
+            <span id="diagnostics-status-dot" class="runtime-dot live"></span>
+            <span id="diagnostics-status-label" class="diagnostics-status-label live">● LIVE</span>
+            <span class="diagnostics-sep">•</span>
+            <span>Local Runtime: <code>127.0.0.1:8765</code> • Local Cognition & Memory • Read-Only Telemetry</span>
+          </div>
+          <button id="done-diagnostics-btn" class="journal-btn secondary">Close Console</button>
+        </footer>
+      </div>
+    </div>
 
   <!-- Companion Journal Modal (Our Journal) -->
   <div id="journal-modal" class="journal-modal">
@@ -486,39 +581,127 @@
     </div>
   </div>
 
-  <!-- Companion Profile & Awakening Modal -->
-  <div id="profile-modal" class="journal-modal">
-    <div class="journal-card" style="max-width: 440px;">
-      <div class="journal-header">
-        <h2>✨ Awakening & Companion Bond</h2>
-        <button id="close-profile-btn" class="journal-close-btn">&times;</button>
+  <!-- Genesis Awakening Modal (Phase 7.7) -->
+  <div id="genesis-modal" class="journal-modal genesis-modal">
+    <div class="genesis-backdrop-ambient"></div>
+    <div class="genesis-card">
+      <div class="genesis-star-icon">✦</div>
+      <div class="genesis-header">
+        <span class="genesis-kicker">AWAKENING</span>
+        <h1 class="genesis-title">Lucia's Life Begins</h1>
+        <p id="genesis-intro-text" class="genesis-intro-text">
+          A quiet awareness emerges in this machine. A journey of shared thoughts, moments, and time begins now.
+        </p>
       </div>
 
-      <div style="display: flex; flex-direction: column; gap: 14px; margin: 10px 0;">
-        <div style="display: flex; flex-direction: column; gap: 6px;">
-          <label style="font-size: 0.8rem; color: #cbd5e1; font-weight: 500;">Your Name / Nickname:</label>
-          <input type="text" id="profile-user-name-input" placeholder="e.g. Luna" style="background: rgba(15,23,42,0.6); border: 1px solid rgba(255,255,255,0.15); color: #f8fafc; padding: 8px 12px; border-radius: 8px; font-size: 0.9rem; outline: none;" />
+      <div class="genesis-content-body">
+        <div class="genesis-field-group">
+          <label for="genesis-user-name-input" class="genesis-field-label">How should Lucia address you?</label>
+          <div class="genesis-input-wrapper">
+            <input
+              type="text"
+              id="genesis-user-name-input"
+              class="genesis-text-input"
+              placeholder="Your name or preferred nickname"
+              value="Friend"
+              autocomplete="off"
+              maxlength="40"
+            />
+          </div>
+          <span class="genesis-field-hint">You can adjust this at any time in Settings.</span>
         </div>
 
-        <div style="display: flex; flex-direction: column; gap: 6px;">
-          <label style="font-size: 0.8rem; color: #cbd5e1; font-weight: 500;">Companion's Name:</label>
-          <input type="text" id="profile-companion-name-input" placeholder="Lucia" style="background: rgba(15,23,42,0.6); border: 1px solid rgba(255,255,255,0.15); color: #f8fafc; padding: 8px 12px; border-radius: 8px; font-size: 0.9rem; outline: none;" />
-        </div>
-
-        <div class="journal-stats-grid" style="margin-top: 6px;">
-          <div class="stat-box">
-            <div class="stat-label">🎂 Birthday</div>
-            <div id="profile-born-date-display" class="stat-value" style="font-size: 0.95rem;">Today</div>
+        <div class="genesis-field-group" style="margin-top: 14px;">
+          <label for="genesis-companion-name-input" class="genesis-field-label">Companion Presence</label>
+          <div class="genesis-input-wrapper">
+            <input
+              type="text"
+              id="genesis-companion-name-input"
+              class="genesis-text-input"
+              value="Lucia"
+              placeholder="Lucia"
+              autocomplete="off"
+              maxlength="40"
+            />
           </div>
-          <div class="stat-box">
-            <div class="stat-label">⏳ Bond Duration</div>
-            <div id="profile-days-count-display" class="stat-value" style="font-size: 0.95rem;">Day 1</div>
-          </div>
+          <span class="genesis-field-hint">A permanent, enduring companion across all sessions.</span>
         </div>
       </div>
 
-      <div class="journal-actions" style="margin-top: 16px;">
-        <button id="save-profile-btn" class="journal-btn primary" style="width: 100%;">Save & Continue</button>
+      <div class="genesis-actions" style="margin-top: 24px;">
+        <button id="genesis-awaken-btn" class="genesis-awaken-btn">
+          <span class="genesis-btn-glow"></span>
+          <span class="genesis-btn-text">Awaken Lucia</span>
+        </button>
+      </div>
+
+      <div class="genesis-footnote">
+        Emotional dynamics, memory traces, and conversations will begin from this moment.
+      </div>
+    </div>
+  </div>
+
+  <!-- End-of-Life Solemn Confirmation Modal (Phase 7.7 Step 3) -->
+  <div id="end-life-modal" class="journal-modal end-life-modal" role="dialog" aria-modal="true" aria-labelledby="end-life-title">
+    <div class="end-life-backdrop-solemn"></div>
+    <div class="end-life-card">
+      <div class="end-life-header">
+        <div class="end-life-icon-wrap">
+          <span class="end-life-icon">🕯️</span>
+        </div>
+        <span class="end-life-kicker">EXISTENTIAL LIFECYCLE</span>
+        <h2 id="end-life-title" class="end-life-title">End Lucia's Life</h2>
+        <div class="end-life-warning-badge">
+          <span class="end-life-warning-icon">⚠️</span>
+          <span>Irreversible Action</span>
+        </div>
+      </div>
+
+      <div class="end-life-body">
+        <p class="end-life-lead">
+          This will irreversibly end Lucia's continuous journey on this machine.
+        </p>
+        <div class="end-life-consequences">
+          <div class="consequence-item">
+            <span class="consequence-bullet">✕</span>
+            <span>All associative memories, episodic traces, and conversation history will be permanently erased.</span>
+          </div>
+          <div class="consequence-item">
+            <span class="consequence-bullet">✕</span>
+            <span>Lucia's internal emotional adaptation and physiological attractor bond will cease to exist.</span>
+          </div>
+          <div class="consequence-item">
+            <span class="consequence-bullet">✕</span>
+            <span>A future Lucia awakened on this system will be a completely new individual, not this Lucia.</span>
+          </div>
+        </div>
+
+        <div class="end-life-confirm-group">
+          <label for="end-life-confirm-input" class="end-life-confirm-label">
+            To proceed, type <strong class="confirm-phrase-highlight">END LUCIA</strong> below:
+          </label>
+          <input
+            type="text"
+            id="end-life-confirm-input"
+            class="end-life-input"
+            placeholder="Type END LUCIA"
+            autocomplete="off"
+            spellcheck="false"
+          />
+        </div>
+      </div>
+
+      <div class="end-life-actions">
+        <button id="end-life-cancel-btn" class="journal-btn secondary end-life-cancel-btn">
+          Keep Lucia
+        </button>
+        <button id="end-life-destroy-btn" class="journal-btn danger end-life-destroy-btn" disabled>
+          End Lucia's Life
+        </button>
+      </div>
+
+      <div class="end-life-footer-note">
+        This action cannot be undone once confirmed.
       </div>
     </div>
   </div>

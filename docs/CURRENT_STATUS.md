@@ -19,7 +19,7 @@ Lucia is currently in **Phase 7 (UI Refactoring: The Personal Digital Room)**, h
 │   Phase 4: Active Inference & LNN Plasticity       [✅ COMPLETED]      │
 │   Phase 5: Embodied Multimodal Presence            [✅ COMPLETED]      │
 │   Phase 6: Refinement, Packaging & Mascot Mode     [✅ COMPLETED]      │
-│   Phase 7: UI Refactoring (Personal Room UX)       [🔄 IN PROGRESS]   │
+│   Phase 7: UI Refactoring (Personal Room UX)       [✅ COMPLETED]      │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -45,7 +45,8 @@ Lucia is currently in **Phase 7 (UI Refactoring: The Personal Digital Room)**, h
 | **Lip-Sync Engine** | `electron/renderer/avatar/lip-sync.js` | **STABLE** | 60 FPS real-time FFT formant analysis (200Hz–2500Hz) computing mouth aperture height and vowel width during vocal playback. |
 | **Stability Telemetry** | `src/core/telemetry/stability_evaluator.py` | **STABLE** | Computes Fast-Loop tick jitter, ODE velocity variance, Free Energy surprise entropy, and Composite Limbic Stability Index (LSI). Watchdog auto-recovers from numerical stalls. |
 | **Desktop Process & IPC** | `electron/main/` | **STABLE** | Native Electron lifecycle management (`ProcessManager`), global hotkey (`Ctrl+Shift+L`), System Tray, context isolation (`ContextBridge`), and model-anchored mascot window physics. |
-| **UI Design & UX System** | `electron/renderer/` | **IN PROGRESS** | Phase 7 refactoring: transitioning from 3-column technical dashboard to intimate Personal Digital Room. Tokens defined; layout and progressive disclosure navigation in active assembly. |
+| **UI Design & UX System** | `electron/renderer/` | **STABLE** | Personal Digital Room: progressive disclosure navigation, subtle qualitative status, settings, dedicated read-only diagnostics console, Genesis Awakening, and solemn End-of-Life boundary. |
+| **Existential Lifecycle** | `src/api/server.py` | **STABLE** | Atomic `POST /lifecycle/end`, profile persistence, Genesis un-onboarded state transition, and clean birth timestamp generation on awakening. |
 
 ---
 
@@ -62,6 +63,9 @@ The Python backend (`src/api/server.py`) binds exclusively to `127.0.0.1:8765` (
 | `POST` | `/voice/transcribe` | Transcribes audio bytes using local `faster-whisper` model. | Streamed / Chunked |
 | `POST` | `/voice/synthesize` | Synthesizes character speech audio from text via RVC / Edge-TTS. | $\approx 150 - 350\text{ms}$ |
 | `GET` | `/voice/models` | Discovers available RVC voice model folders in `models/voice/rvc/`. | $\le 10\text{ms}$ |
+| `GET` | `/profile` | Returns current user/companion profile and awakening status (`is_onboarded`). | $\le 10\text{ms}$ |
+| `POST` | `/profile` | Updates user/companion profile, completes Genesis, and generates canonical `born_at`. | $\le 20\text{ms}$ |
+| `POST` | `/lifecycle/end` | Atomic existential lifecycle reset: wipes memory/state, returns to Genesis-ready baseline. | $\le 20\text{ms}$ |
 
 ---
 

@@ -113,6 +113,21 @@ class CompanionJournal {
     }
   }
 
+  clearPresentation() {
+    this.cachedHistoryTurns = [];
+    this.cachedProfile = null;
+    this.cachedTraceCount = 0;
+    if (this.journalTimeline) {
+      this.journalTimeline.innerHTML = '<div class="timeline-empty-state">No journal entries yet. Shared moments with Lucia will appear here.</div>';
+    }
+    if (this.memoriesGrid) {
+      this.memoriesGrid.innerHTML = '';
+    }
+    if (this.journalLifeMeta) {
+      this.journalLifeMeta.textContent = 'Day 1 with Lucia • 0 Shared Moments • Born Today';
+    }
+  }
+
   async refreshJournalData() {
     try {
       // 1. Fetch Profile info (born date, days count, names)

@@ -1,8 +1,8 @@
 /**
  * Emotion Debug Panel Controller (panel.js)
- * High-frequency 500ms telemetry visualizer for PAD, somatic markers, constraints, and SDM memory traces.
+ * High-frequency 500ms telemetry visualizer for PAD, somatic markers, constraints, SDM memory traces, and hardware profile.
  *
- * Requirements: Phase 3 (7.1–7.8)
+ * Requirements: Phase 7.6 (Dedicated Diagnostics Console)
  */
 
 class EmotionDebugPanel {
@@ -10,6 +10,8 @@ class EmotionDebugPanel {
     this.pollInterval = null;
     this.pollRateMs = 500;
     this.debugPane = document.getElementById('debug-pane');
+    this.modal = document.getElementById('diagnostics-modal');
+    this.backdrop = document.getElementById('diagnostics-backdrop');
 
     // PAD elements
     this.pFill = document.getElementById('pad-p-fill');
@@ -18,6 +20,7 @@ class EmotionDebugPanel {
     this.pVal = document.getElementById('pad-p-val');
     this.aVal = document.getElementById('pad-a-val');
     this.dVal = document.getElementById('pad-d-val');
+    this.philiaDist = document.getElementById('pad-philia-dist');
 
     // Somatic elements
     this.stabilityFill = document.getElementById('somatic-stability-fill');
@@ -29,33 +32,59 @@ class EmotionDebugPanel {
     this.loadVal = document.getElementById('somatic-load-val');
     this.tensionVal = document.getElementById('somatic-tension-val');
 
-    // Conversational State elements
+    // Conversational State & Dynamic Constraints elements
     this.convMood = document.getElementById('conv-mood-val');
     this.convVoice = document.getElementById('conv-voice-val');
     this.convLatency = document.getElementById('conv-latency-val');
     this.convDepth = document.getElementById('conv-depth-val');
+    this.constraintTokens = document.getElementById('constraint-tokens-val');
+    this.constraintTemp = document.getElementById('constraint-temp-val');
 
     // Memory elements
     this.memoryTraceCount = document.getElementById('memory-trace-count');
+    this.sdmCapacity = document.getElementById('sdm-capacity-val');
+    this.sdmSaturation = document.getElementById('sdm-saturation-val');
+    this.sdmDecay = document.getElementById('sdm-decay-val');
 
-    // Stability Telemetry elements
+    // Stability Telemetry elements (LNN / Active Inference)
     this.lsiVal = document.getElementById('telemetry-lsi-val');
     this.jitterVal = document.getElementById('telemetry-jitter-val');
+    this.feVal = document.getElementById('telemetry-fe-val');
+    this.varianceVal = document.getElementById('telemetry-variance-val');
+    this.recoveryVal = document.getElementById('telemetry-recovery-val');
+    this.uptimeVal = document.getElementById('telemetry-uptime-val');
     this.statusBadge = document.getElementById('stability-status-badge');
     this.tickCounter = 0;
 
+    // Hardware & Inference profile elements
+    this.hwTier = document.getElementById('hw-tier-val');
+    this.hwGpuLayers = document.getElementById('hw-gpu-layers-val');
+    this.hwVram = document.getElementById('hw-vram-val');
+    this.hwCtx = document.getElementById('hw-ctx-val');
+    this.hwCadence = document.getElementById('hw-cadence-val');
+
     // Track voice activity via lipSync polling
     this._voiceActivityTimer = null;
+    this._hwProfileTimer = null;
 
     this._setupBackendListeners();
     this._startVoiceActivityMonitor();
     this._setupDrawerControls();
+    this.fetchHardwareProfile();
+
+    // Periodic hardware profile refresh (~10s)
+    this._hwProfileTimer = setInterval(() => {
+      if (this.isDrawerOpen()) {
+        this.fetchHardwareProfile();
+      }
+    }, 10000);
   }
 
   _setupBackendListeners() {
     if (window.lucia && window.lucia.on) {
       window.lucia.on('backend:ready', () => {
         this.startPolling();
+        this.fetchHardwareProfile();
       });
 
       window.lucia.on('backend:error', () => {
@@ -81,6 +110,14 @@ class EmotionDebugPanel {
       clearInterval(this.pollInterval);
       this.pollInterval = null;
     }
+    if (this._hwProfileTimer) {
+      clearInterval(this._hwProfileTimer);
+      this._hwProfileTimer = null;
+    }
+    if (this._voiceActivityTimer) {
+      clearInterval(this._voiceActivityTimer);
+      this._voiceActivityTimer = null;
+    }
   }
 
   async pollOnce() {
@@ -97,13 +134,7 @@ class EmotionDebugPanel {
           const res = await fetch('http://127.0.0.1:8765/telemetry/stability');
           if (res.ok) {
             const sData = await res.json();
-            if (this.lsiVal) this.lsiVal.textContent = `${Math.round((sData.lsi || 0) * 100)}%`;
-            if (this.jitterVal) this.jitterVal.textContent = `${sData.fast_loop_jitter_mean_ms || 0}ms`;
-            if (this.statusBadge) {
-              const st = (sData.status || 'nominal').toUpperCase();
-              this.statusBadge.textContent = st;
-              this.statusBadge.style.color = st === 'NOMINAL' ? '#10b981' : (st === 'RECOVERING' ? '#f59e0b' : '#ef4444');
-            }
+            this.renderStabilitySnapshot(sData);
           }
         } catch (sErr) {}
       }
@@ -118,7 +149,7 @@ class EmotionDebugPanel {
   renderSnapshot(snap) {
     if (!snap) return;
 
-    // 1. PAD Bars & Avatar Expression
+    // 1. PAD Bars & Avatar Expression & Distance
     if (snap.pad) {
       this._updatePADBar(this.pFill, this.pVal, snap.pad.pleasure);
       this._updatePADBar(this.aFill, this.aVal, snap.pad.arousal);
@@ -128,7 +159,13 @@ class EmotionDebugPanel {
         window.avatarRenderer.updateEmotion(snap.pad);
       }
 
-      // Update Conversational State — Mood
+      // Mathematical Euclidean distance to Philia resting attractor (+0.25, -0.05, +0.05)
+      if (this.philiaDist) {
+        const dist = this.computePhiliaDistance(snap.pad.pleasure, snap.pad.arousal, snap.pad.dominance);
+        this.philiaDist.textContent = `Δ = ${dist.toFixed(3)}`;
+      }
+
+      // Affective classification via Russell's 2D circumplex model (not self-report)
       const moodLabel = this._deriveMood(snap.pad);
       if (this.convMood) {
         this.convMood.textContent = moodLabel;
@@ -143,10 +180,12 @@ class EmotionDebugPanel {
       this._updateProgressBar(this.tensionFill, this.tensionVal, snap.somatic.tension);
     }
 
-    // 3. Conversational State — Latency & Depth
+    // 3. Conversational Constraints
     if (snap.constraints) {
-      if (this.convLatency) this.convLatency.textContent = snap.constraints.latency_ms > 0 ? `${snap.constraints.latency_ms} ms` : '— ms';
+      if (this.convLatency) this.convLatency.textContent = snap.constraints.latency_ms > 0 ? `+${snap.constraints.latency_ms} ms` : '+0 ms';
       if (this.convDepth) this.convDepth.textContent = `k=${snap.constraints.reasoning_depth || 1}`;
+      if (this.constraintTokens) this.constraintTokens.textContent = String(snap.constraints.max_tokens || 150);
+      if (this.constraintTemp) this.constraintTemp.textContent = (snap.constraints.temperature !== undefined) ? snap.constraints.temperature.toFixed(2) : '0.75';
     }
 
     // 4. Memory Traces
@@ -155,23 +194,98 @@ class EmotionDebugPanel {
     }
   }
 
+  renderStabilitySnapshot(sData) {
+    if (!sData) return;
+
+    if (this.lsiVal) this.lsiVal.textContent = `${Math.round((sData.lsi || 0) * 100)}%`;
+    if (this.jitterVal) this.jitterVal.textContent = `${(sData.fast_loop_jitter_mean_ms || 0).toFixed(1)} ms`;
+    if (this.statusBadge) {
+      const st = (sData.status || 'nominal').toUpperCase();
+      this.statusBadge.textContent = st;
+      this.statusBadge.style.color = st === 'NOMINAL' ? '#34d399' : (st === 'RECOVERING' ? '#f59e0b' : '#ef4444');
+    }
+    if (this.feVal) {
+      this.feVal.textContent = (sData.free_energy_surprise_mean || 0).toFixed(4);
+    }
+    if (this.varianceVal) {
+      this.varianceVal.textContent = (sData.ode_velocity_variance || 0).toFixed(4);
+    }
+    if (this.recoveryVal) {
+      this.recoveryVal.textContent = String(sData.recovery_count || 0);
+    }
+    if (this.uptimeVal) {
+      const uptimeSec = Math.floor(sData.uptime_seconds || 0);
+      if (uptimeSec >= 3600) {
+        this.uptimeVal.textContent = `${Math.floor(uptimeSec / 3600)}h ${Math.floor((uptimeSec % 3600) / 60)}m`;
+      } else if (uptimeSec >= 60) {
+        this.uptimeVal.textContent = `${Math.floor(uptimeSec / 60)}m ${uptimeSec % 60}s`;
+      } else {
+        this.uptimeVal.textContent = `${uptimeSec}s`;
+      }
+    }
+    if (this.sdmSaturation && sData.sdm_saturation_pct !== undefined) {
+      this.sdmSaturation.textContent = `${(sData.sdm_saturation_pct || 0).toFixed(1)}%`;
+    }
+  }
+
+  async fetchHardwareProfile() {
+    try {
+      let prof = null;
+      if (window.lucia && window.lucia.system && typeof window.lucia.system.getProfile === 'function') {
+        prof = await window.lucia.system.getProfile();
+      } else {
+        const res = await fetch('http://127.0.0.1:8765/system/profile');
+        if (res.ok) prof = await res.json();
+      }
+      if (prof) {
+        this.renderHardwareProfile(prof);
+      }
+    } catch (e) {}
+  }
+
+  renderHardwareProfile(prof) {
+    if (!prof) return;
+    if (this.hwTier) this.hwTier.textContent = `${prof.name || prof.tier || 'Auto'} (${(prof.tier || 'auto').toUpperCase()})`;
+    if (this.hwGpuLayers) {
+      const layers = prof.n_gpu_layers ?? 0;
+      this.hwGpuLayers.textContent = layers > 0 ? `${layers} layers` : 'CPU (0 layers)';
+    }
+    if (this.hwVram) this.hwVram.textContent = `${(prof.vram_mb || 4096).toLocaleString()} MB`;
+    if (this.hwCtx) this.hwCtx.textContent = `${(prof.n_ctx || 2048).toLocaleString()} tokens`;
+    if (this.hwCadence) this.hwCadence.textContent = `${prof.loop_cadence_ms || 200} ms`;
+    if (this.sdmCapacity && prof.sdm_capacity) {
+      this.sdmCapacity.textContent = (prof.sdm_capacity).toLocaleString();
+    }
+  }
+
   /**
-   * Maps PAD triplet to a human-readable mood label.
-   * Based on Russell's Circumplex Model of affect.
+   * Computes Euclidean distance to Philia resting attractor (P=+0.25, A=-0.05, D=+0.05).
+   * Strictly a mathematical Euclidean distance metric, not a relationship or affinity score.
+   */
+  computePhiliaDistance(p, a, d) {
+    const dp = (p || 0) - 0.25;
+    const da = (a || 0) - (-0.05);
+    const dd = (d || 0) - 0.05;
+    return Math.sqrt(dp * dp + da * da + dd * dd);
+  }
+
+  /**
+   * Maps PAD coordinates onto Russell's 2D circumplex model quadrant.
+   * Strictly a mathematical affective classification, avoiding subjective emotional self-report.
    */
   _deriveMood(pad) {
     const p = pad.pleasure || 0;
     const a = pad.arousal || 0;
     const d = pad.dominance || 0;
-    if (p > 0.4 && a > 0.3) return 'Excited ✨';
-    if (p > 0.4 && a < -0.1) return 'Content 😌';
-    if (p > 0.15 && Math.abs(a) < 0.2) return 'Calm 🌿';
-    if (p < -0.3 && a > 0.3) return 'Anxious 😟';
-    if (p < -0.3 && a < -0.1) return 'Sad 😔';
-    if (p < -0.2 && d > 0.2) return 'Irritated 😤';
-    if (a > 0.5) return 'Alert ⚡';
-    if (a < -0.4) return 'Drowsy 😴';
-    return 'Neutral 😶';
+    if (p > 0.4 && a > 0.3) return 'Vigorous / High Valence';
+    if (p > 0.4 && a < -0.1) return 'Content / Low Arousal';
+    if (p > 0.15 && Math.abs(a) < 0.2) return 'Calm / Pleasant';
+    if (p < -0.3 && a > 0.3) return 'Tense / High Arousal';
+    if (p < -0.3 && a < -0.1) return 'Subdued / Low Valence';
+    if (p < -0.2 && d > 0.2) return 'Agitated / High Dominance';
+    if (a > 0.5) return 'Alert / Elevated Arousal';
+    if (a < -0.4) return 'Quiet / Restful';
+    return 'Neutral / Basal';
   }
 
   /**
@@ -187,7 +301,7 @@ class EmotionDebugPanel {
           this.convVoice.textContent = 'Speaking 🔊';
           this.convVoice.style.color = '#34d399';
         } else {
-          this.convVoice.textContent = 'Silent';
+          this.convVoice.textContent = 'Quiet';
           this.convVoice.style.color = '';
         }
       }
@@ -206,11 +320,11 @@ class EmotionDebugPanel {
     if (clamped >= 0) {
       fillElem.style.left = '50%';
       fillElem.style.width = `${widthPercent}%`;
-      fillElem.style.backgroundColor = '#00e676'; // Positive green
+      fillElem.style.backgroundColor = '#10b981'; // Positive emerald
     } else {
       fillElem.style.left = `${50 - widthPercent}%`;
       fillElem.style.width = `${widthPercent}%`;
-      fillElem.style.backgroundColor = '#ff5252'; // Negative red
+      fillElem.style.backgroundColor = '#ef4444'; // Negative crimson
     }
   }
 
@@ -218,13 +332,14 @@ class EmotionDebugPanel {
     if (!fillElem || !valElem) return;
 
     const clamped = Math.max(0.0, Math.min(1.0, value));
-    valElem.textContent = clamped.toFixed(2);
+    valElem.textContent = `${Math.round(clamped * 100)}%`;
     fillElem.style.width = `${clamped * 100}%`;
   }
 
   _setupDrawerControls() {
     this.toggleBtn = document.getElementById('toggle-diagnostics-btn');
     this.closeBtn = document.getElementById('close-diagnostics-btn');
+    this.doneBtn = document.getElementById('done-diagnostics-btn');
     this.backdrop = document.getElementById('diagnostics-backdrop');
 
     if (this.toggleBtn) {
@@ -233,8 +348,16 @@ class EmotionDebugPanel {
     if (this.closeBtn) {
       this.closeBtn.addEventListener('click', () => this.closeDrawer());
     }
+    if (this.doneBtn) {
+      this.doneBtn.addEventListener('click', () => this.closeDrawer());
+    }
     if (this.backdrop) {
       this.backdrop.addEventListener('click', () => this.closeDrawer());
+    }
+    if (this.modal) {
+      this.modal.addEventListener('click', (e) => {
+        if (e.target === this.modal) this.closeDrawer();
+      });
     }
 
     // Shortcut: Ctrl+Shift+D or Cmd+Shift+D toggles diagnostics; Escape closes if open
@@ -249,18 +372,42 @@ class EmotionDebugPanel {
   }
 
   isDrawerOpen() {
-    return this.debugPane && this.debugPane.classList.contains('open');
+    const isModalOpen = this.modal && this.modal.classList.contains('open');
+    const isPaneOpen = this.debugPane && this.debugPane.classList.contains('open');
+    return Boolean(isModalOpen || isPaneOpen);
   }
 
   openDrawer() {
-    if (this.debugPane) this.debugPane.classList.add('open');
-    if (this.backdrop) this.backdrop.classList.add('open');
+    if (this.modal) {
+      this.modal.classList.add('open');
+      this.modal.classList.add('active');
+    }
+    if (this.debugPane) {
+      this.debugPane.classList.add('open');
+      this.debugPane.classList.add('active');
+    }
+    if (this.backdrop) {
+      this.backdrop.classList.add('open');
+      this.backdrop.classList.add('active');
+    }
     if (this.toggleBtn) this.toggleBtn.classList.add('active');
+    this.pollOnce();
+    this.fetchHardwareProfile();
   }
 
   closeDrawer() {
-    if (this.debugPane) this.debugPane.classList.remove('open');
-    if (this.backdrop) this.backdrop.classList.remove('open');
+    if (this.modal) {
+      this.modal.classList.remove('open');
+      this.modal.classList.remove('active');
+    }
+    if (this.debugPane) {
+      this.debugPane.classList.remove('open');
+      this.debugPane.classList.remove('active');
+    }
+    if (this.backdrop) {
+      this.backdrop.classList.remove('open');
+      this.backdrop.classList.remove('active');
+    }
     if (this.toggleBtn) this.toggleBtn.classList.remove('active');
   }
 
@@ -280,10 +427,30 @@ class EmotionDebugPanel {
         this.debugPane.classList.remove('stale-overlay');
       }
     }
+    const dot = document.getElementById('diagnostics-status-dot');
+    const label = document.getElementById('diagnostics-status-label');
+    if (dot) {
+      dot.className = isStale ? 'runtime-dot stale' : 'runtime-dot live';
+    }
+    if (label) {
+      label.textContent = isStale ? '⚠ STALE' : '● LIVE';
+      label.className = isStale ? 'diagnostics-status-label stale' : 'diagnostics-status-label live';
+    }
   }
 }
 
-// Instantiate on DOM ready
-document.addEventListener('DOMContentLoaded', () => {
-  window.emotionDebugPanel = new EmotionDebugPanel();
-});
+// Instantiate on DOM ready if document exists
+if (typeof document !== 'undefined') {
+  document.addEventListener('DOMContentLoaded', () => {
+    window.emotionDebugPanel = new EmotionDebugPanel();
+  });
+}
+
+if (typeof window !== 'undefined') {
+  window.EmotionDebugPanel = EmotionDebugPanel;
+}
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { EmotionDebugPanel };
+}
+

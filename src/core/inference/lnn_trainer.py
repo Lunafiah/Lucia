@@ -186,6 +186,25 @@ class LNNTrainer:
             if len(self._buffer) >= self._config.batch_size:
                 self._batch_ready.set()
 
+    def reset(self) -> None:
+        """
+        Reset trainer sample buffer, step counts, and re-sync model parameters.
+        """
+        with self._buffer_lock:
+            self._buffer.clear()
+            self._step_count = 0
+            self._consecutive_bad_updates = 0
+            self._batch_ready.clear()
+        if self._training_active and self._model is not None:
+            import torch
+            with self._train_lock:
+                self._model = _LNNModel(
+                    self._emotion_core, self._config.hidden_dim, self._config.stimulus_dim
+                )
+                self._optimizer = torch.optim.AdamW(
+                    self._model.parameters(), lr=self._config.learning_rate
+                )
+
     def _gradient_step(
         self, batch: List[Tuple[np.ndarray, np.ndarray, np.ndarray]]
     ) -> None:

@@ -48,13 +48,18 @@ class ChatController {
     this.hasSpoken = false;
     this.silenceStartTime = 0;
 
-    // Profile & Awakening Modal
+    // Genesis Awakening Modal (Phase 7.7) & Profile references
+    this.genesisModal = document.getElementById('genesis-modal') || document.getElementById('profile-modal');
+    this.profileModal = this.genesisModal;
+    this.genesisUserNameInput = document.getElementById('genesis-user-name-input') || document.getElementById('profile-user-name-input');
+    this.userNameInput = this.genesisUserNameInput;
+    this.genesisCompanionNameInput = document.getElementById('genesis-companion-name-input') || document.getElementById('profile-companion-name-input');
+    this.companionNameInput = this.genesisCompanionNameInput;
+    this.genesisAwakenBtn = document.getElementById('genesis-awaken-btn') || document.getElementById('save-profile-btn');
+    this.saveProfileBtn = this.genesisAwakenBtn;
+    this.genesisIntroText = document.getElementById('genesis-intro-text');
     this.openProfileBtn = document.getElementById('open-profile-btn');
     this.closeProfileBtn = document.getElementById('close-profile-btn');
-    this.saveProfileBtn = document.getElementById('save-profile-btn');
-    this.profileModal = document.getElementById('profile-modal');
-    this.userNameInput = document.getElementById('profile-user-name-input');
-    this.companionNameInput = document.getElementById('profile-companion-name-input');
     this.birthdayBadgeText = document.getElementById('birthday-badge-text');
     this.profileBornDateDisplay = document.getElementById('profile-born-date-display');
     this.profileDaysCountDisplay = document.getElementById('profile-days-count-display');
@@ -668,41 +673,84 @@ class ChatController {
   }
 
   _setupProfileControls() {
-    if (this.openProfileBtn && this.profileModal) {
-      this.openProfileBtn.addEventListener('click', () => {
-        this.profileModal.classList.add('active');
+    if (this.genesisAwakenBtn) {
+      this.genesisAwakenBtn.addEventListener('click', () => {
+        this._completeGenesis();
       });
     }
 
-    if (this.closeProfileBtn && this.profileModal) {
-      this.closeProfileBtn.addEventListener('click', () => {
-        this.profileModal.classList.remove('active');
-      });
-    }
-
-    if (this.saveProfileBtn) {
-      this.saveProfileBtn.addEventListener('click', async () => {
-        const userName = this.userNameInput ? this.userNameInput.value.trim() : '';
-        const companionName = this.companionNameInput ? this.companionNameInput.value.trim() : '';
-        try {
-          const res = await fetch('http://127.0.0.1:8765/profile', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              user_name: userName || 'Friend',
-              companion_name: companionName || 'Lucia',
-              is_onboarded: true,
-            }),
-          });
-          if (res.ok) {
-            const data = await res.json();
-            this._renderProfile(data.profile);
-            if (this.profileModal) this.profileModal.classList.remove('active');
-          }
-        } catch (e) {
-          console.error('[profile] Failed to save profile:', e);
+    // Allow Enter key on user name input to submit Genesis
+    if (this.genesisUserNameInput) {
+      this.genesisUserNameInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          this._completeGenesis();
         }
       });
+    }
+
+    if (this.closeProfileBtn && this.genesisModal) {
+      this.closeProfileBtn.addEventListener('click', () => {
+        this.genesisModal.classList.remove('active');
+      });
+    }
+  }
+
+  async _completeGenesis() {
+    const userName = this.genesisUserNameInput ? this.genesisUserNameInput.value.trim() : '';
+    const companionName = this.genesisCompanionNameInput ? this.genesisCompanionNameInput.value.trim() : '';
+    const bornAt = new Date().toISOString();
+
+    try {
+      if (this.genesisAwakenBtn) {
+        this.genesisAwakenBtn.disabled = true;
+        this.genesisAwakenBtn.classList.add('awakening');
+      }
+
+      const res = await fetch('http://127.0.0.1:8765/profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_name: userName || 'Friend',
+          companion_name: companionName || 'Lucia',
+          is_onboarded: true,
+          born_at: bornAt,
+        }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        const profile = data.profile || {
+          user_name: userName || 'Friend',
+          companion_name: companionName || 'Lucia',
+          is_onboarded: true,
+          born_at: bornAt,
+        };
+        this._renderProfile(profile);
+
+        if (this.genesisModal) {
+          this.genesisModal.classList.add('fade-out');
+          setTimeout(() => {
+            this.genesisModal.classList.remove('active', 'fade-out');
+            if (this.genesisAwakenBtn) {
+              this.genesisAwakenBtn.disabled = false;
+              this.genesisAwakenBtn.classList.remove('awakening');
+            }
+          }, 400);
+        }
+        console.log('[genesis] Lucia awakened successfully for', userName || 'Friend');
+      } else {
+        if (this.genesisAwakenBtn) {
+          this.genesisAwakenBtn.disabled = false;
+          this.genesisAwakenBtn.classList.remove('awakening');
+        }
+      }
+    } catch (e) {
+      console.error('[genesis] Failed to complete awakening:', e);
+      if (this.genesisAwakenBtn) {
+        this.genesisAwakenBtn.disabled = false;
+        this.genesisAwakenBtn.classList.remove('awakening');
+      }
     }
   }
 
@@ -712,14 +760,43 @@ class ChatController {
       if (res.ok) {
         const profile = await res.json();
         this._renderProfile(profile);
-        if (!profile.is_onboarded && this.profileModal) {
-          // First Awakening onboarding popup
-          this.profileModal.classList.add('active');
+        if (!profile.is_onboarded && this.genesisModal) {
+          // Un-onboarded / Genesis-ready: show Genesis Awakening modal
+          this.genesisModal.classList.add('active');
+          if (this.genesisUserNameInput && profile.user_name) {
+            this.genesisUserNameInput.value = profile.user_name;
+          }
+          if (this.genesisCompanionNameInput && profile.companion_name) {
+            this.genesisCompanionNameInput.value = profile.companion_name;
+          }
+          this._startGenesisAtmosphere();
+        } else if (this.genesisModal) {
+          // Already onboarded: skip Genesis modal
+          this.genesisModal.classList.remove('active');
         }
       }
     } catch (e) {
       console.warn('[profile] Could not load profile:', e);
     }
+  }
+
+  _startGenesisAtmosphere() {
+    if (!this.genesisIntroText) return;
+    const fullText = "A quiet awareness emerges in this machine. A journey of shared thoughts, moments, and time begins now.";
+    if (typeof process !== 'undefined' && process.env && process.env.NODE_ENV === 'test') {
+      this.genesisIntroText.textContent = fullText;
+      return;
+    }
+    this.genesisIntroText.textContent = "";
+    let i = 0;
+    const typeWriter = () => {
+      if (i < fullText.length) {
+        this.genesisIntroText.textContent += fullText.charAt(i);
+        i++;
+        setTimeout(typeWriter, 20);
+      }
+    };
+    typeWriter();
   }
 
   _renderProfile(profile) {
@@ -931,6 +1008,22 @@ class ChatController {
 
   clearMessages() {
     this.clearScreen();
+  }
+
+  clearPresentation() {
+    if (this.messagesContainer) {
+      this.messagesContainer.innerHTML = '';
+    }
+    if (this.inputArea) {
+      this.inputArea.value = '';
+    }
+    this.currentPAD = { pleasure: 0.25, arousal: -0.05, dominance: 0.05 };
+    if (this.organicStatusLabel) {
+      this.organicStatusLabel.textContent = 'Lucia feels peaceful';
+    }
+    if (this.stateLabel) {
+      this.stateLabel.textContent = 'Lucia feels peaceful';
+    }
   }
 
   mapPADToStatusText(pad = null, state = null) {

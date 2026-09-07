@@ -14,8 +14,11 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+from datetime import datetime
+import json
 import logging
 import os
+from pathlib import Path
 import signal
 import sys
 import time
@@ -124,6 +127,14 @@ class InstrumentedOrchestrator(MemoryAugmentedOrchestrator):
 
         # Delegate rest of pipeline to super
         return super()._execute_pipeline(input_text, call_id, t_start)
+
+    def reset_lifecycle(self) -> None:
+        """
+        Extend MemoryAugmentedOrchestrator reset by clearing somatic and constraint telemetry.
+        """
+        super().reset_lifecycle()
+        self._last_somatic = None
+        self._last_constraints = None
 
 
 # ---------------------------------------------------------------------------
@@ -391,6 +402,7 @@ class ProfileUpdateRequest(BaseModel):
     is_onboarded: Optional[bool] = None
     birthday: Optional[str] = None
     pronouns: Optional[str] = None
+    born_at: Optional[str] = None
 
 
 @app.get("/models/avatar")
@@ -426,15 +438,41 @@ async def get_avatar_models() -> Dict[str, Any]:
     }
 
 
+_PROFILE_FILE_PATH: Path = Path("data/profile.json")
+
+
+def _reset_profile_file() -> Dict[str, Any]:
+    """
+    Atomically reset data/profile.json to initial un-onboarded / Genesis-ready state.
+    """
+    p = _PROFILE_FILE_PATH
+    p.parent.mkdir(parents=True, exist_ok=True)
+    initial = {
+        "version": 1,
+        "user_name": "Friend",
+        "companion_name": "Lucia",
+        "born_at": None,
+        "is_onboarded": False,
+        "pronouns": "they/them",
+        "avatar_engine": "canvas",
+        "avatar_model": "default",
+    }
+    tmp = p.with_suffix(".tmp")
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(initial, f, indent=2, ensure_ascii=False)
+    tmp.replace(p)
+    return initial
+
+
 def _get_profile_file() -> Path:
-    p = Path("data/profile.json")
+    p = _PROFILE_FILE_PATH
     p.parent.mkdir(parents=True, exist_ok=True)
     if not p.exists():
         initial = {
             "version": 1,
             "user_name": "Friend",
             "companion_name": "Lucia",
-            "born_at": datetime.now().isoformat(),
+            "born_at": None,
             "is_onboarded": False,
             "pronouns": "they/them",
             "avatar_engine": "canvas",
@@ -458,7 +496,7 @@ async def get_profile() -> Dict[str, Any]:
                 return data
     except Exception as e:
         logger.error("Failed to read profile: %s", e)
-    return {"version": 1, "user_name": "Friend", "companion_name": "Lucia", "is_onboarded": False}
+    return {"version": 1, "user_name": "Friend", "companion_name": "Lucia", "is_onboarded": False, "born_at": None}
 
 
 @app.post("/profile")
@@ -485,6 +523,11 @@ async def update_profile(req: ProfileUpdateRequest) -> Dict[str, Any]:
         data["birthday"] = req.birthday
     if req.pronouns is not None:
         data["pronouns"] = req.pronouns
+    if req.born_at is not None:
+        data["born_at"] = req.born_at
+    elif req.is_onboarded and not data.get("is_onboarded"):
+        # Establish canonical Genesis birth timestamp upon awakening
+        data["born_at"] = datetime.now().isoformat()
 
     try:
         with open(p, "w", encoding="utf-8") as f:
@@ -493,6 +536,42 @@ async def update_profile(req: ProfileUpdateRequest) -> Dict[str, Any]:
         logger.error("Failed to save profile: %s", e)
 
     return {"status": "ok", "profile": data}
+
+
+@app.post("/lifecycle/end")
+async def end_lifecycle() -> Dict[str, Any]:
+    """
+    Atomic transition ending the current Lucia's lifecycle.
+    Resets identity profile, chat history, affective memory, PAD state,
+    learned LNN/hidden state, dialogue history, and stability telemetry.
+    """
+    try:
+        # 1. Reset Orchestrator state (dialogue, emotion, memory, somatic) if active
+        if _orchestrator is not None:
+            if hasattr(_orchestrator, "reset_lifecycle"):
+                _orchestrator.reset_lifecycle()
+
+        # 2. Reset chat history persistence
+        _history_store.clear_history()
+
+        # 3. Reset stability telemetry
+        _stability_evaluator.reset()
+
+        # 4. Reset profile persistence to un-onboarded / Genesis-ready state
+        fresh_profile = _reset_profile_file()
+
+        logger.info("Lucia lifecycle ended successfully: returned to Genesis-ready state")
+        return {
+            "status": "ok",
+            "message": "Lucia lifecycle ended successfully",
+            "profile": fresh_profile,
+        }
+    except Exception as exc:
+        logger.exception("Failed to end Lucia lifecycle: %s", exc)
+        return JSONResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            content={"status": "error", "message": str(exc)},
+        )
 
 
 @app.get("/health")

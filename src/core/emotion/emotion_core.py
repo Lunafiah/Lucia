@@ -164,6 +164,38 @@ class EmotionCore:
         with self._stimulus_lock:
             self._pending_stimulus = np.array(vector, dtype=np.float64)
 
+    def reset_to_resting(self) -> None:
+        """
+        Reset hidden state, pending stimulus, learned weights, and PAD state to resting baseline.
+        Adheres to concurrency lock hierarchy: _train_lock -> _stimulus_lock -> _state_lock.
+        """
+        with self._train_lock:
+            rng = np.random.default_rng(_INIT_SEED)
+            H = self._config.hidden_dim
+            current_n = self.U_f.shape[1]
+            self.W_f = _xavier_uniform((H, H), rng)
+            self.U_f = _xavier_uniform((H, current_n), rng)
+            self.b_f = np.zeros(H, dtype=np.float64)
+            self.W_tau = _xavier_uniform((H, H), rng)
+            self.U_tau = _xavier_uniform((H, current_n), rng)
+            self.b_tau = np.zeros(H, dtype=np.float64)
+            self.W_proj = _xavier_uniform((3, H), rng)
+            self.b_proj = np.zeros(3, dtype=np.float64)
+
+            with self._stimulus_lock:
+                self._pending_stimulus = None
+
+            with self._state_lock:
+                self._h = np.zeros(H, dtype=np.float64)
+                p, a, d = self._config.resting_baseline
+                self._pad_resting = PADState(
+                    pleasure=float(p),
+                    arousal=float(a),
+                    dominance=float(d),
+                    timestamp=time.monotonic(),
+                )
+                self._pad_snapshot = self._pad_resting
+
     # ------------------------------------------------------------------
     # Core computation
     # ------------------------------------------------------------------

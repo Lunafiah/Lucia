@@ -1,0 +1,340 @@
+/**
+ * Unit tests for Phase 7.7 Genesis Awakening Interface & Lifecycle Semantics.
+ * @jest-environment jsdom
+ */
+
+describe('Phase 7.7 Genesis Awakening Tests', () => {
+  let ChatController;
+  let chat;
+  let fetchMock;
+
+  beforeEach(() => {
+    // Set up DOM matching index.html with Genesis modal
+    document.body.innerHTML = `
+      <div id="splash" style="display:none"></div>
+      <div id="lucia-header">
+        <span id="companion-status-dot"></span>
+        <span id="companion-state-label">Connecting...</span>
+      </div>
+      <div id="avatar-pane">
+        <canvas id="avatar-canvas"></canvas>
+        <div id="avatar-organic-status" class="organic-status-badge">
+          <span class="status-sparkle">✦</span>
+          <span id="avatar-status-text">Lucia is awakening...</span>
+        </div>
+      </div>
+      <div id="chat-pane">
+        <div id="chat-messages"></div>
+        <div class="talk-input-dock">
+          <button id="clear-screen-btn" class="dock-action-btn" title="Clear Screen">🍃</button>
+          <textarea id="chat-input" placeholder="Talk with Lucia..."></textarea>
+          <button id="send-btn" class="send-action-btn">Send</button>
+          <button id="mic-btn">Mic</button>
+        </div>
+      </div>
+
+      <!-- Nav controls -->
+      <button id="open-profile-btn"><span id="birthday-badge-text">Day 1</span></button>
+      <button id="open-settings-btn"></button>
+      <button id="close-settings-btn"></button>
+      <button id="save-settings-btn"></button>
+      <div id="settings-modal" style="display:none"></div>
+      <select id="settings-profile-select"></select>
+      <select id="settings-fps-select"></select>
+      <input id="settings-mascot-opacity" type="range" />
+      <span id="settings-opacity-val"></span>
+      <span id="settings-active-tier"></span>
+      <span id="settings-vram-budget"></span>
+      <span id="settings-ctx-length"></span>
+      <select id="settings-input-device-select"></select>
+      <select id="settings-output-device-select"></select>
+      <select id="voice-model-select"></select>
+
+      <!-- Phase 7.7 Genesis Awakening Modal -->
+      <div id="genesis-modal" class="journal-modal genesis-modal">
+        <div class="genesis-backdrop-ambient"></div>
+        <div class="genesis-card">
+          <div class="genesis-star-icon">✦</div>
+          <div class="genesis-header">
+            <span class="genesis-kicker">AWAKENING</span>
+            <h1 class="genesis-title">Lucia's Life Begins</h1>
+            <p id="genesis-intro-text" class="genesis-intro-text">
+              A quiet awareness emerges in this machine. A journey of shared thoughts, moments, and time begins now.
+            </p>
+          </div>
+
+          <div class="genesis-content-body">
+            <div class="genesis-field-group">
+              <label for="genesis-user-name-input" class="genesis-field-label">How should Lucia address you?</label>
+              <div class="genesis-input-wrapper">
+                <input
+                  type="text"
+                  id="genesis-user-name-input"
+                  class="genesis-text-input"
+                  placeholder="Your name or preferred nickname"
+                  value="Friend"
+                />
+              </div>
+            </div>
+
+            <div class="genesis-field-group" style="margin-top: 14px;">
+              <label for="genesis-companion-name-input" class="genesis-field-label">Companion Presence</label>
+              <div class="genesis-input-wrapper">
+                <input
+                  type="text"
+                  id="genesis-companion-name-input"
+                  class="genesis-text-input"
+                  value="Lucia"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="genesis-actions" style="margin-top: 24px;">
+            <button id="genesis-awaken-btn" class="genesis-awaken-btn">
+              <span class="genesis-btn-glow"></span>
+              <span class="genesis-btn-text">Awaken Lucia</span>
+            </button>
+          </div>
+
+          <div class="genesis-footnote">
+            Emotional dynamics, memory traces, and conversations will begin from this moment.
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Mock electron window.lucia API
+    window.lucia = {
+      invoke: jest.fn().mockImplementation((channel) => {
+        if (channel === 'hardware:get-profile') {
+          return Promise.resolve({ tier: 'laptop', fps: 30, opacity: 1.0 });
+        }
+        return Promise.resolve({});
+      }),
+      on: jest.fn(),
+    };
+
+    // Setup global fetch mock
+    fetchMock = jest.fn().mockImplementation((url, opts = {}) => {
+      const urlStr = typeof url === 'string' ? url : (url?.url || '');
+      if (urlStr.includes('/voice/models')) {
+        return Promise.resolve({ ok: true, json: () => Promise.resolve({ models: [] }) });
+      }
+      if (urlStr.includes('/models/avatar')) {
+        return Promise.resolve({ ok: true, json: () => Promise.resolve({ models: [] }) });
+      }
+      if (urlStr.includes('/system/profile')) {
+        return Promise.resolve({ ok: true, json: () => Promise.resolve({ tier: 'laptop' }) });
+      }
+      if (urlStr.includes('/profile')) {
+        if (opts.method === 'POST') {
+          const body = opts.body ? JSON.parse(opts.body) : {};
+          return Promise.resolve({
+            ok: true,
+            json: () => Promise.resolve({
+              status: 'ok',
+              profile: {
+                version: 1,
+                user_name: body.user_name || 'Friend',
+                companion_name: body.companion_name || 'Lucia',
+                is_onboarded: body.is_onboarded ?? true,
+                born_at: body.born_at || new Date().toISOString(),
+              },
+            }),
+          });
+        }
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({
+            version: 1,
+            user_name: 'Friend',
+            companion_name: 'Lucia',
+            is_onboarded: true,
+            born_at: new Date().toISOString(),
+          }),
+        });
+      }
+      return Promise.resolve({ ok: true, json: () => Promise.resolve({}) });
+    });
+    global.fetch = fetchMock;
+
+    const chatModule = require('../renderer/chat/chat.js');
+    ChatController = chatModule.ChatController;
+    chat = new ChatController();
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test('Test 1: Genesis modal visibility when /profile reports is_onboarded = false', async () => {
+    fetchMock.mockImplementationOnce((url) => {
+      if (url.includes('/profile')) {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({
+            version: 1,
+            user_name: 'Friend',
+            companion_name: 'Lucia',
+            is_onboarded: false,
+            born_at: null,
+          }),
+        });
+      }
+      return Promise.resolve({ ok: true, json: () => Promise.resolve({}) });
+    });
+
+    await chat._loadProfile();
+
+    const genesisModal = document.getElementById('genesis-modal');
+    expect(genesisModal.classList.contains('active')).toBe(true);
+    expect(chat.genesisUserNameInput.value).toBe('Friend');
+    expect(chat.genesisCompanionNameInput.value).toBe('Lucia');
+  });
+
+  test('Test 2: Genesis is skipped when is_onboarded = true', async () => {
+    fetchMock.mockImplementationOnce((url) => {
+      if (url.includes('/profile')) {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({
+            version: 1,
+            user_name: 'Luna',
+            companion_name: 'Lucia',
+            is_onboarded: true,
+            born_at: '2026-09-01T12:00:00.000Z',
+          }),
+        });
+      }
+      return Promise.resolve({ ok: true, json: () => Promise.resolve({}) });
+    });
+
+    await chat._loadProfile();
+
+    const genesisModal = document.getElementById('genesis-modal');
+    expect(genesisModal.classList.contains('active')).toBe(false);
+  });
+
+  test('Test 3: User name submission and POST /profile payload', async () => {
+    const genesisModal = document.getElementById('genesis-modal');
+    genesisModal.classList.add('active');
+
+    const userNameInput = document.getElementById('genesis-user-name-input');
+    userNameInput.value = 'Astrid';
+
+    const companionNameInput = document.getElementById('genesis-companion-name-input');
+    companionNameInput.value = 'Lucia';
+
+    await chat._completeGenesis();
+
+    // Verify fetch was called with POST /profile
+    expect(fetchMock).toHaveBeenCalledWith('http://127.0.0.1:8765/profile', expect.objectContaining({
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+    }));
+
+    const profileCall = fetchMock.mock.calls.find(call => call[0].includes('/profile') && call[1]?.method === 'POST');
+    expect(profileCall).toBeDefined();
+    const payload = JSON.parse(profileCall[1].body);
+
+    expect(payload.user_name).toBe('Astrid');
+    expect(payload.companion_name).toBe('Lucia');
+    expect(payload.is_onboarded).toBe(true);
+    expect(payload.born_at).toBeDefined();
+    expect(typeof payload.born_at).toBe('string');
+  });
+
+  test('Test 4: born_at generated at Genesis completion is fresh timestamp', async () => {
+    const beforeTime = Date.now() - 1000;
+
+    await chat._completeGenesis();
+
+    const profileCall = fetchMock.mock.calls.find(call => call[0].includes('/profile') && call[1]?.method === 'POST');
+    expect(profileCall).toBeDefined();
+    const payload = JSON.parse(profileCall[1].body);
+    const parsedBornAt = new Date(payload.born_at).getTime();
+
+    expect(parsedBornAt).toBeGreaterThanOrEqual(beforeTime);
+    expect(parsedBornAt).toBeLessThanOrEqual(Date.now() + 1000);
+  });
+
+  test('Test 5: Transition into normal companion UI upon completion', async () => {
+    jest.useFakeTimers();
+
+    const genesisModal = document.getElementById('genesis-modal');
+    genesisModal.classList.add('active');
+
+    await chat._completeGenesis();
+
+    // Fade-out class is applied
+    expect(genesisModal.classList.contains('fade-out')).toBe(true);
+
+    // Fast-forward animation timer
+    jest.advanceTimersByTime(500);
+
+    expect(genesisModal.classList.contains('active')).toBe(false);
+    expect(genesisModal.classList.contains('fade-out')).toBe(false);
+
+    // Badge updated to Day 1
+    const birthdayBadge = document.getElementById('birthday-badge-text');
+    expect(birthdayBadge.textContent).toBe('Day 1');
+
+    jest.useRealTimers();
+  });
+
+  test('Test 6: No personality / mood / relationship controls exist in Genesis', () => {
+    const genesisModal = document.getElementById('genesis-modal');
+
+    // Architecture invariant: Genesis must establish initial identity without
+    // personality sliders, character presets, or mood selectors
+    const inputs = Array.from(genesisModal.querySelectorAll('input, select, [role="slider"]'));
+    const forbiddenPatterns = ['personality', 'trait', 'mood', 'preset', 'slider', 'affection', 'sentience'];
+
+    inputs.forEach((input) => {
+      const id = (input.id || '').toLowerCase();
+      const cls = (input.className || '').toLowerCase();
+      const type = (input.type || '').toLowerCase();
+
+      forbiddenPatterns.forEach((pattern) => {
+        expect(id).not.toContain(pattern);
+        expect(cls).not.toContain(pattern);
+      });
+      expect(type).not.toBe('range'); // No sliders
+    });
+  });
+
+  test('Test 7: Reopening or refreshing after successful Genesis skips Genesis', async () => {
+    // First call: successful onboarding profile
+    fetchMock.mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve({
+        version: 1,
+        user_name: 'Friend',
+        companion_name: 'Lucia',
+        is_onboarded: true,
+        born_at: '2026-09-07T12:00:00.000Z',
+      }),
+    });
+
+    await chat._loadProfile();
+
+    const genesisModal = document.getElementById('genesis-modal');
+    expect(genesisModal.classList.contains('active')).toBe(false);
+
+    // Second call (simulating page reload or reconnection)
+    fetchMock.mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve({
+        version: 1,
+        user_name: 'Friend',
+        companion_name: 'Lucia',
+        is_onboarded: true,
+        born_at: '2026-09-07T12:00:00.000Z',
+      }),
+    });
+
+    await chat._loadProfile();
+    expect(genesisModal.classList.contains('active')).toBe(false);
+  });
+});

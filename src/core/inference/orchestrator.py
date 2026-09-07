@@ -243,6 +243,17 @@ class InferencePipelineOrchestrator(MemoryAugmentedOrchestrator):
 
         return safe_response
 
+    def reset_lifecycle(self) -> None:
+        """
+        Extend MemoryAugmentedOrchestrator reset by resetting active inference and LNN trainer.
+        """
+        super().reset_lifecycle()
+        self._last_pred_error = 0.0
+        if hasattr(self, "_active_inference") and self._active_inference is not None:
+            self._active_inference.reset()
+        if hasattr(self, "_lnn_trainer") and self._lnn_trainer is not None:
+            self._lnn_trainer.reset()
+
     def shutdown(self) -> None:
         """
         Cleanly stop LNN Trainer, Decay Engine, and Fast Loop threads.

@@ -120,6 +120,21 @@ This document captures:
 
 ---
 
+### ADR-010: Existential Lifecycle Boundary: Genesis Awakening, Solemn End-of-Life, and Identity Isolation
+* **Status**: **ACCEPTED** (Phase 7.7)
+* **Context**: Companion AI applications either treat companion resets frivolously (e.g. instant casual "Reset Chat" buttons) or preserve stale relational traces across resets. In Lucia, ending a companion's life is permanent and existential.
+* **Decision**:
+  1. **Sole Destruction Authority**: The backend `POST /lifecycle/end` endpoint is the single authority for lifecycle termination (erases associative memory, episodic traces, conversation history, resets LNN weights and PAD state to Philia baseline, and writes an un-onboarded profile with `born_at: null`).
+  2. **Exact Solemn Confirmation**: A dedicated, grave dialog (`#end-life-modal`) enforces typing the exact phrase `END LUCIA` before enabling the destructive action. Duplicate clicks are locked via transitional state.
+  3. **Critical Failure Boundary**: If the backend request fails, client identity state, presentation, and session integrity are untouched. Genesis is never opened on failure.
+  4. **Surgical Renderer Cleanup**: On backend success, only Lucia identity keys (`lucia_profile`, `lucia_user_name`, `lucia_companion_name`, `lucia_is_onboarded`, `lucia_born_at`, `lucia_chat_history`) are purged. All application-level preferences (appearance, audio, presence, performance) are strictly preserved.
+  5. **Genesis Awakening & Birth Invariant**: The existing `#genesis-modal` is reused. The new Lucia's `born_at` timestamp is **never** created during the reset transition itself; it is only generated when the user completes Genesis.
+  6. **Identity Isolation**: *Previous Lucia ≠ Future Lucia*. No past memories, emotional adaptation, or conversation history leak across the boundary.
+* **Consequences**:
+  * *Positive*: Full architectural fidelity to the "One Continuous Life" ethos; transparent existential gravity for the user; zero preference loss.
+
+---
+
 ## 3. Reconciliation of Outdated Specs & Conflicting Decisions
 
 | Dimension | Outdated / Preliminary Spec | Authoritative Implemented Reality | Resolution & Rationale |
