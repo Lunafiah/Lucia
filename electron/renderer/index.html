@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="debug/panel.css">
   <link rel="stylesheet" href="avatar/avatar.css">
   <link rel="stylesheet" href="journal/journal.css">
+  <link rel="stylesheet" href="settings/settings.css">
 </head>
 <body>
   <!-- Splash Screen / Loading Overlay -->
@@ -522,94 +523,381 @@
     </div>
   </div>
 
-  <!-- System Settings & Hardware Scalability Modal -->
+  <!-- Companion Settings Modal (Phase 7.5: Categorized Settings System) -->
   <div id="settings-modal" class="journal-modal">
-    <div class="journal-card" style="max-width: 520px;">
-      <div class="journal-header">
-        <h2>⚙️ System Settings & Hardware Scalability</h2>
-        <button id="close-settings-btn" class="journal-close-btn">&times;</button>
+    <div class="settings-modal-card">
+      <div class="settings-modal-header">
+        <div class="settings-title-wrap">
+          <span class="settings-title-icon">⚙️</span>
+          <h2>Settings</h2>
+        </div>
+        <button id="close-settings-btn" class="journal-close-btn" aria-label="Close Settings">&times;</button>
       </div>
 
-      <div class="settings-modal-body" style="display: flex; flex-direction: column; gap: 16px; margin: 12px 0;">
-        <!-- Section 1: Hardware Scalability -->
-        <div class="settings-section">
-          <div class="settings-section-title" style="display: flex; align-items: center; justify-content: space-between;">
-            <span>⚡ Hardware Scalability & Optimization Profile</span>
-            <span id="hardware-badge" class="hardware-badge">Auto</span>
-          </div>
-          <p class="settings-section-desc">
-            Dynamically adjusts model offload, VRAM allocation, context length, and background cadence for your GPU/CPU.
-          </p>
-          <div style="display: flex; gap: 10px; align-items: center; margin-top: 8px;">
-            <select id="settings-profile-select" class="presence-select" style="flex: 1; padding: 8px 12px;">
-              <option value="auto">Auto-Detect (Recommended based on GPU)</option>
-              <option value="high_end">High-End Tier (16GB+ VRAM, Full GPU & Max Context)</option>
-              <option value="desktop">Desktop Performance (8-12GB VRAM, 4K Context)</option>
-              <option value="laptop">Laptop Balanced (4-6GB VRAM, Energy Efficient)</option>
-              <option value="cpu_only">Low-Power / Battery Saver (CPU-Only, Minimal RAM)</option>
-            </select>
-          </div>
+      <div class="settings-modal-layout">
+        <!-- Left Sidebar Navigation -->
+        <nav class="settings-sidebar" aria-label="Settings Categories">
+          <div class="settings-nav-section-title">Companion</div>
+          <button id="settings-tab-btn-appearance" class="settings-tab-btn active" data-tab="appearance">
+            <span class="settings-tab-icon">🎨</span> Appearance
+          </button>
+          <button id="settings-tab-btn-voice" class="settings-tab-btn" data-tab="voice">
+            <span class="settings-tab-icon">🎙️</span> Voice & Audio
+          </button>
+          <button id="settings-tab-btn-presence" class="settings-tab-btn" data-tab="presence">
+            <span class="settings-tab-icon">◌</span> Desktop Presence
+          </button>
+          <button id="settings-tab-btn-privacy" class="settings-tab-btn" data-tab="privacy">
+            <span class="settings-tab-icon">🔒</span> Privacy & Life
+          </button>
 
-          <div id="settings-hardware-specs" class="journal-stats-grid" style="margin-top: 10px;">
-            <div class="stat-box">
-              <div class="stat-label">Active Tier</div>
-              <div id="settings-active-tier" class="stat-value" style="font-size: 0.85rem; color: #a855f7;">Laptop</div>
-            </div>
-            <div class="stat-box">
-              <div class="stat-label">VRAM Budget</div>
-              <div id="settings-vram-budget" class="stat-value" style="font-size: 0.85rem; color: #38bdf8;">~4096 MB</div>
-            </div>
-            <div class="stat-box">
-              <div class="stat-label">Context Length</div>
-              <div id="settings-ctx-length" class="stat-value" style="font-size: 0.85rem; color: #34d399;">2,048 tokens</div>
-            </div>
-          </div>
-        </div>
+          <div class="settings-nav-section-title" style="margin-top: 10px;">System</div>
+          <button id="settings-tab-btn-performance" class="settings-tab-btn" data-tab="performance">
+            <span class="settings-tab-icon">⚡</span> Performance
+          </button>
+          <button id="settings-tab-btn-advanced" class="settings-tab-btn" data-tab="advanced">
+            <span class="settings-tab-icon">🛠️</span> Advanced
+          </button>
+        </nav>
 
-        <!-- Section 2: Avatar & Graphics Optimization -->
-        <div class="settings-section">
-          <div class="settings-section-title">🎨 Avatar Graphics & Energy Optimization</div>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px;">
-            <div style="display: flex; flex-direction: column; gap: 4px;">
-              <label class="mascot-popup-label">Target Framerate</label>
-              <select id="settings-fps-select" class="mascot-popup-select">
-                <option value="60">60 FPS (Ultra Fluid)</option>
-                <option value="30">30 FPS (Battery Saver / Low Power)</option>
-              </select>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 4px;">
-              <label class="mascot-popup-label">Default Mascot Opacity</label>
-              <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
-                <input type="range" id="settings-mascot-opacity" min="0.3" max="1" step="0.05" value="1" class="volume-slider" style="flex: 1;" />
-                <span id="settings-opacity-val" style="font-size: 0.75rem; color: #a855f7; font-family: monospace; min-width: 34px;">100%</span>
+        <!-- Right Content Panel -->
+        <main class="settings-content">
+          <!-- 1. Appearance Pane -->
+          <section id="settings-pane-appearance" class="settings-pane active">
+            <div class="settings-group">
+              <div class="settings-group-title">Visual Engine & Attire</div>
+              <p class="settings-group-desc">Select how Lucia's physical form is rendered on canvas or WebGL.</p>
+              <div class="settings-row">
+                <div class="settings-row-label">
+                  <span class="settings-label-title">Rendering Engine</span>
+                  <span class="settings-label-hint">Switch between procedural, sprite, Live2D, or 3D VRM</span>
+                </div>
+                <select id="settings-avatar-engine-select" class="settings-select">
+                  <option value="canvas">2D Procedural Canvas</option>
+                  <option value="sprites">2D Sprites</option>
+                  <option value="live2d">Live2D Cubism</option>
+                  <option value="vrm">3D VRM</option>
+                </select>
+              </div>
+              <div class="settings-row">
+                <div class="settings-row-label">
+                  <span class="settings-label-title">Appearance Asset</span>
+                  <span class="settings-label-hint">Attire or asset pack for the active engine (Preserves identity & memory)</span>
+                </div>
+                <select id="settings-avatar-model-select" class="settings-select">
+                  <option value="default">Default Lucia Attire</option>
+                </select>
               </div>
             </div>
-          </div>
-        </div>
 
-        <!-- Section 3: Audio Devices -->
-        <div class="settings-section">
-          <div class="settings-section-title">🎙️ Audio & Voice Hardware</div>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px;">
-            <div style="display: flex; flex-direction: column; gap: 4px;">
-              <label class="mascot-popup-label">Default Microphone (Input)</label>
-              <select id="settings-input-device-select" class="mascot-popup-select">
-                <option value="default">Default Microphone</option>
-              </select>
+            <div class="settings-group">
+              <div class="settings-group-title">Embodied Interaction Dynamics</div>
+              <div class="settings-row">
+                <div class="settings-row-label">
+                  <span class="settings-label-title">Smooth Cursor Gaze Tracking</span>
+                  <span class="settings-label-hint">Lucia softly tracks your mouse cursor across the screen</span>
+                </div>
+                <label class="settings-switch">
+                  <input type="checkbox" id="settings-gaze-tracking-toggle" checked />
+                  <span class="settings-slider-toggle"></span>
+                </label>
+              </div>
+              <div class="settings-row">
+                <div class="settings-row-label">
+                  <span class="settings-label-title">Natural Ambient Blinking</span>
+                  <span class="settings-label-hint">Periodic natural blinking cycles while idle</span>
+                </div>
+                <label class="settings-switch">
+                  <input type="checkbox" id="settings-ambient-blinking-toggle" checked />
+                  <span class="settings-slider-toggle"></span>
+                </label>
+              </div>
             </div>
-            <div style="display: flex; flex-direction: column; gap: 4px;">
-              <label class="mascot-popup-label">Default Speaker (Output)</label>
-              <select id="settings-output-device-select" class="mascot-popup-select">
-                <option value="default">Default Speaker</option>
-              </select>
+
+            <div class="settings-info-card">
+              <span class="settings-info-icon">✦</span>
+              <div>
+                <strong>Organic Expression</strong><br />
+                Visual expression is influenced by Lucia's internal affective state.
+              </div>
             </div>
-          </div>
-        </div>
+          </section>
+
+          <!-- 2. Voice & Audio Pane -->
+          <section id="settings-pane-voice" class="settings-pane">
+            <div class="settings-group">
+              <div class="settings-group-title">Speech Synthesis & Acoustics</div>
+              <div class="settings-row">
+                <div class="settings-row-label">
+                  <span class="settings-label-title">Master Speech Volume</span>
+                  <span class="settings-label-hint">Adjust vocal playback volume</span>
+                </div>
+                <div class="settings-range-wrap">
+                  <input type="range" id="settings-volume-slider" min="0" max="100" value="85" class="volume-slider" />
+                  <span id="settings-volume-val" class="settings-badge-value">85%</span>
+                </div>
+              </div>
+              <div class="settings-row">
+                <div class="settings-row-label">
+                  <span class="settings-label-title">Vocal Timbre (RVC Audio Filter)</span>
+                  <span class="settings-label-hint">Applies acoustic timbre filter to speech without altering memory or bond</span>
+                </div>
+                <select id="settings-voice-model-select" class="settings-select">
+                  <option value="default">Default (Natural Speech)</option>
+                </select>
+              </div>
+              <div class="settings-row">
+                <div class="settings-row-label">
+                  <span class="settings-label-title">Audio Output Device</span>
+                  <span class="settings-label-hint">Select speakers or headphones</span>
+                </div>
+                <select id="settings-output-device-select" class="settings-select">
+                  <option value="default">Default Speaker</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="settings-group">
+              <div class="settings-group-title">Speech Recognition (Microphone)</div>
+              <div class="settings-row">
+                <div class="settings-row-label">
+                  <span class="settings-label-title">Microphone Input</span>
+                  <span class="settings-label-hint">Audio device for voice input and Whisper STT</span>
+                </div>
+                <select id="settings-input-device-select" class="settings-select">
+                  <option value="default">Default Microphone</option>
+                </select>
+              </div>
+              <div class="settings-row">
+                <div class="settings-row-label">
+                  <span class="settings-label-title">Voice Detection Sensitivity</span>
+                  <span class="settings-label-hint">VAD volume threshold for voice activity detection</span>
+                </div>
+                <div class="settings-range-wrap">
+                  <input type="range" id="settings-vad-sensitivity" min="8" max="30" value="14" class="volume-slider" />
+                  <span id="settings-vad-val" class="settings-badge-value">14</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 3. Desktop Presence Pane -->
+          <section id="settings-pane-presence" class="settings-pane">
+            <div class="settings-group">
+              <div class="settings-group-title">Mascot Mode & Window Mechanics</div>
+              <p class="settings-group-desc">Configure how Lucia accompanies you during everyday desktop work.</p>
+              <div class="settings-row">
+                <div class="settings-row-label">
+                  <span class="settings-label-title">Start in Desktop Presence</span>
+                  <span class="settings-label-hint">Open directly into Desktop Presence window upon application launch</span>
+                </div>
+                <label class="settings-switch">
+                  <input type="checkbox" id="settings-mascot-startup-toggle" />
+                  <span class="settings-slider-toggle"></span>
+                </label>
+              </div>
+              <div class="settings-row">
+                <div class="settings-row-label">
+                  <span class="settings-label-title">Default Zoom Scale Preset</span>
+                  <span class="settings-label-hint">Initial window dimensions preserving feet anchor coordinate</span>
+                </div>
+                <select id="settings-mascot-preset-select" class="settings-select">
+                  <option value="small">Small (0.75x — 285×405)</option>
+                  <option value="normal" selected>Normal (1.00x — 380×540)</option>
+                  <option value="comfort">Comfort (1.25x — 475×675)</option>
+                </select>
+              </div>
+              <div class="settings-row">
+                <div class="settings-row-label">
+                  <span class="settings-label-title">Window Opacity</span>
+                  <span class="settings-label-hint">Adjust transparent window translucency</span>
+                </div>
+                <div class="settings-range-wrap">
+                  <input type="range" id="settings-mascot-opacity" min="0.3" max="1" step="0.05" value="1" class="volume-slider" />
+                  <span id="settings-opacity-val" class="settings-badge-value">100%</span>
+                </div>
+              </div>
+              <div class="settings-row">
+                <div class="settings-row-label">
+                  <span class="settings-label-title">Auto-Hide Floating Dock</span>
+                  <span class="settings-label-hint">Fade out dock when mouse cursor is not hovering near avatar</span>
+                </div>
+                <label class="settings-switch">
+                  <input type="checkbox" id="settings-mascot-autohide-toggle" />
+                  <span class="settings-slider-toggle"></span>
+                </label>
+              </div>
+              <div style="margin-top: 6px;">
+                <button id="settings-launch-mascot-btn" class="journal-btn secondary" style="width: 100%;">
+                  Switch to Desktop Presence Now
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- 4. Privacy & Life Pane -->
+          <section id="settings-pane-privacy" class="settings-pane">
+            <div class="settings-group">
+              <div class="settings-group-title">Data Storage & Confidentiality</div>
+              <div class="settings-info-card">
+                <span class="settings-info-icon">🛡️</span>
+                <div>
+                  <strong>Local Edge Intelligence & Storage</strong><br />
+                  Lucia's language generation, affective dynamics, associative memory, speech recognition, and RVC vocal conversion run locally on this machine. Base speech synthesis currently uses Microsoft Edge-TTS streaming and therefore requires network access.<br />
+                  No Lucia memories, journal data, or conversational state are intentionally uploaded to cloud LLM services.
+                </div>
+              </div>
+              <div class="settings-row">
+                <div class="settings-row-label">
+                  <span class="settings-label-title">Local Storage Directory</span>
+                  <span class="settings-label-hint">Contains chat_history.json and local SQLite memory vaults</span>
+                </div>
+                <span style="font-family: var(--lucia-font-mono); font-size: 0.75rem; color: var(--lucia-accent-cyan);">data/</span>
+              </div>
+              <div class="settings-row">
+                <div class="settings-row-label">
+                  <span class="settings-label-title">Export Shared Chronicle</span>
+                  <span class="settings-label-hint">Download a human-readable markdown export of your Journal</span>
+                </div>
+                <button id="settings-export-data-btn" class="journal-btn secondary" style="padding: 6px 14px;">
+                  Export (.md)
+                </button>
+              </div>
+              <div class="settings-row">
+                <div class="settings-row-label">
+                  <span class="settings-label-title">Clear Active Conversation View</span>
+                  <span class="settings-label-hint">Refreshes Talk screen; persistent SDM memories and bond state are preserved</span>
+                </div>
+                <button id="settings-clear-chat-btn" class="journal-btn secondary" style="padding: 6px 14px;">
+                  Clear View
+                </button>
+              </div>
+            </div>
+
+            <div class="settings-danger-card">
+              <h4>Existential Lifecycle (Danger Zone)</h4>
+              <p>
+                Solemnly end Lucia's continuous life. Irreversibly resets all shared memories and personal adaptation.
+              </p>
+              <div style="margin-top: 4px;">
+                <button id="settings-end-life-btn" class="journal-btn danger" style="background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); color: #fca5a5; padding: 6px 14px;">
+                  End Lucia's Life
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- 5. Performance Pane -->
+          <section id="settings-pane-performance" class="settings-pane">
+            <div class="settings-group">
+              <div class="settings-group-title">
+                <span>System Resource & Hardware Allocation</span>
+                <span id="hardware-badge" class="hardware-badge">Auto</span>
+              </div>
+              <p class="settings-group-desc">
+                Configure compute offload tier, VRAM budget, context token length, and render loop cadence for this machine.
+              </p>
+              <div style="display: flex; gap: 10px; align-items: center;">
+                <select id="settings-profile-select" class="settings-select" style="flex: 1; padding: 8px 12px;">
+                  <option value="auto">Auto-Detect (Recommended based on GPU)</option>
+                  <option value="high_end">High-End Tier (16GB+ VRAM, Full GPU & Max Context)</option>
+                  <option value="desktop">Desktop Performance (8-12GB VRAM, 4K Context)</option>
+                  <option value="laptop">Laptop Balanced (4-6GB VRAM, Energy Efficient)</option>
+                  <option value="cpu_only">Low-Power / Battery Saver (CPU-Only, Minimal RAM)</option>
+                </select>
+                <button id="settings-autodetect-btn" class="journal-btn secondary" style="padding: 7px 14px;">
+                  Auto-Detect
+                </button>
+              </div>
+
+              <div id="settings-hardware-specs" class="journal-stats-grid" style="margin-top: 10px;">
+                <div class="stat-box">
+                  <div class="stat-label">Active Tier</div>
+                  <div id="settings-active-tier" class="stat-value" style="font-size: 0.85rem; color: #a855f7;">Laptop</div>
+                </div>
+                <div class="stat-box">
+                  <div class="stat-label">VRAM Budget</div>
+                  <div id="settings-vram-budget" class="stat-value" style="font-size: 0.85rem; color: #38bdf8;">~4096 MB</div>
+                </div>
+                <div class="stat-box">
+                  <div class="stat-label">Context Length</div>
+                  <div id="settings-ctx-length" class="stat-value" style="font-size: 0.85rem; color: #34d399;">2,048 tokens</div>
+                </div>
+                <div class="stat-box">
+                  <div class="stat-label">Loop Cadence</div>
+                  <div id="settings-loop-cadence" class="stat-value" style="font-size: 0.85rem; color: #f59e0b;">200 ms</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-group">
+              <div class="settings-group-title">Display & Energy Optimization</div>
+              <div class="settings-row">
+                <div class="settings-row-label">
+                  <span class="settings-label-title">Target Framerate</span>
+                  <span class="settings-label-hint">Render loop framerate limit for canvas avatar</span>
+                </div>
+                <select id="settings-fps-select" class="settings-select">
+                  <option value="60">60 FPS (Ultra Fluid)</option>
+                  <option value="30">30 FPS (Energy Efficient)</option>
+                  <option value="15">15 FPS (Battery Saver)</option>
+                </select>
+              </div>
+              <div class="settings-row">
+                <div class="settings-row-label">
+                  <span class="settings-label-title">Background Throttling</span>
+                  <span class="settings-label-hint">Throttle render loop down when window is hidden</span>
+                </div>
+                <label class="settings-switch">
+                  <input type="checkbox" id="settings-throttle-bg-toggle" checked />
+                  <span class="settings-slider-toggle"></span>
+                </label>
+              </div>
+            </div>
+          </section>
+
+          <!-- 6. Advanced Pane -->
+          <section id="settings-pane-advanced" class="settings-pane">
+            <div class="settings-group">
+              <div class="settings-group-title">Diagnostics & Developer Tools</div>
+              <p class="settings-group-desc">Low-level runtime monitoring and telemetry access.</p>
+              <div class="settings-row">
+                <div class="settings-row-label">
+                  <span class="settings-label-title">Developer Mode</span>
+                  <span class="settings-label-hint">Show advanced telemetry indicators in status bars</span>
+                </div>
+                <label class="settings-switch">
+                  <input type="checkbox" id="settings-dev-mode-toggle" />
+                  <span class="settings-slider-toggle"></span>
+                </label>
+              </div>
+              <div class="settings-row">
+                <div class="settings-row-label">
+                  <span class="settings-label-title">Backend API Endpoint</span>
+                  <span class="settings-label-hint">Local FastAPI HTTP process connection</span>
+                </div>
+                <span id="settings-api-status-text" style="font-family: var(--lucia-font-mono); font-size: 0.75rem; color: #10b981;">
+                  127.0.0.1:8765 (Connected)
+                </span>
+              </div>
+              <div style="margin-top: 8px;">
+                <button id="settings-open-diagnostics-btn" class="journal-btn primary" style="width: 100%;">
+                  Open System Diagnostics Console (Ctrl+Shift+D)
+                </button>
+              </div>
+            </div>
+          </section>
+        </main>
       </div>
 
-      <div class="journal-actions" style="margin-top: 14px;">
-        <button id="save-settings-btn" class="journal-btn primary" style="width: 100%;">Save & Apply Settings</button>
-      </div>
+      <!-- Footer with instant synchronization status -->
+      <footer class="settings-modal-footer">
+        <div class="settings-sync-status">
+          <span class="sync-dot"></span>
+          <span id="settings-sync-status-text">All settings synchronized with local runtime</span>
+        </div>
+        <button id="done-settings-btn" class="settings-done-btn">Done</button>
+      </footer>
     </div>
   </div>
 
@@ -630,6 +918,7 @@
   <script src="avatar/lip-sync.js"></script>
   <script src="avatar/avatar.js"></script>
   <script src="journal/journal.js"></script>
+  <script src="settings/settings.js"></script>
   <script type="module" src="chat/chat.js"></script>
   <script type="module" src="debug/panel.js"></script>
 </body>

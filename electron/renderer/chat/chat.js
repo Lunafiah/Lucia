@@ -82,6 +82,11 @@ class ChatController {
 
     window.chatController = this;
 
+    // Initialize Companion Settings Controller (Phase 7.5)
+    if (typeof CompanionSettings !== 'undefined') {
+      window.companionSettings = new CompanionSettings();
+    }
+
     // Initialize Canvas Avatar
     const canvas = document.getElementById('avatar-canvas');
     if (canvas && typeof AvatarRenderer !== 'undefined') {
@@ -736,23 +741,35 @@ class ChatController {
   }
 
   _setupSettingsControls() {
-    if (this.openSettingsBtn && this.settingsModal) {
+    if (this.openSettingsBtn) {
       this.openSettingsBtn.addEventListener('click', () => {
-        this.settingsModal.classList.add('active');
-        this._loadSystemProfile();
+        if (window.companionSettings && window.companionSettings.openSettings) {
+          window.companionSettings.openSettings();
+        } else if (this.settingsModal) {
+          this.settingsModal.classList.add('active');
+          this._loadSystemProfile();
+        }
       });
     }
 
     if (this.closeSettingsBtn && this.settingsModal) {
       this.closeSettingsBtn.addEventListener('click', () => {
-        this.settingsModal.classList.remove('active');
+        if (window.companionSettings && window.companionSettings.closeSettings) {
+          window.companionSettings.closeSettings();
+        } else {
+          this.settingsModal.classList.remove('active');
+        }
       });
     }
 
     if (this.settingsModal) {
       this.settingsModal.addEventListener('click', (e) => {
         if (e.target === this.settingsModal) {
-          this.settingsModal.classList.remove('active');
+          if (window.companionSettings && window.companionSettings.closeSettings) {
+            window.companionSettings.closeSettings();
+          } else {
+            this.settingsModal.classList.remove('active');
+          }
         }
       });
     }

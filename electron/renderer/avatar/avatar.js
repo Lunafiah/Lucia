@@ -138,6 +138,11 @@ class AvatarRenderer {
 
   _bindEvents() {
     const onGazeMove = (e) => {
+      if (this.gazeEnabled === false) {
+        this.mouse.targetX = 0;
+        this.mouse.targetY = 0;
+        return;
+      }
       const activeEl =
         this.activeEngine === "live2d"
           ? this.live2dCanvas
@@ -590,6 +595,30 @@ class AvatarRenderer {
   }
 
   /**
+   * Toggle mouse cursor gaze tracking.
+   */
+  setGazeTracking(enabled) {
+    this.gazeEnabled = !!enabled;
+    if (!this.gazeEnabled) {
+      this.mouse.targetX = 0;
+      this.mouse.targetY = 0;
+      this.mouse.x = 0;
+      this.mouse.y = 0;
+    }
+  }
+
+  /**
+   * Toggle natural ambient eye blinking.
+   */
+  setAmbientBlinking(enabled) {
+    this.blinkingEnabled = !!enabled;
+    if (!this.blinkingEnabled) {
+      this.isBlinking = false;
+      this.blinkProgress = 0;
+    }
+  }
+
+  /**
    * Update live PAD emotion state from telemetry polling.
    */
   updateEmotion(pad) {
@@ -644,7 +673,7 @@ class AvatarRenderer {
     this.mouse.y += (this.mouse.targetY - this.mouse.y) * 0.06;
 
     // Blink cycle
-    if (now >= this.nextBlinkTime && !this.isBlinking) {
+    if (this.blinkingEnabled !== false && now >= this.nextBlinkTime && !this.isBlinking) {
       this.isBlinking = true;
       this.blinkProgress = 0;
     }

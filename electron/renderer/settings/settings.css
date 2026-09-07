@@ -1,0 +1,405 @@
+/* ==========================================================================
+   Lucia Companion Settings Styles (settings.css)
+   Sub-Phase 7.5: Categorized Settings System ("How I Want Lucia to Live with Me on This Machine")
+   ========================================================================== */
+
+/* Settings Modal Card (Two-column layout) */
+.settings-modal-card {
+  width: 92%;
+  max-width: 820px;
+  min-height: 520px;
+  max-height: 86vh;
+  background: var(--lucia-surface-glass-modal);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid var(--lucia-border-medium);
+  border-radius: var(--lucia-radius-xl);
+  box-shadow: var(--lucia-shadow-lg), 0 0 50px rgba(139, 92, 246, 0.15);
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+  color: var(--lucia-text-primary);
+  user-select: text !important;
+}
+
+/* Settings Modal Header */
+.settings-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--lucia-border-subtle);
+  background: rgba(10, 8, 22, 0.45);
+}
+
+.settings-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.settings-title-icon {
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+.settings-modal-header h2 {
+  font-family: var(--lucia-font-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, var(--lucia-text-primary), #c4b5fd);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0;
+}
+
+/* Two-column Body */
+.settings-modal-layout {
+  display: flex;
+  flex: 1;
+  min-height: 0; /* Important for flex child scrolling */
+  overflow: hidden;
+}
+
+/* Left Sidebar Navigation */
+.settings-sidebar {
+  width: 210px;
+  min-width: 210px;
+  background: rgba(12, 10, 26, 0.55);
+  border-right: 1px solid var(--lucia-border-subtle);
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow-y: auto;
+}
+
+.settings-nav-section-title {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--lucia-text-faint);
+  padding: 8px 12px 4px 12px;
+  font-weight: 600;
+}
+
+.settings-tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 14px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--lucia-radius-md);
+  color: var(--lucia-text-muted);
+  font-family: var(--lucia-font-display);
+  font-size: var(--lucia-text-sm);
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: all var(--lucia-trans-fast);
+}
+
+.settings-tab-btn:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--lucia-text-primary);
+}
+
+.settings-tab-btn.active {
+  background: rgba(168, 85, 247, 0.12);
+  border-color: rgba(168, 85, 247, 0.3);
+  color: #d8b4fe;
+  box-shadow: 0 0 16px rgba(168, 85, 247, 0.15);
+}
+
+.settings-tab-icon {
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+/* Right Content Panel */
+.settings-content {
+  flex: 1;
+  padding: 20px 26px;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+/* Tab Panes */
+.settings-pane {
+  display: none;
+  flex-direction: column;
+  gap: 20px;
+  animation: settingsFadeIn var(--lucia-trans-fast);
+}
+
+.settings-pane.active {
+  display: flex;
+}
+
+@keyframes settingsFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Section Grouping inside Panes */
+.settings-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.settings-group-title {
+  font-size: var(--lucia-text-sm);
+  font-weight: 600;
+  color: var(--lucia-text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.settings-group-desc {
+  font-size: var(--lucia-text-xs);
+  color: var(--lucia-text-muted);
+  line-height: 1.45;
+  margin: -4px 0 2px 0;
+}
+
+/* Form Controls & Rows */
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--lucia-border-subtle);
+  border-radius: var(--lucia-radius-md);
+}
+
+.settings-row-label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.settings-label-title {
+  font-size: var(--lucia-text-sm);
+  color: var(--lucia-text-primary);
+  font-weight: 500;
+}
+
+.settings-label-hint {
+  font-size: var(--lucia-text-xs);
+  color: var(--lucia-text-faint);
+}
+
+/* Select & Inputs */
+.settings-select {
+  background: rgba(14, 12, 28, 0.85);
+  border: 1px solid var(--lucia-border-medium);
+  border-radius: var(--lucia-radius-sm);
+  color: var(--lucia-text-primary);
+  padding: 6px 12px;
+  font-size: var(--lucia-text-xs);
+  font-family: inherit;
+  outline: none;
+  cursor: pointer;
+  transition: border-color var(--lucia-trans-fast);
+}
+
+.settings-select:focus {
+  border-color: var(--lucia-accent-amethyst);
+}
+
+/* Toggle Switch */
+.settings-switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.settings-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.settings-slider-toggle {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: var(--lucia-radius-pill);
+  transition: var(--lucia-trans-fast);
+}
+
+.settings-slider-toggle:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 3px;
+  bottom: 3px;
+  background: #ffffff;
+  border-radius: 50%;
+  transition: var(--lucia-trans-fast);
+}
+
+.settings-switch input:checked + .settings-slider-toggle {
+  background: var(--lucia-accent-amethyst);
+}
+
+.settings-switch input:checked + .settings-slider-toggle:before {
+  transform: translateX(18px);
+}
+
+/* Range Slider with Numeric Badge */
+.settings-range-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  max-width: 240px;
+}
+
+.settings-badge-value {
+  font-family: var(--lucia-font-mono);
+  font-size: var(--lucia-text-xs);
+  color: var(--lucia-accent-amethyst);
+  min-width: 40px;
+  text-align: right;
+}
+
+/* Informational Cards */
+.settings-info-card {
+  padding: 12px 16px;
+  background: rgba(168, 85, 247, 0.05);
+  border: 1px solid rgba(168, 85, 247, 0.18);
+  border-radius: var(--lucia-radius-md);
+  font-size: var(--lucia-text-xs);
+  color: var(--lucia-text-secondary);
+  line-height: 1.5;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.settings-info-icon {
+  color: var(--lucia-accent-amethyst);
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+/* Danger Zone Card */
+.settings-danger-card {
+  padding: 14px 16px;
+  background: rgba(239, 68, 68, 0.06);
+  border: 1px solid rgba(239, 68, 68, 0.22);
+  border-radius: var(--lucia-radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.settings-danger-card h4 {
+  font-size: var(--lucia-text-sm);
+  color: #fca5a5;
+  margin: 0;
+  font-weight: 600;
+}
+
+.settings-danger-card p {
+  font-size: var(--lucia-text-xs);
+  color: var(--lucia-text-muted);
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* Modal Footer */
+.settings-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 24px;
+  border-top: 1px solid var(--lucia-border-subtle);
+  background: rgba(10, 8, 22, 0.6);
+}
+
+.settings-sync-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--lucia-text-xs);
+  color: var(--lucia-text-muted);
+}
+
+.sync-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--lucia-accent-emerald);
+  box-shadow: 0 0 6px var(--lucia-accent-emerald);
+}
+
+.settings-done-btn {
+  padding: 7px 20px;
+  background: linear-gradient(135deg, var(--lucia-accent-amethyst), var(--lucia-accent-violet));
+  border: none;
+  border-radius: var(--lucia-radius-md);
+  color: #ffffff;
+  font-family: var(--lucia-font-display);
+  font-size: var(--lucia-text-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--lucia-trans-fast);
+}
+
+.settings-done-btn:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+  box-shadow: 0 0 12px rgba(168, 85, 247, 0.35);
+}
+
+/* Hardware Specs Grid in Performance Tab */
+.journal-stats-grid,
+.settings-stats-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 10px !important;
+  margin-top: 12px !important;
+}
+
+.stat-box {
+  background: rgba(18, 16, 38, 0.6) !important;
+  border: 1px solid var(--lucia-border-subtle) !important;
+  border-radius: var(--lucia-radius-md) !important;
+  padding: 10px 14px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+}
+
+.stat-label {
+  font-size: 0.68rem !important;
+  color: var(--lucia-text-muted) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  font-weight: 600 !important;
+}
+
+.stat-value {
+  font-family: var(--lucia-font-mono) !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+}
