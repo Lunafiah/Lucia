@@ -41,6 +41,12 @@ def integrated_server(tmp_path):
         orch = InstrumentedOrchestrator(config)
         api_module._orchestrator = orch
         api_module._resource_profile = get_resource_profile("laptop")
+        # Phase 8: force live mode so /process and /lifecycle endpoints are not blocked.
+        # test_simulation_api uses scope=module and leaves _mode/_sim_runtime set globally.
+        original_mode = api_module._mode
+        original_sim_runtime = api_module._sim_runtime
+        api_module._mode = "live"
+        api_module._sim_runtime = None
         client = TestClient(api_module.app)
 
         yield client, orch
@@ -48,16 +54,18 @@ def integrated_server(tmp_path):
         orch.shutdown()
         api_module._orchestrator = None
         api_module._resource_profile = None
+        api_module._mode = original_mode
+        api_module._sim_runtime = original_sim_runtime
 
 
 class TestAPIServerIntegration:
     def test_end_to_end_process_and_state_evolution(self, integrated_server):
         client, orch = integrated_server
 
-        # Healthcheck
+        # Healthcheck — Phase 8 adds 'mode' and 'healthy' fields; check only 'status'.
         health_resp = client.get("/health")
         assert health_resp.status_code == 200
-        assert health_resp.json() == {"status": "ok"}
+        assert health_resp.json()["status"] == "ok"
 
         # Initial state before turn
         state_0 = client.get("/state").json()
