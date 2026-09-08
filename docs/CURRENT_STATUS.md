@@ -21,7 +21,7 @@ Lucia has successfully completed **Phase 8 (Runtime Isolation & Simulation Envir
 │   Phase 6: Refinement, Packaging & Mascot Mode     [✅ COMPLETED]      │
 │   Phase 7: UI Refactoring (Personal Room UX)       [✅ COMPLETED]      │
 │   Phase 8: Runtime Isolation & Simulation          [✅ COMPLETED]      │
-│   Phase 9: Cognitive Unification & Convergence     [📋 SPECIFIED]      │
+│   Phase 9: Cognitive Unification & Convergence     [🏛️ GATE APPROVED]  │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -145,16 +145,24 @@ Lucia/
 
 ---
 
-## 5. Active Phase 9 Preparation & Next Steps
+## 5. Active Phase 9 Preparation & Approved Architecture Gate
 
-Following the comprehensive post-Phase-8 architectural review (`PHASE_8_ARCHITECTURE_REVIEW.md`), development transitions to **Phase 9: Cognitive Unification & Convergence**:
+Following the comprehensive post-Phase-8 architectural review (`PHASE_8_ARCHITECTURE_REVIEW.md`) and formal **Architecture Decision Gate** (`PHASE_9_ARCHITECTURE_GATE.md`), the architecture for **Phase 9: Cognitive Unification & Convergence** has been verified and approved:
 
-1. **Unify the Cognitive Pipeline**:
-   - Promote `server.py` to instantiate `PresenceOrchestrator` (inheriting from `InferencePipelineOrchestrator`).
-   - Wire Active Inference (Layer 4) and online CPU LNN Plasticity into active production turns.
-   - Eliminate double-stimulus and double-homeostatic invocation in `InstrumentedOrchestrator`.
-2. **Complete Brain ↔ Body IPC Bridge**:
-   - Migrate remaining direct `fetch()` calls in `chat.js` (`/voice/*`, `/profile`, `/history`, `/system/profile`) to secure `window.lucia` IPC channels.
-   - Implement dynamic port discovery to eliminate hardcoded port fragility.
-3. **Execution Guardrails**:
-   - Introduce request mutex for turn processing to protect `_history` and pipeline state under concurrency.
+1. **Unified Cognitive Orchestrator (`CognitiveOrchestrator`)**:
+   - Deprecate 5-tier inheritance hierarchy (`Orchestrator` $\rightarrow$ `MemoryAugmentedOrchestrator` $\rightarrow$ `InferencePipelineOrchestrator` $\rightarrow$ `PresenceOrchestrator`).
+   - Implement `CognitiveOrchestrator` composing Layers 1–6 in a single linear pass with property telemetry (ADR-014).
+   - Completely eliminate double-stimulus push and double-homeostatic recording.
+2. **Causal Active Inference**:
+   - Wire `ActiveInferenceEngine` into every live turn before stimulus integration (ADR-015).
+   - Evaluate Prediction Surprise $\mathcal{S}$; modulate Homeostatic Cognitive Load, Tension, and trigger reasoning depth $k=2$ when $\mathcal{S} > 0.60$.
+3. **Decoupled Expression Pipeline for Voice**:
+   - Voice synthesis remains an asynchronous service triggered via IPC by the Electron Body UI after cognitive turn completion (ADR-016).
+   - Guarantees zero latency penalty for text, failure isolation, and zero compute when muted.
+4. **Two-Stage LNN Plasticity**:
+   - Online salience tagging during turns; offline CPU backprop consolidation during idle periods ($T_{\text{idle}} \ge 45\text{s}$) or salient batch overflow ($\ge 8$) (ADR-017).
+5. **Turn-Level Concurrency Protection**:
+   - Wrap `POST /process` in an asynchronous turn mutex (`asyncio.Lock()`) in `server.py` and a re-entrant lock in `CognitiveOrchestrator` (ADR-018).
+6. **Complete Brain ↔ Body IPC Remediation**:
+   - Migrate all 12 remaining direct `fetch()` calls in `chat.js` to secure `window.lucia.*` IPC channels with dynamic port resilience (ADR-019).
+

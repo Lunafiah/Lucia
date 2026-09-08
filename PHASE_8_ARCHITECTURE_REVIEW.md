@@ -456,3 +456,19 @@ The following items are recognized architectural requirements that are explicitl
 Lucia's core foundations—pre-reflective affect, homeostatic budgeting, associative memory, embodied voice/avatar presence, and simulation isolation—are exceptionally sound and mathematically rigorous.
 
 The system is declared **ARCHITECTURALLY STABLE AND READY FOR PHASE 9 SPECIFICATION**.
+
+---
+
+## 16. Post-Audit Architectural Gate Resolutions (F-01 through F-04)
+
+On September 9, 2026, the formal **Phase 9 Architectural Decision Gate** (`PHASE_9_ARCHITECTURE_GATE.md`) reviewed and resolved all primary findings identified in this audit:
+
+| Finding ID | Title | Audit Finding | Architecture Gate Resolution | Approved Destination |
+|---|---|---|---|---|
+| **F-01** | Layer 4 Active Inference Bypassed & Decorative | Active Inference and LNN trainer not instantiated in `server.py`; prediction error not used downstream. | **RESOLVED**: Wire Active Inference into the causal loop before homeostasis; Prediction Surprise $\mathcal{S}$ modulates Cognitive Load, Tension, and Reasoning Depth ($k=2$ when $\mathcal{S} > 0.6$). | Phase 9 Core |
+| **F-02** | Cognitive Turn Ownership & Double Execution | `InstrumentedOrchestrator` ran Steps 1–4 twice; deep inheritance ladder duplicated code. | **RESOLVED**: Deprecate 5-tier inheritance. Implement `CognitiveOrchestrator` composing Layers 1–6 in a single linear pass with property telemetry. | Phase 9 Core |
+| **F-03** | Insufficient Concurrency / State Protection | `process()` had no concurrency mutex in `server.py`; state could be corrupted by concurrent requests. | **RESOLVED**: Enforce strict serialization via `asyncio.Lock()` in `server.py` and re-entrant `_turn_lock` in `CognitiveOrchestrator`. `/state` remains non-blocking ($\le 10\text{ms}$) via `_state_lock`. | Phase 9 Core |
+| **F-04** | Direct Renderer `fetch()` Residuals | 12 direct `fetch()` calls in `chat.js` with hardcoded port. | **RESOLVED**: Migrate all 12 calls to secure `window.lucia.*` IPC bridge methods in `preload.js` and `ipc-bridge.js`. | Phase 9 Body |
+| **Voice Architecture** | Synchronous vs Decoupled Voice Synthesis | Proposed unification inside `/process` would add 500ms latency to text and waste compute when muted. | **RESOLVED**: Decouple Voice as an asynchronous Expression Service triggered by the Body layer via IPC after cognitive turn completion. | Phase 9 Expression |
+| **Plasticity Trigger** | "Every 16 turns" Arbitrary Timer | Uninformative batch training; CPU contention during conversation. | **RESOLVED**: Adopt two-stage plasticity: online salience tagging during turns, offline consolidation on CPU during idle rest periods ($T_{idle} \ge 45\text{s}$). | Phase 9 Learning |
+

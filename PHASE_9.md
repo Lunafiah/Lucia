@@ -1,203 +1,146 @@
-# PHASE_9.md — Cognitive Unification & System Convergence Specification
+# PHASE_9.md — Unified Cognitive Architecture Specification
 
-> **Authoritative Phase 9 Specification: Unifying the 6-Layer Cognitive Pipeline, Completing Brain ↔ Body IPC Mediation, and Hardening Concurrency**  
-> **Status**: APPROVED ARCHITECTURAL SPECIFICATION (Implementation Pending)  
+> **Authoritative Phase 9 Specification: Unified Cognitive Orchestrator, Causal Active Inference, Decoupled Voice Expression, and Complete IPC Mediation**  
+> **Status**: APPROVED AT ARCHITECTURE GATE (Implementation Pending Sign-Off)  
+> **Architecture Gate Reference**: [`PHASE_9_ARCHITECTURE_GATE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/PHASE_9_ARCHITECTURE_GATE.md)  
 > **Baseline Review**: [`PHASE_8_ARCHITECTURE_REVIEW.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/PHASE_8_ARCHITECTURE_REVIEW.md)  
-> **Target Release**: Phase 9 Milestone
+> **Target Milestone**: Phase 9 (System Convergence & Cognitive Unification)
 
 ---
 
-## 1. Phase 9 Objective
+## 1. Executive Summary & Core Objective
 
-The objective of **Phase 9** is **Cognitive Unification & System Convergence**.
+The objective of **Phase 9** is **Cognitive Unification & Architectural Convergence**.
 
-Phase 9 does not add speculative end-user features (such as vision models or external agent toolbars). Instead, Phase 9 resolves the architectural debts identified in the Post-Phase-8 Architecture Review by:
-1. Connecting the complete 6-layer cognitive pipeline into the live production turn loop (`server.py`), activating **Active Inference Free Energy Minimization** and **Online CPU LNN Plasticity** (Layer 4).
-2. Eliminating redundant stimulus pushes and homeostatic double-recordings in `InstrumentedOrchestrator`.
-3. Completing the **Brain ↔ Body IPC Bridge**, migrating all remaining direct `fetch()` calls in `chat.js` to secure `window.lucia` IPC channels with dynamic port resilience.
-4. Implementing turn-level concurrency protection for dialogue history and inference pipelines.
+During the Phase 9 Architectural Decision Gate, the theoretical Russian-doll inheritance model (`UnifiedPresenceOrchestrator`) was formally rejected. In its place, Phase 9 establishes a **clean, composition-based cognitive architecture** that resolves all architectural findings from Phase 8:
 
----
-
-## 2. Architectural Motivation
-
-During Phases 1 through 8, subsystems were developed and validated in milestone increments:
-- Phase 2 created `MemoryAugmentedOrchestrator` (SDM + Ecphory + Decay).
-- Phase 4 created `InferencePipelineOrchestrator` (Active Inference + LNN Plasticity).
-- Phase 5 created `PresenceOrchestrator` (coupling VoiceEngine to the cognitive pipeline).
-- Phase 8 created `SimulationRuntime` and `SimClock`.
-
-However, `src/api/server.py` remained frozen on `InstrumentedOrchestrator` (inheriting directly from Phase 2's `MemoryAugmentedOrchestrator`). As a result, the live companion in production has been executing without Layer 4 active inference or CPU plasticity, while voice synthesis remained an out-of-band asynchronous client request.
-
-Phase 9 converges these separated modules into a single, unified, production-grade cognitive presence.
+1. **Unified Cognitive Orchestrator (`CognitiveOrchestrator`)**: Deprecates the fragile 5-tier inheritance ladder (`Orchestrator` $\rightarrow$ `MemoryAugmentedOrchestrator` $\rightarrow$ `InferencePipelineOrchestrator` $\rightarrow$ `PresenceOrchestrator` + `InstrumentedOrchestrator`). Implements a single, cohesive orchestrator composing Layers 1–6 in a linear, non-redundant execution flow.
+2. **Causal Active Inference (Layer 4 Integration)**: Integrates `ActiveInferenceEngine` into every live turn. Evaluates pre-stimulus prediction expectations, measures Prediction Surprise $\mathcal{S}_t = \|A \cdot p_{t-1} + b - p_t\|_2$, and causally modulates Homeostatic Cognitive Load, Tension, and Reasoning Depth ($k=2$ when $\mathcal{S}_t > 0.60$).
+3. **Decoupled Expression Pipeline for Voice**: Voice synthesis remains an independent multimodal expression service triggered asynchronously by the Body UI via IPC. It is decoupled from the synchronous cognitive return, guaranteeing zero text latency, complete failure isolation, and zero compute waste when muted.
+4. **Two-Stage LNN Plasticity**: Replaces arbitrary "every 16 turns" batch training with online salience tagging during turns and offline consolidation on CPU during idle rest periods ($T_{\text{idle}} \ge 45\text{s}$) or salience threshold overflows.
+5. **Strict Serialized Cognitive Turns**: Enforces an asynchronous turn mutex (`asyncio.Lock()`) in `server.py` and a threading lock in `CognitiveOrchestrator` to prevent concurrent turn corruption.
+6. **Complete Brain ↔ Body IPC Remediation**: Eliminates all 12 direct `fetch()` calls in `chat.js`, routing all voice, history, profile, and asset queries through `window.lucia.*` via `preload.js` and `ipc-bridge.js`.
 
 ---
 
-## 3. Problems Inherited from Phase 8
+## 2. Canonical Cognitive Turn Flow
 
-As documented in `PHASE_8_ARCHITECTURE_REVIEW.md`, Phase 9 inherits four specific structural defects:
-
-1. **Layer 4 Cognitive Bypassing (Critical)**:
-   - `ActiveInferenceEngine` and `LNNTrainer` are fully tested in unit suites but completely bypassed in `POST /process` live turns because `server.py` does not instantiate `InferencePipelineOrchestrator`.
-2. **Double Homeostatic Accounting (High)**:
-   - `InstrumentedOrchestrator._execute_pipeline()` in `server.py` calls `push_stimulus()` and `record_input()` to capture telemetry, and then delegates to `super()._execute_pipeline()`, which calls both methods a second time. This causes metabolic energy to deplete at $2\times$ the specified rate.
-3. **Brain ↔ Body IPC Incompleteness (Medium)**:
-   - Eight auxiliary endpoints in `electron/renderer/chat/chat.js` (`/voice/synthesize`, `/profile`, `/history`, `/system/profile`, etc.) still make unmediated `window.fetch()` calls to `127.0.0.1:8765`, violating process isolation and breaking if the backend port changes.
-4. **Unprotected Turn Concurrency (High)**:
-   - `Orchestrator.process()` mutates `self._history` and sub-module buffers without a pipeline execution mutex, creating race-condition vulnerabilities if multiple requests arrive concurrently.
-
----
-
-## 4. Approved Architectural Direction
-
-Phase 9 establishes the following architectural solutions:
-
-```
-┌────────────────────────────────────────────────────────────────────────────────────────┐
-│                          PHASE 9 CONVERGED ARCHITECTURE                                │
-│                                                                                        │
-│   FastAPI Server (server.py)                                                           │
-│   └── UnifiedPresenceOrchestrator                                                      │
-│       └── PresenceOrchestrator (Phase 5 VoiceEngine coupling)                          │
-│           └── InferencePipelineOrchestrator (Phase 4 Active Inference & LNN Plasticity)│
-│               └── MemoryAugmentedOrchestrator (Phase 2 SDM, Ecphory & Decay)           │
-│                   └── Base Orchestrator (Phase 1 Gating, ODE, Homeostasis, LLM)        │
-│                                                                                        │
-│   Execution Guarantees:                                                                │
-│   • Single-pass stimulus encoding and homeostatic accounting per turn.                 │
-│   • Asynchronous turn-level queue/mutex protecting conversation history and state.     │
-│   • Real-time Active Inference surprise calculation recorded in StabilityEvaluator.   │
-│   • 100% IPC mediation via window.lucia bridge; zero raw fetch() in renderer.         │
-│   • Dynamic port negotiation between ProcessManager and Renderer.                      │
-└────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-1. **Unified Orchestration Hierarchy**:
-   - Create `UnifiedPresenceOrchestrator` in `src/core/orchestrator/unified_orchestrator.py` (or promote `src/core/presence/orchestrator.py`), ensuring that `server.py` runs the entire 10-step cognitive pipeline (Sensors $\rightarrow$ Limbic ODE $\rightarrow$ Somatic Budgeting $\rightarrow$ Active Inference $\rightarrow$ Memory Echo $\rightarrow$ Prompt Assembly $\rightarrow$ LLM $\rightarrow$ Boundary Filter $\rightarrow$ SDM Store $\rightarrow$ LNN Experience Buffer).
-2. **Surgical Telemetry Tap**:
-   - Rather than re-executing steps 1-4, telemetry snapshotting (`_last_somatic`, `_last_constraints`) will be tapped via pipeline callbacks or hook bus events (`on_somatic_updated`).
-3. **Complete IPC Channel Coverage**:
-   - Implement Electron main handlers for:
-     `voice:synthesize`, `voice:transcribe`, `voice:models`, `voice:select-model`, `profile:get`, `profile:set`, `history:get`, `models:avatar:get`.
-   - Update `chat.js` to call exclusively `window.lucia.*`.
-
----
-
-## 5. Scope
-
-### Phase 9.1: Cognitive Pipeline Convergence
-- [ ] Implement `UnifiedPresenceOrchestrator` inheriting from `InferencePipelineOrchestrator` and composing `VoiceEngine`.
-- [ ] Connect Active Inference belief state ($A, b$) and prediction surprise to the live turn cycle.
-- [ ] Enqueue experience tuples into `LNNTrainer` ring buffer during live turns for background CPU plasticity.
-- [ ] Fix double-stimulus and double-homeostatic execution in `server.py`.
-- [ ] Add turn-level concurrency lock (`asyncio.Lock`) in `server.py` wrapping turn processing.
-
-### Phase 9.2: Complete IPC Mediation & Port Resilience
-- [ ] Implement missing IPC channels in `electron/main/ipc-bridge.js`:
-  - `voice:synthesize`
-  - `voice:transcribe`
-  - `voice:get-models`
-  - `voice:select-model`
-  - `profile:get`
-  - `profile:set`
-  - `history:get`
-  - `models:avatar:get`
-- [ ] Expose all new channels cleanly via `electron/preload/preload.js` under `window.lucia`.
-- [ ] Refactor `electron/renderer/chat/chat.js` to eliminate all 8 remaining direct `fetch()` calls.
-- [ ] Implement dynamic port handoff from `process-manager.js` to `ipc-bridge.js` and renderer.
-
-### Phase 9.3: Stability & Telemetry Integration
-- [ ] Feed Active Inference prediction surprise directly into `StabilityEvaluator.record_surprise()`.
-- [ ] Update `GET /telemetry/stability` and `GET /state` to reflect live active inference metrics.
-- [ ] Expose active inference surprise and LNN trainer batch progress in the Diagnostics modal.
-
-### Phase 9.4: Verification & Regression Testing
-- [ ] Write integration test verifying that `POST /process` updates Active Inference belief matrix $A$.
-- [ ] Write integration test verifying that `POST /process` enqueues tuples to `LNNTrainer`.
-- [ ] Write test verifying energy depletes by exactly $0.05$ on a single turn (confirming double-depletion fix).
-- [ ] Write Jest tests verifying zero direct `fetch()` calls in `chat.js` and full IPC coverage.
-- [ ] Re-run full test suite ensuring $\ge 604$ tests pass without regression.
-
----
-
-## 6. Non-Goals
-
-The following items are explicitly out of scope for Phase 9:
-- **No Desktop Vision / Screen Reading (VLM)**: ReAct desktop automation and Qwen2.5-VL screen reading remain deferred (Phase 10+).
-- **No Cloud API Integrations**: Zero cloud dependencies invariant remains absolute (100% local edge execution).
-- **No Persona Switchers**: Single Continuous Life ontology remains invariant; avatars are Appearance only.
-- **No Introspective LLM Prompts**: Strict boundary layer invariants against self-reported affect remain absolute.
-- **No Production Code Refactoring of Solvers**: Core ODE equations (`solve_ivp` RK45) and SDM Hamming mathematics remain unchanged.
-
----
-
-## 7. Dependencies
-
-- Python 3.10+ / 3.12+ virtual environment with `torch`, `torchdiffeq`, `scipy`, `numpy`, `fastapi`, `uvicorn`.
-- Electron 33+ desktop runtime with `jest` testing framework.
-- Pre-existing verified test suite: 450 Python unit/integration tests + 35 property tests + 119 Jest tests.
-
----
-
-## 8. Implementation Sequence
-
-```
-Step 1: Cognitive Pipeline Unification (Python Core)
-  ├── 1.1 Create UnifiedPresenceOrchestrator in src/core/orchestrator/
-  ├── 1.2 Eliminate double-execution bug in InstrumentedOrchestrator
-  ├── 1.3 Wire Active Inference & LNNTrainer into server.py
-  └── 1.4 Add turn-level concurrency mutex
-
-Step 2: Stability & Telemetry Fusion
-  ├── 2.1 Connect Active Inference surprise to StabilityEvaluator
-  └── 2.2 Expose Layer 4 metrics in GET /state and GET /telemetry/stability
-
-Step 3: Brain ↔ Body IPC Bridge Completion (Electron)
-  ├── 3.1 Add IPC handlers in electron/main/ipc-bridge.js
-  ├── 3.2 Expose IPC bridge in electron/preload/preload.js
-  └── 3.3 Migrate electron/renderer/chat/chat.js to eliminate all fetch() calls
-
-Step 4: Comprehensive Validation
-  ├── 4.1 Execute new unit and integration tests for Layer 4 live turn integration
-  ├── 4.2 Execute Jest tests for IPC bridge and chat.js fetch elimination
-  └── 4.3 Full regression run across Python, Property, and Jest suites
+```mermaid
+flowchart TD
+    UserMsg([User Input Text]) --> L1[Layer 1: StimulusProcessor]
+    L1 -->|16D Stimulus Vector x| L4a[Layer 4a: Active Inference Prediction]
+    L4a -->|Expected p̂| L2[Layer 2: Limbic ODE solve_ivp]
+    L2 -->|Observed PAD p_t| L4b[Layer 4b: Active Inference Surprise]
+    L4b -->|Surprise S & Belief Update| L3[Layer 3: Homeostatic Engine]
+    L3 -->|Somatic Markers & Constraints [k, temp, latency]| L5a[Layer 5a: Ecphory Query]
+    L5a -->|Subconscious Echo Vector| L6a[Layer 6a: Prompt Assembler]
+    L6a -->|Conditioned Prompt| L6b[Layer 6b: Local SLM Generate]
+    L6b -->|Raw Text| L6c[Layer 6c: BoundaryLayer Filter]
+    L6c -->|Safe Response| MemoryStore[Layer 5b: SDM Trace Store with Surprise Salience]
+    MemoryStore --> HistAppend[Append Working History Pair]
+    HistAppend --> PlasticityTag[Layer 4c: Tag Salient Experience for Idle Consolidation]
+    PlasticityTag --> TurnReturn([Return Text + PAD + Somatic Snapshot])
 ```
 
 ---
 
-## 9. Validation Requirements
+## 3. Subsystem Specifications
 
-To be accepted, Phase 9 implementation must satisfy the following automated validation criteria:
+### 3.1. Unified Cognitive Orchestrator (`src/core/orchestrator/cognitive_orchestrator.py`)
+- **Pattern**: Composition and Dependency Injection.
+- **Collaborators**:
+  - `StimulusProcessor` (Layer 1)
+  - `EmotionCore` (Layer 2)
+  - `HomeostaticEngine` (Layer 3)
+  - `ActiveInferenceEngine` (Layer 4)
+  - `AffectiveMemory` & `EcphoryEngine` (Layer 5)
+  - `PromptAssembler`, `LLMBackend`, `BoundaryLayer` (Layer 6)
+  - `LNNTrainer` (Layer 4 Plasticity, optional)
+- **Turn Method**: `process(input_text: str) -> TurnResult`:
+  - Enforces `self._turn_lock`.
+  - Executes the 10 stages in exact causal order.
+  - Updates direct telemetry properties: `last_somatic`, `last_constraints`, `last_pred_error`, `last_echo_resonance`.
+  - Guarantees **exactly one** `push_stimulus()` and **exactly one** `record_input()` call per turn.
 
-1. **VAL-1: Active Inference Live Verification**:
-   - A test must execute 5 conversational turns via `POST /process` and assert that the generative transition model matrix $A$ in `ActiveInferenceEngine` has shifted from its initial identity state ($A \neq I_3$).
-2. **VAL-2: Single Energy Depletion Verification**:
-   - A test must call `POST /process` with an initial energy of $1.0$ and assert that post-turn energy is exactly $0.95 \pm 0.001$ (confirming the fix for the double-depletion bug R-02).
-3. **VAL-3: LNN Plasticity Enqueue Verification**:
-   - A test must assert that after 16 conversational turns via `POST /process`, `LNNTrainer` has accumulated a batch of 16 experience tuples.
-4. **VAL-4: Zero Direct Fetch in Renderer**:
-   - A static analysis / Jest test must assert that `grep -n "fetch(" electron/renderer/chat/chat.js` returns zero matches outside comments.
-5. **VAL-5: Zero Regression Baseline**:
-   - All 450 existing Python unit/integration tests, 35 property tests, and 119 Jest tests must pass.
+### 3.2. Causal Active Inference Integration
+- Before pushing stimulus:
+  $$\hat{p} = A \cdot p_{\text{before}} + b$$
+- After ODE integration:
+  $$\mathcal{S} = \|A \cdot p_{\text{before}} + b - p_{\text{after}}\|_2$$
+- Update belief state:
+  $$\Delta A = -2\eta (\hat{p} - p_{\text{after}}) p_{\text{before}}^T - 2\eta \lambda_{KL} (A - I)$$
+  $$\Delta b = -2\eta (\hat{p} - p_{\text{after}})$$
+- Somatic Modulation:
+  - $\text{CognitiveLoad} = \text{clip}(\text{base} + 0.35 \cdot \mathcal{S}, 0.0, 1.0)$
+  - $\text{Tension} = \text{clip}(\text{base} + 0.25 \cdot \mathcal{S}, 0.0, 1.0)$
+  - If $\mathcal{S} > 0.60$ or $\text{Tension} > 0.70 \implies \text{reasoning\_depth} = 2$.
+  - $\Delta T = +0.05 \cdot \mathcal{S}$.
+
+### 3.3. Two-Stage LNN Plasticity Model
+- **Turn Time**: Fast online tagging. Compute $\text{Salience} = 0.6 \cdot \mathcal{S} + 0.4 \cdot \|PAD - PAD_{\text{philia}}\|_2$. If $\text{Salience} > 0.35$, push tuple $(x, h_{\text{before}}, h_{\text{after}}, \text{Salience})$ to consolidation buffer.
+- **Idle Time**: Background worker runs when $T_{\text{idle}} \ge 45\text{s}$ and buffer count $\ge 4$, or if buffer reaches 8 samples. Runs `torchdiffeq.odeint` on CPU with AdamW, clips gradient norm to 1.0, and executes atomic weight swap under `_train_lock` ($\le 2\text{ms}$).
+
+### 3.4. Backend Server Concurrency & Serialization (`src/api/server.py`)
+- Instantiates `CognitiveOrchestrator` directly from configuration.
+- Protects `POST /process` with `_turn_lock = asyncio.Lock()`.
+- Returns cognitive payload:
+  ```json
+  {
+    "response": "...",
+    "call_id": "...",
+    "pad": { "pleasure": 0.25, "arousal": -0.04, "dominance": 0.05 },
+    "somatic": { "stability": 0.96, "cognitive_load": 0.12, "energy": 0.85, "tension": 0.04 },
+    "surprise": 0.082
+  }
+  ```
+- `GET /state` reads directly from `_emotion_core` and `CognitiveOrchestrator` properties under `_state_lock` without blocking on the turn lock ($\le 10\text{ms}$ response time).
+
+### 3.5. Electron Body IPC Remediation (`electron/`)
+- In `electron/preload/preload.js`: Expose complete API:
+  - `window.lucia.chat.send(text)`
+  - `window.lucia.chat.getHistory()`
+  - `window.lucia.voice.synthesize(text, pad)`
+  - `window.lucia.voice.transcribe(audioBlob)`
+  - `window.lucia.voice.getModels()`
+  - `window.lucia.voice.selectModel(modelName)`
+  - `window.lucia.system.getProfile()`
+  - `window.lucia.system.setProfile(profile)`
+  - `window.lucia.models.getAvatars()`
+- In `electron/main/ipc-bridge.js`: Implement main process proxy handlers for dynamic port routing.
+- In `electron/renderer/chat/chat.js`: Replace all 12 direct `fetch()` calls with their corresponding `window.lucia.*` invocations.
 
 ---
 
-## 10. Acceptance Criteria
+## 4. Phase 9 Implementation Roadmap
 
-| Criteria ID | Target Requirement | Acceptance Condition |
-|---|---|---|
-| **AC-01** | Layer 4 Live Integration | `POST /process` updates Active Inference belief state and records Free Energy surprise. |
-| **AC-02** | Energy Depletion Fidelity | Energy decreases by exactly $0.05$ per turn without duplicate stimulus processing. |
-| **AC-03** | Turn Concurrency Safety | Concurrent requests to `POST /process` are serialized safely without history corruption. |
-| **AC-04** | Complete IPC Mediation | 100% of renderer communication with backend is routed via `window.lucia` IPC channels. |
-| **AC-05** | Test Suite Health | 100% test pass rate across all suites ($\ge 610$ total automated tests). |
-| **AC-06** | Invariant Preservation | All AGENTS.md invariants (No introspection, One Continuous Life, 0 cloud keys) preserved. |
+```
+Phase 9 Implementation Steps
+├── Step 1: CognitiveOrchestrator & Layer 4 Causal Wiring (Python Core)
+│   ├── 1.1 Create src/core/orchestrator/cognitive_orchestrator.py
+│   ├── 1.2 Wire Active Inference surprise into HomeostaticEngine
+│   ├── 1.3 Refactor LNNTrainer to support idle-time consolidation
+│   └── 1.4 Add unit tests in tests/unit/test_cognitive_orchestrator.py
+├── Step 2: Backend Server Convergence (server.py)
+│   ├── 2.1 Replace InstrumentedOrchestrator with CognitiveOrchestrator
+│   ├── 2.2 Add asyncio.Lock turn mutex to POST /process
+│   ├── 2.3 Expose surprise and telemetry in /process and /state
+│   └── 2.4 Add concurrency tests in tests/integration/test_turn_concurrency.py
+├── Step 3: Electron Brain ↔ Body IPC Mediation
+│   ├── 3.1 Register missing IPC handlers in electron/main/ipc-bridge.js
+│   ├── 3.2 Expose typed methods in electron/preload/preload.js
+│   ├── 3.3 Migrate all 12 fetch calls in electron/renderer/chat/chat.js
+│   └── 3.4 Verify with npm test in electron/
+└── Step 4: Verification & Regression Gate
+    ├── 4.1 Run full Python test suite (Unit, Property, Integration)
+    ├── 4.2 Run Electron test suite
+    └── 4.3 Verify zero direct fetch() calls in renderer
+```
 
 ---
 
-## 11. Deferred Work
+## 5. Non-Goals
 
-The following items are explicitly deferred to Phase 10 and beyond:
-1. **Multimodal Visual Perception**: Screen capture, VLM grounding, and visual environmental awareness.
-2. **Long-Term Episodic Knowledge Graph**: Structured relational entity consolidation beyond SDM 64-dim content vectors.
-3. **Sleep-Wake Decay Consolidation**: Deep offline memory consolidation algorithms executing during system idle/sleep states.
+- **NO Visual Redesign**: Personal Digital Room layout and Avatar stage remain visually unchanged.
+- **NO Cloud Dependencies**: 100% local edge execution remains invariant.
+- **NO Synchronous Voice Coupling in `/process`**: Voice remains in the decoupled Expression pipeline.
+- **NO Multi-Persona / Character Switching**: Single continuous companion ontology preserved.

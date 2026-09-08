@@ -148,6 +148,66 @@ This document captures:
 
 ---
 
+### ADR-014: Unified Cognitive Orchestrator via Composition
+* **Status**: **APPROVED AT ARCHITECTURE GATE** (Phase 9)
+* **Context**: Across Phases 1–5, orchestrators evolved by inheritance (`Orchestrator` $\rightarrow$ `MemoryAugmentedOrchestrator` $\rightarrow$ `InferencePipelineOrchestrator` $\rightarrow$ `PresenceOrchestrator`). Each subclass overrode `_execute_pipeline` by copy-pasting preceding steps. In `server.py`, `InstrumentedOrchestrator` ran Steps 1–4 locally to capture telemetry before delegating to `super()._execute_pipeline()`, causing double stimulus injection and double metabolic input recording per turn.
+* **Decision**: Deprecate the 5-tier inheritance hierarchy. Implement `CognitiveOrchestrator` as the single authoritative owner of the cognitive turn. It composes Layers 1–6 (Stimulus Processor, Emotion Core, Homeostatic Engine, Active Inference, Affective Memory, Language Core) via dependency injection, executes a single non-redundant linear pipeline, and exposes telemetry snapshots via direct properties.
+* **Consequences**:
+  * *Positive*: Completely eliminates the double stimulus / input recording bug; eliminates thousands of lines of copy-paste pipeline duplication; provides single ownership of dialogue turn lifecycle.
+
+---
+
+### ADR-015: Causal Active Inference via Prediction Surprise Modulation
+* **Status**: **APPROVED AT ARCHITECTURE GATE** (Phase 9)
+* **Context**: In Phase 4, Active Inference computed prediction error $\mathcal{S} = \|A \cdot p_{\text{before}} + b - p_{\text{after}}\|_2$, but this value was only logged and had zero causal effect on downstream behavior, somatic markers, prompt assembly, or reasoning depth.
+* **Decision**: Integrate Active Inference into the live causal loop between sensory perception and homeostatic budgeting:
+  1. Evaluate expected PAD transition $\hat{p} = A \cdot p_{\text{before}} + b$ before ODE integration.
+  2. Compute Prediction Surprise $\mathcal{S}$ after ODE integration and update belief state $(A, b)$ via Free Energy minimization.
+  3. Feed $\mathcal{S}$ directly into `HomeostaticEngine` to modulate Cognitive Load ($\mathcal{C} \propto \mathcal{S}$), Tension ($\mathcal{T} \propto \mathcal{S}$), and shift reasoning depth to $k=2$ when $\mathcal{S} > 0.60$.
+  4. Modulate memory trace base intensity with surprise-weighted salience.
+* **Consequences**:
+  * *Positive*: Active Inference becomes a true causal participant in cognition; unexpected emotional shifts heighten cognitive focus and trigger deliberative reasoning rather than reflexive blurting.
+
+---
+
+### ADR-016: Decoupled Multimodal Expression Pipeline for Voice
+* **Status**: **APPROVED AT ARCHITECTURE GATE** (Phase 9)
+* **Context**: Phase 5 proposed uniting voice synthesis directly inside the cognitive pipeline (`PresenceOrchestrator.process_with_voice`). However, synchronous voice generation inside `POST /process` adds 300–800ms to text response latency, wastes CPU/GPU compute when the user has muted audio in the UI, and causes conversational failure if audio synthesis crashes.
+* **Decision**: Formally decouple Voice as an asynchronous **Expression Service** triggered by the Electron Body UI via IPC after cognitive turn completion. The cognitive turn returns text and PAD state; if voice is unmuted, the client calls `window.lucia.voice.synthesize(text, pad)`.
+* **Consequences**:
+  * *Positive*: Zero latency added to text generation; complete failure isolation (audio failure never blocks text display); zero compute spent when muted; clean separation of cognition from motor vocal execution.
+
+---
+
+### ADR-017: Two-Stage LNN Plasticity (Online Tagging & Offline Consolidation)
+* **Status**: **APPROVED AT ARCHITECTURE GATE** (Phase 9)
+* **Context**: Phase 4 ran CPU backprop-through-ODE whenever a batch of 16 interaction turns accumulated. This caused uninformative training on small talk, delayed learning on high-surprise turns, and stole CPU cycles during active user conversation.
+* **Decision**: Adopt a two-stage plasticity model:
+  1. *Online Salience Tagging*: During conversational turns, tag experience tuples $(x, h_{\text{before}}, h_{\text{after}})$ with calculated salience. If $\text{Salience} > 0.35$, push to the consolidation buffer.
+  2. *Offline Consolidation*: Background CPU training runs during idle rest periods ($T_{\text{idle}} \ge 45\text{s}$) or when 8 salient samples accumulate, swapping weights under sub-2ms `_train_lock`.
+* **Consequences**:
+  * *Positive*: Zero CPU contention during active conversation; weights adapt specifically to meaningful, salient transitions.
+
+---
+
+### ADR-018: Strict Serialized Cognitive Turn Execution
+* **Status**: **APPROVED AT ARCHITECTURE GATE** (Phase 9)
+* **Context**: `server.py` ran `process()` in FastAPI's default threadpool without concurrency synchronization. Multiple concurrent HTTP requests could interleave, racing on `_history`, metabolic energy, SDM activations, and local CUDA LLM context.
+* **Decision**: Enforce strict turn serialization. In `server.py`, wrap `POST /process` in an asynchronous mutex (`asyncio.Lock`). In `CognitiveOrchestrator`, protect `process()` with a re-entrant `threading.Lock`. State polling (`/state`) remains non-blocking ($\le 10\text{ms}$) under `_state_lock`.
+* **Consequences**:
+  * *Positive*: Protects the "One Continuous Life" ontology; eliminates dialogue history corruption and CUDA context thrashing under concurrent load.
+
+---
+
+### ADR-019: Complete Context Bridge IPC Remediation
+* **Status**: **APPROVED AT ARCHITECTURE GATE** (Phase 9)
+* **Context**: `electron/renderer/chat/chat.js` contained 12 direct `fetch()` calls to `http://127.0.0.1:8765`, violating Electron context isolation and breaking when ports are remapped.
+* **Decision**: Eliminate all direct `fetch()` calls from the renderer. Register complete IPC channels in `ipc-bridge.js` and expose them on `window.lucia.*` in `preload.js`.
+* **Consequences**:
+  * *Positive*: 100% sandboxed renderer process; dynamic port resilience; adherence to Electron security best practices.
+
+---
+
 ## 3. Reconciliation of Outdated Specs & Conflicting Decisions
 
 | Dimension | Outdated / Preliminary Spec | Authoritative Implemented Reality | Resolution & Rationale |
@@ -198,5 +258,10 @@ All future contributions and modifications must strictly observe the following l
 | **ARCH-009** | Cloud STT/TTS | Fully offline local speech pipeline (`faster-whisper`, RVC)| 100% privacy, zero cloud costs, works offline | Phase 5/6 | Implementation Fact |
 | **ARCH-010** | Casual chat wipes | Solemn End-of-Life boundary (`POST /lifecycle/end`) | Existential gravity; prevents relational contamination | Phase 7.7 | Implementation Fact |
 | **ARCH-011** | Monolithic process startup | Runtime Isolation: `LiveRuntime` vs `SimulationRuntime` | Enforce Development $\neq$ Activation; zero live contamination | Phase 8 | Implementation Fact |
-| **ARCH-012** | `MemoryAugmentedOrchestrator` in `server.py` | `PresenceOrchestrator` with unified Layer 4 & voice | Unify Active Inference and online plasticity into live turns | Phase 9 | **Approved Direction (Future Implementation)** |
-| **ARCH-013** | Direct renderer `fetch()` calls | Complete `window.lucia` IPC bridge mediation | Security isolation and dynamic port resilience | Phase 9 | **Approved Direction (Future Implementation)** |
+| **ARCH-012** | 5-tier inheritance (`Orchestrator` $\rightarrow$ `PresenceOrchestrator`) | `CognitiveOrchestrator` via composition (ADR-014) | Eliminates double stimulus/input bug; single turn ownership | Phase 9 | **Approved at Architecture Gate** |
+| **ARCH-013** | Direct renderer `fetch()` calls in `chat.js` | Complete `window.lucia` IPC bridge mediation (ADR-019) | Security isolation and dynamic port resilience | Phase 9 | **Approved at Architecture Gate** |
+| **ARCH-014** | Decorative Active Inference (logged only) | Causal Active Inference modulating Homeostasis & $k=2$ (ADR-015) | Free Energy minimization actively shapes behavior | Phase 9 | **Approved at Architecture Gate** |
+| **ARCH-015** | Synchronous voice in cognitive pipeline | Decoupled Expression Service via IPC (ADR-016) | Zero text latency; failure isolation; zero compute when muted | Phase 9 | **Approved at Architecture Gate** |
+| **ARCH-016** | Arbitrary 16-turn LNN batching | Two-stage plasticity: online salience + idle consolidation (ADR-017) | Zero CPU contention during conversation; salient learning | Phase 9 | **Approved at Architecture Gate** |
+| **ARCH-017** | Unsynchronized cognitive turn execution | Serialized turn mutex (`asyncio.Lock` & `_turn_lock`) (ADR-018) | Single continuous life; prevents state corruption | Phase 9 | **Approved at Architecture Gate** |
+

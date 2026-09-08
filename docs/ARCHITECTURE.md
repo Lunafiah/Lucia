@@ -78,9 +78,11 @@ Prevents emotional burnout, runaway anxiety, or manic states:
   * Low Energy $\rightarrow$ Simulated conversational latency delay.
 
 ### 3.4. Layer 4: Active Inference & LNN Plasticity (`src/core/inference/`)
-* **Active Inference Engine**: Maintains belief state matrices $A \in \mathbb{R}^{3 \times 3}, b \in \mathbb{R}^3$ predicting emotional transitions. Computes Free Energy / Prediction Surprise:
-  $$\text{Surprise} = \|A \cdot p_{before} + b - p_{after}\|_2$$
-* **LNN Trainer (CPU-only)**: Collects experience tuples `(stimulus, h_before, h_after)` in a ring buffer. A dedicated background CPU thread runs backpropagation-through-ODE (`torchdiffeq.odeint`) to adapt LNN weights without competing for GPU VRAM.
+* **Active Inference Engine**: Maintains belief state matrices $A \in \mathbb{R}^{3 \times 3}, b \in \mathbb{R}^3$ predicting emotional transitions. Before stimulus integration, projects expectation $\hat{p} = A \cdot p_{before} + b$. After integration, computes Free Energy Prediction Surprise:
+  $$\mathcal{S} = \|A \cdot p_{before} + b - p_{after}\|_2$$
+  Updates belief state via analytic gradient descent with KL regularization toward identity.
+  **Causal Coupling**: Surprise $\mathcal{S}$ directly modulates `HomeostaticEngine` Cognitive Load and Tension, shifting reasoning depth to $k=2$ when $\mathcal{S} > 0.60$ or Tension $> 0.70$.
+* **Two-Stage LNN Plasticity**: Online salience tagging flags transitions where $\text{Salience} > 0.35$. A dedicated background CPU thread executes backpropagation-through-ODE (`torchdiffeq.odeint`) during idle rest periods ($T_{\text{idle}} \ge 45\text{s}$) or salient batch overflow ($\ge 8$), adapting weights without competing for GPU VRAM or interrupting active conversation.
 
 ### 3.5. Layer 5: Affective Memory & Ecphory (`src/core/memory/`)
 * **Kanerva Sparse Distributed Memory (SDM)**: $N=1,000$ distributed locations with 64-bit Hamming addresses and 16-bit content vectors.
@@ -142,16 +144,18 @@ Lucia provides two presentation contexts managed by Electron:
 
 ## 5. Concurrency & Threading Model
 
-Lucia operates with non-blocking concurrent daemon threads coordinated by thread-safe locks:
+Lucia operates with non-blocking concurrent daemon threads coordinated by strict thread-safe locks and turn serialization:
 
-| Thread Name | Module | Cadence | Purpose | Lock Discipline |
+| Thread / Worker Name | Module | Cadence | Purpose | Lock Discipline |
 |---|---|---|---|---|
-| **`EmotionCore-FastLoop`** | Limbic Engine | 200ms | Solves continuous emotion ODE | Holds `_state_lock` (1ms), copies weights via `_train_lock` |
+| **`Cognitive Turn Mutex`** | Brain Core (`server.py`) | Per Turn | Serializes cognitive turn execution | Holds `asyncio.Lock` & `_turn_lock` during `process()` |
+| **`EmotionCore-FastLoop`** | Limbic Engine | 200ms | Solves continuous emotion ODE | Holds `_state_lock` ($\le 1\text{ms}$), copies weights via `_train_lock` |
 | **`DecayEngine-SlowLoop`** | Memory Store | 60s | Applies emotional memory decay | Holds `_index_lock` |
-| **`LNN-Trainer`** | Online Plasticity | On Batch (16) | CPU Backpropagation-through-ODE | Holds `_train_lock` during weight swap ($\le 2\text{ms}$) |
+| **`LNN-Trainer`** | Offline Plasticity | Idle / Salience | CPU Backpropagation-through-ODE | Holds `_train_lock` during weight swap ($\le 2\text{ms}$) |
 | **`SimClock Background`** | Simulation | Configurable | Virtual clock advancement when resumed | Dispatches synchronous callbacks; no autonomous loops |
-| **`Uvicorn Async Loop`** | FastAPI Server | Event-driven | Serves `/process`, `/state`, `/sim/*`, `/voice/*` | Async non-blocking I/O |
+| **`Uvicorn Async Loop`** | FastAPI Server | Event-driven | Serves `/process`, `/state`, `/sim/*`, `/voice/*` | Async non-blocking I/O (`/state` reads under `_state_lock`) |
 | **`Electron Render Thread`**| UI / Avatar | 60 / 30 FPS | WebGL & Canvas avatar rendering | RequestAnimationFrame loop |
+
 
 ---
 

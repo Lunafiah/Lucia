@@ -122,32 +122,39 @@ The Homeostatic Engine prevents emotional extremes, anxiety spirals, or conversa
 1. **Metabolic Energy Budgeting**:
    * Every conversational turn consumes energy proportional to input length and emotional arousal.
    * While idle, energy recharges linearly at $+0.05/\text{sec}$ up to $1.0$.
-2. **Somatic Markers**:
+2. **Somatic Markers (Causally Modulated by Surprise)**:
    * **Stability**: Resistance to sudden emotional turbulence.
-   * **Cognitive Load**: Short-term processing strain.
+   * **Cognitive Load**: Processing strain modulated by both input complexity and Layer 4 Free Energy surprise:
+     $$\mathcal{C} = \text{clip}(\mathcal{C}_{base} + 0.35 \cdot \mathcal{S}, 0.0, 1.0)$$
    * **Energy**: Available conversational stamina.
-   * **Tension**: Discrepancy between internal homeostatic targets and external demands.
+   * **Tension**: Discrepancy between homeostatic targets and external demands, heightened by prediction surprise:
+     $$\mathcal{T} = \text{clip}(\mathcal{T}_{base} + 0.25 \cdot \mathcal{S}, 0.0, 1.0) \quad (\text{if } \mathcal{S} > 0.4)$$
 3. **Dynamic Behavioral Conditioning**:
    * Instead of telling the model "be happy" or "be sad", the Homeostatic Engine dynamically modifies generation parameters:
      * **High Arousal / Low Energy** $\rightarrow$ Shorter token budget (brisk replies), higher temperature.
-     * **High Tension** $\rightarrow$ Increased reasoning depth ($k=2$).
+     * **High Surprise / High Tension ($\mathcal{S} > 0.60 \text{ or } \mathcal{T} > 0.70$)** $\rightarrow$ Increased reasoning depth ($k=2$, deliberate cognitive appraisal rather than reflexive habit).
      * **Low Energy** $\rightarrow$ Injects simulated conversational latency delay.
 
 ---
 
 ### Component 4: Active Inference & Online LNN Plasticity (`src/core/inference/`)
 
-Lucia adapts her emotional responses over time using **Active Inference** (Free Energy Minimization):
+Lucia adapts her emotional generative model and limbic dynamics using **Active Inference** (Free Energy Minimization) and **Two-Stage LNN Plasticity**:
 
 1. **Short-Horizon Generative Model**:
-   * Maintains a linear transition matrix $A \in \mathbb{R}^{3 \times 3}$ and bias vector $b \in \mathbb{R}^3$ predicting the upcoming PAD state:
+   * Predicts upcoming PAD emotional transitions before stimulus integration:
      $$\hat{p}_{next} = A \cdot p_{current} + b$$
-2. **Prediction Error & Surprise**:
-   * When the actual outcome $p_{actual}$ is observed, the engine calculates Free Energy Surprise:
-     $$\text{Surprise} = \|A \cdot p_{current} + b - p_{actual}\|_2$$
-3. **Online LNN Plasticity (CPU-Only Trainer)**:
-   * Interaction tuples $(x, h_{before}, h_{after})$ are accumulated into an experience buffer.
-   * When a batch of 16 turns is ready, a background CPU thread runs backpropagation-through-ODE (`torchdiffeq.odeint`) with analytic gradients clipped to $[-2.0, 2.0]$.
+2. **Prediction Error & Free Energy Surprise**:
+   * When observed limbic outcome $p_{actual}$ is integrated by the ODE, calculates Free Energy Surprise:
+     $$\mathcal{S} = \|A \cdot p_{current} + b - p_{actual}\|_2$$
+   * Analytic gradients update generative belief matrices $(A, b)$ with KL-regularization pulling $A$ toward identity:
+     $$\min_{A, b} \|A \cdot p_{current} + b - p_{actual}\|_2^2 + \lambda_{KL} \|A - I\|_F^2$$
+   * Surprise $\mathcal{S}$ feeds directly into Component 3 (Homeostasis) to modulate Cognitive Load, Tension, and Reasoning Depth ($k$).
+3. **Two-Stage LNN Plasticity (CPU-Only Trainer)**:
+   * **Online Salience Tagging**: During turns, evaluates interaction salience:
+     $$\text{Salience} = 0.6 \cdot \mathcal{S} + 0.4 \cdot \|p_{actual} - p_{philia}\|_2$$
+     If $\text{Salience} > 0.35$, interaction tuple $(x, h_{before}, h_{after})$ is queued into the consolidation buffer.
+   * **Offline Consolidation (Zero Live Contention)**: Training executes on CPU during idle periods ($T_{idle} \ge 45\text{s}$) or buffer overflow ($\ge 8$ salient samples) using `torchdiffeq.odeint` (RK4 solver, clipped gradient norm 1.0).
    * Updated weights are swapped into `EmotionCore` inside a sub-2ms `_train_lock`, producing **0 MB GPU VRAM contention**.
 
 ---
