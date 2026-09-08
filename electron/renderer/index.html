@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="avatar/avatar.css">
   <link rel="stylesheet" href="journal/journal.css">
   <link rel="stylesheet" href="settings/settings.css">
+  <link rel="stylesheet" href="simulation/simulation.css">
 </head>
 <body>
   <!-- Splash Screen / Loading Overlay -->
@@ -31,6 +32,32 @@
 
   <!-- Main Application Container -->
   <div id="lucia-app" class="lucia-app app-layout">
+    <!-- Phase 8: Simulation Canopy Ribbon (dormant in live mode) -->
+    <aside id="simulation-canopy" class="simulation-canopy hidden" aria-label="Simulation Environment Status">
+      <div class="canopy-left">
+        <div class="sim-badge">
+          <span class="sim-pulse-dot"></span>
+          <span>Simulation Sandbox</span>
+        </div>
+        <div class="sim-clock-display" title="Virtual Clock (SimClock)">
+          <span>Clock:</span>
+          <span id="sim-clock-val" class="clock-val">00:00:00.000</span>
+          <span id="sim-clock-speed" class="clock-speed-tag">1.0x</span>
+        </div>
+      </div>
+      <div class="canopy-right">
+        <button id="sim-step-canopy-btn" class="canopy-btn" title="Advance clock by 1 fast tick (200ms)">
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+          Step 200ms
+        </button>
+        <button id="sim-pause-resume-btn" class="canopy-btn" title="Pause / Resume virtual time">Pause</button>
+        <button id="sim-toggle-console-btn" class="canopy-btn primary" title="Open Simulation Console Drawer">
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          Dev Console
+        </button>
+      </div>
+    </aside>
+
     <!-- Global Companion Navigation Header (Phase 7.1) -->
     <header id="lucia-header" class="lucia-nav-header">
       <div class="nav-brand-section">
@@ -1215,6 +1242,206 @@
     </div>
   </div>
 
+  <!-- Phase 8: Simulation Console Drawer (Glassmorphic Bottom Drawer) -->
+  <aside id="simulation-console-drawer" class="simulation-console-drawer collapsed" aria-label="Simulation Developer Console">
+    <header class="console-header">
+      <div class="console-tabs">
+        <button id="sim-tab-inspector" class="console-tab-btn active">State & Safety Inspector</button>
+        <button id="sim-tab-stimulus" class="console-tab-btn">Sensory & Stimulus Injector</button>
+        <button id="sim-tab-timewarp" class="console-tab-btn">Time Warp & Clock</button>
+        <button id="sim-tab-scenarios" class="console-tab-btn">Scenario Runner</button>
+      </div>
+      <div class="console-controls">
+        <button id="sim-drawer-close-btn" class="canopy-btn" title="Close Drawer">
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="console-body">
+      <!-- Tab 1: State & Safety Inspector -->
+      <section id="sim-panel-inspector" class="console-panel active">
+        <div class="grid-4col">
+          <!-- Runtime & Safety Status -->
+          <div class="sim-card">
+            <div class="sim-card-title">Isolation & Safety Guard</div>
+            <div style="display: flex; flex-direction: column; gap: 6px; font-size: 0.76rem;">
+              <div><strong>Runtime State:</strong> <span id="sim-state-badge" style="color:#fbbf24;">SIMULATING</span></div>
+              <div><strong>Lifecycle:</strong> <span id="sim-safety-badge" style="color:#34d399;">BLOCKED (SAFE)</span></div>
+              <div><strong>Storage:</strong> <span id="sim-storage-badge" style="color:#38bdf8;">In-Memory Isolated</span></div>
+              <div><strong>Active Memories:</strong> <span id="sim-val-traces" style="font-family:monospace; color:#cbd5e1;">0</span> traces</div>
+            </div>
+          </div>
+
+          <!-- Live PAD Space -->
+          <div class="sim-card">
+            <div class="sim-card-title">Continuous PAD State</div>
+            <div class="meter-row">
+              <span class="meter-label">Pleasure (P)</span>
+              <div class="meter-bar-container"><div id="sim-meter-pleasure" class="meter-bar" style="width:62.5%; background:#10b981;"></div></div>
+              <span id="sim-val-pleasure" class="meter-val">+0.250</span>
+            </div>
+            <div class="meter-row">
+              <span class="meter-label">Arousal (A)</span>
+              <div class="meter-bar-container"><div id="sim-meter-arousal" class="meter-bar" style="width:47.5%; background:#f59e0b;"></div></div>
+              <span id="sim-val-arousal" class="meter-val">-0.050</span>
+            </div>
+            <div class="meter-row">
+              <span class="meter-label">Dominance (D)</span>
+              <div class="meter-bar-container"><div id="sim-meter-dominance" class="meter-bar" style="width:52.5%; background:#8b5cf6;"></div></div>
+              <span id="sim-val-dominance" class="meter-val">+0.050</span>
+            </div>
+          </div>
+
+          <!-- Somatic & Homeostasis -->
+          <div class="sim-card">
+            <div class="sim-card-title">Somatic State</div>
+            <div class="meter-row">
+              <span class="meter-label">Stability</span>
+              <span id="sim-val-stability" class="meter-val" style="color:#34d399;">1.00</span>
+            </div>
+            <div class="meter-row">
+              <span class="meter-label">Tension</span>
+              <span id="sim-val-tension" class="meter-val" style="color:#f43f5e;">0.00</span>
+            </div>
+            <div class="meter-row">
+              <span class="meter-label">Energy</span>
+              <span id="sim-val-energy" class="meter-val" style="color:#38bdf8;">1.00</span>
+            </div>
+            <div class="meter-row">
+              <span class="meter-label">Cognitive Load</span>
+              <span id="sim-val-cogload" class="meter-val" style="color:#fbbf24;">0.00</span>
+            </div>
+          </div>
+
+          <!-- Generation Constraints -->
+          <div class="sim-card">
+            <div class="sim-card-title">Generation Constraints</div>
+            <div class="meter-row">
+              <span class="meter-label">Max Tokens</span>
+              <span id="sim-val-maxtokens" class="meter-val">150</span>
+            </div>
+            <div class="meter-row">
+              <span class="meter-label">Temperature</span>
+              <span id="sim-val-temperature" class="meter-val">0.75</span>
+            </div>
+            <div class="meter-row">
+              <span class="meter-label">Latency</span>
+              <span id="sim-val-latency" class="meter-val">0ms</span>
+            </div>
+            <div class="meter-row">
+              <span class="meter-label">Reasoning Depth</span>
+              <span id="sim-val-depth" class="meter-val">k=1</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab 2: Sensory & Stimulus Injector -->
+      <section id="sim-panel-stimulus" class="console-panel">
+        <div class="grid-2col">
+          <div>
+            <div class="sim-card" style="margin-bottom: 12px;">
+              <div class="sim-card-title">Natural Language Sensory Input (Normal Pathway)</div>
+              <p style="font-size: 0.72rem; color: #94a3b8; margin-bottom: 8px;">
+                Text passes through <code>StimulusProcessor</code> &rarr; 16D valence/density vector &rarr; Brain ODE integration.
+              </p>
+              <div class="input-row">
+                <input type="text" id="sim-stimulus-text-input" class="sim-input" placeholder="Enter stimulus utterance (e.g. Good morning Lucia!)...">
+                <select id="sim-stimulus-source-select" class="sim-input" style="flex: 0 0 110px;">
+                  <option value="desktop_ui">Desktop UI</option>
+                  <option value="user_voice">Voice STT</option>
+                  <option value="ambient">Ambient</option>
+                </select>
+                <button id="sim-inject-text-btn" class="canopy-btn primary">Inject</button>
+              </div>
+            </div>
+
+            <div class="sim-card">
+              <div class="sim-card-title">Pre-calibrated Sensory Presets</div>
+              <div id="sim-presets-grid" class="preset-grid">
+                <!-- Dynamically populated from /sim/stimulus/presets -->
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="sim-card" style="margin-bottom: 12px;">
+              <div class="sim-card-title" style="color: #f59e0b;">Developer Instrument Probe (Direct 16D Vector)</div>
+              <p style="font-size: 0.72rem; color: #fca5a5; margin-bottom: 8px;">
+                <strong>Probe Mode:</strong> Bypasses text analysis and directly feeds a raw 16D stimulus vector into ODE solver.
+              </p>
+              <div class="input-row">
+                <input type="text" id="sim-vector-input" class="sim-input" value="[0.5, 0.2, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]">
+                <button id="sim-inject-vector-btn" class="canopy-btn" style="background: rgba(245,158,11,0.2); border-color:#f59e0b; color:#fbbf24;">Inject Vector</button>
+              </div>
+            </div>
+
+            <div class="sim-card">
+              <div class="sim-card-title">Recent Stimulus Activity Log</div>
+              <div id="sim-stimulus-history-list" style="max-height: 140px; overflow-y: auto;">
+                <div style="color: #64748b; font-size: 0.75rem; padding: 6px 0;">No stimuli recorded yet.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab 3: Time Warp & Clock -->
+      <section id="sim-panel-timewarp" class="console-panel">
+        <div class="grid-2col">
+          <div class="sim-card">
+            <div class="sim-card-title">Virtual Time Engine (SimClock)</div>
+            <div style="font-size: 1.1rem; font-family: monospace; color: #38bdf8; margin: 8px 0;" id="sim-virtual-time-full">
+              T + 0.00s (00:00:00)
+            </div>
+            <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 12px;">
+              Clock Status: <span id="sim-clock-status" style="color:#34d399; font-weight:600;">RUNNING</span>
+            </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <button id="sim-reset-clock-btn" class="canopy-btn" style="color:#f43f5e; border-color:rgba(244,63,94,0.3);">Reset to T=0s</button>
+            </div>
+          </div>
+
+          <div class="sim-card">
+            <div class="sim-card-title">Time Dilation & Manual Stepping</div>
+            <div style="margin-bottom: 12px;">
+              <div style="font-size: 0.72rem; color: #cbd5e1; margin-bottom: 6px;">Simulation Speed Multiplier:</div>
+              <div style="display: flex; gap: 6px;">
+                <button class="canopy-btn sim-speed-btn" data-speed="0.5">0.5x</button>
+                <button class="canopy-btn sim-speed-btn" data-speed="1.0">1.0x</button>
+                <button class="canopy-btn sim-speed-btn" data-speed="2.0">2.0x</button>
+                <button class="canopy-btn sim-speed-btn" data-speed="5.0">5.0x</button>
+                <button class="canopy-btn sim-speed-btn" data-speed="10.0">10.0x</button>
+                <button class="canopy-btn sim-speed-btn" data-speed="50.0">50.0x</button>
+              </div>
+            </div>
+            <div>
+              <div style="font-size: 0.72rem; color: #cbd5e1; margin-bottom: 6px;">Discrete Time Steps:</div>
+              <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                <button class="canopy-btn sim-step-btn" data-step="200">+200ms (1 Fast Tick)</button>
+                <button class="canopy-btn sim-step-btn" data-step="1000">+1s (5 Ticks)</button>
+                <button class="canopy-btn sim-step-btn" data-step="60000">+60s (1 Decay Tick)</button>
+                <button class="canopy-btn sim-step-btn" data-step="3600000">+1 Hour Leap</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab 4: Scenario Runner -->
+      <section id="sim-panel-scenarios" class="console-panel">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+          <span style="font-size: 0.78rem; color: #94a3b8;">Deterministic behavioral verification scenarios (Scenarios A &ndash; D)</span>
+          <button id="sim-run-all-scenarios-btn" class="canopy-btn primary">Run All Verification Scenarios</button>
+        </div>
+        <div id="sim-scenarios-container">
+          <!-- Dynamically populated from /sim/scenarios/list -->
+        </div>
+      </section>
+    </div>
+  </aside>
+
   <!-- Live2D Cubism Core & PixiJS WebGL Libraries -->
   <script src="libs/live2dcubismcore.min.js"></script>
   <script src="libs/pixi.min.js"></script>
@@ -1233,6 +1460,7 @@
   <script src="avatar/avatar.js"></script>
   <script src="journal/journal.js"></script>
   <script src="settings/settings.js"></script>
+  <script src="simulation/simulation.js"></script>
   <script type="module" src="chat/chat.js"></script>
   <script type="module" src="debug/panel.js"></script>
 </body>

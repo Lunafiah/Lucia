@@ -143,6 +143,120 @@
           "metadata": {}
         }
       ]
+    },
+    {
+      "id": "session_20260908_235132",
+      "created_at": "2026-09-08T23:51:32.239845",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Hello Lucia!",
+          "timestamp": 1788886292.2392356,
+          "created_at": "2026-09-08T23:51:32.239235",
+          "metadata": {}
+        },
+        {
+          "role": "companion",
+          "content": "Hello from Lucia!",
+          "timestamp": 1788886292.242032,
+          "created_at": "2026-09-08T23:51:32.242032",
+          "metadata": {}
+        }
+      ]
+    },
+    {
+      "id": "session_20260908_235207",
+      "created_at": "2026-09-08T23:52:07.607702",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Hello Lucia!",
+          "timestamp": 1788886327.5998247,
+          "created_at": "2026-09-08T23:52:07.599876",
+          "metadata": {}
+        },
+        {
+          "role": "companion",
+          "content": "Hello from Lucia!",
+          "timestamp": 1788886327.6107018,
+          "created_at": "2026-09-08T23:52:07.610701",
+          "metadata": {}
+        }
+      ]
+    },
+    {
+      "id": "session_20260909_000936",
+      "created_at": "2026-09-09T00:09:36.120754",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Hello Lucia!",
+          "timestamp": 1788887376.1201723,
+          "created_at": "2026-09-09T00:09:36.120172",
+          "metadata": {}
+        },
+        {
+          "role": "companion",
+          "content": "Hello from Lucia!",
+          "timestamp": 1788887376.123599,
+          "created_at": "2026-09-09T00:09:36.123599",
+          "metadata": {}
+        }
+      ]
+    },
+    {
+      "id": "session_20260909_001601",
+      "created_at": "2026-09-09T00:16:01.841636",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Hello Lucia!",
+          "timestamp": 1788887761.8406372,
+          "created_at": "2026-09-09T00:16:01.840637",
+          "metadata": {}
+        },
+        {
+          "role": "companion",
+          "content": "I hear you clearly, my friend.",
+          "timestamp": 1788887761.8462021,
+          "created_at": "2026-09-09T00:16:01.846202",
+          "metadata": {}
+        },
+        {
+          "role": "user",
+          "content": "Concurrent test message",
+          "timestamp": 1788887761.9057603,
+          "created_at": "2026-09-09T00:16:01.905760",
+          "metadata": {}
+        },
+        {
+          "role": "companion",
+          "content": "I hear you clearly, my friend.",
+          "timestamp": 1788887761.91929,
+          "created_at": "2026-09-09T00:16:01.919290",
+          "metadata": {}
+        }
+      ]
+    },
+    {
+      "id": "session_20260909_003142",
+      "created_at": "2026-09-09T00:31:42.543322",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Hello Lucia!",
+          "timestamp": 1788888702.5427482,
+          "created_at": "2026-09-09T00:31:42.542748",
+          "metadata": {}
+        },
+        {
+          "role": "companion",
+          "content": "Hello from Lucia!",
+          "timestamp": 1788888702.5461683,
+          "created_at": "2026-09-09T00:31:42.546168",
+          "metadata": {}
+        }
+      ]
     }
   ]
 }

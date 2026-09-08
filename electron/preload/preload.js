@@ -24,6 +24,32 @@ contextBridge.exposeInMainWorld('lucia', {
     getProfile: () => ipcRenderer.invoke('profile:get'),
     setProfile: (profile) => ipcRenderer.invoke('profile:set', { profile })
   },
+  runtime: {
+    getDescriptor: () => ipcRenderer.invoke('runtime:descriptor'),
+    getSnapshot: () => ipcRenderer.invoke('runtime:snapshot')
+  },
+  sim: {
+    clock: {
+      step: (delta_ms) => ipcRenderer.invoke('sim:clock:step', { delta_ms }),
+      pause: () => ipcRenderer.invoke('sim:clock:pause'),
+      resume: () => ipcRenderer.invoke('sim:clock:resume'),
+      setSpeed: (multiplier) => ipcRenderer.invoke('sim:clock:speed', { multiplier }),
+      reset: (reset_time_s) => ipcRenderer.invoke('sim:clock:reset', { reset_time_s })
+    },
+    stimulus: {
+      injectText: (text, source) => ipcRenderer.invoke('sim:stimulus:inject-text', { text, source }),
+      injectVector: (vector, source) => ipcRenderer.invoke('sim:stimulus:inject-vector', { vector, source }),
+      getPresets: () => ipcRenderer.invoke('sim:stimulus:presets'),
+      injectPreset: (preset, pathway) => ipcRenderer.invoke('sim:stimulus:preset', { preset, pathway }),
+      getHistory: (limit) => ipcRenderer.invoke('sim:stimulus:history', { limit })
+    },
+    scenarios: {
+      list: () => ipcRenderer.invoke('sim:scenarios:list'),
+      run: (scenario_id) => ipcRenderer.invoke('sim:scenarios:run', { scenario_id }),
+      getResults: () => ipcRenderer.invoke('sim:scenarios:results')
+    },
+    chat: (input) => ipcRenderer.invoke('sim:chat', { input })
+  },
   models: {
     getAvatars: () => ipcRenderer.invoke('models:get-avatars'),
     getVoices: () => ipcRenderer.invoke('models:get-voices')

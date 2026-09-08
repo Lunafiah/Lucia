@@ -6,6 +6,7 @@
   "scripts": {
     "start": "electron .",
     "preview": "electron . --preview",
+    "sim": "electron . --sim",
     "test": "jest",
     "build:win": "electron-builder --win --x64"
   },

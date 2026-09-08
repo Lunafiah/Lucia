@@ -44,6 +44,15 @@ class PADState:
             timestamp=time.monotonic(),
         )
 
+    def to_dict(self) -> dict[str, float]:
+        """Return dictionary representation of PADState."""
+        return {
+            "pleasure": float(self.pleasure),
+            "arousal": float(self.arousal),
+            "dominance": float(self.dominance),
+            "timestamp": float(self.timestamp),
+        }
+
 
 @dataclass(frozen=True)
 class SomaticMarkers:

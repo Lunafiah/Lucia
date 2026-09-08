@@ -261,32 +261,47 @@ class EmotionCore:
             return np.zeros(self.U_f.shape[1], dtype=np.float64)
         return s
 
+    def step_once(self, custom_timestamp: Optional[float] = None) -> PADState:
+        """
+        Advance the LNN ODE by exactly one tick deterministically.
+        Consumes any pending stimulus (or zeroes if none).
+        Thread-safe; updates hidden state and PAD snapshot.
+        Allows virtual clock (SimClock) to drive EmotionCore in simulation mode.
+        """
+        try:
+            x = self._consume_stimulus()
+            h_new = self._ode_step(self._h, x)
+            pad = self._project_to_pad(h_new)
+            if custom_timestamp is not None:
+                pad = PADState(
+                    pleasure=pad.pleasure,
+                    arousal=pad.arousal,
+                    dominance=pad.dominance,
+                    timestamp=custom_timestamp,
+                )
+            self._h = h_new
+            with self._state_lock:
+                self._pad_snapshot = pad
+            self._tick_counter += 1
+            return pad
+        except Exception:
+            logger.exception("EmotionCore step_once exception — resetting to resting baseline")
+            self._h = np.zeros(self._config.hidden_dim, dtype=np.float64)
+            resting = PADState(
+                pleasure=float(self._config.resting_baseline[0]),
+                arousal=float(self._config.resting_baseline[1]),
+                dominance=float(self._config.resting_baseline[2]),
+                timestamp=custom_timestamp if custom_timestamp is not None else time.monotonic(),
+            )
+            with self._state_lock:
+                self._pad_snapshot = resting
+            return resting
+
     def _fast_loop_worker(self) -> None:
         """Background thread: advance LNN state continuously."""
         while not self._stop_event.is_set():
             tick_start = time.monotonic()
-            try:
-                x = self._consume_stimulus()
-                h_new = self._ode_step(self._h, x)
-                pad = self._project_to_pad(h_new)
-                self._h = h_new
-                with self._state_lock:
-                    self._pad_snapshot = pad
-                self._tick_counter += 1
-            except Exception:
-                logger.exception("EmotionCore Fast_Loop exception — resetting to resting baseline")
-                # Reset both hidden state and PAD snapshot (Requirement 1.8)
-                self._h = np.zeros(self._config.hidden_dim, dtype=np.float64)
-                resting = PADState(
-                    pleasure=float(self._config.resting_baseline[0]),
-                    arousal=float(self._config.resting_baseline[1]),
-                    dominance=float(self._config.resting_baseline[2]),
-                    timestamp=time.monotonic(),
-                )
-                with self._state_lock:
-                    self._pad_snapshot = resting
-                # Do NOT increment tick_counter on error; do NOT terminate thread
-
+            self.step_once()
             elapsed_ms = (time.monotonic() - tick_start) * 1000.0
             sleep_s = max(0.0, self._config.loop_cadence_ms - elapsed_ms) / 1000.0
             time.sleep(sleep_s)

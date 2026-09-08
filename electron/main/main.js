@@ -110,9 +110,11 @@ function createWindow() {
 app.whenReady().then(async () => {
   const config = loadConfig();
   const isPreview = process.argv.includes('--preview') || process.env.LUCIA_PREVIEW === 'true';
+  const isSim = process.argv.includes('--sim') || process.env.LUCIA_SIM === 'true' || process.env.LUCIA_MODE === 'simulation';
+  const mode = isPreview ? 'preview' : (isSim ? 'simulation' : 'live');
 
   // Register main IPC handlers
-  registerHandlers(config.port, isPreview, () => mascotManager);
+  registerHandlers(config.port, isPreview, () => mascotManager, mode);
 
   // Create renderer window
   createWindow();
@@ -124,10 +126,15 @@ app.whenReady().then(async () => {
       mainWindow.webContents.on('did-finish-load', () => {
         setTimeout(() => {
           if (mainWindow && !mainWindow.isDestroyed()) {
-            mainWindow.webContents.send('backend:ready');
+            mainWindow.webContents.send('backend:ready', { mode: 'preview' });
           }
         }, 500);
       });
+    }
+  } else if (isSim) {
+    console.log('[main] Running in SIMULATION MODE (Isolated virtual clock, companion sleeping)');
+    if (mainWindow) {
+      mainWindow.setTitle('Lucia — AI Companion [Simulation Environment]');
     }
   }
 
@@ -148,8 +155,8 @@ app.whenReady().then(async () => {
   hotkeyManager.register();
 
   if (!isPreview) {
-    // Start the Python backend process
-    processManager = new ProcessManager(config, () => mainWindow);
+    // Start the Python backend process with active mode
+    processManager = new ProcessManager({ ...config, mode }, () => mainWindow);
     try {
       await processManager.start();
     } catch (err) {

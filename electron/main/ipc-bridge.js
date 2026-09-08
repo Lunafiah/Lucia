@@ -12,7 +12,7 @@ let pendingChat = Promise.resolve();
  *
  * Requirements: Phase 3 (5.1–5.6)
  */
-function registerHandlers(port = 8765, isPreview = false, getMascotManager = null) {
+function registerHandlers(port = 8765, isPreview = false, getMascotManager = null, mode = 'live') {
   const baseUrl = `http://127.0.0.1:${port}`;
 
   // window:toggle-mascot IPC handler
@@ -185,6 +185,30 @@ function registerHandlers(port = 8765, isPreview = false, getMascotManager = nul
         response: `[UI Preview]: Lucia's brain is sleeping (0% GPU/CPU). You typed: "${input}".`,
         call_id: 'preview_call'
       };
+    if (mode === 'simulation') {
+      try {
+        const response = await fetch(`${baseUrl}/sim/chat`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ input }),
+          signal: AbortSignal.timeout(10000)
+        });
+        if (!response.ok) {
+          const errData = await response.json().catch(() => ({}));
+          throw { code: `http_${response.status}`, message: errData.detail || `HTTP ${response.status}` };
+        }
+        const data = await response.json();
+        return {
+          response: data.assistant_reply || data.response || "...",
+          call_id: `sim_${Date.now()}`
+        };
+      } catch (err) {
+        if (err.name === 'TimeoutError') {
+          throw { code: 'timeout', message: 'Simulation chat timed out' };
+        }
+        if (err.code) throw err;
+        throw { code: 'sim_error', message: err.message || 'Simulation chat failed' };
+      }
     }
 
     // Chain onto pendingChat so only one chat request is in-flight at a time
@@ -313,6 +337,174 @@ function registerHandlers(port = 8765, isPreview = false, getMascotManager = nul
       console.warn('[ipc-bridge] Failed to set profile:', e);
     }
     return { status: 'error' };
+  });
+
+  // ---------------------------------------------------------------------------
+  // Phase 8: Runtime & Simulation IPC Handlers
+  // ---------------------------------------------------------------------------
+
+  ipcMain.handle('runtime:descriptor', async () => {
+    if (isPreview) {
+      return {
+        mode: 'preview',
+        is_live: false,
+        is_simulated: false,
+        state: 'PREVIEW',
+        active_profile: 'preview',
+        capabilities: ['mock_chat', 'canvas_avatar']
+      };
+    }
+    try {
+      const response = await fetch(`${baseUrl}/runtime/descriptor`, {
+        signal: AbortSignal.timeout(3000)
+      });
+      return await response.json();
+    } catch (e) {
+      return { mode: mode || 'live', is_live: mode === 'live', error: e.message };
+    }
+  });
+
+  ipcMain.handle('runtime:snapshot', async () => {
+    if (isPreview) {
+      return {
+        runtime: { mode: 'preview', state: 'PREVIEW', is_live: false, is_simulated: false },
+        clock: { virtual_time_s: 0, is_paused: true, speed_factor: 1.0 },
+        pad: { pleasure: 0.25, arousal: -0.05, dominance: 0.05 },
+        storage: { storage_type: 'preview_mock' }
+      };
+    }
+    try {
+      const response = await fetch(`${baseUrl}/runtime/snapshot`, {
+        signal: AbortSignal.timeout(3000)
+      });
+      return await response.json();
+    } catch (e) {
+      return { error: e.message };
+    }
+  });
+
+  ipcMain.handle('sim:clock:step', async (_event, { delta_ms = 200 }) => {
+    const res = await fetch(`${baseUrl}/sim/clock/step`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ delta_ms }),
+      signal: AbortSignal.timeout(5000)
+    });
+    return await res.json();
+  });
+
+  ipcMain.handle('sim:clock:pause', async () => {
+    const res = await fetch(`${baseUrl}/sim/clock/pause`, {
+      method: 'POST',
+      signal: AbortSignal.timeout(3000)
+    });
+    return await res.json();
+  });
+
+  ipcMain.handle('sim:clock:resume', async () => {
+    const res = await fetch(`${baseUrl}/sim/clock/resume`, {
+      method: 'POST',
+      signal: AbortSignal.timeout(3000)
+    });
+    return await res.json();
+  });
+
+  ipcMain.handle('sim:clock:speed', async (_event, { multiplier = 1.0 }) => {
+    const res = await fetch(`${baseUrl}/sim/clock/speed`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ multiplier }),
+      signal: AbortSignal.timeout(3000)
+    });
+    return await res.json();
+  });
+
+  ipcMain.handle('sim:clock:reset', async (_event, { reset_time_s = 0.0 }) => {
+    const res = await fetch(`${baseUrl}/sim/clock/reset`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ reset_time_s }),
+      signal: AbortSignal.timeout(3000)
+    });
+    return await res.json();
+  });
+
+  ipcMain.handle('sim:stimulus:inject-text', async (_event, { text, source = 'desktop_ui' }) => {
+    const res = await fetch(`${baseUrl}/sim/stimulus/inject-text`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text, source }),
+      signal: AbortSignal.timeout(5000)
+    });
+    return await res.json();
+  });
+
+  ipcMain.handle('sim:stimulus:inject-vector', async (_event, { vector, source = 'debug_probe' }) => {
+    const res = await fetch(`${baseUrl}/sim/stimulus/inject-vector`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ vector, source }),
+      signal: AbortSignal.timeout(5000)
+    });
+    return await res.json();
+  });
+
+  ipcMain.handle('sim:stimulus:presets', async () => {
+    const res = await fetch(`${baseUrl}/sim/stimulus/presets`, {
+      signal: AbortSignal.timeout(3000)
+    });
+    return await res.json();
+  });
+
+  ipcMain.handle('sim:stimulus:preset', async (_event, { preset, pathway = 'sensory_text' }) => {
+    const res = await fetch(`${baseUrl}/sim/stimulus/preset`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ preset, pathway }),
+      signal: AbortSignal.timeout(5000)
+    });
+    return await res.json();
+  });
+
+  ipcMain.handle('sim:stimulus:history', async (_event, { limit = 50 }) => {
+    const res = await fetch(`${baseUrl}/sim/stimulus/history?limit=${limit}`, {
+      signal: AbortSignal.timeout(3000)
+    });
+    return await res.json();
+  });
+
+  ipcMain.handle('sim:scenarios:list', async () => {
+    const res = await fetch(`${baseUrl}/sim/scenarios/list`, {
+      signal: AbortSignal.timeout(3000)
+    });
+    return await res.json();
+  });
+
+  ipcMain.handle('sim:scenarios:run', async (_event, { scenario_id = 'all' }) => {
+    const res = await fetch(`${baseUrl}/sim/scenarios/run`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ scenario_id }),
+      signal: AbortSignal.timeout(30000)
+    });
+    return await res.json();
+  });
+
+  ipcMain.handle('sim:scenarios:results', async () => {
+    const res = await fetch(`${baseUrl}/sim/scenarios/results`, {
+      signal: AbortSignal.timeout(3000)
+    });
+    return await res.json();
+  });
+
+  ipcMain.handle('sim:chat', async (_event, { input }) => {
+    const res = await fetch(`${baseUrl}/sim/chat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ input }),
+      signal: AbortSignal.timeout(10000)
+    });
+    return await res.json();
   });
 }
 

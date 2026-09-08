@@ -88,7 +88,15 @@ class DecayEngine:
             1.0 - self._emotional_intensity(pad_tag)
         )
 
-    def _apply_decay_tick(self, elapsed_seconds: float) -> None:
+    def apply_decay_tick(self, elapsed_seconds: float) -> int:
+        """
+        Public method to advance decay deterministically by elapsed_seconds.
+        Used by SimClock in simulation mode to step memory decay.
+        Returns the number of purged traces.
+        """
+        return self._apply_decay_tick(elapsed_seconds)
+
+    def _apply_decay_tick(self, elapsed_seconds: float) -> int:
         """
         Apply decay to all indexed traces and purge those below viability threshold.
         Entire operation is performed atomically under _index_lock.
@@ -112,6 +120,7 @@ class DecayEngine:
             len(to_purge),
             len(self._memory._index),
         )
+        return len(to_purge)
 
     def _slow_loop_worker(self) -> None:
         """

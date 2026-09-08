@@ -23,7 +23,7 @@ import signal
 import sys
 import time
 import uuid
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 # Ensure project root is on sys.path regardless of execution mode or IDE root
 _PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
@@ -42,14 +42,40 @@ from src.core.models import BehavioralConstraints, SomaticMarkers
 from src.core.orchestrator.orchestrator import MemoryAugmentedOrchestrator
 from src.core.plugins.hook_bus import HookBus
 from src.core.resource_manager import ResourceProfile, get_resource_profile
+from src.core.simulation import (
+    ActivationSafetyError,
+    ScenarioRunner,
+    SimulationRuntime,
+)
 from src.core.storage.history_store import ChatHistoryStore
 from src.core.telemetry.stability_evaluator import StabilityEvaluator
 
 logger = logging.getLogger("lucia.api")
 
 _hook_bus = HookBus()
-_history_store = ChatHistoryStore()
-_stability_evaluator = StabilityEvaluator()
+_history_store: Optional[Any] = None
+_stability_evaluator: Optional[StabilityEvaluator] = None
+_sim_runtime: Optional[SimulationRuntime] = None
+_scenario_runner: Optional[ScenarioRunner] = None
+_mode: str = "live"
+
+
+def get_history_store() -> Any:
+    global _history_store
+    if _sim_runtime is not None:
+        return _sim_runtime.chat_store
+    if _history_store is None:
+        _history_store = ChatHistoryStore()
+    return _history_store
+
+
+def get_stability_evaluator() -> StabilityEvaluator:
+    global _stability_evaluator
+    if _sim_runtime is not None:
+        return _sim_runtime.stability_evaluator
+    if _stability_evaluator is None:
+        _stability_evaluator = StabilityEvaluator()
+    return _stability_evaluator
 
 
 # ---------------------------------------------------------------------------
@@ -148,6 +174,11 @@ _resource_profile: Optional[ResourceProfile] = None
 
 
 def get_orchestrator() -> InstrumentedOrchestrator:
+    if _mode == "simulation" or _sim_runtime is not None:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Orchestrator is not available in simulation mode. Live companion is inactive.",
+        )
     if _orchestrator is None:
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
@@ -157,10 +188,16 @@ def get_orchestrator() -> InstrumentedOrchestrator:
 
 
 @app.post("/process", response_model=ProcessResponse)
-async def process_turn(req: ProcessRequest) -> Dict[str, str]:
+async def process_turn(req: ProcessRequest) -> Any:
     """
     Execute full cognitive-emotional turn synchronously via run_in_executor.
+    Disabled in simulation mode.
     """
+    if _mode == "simulation" or _sim_runtime is not None:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Live processing disabled in simulation mode. Use POST /sim/chat for simulated turns.",
+        )
     orch = get_orchestrator()
     if orch._degraded or not orch.is_healthy():
         return JSONResponse(
@@ -173,7 +210,8 @@ async def process_turn(req: ProcessRequest) -> Dict[str, str]:
 
     call_id = uuid.uuid4().hex
     _hook_bus.emit("on_turn_start", req.input)
-    _history_store.append_turn("user", req.input)
+    store = get_history_store()
+    store.append_turn("user", req.input)
 
     loop = asyncio.get_running_loop()
 
@@ -182,10 +220,10 @@ async def process_turn(req: ProcessRequest) -> Dict[str, str]:
 
         # Update stability metrics
         if hasattr(orch, "_affective_memory") and orch._affective_memory is not None:
-            _stability_evaluator.update_sdm_count(orch._affective_memory.trace_count)
+            get_stability_evaluator().update_sdm_count(orch._affective_memory.trace_count)
 
         # Store turn in history
-        _history_store.append_turn("companion", response_text)
+        store.append_turn("companion", response_text)
         _hook_bus.emit("on_turn_completed", {"user": req.input, "response": response_text})
 
         return {"response": response_text, "call_id": call_id}
@@ -203,6 +241,33 @@ async def get_state(response: Response) -> StateSnapshot:
     Return non-blocking real-time emotional state snapshot with no caching.
     """
     response.headers["Cache-Control"] = "no-store"
+    if _sim_runtime is not None:
+        pad_state = _sim_runtime.emotion_core.get_pad_state()
+        markers = _sim_runtime.homeostatic_engine.compute_somatic_markers(pad_state)
+        constraints = _sim_runtime.homeostatic_engine.compute_behavioral_constraints(markers, pad_state)
+        return StateSnapshot(
+            pad=PADSnapshot(
+                pleasure=float(pad_state.pleasure),
+                arousal=float(pad_state.arousal),
+                dominance=float(pad_state.dominance),
+            ),
+            somatic=SomaticSnapshot(
+                stability=float(markers.stability),
+                cognitive_load=float(markers.cognitive_load),
+                energy=float(markers.energy),
+                tension=float(markers.tension),
+            ),
+            constraints=ConstraintsSnapshot(
+                max_tokens=int(constraints.max_tokens),
+                temperature=float(constraints.temperature),
+                latency_ms=int(constraints.latency_ms),
+                reasoning_depth=int(constraints.reasoning_depth),
+            ),
+            memory_trace_count=_sim_runtime.affective_memory.trace_count,
+            timestamp=_sim_runtime.sim_clock.virtual_time_s,
+            profile="simulation",
+        )
+
     orch = get_orchestrator()
 
     pad_state = orch._emotion_core.get_pad_state()
@@ -354,7 +419,7 @@ async def get_stability_telemetry() -> Dict[str, Any]:
     """
     Return composite Limbic Stability Index (LSI), tick jitter, and ODE variance.
     """
-    return _stability_evaluator.get_snapshot().to_dict()
+    return get_stability_evaluator().get_snapshot().to_dict()
 
 
 @app.get("/history")
@@ -362,7 +427,7 @@ async def get_chat_history(limit: int = 50) -> Dict[str, Any]:
     """
     Return recent conversation turns across active and past sessions.
     """
-    return {"turns": _history_store.get_history(limit=limit)}
+    return {"turns": get_history_store().get_history(limit=limit)}
 
 
 @app.post("/history/new-session")
@@ -370,7 +435,7 @@ async def new_chat_session() -> Dict[str, Any]:
     """
     Start a fresh conversation session without deleting older history.
     """
-    session_id = _history_store.new_session()
+    session_id = get_history_store().new_session()
     return {"status": "ok", "session_id": session_id}
 
 
@@ -379,7 +444,7 @@ async def clear_chat_history() -> Dict[str, Any]:
     """
     Clear all conversation history logs.
     """
-    _history_store.clear_history()
+    get_history_store().clear_history()
     return {"status": "ok", "message": "History cleared"}
 
 
@@ -388,7 +453,7 @@ async def export_chat_history() -> Response:
     """
     Export full conversation history as a formatted Markdown file.
     """
-    md_content = _history_store.export_markdown()
+    md_content = get_history_store().export_markdown()
     return Response(
         content=md_content,
         media_type="text/markdown",
@@ -488,6 +553,9 @@ async def get_profile() -> Dict[str, Any]:
     """
     Return current user/companion profile and awakening status.
     """
+    if _sim_runtime is not None:
+        return _sim_runtime.profile_store.get_profile()
+
     p = _get_profile_file()
     try:
         with open(p, "r", encoding="utf-8") as f:
@@ -503,7 +571,28 @@ async def get_profile() -> Dict[str, Any]:
 async def update_profile(req: ProfileUpdateRequest) -> Dict[str, Any]:
     """
     Update profile fields (user name, companion name, onboarding status).
+    Guards against live awakening in simulation mode.
     """
+    if _sim_runtime is not None:
+        if req.is_onboarded is True:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Live onboarding activation forbidden in simulation mode: is_onboarded=True forbidden.",
+            )
+        try:
+            updated = _sim_runtime.profile_store.update_profile(
+                user_name=req.user_name,
+                companion_name=req.companion_name,
+                birthday=req.birthday,
+                pronouns=req.pronouns,
+            )
+            return {"status": "ok", "profile": updated}
+        except ActivationSafetyError as exc:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=f"Live onboarding activation forbidden in simulation mode: {exc}",
+            )
+
     p = _get_profile_file()
     try:
         with open(p, "r", encoding="utf-8") as f:
@@ -538,13 +627,66 @@ async def update_profile(req: ProfileUpdateRequest) -> Dict[str, Any]:
     return {"status": "ok", "profile": data}
 
 
+@app.post("/lifecycle/activate")
+async def activate_companion() -> Dict[str, Any]:
+    """
+    Explicit activation endpoint transitioning Lucia from Genesis-ready to live companion.
+    Strictly gated to live mode.
+    """
+    if _mode == "simulation" or _sim_runtime is not None:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Cannot activate live companion in simulation mode. Direct lifecycle activation is strictly forbidden in simulation mode.",
+        )
+    p = _get_profile_file()
+    try:
+        with open(p, "r", encoding="utf-8") as f:
+            data = json.load(f)
+            if not isinstance(data, dict):
+                data = {}
+    except Exception:
+        data = {}
+
+    if data.get("is_onboarded") is True:
+        return {
+            "status": "already_active",
+            "message": "Lucia is already active",
+            "born_at": data.get("born_at"),
+            "companion_name": data.get("companion_name", "Lucia"),
+        }
+
+    data["is_onboarded"] = True
+    data["born_at"] = datetime.now().isoformat()
+    try:
+        with open(p, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
+    except Exception as e:
+        logger.error("Failed to save profile during activation: %s", e)
+        raise HTTPException(status_code=500, detail="Failed to persist activation")
+
+    logger.info("Lucia activated in live mode at %s", data["born_at"])
+    return {
+        "status": "activated",
+        "born_at": data["born_at"],
+        "companion_name": data.get("companion_name", "Lucia"),
+    }
+
+
 @app.post("/lifecycle/end")
 async def end_lifecycle() -> Dict[str, Any]:
     """
     Atomic transition ending the current Lucia's lifecycle.
-    Resets identity profile, chat history, affective memory, PAD state,
-    learned LNN/hidden state, dialogue history, and stability telemetry.
+    Disabled in simulation mode.
     """
+    if _mode == "simulation" or _sim_runtime is not None:
+        return JSONResponse(
+            status_code=status.HTTP_403_FORBIDDEN,
+            content={
+                "error": "LifecycleEndForbiddenInSimulation",
+                "message": "Cannot end live lifecycle while running in simulation mode.",
+            },
+        )
+
     try:
         # 1. Reset Orchestrator state (dialogue, emotion, memory, somatic) if active
         if _orchestrator is not None:
@@ -552,10 +694,10 @@ async def end_lifecycle() -> Dict[str, Any]:
                 _orchestrator.reset_lifecycle()
 
         # 2. Reset chat history persistence
-        _history_store.clear_history()
+        get_history_store().clear_history()
 
         # 3. Reset stability telemetry
-        _stability_evaluator.reset()
+        get_stability_evaluator().reset()
 
         # 4. Reset profile persistence to un-onboarded / Genesis-ready state
         fresh_profile = _reset_profile_file()
@@ -575,16 +717,243 @@ async def end_lifecycle() -> Dict[str, Any]:
 
 
 @app.get("/health")
-async def health_check() -> Dict[str, str]:
+async def health_check() -> Dict[str, Any]:
     """
     Healthcheck endpoint for ProcessManager monitoring.
     """
+    if _sim_runtime is not None:
+        return {"status": "ok", "mode": "simulation", "healthy": True}
     if _orchestrator is not None and _orchestrator.is_healthy():
         return {"status": "ok"}
     return JSONResponse(
         status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
         content={"status": "degraded"},
     )
+
+
+# ---------------------------------------------------------------------------
+# Simulation API Models & Endpoints (Phase 8)
+# ---------------------------------------------------------------------------
+
+class ClockStepRequest(BaseModel):
+    delta_ms: float = Field(200.0, ge=0.0)
+
+class ClockSpeedRequest(BaseModel):
+    multiplier: float = Field(1.0, gt=0.0)
+
+class ClockResetRequest(BaseModel):
+    reset_time_s: float = Field(0.0, ge=0.0)
+
+class StimulusTextRequest(BaseModel):
+    text: str = Field(..., min_length=1, max_length=4000)
+    source: str = "simulation_ui"
+
+class StimulusVectorRequest(BaseModel):
+    vector: List[float] = Field(..., min_length=16, max_length=16)
+    source: str = "debug_probe"
+
+class StimulusPresetRequest(BaseModel):
+    preset: str
+    pathway: str = "sensory_text"
+
+class ScenarioRunRequest(BaseModel):
+    scenario_id: str = "all"
+
+
+def _require_sim_runtime() -> SimulationRuntime:
+    if _sim_runtime is None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Simulation environment is not active. Start server with --mode simulation.",
+        )
+    return _sim_runtime
+
+
+@app.get("/runtime/descriptor")
+async def get_runtime_descriptor() -> Dict[str, Any]:
+    if _mode == "simulation" and _sim_runtime is not None:
+        return {
+            "mode": "simulation",
+            "is_live": False,
+            "is_simulated": True,
+            "state": _sim_runtime.state,
+            "active_profile": "simulation",
+            "capabilities": [
+                "virtual_clock",
+                "storage_isolation",
+                "sensory_stimulus",
+                "debug_vector_probe",
+                "scenario_runner",
+                "in_memory_chat",
+            ],
+        }
+    return {
+        "mode": "live",
+        "is_live": True,
+        "is_simulated": False,
+        "state": "READY" if _orchestrator and _orchestrator.is_healthy() else "DEGRADED",
+        "active_profile": _resource_profile.name if _resource_profile else "auto",
+        "capabilities": ["live_chat", "model_inference", "voice", "presence"],
+    }
+
+
+@app.get("/runtime/snapshot")
+async def get_runtime_snapshot() -> Dict[str, Any]:
+    if _sim_runtime is not None:
+        return _sim_runtime.get_state_snapshot()
+
+    state_snap = await get_state(Response())
+    return {
+        "runtime": {
+            "mode": "live",
+            "state": "READY" if _orchestrator and _orchestrator.is_healthy() else "DEGRADED",
+            "is_live": True,
+            "is_simulated": False,
+        },
+        "pad": state_snap.pad.dict(),
+        "somatic_markers": state_snap.somatic.dict(),
+        "behavioral_constraints": state_snap.constraints.dict(),
+        "stability": get_stability_evaluator().get_snapshot().to_dict(),
+        "storage": {
+            "storage_type": "persistent_disk",
+            "chat_turns_count": len(get_history_store().get_history(1000)),
+        },
+    }
+
+
+@app.post("/sim/clock/step")
+async def sim_clock_step(req: ClockStepRequest) -> Dict[str, Any]:
+    rt = _require_sim_runtime()
+    return rt.step_simulation(req.delta_ms)
+
+
+@app.post("/sim/clock/pause")
+async def sim_clock_pause() -> Dict[str, Any]:
+    rt = _require_sim_runtime()
+    rt.pause_simulation()
+    return {"status": "ok", "is_paused": True, "virtual_time_s": rt.sim_clock.virtual_time_s}
+
+
+@app.post("/sim/clock/resume")
+async def sim_clock_resume() -> Dict[str, Any]:
+    rt = _require_sim_runtime()
+    rt.start_simulation()
+    return {"status": "ok", "is_paused": False, "virtual_time_s": rt.sim_clock.virtual_time_s}
+
+
+@app.post("/sim/clock/speed")
+async def sim_clock_speed(req: ClockSpeedRequest) -> Dict[str, Any]:
+    rt = _require_sim_runtime()
+    rt.sim_clock.set_speed(req.multiplier)
+    return {"status": "ok", "speed_factor": rt.sim_clock.speed_factor}
+
+
+@app.post("/sim/clock/reset")
+async def sim_clock_reset(req: ClockResetRequest) -> Dict[str, Any]:
+    rt = _require_sim_runtime()
+    rt.reset_simulation()
+    return {"status": "ok", "virtual_time_s": rt.sim_clock.virtual_time_s}
+
+
+@app.post("/sim/stimulus/inject-text")
+async def sim_stimulus_text(req: StimulusTextRequest) -> Dict[str, Any]:
+    rt = _require_sim_runtime()
+    entry = rt.stimulus_service.inject_text(req.text, source=req.source, custom_timestamp=rt.sim_clock.virtual_time_s)
+    return {"status": "ok", "stimulus": entry, "pathway": entry.get("pathway"), "pad_after": entry.get("pad_after")}
+
+
+@app.post("/sim/stimulus/inject-vector")
+async def sim_stimulus_vector(req: StimulusVectorRequest) -> Dict[str, Any]:
+    rt = _require_sim_runtime()
+    entry = rt.stimulus_service.inject_vector(req.vector, source=req.source, custom_timestamp=rt.sim_clock.virtual_time_s)
+    return {
+        "status": "ok",
+        "stimulus": entry,
+        "pathway": entry.get("pathway"),
+        "source": entry.get("source"),
+        "pad_after": entry.get("pad_after"),
+    }
+
+
+@app.get("/sim/stimulus/presets")
+async def sim_stimulus_presets() -> Dict[str, Any]:
+    rt = _require_sim_runtime()
+    return {"presets": rt.stimulus_service.get_presets()}
+
+
+@app.post("/sim/stimulus/preset")
+async def sim_stimulus_preset(req: StimulusPresetRequest) -> Dict[str, Any]:
+    rt = _require_sim_runtime()
+    entry = rt.stimulus_service.inject_preset(
+        req.preset,
+        pathway=req.pathway,
+        source="sim_preset_api",
+        custom_timestamp=rt.sim_clock.virtual_time_s,
+    )
+    return {
+        "status": "ok",
+        "stimulus": entry,
+        "pathway": entry.get("pathway"),
+        "source": entry.get("source"),
+        "pad_after": entry.get("pad_after"),
+    }
+
+
+@app.get("/sim/stimulus/history")
+async def sim_stimulus_history(limit: int = 50) -> Dict[str, Any]:
+    rt = _require_sim_runtime()
+    return {"history": rt.stimulus_service.get_history(limit)}
+
+
+@app.get("/sim/scenarios/list")
+async def sim_scenarios_list() -> Dict[str, Any]:
+    rt = _require_sim_runtime()
+    global _scenario_runner
+    if _scenario_runner is None:
+        _scenario_runner = ScenarioRunner(rt)
+    return {"scenarios": _scenario_runner.list_scenarios()}
+
+
+@app.post("/sim/scenarios/run")
+async def sim_scenarios_run(req: ScenarioRunRequest) -> Dict[str, Any]:
+    rt = _require_sim_runtime()
+    global _scenario_runner
+    if _scenario_runner is None:
+        _scenario_runner = ScenarioRunner(rt)
+
+    if req.scenario_id == "all":
+        summary = _scenario_runner.run_all()
+        results_list = list(summary["scenarios"].values())
+        return {"all_passed": summary["all_passed"], "results": results_list, "summary": summary}
+    res = _scenario_runner.run_scenario(req.scenario_id)
+    return {"status": "ok", "results": [res], "result": res}
+
+
+@app.get("/sim/scenarios/results")
+async def sim_scenarios_results() -> Dict[str, Any]:
+    rt = _require_sim_runtime()
+    global _scenario_runner
+    if _scenario_runner is None:
+        _scenario_runner = ScenarioRunner(rt)
+    last = _scenario_runner.get_last_results()
+    if isinstance(last, dict) and "scenarios" in last:
+        results_list = list(last["scenarios"].values())
+    elif isinstance(last, dict):
+        results_list = [v for k, v in last.items() if isinstance(v, dict) and "passed" in v]
+    else:
+        results_list = []
+    return {"results": results_list, "last_run": last}
+
+
+@app.post("/sim/chat")
+async def sim_chat(req: ProcessRequest) -> Dict[str, Any]:
+    rt = _require_sim_runtime()
+    res = rt.send_chat(req.input, source="sim_chat_api")
+    return {
+        **res,
+        "response": res.get("assistant_reply", ""),
+        "call_id": f"sim_{uuid.uuid4().hex[:12]}",
+    }
 
 
 @app.get("/system/profile")
@@ -643,30 +1012,57 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--model-path", type=str, default="", help="Path to GGUF model")
     parser.add_argument("--profile", type=str, default="auto", help="Hardware scaling tier")
     parser.add_argument("--log-level", type=str, default="INFO", help="Logging level")
+    parser.add_argument(
+        "--mode",
+        type=str,
+        default=os.environ.get("LUCIA_MODE", "live"),
+        choices=["live", "simulation", "preview"],
+        help="Runtime mode (live, simulation, or preview)",
+    )
     return parser.parse_args()
 
 
 def init_server(
-    model_path: str,
+    model_path: str = "",
     port: int = 8765,
     profile_name: str = "auto",
     log_level: str = "INFO",
+    mode: str = "live",
 ) -> None:
-    global _orchestrator, _resource_profile
+    global _orchestrator, _resource_profile, _sim_runtime, _scenario_runner, _mode
+    _mode = mode.lower()
 
     logging.basicConfig(level=getattr(logging, log_level.upper(), logging.INFO))
 
-    # Read env fallbacks
+    if not (1024 <= port <= 65535):
+        sys.stdout.write("LUCIA_BACKEND_ERROR: invalid_port\n")
+        sys.stdout.flush()
+        sys.exit(1)
+
+    if _mode == "simulation":
+        logger.info("Initializing Lucia Backend in SIMULATION mode...")
+        try:
+            _sim_runtime = SimulationRuntime()
+            _scenario_runner = ScenarioRunner(_sim_runtime)
+            _resource_profile = get_resource_profile("minimal")
+            logger.info("Simulation runtime initialized successfully.")
+        except Exception as exc:
+            logger.exception("Failed to initialize SimulationRuntime: %s", exc)
+            sys.stdout.write(f"LUCIA_BACKEND_ERROR: {exc}\n")
+            sys.stdout.flush()
+            sys.exit(1)
+
+        # Signal ready to Electron parent process
+        sys.stdout.write("LUCIA_BACKEND_READY\n")
+        sys.stdout.flush()
+        return
+
+    # Live mode execution
     if not model_path:
         model_path = os.environ.get("LUCIA_MODEL_PATH", "")
 
     if not model_path:
         sys.stdout.write("LUCIA_BACKEND_ERROR: model_path_not_configured\n")
-        sys.stdout.flush()
-        sys.exit(1)
-
-    if not (1024 <= port <= 65535):
-        sys.stdout.write("LUCIA_BACKEND_ERROR: invalid_port\n")
         sys.stdout.flush()
         sys.exit(1)
 
@@ -691,15 +1087,19 @@ def init_server(
 def main() -> None:
     args = _parse_args()
     port = int(os.environ.get("LUCIA_PORT", args.port)) if args.port == 8765 else args.port
+    mode = os.environ.get("LUCIA_MODE", args.mode)
     init_server(
         model_path=args.model_path,
         port=port,
         profile_name=args.profile,
         log_level=args.log_level,
+        mode=mode,
     )
 
     def shutdown_handler(sig, frame):
         logger.info("Received termination signal %s, shutting down...", sig)
+        if _sim_runtime is not None:
+            _sim_runtime.shutdown()
         if _orchestrator is not None:
             _orchestrator.shutdown()
         sys.exit(0)

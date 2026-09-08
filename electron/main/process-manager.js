@@ -47,13 +47,15 @@ class ProcessManager {
       const modelPath = this.config.model_path || '';
       const profile = this.config.profile || 'auto';
       const logLevel = this.config.log_level || 'INFO';
+      const mode = this.config.mode || 'live';
 
       const args = [
         '-m', 'src.api.server',
         '--port', String(port),
         '--model-path', modelPath,
         '--profile', profile,
-        '--log-level', logLevel
+        '--log-level', logLevel,
+        '--mode', mode
       ];
 
       console.log(`[ProcessManager] Spawning backend: ${pythonPath} ${args.join(' ')}`);

@@ -17,8 +17,8 @@ data/
 # ──────────────────────────────────────────────
 # Specs & metadata
 # ──────────────────────────────────────────────
-.kiro/specs/**/*.md
-.kiro/specs/**/.config.kiro
+docs/.kiro/specs/**/*.md
+docs/.kiro/specs/**/.config.kiro
 
 # ──────────────────────────────────────────────
 # Generated / local UI config
