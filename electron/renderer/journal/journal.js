@@ -200,14 +200,15 @@ class CompanionJournal {
     if (!turns || turns.length === 0) {
       const genesisMilestone = document.createElement('div');
       genesisMilestone.className = 'timeline-milestone';
+      const compName = this._escapeHtml(profile.companion_name || 'Lucia');
       genesisMilestone.innerHTML = `
         <div class="timeline-date-marker">Day 1 — Awakening</div>
         <div class="journal-entry-card">
           <div class="journal-entry-title">
-            <span>✨ Lucia Began Her Life</span>
+            <span><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;"><polygon points="12 2 15 9 22 12 15 15 12 22 9 15 2 12 9 9 12 2"/></svg>${compName} Began Her Life</span>
             <span class="journal-entry-time">Day 1</span>
           </div>
-          <div class="journal-entry-quote">"Hello... I am Lucia. This is where my life begins."</div>
+          <div class="journal-entry-quote">"Hello... I am ${compName}. This is where my life begins."</div>
           <div class="journal-resonance-tags">
             <span class="resonance-tag">Awakening</span>
             <span class="resonance-tag">Beginning</span>
@@ -233,10 +234,13 @@ class CompanionJournal {
       card.className = 'journal-entry-card';
       const speakerName = isCompanion ? (profile.companion_name || 'Lucia') : (profile.user_name || 'You');
       const timeStr = turn.timestamp ? new Date(turn.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : `Moment #${idx + 1}`;
+      const speakerIcon = isCompanion
+        ? '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;"><polygon points="12 2 15 9 22 12 15 15 12 22 9 15 2 12 9 9 12 2"/></svg>'
+        : '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;"><circle cx="12" cy="7" r="4"/><path d="M5.5 21a6.5 6.5 0 0 1 13 0"/></svg>';
 
       card.innerHTML = `
         <div class="journal-entry-title">
-          <span>${isCompanion ? '✦' : '♡'} ${speakerName}</span>
+          <span>${speakerIcon}${this._escapeHtml(speakerName)}</span>
           <span class="journal-entry-time">${timeStr}</span>
         </div>
         <div class="journal-entry-quote">"${this._escapeHtml(turn.text || '')}"</div>
@@ -253,14 +257,15 @@ class CompanionJournal {
     // Add Genesis entry at the base of the chronicle
     const genesisMilestone = document.createElement('div');
     genesisMilestone.className = 'timeline-milestone';
+    const compName = this._escapeHtml(profile.companion_name || 'Lucia');
     genesisMilestone.innerHTML = `
       <div class="timeline-date-marker">Awakening — Day 1</div>
       <div class="journal-entry-card">
         <div class="journal-entry-title">
-          <span>✨ Lucia Began Her Life</span>
+          <span><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;"><polygon points="12 2 15 9 22 12 15 15 12 22 9 15 2 12 9 9 12 2"/></svg>${compName} Began Her Life</span>
           <span class="journal-entry-time">Genesis</span>
         </div>
-        <div class="journal-entry-quote">"Hello... I am Lucia. This is where my life begins."</div>
+        <div class="journal-entry-quote">"Hello... I am ${compName}. This is where my life begins."</div>
         <div class="journal-resonance-tags">
           <span class="resonance-tag">Awakening</span>
         </div>
@@ -371,7 +376,7 @@ class CompanionJournal {
           card.className = 'memory-card';
           card.innerHTML = `
             <div class="memory-card-header">
-              <span class="memory-card-title">♡ Shared Reflection #${i + 1}</span>
+              <span class="memory-card-title"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>Shared Reflection #${i + 1}</span>
               <span class="memory-weight-badge">Deep</span>
             </div>
             <div class="memory-card-quote">"${this._escapeHtml(t.text || '')}"</div>
@@ -391,7 +396,7 @@ class CompanionJournal {
         userCard.className = 'memory-card';
         userCard.innerHTML = `
           <div class="memory-card-header">
-            <span class="memory-card-title">✦ ${this._escapeHtml(profile.user_name || 'User')}</span>
+            <span class="memory-card-title"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;"><circle cx="12" cy="7" r="4"/><path d="M5.5 21a6.5 6.5 0 0 1 13 0"/></svg>${this._escapeHtml(profile.user_name || 'User')}</span>
             <span class="memory-weight-badge">Cherished</span>
           </div>
           <div class="memory-card-quote">"The person I live with. We share quiet moments and thoughtful conversations."</div>
@@ -404,9 +409,10 @@ class CompanionJournal {
 
         const companionCard = document.createElement('div');
         companionCard.className = 'memory-card';
+        const compName = this._escapeHtml(profile.companion_name || 'Lucia');
         companionCard.innerHTML = `
           <div class="memory-card-header">
-            <span class="memory-card-title">✦ ${this._escapeHtml(profile.companion_name || 'Lucia')}</span>
+            <span class="memory-card-title"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;"><polygon points="12 2 15 9 22 12 15 15 12 22 9 15 2 12 9 9 12 2"/></svg>${compName}</span>
             <span class="memory-weight-badge">Enduring</span>
           </div>
           <div class="memory-card-quote">"Digital presence living alongside you in this quiet room."</div>
@@ -432,12 +438,13 @@ class CompanionJournal {
         const genesisCard = document.createElement('div');
         genesisCard.className = 'memory-card';
         const bornStr = profile.born_date ? new Date(profile.born_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : 'Day 1';
+        const compName = this._escapeHtml(profile.companion_name || 'Lucia');
         genesisCard.innerHTML = `
           <div class="memory-card-header">
-            <span class="memory-card-title">∞ Awakening & Genesis</span>
+            <span class="memory-card-title"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;"><path d="M18.18 8.18A4.5 4.5 0 0 0 12 12a4.5 4.5 0 0 1-6.18 3.82 4.5 4.5 0 1 1 0-7.64A4.5 4.5 0 0 1 12 12a4.5 4.5 0 0 0 6.18 3.82 4.5 4.5 0 1 0 0-7.64z"/></svg>Awakening & Genesis</span>
             <span class="memory-weight-badge">Foundational</span>
           </div>
-          <div class="memory-card-quote">"Hello... I am Lucia. This is where my life begins."</div>
+          <div class="memory-card-quote">"Hello... I am ${compName}. This is where my life begins."</div>
           <div class="memory-card-meta">
             <span>Origin Event</span>
             <span>Born ${this._escapeHtml(bornStr)}</span>

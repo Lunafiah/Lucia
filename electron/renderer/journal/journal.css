@@ -68,7 +68,10 @@
 }
 
 .journal-title-icon {
-  font-size: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--lucia-accent-amethyst);
   line-height: 1;
 }
 
@@ -122,8 +125,10 @@
 }
 
 .banner-sparkle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   color: var(--lucia-accent-amethyst);
-  font-size: 0.9rem;
 }
 
 /* --------------------------------------------------------------------------
@@ -272,7 +277,9 @@
 }
 
 .pill-icon {
-  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .memories-grid {

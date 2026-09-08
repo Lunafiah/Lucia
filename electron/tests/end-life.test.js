@@ -149,7 +149,7 @@ describe('Phase 7.7 End-of-Life Confirmation & Transition Suite', () => {
             </div>
 
             <div class="end-life-confirm-group">
-              <label for="end-life-confirm-input">To proceed, type <strong>END LUCIA</strong> below:</label>
+              <label for="end-life-confirm-input" class="end-life-confirm-label">To proceed, type <strong>END LUCIA</strong> below:</label>
               <input
                 type="text"
                 id="end-life-confirm-input"
@@ -738,4 +738,44 @@ describe('Phase 7.7 End-of-Life Confirmation & Transition Suite', () => {
     const chatContainer = document.getElementById('chat-messages');
     expect(chatContainer.textContent).not.toContain('Previous Lucia');
   });
+
+  test('Test 25: End-of-Life dynamically adapts title, consequences, and confirmation to companion name (e.g. ABC)', async () => {
+    // Set custom companion name in storage
+    localStorageStore.lucia_companion_name = 'ABC';
+
+    settings.openEndLifeModal();
+
+    // Verify dynamic text
+    const title = document.getElementById('end-life-title');
+    expect(title.textContent).toBe("End ABC's Life");
+
+    const lead = document.querySelector('.end-life-lead');
+    expect(lead.textContent).toContain('ABC');
+
+    const cancelBtn = document.getElementById('end-life-cancel-btn');
+    expect(cancelBtn.textContent.trim()).toBe('Keep ABC');
+
+    const destroyBtn = document.getElementById('end-life-destroy-btn');
+    expect(destroyBtn.textContent.trim()).toBe("End ABC's Life");
+
+    const confirmLabel = document.querySelector('.end-life-confirm-label');
+    expect(confirmLabel.textContent).toContain('END ABC');
+
+    // Typing default "END LUCIA" must NOT enable destroy for ABC
+    const confirmInput = document.getElementById('end-life-confirm-input');
+    confirmInput.value = 'END LUCIA';
+    confirmInput.dispatchEvent(new Event('input'));
+    expect(destroyBtn.disabled).toBe(true);
+
+    // Exact match "END ABC" enables destroy
+    confirmInput.value = 'END ABC';
+    confirmInput.dispatchEvent(new Event('input'));
+    expect(destroyBtn.disabled).toBe(false);
+
+    // Execution shows transitional text for ABC
+    const executePromise = settings.executeEndLife();
+    expect(destroyBtn.textContent.trim()).toBe("Ending ABC's life...");
+    await executePromise;
+  });
 });
+

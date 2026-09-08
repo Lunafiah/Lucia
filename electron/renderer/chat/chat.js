@@ -673,6 +673,24 @@ class ChatController {
   }
 
   _setupProfileControls() {
+    if (this.genesisCompanionNameInput) {
+      this.genesisCompanionNameInput.addEventListener('input', () => {
+        this._updateGenesisAwakenButton();
+      });
+      this.genesisCompanionNameInput.addEventListener('blur', () => {
+        if (!this.genesisCompanionNameInput.value.trim()) {
+          this.genesisCompanionNameInput.value = 'Lucia';
+          this._updateGenesisAwakenButton();
+        }
+      });
+      this.genesisCompanionNameInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          this._completeGenesis();
+        }
+      });
+    }
+
     if (this.genesisAwakenBtn) {
       this.genesisAwakenBtn.addEventListener('click', () => {
         this._completeGenesis();
@@ -694,11 +712,36 @@ class ChatController {
         this.genesisModal.classList.remove('active');
       });
     }
+
+    this._updateGenesisAwakenButton();
+  }
+
+  _updateGenesisAwakenButton() {
+    const rawVal = this.genesisCompanionNameInput ? this.genesisCompanionNameInput.value.trim() : '';
+    const companionName = rawVal || 'Lucia';
+
+    const btnText = this.genesisAwakenBtn ? this.genesisAwakenBtn.querySelector('.genesis-btn-text') : null;
+    if (btnText) {
+      btnText.textContent = `Awaken ${companionName}`;
+    } else if (this.genesisAwakenBtn) {
+      this.genesisAwakenBtn.textContent = `Awaken ${companionName}`;
+    }
+
+    const titleEl = document.querySelector('.genesis-title');
+    if (titleEl) {
+      titleEl.textContent = `${companionName}'s Life Begins`;
+    }
+
+    const userLabelEl = document.querySelector('label[for="genesis-user-name-input"]');
+    if (userLabelEl) {
+      userLabelEl.textContent = `How should ${companionName} address you?`;
+    }
   }
 
   async _completeGenesis() {
     const userName = this.genesisUserNameInput ? this.genesisUserNameInput.value.trim() : '';
     const companionName = this.genesisCompanionNameInput ? this.genesisCompanionNameInput.value.trim() : '';
+    const finalCompanionName = companionName || 'Lucia';
     const bornAt = new Date().toISOString();
 
     try {
@@ -712,7 +755,7 @@ class ChatController {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           user_name: userName || 'Friend',
-          companion_name: companionName || 'Lucia',
+          companion_name: finalCompanionName,
           is_onboarded: true,
           born_at: bornAt,
         }),
@@ -722,10 +765,14 @@ class ChatController {
         const data = await res.json();
         const profile = data.profile || {
           user_name: userName || 'Friend',
-          companion_name: companionName || 'Lucia',
+          companion_name: finalCompanionName,
           is_onboarded: true,
           born_at: bornAt,
         };
+        try {
+          localStorage.setItem('lucia_companion_name', finalCompanionName);
+          localStorage.setItem('lucia_user_name', userName || 'Friend');
+        } catch (e) {}
         this._renderProfile(profile);
 
         if (this.genesisModal) {
@@ -738,7 +785,7 @@ class ChatController {
             }
           }, 400);
         }
-        console.log('[genesis] Lucia awakened successfully for', userName || 'Friend');
+        console.log(`[genesis] ${finalCompanionName} awakened successfully for`, userName || 'Friend');
       } else {
         if (this.genesisAwakenBtn) {
           this.genesisAwakenBtn.disabled = false;
@@ -766,9 +813,10 @@ class ChatController {
           if (this.genesisUserNameInput && profile.user_name) {
             this.genesisUserNameInput.value = profile.user_name;
           }
-          if (this.genesisCompanionNameInput && profile.companion_name) {
-            this.genesisCompanionNameInput.value = profile.companion_name;
+          if (this.genesisCompanionNameInput) {
+            this.genesisCompanionNameInput.value = profile.companion_name || 'Lucia';
           }
+          this._updateGenesisAwakenButton();
           this._startGenesisAtmosphere();
         } else if (this.genesisModal) {
           // Already onboarded: skip Genesis modal
@@ -803,6 +851,11 @@ class ChatController {
     if (!profile) return;
     if (this.userNameInput) this.userNameInput.value = profile.user_name || '';
     if (this.companionNameInput) this.companionNameInput.value = profile.companion_name || 'Lucia';
+    if (profile.companion_name) {
+      try {
+        localStorage.setItem('lucia_companion_name', profile.companion_name);
+      } catch (e) {}
+    }
 
     if (profile.born_at) {
       const bornDate = new Date(profile.born_at);

@@ -337,4 +337,52 @@ describe('Phase 7.7 Genesis Awakening Tests', () => {
     await chat._loadProfile();
     expect(genesisModal.classList.contains('active')).toBe(false);
   });
+
+  test('Test 8: Real-time dynamic name updating of Awaken button, title, and prompt', () => {
+    const genesisModal = document.getElementById('genesis-modal');
+    genesisModal.classList.add('active');
+
+    const companionInput = document.getElementById('genesis-companion-name-input');
+    const awakenBtnText = document.querySelector('.genesis-btn-text');
+    const genesisTitle = document.querySelector('.genesis-title');
+    const userPromptLabel = document.querySelector('label[for="genesis-user-name-input"]');
+
+    // Default state
+    expect(companionInput.value).toBe('Lucia');
+    expect(awakenBtnText.textContent).toBe('Awaken Lucia');
+    expect(genesisTitle.textContent).toBe("Lucia's Life Begins");
+    expect(userPromptLabel.textContent).toBe('How should Lucia address you?');
+
+    // Type custom name: "ABC"
+    companionInput.value = 'ABC';
+    companionInput.dispatchEvent(new Event('input', { bubbles: true }));
+
+    expect(awakenBtnText.textContent).toBe('Awaken ABC');
+    expect(genesisTitle.textContent).toBe("ABC's Life Begins");
+    expect(userPromptLabel.textContent).toBe('How should ABC address you?');
+
+    // Clear input -> reverts to Lucia default
+    companionInput.value = '';
+    companionInput.dispatchEvent(new Event('input', { bubbles: true }));
+
+    expect(awakenBtnText.textContent).toBe('Awaken Lucia');
+    expect(genesisTitle.textContent).toBe("Lucia's Life Begins");
+    expect(userPromptLabel.textContent).toBe('How should Lucia address you?');
+  });
+
+  test('Test 9: Genesis submission with custom companion name persists name in profile and localStorage', async () => {
+    const companionInput = document.getElementById('genesis-companion-name-input');
+    companionInput.value = 'ABC';
+    companionInput.dispatchEvent(new Event('input', { bubbles: true }));
+
+    await chat._completeGenesis();
+
+    const profileCall = fetchMock.mock.calls.find(call => call[0].includes('/profile') && call[1]?.method === 'POST');
+    expect(profileCall).toBeDefined();
+    const payload = JSON.parse(profileCall[1].body);
+    expect(payload.companion_name).toBe('ABC');
+
+    expect(localStorage.getItem('lucia_companion_name')).toBe('ABC');
+  });
 });
+

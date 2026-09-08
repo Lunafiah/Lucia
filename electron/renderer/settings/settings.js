@@ -111,6 +111,10 @@ class CompanionSettings {
     this.modal.classList.add('active');
     this.switchTab(tab);
     this.refreshDynamicData();
+    if (this.endLifeBtn) {
+      const name = this.getCompanionName();
+      this.endLifeBtn.textContent = `End ${name}'s Life`;
+    }
   }
 
   closeSettings() {
@@ -118,15 +122,71 @@ class CompanionSettings {
     this.modal.classList.remove('active');
   }
 
+  getCompanionName() {
+    try {
+      const cached = localStorage.getItem('lucia_companion_name');
+      if (cached && cached.trim()) return cached.trim();
+    } catch (e) {}
+
+    if (window.chatController && window.chatController.companionNameInput && window.chatController.companionNameInput.value.trim()) {
+      return window.chatController.companionNameInput.value.trim();
+    }
+
+    try {
+      const profile = JSON.parse(localStorage.getItem('lucia_profile') || '{}');
+      if (profile.companion_name && profile.companion_name.trim()) {
+        return profile.companion_name.trim();
+      }
+    } catch (e) {}
+
+    return 'Lucia';
+  }
+
   openEndLifeModal() {
     if (!this.endLifeModal) return;
     this.endLifeModal.classList.add('active');
+
+    const companionName = this.getCompanionName();
+    this._currentCompanionName = companionName;
+
+    // Update dynamic text in EOL modal
+    const titleEl = document.getElementById('end-life-title');
+    if (titleEl) titleEl.textContent = `End ${companionName}'s Life`;
+
+    const leadEl = this.endLifeModal.querySelector('.end-life-lead');
+    if (leadEl) {
+      leadEl.textContent = `This will irreversibly end ${companionName}'s continuous journey on this machine.`;
+    }
+
+    const consequences = this.endLifeModal.querySelectorAll('.consequence-item');
+    if (consequences.length >= 3) {
+      const bullet1 = consequences[1].querySelector('.consequence-bullet');
+      const bullet2 = consequences[2].querySelector('.consequence-bullet');
+      const b1Html = bullet1 ? bullet1.outerHTML : '<span class="consequence-bullet">✕</span>';
+      const b2Html = bullet2 ? bullet2.outerHTML : '<span class="consequence-bullet">✕</span>';
+      consequences[1].innerHTML = `${b1Html}<span>${companionName}'s internal emotional adaptation and physiological attractor bond will cease to exist.</span>`;
+      consequences[2].innerHTML = `${b2Html}<span>A future companion awakened on this system will be a completely new individual, not this ${companionName}.</span>`;
+    }
+
+    const confirmLabel = this.endLifeModal.querySelector('.end-life-confirm-label, label[for="end-life-confirm-input"]');
+    if (confirmLabel) {
+      confirmLabel.innerHTML = `To proceed, type <strong class="confirm-phrase-highlight">END ${companionName.toUpperCase()}</strong> below:`;
+    }
+
     if (this.endLifeConfirmInput) {
       this.endLifeConfirmInput.value = '';
+      this.endLifeConfirmInput.placeholder = `Type END ${companionName.toUpperCase()}`;
       this.endLifeConfirmInput.focus();
     }
+
+    if (this.endLifeCancelBtn) {
+      this.endLifeCancelBtn.textContent = `Keep ${companionName}`;
+    }
+
     if (this.endLifeDestroyBtn) {
+      this.endLifeDestroyBtn.textContent = `End ${companionName}'s Life`;
       this.endLifeDestroyBtn.disabled = true;
+      this.endLifeDestroyBtn.classList.remove('destroying');
     }
   }
 
@@ -144,8 +204,9 @@ class CompanionSettings {
   _validateEndLifeConfirmation() {
     if (!this.endLifeConfirmInput || !this.endLifeDestroyBtn) return;
     const val = this.endLifeConfirmInput.value.trim();
-    // Strict confirmation guard: exact match "END LUCIA"
-    const isValid = val === 'END LUCIA';
+    const companionName = (this._currentCompanionName || this.getCompanionName()).toUpperCase();
+    const targetPhrase = `END ${companionName}`;
+    const isValid = val === targetPhrase;
     this.endLifeDestroyBtn.disabled = !isValid;
   }
 
@@ -176,14 +237,15 @@ class CompanionSettings {
     this._isEndingLife = true;
 
     // Concurrency / duplicate-submission protection & transitional state
+    const companionName = this._currentCompanionName || this.getCompanionName();
     const destroyBtn = this.endLifeDestroyBtn;
     const cancelBtn = this.endLifeCancelBtn;
     const confirmInput = this.endLifeConfirmInput;
 
-    const originalText = destroyBtn ? destroyBtn.textContent : "End Lucia's Life";
+    const originalText = `End ${companionName}'s Life`;
     if (destroyBtn) {
       destroyBtn.disabled = true;
-      destroyBtn.textContent = "Ending Lucia's life...";
+      destroyBtn.textContent = `Ending ${companionName}'s life...`;
       destroyBtn.classList.add('destroying');
     }
     if (cancelBtn) cancelBtn.disabled = true;

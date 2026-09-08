@@ -40,7 +40,10 @@
 }
 
 .settings-title-icon {
-  font-size: 1.3rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--lucia-accent-amethyst);
   line-height: 1;
 }
 
@@ -115,8 +118,11 @@
 }
 
 .settings-tab-icon {
-  font-size: 1.05rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   line-height: 1;
+  color: currentColor;
 }
 
 /* Right Content Panel */
@@ -296,9 +302,12 @@
 }
 
 .settings-info-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   color: var(--lucia-accent-amethyst);
-  font-size: 1rem;
-  line-height: 1.2;
+  flex-shrink: 0;
+  margin-top: 2px;
 }
 
 /* Danger Zone Card */
