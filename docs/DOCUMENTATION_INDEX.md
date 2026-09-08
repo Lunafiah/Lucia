@@ -44,8 +44,8 @@ To prevent confusion across development phases, Lucia maintains a strict documen
 | **Authoritative** | [`docs/USER_MANUAL.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/USER_MANUAL.md) | **Active Truth** | User guide, installation, model layout, mascot shortcuts, audio/graphics settings. |
 | **Authoritative** | [`PHASE_8_ARCHITECTURE_REVIEW.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/.kiro/specs/lucia-phase8-ISOLATION/PHASE_8_ARCHITECTURE_REVIEW.md) | **Active Truth** | Authoritative post-Phase-8 architectural audit, state map, and baseline. |
 | **Authoritative** | [`PHASE_8.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/.kiro/specs/lucia-phase8-ISOLATION/PHASE_8.md) | **Active Truth** | Phase 8 Runtime Isolation & Simulation Environment specification and evidence. |
-| **Authoritative** | [`PHASE_9_ARCHITECTURE_GATE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/.kiro/specs/lucia-phase9-Cognition_Unifying/PHASE_9_ARCHITECTURE_GATE.md) | **Active Truth** | Formal Phase 9 Architectural Decision Gate: F-01 to F-04 resolutions, concurrency, voice & learning models. |
-| **Authoritative** | [`PHASE_9.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/.kiro/specs/lucia-phase9-Cognition_Unifying/PHASE_9.md) | **Active Truth** | Canonical Phase 9 specification: Unified Cognitive Architecture & System Convergence. |
+| **Authoritative** | [`PHASE_9_ARCHITECTURE_GATE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/phase9/PHASE_9_ARCHITECTURE_GATE.md) | **Active Truth** | Formal Phase 9 Architectural Decision Gate (Revision v2.0): F-01 to F-04, 5-tier concurrency, state ownership, simulation validation, generation policy. |
+| **Authoritative** | [`PHASE_9.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/phase9/PHASE_9.md) | **Active Truth** | Canonical Phase 9 specification: Unified Cognitive Architecture & System Convergence. |
 | **Authoritative** | [`README.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/README.md) | **Active Truth** | Project entry point, quick start commands, repository structure. |
 | **Authoritative** | [`PHASE_7_UI_REFACTORING_SPEC.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/.kiro/specs/lucia-phase7-UI_refractoring/PHASE_7_UI_REFACTORING_SPEC.md) | **Active Truth** | Phase 7 UI Design System, tokens, component layouts, mascot controls. |
 | **Authoritative** | [`new_UI_requirement.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/.kiro/specs/lucia-phase7-UI_refractoring/new_UI_requirement.md) | **Active Truth** | Product brief for Phase 7: Personal Digital Room, One Continuous Life ontology. |
@@ -56,6 +56,8 @@ To prevent confusion across development phases, Lucia maintains a strict documen
 | **Historical Spec** | [`lucia-ui-phase3`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/.kiro/specs/lucia-ui-phase3/) | **Historical** | Phase 3 milestone specification (FastAPI server, Electron IPC, debug panel). |
 | **Historical Spec** | [`lucia-inference-phase4`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/.kiro/specs/lucia-inference-phase4/) | **Historical** | Phase 4 milestone specification (ActiveInference, LNNTrainer, torchdiffeq). |
 | **Historical Spec** | [`lucia-refinement-phase6`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/.kiro/specs/lucia-refinement-phase6/) | **Historical** | Phase 6 milestone specification (Packaging, System Tray, Mascot, LSI). |
+| **Historical Spec** | [`lucia-phase8-ISOLATION`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/.kiro/specs/lucia-phase8-ISOLATION/) | **Historical** | Phase 8 milestone specification (Runtime Isolation & Simulation). |
+| **Active Spec** | [`lucia-phase9-cognition`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/.kiro/specs/lucia-phase9-cognition/) | **Active Truth** | Phase 9 milestone specification (Unified Cognition & Causal Inference). |
 | **Diverged Spec** | [`lucia-presence-phase5`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/.kiro/specs/lucia-presence-phase5/) | **Superseded** | Proposed VLM screen observation & PyAutoGUI agency (pivoted to RVC/Avatar). |
 | **Diverged Note** | [`models/voice/README.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/models/voice/README.md) | **Superseded** | Preliminary notes on Piper/Kokoro ONNX (superseded by RVC engine). |
 | **Domain Asset** | [`models/avatar/README.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/models/avatar/README.md) | **Domain Guide** | Directory layout rules for custom Live2D, VRM, and 2D sprite models. |
@@ -73,6 +75,7 @@ Lucia/
 ├── PHASE_8.md                                  # Phase 8: Runtime isolation & simulation specification
 ├── PHASE_8_ARCHITECTURE_REVIEW.md              # Authoritative post-Phase-8 architectural audit & baseline
 ├── PHASE_9.md                                  # Phase 9: Cognitive unification & convergence specification
+├── PHASE_9_ARCHITECTURE_GATE.md                # Phase 9: Authoritative Architectural Gate (v2.0)
 ├── config/
 │   ├── ui.json                                 # Port, default model, voice, and log settings
 │   └── window-state.json                       # Saved window coordinates and bounds
@@ -87,6 +90,7 @@ Lucia/
 │   ├── MECHANISM.md                            # Mathematical formulas, lifecycle, dataflow specifications
 │   ├── Triết lý thiết kế AI cảm xúc.md         # Foundational concept paper (Vietnamese)
 │   ├── USER_MANUAL.md                          # Complete user, configuration & operating manual
+│   ├── phase9/                                 # Phase 9: Unified cognition specifications & Gate v2.0
 │   └── screenshots/                            # Architectural UI & telemetry captures
 ├── .kiro/
 │   └── specs/                                  # IMMUTABLE HISTORICAL MILESTONE SPECS
