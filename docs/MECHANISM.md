@@ -79,7 +79,8 @@ flowchart TD
 
 ---
 
-### Component 1: Sensors & Stimulus Processor (`src/core/sensors/`)
+### Component 1: Sensors & Stimulus Processor (`src/core/gating/stimulus_processor.py`)
+*Historical path: `src/core/sensors/` (retained in historical Phase 1 specs).*
 
 The Stimulus Processor converts raw user input into continuous floating-point signals without relying on cloud embeddings or heavy neural networks.
 
@@ -113,7 +114,8 @@ $$\frac{dh}{dt} = \frac{-h + \tanh(W_f h + U_f x + b_f)}{\text{softplus}(W_\tau 
 
 ---
 
-### Component 3: Survival & Homeostatic Engine (`src/core/homeostasis/`)
+### Component 3: Survival & Homeostatic Engine (`src/core/emotion/homeostatic_engine.py`)
+*Historical path: `src/core/homeostasis/` (retained in historical Phase 1 specs).*
 
 The Homeostatic Engine prevents emotional extremes, anxiety spirals, or conversational burnout:
 
@@ -306,12 +308,34 @@ Lucia includes a non-blocking hook bus so future features (e.g. 3D VRM models, s
 
 ---
 
+### Component 11: Simulation Engine, Virtual Clock & Ephemeral Storage (`src/core/simulation/`)
+
+Phase 8 implements deterministic, inspectable simulation mechanics operating under the strict invariant $\text{Development} \neq \text{Activation}$:
+
+1. **Virtual Clock Mechanism (`SimClock`)**:
+   * Synchronously advances virtual time without running autonomous sleep-loops:
+     $$\Delta t_{accum} \mathrel{+}= \Delta t_{step}$$
+   * Dispatches fast-tick callbacks (`EmotionCore.step_once`) for each elapsed 200ms interval, subject to `max_fast_ticks=50` to prevent event-loop starvation during multi-hour time leaps.
+   * Computes due slow-tick decay events:
+     $$\text{due\_slow\_ticks} = \lfloor \frac{\text{elapsed\_virtual\_seconds}}{60.0} \rfloor$$
+     Executing synchronous `DecayEngine.apply_decay_tick(60.0)` for every accumulated minute.
+2. **Ephemeral Storage Isolation (`StoragePolicy`)**:
+   * Intercepts and blocks all file write operations resolving into `data/` or `data/profile.json` (`assert_write_permitted()`).
+   * Replaces disk JSON stores with `InMemoryChatHistoryStore` (RAM list) and `InMemoryProfileStore` (RAM dict).
+   * Unconditionally blocks live companion awakening: `SimulationRuntime.activate()` raises `ActivationSafetyError`.
+3. **Sensory vs. Debug Probe Pathway Mechanics**:
+   * *Sensory Pathway*: Invokes `StimulusProcessor.encode(text)` yielding a 16D vector tagged `pathway: "sensory_text"`.
+   * *Debug Probe Pathway*: Injects raw 16D vector directly into `EmotionCore` tagged `pathway: "debug_vector_probe"`, bypassing sensory processing.
+
+---
+
 ## 3. Summary of Concurrency & Threads
 
 | Thread | Frequency | Module | Function |
 |---|---|---|---|
-| **Fast-Loop ODE** | 200ms | `src/core/emotion/` | Solves continuous emotion differential equation |
-| **Slow-Loop Decay** | 60s | `src/core/memory/` | Applies emotional memory forgetting curve |
+| **Fast-Loop ODE** | 200ms | `src/core/emotion/` | Solves continuous emotion differential equation (live mode) |
+| **Slow-Loop Decay** | 60s | `src/core/memory/` | Applies emotional memory forgetting curve (live mode) |
 | **LNN Trainer** | On Batch (16) | `src/core/inference/` | CPU backpropagation-through-ODE plasticity |
+| **SimClock Driver** | Virtual / Step | `src/core/simulation/` | Synchronous callback dispatching & time-warp in simulation mode |
 | **Uvicorn Server** | Event-Driven | `src/api/server.py` | Serves FastAPI REST & telemetry endpoints |
 | **Electron UI** | 60 FPS | `electron/renderer/` | Hardware-accelerated avatar rendering & lip-sync |

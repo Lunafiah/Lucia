@@ -133,6 +133,19 @@ This document captures:
 * **Consequences**:
   * *Positive*: Full architectural fidelity to the "One Continuous Life" ethos; transparent existential gravity for the user; zero preference loss.
 
+### ADR-011: Runtime Isolation & Deterministic Simulation Environment
+* **Status**: **ACCEPTED** (Phase 8)
+* **Context**: Prior to Phase 8, running automated integration tests, developer debugging, or scenario benchmarks risked activating live companion background loops, firing uncontrolled daemon threads, corrupting `data/chat_history.json`, or advancing the live companion's permanent emotional trajectory.
+* **Decision**: Formally bifurcate the system into `LiveRuntime` and `SimulationRuntime` based on the invariant $\text{Development} \neq \text{Activation}$:
+  1. **Class-Level Guardrail**: `SimulationRuntime.activate()` unconditionally raises `ActivationSafetyError`. In simulation mode, `POST /lifecycle/activate`, `POST /lifecycle/end`, and `POST /process` return HTTP 403 Forbidden.
+  2. **Controllable Time (`SimClock`)**: Background daemon threads (`EmotionCore-FastLoop`, `DecayEngine-SlowLoop`) are suppressed. Synchronous tick callbacks drive ODE integration and decay sweeps on demand or via controllable virtual time leaps (`step()`, `pause()`, `resume()`).
+  3. **Ephemeral Storage Policy (`StoragePolicy`)**: All writes resolving into `data/` are intercepted. Chat history and profile are backed by ephemeral in-RAM adapters (`InMemoryChatHistoryStore`, `InMemoryProfileStore`).
+  4. **Dual Stimulus Pathways**: Distinguish user text passing through the sensory `StimulusProcessor` (`pathway: "sensory_text"`) from raw 16D developer probes injected directly to the brain (`pathway: "debug_vector_probe"`).
+  5. **Canonical Body UI Integration**: Simulation controls (Canopy ribbon and Console drawer) mount conditionally into the existing Phase 7 Personal Digital Room without spawning secondary companion interfaces.
+* **Consequences**:
+  * *Positive*: 100% reproducible scenario testing, zero live data contamination, and deep developer observability without activating live companion life.
+  * *Trade-off*: Developers must explicitly run with `--mode simulation` or `Sim-Lucia.bat` when testing.
+
 ---
 
 ## 3. Reconciliation of Outdated Specs & Conflicting Decisions
@@ -142,9 +155,12 @@ This document captures:
 | **SDM Dimension** | 64-bit address, 16-bit content (early conceptual notes in Architecture/Mechanism). | 1,000-bit address (`D=1000`), 64-dim content (`M=64`), $N=1,000$ locations (`src/core/memory/sdm.py`). | The 64-bit mention was an introductory mathematical simplification. The 1000-bit address is the true Kanerva Hamming space implemented in code and tested by Hypothesis property tests. |
 | **Resting Baseline** | $P=0.1, A=0.0, D=0.0$ (Phase 1 spec default). | Philia Attractor: $P=+0.25, A=-0.05, D=+0.05$ (`EmotionCore`). | Shifted during Phase 6 limbic tuning to provide a warmer, slightly calmer, egalitarian peer baseline. |
 | **Decay Cadence** | 3,600 seconds / 1 hour (Phase 2 spec glossary). | 60 seconds continuous background daemon tick (`DecayEngine`). | A 60-second tick with scaled effective decay rate ($\lambda_{eff}$) ensures smooth mathematical forgetting rather than hourly chunk drops. |
+| **Layer 1 Path** | `src/core/sensors/` (`ARCHITECTURE.md` §3.1). | `src/core/gating/stimulus_processor.py`. | Directory `sensors/` was historically renamed to `gating/` during early Phase 1 restructuring; all active code lives in `src/core/gating/`. |
+| **Layer 3 Path** | `src/core/homeostasis/` (`ARCHITECTURE.md` §3.3). | `src/core/emotion/homeostatic_engine.py`. | `HomeostaticEngine` was co-located with `EmotionCore` under `src/core/emotion/`. Canonical docs now reference this active path. |
 | **Voice Backend** | Piper / Kokoro ONNX (`models/voice/README.md`). | Direct RVC engine (`.pth` + `.index`) with Edge-TTS (`src/core/voice/voice_engine.py`). | RVC provides superior character timbre customization and emotional pitch modulation. |
 | **UI Telemetry Focus** | Front-page telemetry meters (Phase 3 & 6). | Progressive disclosure; telemetry relegated to Diagnostics modal (Phase 7). | Aligns with companion-first philosophy: interact with Lucia first, inspect systems second. |
 | **Chat Session Reset** | "Clear Screen" perceived as data loss. | Visual reset only; long-term SDM memory and friendship bond remain untouched. | Architectural separation between ephemeral chat history (`data/chat_history.json`) and subconscious memory (`SDMCore`). |
+| **Runtime Authority** | Monolithic live execution on startup. | Dual runtime modes: `LiveRuntime` vs `SimulationRuntime` (`src/core/simulation/`). | Phase 8 introduced complete runtime isolation to prevent live companion contamination during simulation. |
 
 ---
 
@@ -164,3 +180,23 @@ All future contributions and modifications must strictly observe the following l
 │   RULE: Never perform disk I/O or network requests while holding locks.│
 └────────────────────────────────────────────────────────────────────────┘
 ```
+
+---
+
+## 5. Architecture Change Log
+
+| Decision ID | Previous Architecture | Current Architecture | Reason | Phase | Status |
+|---|---|---|---|---|---|
+| **ARCH-001** | Prompted roleplay emotion | Pre-reflective continuous PAD LNN ODE ($5\text{ Hz}$) | Organic affect, eliminates amnesia and superficial roleplay | Phase 1 | Implementation Fact |
+| **ARCH-002** | Theoretical HDC/SNN language core | Local GGUF SLM (LFM2.5-1.2B) + BoundaryLayer | Consumer edge hardware feasibility (4GB VRAM target) | Phase 1 | Implementation Fact |
+| **ARCH-003** | RAG dense vector lookup | Kanerva SDM + Salience Decay + Synergistic Ecphory | Subconscious affective priming without robotic quotes | Phase 2 | Implementation Fact |
+| **ARCH-004** | GPU ODE training | CPU `torchdiffeq.odeint` LNNTrainer | Zero VRAM contention with active GGUF LLM | Phase 4 | Implementation Fact (Isolated) |
+| **ARCH-005** | Desktop ReAct screen agency | Embodied Multimodal Presence (RVC, STT, Quad-Avatar)| Preserves companion intimacy; fits 4GB VRAM ceiling | Phase 5 | Historical Decision / Pivot |
+| **ARCH-006** | Technical 3-column UI | Personal Digital Room (Progressive Disclosure) | Transformed app from technical machine to intimate room | Phase 7 | Implementation Fact |
+| **ARCH-007** | Character presets / pickers | Single Continuous Life ontology | Lifelong relational bond; avatars are attire, not personas | Phase 7 | Implementation Fact |
+| **ARCH-008** | Single window mode | Dual Presentation: Studio Window & Mascot Mode | Unobtrusive presence on desktop during user work | Phase 6/7 | Implementation Fact |
+| **ARCH-009** | Cloud STT/TTS | Fully offline local speech pipeline (`faster-whisper`, RVC)| 100% privacy, zero cloud costs, works offline | Phase 5/6 | Implementation Fact |
+| **ARCH-010** | Casual chat wipes | Solemn End-of-Life boundary (`POST /lifecycle/end`) | Existential gravity; prevents relational contamination | Phase 7.7 | Implementation Fact |
+| **ARCH-011** | Monolithic process startup | Runtime Isolation: `LiveRuntime` vs `SimulationRuntime` | Enforce Development $\neq$ Activation; zero live contamination | Phase 8 | Implementation Fact |
+| **ARCH-012** | `MemoryAugmentedOrchestrator` in `server.py` | `PresenceOrchestrator` with unified Layer 4 & voice | Unify Active Inference and online plasticity into live turns | Phase 9 | **Approved Direction (Future Implementation)** |
+| **ARCH-013** | Direct renderer `fetch()` calls | Complete `window.lucia` IPC bridge mediation | Security isolation and dynamic port resilience | Phase 9 | **Approved Direction (Future Implementation)** |

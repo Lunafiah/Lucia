@@ -42,6 +42,9 @@ To prevent confusion across development phases, Lucia maintains a strict documen
 | **Authoritative** | [`docs/CURRENT_STATUS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/CURRENT_STATUS.md) | **Active Truth** | Live implementation snapshot, subsystem health matrix, active API routes. |
 | **Authoritative** | [`docs/DESIGN_DECISIONS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/DESIGN_DECISIONS.md) | **Active Truth** | Architectural Decision Records (ADRs), trade-offs, reconciled contradictions. |
 | **Authoritative** | [`docs/USER_MANUAL.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/USER_MANUAL.md) | **Active Truth** | User guide, installation, model layout, mascot shortcuts, audio/graphics settings. |
+| **Authoritative** | [`PHASE_8_ARCHITECTURE_REVIEW.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/PHASE_8_ARCHITECTURE_REVIEW.md) | **Active Truth** | Authoritative post-Phase-8 architectural audit, state map, and baseline. |
+| **Authoritative** | [`PHASE_8.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/PHASE_8.md) | **Active Truth** | Phase 8 Runtime Isolation & Simulation Environment specification and evidence. |
+| **Authoritative** | [`PHASE_9.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/PHASE_9.md) | **Active Truth** | Canonical Phase 9 specification: Cognitive Unification & Convergence. |
 | **Authoritative** | [`README.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/README.md) | **Active Truth** | Project entry point, quick start commands, repository structure. |
 | **Authoritative** | [`.kiro/specs/lucia-UI_refractoring-phase7/PHASE_7_UI_REFACTORING_SPEC.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/.kiro/specs/lucia-UI_refractoring-phase7/PHASE_7_UI_REFACTORING_SPEC.md) | **Active Truth** | Phase 7 UI Design System, tokens, component layouts, mascot controls. |
 | **Authoritative** | [`.kiro/specs/lucia-UI_refractoring-phase7/new_UI_requirement.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/.kiro/specs/lucia-UI_refractoring-phase7/new_UI_requirement.md) | **Active Truth** | Product brief for Phase 7: Personal Digital Room, One Continuous Life ontology. |
@@ -66,6 +69,9 @@ To prevent confusion across development phases, Lucia maintains a strict documen
 Lucia/
 ├── AGENTS.md                                   # Master operating guide for AI coding agents
 ├── README.md                                   # Public front-door & quick-start instructions
+├── PHASE_8.md                                  # Phase 8: Runtime isolation & simulation specification
+├── PHASE_8_ARCHITECTURE_REVIEW.md              # Authoritative post-Phase-8 architectural audit & baseline
+├── PHASE_9.md                                  # Phase 9: Cognitive unification & convergence specification
 ├── config/
 │   ├── ui.json                                 # Port, default model, voice, and log settings
 │   └── window-state.json                       # Saved window coordinates and bounds
@@ -93,13 +99,13 @@ Lucia/
 ├── electron/                                   # Native Electron desktop application
 │   ├── main/                                   # Main process: ProcessManager, IPC, Mascot window
 │   ├── preload/                                # ContextBridge security isolation
-│   └── renderer/                               # Web client: Chat, 4-Engine Avatar, Settings, Journal
+│   └── renderer/                               # Web client: Chat, 4-Engine Avatar, Settings, Journal, Simulation
 ├── models/                                     # Model weights & character assets
 │   ├── avatar/                                 # Avatar assets (live2d/, sprites/, vrm/)
 │   └── voice/                                  # Voice models (rvc/)
 ├── src/                                        # Python core backend (FastAPI, PyTorch, NumPy)
 │   ├── api/                                    # REST API server & endpoints
-│   └── core/                                   # Cognitive layers (emotion, memory, voice, etc.)
+│   └── core/                                   # Cognitive layers (emotion, gating, memory, simulation, voice)
 └── tests/                                      # Comprehensive test suites
     ├── unit/                                   # Isolated unit tests
     ├── property/                               # Hypothesis property-based tests (P1 - P30)
@@ -156,3 +162,7 @@ Depending on your role or objective, follow these curated reading sequences:
 | **Limbic Stability Evaluator (LSI)** | `docs/ARCHITECTURE.md` §5 | `docs/MECHANISM.md` §2 Comp 9 | `.kiro/specs/lucia-refinement-phase6/` |
 | **UI Design System & Personal Room** | `PHASE_7_UI_REFACTORING_SPEC.md` | `new_UI_requirement.md` | `.kiro/specs/lucia-ui-phase3/` |
 | **Session Persistence & Chat History** | `docs/MECHANISM.md` §2 Comp 6 | `docs/USER_MANUAL.md` §6 | `.kiro/specs/lucia-refinement-phase6/` |
+| **Runtime Isolation & Dual Modes** | `PHASE_8.md` §3 | `PHASE_8_ARCHITECTURE_REVIEW.md` §2, §9 | `src/core/simulation/` |
+| **Virtual SimClock & Time Warp** | `PHASE_8.md` §2.1 | `docs/MECHANISM.md` §2 Comp 10 | `src/core/simulation/sim_clock.py` |
+| **Ephemeral Storage Policy** | `PHASE_8.md` §3 (INV-2, INV-3) | `PHASE_8_ARCHITECTURE_REVIEW.md` §5 | `src/core/simulation/storage_policy.py` |
+| **Simulation UI Canopy & Drawer** | `PHASE_8.md` §2.5 | `PHASE_8_ARCHITECTURE_REVIEW.md` §2.2 | `electron/renderer/simulation/` |

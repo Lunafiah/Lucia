@@ -53,7 +53,8 @@ Lucia's internal limbic state is centered around **Philia** ($\phi\iota\lambda\i
 
 ## 3. Detailed Component Deep-Dive
 
-### 3.1. Layer 1: Stimulus Processor (`src/core/sensors/`)
+### 3.1. Layer 1: Stimulus Processor (`src/core/gating/stimulus_processor.py`)
+*Historical path: `src/core/sensors/` (retained in historical Phase 1 specs).*
 * **Valence Extraction**: Lexical affinity analysis scoring sentiment in $[-1.0, 1.0]$.
 * **Arousal Extraction**: Punctuation cadence, capitalization bursts, and urgency scoring in $[0.0, 1.0]$.
 * **Semantic Density**: Information-to-token ratio across the input message.
@@ -66,7 +67,8 @@ $$\frac{dh}{dt} = \frac{-h + \tanh(W_f h + U_f x + b_f)}{\text{softplus}(W_\tau 
 * **Projection**: Linear projection $W_{proj} h + b_{proj}$ mapped and clamped to the 3D PAD space $[-1.0, 1.0]^3$.
 * **Thread Safety**: Protected by `_state_lock` (read deadline $\le 1\text{ms}$) and `_train_lock` for atomic weight swapping.
 
-### 3.3. Layer 3: Homeostatic Engine (`src/core/homeostasis/`)
+### 3.3. Layer 3: Homeostatic Engine (`src/core/emotion/homeostatic_engine.py`)
+*Historical path: `src/core/homeostasis/` (retained in historical Phase 1 specs).*
 Prevents emotional burnout, runaway anxiety, or manic states:
 * **Metabolic Budgeting**: Depletes energy on heavy turns; recovers during idle periods.
 * **Somatic Markers**: Computes Stability, Cognitive Load, Energy, and Tension.
@@ -121,11 +123,11 @@ Lucia provides two presentation contexts managed by Electron:
            ▼                                                 ▼
 ┌──────────────────────────────┐          ┌──────────────────────────────┐
 │     MAIN APP WINDOW (STUDIO) │          │   ALWAYS-ON-TOP MASCOT MODE  │
-│ • 3-Column Layout            │          │ • Transparent, frameless     │
-│ • Full Affective Telemetry   │          │ • Zero-chrome desktop avatar │
+│ • Personal Digital Room      │          │ • Transparent, frameless     │
+│ • Progressive Disclosure Nav │          │ • Zero-chrome desktop avatar │
 │ • Interactive Chat Feed      │          │ • Model-anchored dock toolbar│
 │ • Full-Height Avatar Stage   │          │ • Mouse window drag via IPC  │
-│ • System Settings & Journal  │          │ • Smart hover-bounded zoom   │
+│ • Settings, Journal, Diag    │          │ • Smart hover-bounded zoom   │
 └──────────────────────────────┘          └──────────────────────────────┘
 ```
 
@@ -147,7 +149,8 @@ Lucia operates with non-blocking concurrent daemon threads coordinated by thread
 | **`EmotionCore-FastLoop`** | Limbic Engine | 200ms | Solves continuous emotion ODE | Holds `_state_lock` (1ms), copies weights via `_train_lock` |
 | **`DecayEngine-SlowLoop`** | Memory Store | 60s | Applies emotional memory decay | Holds `_index_lock` |
 | **`LNN-Trainer`** | Online Plasticity | On Batch (16) | CPU Backpropagation-through-ODE | Holds `_train_lock` during weight swap ($\le 2\text{ms}$) |
-| **`Uvicorn Async Loop`** | FastAPI Server | Event-driven | Serves `/process`, `/state`, `/system/profile`, `/voice/*` | Async non-blocking I/O |
+| **`SimClock Background`** | Simulation | Configurable | Virtual clock advancement when resumed | Dispatches synchronous callbacks; no autonomous loops |
+| **`Uvicorn Async Loop`** | FastAPI Server | Event-driven | Serves `/process`, `/state`, `/sim/*`, `/voice/*` | Async non-blocking I/O |
 | **`Electron Render Thread`**| UI / Avatar | 60 / 30 FPS | WebGL & Canvas avatar rendering | RequestAnimationFrame loop |
 
 ---
@@ -164,3 +167,30 @@ Lucia features automated hardware detection (`HardwareTier`) with real-time runt
 | **`HIGH_END`** | $> 12\text{GB}$ VRAM (e.g. RTX 3090/4090) | Full GPU (7B/14B) | 8,192 tokens | 10,000 traces | 100ms | $\approx 8.0\text{GB}$ |
 
 * **Live Dynamic Profiling**: Users can switch tiers on-the-fly from the `⚙️ Settings` UI modal, adjusting memory parameters, context windows, and compute cadence without restarting the backend process.
+
+---
+
+## 7. Phase 8 Runtime Isolation & Simulation Architecture
+
+Phase 8 introduces a deterministic, inspectable simulation runtime executing under the invariant:
+
+$$\text{Development / Simulation Environment} \neq \text{Lucia Activation}$$
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│                        RUNTIME BIFURCATION                             │
+│                                                                        │
+│   LIVE RUNTIME (Default)               SIMULATION RUNTIME (--mode sim) │
+│   • Starts background daemon threads   • Zero background daemon loops  │
+│   • Binds to disk storage (data/)      • Ephemeral in-memory storage   │
+│   • Live companion activation enabled  • Hard-blocked activation (403) │
+│   • Normal turns via POST /process     • Isolated turns via POST /sim/chat │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+* **Virtual Clock (`SimClock`)**: Replaces autonomous wall-clock loops with controllable, step-driven virtual time (`step`, `pause`, `resume`, `set_speed`, `reset`). Dispatches registered fast-tick callbacks (`EmotionCore.step_once`) and slow-tick callbacks (`DecayEngine.apply_decay_tick`).
+* **Ephemeral Storage Policy (`StoragePolicy`)**: Replaces `data/chat_history.json` and `data/profile.json` with `InMemoryChatHistoryStore` and `InMemoryProfileStore`. `assert_write_permitted()` actively intercepts any attempt to write into protected directories.
+* **Dual Stimulus Pathways**:
+  1. *Sensory Pathway*: Text $\rightarrow$ `StimulusProcessor.encode()` $\rightarrow$ 16D vector $\rightarrow$ `EmotionCore` (labeled `pathway: "sensory_text"`).
+  2. *Debug Vector Probe*: Raw 16D vector injected directly into `EmotionCore` bypassing the sensory processor (labeled `pathway: "debug_vector_probe"`).
+* **Canonical Body UI Integration**: Simulation Canopy (`#simulation-canopy`) and Console drawer (`#simulation-console-drawer`) mount conditionally within the existing Phase 7 Personal Digital Room (`index.html`). No secondary companion interface is created.

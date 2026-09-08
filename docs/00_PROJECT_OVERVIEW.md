@@ -105,10 +105,11 @@ Lucia operates on three biological time horizons coordinated by non-blocking dae
 | Loop Name | Frequency | Implementation | Purpose & Discipline |
 |---|---|---|---|
 | **Fast Loop** | 200 ms (5 Hz) | `src/core/emotion/` | Solves continuous Liquid Neural Network ODE. Holds `_state_lock` ($\le 1\text{ms}$). |
-| **Mid Loop** | Per Turn | `src/core/homeostasis/` | Computes somatic load & behavioral parameters conditioning prompt generation. |
+| **Mid Loop** | Per Turn | `src/core/emotion/` | Computes somatic load & behavioral parameters conditioning prompt generation. |
 | **Slow Loop** | 60 s | `src/core/memory/` | Computes time-based memory decay ($\lambda_{eff}$) and purges dead traces. |
 | **Plasticity Loop** | On Batch (16) | `src/core/inference/` | Background CPU backpropagation-through-ODE. Swaps weights under `_train_lock` ($\le 2\text{ms}$). |
-| **Uvicorn Server** | Async I/O | `src/api/server.py` | Serves FastAPI REST endpoints (`POST /process`, `GET /state`, `GET /telemetry/stability`). |
+| **SimClock Loop** | Virtual / Step | `src/core/simulation/` | Controls simulation cadence, fast/slow tick dispatching, and time warp in simulation mode. |
+| **Uvicorn Server** | Async I/O | `src/api/server.py` | Serves FastAPI REST endpoints in live mode (`POST /process`, `GET /state`) or simulation mode (`POST /sim/*`). |
 | **Render Thread** | 60 / 30 FPS | Electron Renderer | WebGL/Canvas animation, Web Audio FFT lip-sync analysis. |
 
 ---
@@ -137,7 +138,9 @@ Phase 3: Desktop Interface & Telemetry  [COMPLETED]
 Phase 4: Active Inference & Plasticity  [COMPLETED]
 Phase 5: Embodied Multimodal Presence   [COMPLETED]
 Phase 6: Refinement, Mascot & QoL       [COMPLETED]
-Phase 7: UI Refactoring (Personal Room) [IN ACTIVE DEVELOPMENT]
+Phase 7: UI Refactoring (Personal Room) [COMPLETED]
+Phase 8: Runtime Isolation & Simulation [COMPLETED]
+Phase 9: Cognitive Unification & System Convergence [PLANNED]
 ```
 
 * **Phase 1 (Core Pipeline)**: Continuous emotion ODE, Homeostatic engine, Stimulus processing, Boundary Layer, GGUF backend.
@@ -147,3 +150,5 @@ Phase 7: UI Refactoring (Personal Room) [IN ACTIVE DEVELOPMENT]
 * **Phase 5 (Embodied Presence)**: Direct RVC voice conversion, offline faster-whisper STT, 4-Engine Avatar, Web Audio lip-sync.
 * **Phase 6 (Refinement & QoL)**: System tray, Mascot mode, Chat session persistence, Limbic Stability Evaluator (LSI), Extensibility Hook Bus.
 * **Phase 7 (UI Refactoring)**: Transformation from a technical telemetry dashboard into an intimate "Personal Digital Room", implementing the "One Continuous Life" companion ontology and progressive disclosure design system.
+* **Phase 8 (Runtime Isolation & Simulation)**: Complete architectural bifurcation between live companion activation and the deterministic simulation environment (`SimulationRuntime`, `SimClock`, `StoragePolicy`, 7-invariant isolation verification).
+* **Phase 9 (Cognitive Unification & Convergence)**: Integration of Active Inference (Layer 4) into live server turn execution, elimination of redundant pipeline calls, complete IPC migration for auxiliary renderer fetch calls, and unified end-to-end cognitive presence.
