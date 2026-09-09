@@ -237,8 +237,9 @@ class TestE_ExactlyOnceSemantics:
 
     def test_background_thread_consumption_prevents_duplicate_step(self):
         """
+        Case 2: Background thread wins.
         If the background thread consumed and stepped the stimulus before commit_stimulus()
-        is called (Case B), commit_stimulus() must detect that committed_seq >= token
+        is called, commit_stimulus() must detect that committed_seq >= token
         and return without stepping again.
         """
         core = EmotionCore(EmotionConfig(loop_cadence_ms=500))
@@ -252,6 +253,95 @@ class TestE_ExactlyOnceSemantics:
         # Now call commit_stimulus
         core.commit_stimulus(token)
         assert core.tick_count() == 1, "commit_stimulus must not step if already committed"
+
+    def test_idle_background_ticks_do_not_falsely_advance_committed_sequence(self):
+        """
+        Ordinary ODE ticks with no pending stimulus must NEVER advance
+        _committed_stimulus_seq or falsely match _stimulus_seq.
+        """
+        core = EmotionCore(EmotionConfig(loop_cadence_ms=500))
+        assert core._stimulus_seq == 0
+        assert core._committed_stimulus_seq == 0
+
+        # Perform 5 idle ticks with no stimuli
+        for _ in range(5):
+            core.step_once()
+        assert core.tick_count() == 5
+        assert core._stimulus_seq == 0
+        assert core._committed_stimulus_seq == 0, "Idle ticks must not increment committed sequence!"
+
+        # Now push a stimulus N=1
+        token = core.push_stimulus(np.ones(16) * 0.3)
+        assert token == 1
+        assert core._stimulus_seq == 1
+        assert core._committed_stimulus_seq == 0  # Still 0 before step
+
+        # Step consumes N=1
+        core.step_once()
+        assert core._committed_stimulus_seq == 1
+
+        # Perform 5 more idle ticks
+        for _ in range(5):
+            core.step_once()
+        assert core.tick_count() == 11
+        assert core._committed_stimulus_seq == 1, "Subsequent idle ticks must not advance committed sequence!"
+
+    def test_multiple_stimulus_submissions_fifo_queued_without_loss(self):
+        """
+        Case 4: Multiple stimulus submissions.
+        If push(N) and push(N+1) are called before an ODE step, neither stimulus
+        must be dropped or overwritten. Both must be integrated in causal FIFO order.
+        """
+        core = EmotionCore(EmotionConfig(loop_cadence_ms=500))
+        vec_A = np.ones(16) * 0.4
+        vec_B = np.ones(16) * -0.6
+
+        consumed_vectors = []
+        original_ode_step = core._ode_step
+
+        def recording_ode_step(h, x):
+            consumed_vectors.append(x.copy())
+            return original_ode_step(h, x)
+
+        core._ode_step = recording_ode_step
+
+        token_A = core.push_stimulus(vec_A)
+        token_B = core.push_stimulus(vec_B)
+        assert token_A == 1
+        assert token_B == 2
+
+        # Commit target_seq=2
+        pad_final = core.commit_stimulus(token_B)
+
+        assert core._committed_stimulus_seq == 2
+        assert len(consumed_vectors) == 2, f"Expected exactly 2 ODE steps, got {len(consumed_vectors)}"
+        np.testing.assert_allclose(consumed_vectors[0], vec_A)
+        np.testing.assert_allclose(consumed_vectors[1], vec_B)
+        assert len(core._pending_stimuli) == 0
+
+    def test_exact_single_ode_integration_under_turn_thread(self):
+        """
+        Case 1: Turn thread wins.
+        Confirms stimulus vector is passed into _ode_step exactly once.
+        """
+        core = EmotionCore(EmotionConfig(loop_cadence_ms=500))
+        vec = np.ones(16) * 0.85
+        calls = []
+        orig_ode = core._ode_step
+
+        def spy_ode(h, x):
+            calls.append(x.copy())
+            return orig_ode(h, x)
+
+        core._ode_step = spy_ode
+
+        token = core.push_stimulus(vec)
+        p1 = core.commit_stimulus(token)
+        p2 = core.commit_stimulus(token)
+        p3 = core.commit_stimulus(token)
+
+        assert len(calls) == 1, f"Expected exactly 1 ODE step, got {len(calls)}"
+        np.testing.assert_allclose(calls[0], vec)
 
 
 # ---------------------------------------------------------------------------
@@ -295,6 +385,34 @@ class TestF_ConcurrencyStress:
         assert np.all(np.isfinite(core._h)), "Hidden state _h contains NaN or Inf!"
         assert np.all(np.abs(core._h) <= 1.0), "Hidden state _h exceeded [-1.0, 1.0] bounds!"
         assert core._committed_stimulus_seq <= core._stimulus_seq
+
+    def test_race_at_boundary_background_vs_turn_thread(self):
+        """
+        Case 3: Race at the boundary.
+        Executes 15 successive stimuli under an actively ticking background thread (100ms cadence)
+        where background and turn thread contend directly for _step_lock.
+        Verifies:
+          1. Every stimulus is consumed and committed.
+          2. No duplicate integration occurs.
+          3. Final committed_seq equals total submitted tokens.
+        """
+        core = EmotionCore(EmotionConfig(loop_cadence_ms=100))
+        core.start()
+
+        num_stimuli = 15
+        try:
+            for i in range(num_stimuli):
+                vec = np.ones(16) * (0.1 * (i % 5))
+                token = core.push_stimulus(vec)
+                pad = core.commit_stimulus(token)
+                assert -1.0 <= pad.pleasure <= 1.0
+                assert core._committed_stimulus_seq >= token
+                time.sleep(0.01)  # slight jitter to create boundary contention
+        finally:
+            core.stop()
+
+        assert core._committed_stimulus_seq == num_stimuli
+        assert len(core._pending_stimuli) == 0
 
 
 # ---------------------------------------------------------------------------
