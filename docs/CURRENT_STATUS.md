@@ -23,6 +23,7 @@ Lucia has successfully completed **Phase 8 (Runtime Isolation & Simulation Envir
 │   Phase 8: Runtime Isolation & Simulation          [✅ COMPLETED]      │
 │   Phase 9: Cognitive Unification & Convergence     [✅ COMPLETED]      │
 │   Phase 9.5: Real LLM Backend Recovery (CUDA)      [✅ COMPLETED]      │
+│   Phase 9.6: Corrective Temporal Synchronization   [✅ COMPLETED]      │
 │   Ablation Test v1: Experimental Validation        [✅ COMPLETED]      │
 └────────────────────────────────────────────────────────────────────────┘
 ```
@@ -34,9 +35,9 @@ Lucia has successfully completed **Phase 8 (Runtime Isolation & Simulation Envir
 | Subsystem / Layer | Module Path | Status | Operational Capabilities & Integration Reality |
 |---|---|---|---|
 | **Stimulus Processor** | `src/core/gating/` | **STABLE** | Lexical valence scoring ($[-1, 1]$), punctuation cadence, semantic density. Emits 16-dim continuous vector. *(Historical doc: `src/core/sensors/`)* |
-| **Limbic Fast Loop** | `src/core/emotion/` | **STABLE** | Continuous 200ms background thread (live) or discrete virtual tick step (sim). Liquid Neural Network ODE integration. Projects hidden state $h \in \mathbb{R}^{32}$ to 3D PAD space. Thread-safe $\le 1\text{ms}$ lock. |
+| **Limbic Fast Loop** | `src/core/emotion/` | **STABLE** | Continuous 200ms background thread (live) or discrete virtual tick step (sim). Liquid Neural Network ODE integration. Enforces deterministic barrier `commit_stimulus()` to integrate pending stimuli before post-turn PAD evaluation. |
 | **Homeostatic Engine** | `src/core/emotion/` | **STABLE** | Tracks cognitive load, metabolic stamina (energy), tension, and stability. Calculates generation constraints (`max_tokens`, `temperature`, `latency_ms`, `reasoning_depth`). *(Historical doc: `src/core/homeostasis/`)* |
-| **Active Inference** | `src/core/inference/` | **STABLE (Causal)** | $3 \times 3$ linear generative transition model predicting PAD state. Computes Free Energy surprise $\mathcal{S}$. Causal: modulates cognitive load/tension and triggers $k=2$ when $\mathcal{S} > 0.60$. |
+| **Active Inference** | `src/core/inference/` | **STABLE (Causal)** | $3 \times 3$ linear generative transition model predicting PAD state. Computes Free Energy surprise $\mathcal{S} = \|A \cdot p_{before} + b - p_{after}\|_2$ evaluated on deterministically committed post-stimulus PAD. Causal: modulates cognitive load/tension and triggers $k=2$ when $\mathcal{S} > 0.60$. |
 | **LNN Plasticity** | `src/core/inference/` | **STABLE** | Two-stage plasticity: online turn salience tagging + idle consolidation ($T_{\text{idle}} \ge 45\text{s}$) on CPU thread. Swaps weights into `EmotionCore` under 2ms `_train_lock`. |
 | **Sparse Distributed Memory** | `src/core/memory/sdm.py` | **STABLE** | 1,000 hard locations across 1,000-bit Hamming address space with 64-dim content vectors. Distributed read/write within activation radius. |
 | **Affective Tagging & Decay** | `src/core/memory/decay.py` | **STABLE** | 60-second slow-loop daemon (live) or virtual clock decay tick (sim). Salience-resistant decay ($\lambda_{eff}$) gives intense emotional memories up to $4\times$ longer lifetime. |

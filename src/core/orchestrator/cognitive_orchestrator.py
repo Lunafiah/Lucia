@@ -287,12 +287,16 @@ class CognitiveOrchestrator:
         )
 
         # ── Stage 3: Limbic Integration ──────────────────────────────────
-        # Record metabolic cost ONCE (fixes double-execution bug from InstrumentedOrchestrator)
+        # Inject stimulus into L2 limbic engine
         self._emotion_core.push_stimulus(stimulus)
+        # Deterministically commit state transition before Stage 4 reads (temporal barrier)
+        if hasattr(self._emotion_core, "commit_stimulus"):
+            self._emotion_core.commit_stimulus()
+        # Record metabolic cost ONCE (fixes double-execution bug from InstrumentedOrchestrator)
         self._homeostatic_engine.record_input()
 
         # ── Stage 4: Prediction Surprise & Belief Update ─────────────────
-        # Read PAD *after* limbic integration
+        # Read committed post-stimulus PAD state
         pad_final: PADState = self._emotion_core.get_pad_state()
         prediction_error: float = self._active_inference.step(pad_initial, pad_final)
 

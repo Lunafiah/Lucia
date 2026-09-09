@@ -149,13 +149,33 @@ Lucia operates with non-blocking concurrent daemon threads coordinated by strict
 | Thread / Worker Name | Module | Cadence | Purpose | Lock Discipline |
 |---|---|---|---|---|
 | **`Cognitive Turn Mutex`** | Brain Core (`server.py`) | Per Turn | Serializes cognitive turn execution | Holds `asyncio.Lock` & `_turn_lock` during `process()` |
-| **`EmotionCore-FastLoop`** | Limbic Engine | 200ms | Solves continuous emotion ODE | Holds `_state_lock` ($\le 1\text{ms}$), copies weights via `_train_lock` |
+| **`EmotionCore-FastLoop`** | Limbic Engine | 200ms | Solves continuous emotion ODE | Holds `_step_lock`, `_state_lock` ($\le 1\text{ms}$), copies weights via `_train_lock` |
 | **`DecayEngine-SlowLoop`** | Memory Store | 60s | Applies emotional memory decay | Holds `_index_lock` |
 | **`LNN-Trainer`** | Offline Plasticity | Idle / Salience | CPU Backpropagation-through-ODE | Holds `_train_lock` during weight swap ($\le 2\text{ms}$) |
 | **`SimClock Background`** | Simulation | Configurable | Virtual clock advancement when resumed | Dispatches synchronous callbacks; no autonomous loops |
 | **`Uvicorn Async Loop`** | FastAPI Server | Event-driven | Serves `/process`, `/state`, `/sim/*`, `/voice/*` | Async non-blocking I/O (`/state` reads under `_state_lock`) |
 | **`Electron Render Thread`**| UI / Avatar | 60 / 30 FPS | WebGL & Canvas avatar rendering | RequestAnimationFrame loop |
 
+### 5.1. Temporal Synchronization Contract & Lock Hierarchy
+
+To prevent asynchronous race conditions where `CognitiveOrchestrator` reads `PAD_final` before `EmotionCore` has integrated the turn's stimulus, Lucia enforces an explicit **Temporal Synchronization Barrier**:
+
+1. **Architectural Invariant**:
+   * A cognitive turn MUST integrate its stimulus into L2 and commit the state transition deterministically before L4 Active Inference reads `PAD_final`.
+   * Prediction surprise $\mathcal{S}$ must represent genuine state transition error ($\|A \cdot p_{before} + b - p_{after}\|_2$), never an artificial zero from uncommitted asynchronous state.
+2. **Implementation Mechanism (`commit_stimulus()`)**:
+   * `push_stimulus(vector)` assigns a monotonically increasing sequence token `_stimulus_seq`.
+   * `commit_stimulus(target_seq)` acts as an idempotent barrier:
+     * **Case A (Pending)**: If `_committed_stimulus_seq < target_seq`, synchronously performs one ODE integration step via `_step_once_unlocked()`, updates `self._h`, publishes the new `PADState` snapshot, and marks `_committed_stimulus_seq = target_seq`.
+     * **Case B (Already Committed)**: If the 200ms background thread already consumed and integrated the stimulus, `commit_stimulus()` observes `_committed_stimulus_seq >= target_seq` and immediately returns without duplicating the ODE step (strictly exactly-once semantics).
+3. **Lock Hierarchy**:
+   $$\text{Orchestrator } \_turn\_lock \longrightarrow \_step\_lock \longrightarrow \_train\_lock \longrightarrow \_stimulus\_lock \longrightarrow \_state\_lock$$
+   * `_turn_lock`: Serializes single-turn execution in `CognitiveOrchestrator`.
+   * `_step_lock`: Serializes ODE step calculation between turn threads and the background `FastLoop` worker.
+   * `_train_lock`: Protects LNN weight arrays during parameter copy or plasticity weight swap ($\le 2\text{ms}$).
+   * `_stimulus_lock`: Protects pending stimulus buffer and sequence token counters ($\le 0.1\text{ms}$).
+   * `_state_lock`: Protects `_pad_snapshot` reads/writes ($\le 1\text{ms}$).
+   * **Lock Order Invariant**: Locks must always be acquired in descending order of this hierarchy. Zero inverted acquisitions or nested deadlocks are permitted.
 
 ---
 

@@ -21,7 +21,7 @@ from __future__ import annotations
 import logging
 import threading
 import time
-from typing import Optional
+from typing import Optional, Tuple
 
 import numpy as np
 from scipy.integrate import solve_ivp
@@ -98,9 +98,14 @@ class EmotionCore:
         # Phase 4: Training lock for atomic weight updates
         self._train_lock = threading.Lock()
 
-        # Pending stimulus (protected by _stimulus_lock)
-        self._pending_stimulus: Optional[np.ndarray] = None
+        # Pending stimulus and sequence tracking (protected by _stimulus_lock)
+        self._pending_stimulus: Optional[Tuple[int, np.ndarray]] = None
         self._stimulus_lock = threading.Lock()
+        self._stimulus_seq: int = 0
+        self._committed_stimulus_seq: int = 0
+
+        # Step synchronization lock (serializes ODE stepping between turn and background thread)
+        self._step_lock = threading.Lock()
 
         # Loop control
         self._stop_event = threading.Event()
@@ -153,48 +158,55 @@ class EmotionCore:
             if acquired:
                 self._state_lock.release()
 
-    def push_stimulus(self, vector: np.ndarray) -> None:
+    def push_stimulus(self, vector: np.ndarray) -> int:
         """
-        Inject a Stimulus_Vector to be consumed on the next Fast_Loop tick.
+        Inject a Stimulus_Vector to be consumed on the next ODE step.
 
-        Thread-safe. Only the most-recent stimulus is kept (latest wins).
+        Thread-safe. Assigns a monotonically increasing sequence token.
+        Returns the assigned sequence token.
         """
         # Resize input weight matrices if the stimulus dimensionality changed
         self._ensure_input_dim(len(vector))
         with self._stimulus_lock:
-            self._pending_stimulus = np.array(vector, dtype=np.float64)
+            self._stimulus_seq += 1
+            seq = self._stimulus_seq
+            self._pending_stimulus = (seq, np.array(vector, dtype=np.float64))
+            return seq
 
     def reset_to_resting(self) -> None:
         """
         Reset hidden state, pending stimulus, learned weights, and PAD state to resting baseline.
-        Adheres to concurrency lock hierarchy: _train_lock -> _stimulus_lock -> _state_lock.
+        Adheres to concurrency lock hierarchy: _step_lock -> _train_lock -> _stimulus_lock -> _state_lock.
         """
-        with self._train_lock:
-            rng = np.random.default_rng(_INIT_SEED)
-            H = self._config.hidden_dim
-            current_n = self.U_f.shape[1]
-            self.W_f = _xavier_uniform((H, H), rng)
-            self.U_f = _xavier_uniform((H, current_n), rng)
-            self.b_f = np.zeros(H, dtype=np.float64)
-            self.W_tau = _xavier_uniform((H, H), rng)
-            self.U_tau = _xavier_uniform((H, current_n), rng)
-            self.b_tau = np.zeros(H, dtype=np.float64)
-            self.W_proj = _xavier_uniform((3, H), rng)
-            self.b_proj = np.zeros(3, dtype=np.float64)
+        with self._step_lock:
+            with self._train_lock:
+                rng = np.random.default_rng(_INIT_SEED)
+                H = self._config.hidden_dim
+                current_n = self.U_f.shape[1]
+                self.W_f = _xavier_uniform((H, H), rng)
+                self.U_f = _xavier_uniform((H, current_n), rng)
+                self.b_f = np.zeros(H, dtype=np.float64)
+                self.W_tau = _xavier_uniform((H, H), rng)
+                self.U_tau = _xavier_uniform((H, current_n), rng)
+                self.b_tau = np.zeros(H, dtype=np.float64)
+                self.W_proj = _xavier_uniform((3, H), rng)
+                self.b_proj = np.zeros(3, dtype=np.float64)
 
-            with self._stimulus_lock:
-                self._pending_stimulus = None
+                with self._stimulus_lock:
+                    self._pending_stimulus = None
+                    self._stimulus_seq = 0
+                    self._committed_stimulus_seq = 0
 
-            with self._state_lock:
-                self._h = np.zeros(H, dtype=np.float64)
-                p, a, d = self._config.resting_baseline
-                self._pad_resting = PADState(
-                    pleasure=float(p),
-                    arousal=float(a),
-                    dominance=float(d),
-                    timestamp=time.monotonic(),
-                )
-                self._pad_snapshot = self._pad_resting
+                with self._state_lock:
+                    self._h = np.zeros(H, dtype=np.float64)
+                    p, a, d = self._config.resting_baseline
+                    self._pad_resting = PADState(
+                        pleasure=float(p),
+                        arousal=float(a),
+                        dominance=float(d),
+                        timestamp=time.monotonic(),
+                    )
+                    self._pad_snapshot = self._pad_resting
 
     # ------------------------------------------------------------------
     # Core computation
@@ -252,24 +264,28 @@ class EmotionCore:
     # Fast Loop worker
     # ------------------------------------------------------------------
 
-    def _consume_stimulus(self) -> np.ndarray:
-        """Return the pending stimulus and clear it. Returns zero vector if none."""
+    def _consume_stimulus(self) -> Tuple[np.ndarray, Optional[int]]:
+        """
+        Atomically return the pending stimulus (vector, seq) and clear it.
+        If no pending stimulus, returns (zero_vector, None).
+        """
         with self._stimulus_lock:
-            s = self._pending_stimulus
+            item = self._pending_stimulus
             self._pending_stimulus = None
-        if s is None:
-            return np.zeros(self.U_f.shape[1], dtype=np.float64)
-        return s
+        if item is None:
+            return np.zeros(self.U_f.shape[1], dtype=np.float64), None
+        seq, vec = item
+        return vec, seq
 
-    def step_once(self, custom_timestamp: Optional[float] = None) -> PADState:
+    def _step_once_unlocked(self, custom_timestamp: Optional[float] = None) -> PADState:
         """
         Advance the LNN ODE by exactly one tick deterministically.
+        Must be called under _step_lock.
         Consumes any pending stimulus (or zeroes if none).
-        Thread-safe; updates hidden state and PAD snapshot.
-        Allows virtual clock (SimClock) to drive EmotionCore in simulation mode.
+        Updates hidden state, PAD snapshot, and committed sequence token.
         """
         try:
-            x = self._consume_stimulus()
+            x, seq = self._consume_stimulus()
             h_new = self._ode_step(self._h, x)
             pad = self._project_to_pad(h_new)
             if custom_timestamp is not None:
@@ -282,6 +298,8 @@ class EmotionCore:
             self._h = h_new
             with self._state_lock:
                 self._pad_snapshot = pad
+            if seq is not None:
+                self._committed_stimulus_seq = max(self._committed_stimulus_seq, seq)
             self._tick_counter += 1
             return pad
         except Exception:
@@ -296,6 +314,56 @@ class EmotionCore:
             with self._state_lock:
                 self._pad_snapshot = resting
             return resting
+
+    def step_once(self, custom_timestamp: Optional[float] = None) -> PADState:
+        """
+        Advance the LNN ODE by exactly one tick deterministically.
+        Thread-safe; serializes ODE stepping via _step_lock.
+        Consumes any pending stimulus (or zeroes if none).
+        Allows virtual clock (SimClock) to drive EmotionCore in simulation mode.
+        """
+        with self._step_lock:
+            return self._step_once_unlocked(custom_timestamp=custom_timestamp)
+
+    def commit_stimulus(self, target_seq: Optional[int] = None) -> PADState:
+        """
+        Deterministically commit the state transition for a submitted stimulus.
+
+        Enforces the temporal boundary for cognitive turns:
+          Case A: target stimulus has not yet been committed (committed_seq < target_seq).
+                  Advances the ODE immediately under _step_lock, consuming and integrating
+                  the pending stimulus, publishing the new PAD snapshot, and marking it committed.
+          Case B: target stimulus was already consumed and committed by the background
+                  worker thread in the interim (committed_seq >= target_seq).
+                  Observes that target_seq is already committed; does NOT execute a duplicate
+                  ODE tick (guaranteeing exactly-once execution). Returns the committed state.
+
+        Parameters
+        ----------
+        target_seq : Optional[int]
+            The sequence token of the stimulus to commit. If None, targets the latest
+            submitted stimulus token (_stimulus_seq).
+
+        Returns
+        -------
+        PADState
+            The committed post-stimulus PAD state snapshot.
+        """
+        with self._step_lock:
+            if target_seq is None:
+                with self._stimulus_lock:
+                    target_seq = self._stimulus_seq
+
+            # If no stimulus was ever submitted, return current state snapshot
+            if target_seq == 0:
+                return self.get_pad_state()
+
+            # Case B: stimulus already integrated and committed by background thread
+            if self._committed_stimulus_seq >= target_seq:
+                return self.get_pad_state()
+
+            # Case A: pending stimulus not yet integrated; step ODE now
+            return self._step_once_unlocked()
 
     def _fast_loop_worker(self) -> None:
         """Background thread: advance LNN state continuously."""
