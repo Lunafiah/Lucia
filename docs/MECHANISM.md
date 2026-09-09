@@ -195,8 +195,14 @@ Lucia uses a biologically inspired memory architecture based on **Pentti Kanerva
    * **Emotional Intensity Resistance**: Memories formed during intense emotional moments ($|PAD| \gg 0$) resist decay up to **$4\times$ longer**:
      $$\lambda_{eff} = \frac{\lambda_0}{1 + 3 \cdot \max(|P|, |A|, |D|)}$$
 3. **Synergistic Ecphory (Subconscious Resonance Echo)**:
-   * When Lucia interacts with the user, her current emotional state acts as a retrieval cue across past SDM traces.
-   * Rather than quoting past memories mechanically (*"On Tuesday you said X"*), the engine synthesizes a subtle **Subconscious Echo Vector** that gently colors her prompt context, conversational depth, and tone.
+   * When Lucia interacts with the user, her committed emotional state ($p_{\text{final}}$) acts as a retrieval cue across past SDM traces via PAD-space cosine similarity:
+     $$\text{Resonance}(p, p_{\text{tag}}) = \frac{p \cdot p_{\text{tag}}}{\|p\|_2 \|p_{\text{tag}}\|_2}$$
+   * Traces with $\text{Resonance} > 0.60$ and $\text{decay\_weight} > 0.05$ are weighted by score and decay to synthesize the **Echo Vector**:
+     $$\vec{e} = \frac{\sum_k (\text{Resonance}_k \cdot w_k) \vec{c}_k}{\sum_k (\text{Resonance}_k \cdot w_k)}$$
+   * **Architectural Boundary (Open-Loop Injection)**:
+     * The Echo Vector $\vec{e}$ is encoded as numerical lines `[MEMORY ECHO]\necho_i: ...` in `PromptAssembler` (Stage 7) for LLM generation context.
+     * $\vec{e}$ **does not feed back into the limbic ODE solver** ($dh/dt$), **does not alter Active Inference prediction error** ($\mathcal{S}$), and **does not adjust Homeostatic Engine** constraints.
+     * Consequently, memory operates at **Level A (Storage)** and **Level B (Associative Retrieval)**. Authentic **Level C (Affective Recollection)** and **Level D (Autobiographical Continuity)** remain distinct future capabilities requiring explicit causal feedback loops.
 
 ---
 

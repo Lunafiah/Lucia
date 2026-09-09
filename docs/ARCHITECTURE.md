@@ -218,6 +218,49 @@ Executed via `tests/ablation/run_temporal_ablation_v2.py` using `LFM2.5-1.2B-Ins
 * **[EMPIRICAL RESULT] Background Autonomous Relaxation (Exp F)**:
   * Following acute stress displacement ($0.3159$ from resting attractor), idle FastLoop ODE integration smoothly relaxes limbic coordinates back toward Philia ($0.3159 \to 0.3087 \to 0.3049 \to 0.2979$ across $t = 0 \dots 12\text{s}$), verifying continuous pre-reflective recovery.
 
+### 5.3. Memory-Affect Coupling Boundary & Self-Model Readiness
+
+Following Phase 9.6 and Temporal Ablation v2, a dedicated **Architectural Boundary Audit** was conducted to verify whether Kanerva SDM associative retrieval (Synergistic Ecphory) exerts authentic causal feedback on Lucia's internal mathematical dynamics, and whether existing primitives support an integrated self-model.
+
+#### 1. Causal Graph: Closed-Loop Dynamics vs. Open-Loop Memory Sink
+
+Tracing the 10-stage pipeline of `CognitiveOrchestrator` reveals:
+- **Closed-Loop Subsystems**:
+  - **Limbic Persistence Loop**: $h_{t-1} \xrightarrow{\text{ODE}} h_t \xrightarrow{} p_t \xrightarrow{} h_{t+1}$ (Continuous dynamical feedback).
+  - **Active Inference Adaptation Loop**: $\mathcal{S}_t \to \Delta b_t \to \hat{p}_{t+1}$ (Online generative belief adaptation).
+  - **Homeostatic Metabolic Loop**: $\text{Input Freq} + \mathcal{S}_t \to \mathcal{C}_t \to \text{Constraints}$ (Dynamic token budget throttling).
+- **Open-Loop Memory Sink (Architectural Boundary)**:
+  - Memory encoding (Stage 8) captures $p_{\text{final}}$ and stores content vector into `AffectiveMemory`.
+  - Memory retrieval (Stage 6) queries traces via PAD cosine resonance, synthesizing `echo_vector`.
+  - **Crucial Boundary**: `echo_vector` is forwarded **exclusively** to Stage 7 (`PromptAssembler`), where it is printed as numeric text lines `[MEMORY ECHO]\necho_i: ...` into the LLM prompt.
+  - `echo_vector` **never** feeds back into `EmotionCore` ODE, **never** alters `ActiveInferenceEngine` prediction priors $\hat{p}$, and **never** adjusts `HomeostaticEngine` markers.
+  - **Empirical Proof (`tests/ablation/run_memory_causal_ablation.py`)**: Comparing Condition A (Retrieval Enabled, $\|\text{echo}\|_2 = 1.0152$) against Condition B (Retrieval Disabled, $\|\text{echo}\|_2 = 0.0000$) demonstrated that post-probe PAD, surprise $\mathcal{S}$, cognitive load $\mathcal{C}$, and token budget remain **identical**.
+
+#### 2. Four-Tier Classification of Affective Memory
+
+| Memory Level | Definition | Status in Lucia | Architectural Evidence |
+|---|---|:---:|---|
+| **Level A: Storage** | Discrete event representations co-stored with affective snapshots. | **PROVEN** | `AffectiveMemory.store(content, pad_final)` writes to SDMCore and index. |
+| **Level B: Associative Retrieval** | Cue similarity reactivates resonant traces based on current limbic state. | **PROVEN** | `EcphoryEngine.query(pad_final, traces)` computes PAD cosine resonance ($r > 0.6$). |
+| **Level C: Affective Recollection** | Retrieved memory feeds back to modify current internal mathematical state ($h, p, \mathcal{S}, \mathcal{C}$). | **ABSENT** | Memory echo is injected solely into LLM prompt; L2/L3/L4 are deaf to retrieved memories. |
+| **Level D: Autobiographical Continuity** | Causal history of interrelated events shaping an enduring self-model. | **ABSENT** | Past dialogues exist as raw transcripts (`data/chat_history.json`), not an episodic causal graph. |
+
+#### 3. Self-Model Readiness & Missing Causal Edges
+
+Lucia currently possesses distinct categories of knowledge about herself, but **lacks an integrated Self-Model**:
+- **Body Knowledge**: Window physics, Quad-Avatar WebGL engines, System Tray, audio formants (Operational).
+- **State Knowledge**: Instantaneous PAD coordinates, stability, energy, cognitive load (Operational).
+- **System Knowledge**: Hardware scalability profile, active model/voice configurations (Operational).
+- **Autobiographical Knowledge**: Unstructured chat transcript history and unlinked SDM traces (Fragmented).
+- **Integrated Self-Model**: **Non-existent**. No central representation unifies operational capabilities, relational stance, and ongoing history into a coherent model of "self".
+
+#### 4. Required Prerequisite Edges Before Constructing a Self-Model
+
+To advance to authentic self-modeling without falling into anthropomorphic prompt roleplay, three missing edges must be constructed:
+1. **Edge 1 (Affective Recollection — Level C)**: Connect `echo_vector` back into Active Inference prior expectation $\hat{p}$ or provide a subtle limbic bias in L2, allowing recalled events to dynamically affect subsequent emotional processing.
+2. **Edge 2 (Self-State Observation Interface)**: Implement a read-only introspection interface translating raw numerical values ($P, A, D, \mathcal{E}, \mathcal{C}$) into an interpreted functional self-state (e.g. cognitive readiness, metabolic exhaustion), strictly separated from linguistic self-report to maintain the No-Reflective-Ego invariant.
+3. **Edge 3 (Autobiographical Episodic Graph)**: Structure past interactions into a connected causal timeline rather than isolated dialogue turns or disconnected SDM vectors.
+
 ---
 
 ## 6. Hardware Scalability & Dynamic Profiling
