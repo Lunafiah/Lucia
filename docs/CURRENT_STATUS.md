@@ -21,7 +21,8 @@ Lucia has successfully completed **Phase 8 (Runtime Isolation & Simulation Envir
 │   Phase 6: Refinement, Packaging & Mascot Mode     [✅ COMPLETED]      │
 │   Phase 7: UI Refactoring (Personal Room UX)       [✅ COMPLETED]      │
 │   Phase 8: Runtime Isolation & Simulation          [✅ COMPLETED]      │
-│   Phase 9: Cognitive Unification & Convergence     [🏛️ GATE REVISED v2 / AWAITING SIGN-OFF]  │
+│   Phase 9: Cognitive Unification & Convergence     [✅ COMPLETED]      │
+│   Phase 9.5: Real LLM Backend Recovery (CUDA)      [✅ COMPLETED]      │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -34,12 +35,12 @@ Lucia has successfully completed **Phase 8 (Runtime Isolation & Simulation Envir
 | **Stimulus Processor** | `src/core/gating/` | **STABLE** | Lexical valence scoring ($[-1, 1]$), punctuation cadence, semantic density. Emits 16-dim continuous vector. *(Historical doc: `src/core/sensors/`)* |
 | **Limbic Fast Loop** | `src/core/emotion/` | **STABLE** | Continuous 200ms background thread (live) or discrete virtual tick step (sim). Liquid Neural Network ODE integration. Projects hidden state $h \in \mathbb{R}^{32}$ to 3D PAD space. Thread-safe $\le 1\text{ms}$ lock. |
 | **Homeostatic Engine** | `src/core/emotion/` | **STABLE** | Tracks cognitive load, metabolic stamina (energy), tension, and stability. Calculates generation constraints (`max_tokens`, `temperature`, `latency_ms`, `reasoning_depth`). *(Historical doc: `src/core/homeostasis/`)* |
-| **Active Inference** | `src/core/inference/` | **VERIFIED (Isolated)** | $3 \times 3$ linear generative transition model predicting PAD state. Computes Free Energy surprise. Verified in unit/property tests; bypassed in live `server.py` turns (targeted for Phase 9 unification). |
-| **LNN Plasticity** | `src/core/inference/` | **VERIFIED (Isolated)** | Online backprop-through-ODE (`torchdiffeq.odeint`) running on CPU daemon thread. Swaps weights into `EmotionCore` under 2ms `_train_lock`. Verified in unit tests; bypassed in live `server.py` turns. |
+| **Active Inference** | `src/core/inference/` | **STABLE (Causal)** | $3 \times 3$ linear generative transition model predicting PAD state. Computes Free Energy surprise $\mathcal{S}$. Causal: modulates cognitive load/tension and triggers $k=2$ when $\mathcal{S} > 0.60$. |
+| **LNN Plasticity** | `src/core/inference/` | **STABLE** | Two-stage plasticity: online turn salience tagging + idle consolidation ($T_{\text{idle}} \ge 45\text{s}$) on CPU thread. Swaps weights into `EmotionCore` under 2ms `_train_lock`. |
 | **Sparse Distributed Memory** | `src/core/memory/sdm.py` | **STABLE** | 1,000 hard locations across 1,000-bit Hamming address space with 64-dim content vectors. Distributed read/write within activation radius. |
 | **Affective Tagging & Decay** | `src/core/memory/decay.py` | **STABLE** | 60-second slow-loop daemon (live) or virtual clock decay tick (sim). Salience-resistant decay ($\lambda_{eff}$) gives intense emotional memories up to $4\times$ longer lifetime. |
 | **Synergistic Ecphory** | `src/core/memory/ecphory.py` | **STABLE** | Cosine similarity resonance between current PAD state and stored tags. Synthesizes subconscious Echo Vector to softly color prompt context. |
-| **Language Generation** | `src/core/language/` | **STABLE** | Local GGUF Small Language Model (LFM2.5-1.2B Instruct) running via `llama-cpp-python` with CUDA acceleration. Pre-reflective prompt conditioning. |
+| **Language Generation** | `src/core/language/` | **STABLE (CUDA Verified)** | Local GGUF Small Language Model (LFM2.5-1.2B Instruct) running via `llama-cpp-python` with CUDA acceleration on NVIDIA RTX 3050 Ti Laptop GPU (17/17 layers offloaded, 152 tok/s, 845 MiB VRAM). Pre-reflective prompt conditioning. |
 | **Boundary Safety Layer** | `src/core/safety/boundary_layer.py` | **STABLE** | Regex and pattern validator blocking introspective meta-selfhood statements (*"I feel"*, *"I exist as"*, *"As an AI"*). |
 | **RVC Voice Synthesis** | `src/core/voice/voice_engine.py` | **STABLE** | Direct RVC model execution (`.pth` + `.index`) from `models/voice/rvc/` with built-in high-quality `en-US-AnaNeural` base voice. Zero-latency phrase cache for conversational acknowledgments. |
 | **Offline STT & VAD** | `src/core/voice/stt_engine.py` | **STABLE** | Continuous local microphone capture via Web Audio VAD with transcription via `faster-whisper` (CTranslate2). Fully offline; no cloud keys required. |

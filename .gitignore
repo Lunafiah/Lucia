@@ -86,9 +86,10 @@ htmlcov/
 .tox/
 .hypothesis/
 
-# Logs
+# Logs & Scratch
 *.log
 logs/
+scratch/
 
 # Local config
 config/local/

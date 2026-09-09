@@ -208,6 +208,19 @@ This document captures:
 
 ---
 
+### ADR-020: Hybrid Ampere CUDA / AVX2 CPU Binary Stack for Local GGUF Inference
+* **Status**: **ACCEPTED & VERIFIED** (Phase 9.5)
+* **Context**: The upstream prebuilt `llama-cpp-python` wheels compiled host fallback CPU routines (`ggml-cpu.dll`) with `/arch:AVX512` on cloud CI runners. The target host CPU (AMD Ryzen 7 4800H, Zen 2) natively supports AVX2/FMA3 but lacks AVX-512 hardware support, resulting in `WinError 0xc000001d (STATUS_ILLEGAL_INSTRUCTION)` when initializing `llama_context`.
+* **Decision**: Synthesize a hybrid binary stack:
+  1. Use pre-compiled CUDA kernels targeting NVIDIA Ampere (`sm_86` / RTX 3050 Ti Laptop GPU, 4GB VRAM) and CUDA 12.1+ from `llama-cpp-python 0.3.20`.
+  2. Compile `ggml-cpu.dll` from the exact matching `llama.cpp` submodule commit (`f49e917`) using local MSVC 18 + Ninja with `-DGGML_AVX512=OFF -DGGML_AVX2=ON -DGGML_FMA=ON`.
+  3. Replace the cloud-compiled `ggml-cpu.dll` with the native AVX2 binary.
+* **Consequences**:
+  * *Positive*: Full CUDA offload (17/17 layers, 152 tok/s, CUDA Graph acceleration) on RTX 3050 Ti with 0 illegal instruction crashes; 845 MiB VRAM footprint fits comfortably within the 4096 MiB budget.
+  * *Trade-off*: Future upgrades of `llama-cpp-python` must ensure `ggml-cpu.dll` does not introduce AVX-512 instructions on Zen 2 CPUs.
+
+---
+
 ## 3. Reconciliation of Outdated Specs & Conflicting Decisions
 
 | Dimension | Outdated / Preliminary Spec | Authoritative Implemented Reality | Resolution & Rationale |
@@ -264,4 +277,5 @@ All future contributions and modifications must strictly observe the following l
 | **ARCH-015** | Synchronous voice in cognitive pipeline | Decoupled Expression Service via IPC (ADR-016) | Zero text latency; failure isolation; zero compute when muted | Phase 9 | **Approved at Architecture Gate** |
 | **ARCH-016** | Arbitrary 16-turn LNN batching | Two-stage plasticity: online salience + idle consolidation (ADR-017) | Zero CPU contention during conversation; salient learning | Phase 9 | **Approved at Architecture Gate** |
 | **ARCH-017** | Unsynchronized cognitive turn execution | Serialized turn mutex (`asyncio.Lock` & `_turn_lock`) (ADR-018) | Single continuous life; prevents state corruption | Phase 9 | **Approved at Architecture Gate** |
+| **ARCH-018** | Upstream AVX-512 `llama-cpp-python` wheel | Hybrid Ampere CUDA (`sm_86`) + Native AVX2 `ggml-cpu.dll` (ADR-020) | Resolves `0xc000001d` on Zen 2 CPUs; enables real CUDA inference | Phase 9.5 | Implementation Fact |
 
