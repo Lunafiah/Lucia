@@ -131,13 +131,15 @@ The Homeostatic Engine prevents emotional extremes, anxiety spirals, or conversa
    * **Cognitive Load ($\mathcal{C}$)**: Increases with input frequency across a 60-second rolling window and high arousal, modulated causally by Active Inference prediction surprise:
      $$\mathcal{C} = \text{clip}\left(\frac{\text{clip}(\text{count}_{60s}/10, 0, 1) + \text{arousal\_comp}}{2} + 0.25 \cdot \mathcal{S}, 0.0, 1.0\right)$$
      *Multi-turn accumulation*: Successive rapid turns drive $\mathcal{C}$ up from $\sim 0.08$ to $> 0.58$, dynamically contracting the token budget from 350 to 150.
-   * **Energy ($\mathcal{E}$)**: Available conversational stamina. Drains monotonically across active turns.
-   * **Tension ($\mathcal{T}$)**: Discrepancy between homeostatic targets and external demands, modulated when surprise exceeds threshold:
-     $$\mathcal{T} = \text{clip}(\mathcal{T}_{base} + 0.25 \cdot \max(0.0, \mathcal{S} - 0.40), 0.0, 1.0)$$
+   * **Energy ($\mathcal{E}$)**: Available conversational stamina. Drains monotonically across active turns ($\Delta\mathcal{E} = -0.05$ per turn; recovers during idle ticks).
+   * **Tension ($\mathcal{T}$)**: Instantaneous discrepancy between homeostatic targets and external demands:
+     $$\mathcal{T}_{\text{base}} = \begin{cases} |v - P_{01}| & \text{if valence } v \text{ is provided} \\ 0.0 & \text{otherwise} \end{cases}$$
+     $$\mathcal{T} = \text{clip}\left(\mathcal{T}_{\text{base}} + 0.50 \cdot \max(0.0, \mathcal{S} - 0.40), 0.0, 1.0\right)$$
+     *Instantaneous Signal Semantic*: Tension represents an **acute threat / mismatch signal**, evaluated fresh per turn with **zero inter-turn leaky persistence**. Because single-step surprise $\mathcal{S} \approx 0.06 - 0.10$ remains below the onset threshold ($0.40$), tension evaluates to $0.0000$ during steady-state or gradual shifts. It is not an emotional reservoir; multi-turn fatigue is handled by Cognitive Load ($\mathcal{C}$) and Energy ($\mathcal{E}$).
 3. **Dynamic Behavioral Conditioning**:
    * Instead of telling the model "be happy" or "be sad", the Homeostatic Engine dynamically modifies generation parameters:
      * **Cognitive Load $> 0.30$ or Low Energy** $\rightarrow$ Throttles token budget ($350 \to 150 \to 80$ tokens), increases temperature.
-     * **High Surprise / High Tension ($\mathcal{S} > 0.60 \text{ or } \mathcal{T} > 0.70$)** $\rightarrow$ Increased reasoning depth ($k=2$, deliberate cognitive appraisal rather than reflexive habit).
+     * **High Surprise / High Tension ($\mathcal{S} \ge 0.60 \text{ or } \mathcal{T} \ge 0.70$)** $\rightarrow$ Increased reasoning depth ($k=2$, deliberate cognitive appraisal rather than reflexive habit).
      * **Low Energy** $\rightarrow$ Injects simulated conversational latency delay.
 
 ---
@@ -152,11 +154,13 @@ Lucia adapts her emotional generative model and limbic dynamics using **Active I
 2. **Prediction Error & Free Energy Surprise**:
    * When observed limbic outcome $p_{actual}$ is committed by the ODE barrier, calculates Free Energy Surprise:
      $$\mathcal{S} = \|A \cdot p_{current} + b - p_{actual}\|_2$$
-   * **Single-Step vs. Multi-Turn Dynamics**:
+   * **Online Belief Vector Adaptation ($b$)**:
+     * Belief bias vector $b$ updates online via analytic gradient descent:
+       $$\Delta b = \eta \cdot (p_{actual} - (A \cdot p_{current} + b))$$
+     * Under repeated identical stimuli, the belief vector gradually learns the directional trend ($\|\Delta b\| \approx 1.5 \times 10^{-4}$ per step), causing prediction surprise $\mathcal{S}$ to decline monotonically ($0.0927 \to 0.0699$ across 5 turns).
+   * **Single-Step vs. Multi-Turn Dynamics & Hysteresis**:
      * A single ODE step ($\Delta t = 0.1$) shifts PAD by $\approx 0.06 - 0.10$, yielding an instantaneous surprise $\mathcal{S} \approx 0.06 - 0.10 < \theta_{\text{deliberative}} = 0.60$.
-     * Online gradient updates adjust $(A, b)$ to minimize Free Energy:
-       $$\min_{A, b} \|A \cdot p_{current} + b - p_{actual}\|_2^2 + \lambda_{KL} \|A - I\|_F^2$$
-     * As belief matrices $(A, b)$ adapt to sustained input, surprise for subsequent expected transitions remains bounded ($\mathcal{S} \sim 0.08$). Meanwhile, L2 hidden state $h$ accumulates continuously over multiple turns ($\Delta P = 0.4325$ across $N=10$).
+     * **Same-Probe Hysteresis**: Because the ODE derivative $\frac{dh}{dt} = f(h, x)$ depends nonlinearly on both the stimulus $x$ and the current hidden state $h(t)$, an identical sensory probe $x$ injected from different prior limbic histories ($h_{\text{neutral}}$ vs $h_{\text{stressed}}$ vs $h_{\text{relaxed}}$) follows distinct vector trajectories, arriving at divergent post-probe PAD coordinates, prediction errors, and cognitive load levels.
 3. **Two-Stage LNN Plasticity (CPU-Only Trainer)**:
    * **Online Salience Tagging**: During turns, evaluates interaction salience:
      $$\text{Salience} = 0.6 \cdot \mathcal{S} + 0.4 \cdot \|p_{actual} - p_{philia}\|_2$$
