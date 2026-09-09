@@ -189,11 +189,7 @@ class ChatController {
         const mascotVoice = document.getElementById('mascot-voice-select');
         if (mascotVoice) mascotVoice.value = modelName;
         try {
-          await fetch('http://127.0.0.1:8765/voice/select-model', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ model_name: modelName }),
-          });
+          await window.lucia.voice.selectModel(modelName);
           console.log(`[voice] Selected model: ${modelName}`);
         } catch (err) {
           console.error('[voice] Failed to select voice model:', err);
@@ -207,11 +203,7 @@ class ChatController {
         const modelName = e.target.value;
         if (this.voiceModelSelect) this.voiceModelSelect.value = modelName;
         try {
-          await fetch('http://127.0.0.1:8765/voice/select-model', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ model_name: modelName }),
-          });
+          await window.lucia.voice.selectModel(modelName);
           console.log(`[voice] Selected mascot model: ${modelName}`);
         } catch (err) {
           console.error('[voice] Failed to select voice model from mascot toolbar:', err);
@@ -223,11 +215,8 @@ class ChatController {
   async _loadVoiceModels() {
     try {
       let data = null;
-      if (window.lucia && window.lucia.models && window.lucia.models.getVoices) {
-        data = await window.lucia.models.getVoices();
-      } else {
-        const res = await fetch('http://127.0.0.1:8765/voice/models');
-        if (res.ok) data = await res.json();
+      if (window.lucia && window.lucia.voice && window.lucia.voice.getModels) {
+        data = await window.lucia.voice.getModels();
       }
 
       if (data && data.models && data.models.length > 0) {
@@ -374,9 +363,6 @@ class ChatController {
       let data = null;
       if (window.lucia && window.lucia.models && window.lucia.models.getAvatars) {
         data = await window.lucia.models.getAvatars();
-      } else {
-        const res = await fetch('http://127.0.0.1:8765/models/avatar');
-        if (res.ok) data = await res.json();
       }
 
       if (data) {
@@ -583,30 +569,32 @@ class ChatController {
       this.isSpeakingOrProcessing = true;
       if (this.micBtn) this.micBtn.classList.add('paused');
 
-      const formData = new FormData();
-      formData.append('file', audioBlob, 'speech.webm');
-
-      const res = await fetch('http://127.0.0.1:8765/voice/transcribe', {
-        method: 'POST',
-        body: formData
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        const text = (data.text || '').trim();
-        if (text) {
-          console.log(`[voice] Transcribed text: "${text}"`);
-          this.inputArea.value = text;
-          this._autoResizeInput();
-          this._updateSendButtonState();
-          await this.sendMessage(text);
-        } else {
-          console.log('[voice] Empty transcription');
-          this.isSpeakingOrProcessing = false;
-          if (this.isMicMode) this._resumeListening();
-        }
+      let text = '';
+      if (window.lucia && window.lucia.voice && window.lucia.voice.transcribe) {
+        const arrayBuffer = await audioBlob.arrayBuffer();
+        const audioData = new Uint8Array(arrayBuffer);
+        const data = await window.lucia.voice.transcribe(audioData);
+        text = (data && data.text ? data.text : '').trim();
       } else {
-        console.warn('[voice] Transcribe endpoint returned status:', res.status);
+        const formData = new FormData();
+        formData.append('audio', audioBlob, 'recording.wav');
+        const res = await fetch('http://127.0.0.1:8765/voice/transcribe', {
+          method: 'POST',
+          body: formData,
+        });
+        if (res.ok) {
+          const data = await res.json();
+          text = (data && data.text ? data.text : '').trim();
+        }
+      }
+      if (text) {
+        console.log(`[voice] Transcribed text: "${text}"`);
+        this.inputArea.value = text;
+        this._autoResizeInput();
+        this._updateSendButtonState();
+        await this.sendMessage(text);
+      } else {
+        console.log('[voice] Empty transcription');
         this.isSpeakingOrProcessing = false;
         if (this.isMicMode) this._resumeListening();
       }
@@ -750,19 +738,31 @@ class ChatController {
         this.genesisAwakenBtn.classList.add('awakening');
       }
 
-      const res = await fetch('http://127.0.0.1:8765/profile', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+      let data = null;
+      if (window.lucia && window.lucia.system && window.lucia.system.setUserProfile) {
+        data = await window.lucia.system.setUserProfile({
           user_name: userName || 'Friend',
           companion_name: finalCompanionName,
           is_onboarded: true,
           born_at: bornAt,
-        }),
-      });
+        });
+      } else {
+        const res = await fetch('http://127.0.0.1:8765/profile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            user_name: userName || 'Friend',
+            companion_name: finalCompanionName,
+            is_onboarded: true,
+            born_at: bornAt,
+          }),
+        });
+        if (res.ok) {
+          data = await res.json();
+        }
+      }
 
-      if (res.ok) {
-        const data = await res.json();
+      if (data && data.status !== 'error') {
         const profile = data.profile || {
           user_name: userName || 'Friend',
           companion_name: finalCompanionName,
@@ -803,9 +803,16 @@ class ChatController {
 
   async _loadProfile() {
     try {
-      const res = await fetch('http://127.0.0.1:8765/profile');
-      if (res.ok) {
-        const profile = await res.json();
+      let profile = null;
+      if (window.lucia && window.lucia.system && window.lucia.system.getUserProfile) {
+        profile = await window.lucia.system.getUserProfile();
+      } else {
+        const res = await fetch('http://127.0.0.1:8765/profile');
+        if (res.ok) {
+          profile = await res.json();
+        }
+      }
+      if (profile) {
         this._renderProfile(profile);
         if (!profile.is_onboarded && this.genesisModal) {
           // Un-onboarded / Genesis-ready: show Genesis Awakening modal
@@ -961,7 +968,9 @@ class ChatController {
   async _loadSystemProfile() {
     try {
       let data = null;
-      if (window.lucia && window.lucia.system && window.lucia.system.getProfile) {
+      if (window.lucia && window.lucia.system && window.lucia.system.getHardwareProfile) {
+        data = await window.lucia.system.getHardwareProfile();
+      } else if (window.lucia && window.lucia.system && window.lucia.system.getProfile) {
         data = await window.lucia.system.getProfile();
       } else {
         const res = await fetch('http://127.0.0.1:8765/system/profile');
@@ -1001,7 +1010,9 @@ class ChatController {
     try {
       localStorage.setItem('lucia_hardware_profile', profileName);
       let data = null;
-      if (window.lucia && window.lucia.system && window.lucia.system.setProfile) {
+      if (window.lucia && window.lucia.system && window.lucia.system.setHardwareProfile) {
+        data = await window.lucia.system.setHardwareProfile(profileName);
+      } else if (window.lucia && window.lucia.system && window.lucia.system.setProfile) {
         data = await window.lucia.system.setProfile(profileName);
       } else {
         const res = await fetch('http://127.0.0.1:8765/system/profile', {
@@ -1033,17 +1044,23 @@ class ChatController {
 
   async _restoreHistory() {
     try {
-      const res = await fetch('http://127.0.0.1:8765/history');
-      if (res.ok) {
-        const data = await res.json();
-        const turns = data.turns || [];
-        if (turns.length > 0) {
-          // Clear default welcome card if history exists
-          this.messagesContainer.innerHTML = '';
-          turns.forEach((t) => {
-            this.appendMessage(t.role, t.content);
-          });
+      let turns = [];
+      if (window.lucia && window.lucia.chat && window.lucia.chat.getHistory) {
+        const data = await window.lucia.chat.getHistory(50);
+        turns = data?.turns || [];
+      } else {
+        const res = await fetch('http://127.0.0.1:8765/history');
+        if (res.ok) {
+          const data = await res.json();
+          turns = data.turns || [];
         }
+      }
+      if (turns.length > 0) {
+        // Clear default welcome card if history exists
+        this.messagesContainer.innerHTML = '';
+        turns.forEach((t) => {
+          this.appendMessage(t.role, t.content);
+        });
       }
     } catch (err) {
       console.warn('[chat] Could not restore chat history:', err);
@@ -1262,16 +1279,27 @@ class ChatController {
       if (response && response.response) {
         this.appendMessage('companion', response.response);
 
-        // Synthesize and play voice if not muted
+        // Synthesize and play voice if not muted — via IPC (ADR-019) with fetch fallback
         if (!this.isVoiceMuted && window.avatarRenderer) {
           try {
-            const voiceRes = await fetch('http://127.0.0.1:8765/voice/synthesize', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ text: response.response }),
-            });
-            if (voiceRes.ok) {
-              const audioBlob = await voiceRes.blob();
+            let audioBlob = null;
+            if (window.lucia && window.lucia.voice && window.lucia.voice.synthesize) {
+              const audioBuffer = await window.lucia.voice.synthesize(response.response);
+              if (audioBuffer && audioBuffer.byteLength > 0) {
+                audioBlob = new Blob([audioBuffer], { type: 'audio/mpeg' });
+              }
+            } else {
+              const voiceRes = await fetch('http://127.0.0.1:8765/voice/synthesize', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: response.response }),
+              });
+              if (voiceRes.ok) {
+                audioBlob = await voiceRes.blob();
+              }
+            }
+
+            if (audioBlob) {
               if (!this.audioCache) this.audioCache = new Map();
               this.audioCache.set(response.response, audioBlob);
               window.avatarRenderer.speak(audioBlob, () => {
@@ -1336,14 +1364,24 @@ class ChatController {
         return;
       }
 
-      const voiceRes = await fetch('http://127.0.0.1:8765/voice/synthesize', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text }),
-      });
+      let audioBlob = null;
+      if (window.lucia && window.lucia.voice && window.lucia.voice.synthesize) {
+        const audioBuffer = await window.lucia.voice.synthesize(text);
+        if (audioBuffer && audioBuffer.byteLength > 0) {
+          audioBlob = new Blob([audioBuffer], { type: 'audio/mpeg' });
+        }
+      } else {
+        const voiceRes = await fetch('http://127.0.0.1:8765/voice/synthesize', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text }),
+        });
+        if (voiceRes.ok) {
+          audioBlob = await voiceRes.blob();
+        }
+      }
 
-      if (voiceRes.ok) {
-        const audioBlob = await voiceRes.blob();
+      if (audioBlob) {
         if (!this.audioCache) this.audioCache = new Map();
         this.audioCache.set(text, audioBlob);
         window.avatarRenderer.speak(audioBlob, onEnded);

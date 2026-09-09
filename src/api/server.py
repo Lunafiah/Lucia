@@ -1,13 +1,13 @@
 """
-FastAPI HTTP server wrapping MemoryAugmentedOrchestrator for desktop IPC.
+FastAPI HTTP server — Phase 9 Cognitive Unification.
 
 Endpoints:
-    POST /process  — synchronous single-turn interaction
-    GET  /state    — 500ms real-time emotional telemetry snapshot
+    POST /process  — serialized single-turn cognitive loop (asyncio.Lock, HTTP 429 guard)
+    GET  /state    — non-blocking real-time emotional telemetry snapshot
     GET  /health   — orchestrator health check
     GET  /system/profile — current hardware scaling profile
 
-Requirements: Phase 3 (1.1–1.8, 2.1–2.7, 3.1–3.7, 9.3)
+Requirements: Phase 3 (1.1–1.8, 2.1–2.7, 3.1–3.7, 9.3); Phase 9 (ADR-014–ADR-020)
 """
 
 from __future__ import annotations
@@ -39,7 +39,13 @@ from src.core.voice.stt_engine import get_stt_engine
 
 from src.core.config import MemoryOrchestratorConfig
 from src.core.models import BehavioralConstraints, SomaticMarkers
-from src.core.orchestrator.orchestrator import MemoryAugmentedOrchestrator
+from src.core.orchestrator.cognitive_orchestrator import (
+    CognitiveOrchestrator,
+    build_cognitive_orchestrator,
+)
+# Backward-compatibility alias for test specs
+InstrumentedOrchestrator = CognitiveOrchestrator
+from src.core.orchestrator.policies import CognitiveTurnResult
 from src.core.plugins.hook_bus import HookBus
 from src.core.resource_manager import ResourceProfile, get_resource_profile
 from src.core.simulation import (
@@ -53,8 +59,8 @@ from src.core.telemetry.stability_evaluator import StabilityEvaluator
 logger = logging.getLogger("lucia.api")
 
 _hook_bus = HookBus()
-_history_store: Optional[Any] = None
-_stability_evaluator: Optional[StabilityEvaluator] = None
+_history_store: Any = ChatHistoryStore()
+_stability_evaluator: StabilityEvaluator = StabilityEvaluator()
 _sim_runtime: Optional[SimulationRuntime] = None
 _scenario_runner: Optional[ScenarioRunner] = None
 _mode: str = "live"
@@ -89,6 +95,8 @@ class ProcessRequest(BaseModel):
 class ProcessResponse(BaseModel):
     response: str
     call_id: str
+    surprise: float = 0.0
+    generation_mode: str = "reflexive"
 
 
 class PADSnapshot(BaseModel):
@@ -118,62 +126,35 @@ class StateSnapshot(BaseModel):
     memory_trace_count: int
     timestamp: float
     profile: Optional[str] = None
+    surprise: float = 0.0
+    generation_mode: str = "reflexive"
 
 
 # ---------------------------------------------------------------------------
-# Instrumented Orchestrator subclass
+# Phase 9: asyncio turn-admission lock (Tier 1, ADR-018)
 # ---------------------------------------------------------------------------
+#
+# Exactly one cognitive turn may be in-flight at a time.  A second request
+# waits; a third (and any beyond) receives HTTP 429 immediately.
+#
+# The queue depth bound of 1 + 1 = 2 concurrent awaits (1 executing + 1
+# waiting) is enforced by the _turn_queue_depth counter.
 
-class InstrumentedOrchestrator(MemoryAugmentedOrchestrator):
-    """
-    Subclasses MemoryAugmentedOrchestrator to expose latest somatic markers
-    and behavioral constraints for GET /state telemetry.
-    """
-
-    def __init__(self, config: MemoryOrchestratorConfig) -> None:
-        super().__init__(config)
-        self._last_somatic: Optional[SomaticMarkers] = None
-        self._last_constraints: Optional[BehavioralConstraints] = None
-
-    def _execute_pipeline(
-        self, input_text: str, call_id: str, t_start: float
-    ) -> str:
-        # Step 1-4 execute in parent, but we capture the intermediate metrics
-        stimulus = self._stimulus_processor.encode(input_text)
-        self._emotion_core.push_stimulus(stimulus)
-        pad = self._emotion_core.get_pad_state()
-        self._homeostatic_engine.record_input()
-        markers = self._homeostatic_engine.compute_somatic_markers(pad)
-        constraints = self._homeostatic_engine.compute_behavioral_constraints(
-            markers, pad
-        )
-
-        self._last_somatic = markers
-        self._last_constraints = constraints
-
-        # Delegate rest of pipeline to super
-        return super()._execute_pipeline(input_text, call_id, t_start)
-
-    def reset_lifecycle(self) -> None:
-        """
-        Extend MemoryAugmentedOrchestrator reset by clearing somatic and constraint telemetry.
-        """
-        super().reset_lifecycle()
-        self._last_somatic = None
-        self._last_constraints = None
+_turn_admission_lock: asyncio.Lock = asyncio.Lock()
+_turn_queue_depth: int = 0  # number of requests currently admitted (0, 1, or 2)
 
 
 # ---------------------------------------------------------------------------
 # FastAPI Application & Global State
 # ---------------------------------------------------------------------------
 
-app = FastAPI(title="Lucia Backend API", version="3.0.0")
+app = FastAPI(title="Lucia Backend API", version="9.0.0")
 
-_orchestrator: Optional[InstrumentedOrchestrator] = None
+_orchestrator: Optional[CognitiveOrchestrator] = None
 _resource_profile: Optional[ResourceProfile] = None
 
 
-def get_orchestrator() -> InstrumentedOrchestrator:
+def get_orchestrator() -> CognitiveOrchestrator:
     if _mode == "simulation" or _sim_runtime is not None:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -190,9 +171,17 @@ def get_orchestrator() -> InstrumentedOrchestrator:
 @app.post("/process", response_model=ProcessResponse)
 async def process_turn(req: ProcessRequest) -> Any:
     """
-    Execute full cognitive-emotional turn synchronously via run_in_executor.
+    Execute full cognitive-emotional turn via CognitiveOrchestrator.
+
+    Concurrency (ADR-018):
+      - Tier 1: asyncio.Lock() with queue depth = 1 (one waiting, rest → HTTP 429)
+      - Tier 2: run_in_executor dispatches blocking inference to thread pool
+      - Tier 3: CognitiveOrchestrator._turn_lock serializes pipeline stages
+
     Disabled in simulation mode.
     """
+    global _turn_queue_depth
+
     if _mode == "simulation" or _sim_runtime is not None:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -208,43 +197,88 @@ async def process_turn(req: ProcessRequest) -> Any:
             },
         )
 
-    call_id = uuid.uuid4().hex
-    _hook_bus.emit("on_turn_start", req.input)
-    store = get_history_store()
-    store.append_turn("user", req.input)
-
-    loop = asyncio.get_running_loop()
-
-    try:
-        response_text = await loop.run_in_executor(None, orch.process, req.input)
-
-        # Update stability metrics
-        if hasattr(orch, "_affective_memory") and orch._affective_memory is not None:
-            get_stability_evaluator().update_sdm_count(orch._affective_memory.trace_count)
-
-        # Store turn in history
-        store.append_turn("companion", response_text)
-        _hook_bus.emit("on_turn_completed", {"user": req.input, "response": response_text})
-
-        return {"response": response_text, "call_id": call_id}
-    except Exception as exc:
-        logger.exception("Exception processing turn (call_id=%s): %s", call_id, exc)
+    # --- Tier 1: admission guard (max concurrent = 2: 1 executing + 1 waiting) ---
+    if _turn_queue_depth >= 2:
         return JSONResponse(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            content={"error": "internal_error", "call_id": call_id},
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            content={
+                "error": "turn_in_progress",
+                "detail": "Lucia is currently processing a thought. Please wait.",
+            },
         )
+
+    _turn_queue_depth += 1
+    try:
+        _hook_bus.emit("on_turn_start", req.input)
+        store = get_history_store()
+        store.append_turn("user", req.input)
+
+        loop = asyncio.get_running_loop()
+
+        # Tier 2: offload blocking LLM inference to thread pool
+        try:
+            async with _turn_admission_lock:
+                result: CognitiveTurnResult = await loop.run_in_executor(
+                    None, orch.process, req.input
+                )
+        except Exception as exc:
+            logger.exception("Exception processing turn: %s", exc)
+            return JSONResponse(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                content={"error": "internal_error", "call_id": uuid.uuid4().hex},
+            )
+
+        # Update stability metrics from turn result
+        try:
+            get_stability_evaluator().update_sdm_count(
+                orch._affective_memory.trace_count
+            )
+        except Exception:
+            pass
+
+        if isinstance(result, CognitiveTurnResult):
+            resp_text = result.response_text
+            turn_call_id = result.call_id
+            surprise = float(result.prediction_error)
+            gen_mode = str(result.generation_policy.mode)
+        else:
+            resp_text = str(result)
+            turn_call_id = uuid.uuid4().hex
+            surprise = 0.0
+            gen_mode = "reflexive"
+
+        store.append_turn("companion", resp_text)
+        _hook_bus.emit(
+            "on_turn_completed",
+            {"user": req.input, "response": resp_text},
+        )
+
+        return {
+            "response": resp_text,
+            "call_id": turn_call_id,
+            "surprise": surprise,
+            "generation_mode": gen_mode,
+        }
+    finally:
+        _turn_queue_depth -= 1
 
 
 @app.get("/state", response_model=StateSnapshot)
 async def get_state(response: Response) -> StateSnapshot:
     """
     Return non-blocking real-time emotional state snapshot with no caching.
+
+    Concurrency: This endpoint does NOT acquire _turn_admission_lock or
+    _turn_lock.  It reads EmotionCore._state_lock (≤ 1 ms) and the atomic
+    CognitiveTurnResult reference.  Always responds in < 15 ms.
     """
     response.headers["Cache-Control"] = "no-store"
     if _sim_runtime is not None:
         pad_state = _sim_runtime.emotion_core.get_pad_state()
         markers = _sim_runtime.homeostatic_engine.compute_somatic_markers(pad_state)
-        constraints = _sim_runtime.homeostatic_engine.compute_behavioral_constraints(markers, pad_state)
+        constraints = _sim_runtime.homeostatic_engine.compute_behavioral_constraints(
+            markers, pad_state
+        )
         return StateSnapshot(
             pad=PADSnapshot(
                 pleasure=float(pad_state.pleasure),
@@ -270,6 +304,7 @@ async def get_state(response: Response) -> StateSnapshot:
 
     orch = get_orchestrator()
 
+    # Non-blocking PAD read (≤ 1 ms — Tier 4 state lock)
     pad_state = orch._emotion_core.get_pad_state()
     pad_snap = PADSnapshot(
         pleasure=float(pad_state.pleasure),
@@ -277,34 +312,51 @@ async def get_state(response: Response) -> StateSnapshot:
         dominance=float(pad_state.dominance),
     )
 
-    somatic = orch._last_somatic
-    if somatic is not None:
+    # Latest turn snapshot (atomic pointer read — no lock required)
+    latest = getattr(orch, "latest_result", None)
+    if isinstance(latest, CognitiveTurnResult):
+        somatic_snap = SomaticSnapshot(
+            stability=float(latest.somatic.stability),
+            cognitive_load=float(latest.somatic.cognitive_load),
+            energy=float(latest.somatic.energy),
+            tension=float(latest.somatic.tension),
+        )
+        constraints_snap = ConstraintsSnapshot(
+            max_tokens=int(latest.constraints.max_tokens),
+            temperature=float(latest.constraints.temperature),
+            latency_ms=int(latest.constraints.latency_ms),
+            reasoning_depth=int(latest.constraints.reasoning_depth),
+        )
+        surprise = float(latest.prediction_error)
+        generation_mode = str(latest.generation_policy.mode)
+    elif getattr(orch, "_last_somatic", None) is not None and getattr(orch, "_last_constraints", None) is not None and isinstance(orch._last_somatic, SomaticMarkers):
+        somatic = orch._last_somatic
+        constraints = orch._last_constraints
         somatic_snap = SomaticSnapshot(
             stability=float(somatic.stability),
             cognitive_load=float(somatic.cognitive_load),
             energy=float(somatic.energy),
             tension=float(somatic.tension),
         )
-    else:
-        somatic_snap = SomaticSnapshot(
-            stability=0.0, cognitive_load=0.0, energy=0.0, tension=0.0
-        )
-
-    constraints = orch._last_constraints
-    if constraints is not None:
         constraints_snap = ConstraintsSnapshot(
             max_tokens=int(constraints.max_tokens),
             temperature=float(constraints.temperature),
             latency_ms=int(constraints.latency_ms),
             reasoning_depth=int(constraints.reasoning_depth),
         )
+        surprise = 0.0
+        generation_mode = "reflexive"
     else:
+        somatic_snap = SomaticSnapshot(
+            stability=0.0, cognitive_load=0.0, energy=0.0, tension=0.0
+        )
         constraints_snap = ConstraintsSnapshot(
             max_tokens=150, temperature=0.75, latency_ms=0, reasoning_depth=1
         )
+        surprise = 0.0
+        generation_mode = "reflexive"
 
-    trace_count = orch._affective_memory.trace_count if hasattr(orch, "_affective_memory") else len(orch._affective_memory.get_all_traces())
-
+    trace_count = orch._affective_memory.trace_count
     profile_name = _resource_profile.name if _resource_profile else "auto"
 
     return StateSnapshot(
@@ -314,6 +366,8 @@ async def get_state(response: Response) -> StateSnapshot:
         memory_trace_count=trace_count,
         timestamp=time.monotonic(),
         profile=profile_name,
+        surprise=surprise,
+        generation_mode=generation_mode,
     )
 
 
@@ -1072,7 +1126,8 @@ def init_server(
             model_path=model_path,
             profile_name_or_tier=profile_name,
         )
-        _orchestrator = InstrumentedOrchestrator(config)
+        # Phase 9: use composition-based CognitiveOrchestrator (ADR-014)
+        _orchestrator = build_cognitive_orchestrator(config)
     except Exception as exc:
         logger.exception("Failed to initialize Orchestrator: %s", exc)
         sys.stdout.write(f"LUCIA_BACKEND_ERROR: {exc}\n")

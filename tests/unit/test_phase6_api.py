@@ -23,9 +23,14 @@ def mock_orch():
 
 @pytest.fixture
 def client(mock_orch, tmp_path):
+    orig_mode = api_module._mode
+    orig_sim = api_module._sim_runtime
+    api_module._mode = "live"
+    api_module._sim_runtime = None
     api_module._orchestrator = mock_orch
     api_module._resource_profile = get_resource_profile("laptop")
     # Point history store to tmp_path
+    orig_history_path = api_module._history_store.file_path
     api_module._history_store.file_path = tmp_path / "chat_history.json"
     api_module._history_store._ensure_file_exists()
 
@@ -33,6 +38,9 @@ def client(mock_orch, tmp_path):
     yield test_client
     api_module._orchestrator = None
     api_module._resource_profile = None
+    api_module._history_store.file_path = orig_history_path
+    api_module._mode = orig_mode
+    api_module._sim_runtime = orig_sim
 
 
 class TestPhase6Endpoints:

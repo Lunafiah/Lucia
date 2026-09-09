@@ -13,7 +13,10 @@ from starlette.testclient import TestClient
 
 import src.api.server as api_module
 from src.core.config import MemoryOrchestratorConfig
-from src.api.server import InstrumentedOrchestrator
+from src.core.orchestrator.cognitive_orchestrator import (
+    CognitiveOrchestrator,
+    build_cognitive_orchestrator,
+)
 from src.core.resource_manager import get_resource_profile
 
 
@@ -32,19 +35,22 @@ def integrated_server(tmp_path):
         sdm_capacity=50,
     )
 
-    with patch("src.core.orchestrator.orchestrator.LLMBackend") as mock_llm_cls:
+    with patch("src.core.orchestrator.cognitive_orchestrator.LLMBackend") as mock_llm_cls:
         mock_llm = MagicMock()
         mock_llm.is_ready.return_value = True
         mock_llm.generate.return_value = "I hear you clearly, my friend."
         mock_llm_cls.return_value = mock_llm
 
-        orch = InstrumentedOrchestrator(config)
+        orch = build_cognitive_orchestrator(config)
         api_module._orchestrator = orch
         api_module._resource_profile = get_resource_profile("laptop")
         # Phase 8: force live mode so /process and /lifecycle endpoints are not blocked.
         # test_simulation_api uses scope=module and leaves _mode/_sim_runtime set globally.
         original_mode = api_module._mode
         original_sim_runtime = api_module._sim_runtime
+        original_history_path = api_module._history_store.file_path
+        api_module._history_store.file_path = tmp_path / "chat_history.json"
+        api_module._history_store._ensure_file_exists()
         api_module._mode = "live"
         api_module._sim_runtime = None
         client = TestClient(api_module.app)
@@ -54,6 +60,7 @@ def integrated_server(tmp_path):
         orch.shutdown()
         api_module._orchestrator = None
         api_module._resource_profile = None
+        api_module._history_store.file_path = original_history_path
         api_module._mode = original_mode
         api_module._sim_runtime = original_sim_runtime
 
@@ -108,3 +115,43 @@ class TestAPIServerIntegration:
         poll_thread.join(timeout=2.0)
         assert results["state_polled"]
         assert results["process_done"]
+
+    @pytest.mark.anyio
+    async def test_turn_serialization_and_http_429_admission_control(self, integrated_server):
+        """
+        Acceptance Invariant 3:
+        When 5 requests hit POST /process simultaneously, request 1 executes,
+        request 2 queues, and requests 3-5 receive HTTP 429.
+        """
+        import asyncio
+        import httpx
+        from httpx import ASGITransport
+
+        client, orch = integrated_server
+
+        # Simulate slower LLM generation so queue builds up
+        orig_generate = orch._llm_backend.generate
+
+        def slow_generate(*args, **kwargs):
+            time.sleep(0.2)
+            return "Deliberated reply."
+
+        orch._llm_backend.generate = slow_generate
+
+        try:
+            transport = ASGITransport(app=api_module.app)
+            async with httpx.AsyncClient(transport=transport, base_url="http://test") as ac:
+                tasks = [
+                    ac.post("/process", json={"input": f"Simultaneous request {i}"})
+                    for i in range(5)
+                ]
+                responses = await asyncio.gather(*tasks)
+                status_codes = [r.status_code for r in responses]
+        finally:
+            orch._llm_backend.generate = orig_generate
+
+        assert len(status_codes) == 5
+        # Exactly 2 requests admitted (1 active + 1 queued) -> 200 OK
+        assert status_codes.count(200) == 2
+        # Remaining 3 requests rejected -> 429 Too Many Requests
+        assert status_codes.count(429) == 3

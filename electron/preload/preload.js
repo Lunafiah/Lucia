@@ -3,7 +3,10 @@ const { contextBridge, ipcRenderer } = require('electron');
 /**
  * Preload script exposing a secure, sandboxed API to the renderer process.
  *
- * Requirements: Phase 3 (5.3, 10.1, 10.4)
+ * Requirements: Phase 3 (5.3, 10.1, 10.4); Phase 9 (ADR-019)
+ *
+ * Phase 9 additions: voice.*, system.getHardwareProfile/setHardwareProfile,
+ *   chat.getHistory — eliminating all direct fetch() calls in chat.js (ADR-019).
  */
 
 const ALLOWED_CHANNELS = ['backend:ready', 'backend:error', 'voice:mute-toggled'];
@@ -15,14 +18,71 @@ contextBridge.exposeInMainWorld('lucia', {
         return Promise.reject(new Error('Input must be a string'));
       }
       return ipcRenderer.invoke('chat:send', { input });
-    }
+    },
+    getHistory: (limit = 50) => ipcRenderer.invoke('chat:get-history', { limit })
   },
   state: {
     get: () => ipcRenderer.invoke('state:get')
   },
+  voice: {
+    /**
+     * Synthesize speech and return an ArrayBuffer of audio/mpeg bytes.
+     * @param {string} text
+     * @param {{ rate?: string, volume?: string, pitch?: string }} [opts]
+     * @returns {Promise<ArrayBuffer>}
+     */
+    synthesize: (text, opts = {}) =>
+      ipcRenderer.invoke('voice:synthesize', { text, ...opts }),
+
+    /**
+     * Transcribe an audio blob to text.
+     * @param {Blob} blob
+     * @returns {Promise<{ status: string, text: string }>}
+     */
+    transcribe: (blob) =>
+      ipcRenderer.invoke('voice:transcribe', blob),
+
+    /**
+     * Return discovered RVC models and active model.
+     * @returns {Promise<{ models: Array, active_model: string }>}
+     */
+    getModels: () => ipcRenderer.invoke('voice:get-models'),
+
+    /**
+     * Select active RVC model by name (or 'default').
+     * @param {string} modelName
+     * @returns {Promise<{ status: string, active_model: string }>}
+     */
+    selectModel: (modelName) =>
+      ipcRenderer.invoke('voice:select-model', { modelName })
+  },
   system: {
     getProfile: () => ipcRenderer.invoke('profile:get'),
-    setProfile: (profile) => ipcRenderer.invoke('profile:set', { profile })
+    setProfile: (profile) => ipcRenderer.invoke('profile:set', { profile }),
+    /**
+     * Return the current hardware scaling profile (tier, vram_mb, etc.)
+     * @returns {Promise<object>}
+     */
+    getHardwareProfile: () => ipcRenderer.invoke('system:get-hardware-profile'),
+    /**
+     * Update the active hardware tier.
+     * @param {string} tier  e.g. 'minimal', 'balanced', 'performance', 'auto'
+     * @returns {Promise<object>}
+     */
+    setHardwareProfile: (tier) =>
+      ipcRenderer.invoke('system:set-hardware-profile', { tier }),
+    /**
+     * Fetch the user/companion profile (user_name, companion_name, etc.)
+     * @returns {Promise<object>}
+     */
+    getUserProfile: () => ipcRenderer.invoke('system:get-user-profile'),
+    /**
+     * Save user/companion profile fields.
+     * @param {object} data
+     * @returns {Promise<object>}
+     */
+    setUserProfile: (data) =>
+      ipcRenderer.invoke('system:set-user-profile', { data })
   },
   runtime: {
     getDescriptor: () => ipcRenderer.invoke('runtime:descriptor'),

@@ -128,12 +128,18 @@ def mock_instrumented_orchestrator():
 
 @pytest.fixture
 def client(isolated_env, mock_instrumented_orchestrator):
+    orig_mode = api_module._mode
+    orig_sim = api_module._sim_runtime
+    api_module._mode = "live"
+    api_module._sim_runtime = None
     api_module._orchestrator = mock_instrumented_orchestrator
     api_module._resource_profile = get_resource_profile("laptop")
     test_client = TestClient(api_module.app)
     yield test_client
     api_module._orchestrator = None
     api_module._resource_profile = None
+    api_module._mode = orig_mode
+    api_module._sim_runtime = orig_sim
 
 
 class TestSubsystemResetPrimitives:

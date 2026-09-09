@@ -6,8 +6,14 @@ import src.api.server as server
 @pytest.fixture(scope="module")
 def client():
     # Initialize server in simulation mode
+    orig_mode = server._mode
+    orig_sim = server._sim_runtime
+    orig_orch = server._orchestrator
     server.init_server(mode="simulation", port=8765)
-    return TestClient(server.app)
+    yield TestClient(server.app)
+    server._mode = orig_mode
+    server._sim_runtime = orig_sim
+    server._orchestrator = orig_orch
 
 
 def test_runtime_descriptor(client):

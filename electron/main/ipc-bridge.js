@@ -506,6 +506,181 @@ function registerHandlers(port = 8765, isPreview = false, getMascotManager = nul
     });
     return await res.json();
   });
+
+  // ---------------------------------------------------------------------------
+  // Phase 9: IPC handlers for voice, system profile, and chat history
+  // These replace direct fetch() calls that previously lived in chat.js (ADR-019)
+  // ---------------------------------------------------------------------------
+
+  // voice:synthesize — synthesize speech and return audio Buffer
+  ipcMain.handle('voice:synthesize', async (_event, { text, rate, volume, pitch }) => {
+    if (!text || !text.trim()) {
+      return Buffer.alloc(0);
+    }
+    const body = { text };
+    if (rate) body.rate = rate;
+    if (volume) body.volume = volume;
+    if (pitch) body.pitch = pitch;
+    try {
+      const res = await fetch(`${baseUrl}/voice/synthesize`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+        signal: AbortSignal.timeout(30000)
+      });
+      if (!res.ok) {
+        throw new Error(`Voice synthesis HTTP ${res.status}`);
+      }
+      const arrayBuf = await res.arrayBuffer();
+      return Buffer.from(arrayBuf);
+    } catch (err) {
+      console.warn('[ipc-bridge] voice:synthesize error:', err.message);
+      return Buffer.alloc(0);
+    }
+  });
+
+  // voice:transcribe — transcribe audio blob to text
+  ipcMain.handle('voice:transcribe', async (_event, blobOrBuffer) => {
+    try {
+      let audioBuffer;
+      if (Buffer.isBuffer(blobOrBuffer)) {
+        audioBuffer = blobOrBuffer;
+      } else if (blobOrBuffer instanceof Uint8Array) {
+        audioBuffer = Buffer.from(blobOrBuffer);
+      } else {
+        return { status: 'error', text: '', error: 'Invalid audio data type' };
+      }
+      const res = await fetch(`${baseUrl}/voice/transcribe`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/octet-stream' },
+        body: audioBuffer,
+        signal: AbortSignal.timeout(15000)
+      });
+      if (!res.ok) {
+        throw new Error(`Transcribe HTTP ${res.status}`);
+      }
+      return await res.json();
+    } catch (err) {
+      console.warn('[ipc-bridge] voice:transcribe error:', err.message);
+      return { status: 'error', text: '', error: err.message };
+    }
+  });
+
+  // voice:get-models — list available RVC voice models
+  ipcMain.handle('voice:get-models', async () => {
+    try {
+      const res = await fetch(`${baseUrl}/voice/models`, {
+        signal: AbortSignal.timeout(3000)
+      });
+      if (res.ok) return await res.json();
+    } catch (err) {
+      console.warn('[ipc-bridge] voice:get-models error:', err.message);
+    }
+    return { models: [{ name: 'default', is_active: true }], active_model: 'default' };
+  });
+
+  // voice:select-model — select active RVC model
+  ipcMain.handle('voice:select-model', async (_event, { modelName }) => {
+    try {
+      const res = await fetch(`${baseUrl}/voice/select-model`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ model_name: modelName }),
+        signal: AbortSignal.timeout(5000)
+      });
+      if (res.ok) return await res.json();
+      throw new Error(`HTTP ${res.status}`);
+    } catch (err) {
+      console.warn('[ipc-bridge] voice:select-model error:', err.message);
+      return { status: 'error', error: err.message };
+    }
+  });
+
+  // system:get-hardware-profile — read current hardware scaling tier
+  ipcMain.handle('system:get-hardware-profile', async () => {
+    if (isPreview) {
+      return { tier: 'preview', name: 'UI Preview', vram_mb: 0, n_gpu_layers: 0 };
+    }
+    try {
+      const res = await fetch(`${baseUrl}/system/profile`, {
+        signal: AbortSignal.timeout(2000)
+      });
+      if (res.ok) return await res.json();
+    } catch (err) {
+      console.warn('[ipc-bridge] system:get-hardware-profile error:', err.message);
+    }
+    return { tier: 'unknown' };
+  });
+
+  // system:set-hardware-profile — update active hardware tier
+  ipcMain.handle('system:set-hardware-profile', async (_event, { tier }) => {
+    if (isPreview) {
+      return { status: 'ok', tier, name: `Preview (${tier})` };
+    }
+    try {
+      const res = await fetch(`${baseUrl}/system/profile`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ profile: tier }),
+        signal: AbortSignal.timeout(4000)
+      });
+      if (res.ok) return await res.json();
+    } catch (err) {
+      console.warn('[ipc-bridge] system:set-hardware-profile error:', err.message);
+    }
+    return { status: 'error' };
+  });
+
+  // system:get-user-profile — fetch user/companion profile
+  ipcMain.handle('system:get-user-profile', async () => {
+    if (isPreview) {
+      return { user_name: 'Friend', companion_name: 'Lucia', is_onboarded: false };
+    }
+    try {
+      const res = await fetch(`${baseUrl}/profile`, {
+        signal: AbortSignal.timeout(2000)
+      });
+      if (res.ok) return await res.json();
+    } catch (err) {
+      console.warn('[ipc-bridge] system:get-user-profile error:', err.message);
+    }
+    return { user_name: 'Friend', companion_name: 'Lucia', is_onboarded: false };
+  });
+
+  // system:set-user-profile — save user/companion profile fields
+  ipcMain.handle('system:set-user-profile', async (_event, { data }) => {
+    if (isPreview) {
+      return { status: 'ok', profile: data };
+    }
+    try {
+      const res = await fetch(`${baseUrl}/profile`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+        signal: AbortSignal.timeout(4000)
+      });
+      if (res.ok) return await res.json();
+    } catch (err) {
+      console.warn('[ipc-bridge] system:set-user-profile error:', err.message);
+    }
+    return { status: 'error' };
+  });
+
+  // chat:get-history — fetch recent conversation history
+  ipcMain.handle('chat:get-history', async (_event, { limit = 50 } = {}) => {
+    if (isPreview) {
+      return { turns: [] };
+    }
+    try {
+      const res = await fetch(`${baseUrl}/history?limit=${limit}`, {
+        signal: AbortSignal.timeout(3000)
+      });
+      if (res.ok) return await res.json();
+    } catch (err) {
+      console.warn('[ipc-bridge] chat:get-history error:', err.message);
+    }
+    return { turns: [] };
+  });
 }
 
 module.exports = { registerHandlers };
