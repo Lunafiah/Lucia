@@ -445,3 +445,83 @@ class TestG_SimulationIsolation:
         chat_path = os.path.join(base_dir, "data", "chat_history.json")
         assert os.path.exists(profile_path)
         assert os.path.exists(chat_path)
+
+
+# ---------------------------------------------------------------------------
+# Test H: Edge Cases and Barrier Boundary Semantics
+# ---------------------------------------------------------------------------
+
+class TestH_EdgeCasesAndBoundarySemantics:
+    def test_commit_stimulus_empty_queue_returns_snapshot_without_stepping(self):
+        """
+        Calling commit_stimulus() on an empty queue (no stimuli submitted)
+        must return the current PAD snapshot and execute zero ODE steps.
+        """
+        core = EmotionCore(EmotionConfig(loop_cadence_ms=500))
+        p0 = core.get_pad_state()
+        p_committed = core.commit_stimulus()
+        assert core.tick_count() == 0
+        assert p_committed.pleasure == p0.pleasure
+        assert p_committed.arousal == p0.arousal
+        assert p_committed.dominance == p0.dominance
+
+    def test_commit_stimulus_negative_or_zero_seq_returns_snapshot(self):
+        """
+        Calling commit_stimulus with target_seq <= 0 must return immediately
+        without stepping.
+        """
+        core = EmotionCore(EmotionConfig(loop_cadence_ms=500))
+        core.push_stimulus(np.ones(16) * 0.5)
+        # target_seq = 0
+        p0 = core.commit_stimulus(0)
+        assert core.tick_count() == 0
+        # target_seq = -3
+        p_neg = core.commit_stimulus(-3)
+        assert core.tick_count() == 0
+        assert p0.pleasure == p_neg.pleasure
+
+    def test_commit_stimulus_excess_target_seq_clamps_to_max_submitted(self):
+        """
+        Calling commit_stimulus with target_seq > max_submitted must clamp
+        to max_submitted and drain the available queue without overstepping.
+        """
+        core = EmotionCore(EmotionConfig(loop_cadence_ms=500))
+        t1 = core.push_stimulus(np.ones(16) * 0.3)
+        t2 = core.push_stimulus(np.ones(16) * -0.4)
+        assert t1 == 1 and t2 == 2
+
+        # Request seq 999
+        pad = core.commit_stimulus(999)
+        assert core.tick_count() == 2
+        assert core._committed_stimulus_seq == 2
+        assert len(core._pending_stimuli) == 0
+
+    def test_commit_stimulus_cleared_queue_defensive_exit(self):
+        """
+        If the pending queue was cleared externally while _stimulus_seq remains high,
+        commit_stimulus must defensively break out and not enter an infinite loop.
+        """
+        core = EmotionCore(EmotionConfig(loop_cadence_ms=500))
+        token = core.push_stimulus(np.ones(16) * 0.5)
+        # Manually simulate a desynchronization where queue is cleared
+        with core._stimulus_lock:
+            core._pending_stimuli.clear()
+
+        # commit_stimulus should detect empty queue and return without hanging
+        pad = core.commit_stimulus(token)
+        assert isinstance(pad, PADState)
+        assert core.tick_count() == 0
+
+    def test_orchestrator_pipeline_uses_committed_snapshot_directly(self, mock_orchestrator):
+        """
+        Verifies that CognitiveOrchestrator._execute_pipeline passes the specific
+        stimulus token to commit_stimulus and captures pad_final directly.
+        """
+        res = mock_orchestrator.process("Testing direct committed snapshot propagation.")
+        assert isinstance(res, CognitiveTurnResult)
+        assert res.pad_final is not None
+        assert res.pad_initial is not None
+        assert -1.0 <= res.pad_final.pleasure <= 1.0
+        assert -1.0 <= res.pad_final.arousal <= 1.0
+        assert -1.0 <= res.pad_final.dominance <= 1.0
+

@@ -379,6 +379,10 @@ class EmotionCore:
 
             # Drain pending stimuli up to target_seq in FIFO order
             while self._committed_stimulus_seq < target_seq:
+                with self._stimulus_lock:
+                    if not self._pending_stimuli:
+                        # Defensive: pending queue empty; avoid infinite idle-looping
+                        break
                 self._step_once_unlocked()
 
             return self.get_pad_state()

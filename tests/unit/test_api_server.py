@@ -29,9 +29,11 @@ def mock_orchestrator():
 
 
 @pytest.fixture
-def client(mock_orchestrator):
+def client(mock_orchestrator, tmp_path):
     orig_mode = api_module._mode
     orig_sim = api_module._sim_runtime
+    orig_history_path = getattr(api_module._history_store, "file_path", None)
+    api_module._history_store.file_path = tmp_path / "chat_history.json"
     api_module._mode = "live"
     api_module._sim_runtime = None
     api_module._orchestrator = mock_orchestrator
@@ -42,6 +44,8 @@ def client(mock_orchestrator):
     api_module._resource_profile = None
     api_module._mode = orig_mode
     api_module._sim_runtime = orig_sim
+    if orig_history_path is not None:
+        api_module._history_store.file_path = orig_history_path
 
 
 class TestAPIServerProcessEndpoint:

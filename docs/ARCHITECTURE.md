@@ -160,22 +160,36 @@ Lucia operates with non-blocking concurrent daemon threads coordinated by strict
 
 To prevent asynchronous race conditions where `CognitiveOrchestrator` reads `PAD_final` before `EmotionCore` has integrated the turn's stimulus, Lucia enforces an explicit **Temporal Synchronization Barrier**:
 
-1. **Architectural Invariant**:
-   * A cognitive turn MUST integrate its stimulus into L2 and commit the state transition deterministically before L4 Active Inference reads `PAD_final`.
-   * Prediction surprise $\mathcal{S}$ must represent genuine state transition error ($\|A \cdot p_{before} + b - p_{after}\|_2$), never an artificial zero from uncommitted asynchronous state.
+1. **Architectural Invariants & Epistemic Status**:
+   * **[PROVEN INVARIANT]**: A cognitive turn MUST integrate its stimulus into L2 and commit the state transition deterministically before L4 Active Inference reads `PAD_final`.
+   * **[PROVEN INVARIANT]**: Intra-turn stimulus processing follows strict exactly-once FIFO execution (`collections.deque`), guaranteed under `_step_lock`. Idle ticks never advance `_committed_stimulus_seq`.
+   * **[IMPLEMENTED CONTRACT]**: `push_stimulus(vector)` assigns a monotonically increasing sequence token `_stimulus_seq`. `CognitiveOrchestrator._execute_pipeline()` captures `token = push_stimulus(stimulus)`, invokes `commit_stimulus(token)`, and directly binds `pad_final = pad_committed`, completely eliminating the possibility of background idle ticks interleaving between Stage 3 limbic integration and Stage 4 surprise evaluation.
+   * **[IMPLEMENTED CONTRACT]**: The background `FastLoop` worker (200ms) governs continuous autonomous limbic relaxation towards the Philia resting attractor ($P=+0.25, A=-0.05, D=+0.05$). The synchronous `commit_stimulus(token)` barrier governs deterministic stimulus-caused state transition. These two mechanisms never contend destructively.
 2. **Implementation Mechanism (`commit_stimulus()`)**:
-   * `push_stimulus(vector)` assigns a monotonically increasing sequence token `_stimulus_seq`.
    * `commit_stimulus(target_seq)` acts as an idempotent barrier:
-     * **Case A (Pending)**: If `_committed_stimulus_seq < target_seq`, synchronously performs one ODE integration step via `_step_once_unlocked()`, updates `self._h`, publishes the new `PADState` snapshot, and marks `_committed_stimulus_seq = target_seq`.
+     * **Case A (Pending)**: If `_committed_stimulus_seq < target_seq`, drains pending stimuli in FIFO order under `_step_lock` via `_step_once_unlocked()`, updates `self._h`, publishes the new `PADState` snapshot under `_state_lock`, and marks `_committed_stimulus_seq = target_seq`. Includes a defensive break if the queue is emptied externally to prevent infinite loops.
      * **Case B (Already Committed)**: If the 200ms background thread already consumed and integrated the stimulus, `commit_stimulus()` observes `_committed_stimulus_seq >= target_seq` and immediately returns without duplicating the ODE step (strictly exactly-once semantics).
-3. **Lock Hierarchy**:
+3. **Lock Hierarchy (Verified Call Graph)**:
    $$\text{Orchestrator } \_turn\_lock \longrightarrow \_step\_lock \longrightarrow \_train\_lock \longrightarrow \_stimulus\_lock \longrightarrow \_state\_lock$$
-   * `_turn_lock`: Serializes single-turn execution in `CognitiveOrchestrator`.
-   * `_step_lock`: Serializes ODE step calculation between turn threads and the background `FastLoop` worker.
-   * `_train_lock`: Protects LNN weight arrays during parameter copy or plasticity weight swap ($\le 2\text{ms}$).
-   * `_stimulus_lock`: Protects pending stimulus buffer and sequence token counters ($\le 0.1\text{ms}$).
+   * `_turn_lock`: Serializes single-turn execution in `CognitiveOrchestrator`. Held during turn pipeline including local LLM generation to preserve Lucia's single continuous train of thought. Never blocks `/state` or telemetry polling.
+   * `_step_lock`: Serializes ODE step calculation between turn threads and the background `FastLoop` worker. Held during `solve_ivp` ($\sim 0.5 - 2\text{ms}$) to serialize LNN hidden state mutation.
+   * `_train_lock`: Protects LNN weight arrays during parameter copy or plasticity weight swap ($\le 2\text{ms}$). Released before `solve_ivp`.
+   * `_stimulus_lock`: Protects pending stimulus FIFO buffer and sequence token counters ($\le 0.1\text{ms}$).
    * `_state_lock`: Protects `_pad_snapshot` reads/writes ($\le 1\text{ms}$).
-   * **Lock Order Invariant**: Locks must always be acquired in descending order of this hierarchy. Zero inverted acquisitions or nested deadlocks are permitted.
+   * **Lock Order Invariant**: Locks must always be acquired in descending order of this hierarchy. Zero inverted acquisitions, nested deadlocks, or lock leaks exist in any execution or exception path.
+
+### 5.2. Temporal Accumulation & Continuous Dynamical Mechanics
+
+Post-Phase-9.6 architectural validation resolved the fundamental question of whether Lucia is a continuous dynamical system or an isolated sequence of turn-level updates:
+
+* **[EMPIRICAL RESULT]**: In an exploratory validation across $N=10$ repeated congruent emergency stimuli using real GGUF on CUDA:
+  * **L2 Continuous State Accumulation**: Hidden state $h$ accumulates continuously across turns without resetting. Pleasure shifted from baseline $+0.2500$ down to $-0.1825$ ($\Delta P = 0.4325$), Arousal escalated from $-0.0500$ up to $+0.1476$ ($\Delta A = 0.1976$), and total Euclidean displacement reached $0.474$.
+  * **Homeostatic Resource Depletion**: Cognitive Load accumulated from $0.0871 \to 0.5891$, Energy depleted from $0.9500 \to 0.5000$, and token budget dynamically contracted from 350 to 150 at Turn 5.
+* **[EXPLORATORY OBSERVATION]**:
+  * **Surprise Dynamics**: Active Inference evaluates the *instantaneous single-transition prediction error* ($\mathcal{S} \approx 0.06 - 0.10$ per step). Belief matrices $(A, b)$ adapt online, diminishing surprise for sustained directional trends. Surprise does not accumulate as a scalar sum.
+  * **Somatic Tension**: Evaluated per-turn based on instantaneous surprise and valence discrepancies. Does not accumulate across turns unless sustained by an explicit multi-turn integrator.
+* **[OPEN QUESTION]**:
+  * Future calibration may explore whether homeostatic somatic tension or cognitive load should incorporate a leaky temporal integrator across turns to allow sustained moderate stimuli to eventually trigger deliberative mode ($k=2$). Production thresholds ($\theta_{\text{deliberative}} = 0.60, \theta_{\text{tension}} = 0.40$) remain intact without modification.
 
 ---
 

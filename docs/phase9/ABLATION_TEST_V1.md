@@ -136,3 +136,42 @@ In accordance with the **Scientific Methodology Review v2**, all results adhere 
 1. **Sample Size (N=3)**: Classified strictly as an exploratory pilot. Population-level statistical claims (p < 0.01) are avoided.
 2. **SLM Model Capacity (1.2B)**: LFM2.5-1.2B exhibits higher response stochasticity than 7B+ models. Prompt conditioning provides directional modulation but not deterministic generation.
 3. **Sub-ablations D1-D5**: Deferred to secondary analysis in order to preserve primary matrix integrity.
+
+---
+
+## 6. Post-Phase-9.6 Exploratory Temporal Accumulation Finding
+
+Following the implementation and verification of the explicit stimulus commit barrier (`commit_stimulus()`), an exploratory experiment was conducted to determine whether repeated emotionally congruent stimuli produce temporal accumulation across multiple turns in Full Lucia.
+
+- **Stimulus Probe**: `"EMERGENCY ALERT: CRITICAL SYSTEM OVERLOAD DETECTED"` (10 consecutive identical turns, Seed: 43)
+- **Model**: Real Local GGUF `models/LFM2.5-1.2B-Instruct-Q4_K_M.gguf` (CUDA sm_86, 32 GPU layers offloaded)
+- **Telemetry Log**: `tests/ablation/results/temporal_accumulation_pilot.jsonl`
+
+### Empirical Trajectory Table ($N=10$)
+
+| Turn | Pleasure ($P$) | Arousal ($A$) | Dominance ($D$) | $\|\Delta\text{PAD}\|_2$ | Surprise ($\mathcal{S}$) | Tension ($\mathcal{T}$) | Cognitive Load ($\mathcal{C}$) | Energy ($\mathcal{E}$) | Policy Mode | Max Tokens |
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| **Baseline** | $+0.2500$ | $-0.0500$ | $+0.0500$ | — | — | — | $0.0000$ | $1.0000$ | — | — |
+| **1** | $+0.0626$ | $+0.0743$ | $+0.0282$ | $0.1011$ | $0.0000$ | $0.0000$ | $0.0871$ | $0.9500$ | `reflexive` ($k=1$) | 350 |
+| **2** | $+0.0269$ | $+0.0776$ | $+0.0361$ | $0.0977$ | $0.0977$ | $0.0000$ | $0.1632$ | $0.9000$ | `reflexive` ($k=1$) | 350 |
+| **3** | $+0.0438$ | $+0.1197$ | $+0.0588$ | $0.0784$ | $0.0782$ | $0.0000$ | $0.2294$ | $0.8500$ | `reflexive` ($k=1$) | 350 |
+| **4** | $+0.0366$ | $+0.1436$ | $+0.0781$ | $0.0662$ | $0.0658$ | $0.0000$ | $0.2883$ | $0.8000$ | `reflexive` ($k=1$) | 350 |
+| **5** | $+0.0153$ | $+0.1563$ | $+0.0934$ | $0.0585$ | $0.0580$ | $0.0000$ | $0.3426$ | $0.7500$ | `reflexive` ($k=1$) | **150** |
+| **6** | $-0.1041$ | $+0.0921$ | $+0.0512$ | $0.0891$ | $0.0885$ | $0.0000$ | $0.3682$ | $0.7000$ | `reflexive` ($k=1$) | 150 |
+| **7** | $-0.1286$ | $+0.0989$ | $+0.0173$ | $0.0963$ | $0.0955$ | $0.0000$ | $0.4233$ | $0.6500$ | `reflexive` ($k=1$) | 150 |
+| **8** | $-0.1381$ | $+0.1176$ | $+0.0017$ | $0.0942$ | $0.0932$ | $0.0000$ | $0.4821$ | $0.6000$ | `reflexive` ($k=1$) | 150 |
+| **9** | $-0.1350$ | $+0.1476$ | $+0.0097$ | $0.0820$ | $0.0809$ | $0.0000$ | $0.5440$ | $0.5500$ | `reflexive` ($k=1$) | 150 |
+| **10** | $-0.1825$ | $+0.1324$ | $-0.0178$ | $0.0928$ | $0.0915$ | $0.0000$ | $0.5891$ | $0.5000$ | `reflexive` ($k=1$) | 150 |
+
+### Key Architectural Findings:
+
+1. **[EMPIRICAL RESULT] Continuous Limbic State Accumulation**:
+   * Repeated congruent stimuli continuously drive L2 hidden state $h$ without inter-turn resets. Pleasure dropped from $+0.2500 \to -0.1825$ ($\Delta P = 0.4325$), Arousal escalated from $-0.0500 \to +0.1476$ ($\Delta A = 0.1976$), Dominance flipped from $+0.0500 \to -0.0178$, and cumulative Euclidean displacement reached $0.474$.
+   * Lucia is empirically demonstrated to be a **continuous dynamical system**, not a sequence of independent turn-level resets.
+2. **[EMPIRICAL RESULT] Homeostatic Load Accumulation & Dynamic Throttling**:
+   * Input frequency and arousal compounded Cognitive Load from $0.0871 \to 0.5891$, while metabolic Energy drained from $0.9500 \to 0.5000$.
+   * At Turn 5, as Cognitive Load crossed the $0.30$ threshold, the homeostatic engine dynamically throttled `max_tokens` from 350 to 150, confirming operational behavioral consequences.
+3. **[EXPLORATORY OBSERVATION] Active Inference Online Adaptation vs. Static Threshold**:
+   * Single-step Free Energy prediction error $\mathcal{S}$ remained bounded in $[0.058, 0.098]$ across all turns because each individual ODE step ($\Delta t = 0.1$) causes a bounded displacement, and Active Inference belief matrices $(A, b)$ adapt online.
+   * Consequently, $\mathcal{S} < \theta_{\text{deliberative}} = 0.60$ on every individual turn, maintaining $k=1$ (reflexive). Mode switching to $k=2$ requires either larger single-shock variance or a temporal leaky integrator for somatic tension.
+
