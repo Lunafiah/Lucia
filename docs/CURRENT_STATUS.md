@@ -228,5 +228,34 @@ $$\textbf{Production Baseline: Candidate A (Retrieval Only)}$$
 - No promotion ADR is created, as no candidate satisfies the production promotion gate.
 - Production cognitive code (`src/core/orchestrator/`, `src/core/emotion/`) and persistent data (`data/`) remain 100% unaltered.
 
+---
+
+## 8. Phase 12: Knowledge Learning Research Increment
+
+The repository has established the initial research architecture and empirical benchmark suite for **Phase 12 — Knowledge Learning** (`docs/specs/lucia-phase12-Knowledge_Learning/KNOWLEDGE_LEARNING_SPEC.md`, `tests/unit/test_knowledge_learning.py`).
+
+### 8.1 Empirical Findings Summary (K-EXP-1 to K-EXP-12)
+1. **Memory vs. Knowledge Distinction**:
+   - Verified that structured conceptual knowledge (propositions, concepts, rules) can be stored and retrieved independently of Layer 5 Kanerva SDM episodic vectors.
+2. **LLM-as-Teacher Boundary**:
+   - Benchmarked 4 distinct operational conditions in K-EXP-11:
+     - *Condition A* (LLM only): Answers via external parametric memory; zero Lucia internal provenance.
+     - *Condition B* (Store lookup only): Answers explicitly memorized facts without LLM.
+     - *Condition C* (Store + Derivation): Autonomously deduces unstated conclusions ($4 + 2 = 6$) via deterministic Peano addition rules without LLM involvement.
+     - *Condition D* (Store + LLM): External teacher verifies internal derivation.
+3. **Maturity Evaluation**:
+   - Maturity levels K0 (Exposure), K1 (Memorization), K2 (Retrieval), K3 (Structured Representation), K4 (Association), K5 (Generalization), K6 (Deduction), and K8 (Revision) are **ACHIEVED** within the isolated research harness.
+   - Levels K7 (Cross-domain Transfer) and K9 (High-order Synthesis) remain open research questions.
+
+### 8.2 Production Promotion Gate & Decision
+
+$$\Large\mathbf{PHASE\ 12\ RESEARCH\ CONTINUES}$$
+$$\mathbf{Production\ Baseline:\ Unaltered\ Canonical\ Cognition}$$
+
+- **Production Isolation**: The Knowledge Learning subsystem is strictly contained within `tests/unit/test_knowledge_learning.py`.
+- **Zero Production Mutation**: No files in `src/core/` are modified.
+- **Gate Evaluation**: While local storage, derivation, and revision pass all criteria, canonical runtime integration into `CognitiveOrchestrator` is deferred. No promotion ADR is created.
+
+
 
 

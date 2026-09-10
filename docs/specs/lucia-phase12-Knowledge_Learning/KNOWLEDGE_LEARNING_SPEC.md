@@ -164,8 +164,73 @@ To prevent confounding, initial Knowledge Learning experiments are restricted to
 
 ---
 
-## 6. Status & Implementation Staging
+## 6. Phase 12 Empirical Experiments (K-EXP-1 to K-EXP-12)
 
-- **Maturity Level in Repository**: `SPECIFICATION & RESEARCH HARNESS ONLY`.
-- **Production Integration**: Deferred to Phase 12 milestone after Phase 11 Affective Memory empirical coupling is resolved.
-- **Evidence Label**: `HYPOTHESIS` / `ARCHITECTURAL BLUEPRINT`.
+The dedicated test harness `tests/unit/test_knowledge_learning.py` benchmarks the Knowledge Learning subsystem across 12 empirical experiments:
+
+| Experiment | Target Capability | Empirical Result & Invariant Verified | Evidence Status |
+|---|---|---|:---:|
+| **K-EXP-1** | Structured Storage | Verified storage and exact-match retrieval of propositions and concepts by key. | `IMPLEMENTED & TESTED` |
+| **K-EXP-2** | Provenance Tracking | Validated differentiation of all 8 provenance types and antecedent evidence tracking. | `IMPLEMENTED & TESTED` |
+| **K-EXP-3** | Retrieval Without LLM | Pure symbolic query execution on `(Subject, Predicate, Object)` without LLM participation. | `CAUSALLY SUPPORTED` |
+| **K-EXP-4** | Structured Representation | Represented relational knowledge as typed tuples and graph edges rather than raw text. | `IMPLEMENTED & TESTED` |
+| **K-EXP-5** | Association | Navigated multi-hop relational chains (Canary $\to$ Bird $\to$ Animal) without LLM. | `IMPLEMENTED & TESTED` |
+| **K-EXP-6** | Deterministic Derivation | Deduced novel proposition ($4 + 2 = 6$) from Peano addition rules and transitive relations ($A \to C$). | `CAUSALLY SUPPORTED` |
+| **K-EXP-7** | LLM Boundary Distinction | Distinguished Lucia stored knowledge from external LLM parametric memory. | `CAUSALLY SUPPORTED` |
+| **K-EXP-8** | Generalization | Applied learned successor rule to novel unseen integers ($10 + 2 = 12$). | `OBSERVED & TESTED` |
+| **K-EXP-9** | Contradiction Representation | Detected conflicting assertions on single-valued predicates (`Earth spherical` vs `Earth flat`). | `IMPLEMENTED & TESTED` |
+| **K-EXP-10**| Non-Destructive Revision | Invalidated obsolete belief (`Pluto planet`), preserved history, and linked new verified fact. | `CAUSALLY SUPPORTED` |
+| **K-EXP-11**| Four-Condition Ablation | Benchmarked Conditions A (LLM only), B (Store lookup), C (Store + Derivation), D (Store + LLM). | `CAUSALLY SUPPORTED` |
+| **K-EXP-12**| Persistence Round-Trip | Exported knowledge graph to JSON and reconstructed full graph with zero data loss. | `TESTED` |
+
+---
+
+## 7. Knowledge Maturity Evaluation (K0–K9)
+
+Based on empirical evidence from the Phase 12 research harness:
+
+| Level | Maturity Gate | Current Status | Empirical Basis |
+|---|---|:---:|---|
+| **K0** | Exposure | **ACHIEVED** | System ingests propositions and concepts. |
+| **K1** | Memorization | **ACHIEVED** | Literal storage and recall of facts ($2 + 2 = 4$). |
+| **K2** | Retrieval | **ACHIEVED** | Independent symbolic retrieval without LLM involvement. |
+| **K3** | Structured Representation | **ACHIEVED** | Explicit `(Subject, Predicate, Object)` tuples with confidence and provenance. |
+| **K4** | Association | **ACHIEVED** | Multi-hop conceptual graph traversal (`is_a`, `located_in`). |
+| **K5** | Generalization | **ACHIEVED (Narrow)** | Peano addition rule generalized to novel integers ($10 + 2 = 12$). |
+| **K6** | Deduction / Derivation | **ACHIEVED (Narrow)** | Transitive relation deduction and arithmetic deduction without LLM. |
+| **K7** | Transfer | **OPEN RESEARCH** | Cross-domain structural transfer unvalidated. |
+| **K8** | Knowledge Revision | **ACHIEVED (Local)** | Non-destructive revision with audit log and provenance invalidation. |
+| **K9** | Knowledge Synthesis | **OPEN RESEARCH** | Higher-order hypothesis synthesis from disparate domains unvalidated. |
+
+---
+
+## 8. Production Promotion Gate Evaluation
+
+Promotion of the Knowledge Learning subsystem into canonical Lucia cognition requires satisfying all 12 criteria:
+
+| # | Promotion Criterion | Evaluation Result | Gate Status |
+|---|---|:---:|:---:|
+| **1** | Independent Storage | **PASS** (`KnowledgeStore` operates independently of LLM and SDM) | PASS |
+| **2** | Retrieval Without LLM | **PASS** (Pure symbolic query verified in K-EXP-3) | PASS |
+| **3** | Provenance Tracking | **PASS** (8 provenance types verified in K-EXP-2) | PASS |
+| **4** | Structured Representation | **PASS** (Explicit tuples and concept graphs verified in K-EXP-4) | PASS |
+| **5** | Deterministic Derivation | **PASS** (Peano and transitivity rules verified in K-EXP-6) | PASS |
+| **6** | LLM Ablation Verification | **PASS** (Conditions A–D clearly differentiated in K-EXP-11) | PASS |
+| **7** | Generalization | **PARTIAL** (Demonstrated on narrow arithmetic; broad generalization open) | **RESEARCH ONLY** |
+| **8** | Contradiction Handling | **PASS** (Conflict detection verified in K-EXP-9) | PASS |
+| **9** | Non-Destructive Revision | **PASS** (History preserved verified in K-EXP-10) | PASS |
+| **10**| Persistence Round-Trip | **PASS** (JSON serialization verified in K-EXP-12) | PASS |
+| **11**| Reproducibility & Stability | **PASS** (Deterministic execution in `test_knowledge_learning.py`) | PASS |
+| **12**| Canonical Architecture Integration | **UNTESTED / DEFERRED** (No wiring into `CognitiveOrchestrator`) | **BLOCKING** |
+
+---
+
+## 9. Status & Definitive Decision
+
+$$\Large\mathbf{PHASE\ 12\ RESEARCH\ CONTINUES}$$
+$$\mathbf{Production\ Baseline:\ Unaltered\ Canonical\ Cognition}$$
+
+* **Production Boundary**: The Knowledge Learning subsystem remains strictly isolated within `tests/unit/test_knowledge_learning.py`.
+* **Zero Production Mutation**: No files in `src/core/` are modified. Canonical `CognitiveOrchestrator`, `EmotionCore`, and `PromptAssembler` remain untouched.
+* **No Promotion ADR**: As Criterion 12 (Canonical Architecture Integration) is deferred and general transfer (K7, K9) remains open, no promotion ADR is authored.
+
