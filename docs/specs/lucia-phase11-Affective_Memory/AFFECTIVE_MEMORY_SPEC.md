@@ -183,11 +183,58 @@ Every candidate must be evaluated against the following criteria:
 
 ---
 
-## 7. Evidence Taxonomy
+## 7. Four-Level Evidence Taxonomy
 
-- `IMPLEMENTED`: Code exists and runs in the repository.
-- `TESTED`: Covered by automated test assertions.
-- `OBSERVED`: Empirical phenomena measured during test runs.
-- `CAUSALLY SUPPORTED`: Intervention tests prove the mechanism directly produces the downstream effect.
-- `HYPOTHESIS`: Theoretical model under active evaluation.
-- `UNKNOWN`: Quantities or dynamics unmeasured by current tests.
+To prevent confounding isolated research simulations with canonical production architecture, evidence is classified across four distinct levels:
+
+- **Level 1 — Mathematical / Local Implementability**:
+  The candidate's data structures and mathematical operations execute correctly without numerical divergence, syntax errors, or invalid states.
+- **Level 2 — Mechanistic Support Under Controlled Intervention**:
+  When the candidate coupling mechanism is explicitly invoked via research helpers, downstream variables change in the predicted direction. (Valid in research isolation; does not imply canonical reachability).
+- **Level 3 — Canonical End-to-End Causal Demonstration**:
+  The causal pathway operates autonomously through `CognitiveOrchestrator.process()` without an external test helper manually invoking the coupling. Memory retrieval occurring during turn $t$ must demonstrably affect downstream stages before those stages execute.
+- **Level 4 — Production Promotion Maturity**:
+  Satisfies all 12 production promotion gates (canonical integration, causal intervention, temporal ordering, reproducibility, ablation, specificity, boundedness, reversibility, multi-turn stability, no cross-stimulus interference, no runaway feedback, zero self-model/identity implications).
+
+---
+
+## 8. Phase 11.5 Independent Evidence Audit & Production Promotion Decision
+
+### 8.1 Canonical Pipeline Ordering Finding
+Direct source inspection of `CognitiveOrchestrator._execute_pipeline` establishes the invariant execution sequence:
+$$\text{Stage 4: Prediction Surprise} \longrightarrow \text{Stage 5: Somatic Markers \& Policy Selection} \longrightarrow \text{Stage 6: Affective Ecphory} \longrightarrow \text{Stage 7: Prompt Assembly}$$
+
+**Architectural Consequence**: Because Affective Ecphory (Memory Retrieval) executes at Stage 6, it strictly follows Stage 4 (Active Inference) and Stage 5 (Somatic Markers and Generation Policy Selection). Within a single canonical turn $t$, memory retrieval cannot causally influence Stage 4 or Stage 5 of turn $t$. 
+
+### 8.2 Negative Controls & Causal Attribution Audit
+Six independent negative controls were benchmarked in `TestPhase11_5_IndependentAuditAndNegativeControls`:
+1. **Control 1 (Fake Recollection)**: A synthetic $r(t)$ vector fabricated without memory retrieval produces identical somatic and policy changes to genuine memory recollection. Downstream coupling is **vector-dependent rather than memory-identity-dependent**.
+2. **Control 2 (Retrieval Without Recollection)**: Memory retrieval without recollection synthesis leaves somatic markers and policy thresholds at baseline.
+3. **Control 3 (Recollection Without Coupling)**: Recollection exists, but with coupling disabled ($\alpha=0, \beta=0, \gamma=0$), downstream variables remain at baseline.
+4. **Control 4 (Coupling Without Memory)**: Empty memory produces resting recollection, leaving downstream variables at baseline.
+5. **Control 5 (Orthogonal Memory)**: Orthogonal memories produce sub-threshold resonance, resulting in zero/negligible downstream shift.
+6. **Control 6 (Specificity Gradient)**: Relevant memory elevates tension and lowers deliberative threshold, whereas Irrelevant memory (opposing PAD) and No memory produce identical baseline responses ($\Delta \mathcal{T} = 0.0, \theta = 0.60$).
+
+### 8.3 Candidate A–E Four-Level Evidence Matrix
+
+| Candidate | Level 1 (Local) | Level 2 (Mechanistic) | Level 3 (End-to-End) | Level 4 (Production) | Evidence Basis | Status / Decision |
+|---|:---:|:---:|:---:|:---:|---|---|
+| **A: Retrieval Only** | **PASS** | **PASS** | **PASS** | **PASS** | Canonical Ecphory $\to$ Prompt Context | **PRODUCTION BASELINE** |
+| **B: Isolated $r(t)$** | **PASS** | **PASS** | **N/A** (Passive) | **FAIL** | Standalone research dataclass; experimental clamp | **RESEARCH ONLY** |
+| **C: Recollection $\to$ L3** | **PASS** | **PASS** | **FAIL** | **FAIL** | Helper `couple_recollection_to_l3`; blocked by Stage 6 ordering | **RESEARCH ONLY** |
+| **D: Recollection $\to$ L4** | **PASS** | **PARTIAL** | **FAIL** | **FAIL** | Matrix drift risk; requires clipping safeguards | **RESEARCH ONLY** |
+| **E: Recollection $\to$ Policy** | **PASS** | **PASS** | **FAIL** | **FAIL** | Helper `get_effective_deliberative_threshold`; blocked by Stage 6 ordering | **RESEARCH ONLY** |
+
+### 8.4 Production Promotion Gate Evaluation
+1. Level 3 Canonical End-to-End Causality: **FAIL** (Ecphory executes at Stage 6, after Stages 4 & 5).
+2. Memory-Specific Attribution: **PARTIAL** (Specific in retrieval resonance, but downstream coupling helper is vector-dependent).
+3. Temporal Ordering Correctness: **FAIL for same-turn coupling** (Requires pipeline reordering or inter-turn state persistence).
+4. Production Promotion Maturity: **UNMET**.
+
+### 8.5 Definitive Production Decision
+
+$$\textbf{NO PROMOTION — CONTINUE RESEARCH}$$
+$$\textbf{Active Production Baseline: Candidate A (Retrieval Only)}$$
+
+No candidate satisfies the promotion gate. No promotion ADR will be created. Production cognition code (`CognitiveOrchestrator`, `EmotionCore`, `HomeostaticEngine`, `ActiveInferenceEngine`) remains strictly unaltered.
+

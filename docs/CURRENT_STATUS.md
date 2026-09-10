@@ -199,4 +199,34 @@ The repository is actively investigating whether episodic memory retrieval can b
 - **Production Isolation**: Candidates are evaluated via the dedicated research test harness `tests/unit/test_recollection_coupling.py`.
 - **Bit-Exact Production Data**: `data/chat_history.json` and `data/profile.json` remain untouched.
 
+---
+
+## 7. Phase 11.5: Independent Evidence Audit & Production Promotion Decision
+
+### 7.1 Audit Findings Summary
+An independent scientific and architectural audit was performed on the Phase 11 research harness and canonical pipeline implementation:
+1. **Four-Level Causal Hierarchy**:
+   - **Level 1 (Mathematical Implementability)**: PASSED for Candidates A–E.
+   - **Level 2 (Mechanistic Support in Isolation)**: PASSED for Candidates A, B, C, E; PARTIAL for D.
+   - **Level 3 (Canonical End-to-End Causality)**: PASSED for Candidate A (Retrieval Only). **FAILED / NOT SUPPORTED for Candidates C, D, E**.
+   - **Level 4 (Production Promotion Maturity)**: Only Candidate A qualifies. Candidates B–E fail promotion gates.
+2. **Canonical Pipeline Execution Ordering**:
+   - In `CognitiveOrchestrator._execute_pipeline`, execution strictly follows:
+     $$\text{Stage 4 (Surprise)} \longrightarrow \text{Stage 5 (Somatic Markers \& Policy Selection)} \longrightarrow \text{Stage 6 (Affective Ecphory)}$$
+   - Memory retrieval at Stage 6 cannot causally affect Stage 4 or Stage 5 within the same turn under canonical architecture.
+3. **Negative Controls & Vector Dependence**:
+   - Control 1 (Fake Recollection) proved that downstream somatic/policy modulation in Candidates C and E is **vector-dependent rather than memory-identity-dependent**: a synthetic vector produces the exact same modulation as a memory-derived vector.
+   - Specificity gradient verified that within the Level 2 helper framework, resonance tracks affective relevance (Relevant $\gg$ Irrelevant $==$ None).
+
+### 7.2 Production Promotion Decision
+
+$$\textbf{NO PROMOTION — CONTINUE RESEARCH}$$
+$$\textbf{Production Baseline: Candidate A (Retrieval Only)}$$
+
+- **Candidate A** remains the sole active production architecture (Memory Retrieval $\to$ Echo $\to$ Prompt Context).
+- **Candidates C and E** remain **research-only candidates** evaluated in `tests/unit/test_recollection_coupling.py`.
+- No promotion ADR is created, as no candidate satisfies the production promotion gate.
+- Production cognitive code (`src/core/orchestrator/`, `src/core/emotion/`) and persistent data (`data/`) remain 100% unaltered.
+
+
 

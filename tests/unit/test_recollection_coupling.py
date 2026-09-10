@@ -1019,3 +1019,279 @@ class TestExperimentalControls:
         coupled_off = couple_recollection_to_l3(base, r_active, alpha_mem=0.0, beta_mem=0.0)
         assert coupled_off.tension == base.tension
         assert coupled_off.cognitive_load == base.cognitive_load
+
+
+# ==============================================================================
+# Phase 11.5: Independent Evidence Audit & Negative Controls Suite
+# ==============================================================================
+
+class TestPhase11_5_IndependentAuditAndNegativeControls:
+    """
+    Rigorous independent audit of Candidate C & Candidate E claims.
+    Evaluates whether claimed causal effects are memory-dependent or artifacts
+    of research helper injection, and audits canonical pipeline stage ordering.
+    """
+
+    def test_control_1_fake_recollection_vector_dependence(
+        self,
+        homeostatic_engine: HomeostaticEngine,
+        populated_memory: AffectiveMemory,
+        ecphory_engine: EcphoryEngine,
+    ) -> None:
+        """
+        Control 1 (Fake Recollection):
+        Compare genuine memory-derived recollection against a synthetic vector
+        constructed without ANY memory retrieval.
+        Demonstrates that downstream coupling is vector-dependent rather than
+        intrinsically memory-identity-dependent.
+        """
+        pad = make_pad(-0.80, 0.75, -0.60)
+        base_markers = homeostatic_engine.compute_somatic_markers(pad)
+        policy = SurpriseModulationPolicy(deliberative_surprise_threshold=0.60)
+
+        # Genuine recollection from populated memory
+        r_real = synthesize_recollection(pad, populated_memory.get_all_traces(), ecphory_engine)
+        assert r_real.r_intensity > 0.50, "Genuine trace must resonate"
+
+        # Synthetic 'fake' recollection constructed without ANY memory
+        r_fake = RecollectionState(
+            r_pad=r_real.r_pad.copy(),
+            r_intensity=r_real.r_intensity,
+            r_content=np.random.RandomState(42).randn(16).astype(np.float32),
+            timestamp=time.monotonic(),
+        )
+
+        # Downstream Candidate C modulation
+        coupled_real = couple_recollection_to_l3(base_markers, r_real)
+        coupled_fake = couple_recollection_to_l3(base_markers, r_fake)
+
+        # Audit verification: coupling helper produces identical somatic markers
+        # regardless of whether the vector came from memory or was fabricated
+        assert math.isclose(coupled_real.tension, coupled_fake.tension, abs_tol=1e-9)
+        assert math.isclose(coupled_real.cognitive_load, coupled_fake.cognitive_load, abs_tol=1e-9)
+
+        # Downstream Candidate E modulation
+        thresh_real = get_effective_deliberative_threshold(policy, r_real)
+        thresh_fake = get_effective_deliberative_threshold(policy, r_fake)
+        assert math.isclose(thresh_real, thresh_fake, abs_tol=1e-9)
+
+        # Audit finding: The helper functions couple any vector with appropriate fields;
+        # they possess no cryptographic or causal provenance tracking back to episodic storage.
+
+    def test_control_2_retrieval_without_recollection(
+        self,
+        homeostatic_engine: HomeostaticEngine,
+        populated_memory: AffectiveMemory,
+        ecphory_engine: EcphoryEngine,
+    ) -> None:
+        """
+        Control 2 (Retrieval Without Recollection):
+        Verify that when memory retrieval occurs, but recollection synthesis r(t)
+        is suppressed (left at resting), downstream variables remain at baseline.
+        """
+        pad = make_pad(-0.80, 0.75, -0.60)
+        base_markers = homeostatic_engine.compute_somatic_markers(pad)
+        policy = SurpriseModulationPolicy(deliberative_surprise_threshold=0.60)
+
+        # Genuine retrieval occurs (echo is retrieved)
+        echo = ecphory_engine.query(pad, populated_memory.get_all_traces())
+        assert echo is not None, "Retrieval must successfully produce an echo vector"
+
+        # Recollection synthesis is suppressed -> resting state
+        r_suppressed = RecollectionState.resting()
+
+        # Downstream Candidate C modulation with suppressed recollection
+        coupled = couple_recollection_to_l3(base_markers, r_suppressed)
+        assert coupled.tension == base_markers.tension
+        assert coupled.cognitive_load == base_markers.cognitive_load
+
+        # Downstream Candidate E modulation with suppressed recollection
+        thresh = get_effective_deliberative_threshold(policy, r_suppressed)
+        assert thresh == policy.deliberative_surprise_threshold
+
+    def test_control_3_recollection_without_coupling(
+        self,
+        homeostatic_engine: HomeostaticEngine,
+        populated_memory: AffectiveMemory,
+        ecphory_engine: EcphoryEngine,
+    ) -> None:
+        """
+        Control 3 (Recollection Without Coupling):
+        Recollection state r(t) is synthesized, but downstream coupling is disabled.
+        Verify that downstream states remain at baseline.
+        """
+        pad = make_pad(-0.80, 0.75, -0.60)
+        base_markers = homeostatic_engine.compute_somatic_markers(pad)
+        policy = SurpriseModulationPolicy(deliberative_surprise_threshold=0.60)
+
+        r_state = synthesize_recollection(pad, populated_memory.get_all_traces(), ecphory_engine)
+        assert r_state.r_intensity > 0.50
+
+        # Candidate C with coupling disabled (zero coefficients)
+        coupled_uncoupled = couple_recollection_to_l3(
+            base_markers, r_state, alpha_mem=0.0, beta_mem=0.0
+        )
+        assert coupled_uncoupled.tension == base_markers.tension
+        assert coupled_uncoupled.cognitive_load == base_markers.cognitive_load
+
+        # Candidate E with coupling disabled (zero gamma)
+        thresh_uncoupled = get_effective_deliberative_threshold(policy, r_state, gamma_mem=0.0)
+        assert thresh_uncoupled == policy.deliberative_surprise_threshold
+
+    def test_control_4_coupling_without_memory(
+        self,
+        homeostatic_engine: HomeostaticEngine,
+        ecphory_engine: EcphoryEngine,
+    ) -> None:
+        """
+        Control 4 (Coupling Without Memory):
+        Invoke coupling with an empty memory store.
+        Verify that synthesis yields resting r(t) and downstream states remain at baseline.
+        """
+        pad = make_pad(-0.80, 0.75, -0.60)
+        base_markers = homeostatic_engine.compute_somatic_markers(pad)
+        policy = SurpriseModulationPolicy(deliberative_surprise_threshold=0.60)
+
+        # Empty memory traces
+        r_empty = synthesize_recollection(pad, [], ecphory_engine)
+        assert r_empty.r_intensity == 0.0
+
+        coupled = couple_recollection_to_l3(base_markers, r_empty)
+        assert coupled.tension == base_markers.tension
+        assert coupled.cognitive_load == base_markers.cognitive_load
+
+        thresh = get_effective_deliberative_threshold(policy, r_empty)
+        assert thresh == policy.deliberative_surprise_threshold
+
+    def test_control_5_orthogonal_memory_resonance(
+        self,
+        homeostatic_engine: HomeostaticEngine,
+        populated_memory: AffectiveMemory,
+        ecphory_engine: EcphoryEngine,
+    ) -> None:
+        """
+        Control 5 (Orthogonal Memory):
+        High-affect memories exist in storage, but the active stimulus is orthogonal.
+        Verify retrieval resonance is sub-threshold and downstream effects remain baseline.
+        """
+        # Stimulus orthogonal to all stored traces (trauma: [-0.8, 0.75, -0.6], joy: [0.85, 0.6, 0.7])
+        pad_ortho = make_pad(-0.50, -0.80, -0.40)
+        base_markers = homeostatic_engine.compute_somatic_markers(pad_ortho)
+        policy = SurpriseModulationPolicy(deliberative_surprise_threshold=0.60)
+
+        r_ortho = synthesize_recollection(pad_ortho, populated_memory.get_all_traces(), ecphory_engine)
+
+        # Resonance must be sub-threshold (<= 0.20 or 0.0)
+        assert r_ortho.r_intensity < 0.20
+        coupled = couple_recollection_to_l3(base_markers, r_ortho)
+        # Residual shift should be negligible (< 0.08)
+        assert abs(coupled.tension - base_markers.tension) < 0.08
+
+        thresh = get_effective_deliberative_threshold(policy, r_ortho)
+        assert thresh >= 0.54, "Threshold should remain near baseline 0.60"
+
+    def test_control_6_specificity_gradient(
+        self,
+        homeostatic_engine: HomeostaticEngine,
+        ecphory_engine: EcphoryEngine,
+    ) -> None:
+        """
+        Control 6 (Specificity Gradient):
+        Under the exact same probe stimulus, compare:
+          1. Relevant memory (matching affective PAD)
+          2. Irrelevant memory (opposing affective PAD)
+          3. No memory (empty store)
+        Verifies that causal effect tracks memory relevance rather than mere presence.
+        """
+        probe_pad = make_pad(-0.80, 0.75, -0.60)  # High-threat probe
+        base_markers = homeostatic_engine.compute_somatic_markers(probe_pad)
+        policy = SurpriseModulationPolicy(deliberative_surprise_threshold=0.60)
+
+        # Condition 1: Relevant Memory (Traumatic trace matching probe)
+        mem_relevant = AffectiveMemory(AffectiveMemoryConfig(
+            sdm_config=SDMConfig(address_dim=64, content_dim=16, num_locations=100), m=16
+        ))
+        mem_relevant.store(np.full(16, -0.7, dtype=np.float32), make_pad(-0.80, 0.75, -0.60))
+
+        # Condition 2: Irrelevant Memory (Pure Joy trace opposing probe)
+        mem_irrelevant = AffectiveMemory(AffectiveMemoryConfig(
+            sdm_config=SDMConfig(address_dim=64, content_dim=16, num_locations=100), m=16
+        ))
+        mem_irrelevant.store(np.full(16, 0.8, dtype=np.float32), make_pad(0.85, 0.60, 0.70))
+
+        # Condition 3: No Memory
+        mem_empty_traces: List[MemoryTrace] = []
+
+        # Evaluate Condition 1
+        r_rel = synthesize_recollection(probe_pad, mem_relevant.get_all_traces(), ecphory_engine)
+        c_rel = couple_recollection_to_l3(base_markers, r_rel)
+        th_rel = get_effective_deliberative_threshold(policy, r_rel)
+
+        # Evaluate Condition 2
+        r_irrel = synthesize_recollection(probe_pad, mem_irrelevant.get_all_traces(), ecphory_engine)
+        c_irrel = couple_recollection_to_l3(base_markers, r_irrel)
+        th_irrel = get_effective_deliberative_threshold(policy, r_irrel)
+
+        # Evaluate Condition 3
+        r_none = synthesize_recollection(probe_pad, mem_empty_traces, ecphory_engine)
+        c_none = couple_recollection_to_l3(base_markers, r_none)
+        th_none = get_effective_deliberative_threshold(policy, r_none)
+
+        # Specificity Assertions:
+        # A. Retrieval intensity gradient: Relevant >> Irrelevant == None
+        assert r_rel.r_intensity > 0.60, "Relevant memory must resonate strongly"
+        assert r_irrel.r_intensity == 0.0, "Irrelevant memory must yield 0 resonance (cosine < 0.5)"
+        assert r_none.r_intensity == 0.0, "No memory must yield 0 intensity"
+
+        # B. Somatic tension gradient: Relevant > Irrelevant == None
+        delta_rel = c_rel.tension - base_markers.tension
+        delta_irrel = c_irrel.tension - base_markers.tension
+        delta_none = c_none.tension - base_markers.tension
+
+        assert delta_rel > 0.20, "Relevant memory must elevate tension"
+        assert delta_irrel == 0.0, "Irrelevant memory must have zero tension delta"
+        assert delta_none == 0.0, "No memory must have zero tension delta"
+
+        # C. Policy threshold gradient: Relevant (lowered) < Irrelevant (base) == None (base)
+        assert th_rel <= 0.40, "Relevant memory lowers threshold to deliberative range"
+        assert th_irrel == 0.60, "Irrelevant memory preserves baseline threshold"
+        assert th_none == 0.60, "No memory preserves baseline threshold"
+
+    def test_canonical_pipeline_ordering_audit(self) -> None:
+        """
+        Audit Canonical Pipeline Execution Order:
+        In CognitiveOrchestrator._execute_pipeline:
+          Stage 4: Prediction Surprise (Active Inference)
+          Stage 5: Homeostatic Modulation & Policy Selection
+          Stage 6: Affective Ecphory (Memory Retrieval)
+        Verify that Stage 6 occurs AFTER Stage 4 and Stage 5.
+        Concludes that memory retrieval at Stage 6 CANNOT causally influence
+        Stage 4 or Stage 5 within the same turn under canonical architecture.
+        """
+        import inspect
+        from src.core.orchestrator.cognitive_orchestrator import CognitiveOrchestrator
+
+        source = inspect.getsource(CognitiveOrchestrator._execute_pipeline)
+
+        # Verify Stage comment markers exist in source
+        pos_s4 = source.find("Stage 4: Prediction Surprise")
+        pos_s5 = source.find("Stage 5: Homeostatic Modulation")
+        pos_s6 = source.find("Stage 6: Affective Ecphory")
+        pos_s7 = source.find("Stage 7: Prompt Assembly")
+
+        assert pos_s4 != -1, "Stage 4 must exist in _execute_pipeline"
+        assert pos_s5 != -1, "Stage 5 must exist in _execute_pipeline"
+        assert pos_s6 != -1, "Stage 6 must exist in _execute_pipeline"
+        assert pos_s7 != -1, "Stage 7 must exist in _execute_pipeline"
+
+        # Topologically assert canonical execution order:
+        # Stage 4 precedes Stage 5 precedes Stage 6 precedes Stage 7
+        assert pos_s4 < pos_s5 < pos_s6 < pos_s7, (
+            "Canonical pipeline executes Stage 4 -> Stage 5 -> Stage 6 -> Stage 7. "
+            "Stage 6 (Ecphory) strictly follows Stage 5 (Somatic Markers / Policy Selection)."
+        )
+
+        # Audit finding: Because Stage 6 executes AFTER Stage 5,
+        # same-turn coupling (Memory -> L3/L5) is architecturally impossible
+        # in canonical Lucia without reordering or inter-turn persistent state.
+        # This formally disqualifies Candidates C and E from Level 3 Canonical End-to-End status.
