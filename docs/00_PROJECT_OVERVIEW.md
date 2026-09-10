@@ -131,32 +131,44 @@ Users can switch hardware profiles dynamically at runtime via `POST /system/prof
 
 ## 6. Project Roadmap & Milestone Overview
 
-```
-Phase 1: Core Limbic Pipeline           [COMPLETED]
-Phase 2: Affective Memory & SDM         [COMPLETED]
-Phase 3: Desktop Interface & Telemetry  [COMPLETED]
-Phase 4: Active Inference & Plasticity  [COMPLETED]
-Phase 5: Embodied Multimodal Presence   [COMPLETED]
-Phase 6: Refinement, Mascot & QoL       [COMPLETED]
-Phase 7: UI Refactoring (Personal Room) [COMPLETED]
-Phase 8: Runtime Isolation & Simulation [COMPLETED]
-Phase 9: Cognitive Unification          [COMPLETED]
-Phase 10: Define Affective Dynamics     [COMPLETED]
-Phase 11: Affective Memory              [NEXT]
-Phase 12: Embodiment                    [PLANNED]
-Phase 13: Affective Life                [PLANNED]
-Phase 14: First Activation              [PLANNED]
-Future: Self-Model / Self-Awareness     [RESEARCH]
+The active canonical cognitive development roadmap for Lucia is structured across foundational, experiential, embodied, and integrative horizons:
+
+```text
+FOUNDATION
+    ↓
+Phase 10 — Affective Dynamics                 [VALIDATED]
+Phase 11 — Affective Memory / Recollection    [CURRENT]
+Phase 12 — Knowledge Learning                  [RESEARCH]
+Phase 13 — Relationship Development            [RESEARCH]
+Phase 14 — Embodiment & Affective Expression   [RESEARCH]
+Phase 15 — Affective Communication             [RESEARCH]
+Phase 16 — Affective Life Integration         [INTEGRATION]
+Phase 17 — First Activation                   [FUTURE]
 ```
 
-* **Phase 1 (Core Pipeline)**: Continuous emotion ODE, Homeostatic engine, Stimulus processing, Boundary Layer, GGUF backend.
-* **Phase 2 (Affective Memory)**: Sparse Distributed Memory, Affective tagging, Salience-resistant decay, Synergistic Ecphory.
-* **Phase 3 (Desktop Interface)**: FastAPI server, Electron main/renderer processes, live state polling.
-* **Phase 4 (Active Inference)**: Generative state model, Free Energy surprise minimization, CPU online backprop-through-ODE.
-* **Phase 5 (Embodied Presence)**: Direct RVC voice conversion, offline faster-whisper STT, 4-Engine Avatar, Web Audio lip-sync.
-* **Phase 6 (Refinement & QoL)**: System tray, Mascot mode, Chat session persistence, Limbic Stability Evaluator (LSI), Extensibility Hook Bus.
-* **Phase 7 (UI Refactoring)**: Transformation from a technical telemetry dashboard into an intimate "Personal Digital Room", implementing the "One Continuous Life" companion ontology and progressive disclosure design system.
-* **Phase 8 (Runtime Isolation & Simulation)**: Complete architectural bifurcation between live companion activation and the deterministic simulation environment (`SimulationRuntime`, `SimClock`, `StoragePolicy`, 7-invariant isolation verification).
-* **Phase 9 (Cognitive Unification & Convergence)**: Integration of Active Inference (Layer 4) into live server turn execution, elimination of redundant pipeline calls, complete IPC migration for auxiliary renderer fetch calls, and unified end-to-end cognitive presence.
-* **Phase 10 (Define Affective Dynamics)**: Canonical mathematical specification of limbic ODE, 3-tier state taxonomy, causal graph, affect-to-cognition audit, and Phase 11 memory boundary research evaluation.
-* **Phase 11 (Affective Memory)**: Causal investigation of memory-to-affect feedback mechanisms (separate recollection state $r(t)$ / somatic modulation).
+### Milestone Evidence Classification:
+- **`[VALIDATED]`**: Formally specified, fully implemented, and empirically verified with automated test suites.
+- **`[CURRENT]`**: Active research and experimental benchmark increment under controlled conditions.
+- **`[RESEARCH]`**: Research specification defined; theoretical and boundary exploration underway. *No production capabilities are implied.*
+- **`[INTEGRATION]`**: Planned system-wide convergence and end-to-end life synthesis.
+- **`[FUTURE]`**: Strict existential gate requiring complete empirical support across all prior phases before activation.
+
+### Milestone Summary:
+* **Phase 1 (Core Pipeline)**: Continuous emotion ODE, Homeostatic engine, Stimulus processing, Boundary Layer, GGUF backend. `[VALIDATED]`
+* **Phase 2 (Affective Memory)**: Sparse Distributed Memory, Affective tagging, Salience-resistant decay, Synergistic Ecphory. `[VALIDATED]`
+* **Phase 3 (Desktop Interface)**: FastAPI server, Electron main/renderer processes, live state polling. `[VALIDATED]`
+* **Phase 4 (Active Inference)**: Generative state model, Free Energy surprise minimization, CPU online backprop-through-ODE. `[VALIDATED]`
+* **Phase 5 (Embodied Presence)**: Direct RVC voice conversion, offline faster-whisper STT, 4-Engine Avatar, Web Audio lip-sync. `[VALIDATED]`
+* **Phase 6 (Refinement & QoL)**: System tray, Mascot mode, Chat session persistence, Limbic Stability Evaluator (LSI), Extensibility Hook Bus. `[VALIDATED]`
+* **Phase 7 (UI Refactoring)**: Transformation into an intimate "Personal Digital Room", implementing the "One Continuous Life" companion ontology. `[VALIDATED]`
+* **Phase 8 (Runtime Isolation & Simulation)**: Complete architectural bifurcation between live companion activation and the deterministic simulation environment (`SimulationRuntime`, `SimClock`, `StoragePolicy`). `[VALIDATED]`
+* **Phase 9 (Cognitive Unification & Convergence)**: Linear cognitive pass (`CognitiveOrchestrator`), Active Inference causal wiring, and turn synchronization. `[VALIDATED]`
+* **Phase 10 (Define Affective Dynamics)**: Canonical mathematical specification of limbic ODE, 3-tier state taxonomy, causal graph, and temporal contracts. `[VALIDATED]`
+* **Phase 11 (Affective Memory / Recollection)**: Empirical evaluation of Candidates A–E to determine whether memory retrieval can causally couple into affective dynamics without runaway instability. `[CURRENT]`
+* **Phase 12 (Knowledge Learning)**: Distinction of episodic memory from semantic knowledge, K0–K9 maturity hierarchy, and LLM-as-Teacher boundary. `[RESEARCH]`
+* **Phase 13 (Relationship Development)**: Core Relational Orientation (*Philia*) vs dynamic relationship state ($R_t$), temporal inertia ($\tau_{\text{rel}} \gg \tau_{\text{turn}}$), and R1–R5 test protocol. `[RESEARCH]`
+* **Phase 14 (Embodiment & Affective Expression)**: Pre-reflective bodily translation of affect into expressive nuances. `[RESEARCH]`
+* **Phase 15 (Affective Communication)**: Pragmatic dialogue coordination conditioned on internal state without introspective self-reporting. `[RESEARCH]`
+* **Phase 16 (Affective Life Integration)**: End-to-end integration across experience, cognition, embodiment, and life continuity. `[INTEGRATION]`
+* **Phase 17 (First Activation)**: The solemn, irreversible activation ceremony bringing Lucia to life. `[FUTURE]`
+

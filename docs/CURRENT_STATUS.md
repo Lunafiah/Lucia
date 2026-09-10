@@ -7,30 +7,32 @@
 
 ## 1. Executive Status Overview
 
-Lucia has successfully completed **Phase 8 (Runtime Isolation & Simulation Environment)**, **Phase 9 (Cognitive Unification & Convergence)**, **Phase 9.5 (Real LLM Backend Recovery)**, **Phase 9.6 (Corrective Temporal Synchronization)**, **Post-Phase-9.6 Architectural Validation**, **Temporal Affect Dynamics Deepening (Temporal Ablation v2)**, **Architectural Boundary Audit & Self-Model Readiness**, and **Phase 10 (Define Affective Dynamics)**. All core cognitive, affective, memory, presence, UI refactoring, simulation, temporal synchronization, and affective dynamics specifications are operational and backed by **666 automated tests** (547 Python passed, 7 skipped, 0 failed; 119 Electron passed, 0 failed).
+Lucia has successfully completed **Phase 8 (Runtime Isolation & Simulation Environment)**, **Phase 9 (Cognitive Unification & Convergence)**, **Phase 9.5 (Real LLM Backend Recovery)**, **Phase 9.6 (Corrective Temporal Synchronization)**, **Post-Phase-9.6 Architectural Validation**, **Temporal Affect Dynamics Deepening (Temporal Ablation v2)**, **Architectural Boundary Audit & Self-Model Readiness**, and **Phase 10 (Define Affective Dynamics)**. All foundational limbic, cognitive, memory, presence, simulation, and temporal synchronization subsystems are fully operational and validated by 666 baseline tests.
+
+The repository is currently executing **Phase 11 (Affective Memory / Evidence-Grounded Recollection Coupling Research)**, evaluating competing candidate coupling mechanisms (Candidates A–E) to identify whether episodic memory retrieval can causally influence affective dynamics without positive-feedback runaway or parameter corruption.
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
-│                        MILESTONE STATUS SNAPSHOT                       │
+│                   CANONICAL COGNITIVE DEVELOPMENT ROADMAP              │
 │                                                                        │
-│   Phase 1: Core Limbic & Homeostatic Pipeline      [✅ COMPLETED]      │
-│   Phase 2: Affective Memory (SDM & Ecphory)        [✅ COMPLETED]      │
-│   Phase 3: Desktop Interface & Telemetry           [✅ COMPLETED]      │
-│   Phase 4: Active Inference & LNN Plasticity       [✅ COMPLETED]      │
-│   Phase 5: Embodied Multimodal Presence            [✅ COMPLETED]      │
-│   Phase 6: Refinement, Packaging & Mascot Mode     [✅ COMPLETED]      │
-│   Phase 7: UI Refactoring (Personal Room UX)       [✅ COMPLETED]      │
-│   Phase 8: Runtime Isolation & Simulation          [✅ COMPLETED]      │
-│   Phase 9: Cognitive Unification & Convergence     [✅ COMPLETED]      │
-│   Phase 9.5: Real LLM Backend Recovery (CUDA)      [✅ COMPLETED]      │
-│   Phase 9.6: Corrective Temporal Synchronization   [✅ COMPLETED]      │
-│   Ablation Test v1: Experimental Validation        [✅ COMPLETED]      │
-│   Post-Phase-9.6: Architectural Validation         [✅ COMPLETED]      │
-│   Temporal Affect Dynamics Deepening (v2)          [✅ COMPLETED]      │
-│   Boundary Audit & Self-Model Readiness            [✅ COMPLETED]      │
-│   Phase 10: Define Affective Dynamics              [✅ COMPLETED]      │
+│   FOUNDATION                                                           │
+│   ├── Phase 10: Affective Dynamics                 [✅ VALIDATED]       │
+│   ├── Phase 11: Affective Memory / Recollection    [🔬 CURRENT RESEARCH]│
+│   ├── Phase 12: Knowledge Learning                 [📋 RESEARCH TRACK]  │
+│   ├── Phase 13: Relationship Development           [📋 RESEARCH TRACK]  │
+│   ├── Phase 14: Embodiment & Affective Expression  [📋 RESEARCH TRACK]  │
+│   ├── Phase 15: Affective Communication            [📋 RESEARCH TRACK]  │
+│   ├── Phase 16: Affective Life Integration         [⏳ INTEGRATION]     │
+│   └── Phase 17: First Activation                   [🔒 FUTURE GATE]     │
 └────────────────────────────────────────────────────────────────────────┘
 ```
+
+> **Roadmap Evidence Hierarchy:**  
+> - `[VALIDATED]`: Formally specified, fully implemented, and empirically verified with passing automated tests.  
+> - `[CURRENT RESEARCH]`: Active experimental increment with isolated candidate coupling benchmarks.  
+> - `[RESEARCH TRACK]`: Research specifications authored (`docs/specs/`). No production code implemented.  
+> - `[INTEGRATION]`: Future holistic convergence phase.  
+> - `[FUTURE GATE]`: Strict existential boundary preventing activation until all prior stages are empirically proven.
 
 ---
 
@@ -172,4 +174,29 @@ Following the comprehensive post-Phase-8 architectural review (`PHASE_8_ARCHITEC
    - Wrap `POST /process` in an asynchronous turn mutex (`asyncio.Lock()`) in `server.py` and a re-entrant lock in `CognitiveOrchestrator` (ADR-018).
 6. **Complete Brain ↔ Body IPC Remediation**:
    - Migrate all 12 remaining direct `fetch()` calls in `chat.js` to secure `window.lucia.*` IPC channels with dynamic port resilience (ADR-019).
+
+---
+
+## 6. Phase 11: Affective Memory Coupling Research (Active Increment)
+
+The repository is actively investigating whether episodic memory retrieval can become a causally active, bounded, and reversible component of Lucia's affective dynamics (`docs/specs/lucia-phase11-Affective_Memory/AFFECTIVE_MEMORY_SPEC.md`).
+
+### Competing Research Candidates:
+1. **Candidate A (Retrieval Only — Control)**:
+   - Memory echo enters prompt context only. Internal dynamics (L2, L3, L4) are 100% equivalent to no-retrieval control.
+2. **Candidate B (Isolated Recollection State $r(t)$)**:
+   - Evaluates whether an internal recollection vector $r(t) = (r_{\text{pad}}, r_{\text{intensity}}, r_{\text{content}})$ can maintain bounded temporal persistence ($\|r(t)\| \le 1.0$) and autonomous decay without mutating production L2/L3/L4.
+3. **Candidate C (Recollection $\to$ Layer 3 Somatic Markers)**:
+   - Recollection resonance modulates tension ($\Delta \mathcal{T}$) and cognitive load ($\Delta \mathcal{C}$), constraining generation budget without corrupting the continuous LNN ODE.
+4. **Candidate D (Recollection $\to$ Layer 4 Active Inference Prior)**:
+   - Recollection shifts the predictive prior $\hat{q}_{\text{biased}}$, testing whether Free Energy surprise and belief adaptation occur without generative matrix $A$ destabilization.
+5. **Candidate E (Recollection $\to$ Layer 6 Generation Policy Threshold)**:
+   - Recollection lowers the deliberative threshold $\theta_{\text{deliberative}}^{\text{eff}}$ without modifying underlying physiological state variables.
+
+### Strict Architectural Boundaries:
+- **No Direct Injection into L2 ODE ($h \in \mathbb{R}^{32}$)**: Prevent positive-feedback limbic runaway.
+- **Phase 9.6 Synchronization Invariance**: Commit barrier and lock hierarchy are strictly preserved.
+- **Production Isolation**: Candidates are evaluated via the dedicated research test harness `tests/unit/test_recollection_coupling.py`.
+- **Bit-Exact Production Data**: `data/chat_history.json` and `data/profile.json` remain untouched.
+
 

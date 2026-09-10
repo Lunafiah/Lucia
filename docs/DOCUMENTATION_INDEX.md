@@ -58,6 +58,9 @@ To prevent confusion across development phases, Lucia maintains a strict documen
 | **Historical Spec** | [`lucia-refinement-phase6`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/.kiro/specs/lucia-refinement-phase6/) | **Historical** | Phase 6 milestone specification (Packaging, System Tray, Mascot, LSI). |
 | **Active Spec** | [`lucia-phase9-cognition`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/.kiro/specs/lucia-phase9-cognition/) | **Active Truth** | Phase 9 milestone specification (Unified Cognition & Causal Inference). |
 | **Active Spec** | [`AFFECTIVE_DYNAMICS_SPEC.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase10-Affective_Dynamics/AFFECTIVE_DYNAMICS_SPEC.md) | **Active Truth** | Phase 10 canonical specification: Mathematical formulation, state taxonomy, temporal contract, causal graph, and Phase 11 memory boundary. |
+| **Active Spec** | [`AFFECTIVE_MEMORY_SPEC.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase11-Affective_Memory/AFFECTIVE_MEMORY_SPEC.md) | **Active Truth** | Phase 11 canonical specification: Retrieval vs. Recollection, Candidate Hypotheses A–E, and 8 empirical evaluation criteria. |
+| **Research Spec** | [`KNOWLEDGE_LEARNING_SPEC.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase12-Knowledge_Learning/KNOWLEDGE_LEARNING_SPEC.md) | **Research Spec** | Phase 12 research specification: Memory vs Knowledge distinction, K0–K9 maturity hierarchy, LLM-as-Teacher boundary. |
+| **Research Spec** | [`RELATIONSHIP_DEVELOPMENT_SPEC.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase13-Relationship_Development/RELATIONSHIP_DEVELOPMENT_SPEC.md) | **Research Spec** | Phase 13 research specification: Core Relational Orientation (*Philia*) vs dynamic relationship state ($R_t$), multi-scale inertia, R1–R5 test protocol. |
 | **Validation Report** | [`docs/phase9/ABLATION_TEST_V1.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/phase9/ABLATION_TEST_V1.md) | **Active Truth** | Lucia Ablation Test v1 Exploratory Pilot report (Q1-Q5 evaluation, hardware profile, empirical findings). |
 | **Diverged Spec** | [`lucia-presence-phase5`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/.kiro/specs/lucia-presence-phase5/) | **Superseded** | Proposed VLM screen observation & PyAutoGUI agency (pivoted to RVC/Avatar). |
 | **Diverged Note** | [`models/voice/README.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/models/voice/README.md) | **Superseded** | Preliminary notes on Piper/Kokoro ONNX (superseded by RVC engine). |
@@ -172,3 +175,8 @@ Depending on your role or objective, follow these curated reading sequences:
 | **Virtual SimClock & Time Warp** | `PHASE_8.md` §2.1 | `docs/MECHANISM.md` §2 Comp 10 | `src/core/simulation/sim_clock.py` |
 | **Ephemeral Storage Policy** | `PHASE_8.md` §3 (INV-2, INV-3) | `PHASE_8_ARCHITECTURE_REVIEW.md` §5 | `src/core/simulation/storage_policy.py` |
 | **Simulation UI Canopy & Drawer** | `PHASE_8.md` §2.5 | `PHASE_8_ARCHITECTURE_REVIEW.md` §2.2 | `electron/renderer/simulation/` |
+| **Affective Dynamics & State Taxonomy** | `AFFECTIVE_DYNAMICS_SPEC.md` | `docs/MECHANISM.md` §2 Comp 2, 3 | `docs/specs/lucia-phase10-Affective_Dynamics/` |
+| **Affective Memory & Recollection Coupling** | `AFFECTIVE_MEMORY_SPEC.md` | `docs/MECHANISM.md` §2 Comp 5 | `docs/specs/lucia-phase11-Affective_Memory/` |
+| **Knowledge Learning Hierarchy (K0–K9)** | `KNOWLEDGE_LEARNING_SPEC.md` | `docs/MECHANISM.md` | `docs/specs/lucia-phase12-Knowledge_Learning/` |
+| **Relationship Development & Philia Orientation** | `RELATIONSHIP_DEVELOPMENT_SPEC.md` | `docs/MECHANISM.md` | `docs/specs/lucia-phase13-Relationship_Development/` |
+
