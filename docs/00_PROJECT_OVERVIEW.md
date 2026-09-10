@@ -140,7 +140,13 @@ Phase 5: Embodied Multimodal Presence   [COMPLETED]
 Phase 6: Refinement, Mascot & QoL       [COMPLETED]
 Phase 7: UI Refactoring (Personal Room) [COMPLETED]
 Phase 8: Runtime Isolation & Simulation [COMPLETED]
-Phase 9: Cognitive Unification & System Convergence [PLANNED]
+Phase 9: Cognitive Unification          [COMPLETED]
+Phase 10: Define Affective Dynamics     [COMPLETED]
+Phase 11: Affective Memory              [NEXT]
+Phase 12: Embodiment                    [PLANNED]
+Phase 13: Affective Life                [PLANNED]
+Phase 14: First Activation              [PLANNED]
+Future: Self-Model / Self-Awareness     [RESEARCH]
 ```
 
 * **Phase 1 (Core Pipeline)**: Continuous emotion ODE, Homeostatic engine, Stimulus processing, Boundary Layer, GGUF backend.
@@ -152,3 +158,5 @@ Phase 9: Cognitive Unification & System Convergence [PLANNED]
 * **Phase 7 (UI Refactoring)**: Transformation from a technical telemetry dashboard into an intimate "Personal Digital Room", implementing the "One Continuous Life" companion ontology and progressive disclosure design system.
 * **Phase 8 (Runtime Isolation & Simulation)**: Complete architectural bifurcation between live companion activation and the deterministic simulation environment (`SimulationRuntime`, `SimClock`, `StoragePolicy`, 7-invariant isolation verification).
 * **Phase 9 (Cognitive Unification & Convergence)**: Integration of Active Inference (Layer 4) into live server turn execution, elimination of redundant pipeline calls, complete IPC migration for auxiliary renderer fetch calls, and unified end-to-end cognitive presence.
+* **Phase 10 (Define Affective Dynamics)**: Canonical mathematical specification of limbic ODE, 3-tier state taxonomy, causal graph, affect-to-cognition audit, and Phase 11 memory boundary research evaluation.
+* **Phase 11 (Affective Memory)**: Causal investigation of memory-to-affect feedback mechanisms (separate recollection state $r(t)$ / somatic modulation).
