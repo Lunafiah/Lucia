@@ -140,7 +140,7 @@ Phase 10 — Affective Dynamics                 [VALIDATED]
 Phase 11 — Affective Memory / Recollection    [VALIDATED RES.]
 Phase 12 — Knowledge Learning                 [VALIDATED RES.]
 Phase 13 — Relationship Development           [VALIDATED RES.]
-Phase 14 — Embodiment & Affective Expression   [RESEARCH]
+Phase 14 — Embodiment & Affective Expression   [VALIDATED RES.]
 Phase 15 — Affective Communication             [RESEARCH]
 Phase 16 — Affective Life Integration         [INTEGRATION]
 Phase 17 — First Activation                   [FUTURE]
@@ -167,7 +167,7 @@ Phase 17 — First Activation                   [FUTURE]
 * **Phase 11 (Affective Memory / Recollection)**: Empirical evaluation of Candidates A–E; independent audit concluded no promotion, production baseline remains Candidate A. `[VALIDATED RES.]`
 * **Phase 12 (Knowledge Learning)**: Distinction of episodic memory from semantic knowledge, K0–K9 maturity hierarchy, and LLM-as-Teacher boundary. `[VALIDATED RES.]`
 * **Phase 13 (Relationship Development)**: Core Relational Orientation (*Philia*) vs dynamic relationship state ($R_t$), temporal inertia ($\tau_{\text{rel}} \gg \tau_{\text{turn}}$), and R-EXP-1 to 12 validation suite. `[VALIDATED RES.]`
-* **Phase 14 (Embodiment & Affective Expression)**: Pre-reflective bodily translation of affect into expressive nuances. `[RESEARCH]`
+* **Phase 14 (Embodiment & Affective Expression)**: Multimodal expression policy ($E_t$), temporal smoothing, semantic preservation, and E-EXP-1 to 12 validation suite. `[VALIDATED RES.]`
 * **Phase 15 (Affective Communication)**: Pragmatic dialogue coordination conditioned on internal state without introspective self-reporting. `[RESEARCH]`
 * **Phase 16 (Affective Life Integration)**: End-to-end integration across experience, cognition, embodiment, and life continuity. `[INTEGRATION]`
 * **Phase 17 (First Activation)**: The solemn, irreversible activation ceremony bringing Lucia to life. `[FUTURE]`

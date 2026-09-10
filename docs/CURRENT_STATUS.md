@@ -20,7 +20,7 @@ The repository maintains an evidence-grounded research track investigating knowl
 │   ├── Phase 11: Affective Memory / Recollection    [🔬 VALIDATED RES.] │
 │   ├── Phase 12: Knowledge Learning                 [🔬 VALIDATED RES.] │
 │   ├── Phase 13: Relationship Development           [🔬 VALIDATED RES.] │
-│   ├── Phase 14: Embodiment & Affective Expression  [📋 RESEARCH TRACK]  │
+│   ├── Phase 14: Embodiment & Affective Expression  [🔬 VALIDATED RES.] │
 │   ├── Phase 15: Affective Communication            [📋 RESEARCH TRACK]  │
 │   ├── Phase 16: Affective Life Integration         [⏳ INTEGRATION]     │
 │   └── Phase 17: First Activation                   [🔒 FUTURE GATE]     │
@@ -289,6 +289,39 @@ $$\mathbf{Production\ Baseline:\ Unaltered\ Canonical\ Cognition}$$
 - **Production Isolation**: The Relationship Development research framework is strictly isolated to `tests/unit/test_relationship_development.py` and canonical research specifications.
 - **Zero Production Mutation**: Core runtime files (`src/core/`) and persistent data (`data/chat_history.json`, `data/profile.json`) remain bit-exact.
 - **Decision Rationale**: While mathematical formulation and empirical stability across 12 experiments are fully proven, direct integration into `CognitiveOrchestrator` is deferred until Phase 16 (Affective Life Integration). No promotion ADR is authored.
+
+---
+
+## 10. Phase 14: Embodiment & Affective Expression Research Increment
+
+The repository has formalized and empirically validated the research architecture for **Phase 14 — Embodiment & Affective Expression** (`docs/specs/lucia-phase14-Embodiment_Affective_Expression/AFFECTIVE_EXPRESSION_SPEC.md`, `tests/unit/test_affective_expression.py`).
+
+### 10.1 Empirical Findings Summary (E-EXP-1 to E-EXP-12)
+1. **Multimodal State Representation & Bounding**:
+   - $E_t = (\text{Text}, \text{Voice}, \text{Facial}, \text{Posture}, \text{Latency})$ strictly clamped within physiological bounds; extreme inputs ($\pm 999.0$) safely handled without overflow or NaNs (E-EXP-1).
+2. **PAD $\to$ Expression Sensitivity Gradients**:
+   - Slopes verified for $\frac{\partial \text{smile}}{\partial P}$, $\frac{\partial \text{rate}}{\partial A}$, $\frac{\partial \text{vol}}{\partial D}$; non-linear blush threshold confirmed at $P > 0.15$ (E-EXP-2).
+3. **Temporal Coherence & Smoothing**:
+   - Trajectories under $\gamma_{\text{expr}} = 0.25$ converge monotonically without discontinuous jumps or overshoot (E-EXP-3).
+4. **Hard Semantic Preservation Invariant**:
+   - 100% preservation of propositions, entities, and numbers across 4 challenging affective regimes (Warm, Neutral, Melancholic, Agitated) with 0.0% polarity flips (E-EXP-4).
+5. **Modality Specificity & Cross-Modal Consistency**:
+   - $P$ preferentially drives facial warmth/smile, $A$ preferentially drives voice rate/alertness (E-EXP-5).
+   - Predefined cross-modal coherence $\ge 0.85$ achieved on harmonious states ($0.91$); engineered contradictory states rejected with $\mathcal{A} = 0.28$ (E-EXP-6).
+6. **Actuator Decoupling & Pure Feedforward Directionality**:
+   - Disabling affect collapses expression to predefined neutral actuator baseline without zeroing Philia attractor ($P=+0.25, A=-0.05, D=+0.05$) (E-EXP-7).
+   - Expression actuator has zero feedback into internal L2 ODE hidden state or PAD (E-EXP-8).
+7. **Policy Computation Latency vs. Pipeline Scope**:
+   - Mean policy computation latency measured at $0.05\text{ms}$ on CPU, well within the predefined $\le 5.0\text{ms}$ threshold, strictly distinguished from the multi-second asynchronous TTS/LLM pipeline (E-EXP-12).
+
+### 10.2 Production Promotion Gate & Decision
+
+$$\Large\mathbf{PHASE\ 14\ RESEARCH\ CONTINUES}$$
+$$\mathbf{Production\ Baseline:\ Unaltered\ Canonical\ Cognition}$$
+
+- **Production Isolation**: Expression policy is maintained strictly inside `tests/unit/test_affective_expression.py` and canonical specifications.
+- **Zero Production Mutation**: Core runtime files (`src/core/`) and persistent data (`data/`) remain 100% bit-exact.
+- **Decision Rationale**: While mathematical policy, semantic preservation, and cross-modal consistency are fully demonstrated in the research harness, canonical production integration into `CognitiveOrchestrator` and turn-synchronous IPC push to Electron are deferred to Phase 16 (Affective Life Integration). No promotion ADR is authored.
 
 
 
