@@ -21,7 +21,7 @@ The repository maintains an evidence-grounded research track investigating knowl
 │   ├── Phase 12: Knowledge Learning                 [🔬 VALIDATED RES.] │
 │   ├── Phase 13: Relationship Development           [🔬 VALIDATED RES.] │
 │   ├── Phase 14: Embodiment & Affective Expression  [🔬 VALIDATED RES.] │
-│   ├── Phase 15: Affective Communication            [📋 RESEARCH TRACK]  │
+│   ├── Phase 15: Affective Communication            [🔬 VALIDATED RES.] │
 │   ├── Phase 16: Affective Life Integration         [⏳ INTEGRATION]     │
 │   └── Phase 17: First Activation                   [🔒 FUTURE GATE]     │
 └────────────────────────────────────────────────────────────────────────┘
@@ -322,6 +322,46 @@ $$\mathbf{Production\ Baseline:\ Unaltered\ Canonical\ Cognition}$$
 - **Production Isolation**: Expression policy is maintained strictly inside `tests/unit/test_affective_expression.py` and canonical specifications.
 - **Zero Production Mutation**: Core runtime files (`src/core/`) and persistent data (`data/`) remain 100% bit-exact.
 - **Decision Rationale**: While mathematical policy, semantic preservation, and cross-modal consistency are fully demonstrated in the research harness, canonical production integration into `CognitiveOrchestrator` and turn-synchronous IPC push to Electron are deferred to Phase 16 (Affective Life Integration). No promotion ADR is authored.
+
+---
+
+## 11. Phase 15: Affective Communication Research Increment
+
+The repository has formalized and empirically validated the research architecture for **Phase 15 — Affective Communication** (`docs/specs/lucia-phase15-Affective_Communication/AFFECTIVE_COMMUNICATION_SPEC.md`, `tests/unit/test_affective_communication.py`).
+
+### 11.1 Empirical Findings Summary (C-EXP-1 to C-EXP-12)
+1. **Multidimensional State Representation & Bounding**:
+   - $C_t \in \mathbb{R}^{10}$ (directness, elaboration, supportiveness, formality, acknowledgement, question frequency, injected pacing latency, memory context, knowledge context, safety flag) strictly clamped within physiological bounds under normal and extreme inputs ($\pm 10.0$) (C-EXP-1).
+2. **Affect-to-Communication Strategy Modulation**:
+   - High pleasure elevates supportiveness by $\Delta \mathcal{S}_u \ge 0.20$; dominance variation modulates directness by $|\Delta \mathcal{D}_r| \ge 0.15$ holding semantic intent constant (C-EXP-2).
+3. **Somatic & Homeostatic Pacing Modulation**:
+   - Metabolic energy depletion throttles elaboration depth ($\Delta \mathcal{E}_l \le -0.20$) and actively injects somatic pacing latency ($150\text{ms} \le \mathcal{L}_p \le 1000\text{ms}$) to model conversational fatigue without latency runaway, strictly distinct from LLM/TTS hardware latency (C-EXP-3).
+4. **Interpersonal Relational Framing**:
+   - Relationship development (trust and closeness) elevates supportiveness ($\Delta \mathcal{S}_u \ge 0.15$) and reduces formality ($\Delta \mathcal{F}_s \le -0.15$) holding acute PAD at Philia baseline (C-EXP-4).
+5. **Episodic Recollection Grounding**:
+   - SDM memory availability elevates conversational acknowledgement ($\Delta \mathcal{A}_k \ge 0.15$) and memory context weight ($\Delta \mathcal{C}_{x, M} = 0.50$) (C-EXP-5).
+6. **Knowledge Contextual Grounding**:
+   - Structured knowledge availability elevates elaboration depth ($\Delta \mathcal{E}_l \ge 0.20$) while maintaining 100% semantic grounding across known vs unknown facts without fabrication (C-EXP-6).
+7. **Subsystem Specificity & Orthogonal Ablations**:
+   - Subsystem specificity verified: energy modulates elaboration, not support; affect modulates support, not elaboration (C-EXP-8).
+   - Ablation A (Affect OFF) collapses supportiveness toward actuator neutral baseline without zeroing Core Philia in EmotionCore (C-EXP-9).
+   - Ablation B (Relationship OFF) resets supportiveness and formality to stranger baseline (C-EXP-10).
+   - Ablation C (Memory OFF) collapses memory context referencing ($\mathcal{C}_{x, M} \to 0.0$) while knowledge-derived contextual grounding ($\mathcal{C}_{x, K} = 0.50$) remains fully active, strictly preserving Memory vs Knowledge separation (C-EXP-11).
+8. **Multimodal Alignment & Policy Latency**:
+   - Communication strategy and expression parameters achieve cross-modal alignment $\ge 0.85$. Policy computation latency executes in $< 0.10\text{ms}$ on CPU, well within the predefined $\le 5.0\text{ms}$ limit (C-EXP-12).
+
+### 11.2 Semantic Preservation Evidence Under the Controlled Benchmark
+Across all 5 canonical communication strategies (`DIRECT_FACTUAL`, `REASSURING_WARM`, `CONCISE_RESERVED`, `ELABORATIVE_EXPLANATORY`, `COLLABORATIVE_INQUIRING`), core propositional truth $(S, P, O, \text{polarity})$ and all numerical/entity values are 100% preserved under the controlled benchmark evaluation. Zero introspective emotion labels (*"I feel"*, *"I am happy"*) were emitted across any test case.
+
+### 11.3 Production Promotion Gate & Decision
+
+$$\Large\mathbf{PHASE\ 15\ RESEARCH\ CONTINUES}$$
+$$\mathbf{Production\ Baseline:\ Unaltered\ Canonical\ Cognition}$$
+
+- **Production Isolation**: Communication policy is strictly contained within `tests/unit/test_affective_communication.py` and canonical specifications.
+- **Zero Production Mutation**: Core runtime files (`src/core/`) and persistent data files (`data/`) remain 100% bit-exact.
+- **Decision Rationale**: While mathematical formulation, strategy classification, pacing modulation, and benchmarked semantic preservation are fully proven, live full-pipeline synchronization (`Brain → Orchestrator → LLM → Voice → Avatar → synchronized Body`) requires end-to-end integration architecture, which is deferred to **Phase 16 (Unified Embodied Interaction / Affective Life Integration)**. No production promotion ADR is authored.
+
 
 
 
