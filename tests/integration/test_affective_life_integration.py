@@ -5,7 +5,7 @@ Phase 16 — Production Integration Test Suite: Affective Life Realization.
 Validates the canonical 16-stage cognitive orchestration pipeline and unified
 subsystems under strict safety, storage isolation, and architectural invariants.
 
-Tests Included (Tests A through J):
+Tests Included (Tests A through K):
   - Test A: Full 16-Stage Pipeline Execution
   - Test B: Two-Phase Relationship Read (S9) vs Update (S16)
   - Test C: Bounded Memory Contextualization (Zero Limbic Feedback)
@@ -16,6 +16,7 @@ Tests Included (Tests A through J):
   - Test H: Feedforward Actuator Decoupling (Actuator -> ODE Isolation)
   - Test I: Storage Isolation Invariant (Canonical data/*.json Unmutated)
   - Test J: Longitudinal Multi-Turn Stability (20 Turns)
+  - Test K: Relationship Signal Provenance Invariant (Zero Policy-Reward Coupling)
 """
 
 from __future__ import annotations
@@ -440,3 +441,87 @@ def test_j_longitudinal_multi_turn_stability(
     final_rel = isolated_orchestrator.relationship_updater.get_state()
     assert 0.0 < final_rel.familiarity <= 1.0
     assert 0.0 <= final_rel.trust <= 1.0
+
+
+# ==============================================================================
+# Test K: Relationship Signal Provenance Invariant (Zero Policy-Reward Coupling)
+# ==============================================================================
+
+def test_k_relationship_signal_provenance_invariant(tmp_path: Path) -> None:
+    """
+    Test K (Provenance Audit): Lucia must NOT reward relationship state based
+    merely on Lucia's own selected CommunicationPolicy strategy.
+    With identical user input, two orchestrator instances running divergent
+    communication policies (e.g. forced supportive vs forced concise)
+    must produce exact identical relationship state updates.
+    """
+    model_file = tmp_path / "model.gguf"
+    model_file.write_bytes(b"dummy")
+    config = MemoryOrchestratorConfig(
+        model_path=str(model_file),
+        loop_cadence_ms=100,
+        decay_loop_cadence_seconds=60,
+        sdm_num_locations=100,
+        sdm_address_dim=64,
+        sdm_content_dim=16,
+        sdm_capacity=50,
+    )
+
+    class ForcedSupportiveCommPolicy(CommunicationPolicy):
+        def compute(self, *args: Any, **kwargs: Any) -> CommunicationState:
+            st = super().compute(*args, **kwargs)
+            st.strategy = CommStrategy.REASSURING_WARM
+            st.warmth = 0.99
+            st.depth = 0.99
+            return st
+
+    class ForcedConciseCommPolicy(CommunicationPolicy):
+        def compute(self, *args: Any, **kwargs: Any) -> CommunicationState:
+            st = super().compute(*args, **kwargs)
+            st.strategy = CommStrategy.CONCISE_RESERVED
+            st.warmth = 0.05
+            st.depth = 0.05
+            return st
+
+    # Instance 1: Forced supportive strategy
+    rel_store_path1 = tmp_path / "relationship1.json"
+    updater1 = RelationshipUpdater(alpha=0.03, decay_rate=0.005, storage_path=rel_store_path1)
+    orch1 = build_cognitive_orchestrator(
+        config=config,
+        relationship_updater=updater1,
+        comm_policy=ForcedSupportiveCommPolicy(smoothing_factor=0.25),
+        expression_policy=ExpressionPolicy(smoothing_factor=0.25),
+        llm_backend=MockLLMBackend(),
+    )
+
+    # Instance 2: Forced concise strategy
+    rel_store_path2 = tmp_path / "relationship2.json"
+    updater2 = RelationshipUpdater(alpha=0.03, decay_rate=0.005, storage_path=rel_store_path2)
+    orch2 = build_cognitive_orchestrator(
+        config=config,
+        relationship_updater=updater2,
+        comm_policy=ForcedConciseCommPolicy(smoothing_factor=0.25),
+        expression_policy=ExpressionPolicy(smoothing_factor=0.25),
+        llm_backend=MockLLMBackend(),
+    )
+
+    # Identical user interaction stimulus
+    user_input = "Can you help me analyze the performance of our system?"
+    res1 = orch1.process(user_input)
+    res2 = orch2.process(user_input)
+
+    # Verify that communication states were indeed divergent
+    assert res1.communication is not None and res2.communication is not None
+    assert res1.communication.strategy == CommStrategy.REASSURING_WARM
+    assert res2.communication.strategy == CommStrategy.CONCISE_RESERVED
+    assert res1.communication.warmth != res2.communication.warmth
+
+    # Invariant: Relationship updates must be bit-exact identical
+    r1 = updater1.get_state()
+    r2 = updater2.get_state()
+    assert np.isclose(r1.familiarity, r2.familiarity, atol=1e-6)
+    assert np.isclose(r1.trust, r2.trust, atol=1e-6)
+    assert np.isclose(r1.closeness, r2.closeness, atol=1e-6)
+    assert np.isclose(r1.reciprocity, r2.reciprocity, atol=1e-6)
+    assert np.allclose(r1.to_array(), r2.to_array(), atol=1e-6)
+
