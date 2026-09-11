@@ -7,9 +7,9 @@
 
 ## 1. Executive Status Overview
 
-Lucia has successfully completed **Phase 8 (Runtime Isolation & Simulation Environment)**, **Phase 9 (Cognitive Unification & Convergence)**, **Phase 9.5 (Real LLM Backend Recovery)**, **Phase 9.6 (Corrective Temporal Synchronization)**, **Post-Phase-9.6 Architectural Validation**, **Temporal Affect Dynamics Deepening (Temporal Ablation v2)**, **Architectural Boundary Audit & Self-Model Readiness**, **Phase 10 (Define Affective Dynamics)**, **Phase 11 (Affective Memory Coupling Research)**, **Phase 11.5 (Independent Evidence Audit)**, **Phase 12 (Knowledge Learning Research)**, and **Phase 13 (Relationship Development Research)**. All foundational limbic, cognitive, memory, presence, simulation, and temporal synchronization subsystems are fully operational and validated by baseline tests.
+Lucia has successfully completed **Phase 8 (Runtime Isolation & Simulation Environment)**, **Phase 9 (Cognitive Unification & Convergence)**, **Phase 9.5 (Real LLM Backend Recovery)**, **Phase 9.6 (Corrective Temporal Synchronization)**, **Post-Phase-9.6 Architectural Validation**, **Temporal Affect Dynamics Deepening (Temporal Ablation v2)**, **Architectural Boundary Audit & Self-Model Readiness**, **Phase 10 (Define Affective Dynamics)**, **Phase 11 (Affective Memory Coupling Research)**, **Phase 11.5 (Independent Evidence Audit)**, **Phase 12 (Knowledge Learning Research)**, **Phase 13 (Relationship Development Research)**, **Phase 14 (Embodiment & Affective Expression Research)**, **Phase 15 (Affective Communication Research)**, and **Phase 16 (Affective Life Integration & Production Architecture Realization)**. All foundational limbic, cognitive, memory, presence, simulation, temporal synchronization, and integrated affective life subsystems are fully operational and validated by 10/10 end-to-end integration tests.
 
-The repository maintains an evidence-grounded research track investigating knowledge acquisition, relationship development, and recollection coupling while preserving strict production code isolation and zero mutation to canonical runtime cognition.
+The repository realizes a unified 16-stage cognitive pipeline orchestrating grounded knowledge, two-phase relationship development, bounded memory contextualization, affective communication strategy, canonical 15-dim multimodal expression, and strict test storage isolation.
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -22,7 +22,7 @@ The repository maintains an evidence-grounded research track investigating knowl
 │   ├── Phase 13: Relationship Development           [🔬 VALIDATED RES.] │
 │   ├── Phase 14: Embodiment & Affective Expression  [🔬 VALIDATED RES.] │
 │   ├── Phase 15: Affective Communication            [🔬 VALIDATED RES.] │
-│   ├── Phase 16: Affective Life Integration         [⏳ INTEGRATION]     │
+│   ├── Phase 16: Affective Life Integration         [✅ VALIDATED]       │
 │   └── Phase 17: First Activation                   [🔒 FUTURE GATE]     │
 └────────────────────────────────────────────────────────────────────────┘
 ```
@@ -31,7 +31,7 @@ The repository maintains an evidence-grounded research track investigating knowl
 > - `[VALIDATED]`: Formally specified, fully implemented, and empirically verified with passing automated tests.  
 > - `[CURRENT RESEARCH]`: Active experimental increment with isolated candidate coupling benchmarks.  
 > - `[RESEARCH TRACK]`: Research specifications authored (`docs/specs/`). No production code implemented.  
-> - `[INTEGRATION]`: Future holistic convergence phase.  
+> - `[INTEGRATION]`: Holistic convergence phase.  
 > - `[FUTURE GATE]`: Strict existential boundary preventing activation until all prior stages are empirically proven.
 
 ---
@@ -48,20 +48,25 @@ The repository maintains an evidence-grounded research track investigating knowl
 | **Sparse Distributed Memory** | `src/core/memory/sdm.py` | **STABLE** | 1,000 hard locations across 1,000-bit Hamming address space with 64-dim content vectors. Distributed read/write within activation radius. |
 | **Affective Tagging & Decay** | `src/core/memory/decay.py` | **STABLE** | 60-second slow-loop daemon (live) or virtual clock decay tick (sim). Salience-resistant decay ($\lambda_{eff}$) gives intense emotional memories up to $4\times$ longer lifetime. |
 | **Synergistic Ecphory** | `src/core/memory/ecphory.py` | **STABLE** | Cosine similarity resonance between current PAD state and stored tags. Synthesizes subconscious Echo Vector to softly color prompt context. |
+| **Conceptual Knowledge** | `src/core/knowledge/` | **STABLE (Promoted P16)** | Typed `Proposition` & `Concept` graph with provenance tracking (`DIRECT_EXPERIENCE`, `USER_STATED`, `INFERRED`, `CORE_AXIOM`). Bounded forward inference engine ($d_{max} \le 3$), contradiction resolution, thread-safe `KnowledgeStore`, atomic persistence. |
+| **Interpersonal Relationship** | `src/core/relationship/` | **STABLE (Promoted P16)** | Slowly evolving 4D state $\mathbf{R} = (\text{trust}, \text{familiarity}, \text{attunement}, \text{shared\_experience})$. Strictly decoupled two-phase lifecycle: Stage 9 read snapshot vs Stage 16 post-response categorical signal update with inertia ($\alpha=0.03$) and temporal decay ($0.005$). |
+| **Affective Communication** | `src/core/communication/` | **STABLE (Promoted P16)** | 10D `CommunicationState`, 5 discrete modes (`DEEP_RECIPROCAL`, `ATTUNED_LIGHT`, `SUPPORTIVE_GROUNDING`, `CONCISE_PROTECTIVE`, `PLAYFUL_EXPLORATORY`), bounded memory contextualization ($m_{ctx} \le 0.50$, zero limbic feedback), somatic pacing latency ($0 \le \tau \le 1000\text{ms}$), and `SemanticConsistencyGuard`. |
+| **Multimodal Expression** | `src/core/expression/` | **STABLE (Promoted P16)** | Canonical 15-dim `ExpressionState` (3 text, 4 prosody, 5 facial blendshapes, 2 posture, 1 latency). Pure feedforward actuator decoupling (zero feedback into ODE $\mathbf{h} \in \mathbb{R}^{32}$), temporal smoothing ($\gamma=0.25$), and `SemanticConsistencyGuard`. |
+| **Cognitive Orchestrator** | `src/core/orchestrator/` | **STABLE (16 Stages)** | Canonical 16-stage cognitive processing pipeline (S1–S16) integrating sensory gating, limbic ODE, homeostasis, active inference, somatic markers, ecphory, memory contextualization, knowledge retrieval, relationship read, communication policy, CUDA LLM inference, semantic guard, expression policy, episodic storage, plasticity salience, and post-turn relationship update. |
 | **Language Generation** | `src/core/language/` | **STABLE (CUDA Verified)** | Local GGUF Small Language Model (LFM2.5-1.2B Instruct) running via `llama-cpp-python` with CUDA acceleration on NVIDIA RTX 3050 Ti Laptop GPU (17/17 layers offloaded, 152 tok/s, 845 MiB VRAM). Pre-reflective prompt conditioning. |
-| **Boundary Safety Layer** | `src/core/safety/boundary_layer.py` | **STABLE** | Regex and pattern validator blocking introspective meta-selfhood statements (*"I feel"*, *"I exist as"*, *"As an AI"*). |
+| **Boundary Safety Layer** | `src/core/safety/boundary_layer.py` | **STABLE** | Regex and pattern validator blocking introspective meta-selfhood statements (*"I feel"*, *"I exist as"*, *"As an AI"*). Multi-layered anti-roleplay defense (lexical boundary checks + structured anti-roleplay tests + architectural prohibition of self-model APIs). |
 | **RVC Voice Synthesis** | `src/core/voice/voice_engine.py` | **STABLE** | Direct RVC model execution (`.pth` + `.index`) from `models/voice/rvc/` with built-in high-quality `en-US-AnaNeural` base voice. Zero-latency phrase cache for conversational acknowledgments. |
 | **Offline STT & VAD** | `src/core/voice/stt_engine.py` | **STABLE** | Continuous local microphone capture via Web Audio VAD with transcription via `faster-whisper` (CTranslate2). Fully offline; no cloud keys required. |
-| **Polymorphic Avatar Stage** | `electron/renderer/avatar/` | **STABLE** | Dynamic Quad-Engine: 2D Procedural Canvas, 2D Expression Sprites, Live2D Cubism 4 WebGL, and 3D Humanoid VRM (Three.js). |
+| **Polymorphic Avatar Stage** | `electron/renderer/avatar/` | **STABLE** | Dynamic Quad-Engine: 2D Procedural Canvas, 2D Expression Sprites, Live2D Cubism 4 WebGL, and 3D Humanoid VRM (Three.js). Consumes 15D ExpressionState. |
 | **Lip-Sync Engine** | `electron/renderer/avatar/lip-sync.js` | **STABLE** | 60 FPS real-time FFT formant analysis (200Hz–2500Hz) computing mouth aperture height and vowel width during vocal playback. |
-| **Simulation Runtime** | `src/core/simulation/runtime.py` | **STABLE** | Deterministic simulation state machine (`CREATED` $\rightarrow$ `SIMULATING`). Unconditionally raises `ActivationSafetyError` on `activate()`. |
+| **Simulation Runtime** | `src/core/simulation/runtime.py` | **STABLE** | Deterministic simulation state machine (`CREATED` $\rightarrow$ `SIMULATING`). Unconditionally raises `ActivationSafetyError` on `activate()`. Ephemeral stores protect canonical `data/*.json`. |
 | **Virtual SimClock** | `src/core/simulation/sim_clock.py` | **STABLE** | Virtual time controller supporting `step()`, `pause()`, `resume()`, `set_speed()`, `reset()`. Dispatches fast/slow callbacks synchronously with `max_fast_ticks=50` guard. |
-| **Storage Policy Isolation** | `src/core/simulation/storage_policy.py` | **STABLE** | Intercepts disk write attempts to `data/`. In-memory ephemeral replacements for chat history and profile. Bit-exact SHA-256 zero contamination verified. |
+| **Storage Policy Isolation** | `src/core/simulation/storage_policy.py` | **STABLE** | Intercepts disk write attempts to `data/`. In-memory ephemeral replacements for chat history, relationship, knowledge, and profile. Bit-exact SHA-256 zero contamination verified. |
 | **Scenario Runner** | `src/core/simulation/scenario_runner.py` | **STABLE** | Automated test scenarios: Scenario A (Sensory Gating), B (Emotional Recovery & Decay), C (Somatic Depletion), D (Safety Invariants). |
 | **Stability Telemetry** | `src/core/telemetry/stability_evaluator.py` | **STABLE** | Computes Fast-Loop tick jitter, ODE velocity variance, Free Energy surprise entropy, and Composite Limbic Stability Index (LSI). Watchdog auto-recovers from numerical stalls. |
-| **Desktop Process & IPC** | `electron/main/` | **STABLE** | Native Electron lifecycle management (`ProcessManager`), global hotkey (`Ctrl+Shift+L`), System Tray, context isolation (`ContextBridge`), and model-anchored mascot window physics. |
+| **Desktop Process & IPC** | `electron/main/` | **STABLE** | Native Electron lifecycle management (`ProcessManager`), global hotkey (`Ctrl+Shift+L`), System Tray, context isolation (`ContextBridge`), model-anchored mascot physics, and 15D expression/relationship forwarding. |
 | **UI Design & UX System** | `electron/renderer/` | **STABLE** | Personal Digital Room: progressive disclosure navigation, subtle qualitative status, settings, dedicated read-only diagnostics console, Genesis Awakening, solemn End-of-Life boundary, and Simulation Canopy/Drawer. |
-| **Existential Lifecycle** | `src/api/server.py` | **STABLE** | Atomic `POST /lifecycle/end`, profile persistence, Genesis un-onboarded state transition, and clean birth timestamp generation on awakening. |
+| **Existential Lifecycle** | `src/api/server.py` | **STABLE** | Atomic `POST /lifecycle/end`, profile persistence, Genesis un-onboarded state transition (`is_onboarded = False`), and clean birth timestamp generation on awakening. |
 
 ---
 
@@ -71,8 +76,8 @@ The Python backend (`src/api/server.py`) binds exclusively to `127.0.0.1:8765` (
 
 | Method | Route | Mode Guard | Description | Response Time SLA |
 |---|---|---|---|---|
-| `POST` | `/process` | Live only (403 in sim) | Dispatches user chat turn through the live cognitive pipeline. | $\le$ Model inference $+ 20\text{ms}$ |
-| `GET` | `/state` | Universal | Returns non-blocking real-time emotional state snapshot. | $\le 10\text{ms}$ (non-blocking) |
+| `POST` | `/process` | Live only (403 in sim) | Dispatches user chat turn through 16-stage cognitive pipeline; returns response text, PAD, behavioral constraints, 15D expression, relationship, and communication payloads. | $\le$ Model inference $+ 20\text{ms}$ |
+| `GET` | `/state` | Universal | Returns non-blocking real-time state snapshot (PAD, somatic, and current expression, relationship, communication states). | $\le 10\text{ms}$ (non-blocking) |
 | `GET` | `/telemetry/stability` | Universal | Returns Limbic Stability Index (LSI), tick jitter, and ODE variance. | $\le 15\text{ms}$ |
 | `POST` | `/system/profile` | Universal | Dynamically reconfigures hardware scalability tier (`CPU_ONLY`, `LAPTOP`, `DESKTOP`, `HIGH_END`). | $\le 50\text{ms}$ |
 | `POST` | `/voice/transcribe` | Universal | Transcribes audio bytes using local `faster-whisper` model. | Streamed / Chunked |

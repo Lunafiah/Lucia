@@ -221,6 +221,97 @@ This document captures:
 
 ---
 
+### ADR-021: Production Promotion of Conceptual Knowledge Subsystem (K0–K5)
+* **Status**: **ACCEPTED & PROMOTED WITH GUARDS** (Phase 16)
+* **Context**: Research in Phase 12 proved that episodic memory (SDM affective traces) cannot replace structured conceptual representations with provenance, uncertainty bounds, and forward inference. However, unconstrained automated learning risks hallucination, circular derivations, and knowledge drift.
+* **Decision**: Promote Phase 12 structured knowledge models to `src/core/knowledge/` under strict production contracts:
+  1. Entities are represented as typed `Proposition` and `Concept` nodes with explicit `ProvenanceType` and uncertainty $u \in [0, 1]$.
+  2. The forward derivation engine enforces bounded inference depth ($d_{max} \le 3$) and confidence propagation.
+  3. A thread-safe `KnowledgeStore` governs CRUD operations, contradiction handling, and atomic JSON persistence (`data/knowledge.json`).
+  4. Only grounded, high-confidence propositions ($c \ge 0.7$) are exposed to generation prompts in Stage 8.
+* **Consequences**:
+  * *Positive*: Lucia maintains clear, persistent factual knowledge independent of LLM weights or ephemeral chat histories.
+  * *Boundary*: Ephemeral simulation and automated integration tests must use isolated in-memory or temporary stores; canonical `data/knowledge.json` is never mutated during automated testing.
+
+---
+
+### ADR-022: Production Promotion of Interpersonal Relationship Subsystem with Two-Phase Lifecycle
+* **Status**: **ACCEPTED & PROMOTED WITH GUARDS** (Phase 16)
+* **Context**: Research in Phase 13 demonstrated a slowly evolving 4-dimensional interpersonal relationship state $\mathbf{R} = (\text{trust}, \text{familiarity}, \text{attunement}, \text{shared\_experience}) \in [0, 1]^4$. Integrating relationship updates directly into generation introduces an immediate self-reinforcing feedback loop if updated state is consumed within the very turn that caused it.
+* **Decision**: Promote `RelationshipState` and `RelationshipUpdater` to `src/core/relationship/` with a **strictly decoupled two-phase lifecycle**:
+  1. **Phase 1 (Read State at Stage 9)**: The existing relationship state $\mathbf{R}_{t-1}$ is read snapshot-style to condition communication policy selection.
+  2. **Turn Generation (Stages 10–14)**: Prompt assembly, LLM generation, semantic consistency guards, and expression synthesis proceed based on $\mathbf{R}_{t-1}$.
+  3. **Phase 2 (Signal Extraction & Update at Stage 16)**: Structured interaction signals (`RelationshipSignalType`: `SHARED_VULNERABILITY`, `ATTENTIVE_LISTENING`, `DISMISSIVE`, `CONFLICT_RESOLVED`, `CONSISTENT_CHECKIN`, `NEUTRAL`) are extracted from dialogue outcomes. The updater applies inertia ($\alpha=0.03$) and passive temporal decay (rate $0.005$) to compute $\mathbf{R}_t$, which is atomically persisted to `data/relationship.json`.
+  4. Heuristic NLP signal extraction is kept research-only; production strictly consumes validated categorical signal events.
+* **Consequences**:
+  * *Positive*: Eliminates runaway within-turn positive feedback loops; ensures authentic relational inertia over long-term interaction.
+  * *Boundary*: Isolated testing environments must use temporary storage paths to preserve canonical relational state.
+
+---
+
+### ADR-023: Production Promotion of Communicative Strategy & Bounded Memory Contextualization
+* **Status**: **ACCEPTED & PROMOTED WITH GUARDS** (Phase 16)
+* **Context**: Phase 11 demonstrated associative memory retrieval and ecphoric resonance, while Phase 15 proved that internal affect and relationship can causally modulate conversational strategy and pacing. Combining these into production risks limbic corruption if retrieved memory vectors or communicative outputs feed back into the ODE solver.
+* **Decision**: Promote `CommunicationPolicy` and `CommunicationState` to `src/core/communication/` under the following architectural boundaries:
+  1. **Bounded Memory Contextualization**: Memory promotion is grounded in the joint evidence of Phase 11 retrieval and Phase 15 contextual communication. Memory does NOT alter the core ODE; instead, an ecphory echo salience vector provides a bounded scalar priming signal ($m_{ctx} \in [0.0, 0.50]$) exclusively to communication policy at Stage 10. This is strictly termed *bounded memory contextualization*, **never** "affective recollection".
+  2. **Zero Hidden State Feedback**: Memory traces and communication states have zero backward projection into the limbic hidden state $\mathbf{h} \in \mathbb{R}^{32}$.
+  3. **Multi-Strategy Pacing Modulation**: Maps PAD, homeostatic energy, and relationship state into 5 discrete strategies (`DEEP_RECIPROCAL`, `ATTUNED_LIGHT`, `SUPPORTIVE_GROUNDING`, `CONCISE_PROTECTIVE`, `PLAYFUL_EXPLORATORY`) and bounded somatic response latency ($0 \le \tau_{pacing} \le 1000\text{ms}$).
+  4. **Multi-Layered Anti-Roleplay Boundaries**: Non-reflective boundaries are enforced via lexical regex checks, structured anti-roleplay test suites, and architectural prohibition of self-model APIs. Boundary checks operate as engineering invariants, never as claims of consciousness or self-awareness.
+* **Consequences**:
+  * *Positive*: Coherent, tone-adaptive dialogue pacing and strategy without theatrical emotional mimicry or limbic instability.
+  * *Boundary*: Regex filters reject introspective confessions (*"I feel"*, *"As an AI, I am experiencing"*); violations trigger automatic sanitization or fallback to concise neutral acknowledgment.
+
+---
+
+### ADR-024: Production Promotion of Multimodal Expression Policy with Canonical 15-Dim Actuator Schema and Feedforward Decoupling
+* **Status**: **ACCEPTED & PROMOTED WITH GUARDS** (Phase 16)
+* **Context**: Phase 14 established that internal affect can causally modulate multimodal expression (text, prosody, facial blendshapes, posture, latency) while preserving semantic intent. However, ad-hoc dimension representations risk schema drift between research models and production avatar/TTS services.
+* **Decision**: Promote `ExpressionPolicy` and `ExpressionState` to `src/core/expression/` adhering strictly to the canonical 15-dimensional actuator vector:
+  $$\mathbf{E} \in [0, 1]^{15} = [\text{Text (3)}, \text{Prosody (4)}, \text{Facial Blendshapes (5)}, \text{Posture (2)}, \text{Actuator Latency (1)}]$$
+  1. Dimensions:
+     - Text: `sentence_complexity` (0), `lexical_formality` (1), `metaphor_density` (2)
+     - Prosody: `pitch_accent` (3), `speech_rate` (4), `pause_duration` (5), `breathiness` (6)
+     - Facial: `brow_tension` (7), `smile_degree` (8), `eye_widen` (9), `head_tilt` (10), `blink_rate` (11)
+     - Posture: `lean_angle` (12), `fidget_frequency` (13)
+     - Latency: `pacing_delay` (14)
+  2. **Pure Feedforward Decoupling**: Actuators (WebGL avatar, RVC speech synthesis) are pure consumers of $\mathbf{E}_t$. No sensory feedback loop exists from actuator outputs back into `EmotionCore` ODE state $\mathbf{h}_t$.
+  3. **Semantic Consistency Guard**: Named `SemanticConsistencyGuard` (not "truth invariant checker"); preserves structured intent, entities, and numeric quantities on controlled benchmarks; rejects known semantic mutation patterns; makes zero universal truth verification claims.
+* **Consequences**:
+  * *Positive*: Rich, expressive embodied presentation across Desktop Studio and Mascot mode with mathematically guaranteed affective stability and zero motor feedback jitter.
+  * *Boundary*: Actuator outputs are delivered asynchronously over IPC to Electron renderer; speech synthesis errors cannot crash the core cognitive loop.
+
+---
+
+### ADR-025: Realization of Canonical 16-Stage Cognitive Pipeline Sequence & Storage Isolation Policy
+* **Status**: **ACCEPTED & IMPLEMENTED** (Phase 16)
+* **Context**: Prior to Phase 16, `CognitiveOrchestrator` operated a 10-stage pipeline. Adding knowledge, relationship, communication, and expression without a rigid stage contract risked undefined execution order, data leakage across test runs, and concurrency deadlocks.
+* **Decision**: Expand `CognitiveOrchestrator.process()` to a strictly ordered 16-stage pipeline:
+  ```text
+  Stage 1:  Stimulus Ingestion & Feature Extraction (lexical valence, arousal, density)
+  Stage 2:  Limbic Integration (EmotionCore ODE advance & PAD snapshot)
+  Stage 3:  Homeostatic Budgeting (metabolic energy, fatigue, token budget)
+  Stage 4:  Active Inference & Surprise Estimation (free energy minimization)
+  Stage 5:  Somatic Markers & Policy Formulation (sampling temperature, k-depth)
+  Stage 6:  Associative Memory Ecphory (Kanerva SDM recall & salience echo)
+  Stage 7:  Bounded Memory Contextualization (bounded scalar priming m_ctx <= 0.50)
+  Stage 8:  Grounded Knowledge Retrieval (propositions c >= 0.7 queried from KnowledgeStore)
+  Stage 9:  Interpersonal Relationship Read (snapshot R_{t-1} for turn conditioning)
+  Stage 10: Communication Strategy Formulation (strategy selection & pacing latency)
+  Stage 11: Prompt Assembly & Local LLM Inference (CUDA GGUF execution)
+  Stage 12: Semantic Consistency & Boundary Guard (intent check & forbidden regex filter)
+  Stage 13: Multimodal Expression Policy Synthesis (canonical 15-dim ExpressionState)
+  Stage 14: Episodic Memory Encoding (Kanerva SDM write with PAD tag)
+  Stage 15: Plasticity Queue Registration (salience evaluation for idle LNN consolidation)
+  Stage 16: Interpersonal Relationship Signal Extraction & Update (R_t computation & persistence)
+  ```
+  **Strict Storage Isolation Invariant**:
+  All automated test suites (unit, property, integration) and simulation loops are strictly prohibited from reading or mutating canonical runtime files (`data/profile.json`, `data/knowledge.json`, `data/relationship.json`, `data/chat_history.json`). Tests must execute against ephemeral in-memory models or isolated temporary directories (`tmp_path`). `data/profile.json` remains permanently configured with `is_onboarded = False`.
+* **Consequences**:
+  * *Positive*: Deterministic, traceable execution order across all cognitive layers; rock-solid test reproducibility and zero data corruption.
+  * *Lock Invariant*: All stage transitions maintain lock release $\le 1\text{ms}$; no lock is held during LLM inference or IPC dispatch.
+
+---
+
 ## 3. Reconciliation of Outdated Specs & Conflicting Decisions
 
 | Dimension | Outdated / Preliminary Spec | Authoritative Implemented Reality | Resolution & Rationale |
@@ -278,4 +369,9 @@ All future contributions and modifications must strictly observe the following l
 | **ARCH-016** | Arbitrary 16-turn LNN batching | Two-stage plasticity: online salience + idle consolidation (ADR-017) | Zero CPU contention during conversation; salient learning | Phase 9 | **Approved at Architecture Gate** |
 | **ARCH-017** | Unsynchronized cognitive turn execution | Serialized turn mutex (`asyncio.Lock` & `_turn_lock`) (ADR-018) | Single continuous life; prevents state corruption | Phase 9 | **Approved at Architecture Gate** |
 | **ARCH-018** | Upstream AVX-512 `llama-cpp-python` wheel | Hybrid Ampere CUDA (`sm_86`) + Native AVX2 `ggml-cpu.dll` (ADR-020) | Resolves `0xc000001d` on Zen 2 CPUs; enables real CUDA inference | Phase 9.5 | Implementation Fact |
+| **ARCH-019** | Unstructured episodic memory only | Grounded Conceptual Knowledge Subsystem (`KnowledgeStore`, ADR-021) | Distinguishes episodic memory from structured facts with provenance | Phase 16 | Implementation Fact |
+| **ARCH-020** | Stateless relationship dynamics | Persistently evolving Interpersonal Relationship (`RelationshipState`, ADR-022) | Provides slow relational inertia without within-turn runaway feedback | Phase 16 | Implementation Fact |
+| **ARCH-021** | Fixed conversational prompt style | Communicative Strategy & Bounded Memory Contextualization (ADR-023) | Affective and relational modulation of conversation and response pacing | Phase 16 | Implementation Fact |
+| **ARCH-022** | Hardcoded blendshape/voice tags | Canonical 15-Dim Multimodal Expression Policy (`ExpressionState`, ADR-024) | Controlled, semantically consistent multimodal embodiment | Phase 16 | Implementation Fact |
+| **ARCH-023** | 10-Stage Cognitive Pipeline | Canonical 16-Stage Unified Cognitive Pipeline & Isolated Stores (ADR-025) | Unified execution contract across all cognitive subsystems | Phase 16 | Implementation Fact |
 

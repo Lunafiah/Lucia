@@ -42,6 +42,11 @@ from typing import List, Optional, Tuple
 
 import numpy as np
 
+from src.core.communication.communication_policy import CommunicationPolicy
+from src.core.communication.communication_state import CommIntent, CommunicationState
+from src.core.communication.semantic_consistency_guard import (
+    SemanticConsistencyGuard as CommSemanticGuard,
+)
 from src.core.config import (
     BoundaryConfig,
     HomeostaticConfig,
@@ -52,9 +57,16 @@ from src.core.config import (
 from src.core.emotion.emotion_core import EmotionCore
 from src.core.emotion.homeostatic_engine import HomeostaticEngine
 from src.core.errors import AssemblyError
+from src.core.expression.expression_policy import ExpressionPolicy
+from src.core.expression.expression_state import ExpressionState
+from src.core.expression.semantic_consistency_guard import (
+    SemanticConsistencyGuard as ExprSemanticGuard,
+)
 from src.core.gating.stimulus_processor import StimulusProcessor
 from src.core.inference.active_inference import ActiveInferenceConfig, ActiveInferenceEngine
 from src.core.inference.lnn_trainer import LNNTrainer, LNNTrainerConfig
+from src.core.knowledge.proposition import Proposition
+from src.core.knowledge.store import KnowledgeStore
 from src.core.language.llm_backend import LLMBackend
 from src.core.memory.affective_memory import AffectiveMemory
 from src.core.memory.decay import DecayEngine
@@ -67,6 +79,9 @@ from src.core.orchestrator.policies import (
     SurpriseModulationPolicy,
 )
 from src.core.orchestrator.prompt_assembler import PromptAssembler
+from src.core.relationship.signals import RelationshipSignal, RelationshipSignalType
+from src.core.relationship.state import RelationshipState
+from src.core.relationship.updater import RelationshipUpdater
 from src.core.safety.boundary_layer import BoundaryLayer
 
 logger = logging.getLogger(__name__)
@@ -119,6 +134,11 @@ class CognitiveOrchestrator:
         # --- Policy objects ---
         surprise_policy: Optional[SurpriseModulationPolicy] = None,
         plasticity_policy: Optional[PlasticityPolicy] = None,
+        # --- Phase 16 Subsystems (Optional) ---
+        knowledge_store: Optional[KnowledgeStore] = None,
+        relationship_updater: Optional[RelationshipUpdater] = None,
+        comm_policy: Optional[CommunicationPolicy] = None,
+        expression_policy: Optional[ExpressionPolicy] = None,
         # --- Configuration knobs ---
         system_preamble: str = "",
         n_ctx: int = 2048,
@@ -137,6 +157,22 @@ class CognitiveOrchestrator:
         self._llm_backend = llm_backend
         self._boundary_layer = boundary_layer
         self._lnn_trainer = lnn_trainer
+
+        # Phase 16 Promoted Subsystems
+        self._knowledge_store = knowledge_store if knowledge_store is not None else KnowledgeStore()
+        self._relationship_updater = (
+            relationship_updater if relationship_updater is not None else RelationshipUpdater()
+        )
+        self._comm_policy = (
+            comm_policy if comm_policy is not None else CommunicationPolicy(smoothing_factor=0.25)
+        )
+        self._expression_policy = (
+            expression_policy if expression_policy is not None else ExpressionPolicy(smoothing_factor=0.25)
+        )
+        self._comm_semantic_guard = CommSemanticGuard()
+        self._expr_semantic_guard = ExprSemanticGuard()
+        self._latest_comm_state: Optional[CommunicationState] = None
+        self._latest_expr_state: Optional[ExpressionState] = None
 
         # Policy defaults
         self._surprise_policy = surprise_policy or SurpriseModulationPolicy()
@@ -177,6 +213,22 @@ class CognitiveOrchestrator:
     def latest_result(self) -> Optional[CognitiveTurnResult]:
         """Most recent completed turn result (thread-safe atomic read)."""
         return self._latest_result
+
+    @property
+    def knowledge_store(self) -> KnowledgeStore:
+        return self._knowledge_store
+
+    @property
+    def relationship_updater(self) -> RelationshipUpdater:
+        return self._relationship_updater
+
+    @property
+    def latest_communication(self) -> Optional[CommunicationState]:
+        return self._latest_comm_state
+
+    @property
+    def latest_expression(self) -> Optional[ExpressionState]:
+        return self._latest_expr_state
 
     def process(self, input_text: str) -> CognitiveTurnResult:
         """
@@ -258,17 +310,19 @@ class CognitiveOrchestrator:
             self._affective_memory.clear()
             self._active_inference.reset()
             self._latest_result = None
+            self._latest_comm_state = None
+            self._latest_expr_state = None
         logger.info("CognitiveOrchestrator: lifecycle reset.")
 
     # ------------------------------------------------------------------
-    # Private: 10-stage pipeline
+    # Private: 16-stage pipeline (Phase 16 Realization)
     # ------------------------------------------------------------------
 
     def _execute_pipeline(
         self, input_text: str, call_id: str, t_start: float
     ) -> CognitiveTurnResult:
         """
-        Execute all 10 cognitive pipeline stages in strict causal order.
+        Execute all 16 cognitive pipeline stages in strict causal order.
         All exceptions propagate to process(), which enters Degraded_State.
         """
 
@@ -323,7 +377,7 @@ class CognitiveOrchestrator:
             base_constraints
         )
 
-        # ── Stage 6: Affective Ecphory ────────────────────────────────────
+        # ── Stage 6: Affective Ecphory (Memory Retrieval) ────────────────
         echo_vector: Optional[np.ndarray] = None
         try:
             traces = self._affective_memory.get_all_traces()
@@ -331,7 +385,55 @@ class CognitiveOrchestrator:
         except Exception:
             logger.error("CognitiveOrchestrator: ecphory step failed; omitting echo", exc_info=True)
 
-        # ── Stage 7: Prompt Assembly & LLM Generation ────────────────────
+        # ── Stage 7: Memory Context Extraction (Bounded Contextualization)
+        m_avail = 0.0
+        if echo_vector is not None:
+            norm_val = float(np.linalg.norm(echo_vector))
+            if norm_val > 0.01:
+                m_avail = 1.0
+
+        # ── Stage 8: Structured Knowledge Retrieval ──────────────────────
+        known_propositions: List[Proposition] = []
+        try:
+            if self._knowledge_store is not None:
+                known_propositions = self._knowledge_store.query_relevant(input_text, max_results=5)
+        except Exception:
+            logger.error("CognitiveOrchestrator: knowledge retrieval failed", exc_info=True)
+
+        # ── Stage 9: Relationship Read (Read-Only Pre-Turn State) ────────
+        # Point 1: Read existing state R_{t-1} BEFORE communication generation; no update here!
+        rel_state: RelationshipState
+        try:
+            if self._relationship_updater is not None:
+                rel_state = self._relationship_updater.get_state()
+            else:
+                rel_state = RelationshipState.initial()
+        except Exception:
+            logger.error("CognitiveOrchestrator: relationship read failed", exc_info=True)
+            rel_state = RelationshipState.initial()
+
+        # ── Stage 10: Communication Policy Evaluation ────────────────────
+        comm_state: CommunicationState
+        try:
+            k_dict = {"fact_count": len(known_propositions)} if known_propositions else None
+            m_dict = {"echo_active": True} if m_avail > 0 else None
+            comm_state = self._comm_policy.compute(
+                pad=pad_final,
+                somatic=markers,
+                relationship=rel_state.to_dict(),
+                knowledge=k_dict,
+                recollection=m_dict,
+                prev_state=self._latest_comm_state,
+            )
+            self._latest_comm_state = comm_state
+        except Exception:
+            logger.error(
+                "CognitiveOrchestrator: communication policy failed; falling back to neutral baseline",
+                exc_info=True,
+            )
+            comm_state = self._comm_policy.get_neutral_actuator_baseline()
+
+        # ── Stage 11: Contextual Prompt Assembly (formerly Stage 7: Prompt Assembly) ──
         prompt_or_err = self._prompt_assembler.assemble(
             somatic=markers,
             constraints=constraints,
@@ -339,6 +441,8 @@ class CognitiveOrchestrator:
             system_preamble=self._system_preamble,
             n_ctx=self._n_ctx,
             echo_vector=echo_vector,
+            comm_state=comm_state,
+            knowledge_propositions=known_propositions,
         )
         if isinstance(prompt_or_err, AssemblyError):
             logger.warning(
@@ -352,11 +456,15 @@ class CognitiveOrchestrator:
 
         prompt: str = prompt_or_err
 
-        # Apply homeostatic latency (capped)
-        delay_ms = min(constraints.latency_ms, _MAX_LATENCY_MS)
-        if delay_ms > 0:
-            time.sleep(delay_ms / 1000.0)
+        # ── Stage 12: Conversational Pacing ──────────────────────────────
+        pacing_delay_ms = min(
+            constraints.latency_ms + comm_state.injected_pacing_latency_ms,
+            _MAX_LATENCY_MS,
+        )
+        if pacing_delay_ms > 0:
+            time.sleep(pacing_delay_ms / 1000.0)
 
+        # ── Stage 13: LLM Generation & Boundary Layer ────────────────────
         raw_response = self._llm_backend.generate(prompt, constraints)
         if raw_response is None:
             logger.warning(
@@ -370,7 +478,48 @@ class CognitiveOrchestrator:
         if safe_response.strip() == "[...]":
             safe_response = self._fallback_response
 
-        # ── Stage 8: Affective Memory Consolidation ───────────────────────
+        # ── Stage 14: Semantic Consistency Guard ─────────────────────────
+        # Point 4: Evaluates consistency without claiming universal truth verification
+        try:
+            if known_propositions:
+                facts_dict = {p.subject: p.object for p in known_propositions}
+                guard_result = self._comm_semantic_guard.evaluate(
+                    intent=CommIntent(
+                        subject=known_propositions[0].subject,
+                        predicate=known_propositions[0].predicate,
+                        object=known_propositions[0].object,
+                        polarity=True,
+                    ),
+                    surface_text=safe_response,
+                    known_facts=facts_dict,
+                )
+                if not guard_result.is_preserved:
+                    logger.debug(
+                        "CognitiveOrchestrator: semantic guard flagged deviation (non-blocking): %s",
+                        guard_result,
+                    )
+        except Exception:
+            logger.debug("CognitiveOrchestrator: semantic guard check skipped", exc_info=True)
+
+        # ── Stage 15: Expression Policy & Actuation State ────────────────
+        expr_state: ExpressionState
+        try:
+            expr_state = self._expression_policy.compute(
+                pad=pad_final,
+                somatic=markers,
+                relationship=rel_state.to_dict(),
+                prev_state=self._latest_expr_state,
+            )
+            self._latest_expr_state = expr_state
+        except Exception:
+            logger.error(
+                "CognitiveOrchestrator: expression policy failed; falling back to neutral baseline",
+                exc_info=True,
+            )
+            expr_state = self._expression_policy.get_neutral_actuator_baseline()
+
+        # ── Stage 16: Post-Turn Persistence & Adaptation ──────────────────
+        # 16.1 Affective Memory Consolidation
         trace_stored = False
         try:
             M = self._affective_memory._M
@@ -388,17 +537,12 @@ class CognitiveOrchestrator:
                 exc_info=True,
             )
 
-        # ── Stage 9: Plasticity Tagging ────────────────────────────────────
+        # 16.2 Plasticity Tagging
         experience_queued = False
         if self._lnn_trainer is not None and self._plasticity_policy.should_tag(
             prediction_error
         ):
             try:
-                # Capture experience for LNN plasticity tagging.
-                # EmotionCore's hidden state is not exposed for direct reading;
-                # we use a stimulus-sized placeholder for h_before and the raw
-                # stimulus vector for h_after, which preserves the input-output
-                # mapping the ODE trainer learns.
                 hidden_dim: int = getattr(
                     self._lnn_trainer._config, "hidden_dim", 32
                 )
@@ -416,8 +560,22 @@ class CognitiveOrchestrator:
                     exc_info=True,
                 )
 
-        # ── Stage 10: Turn Completion ────────────────────────────────────────
-        # Update dialogue history (ephemeral working memory)
+        # 16.3 Structured Relationship Update (Points 1 & 3)
+        rel_state_updated = rel_state
+        if self._relationship_updater is not None:
+            try:
+                signal_type = RelationshipSignalType.CASUAL_INTERACTION
+                if prediction_error < 0.30 and markers.tension < 0.40:
+                    signal_type = RelationshipSignalType.COLLABORATIVE_SUCCESS
+                sig = RelationshipSignal.create(signal_type, intensity=0.5)
+                rel_state_updated, _ = self._relationship_updater.step(signal=sig)
+            except Exception:
+                logger.error(
+                    "CognitiveOrchestrator: relationship update step failed; continuing",
+                    exc_info=True,
+                )
+
+        # 16.4 Update dialogue history (ephemeral working memory)
         self._history.append(("user", input_text))
         self._history.append(("assistant", safe_response))
         max_pairs = self._max_history_turns * 2
@@ -452,6 +610,10 @@ class CognitiveOrchestrator:
             trace_stored=trace_stored,
             experience_queued=experience_queued,
             execution_time_s=execution_time_s,
+            relationship=rel_state_updated,
+            communication=comm_state,
+            expression=expr_state,
+            known_facts=known_propositions,
         )
 
     # ------------------------------------------------------------------
@@ -515,6 +677,11 @@ def build_cognitive_orchestrator(
     config: MemoryOrchestratorConfig,
     surprise_policy: Optional[SurpriseModulationPolicy] = None,
     plasticity_policy: Optional[PlasticityPolicy] = None,
+    knowledge_store: Optional[KnowledgeStore] = None,
+    relationship_updater: Optional[RelationshipUpdater] = None,
+    comm_policy: Optional[CommunicationPolicy] = None,
+    expression_policy: Optional[ExpressionPolicy] = None,
+    llm_backend: Optional[LLMBackend] = None,
 ) -> CognitiveOrchestrator:
     """
     Construct a fully wired CognitiveOrchestrator from a MemoryOrchestratorConfig.
@@ -531,7 +698,8 @@ def build_cognitive_orchestrator(
     decay_engine = DecayEngine(affective_memory, config.to_decay_config())
     ecphory_engine = EcphoryEngine(config.to_ecphory_config())
     prompt_assembler = PromptAssembler()
-    llm_backend = LLMBackend(config.to_llm_config())
+    if llm_backend is None:
+        llm_backend = LLMBackend(config.to_llm_config())
     boundary_layer = BoundaryLayer(config.to_boundary_config())
 
     # LNN trainer is optional — gracefully disabled when torch is unavailable
@@ -562,6 +730,10 @@ def build_cognitive_orchestrator(
         lnn_trainer=lnn_trainer,
         surprise_policy=surprise_policy,
         plasticity_policy=plasticity_policy,
+        knowledge_store=knowledge_store,
+        relationship_updater=relationship_updater,
+        comm_policy=comm_policy,
+        expression_policy=expression_policy,
         system_preamble=config.system_preamble,
         n_ctx=config.n_ctx,
         max_history_turns=config.max_history_turns,

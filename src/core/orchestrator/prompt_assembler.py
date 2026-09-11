@@ -14,12 +14,16 @@ Requirements: Phase 1 (5.1–5.8), Phase 2 (11.2–11.4, 12.1, 12.5, 16.3)
 
 from __future__ import annotations
 
-from typing import List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, List, Optional, Tuple, Union
 
 import numpy as np
 
 from src.core.errors import AssemblyError
 from src.core.models import BehavioralConstraints, SomaticMarkers
+
+if TYPE_CHECKING:
+    from src.core.communication.communication_state import CommunicationState
+    from src.core.knowledge.proposition import Proposition
 
 # Section separator (Requirement 5.1)
 _SEP = "\n\n---\n\n"
@@ -59,6 +63,8 @@ class PromptAssembler:
         n_ctx: int = 4096,
         *,
         echo_vector: Optional[np.ndarray] = None,
+        comm_state: Optional[CommunicationState] = None,
+        knowledge_propositions: Optional[List[Proposition]] = None,
     ) -> Union[str, AssemblyError]:
         """
         Build the Conditioned_Prompt string.
@@ -77,6 +83,10 @@ class PromptAssembler:
             LLM context window token limit. Used for overflow detection.
         echo_vector : np.ndarray | None, optional
             Echo_Vector synthesized by EcphoryEngine (Phase 2).
+        comm_state : CommunicationState | None, optional
+            Communication strategy and framing state (Phase 16).
+        knowledge_propositions : list of Proposition | None, optional
+            Structured knowledge facts retrieved for grounding (Phase 16).
 
         Returns
         -------
@@ -106,13 +116,35 @@ class PromptAssembler:
             except AssemblyError as err:
                 return err
 
-        # --- Section 4: reasoning trace (Requirement 5.4, 5.5) ---
+        # --- Section 4: grounded knowledge (Phase 16) ---
+        knowledge_section = ""
+        if knowledge_propositions:
+            facts = [f"({p.subject}, {p.predicate}, {p.object})" for p in knowledge_propositions[:5]]
+            knowledge_section = "[GROUNDED KNOWLEDGE]\n" + "\n".join(facts)
+
+        # --- Section 5: communication strategy (Phase 16) ---
+        comm_section = ""
+        if comm_state is not None:
+            comm_section = (
+                "[COMMUNICATION STRATEGY]\n"
+                f"strategy: {comm_state.strategy.value}\n"
+                f"directness: {comm_state.directness:.2f}\n"
+                f"formality: {comm_state.formality_score:.2f}\n"
+                f"elaboration: {comm_state.elaboration_depth:.2f}\n"
+                f"supportiveness: {comm_state.supportiveness:.2f}"
+            )
+
+        # --- Section 6: reasoning trace (Requirement 5.4, 5.5) ---
         reasoning_section = self._build_reasoning_section(constraints.reasoning_depth)
 
-        # --- Check preamble + somatic + echo fits (Requirement 5.8) ---
+        # --- Check preamble + somatic + echo + knowledge + comm fits (Requirement 5.8) ---
         base_parts = [preamble_section, somatic_section]
         if echo_section:
             base_parts.append(echo_section)
+        if knowledge_section:
+            base_parts.append(knowledge_section)
+        if comm_section:
+            base_parts.append(comm_section)
         if reasoning_section:
             base_parts.append(reasoning_section)
         base_prompt = _SEP.join(p for p in base_parts if p)
@@ -122,13 +154,17 @@ class PromptAssembler:
                 f"(~{_estimate_tokens(base_prompt)} tokens > {n_ctx})"
             )
 
-        # --- Section 5: conversation history (Requirement 5.3, 5.7) ---
+        # --- Section 7: conversation history (Requirement 5.3, 5.7) ---
         history_section = self._build_history_section(history, constraints, n_ctx, base_prompt)
 
         # --- Assemble all sections ---
         all_sections = [preamble_section, somatic_section]
         if echo_section:
             all_sections.append(echo_section)
+        if knowledge_section:
+            all_sections.append(knowledge_section)
+        if comm_section:
+            all_sections.append(comm_section)
         if reasoning_section:
             all_sections.append(reasoning_section)
         all_sections.append(history_section)

@@ -234,7 +234,10 @@ function registerHandlers(port = 8765, isPreview = false, getMascotManager = nul
         const data = await response.json();
         return {
           response: data.response,
-          call_id: data.call_id
+          call_id: data.call_id,
+          expression: data.expression || null,
+          relationship: data.relationship || null,
+          communication: data.communication || null,
         };
       } catch (err) {
         if (err.name === 'TimeoutError') {

@@ -97,6 +97,9 @@ class ProcessResponse(BaseModel):
     call_id: str
     surprise: float = 0.0
     generation_mode: str = "reflexive"
+    expression: Optional[Dict[str, Any]] = None
+    relationship: Optional[Dict[str, Any]] = None
+    communication: Optional[Dict[str, Any]] = None
 
 
 class PADSnapshot(BaseModel):
@@ -128,6 +131,9 @@ class StateSnapshot(BaseModel):
     profile: Optional[str] = None
     surprise: float = 0.0
     generation_mode: str = "reflexive"
+    expression: Optional[Dict[str, Any]] = None
+    relationship: Optional[Dict[str, Any]] = None
+    communication: Optional[Dict[str, Any]] = None
 
 
 # ---------------------------------------------------------------------------
@@ -253,11 +259,30 @@ async def process_turn(req: ProcessRequest) -> Any:
             {"user": req.input, "response": resp_text},
         )
 
+        expr_dict = (
+            result.expression.to_dict()
+            if isinstance(result, CognitiveTurnResult) and result.expression is not None
+            else None
+        )
+        rel_dict = (
+            result.relationship.to_dict()
+            if isinstance(result, CognitiveTurnResult) and result.relationship is not None
+            else None
+        )
+        comm_dict = (
+            result.communication.to_dict()
+            if isinstance(result, CognitiveTurnResult) and result.communication is not None
+            else None
+        )
+
         return {
             "response": resp_text,
             "call_id": turn_call_id,
             "surprise": surprise,
             "generation_mode": gen_mode,
+            "expression": expr_dict,
+            "relationship": rel_dict,
+            "communication": comm_dict,
         }
     finally:
         _turn_queue_depth -= 1
@@ -359,6 +384,22 @@ async def get_state(response: Response) -> StateSnapshot:
     trace_count = orch._affective_memory.trace_count
     profile_name = _resource_profile.name if _resource_profile else "auto"
 
+    expr_dict = (
+        latest.expression.to_dict()
+        if isinstance(latest, CognitiveTurnResult) and latest.expression is not None
+        else None
+    )
+    rel_dict = (
+        latest.relationship.to_dict()
+        if isinstance(latest, CognitiveTurnResult) and latest.relationship is not None
+        else None
+    )
+    comm_dict = (
+        latest.communication.to_dict()
+        if isinstance(latest, CognitiveTurnResult) and latest.communication is not None
+        else None
+    )
+
     return StateSnapshot(
         pad=pad_snap,
         somatic=somatic_snap,
@@ -368,6 +409,9 @@ async def get_state(response: Response) -> StateSnapshot:
         profile=profile_name,
         surprise=surprise,
         generation_mode=generation_mode,
+        expression=expr_dict,
+        relationship=rel_dict,
+        communication=comm_dict,
     )
 
 

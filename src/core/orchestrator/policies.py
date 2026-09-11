@@ -13,11 +13,15 @@ Design ref: PHASE_9_ARCHITECTURE_GATE.md §§ 11, 12
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import List, Optional
 
 import numpy as np
 
+from src.core.communication.communication_state import CommunicationState
+from src.core.expression.expression_state import ExpressionState
+from src.core.knowledge.proposition import Proposition
 from src.core.models import BehavioralConstraints, PADState, SomaticMarkers
+from src.core.relationship.state import RelationshipState
 
 
 # ---------------------------------------------------------------------------
@@ -301,8 +305,20 @@ class CognitiveTurnResult:
     # Whether an experience tuple was queued for LNN plasticity consolidation
     experience_queued: bool
 
-    # Wall-clock execution time for the complete 10-stage pipeline (seconds)
+    # Wall-clock execution time for the complete 16-stage pipeline (seconds)
     execution_time_s: float
+
+    # Phase 16: Interpersonal Relationship state snapshot (post-turn)
+    relationship: Optional[RelationshipState] = None
+
+    # Phase 16: Communication state and strategy
+    communication: Optional[CommunicationState] = None
+
+    # Phase 16: Multimodal 15D expression state
+    expression: Optional[ExpressionState] = None
+
+    # Phase 16: Grounded knowledge propositions retrieved for this turn
+    known_facts: Optional[List[Proposition]] = None
 
     class Config:
         # numpy arrays are not hashable — frozen dataclass still works at runtime

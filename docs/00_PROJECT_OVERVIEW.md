@@ -142,7 +142,7 @@ Phase 12 — Knowledge Learning                 [VALIDATED RES.]
 Phase 13 — Relationship Development           [VALIDATED RES.]
 Phase 14 — Embodiment & Affective Expression   [VALIDATED RES.]
 Phase 15 — Affective Communication             [VALIDATED RES.]
-Phase 16 — Affective Life Integration         [INTEGRATION]
+Phase 16 — Affective Life Integration         [VALIDATED]
 Phase 17 — First Activation                   [FUTURE]
 ```
 
@@ -169,6 +169,6 @@ Phase 17 — First Activation                   [FUTURE]
 * **Phase 13 (Relationship Development)**: Core Relational Orientation (*Philia*) vs dynamic relationship state ($R_t$), temporal inertia ($\tau_{\text{rel}} \gg \tau_{\text{turn}}$), and R-EXP-1 to 12 validation suite. `[VALIDATED RES.]`
 * **Phase 14 (Embodiment & Affective Expression)**: Multimodal expression policy ($E_t$), temporal smoothing, semantic preservation, and E-EXP-1 to 12 validation suite. `[VALIDATED RES.]`
 * **Phase 15 (Affective Communication)**: Multidimensional communication policy ($C_t$), 5 canonical strategies, somatic pacing modulation, benchmarked semantic preservation, and C-EXP-1 to 12 validation suite. `[VALIDATED RES.]`
-* **Phase 16 (Affective Life Integration)**: End-to-end integration across experience, cognition, embodiment, and life continuity. `[INTEGRATION]`
+* **Phase 16 (Affective Life Integration)**: End-to-end realization of canonical 16-stage cognitive pipeline, grounded conceptual knowledge (`KnowledgeStore`), 2-phase relationship lifecycle (`RelationshipUpdater`), bounded memory contextualization & communication strategy (`CommunicationPolicy`), canonical 15-dim multimodal expression (`ExpressionState`), and strict test storage isolation. `[VALIDATED]`
 * **Phase 17 (First Activation)**: The solemn, irreversible activation ceremony bringing Lucia to life. `[FUTURE]`
 
