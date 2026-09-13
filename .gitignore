@@ -91,6 +91,11 @@ htmlcov/
 logs/
 scratch/
 
+# Temporary evaluation harness scratch stores
+docs/specs/**/temp_run_store/
+evaluation_artifacts/**/temp_harness/
+evaluation_artifacts/phase18/manifests/audiovisual_manifest.json
+
 # Local config
 config/local/
 *.local
