@@ -50,16 +50,35 @@ class EmotionConfig:
     Configuration for EmotionCore.
 
     Fields:
-        loop_cadence_ms:   Fast_Loop tick interval in milliseconds (100–500, default 200)
-        hidden_dim:        LNN hidden state dimensionality (>= 1, default 32)
-        resting_baseline:  initial PAD state (pleasure, arousal, dominance) each in [-1, 1]
-        ode_step_size:     time span for each ODE solve call ((0.0, 1.0], default 0.1)
+        loop_cadence_ms:      Fast_Loop tick interval in milliseconds (100–500, default 200)
+        hidden_dim:           Fast LNN hidden state dimensionality (>= 1, default 32)
+        resting_baseline:     initial PAD state (pleasure, arousal, dominance) each in [-1, 1]
+        ode_step_size:        time span for each ODE solve call ((0.0, 1.0], default 0.1)
+        hidden_slow_dim:      Slow latent field dimensionality (>= 1, default 16)
+        tau_fast_min:         minimum fast timescale in seconds (default 0.10)
+        tau_fast_max:         maximum fast timescale in seconds (default 1.50)
+        tau_slow_charge:      slow affective charging time-constant in seconds (default 3.50)
+        tau_slow_decay:       slow affective relaxation time-constant in seconds (default 28.00)
+        w_fs_coupling:        slow-to-fast coupling strength (default 0.05)
+        w_sf_coupling:        fast-to-slow coupling strength (default 1.00)
+        w_homeo_coupling:     homeostatic coupling strength (default 0.40)
+        philia_slow_baseline: resting coordinates in slow latent space (default (0.20, -0.05, 0.05))
     """
 
     loop_cadence_ms: int = 200
     hidden_dim: int = 32
     resting_baseline: tuple = (0.25, -0.05, 0.05)
     ode_step_size: float = 0.1
+    # Phase 19: Coupled Multi-Timescale Liquid Neural Network (MT-LNN)
+    hidden_slow_dim: int = 16
+    tau_fast_min: float = 0.10
+    tau_fast_max: float = 1.50
+    tau_slow_charge: float = 3.50
+    tau_slow_decay: float = 28.00
+    w_fs_coupling: float = 0.05
+    w_sf_coupling: float = 1.00
+    w_homeo_coupling: float = 0.40
+    philia_slow_baseline: tuple = (0.20, -0.05, 0.05)
 
     def __post_init__(self) -> None:
         if not isinstance(self.loop_cadence_ms, int) or not (100 <= self.loop_cadence_ms <= 500):
@@ -86,6 +105,34 @@ class EmotionConfig:
         if not (0.0 < self.ode_step_size <= 1.0):
             raise ValueError(
                 f"EmotionConfig.ode_step_size must be in (0.0, 1.0], got {self.ode_step_size!r}"
+            )
+        if not isinstance(self.hidden_slow_dim, int) or self.hidden_slow_dim < 1:
+            raise ValueError(
+                f"EmotionConfig.hidden_slow_dim must be an integer >= 1, got {self.hidden_slow_dim!r}"
+            )
+        if not (0.0 < self.tau_fast_min <= self.tau_fast_max):
+            raise ValueError(
+                f"EmotionConfig.tau_fast_min ({self.tau_fast_min}) must be in (0.0, tau_fast_max ({self.tau_fast_max})]"
+            )
+        if self.tau_slow_charge <= 0.0:
+            raise ValueError(
+                f"EmotionConfig.tau_slow_charge must be > 0, got {self.tau_slow_charge!r}"
+            )
+        if self.tau_slow_decay <= 0.0:
+            raise ValueError(
+                f"EmotionConfig.tau_slow_decay must be > 0, got {self.tau_slow_decay!r}"
+            )
+        if self.w_fs_coupling < 0.0:
+            raise ValueError(
+                f"EmotionConfig.w_fs_coupling must be >= 0, got {self.w_fs_coupling!r}"
+            )
+        if self.w_sf_coupling < 0.0:
+            raise ValueError(
+                f"EmotionConfig.w_sf_coupling must be >= 0, got {self.w_sf_coupling!r}"
+            )
+        if self.w_homeo_coupling < 0.0:
+            raise ValueError(
+                f"EmotionConfig.w_homeo_coupling must be >= 0, got {self.w_homeo_coupling!r}"
             )
 
 

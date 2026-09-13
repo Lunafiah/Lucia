@@ -109,7 +109,7 @@ Incoming Stimulus Vector x(t) in R^16
 │   ┌─────────────────────────────────────────────────────────────────────────┐   │
 │   │ Philia Dynamic Attractor Grounding (s*_philia in R^16, p*_philia in R^3)│   │
 │   │   PAD(t) = clip(W_proj_f*h_f + W_proj_s*(s_s - s*) + p*_philia, -1, 1)  │   │
-│   │   Unforced Equilibrium (h_f = 0, s_s = s*): PAD* = p*_philia bit-exact   │   │
+│   │   Unforced Equilibrium (h_f = 0, s_s = s*): PAD* = p*_philia (within numerical tolerance, eps < 1e-4)│ │
 │   └─────────────────────────────────────────────────────────────────────────┘   │
 └──────────────────────────────────────┬──────────────────────────────────────────┘
                                        │

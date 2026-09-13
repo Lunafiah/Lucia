@@ -341,10 +341,13 @@ class TestE_RecoveryRelaxation:
         norm_displaced = float(np.linalg.norm(core._h))
         assert norm_displaced > 0.1, f"Stimulus must displace hidden state (norm={norm_displaced})"
 
+        p_base = np.array(core._config.resting_baseline, dtype=np.float64)
         pad_dist_displaced = math.sqrt(
-            pad_displaced.pleasure ** 2 + pad_displaced.arousal ** 2 + pad_displaced.dominance ** 2
+            (pad_displaced.pleasure - p_base[0]) ** 2
+            + (pad_displaced.arousal - p_base[1]) ** 2
+            + (pad_displaced.dominance - p_base[2]) ** 2
         )
-        assert pad_dist_displaced > 0.05, f"PAD must be displaced from origin (dist={pad_dist_displaced})"
+        assert pad_dist_displaced > 0.05, f"PAD must be displaced from resting attractor (dist={pad_dist_displaced})"
 
         # Step 150 idle ticks (x = 0)
         distances: List[float] = []
@@ -352,19 +355,23 @@ class TestE_RecoveryRelaxation:
 
         for _ in range(150):
             pad = core.step_once()
-            dist = math.sqrt(pad.pleasure ** 2 + pad.arousal ** 2 + pad.dominance ** 2)
+            dist = math.sqrt(
+                (pad.pleasure - p_base[0]) ** 2
+                + (pad.arousal - p_base[1]) ** 2
+                + (pad.dominance - p_base[2]) ** 2
+            )
             distances.append(dist)
             h_norms.append(float(np.linalg.norm(core._h)))
 
         final_dist = distances[-1]
         final_h_norm = h_norms[-1]
 
-        # 1. State must decay toward origin
+        # 1. State must decay toward resting equilibrium attractor
         assert final_h_norm < norm_displaced * 0.5, (
             f"Hidden state norm must substantially decay: {norm_displaced:.4f} -> {final_h_norm:.4f}"
         )
         assert final_dist < pad_dist_displaced * 0.6, (
-            f"PAD distance from origin must decay: {pad_dist_displaced:.4f} -> {final_dist:.4f}"
+            f"PAD distance from resting attractor must decay: {pad_dist_displaced:.4f} -> {final_dist:.4f}"
         )
 
         # 2. Check for bounded trajectory (no divergence)

@@ -365,6 +365,14 @@ class CognitiveOrchestrator:
         markers: SomaticMarkers = self._surprise_policy.modulate_somatic(
             base_markers, prediction_error
         )
+        # Phase 19: Push updated homeostatic context into limbic slow-layer context for subsequent ticks
+        if hasattr(self._emotion_core, "update_homeostatic_context"):
+            self._emotion_core.update_homeostatic_context(
+                energy=markers.energy,
+                load=markers.cognitive_load,
+                tension=markers.tension,
+                stability=markers.stability,
+            )
         base_constraints: BehavioralConstraints = (
             self._homeostatic_engine.compute_behavioral_constraints(markers, pad_final)
         )
