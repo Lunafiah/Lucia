@@ -312,6 +312,26 @@ This document captures:
 
 ---
 
+### ADR-026: Coupled Multi-Timescale Liquid Neural Network (MT-LNN) Dynamics with Philia Attractor Grounding
+* **Status**: **PROMOTED & ACCEPTED** (Phase 19 Research Cycle)
+* **Context**: The baseline `EmotionCore` (Phase 10) modeled emotional dynamics as a single-layer limbic ODE operating at a uniform fast timescale ($\tau \approx 0.2 - 1.5\text{ s}$). This caused rapid affective amnesia between conversational turns (half-life $\approx 1.4\text{ s}$), and unforced decay collapsed to the mathematical origin $[0, 0, 0]$ (neutral apathy) rather than the Philia companion resting attractor $[+0.25, -0.05, +0.05]$. Furthermore, it could not reproduce autonomous physiological state transformations (e.g. acute high-arousal stress transforming into low-arousal somatic fatigue over unforced time).
+* **Decision**: Formally promote the **Coupled Multi-Timescale Liquid Neural Network (MT-LNN)** architecture to Lucia's core affective specification:
+  1. **Dual Coupled Vector Fields**: Fast reactive hidden layer ($\mathbf{h}_{\text{fast}} \in \mathbb{R}^{32}, \tau_f \in [0.2, 1.5]\text{ s}$) coupled bidirectionally with a slow affective latent layer ($\mathbf{s}_{\text{slow}} \in \mathbb{R}^{16}, \tau_s \in [30, 90]\text{ s}$).
+  2. **Philia Attractor Grounding**: Slow dynamics are centered around the non-zero Philia attractor coordinate $\Delta \mathbf{s} = \mathbf{s} - \mathbf{s}^*_{\text{philia}}$, guaranteeing that unforced relaxation asymptotically converges to $\mathbf{p}^*_{\text{philia}} = [+0.25, -0.05, +0.05]$ with zero unforced drift.
+  3. **Strict Contraction Invariant**: The Jacobian trace is constrained to be strictly dissipative ($\text{Tr}(J) \le -40.0$), mathematically preventing bistable latching or runaway saturation.
+  4. **Homeostatic Coupling for Autonomous Transformations**: Homeostatic deviations $\Delta \mathbf{m} = \mathbf{m} - [1, 0, 0, 1]^T$ couple into slow dynamics, naturally converting post-threat tension release into somatic fatigue ($P < 0.20, A < 0.0$) during unforced idle intervals.
+* **Empirical Validation**:
+  * Biexponential model decisively preferred ($\Delta\text{AIC} = 6504.96$, $\tau_{\text{ratio}} = 64.91$).
+  * Global convergence confirmed from Joy, Stress, Melancholy, and Origin ($\epsilon \le 0.0386$).
+  * Autonomous stress-to-fatigue transformation observed for 84/90 idle steps.
+  * History-dependent hysteresis divergence $\Delta_{\max} = 0.1749$.
+  * Mean CPU step latency of $1.332\text{ ms} \le 2.0\text{ ms}$; exactly 0.0 MB GPU VRAM contention.
+* **Consequences**:
+  * *Positive*: Organic affective life across multi-minute pauses, natural somatic fatigue, and relationship-grounded appraisal without self-reported emotional roleplay.
+  * *Discipline*: Production migration preserves existing public `EmotionCore` accessors for zero caller breakage.
+
+---
+
 ## 3. Reconciliation of Outdated Specs & Conflicting Decisions
 
 | Dimension | Outdated / Preliminary Spec | Authoritative Implemented Reality | Resolution & Rationale |
@@ -374,4 +394,5 @@ All future contributions and modifications must strictly observe the following l
 | **ARCH-021** | Fixed conversational prompt style | Communicative Strategy & Bounded Memory Contextualization (ADR-023) | Affective and relational modulation of conversation and response pacing | Phase 16 | Implementation Fact |
 | **ARCH-022** | Hardcoded blendshape/voice tags | Canonical 15-Dim Multimodal Expression Policy (`ExpressionState`, ADR-024) | Controlled, semantically consistent multimodal embodiment | Phase 16 | Implementation Fact |
 | **ARCH-023** | 10-Stage Cognitive Pipeline | Canonical 16-Stage Unified Cognitive Pipeline & Isolated Stores (ADR-025) | Unified execution contract across all cognitive subsystems | Phase 16 | Implementation Fact |
+| **ARCH-024** | Single-layer limbic ODE collapsing to origin | Coupled Multi-Timescale LNN (MT-LNN) + Philia Attractor Grounding (ADR-026) | Multi-minute affective continuity, autonomous stress-to-fatigue conversion, exact Philia attractor convergence | Phase 19 | **Promoted at Research Gate** |
 

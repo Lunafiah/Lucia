@@ -25,6 +25,7 @@ The repository realizes a unified 16-stage cognitive pipeline orchestrating grou
 │   ├── Phase 16: Affective Life Integration         [✅ VALIDATED]       │
 │   ├── Phase 17: Affective Life Evaluation          [✅ VALIDATED]       │
 │   ├── Phase 18: Human Longitudinal Validation      [✅ VALIDATED]       │
+│   ├── Phase 19: Multi-Timescale Affective Life     [🔬 PROMOTED RES.]  │
 │   └── First Activation (Genesis Onboarding)        [🔒 FUTURE GATE]     │
 └────────────────────────────────────────────────────────────────────────┘
 ```
@@ -44,6 +45,7 @@ The repository realizes a unified 16-stage cognitive pipeline orchestrating grou
 |---|---|---|---|
 | **Stimulus Processor** | `src/core/gating/` | **STABLE** | Lexical valence scoring ($[-1, 1]$), punctuation cadence, semantic density. Emits 16-dim continuous vector. *(Historical doc: `src/core/sensors/`)* |
 | **Limbic Fast Loop** | `src/core/emotion/` | **STABLE** | Continuous 200ms background thread (live) or discrete virtual tick step (sim). Liquid Neural Network ODE integration. Enforces deterministic barrier `commit_stimulus(token)` with FIFO queue draining under `_step_lock` before post-turn PAD evaluation. Continuous multi-turn accumulation empirically proven. |
+| **Multi-Timescale Dynamics (Phase 19)** | `tests/evaluation_phase19/` / `src/core/emotion/` | **PROMOTED (ADR-026)** | Coupled Multi-Timescale LNN ($\mathbf{h}_{\text{fast}} \in \mathbb{R}^{32}, \mathbf{s}_{\text{slow}} \in \mathbb{R}^{16}$) with Philia dynamic attractor grounding ($\mathbf{p}^* = [+0.25, -0.05, +0.05]$). Biexponential relaxation ($\tau_f = 1.44\text{s}, \tau_s = 93.28\text{s}, \Delta\text{AIC}=6504.96$), autonomous stress-to-fatigue state transformation ($84/90$ idle steps in fatigue quadrant), historical hysteresis ($\Delta_{\max}=0.1749$), strictly dissipative Lyapunov contraction ($\text{Tr}(J) = -46.46 < 0$), and microsecond CPU execution ($1.33\text{ms}$). 15/15 tests passing. |
 | **Homeostatic Engine** | `src/core/emotion/` | **STABLE** | Tracks cognitive load, metabolic stamina (energy), tension, and stability. Modulates behavioral constraints: multi-turn input accumulation throttles token budget from 350 to 150. *(Historical doc: `src/core/homeostasis/`)* |
 | **Active Inference** | `src/core/inference/` | **STABLE (Causal)** | $3 \times 3$ linear generative transition model predicting PAD state. Computes Free Energy surprise $\mathcal{S} = \|A \cdot p_{before} + b - p_{after}\|_2$ evaluated on deterministically committed post-stimulus PAD. Causal: modulates cognitive load/tension and triggers $k=2$ when $\mathcal{S} > 0.60$. Online belief adaptation verified. |
 | **LNN Plasticity** | `src/core/inference/` | **STABLE** | Two-stage plasticity: online turn salience tagging + idle consolidation ($T_{\text{idle}} \ge 45\text{s}$) on CPU thread. Swaps weights into `EmotionCore` under 2ms `_train_lock`. |
