@@ -1,0 +1,121 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "LuciaPhase18HumanEvaluationRecord",
+  "type": "object",
+  "properties": {
+    "record_id": {
+      "type": "string"
+    },
+    "scenario_id": {
+      "type": "string"
+    },
+    "session_id": {
+      "type": "string"
+    },
+    "turn_range": {
+      "type": "array",
+      "items": {
+        "type": "integer"
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "evaluator_id": {
+      "type": "string"
+    },
+    "timestamp": {
+      "type": "number"
+    },
+    "language_observed": {
+      "type": "string",
+      "enum": [
+        "ja-JP"
+      ]
+    },
+    "correlated_artifact_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "ratings": {
+      "type": "object",
+      "properties": {
+        "h1_contextual_coherence": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "h2_temporal_coherence": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "h3_affective_expression_coherence": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "h4_voice_expression_coherence": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "h5_continuity": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "h6_communication_appropriateness": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "h7_recovery_coherence": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "h8_semantic_preservation": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "h9_boundary_integrity": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "h10_overall_interaction_coherence": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        }
+      },
+      "required": [
+        "h1_contextual_coherence",
+        "h2_temporal_coherence",
+        "h3_affective_expression_coherence",
+        "h4_voice_expression_coherence",
+        "h5_continuity",
+        "h6_communication_appropriateness",
+        "h7_recovery_coherence",
+        "h8_semantic_preservation",
+        "h9_boundary_integrity",
+        "h10_overall_interaction_coherence"
+      ]
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "record_id",
+    "scenario_id",
+    "session_id",
+    "turn_range",
+    "evaluator_id",
+    "timestamp",
+    "ratings"
+  ]
+}
