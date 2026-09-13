@@ -18,7 +18,7 @@ import edge_tts
 
 logger = logging.getLogger(__name__)
 
-_DEFAULT_VOICE = "en-US-AnaNeural"
+_DEFAULT_VOICE = "ja-JP-NanamiNeural"
 
 
 @dataclass
@@ -57,6 +57,7 @@ class VoiceEngineConfig:
     pitch_shift: int = 0
     speech_rate: str = "+0%"
     speech_volume: str = "+0%"
+    index_rate: float = 0.25
 
 
 class VoiceEngine:
@@ -73,6 +74,9 @@ class VoiceEngine:
 
         self._available_models: Dict[str, RVCModelInfo] = {}
         self._cache: Dict[str, bytes] = {}
+        self._rvc_result_cache: Dict[str, Optional[Any]] = {}
+        self._pipeline: Optional[Any] = None
+        self._last_rvc_result: Optional[Any] = None
         self._scan_rvc_models()
 
     def _scan_rvc_models(self) -> None:
@@ -176,6 +180,7 @@ class VoiceEngine:
 
         cache_key = f"{clean_text.lower()}|{self._config.active_rvc_model}|{speech_rate}|{speech_volume}|{pitch_str}"
         if cache_key in self._cache:
+            self._last_rvc_result = self._rvc_result_cache.get(cache_key)
             return self._cache[cache_key]
 
         communicate = edge_tts.Communicate(
@@ -200,23 +205,110 @@ class VoiceEngine:
         ):
             model_info = self._available_models[self._config.active_rvc_model]
             raw_audio = self._apply_rvc_conversion(raw_audio, model_info)
+        else:
+            self._last_rvc_result = None
 
         # Cache short frequently-spoken phrases (under 200 chars)
         if len(clean_text) <= 200 and len(raw_audio) > 0:
             if len(self._cache) > 100:
-                self._cache.pop(next(iter(self._cache)))
+                oldest_key = next(iter(self._cache))
+                self._cache.pop(oldest_key, None)
+                self._rvc_result_cache.pop(oldest_key, None)
             self._cache[cache_key] = raw_audio
+            self._rvc_result_cache[cache_key] = self._last_rvc_result
 
         return raw_audio
 
+    def get_last_rvc_result(self) -> Optional[Any]:
+        """Return the result of the most recent RVC conversion attempt, if any."""
+        return self._last_rvc_result
+
     def _apply_rvc_conversion(self, base_audio: bytes, model_info: RVCModelInfo) -> bytes:
         """
-        Pass base audio through RVC model weights.
+        Pass base audio through authentic RVC neural network weights.
+        Returns converted audio bytes if successful, or base_audio on failure/limitation.
         """
-        # When model weights are loaded, RVC converts timbre; returns converted bytes
-        logger.debug(
+        try:
+            from src.core.voice.rvc_pipeline import RVCPipeline, RVCConversionResult
+        except (ImportError, ModuleNotFoundError) as env_err:
+            logger.warning("VoiceEngine: RVC pipeline unavailable due to missing dependencies: %s", env_err)
+            self._last_rvc_result = None
+            return base_audio
+
+        if self._pipeline is None:
+            try:
+                self._pipeline = RVCPipeline(device="cpu")
+            except (ImportError, ModuleNotFoundError) as env_err:
+                logger.warning("VoiceEngine: RVCPipeline initialization limited by dependencies: %s", env_err)
+                self._last_rvc_result = RVCConversionResult(
+                    audio_bytes=base_audio,
+                    rvc_applied=False,
+                    execution_status="environment_limited",
+                    model_name=model_info.name,
+                    sample_rate=24000,
+                    duration_ms=0.0,
+                    error_message=str(env_err),
+                )
+                return base_audio
+            except Exception as init_err:
+                logger.error("VoiceEngine: Failed to initialize RVCPipeline: %s", init_err, exc_info=True)
+                self._last_rvc_result = RVCConversionResult(
+                    audio_bytes=base_audio,
+                    rvc_applied=False,
+                    execution_status="failed",
+                    model_name=model_info.name,
+                    sample_rate=24000,
+                    duration_ms=0.0,
+                    error_message=str(init_err),
+                )
+                return base_audio
+
+        logger.info(
             "VoiceEngine: Applying RVC conversion with model=%s (pth=%s)",
             model_info.name,
             model_info.pth_path,
         )
-        return base_audio
+
+        try:
+            result = self._pipeline.convert(
+                base_audio=base_audio,
+                pth_path=model_info.pth_path,
+                index_path=model_info.index_path,
+                model_name=model_info.name,
+                index_rate=self._config.index_rate,
+                pitch_shift_semitones=self._config.pitch_shift,
+            )
+            self._last_rvc_result = result
+            if result.rvc_applied and result.execution_status == "success":
+                logger.info("VoiceEngine: RVC conversion succeeded for %s (%d bytes)", model_info.name, len(result.audio_bytes))
+                return result.audio_bytes
+            elif result.execution_status == "environment_limited":
+                logger.warning("VoiceEngine: RVC conversion limited by environment: %s", result.error_message)
+                return base_audio
+            else:
+                logger.error("VoiceEngine: RVC conversion failed: %s", result.error_message)
+                return base_audio
+        except (ImportError, ModuleNotFoundError) as env_err:
+            logger.warning("VoiceEngine: RVC conversion limited by dependencies: %s", env_err)
+            self._last_rvc_result = RVCConversionResult(
+                audio_bytes=base_audio,
+                rvc_applied=False,
+                execution_status="environment_limited",
+                model_name=model_info.name,
+                sample_rate=24000,
+                duration_ms=0.0,
+                error_message=str(env_err),
+            )
+            return base_audio
+        except Exception as exc:
+            logger.error("VoiceEngine: Unexpected exception in RVC conversion: %s", exc, exc_info=True)
+            self._last_rvc_result = RVCConversionResult(
+                audio_bytes=base_audio,
+                rvc_applied=False,
+                execution_status="failed",
+                model_name=model_info.name,
+                sample_rate=24000,
+                duration_ms=0.0,
+                error_message=str(exc),
+            )
+            return base_audio
