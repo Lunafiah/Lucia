@@ -332,6 +332,29 @@ This document captures:
 
 ---
 
+### ADR-027: Closed-Loop Affective Recollection via Slow-Field Latent Forcing ($\mathbf{r}_{\text{slow}}^{\text{bounded}}$)
+* **Status**: **PROMOTED AT RESEARCH GATE & APPROVED FOR ARCHITECTURE GATE** (Phase 20 Research Cycle)
+* **Context**: In Phase 11, memory retrieval operated as open-loop textual context injection into the prompt, while affective memory resonance was limited to an uncoupled Echo Vector. Earlier attempts to inject memory vectors directly into `EmotionCore`'s single fast layer produced rapid transient decay ($t_{1/2} \approx 0.50\text{ s}$) and suffered from a critical scientific failure: synthetic random vectors produced downstream shifts functionally indistinguishable from genuine memories (*vector-dependent rather than memory-identity-dependent*).
+* **Decision**: Implement **Closed-Loop Affective Recollection** by directly coupling retrieved episodic memory traces into the slow latent field $\mathbf{s}_{\text{slow}} \in \mathbb{R}^{16}$ of the coupled MT-LNN:
+  1. **Episodic Latent Trace Encoding**: Every episodic interaction stores an encoded 16-dimensional slow-field latent trace $\mathbf{s}_{\text{enc}} \in \mathbb{R}^{16}$ alongside its frozen 3D PAD coordinates and textual summary.
+  2. **Multi-Modal Retrieval Scoring & Competitive Softmax Gating**: Memory retrieval computes composite score $S_i = 0.60 S_{\text{sem}} + 0.25 S_{\text{aff}} + 0.15 S_\sigma$. Traces undergo sharp softmax competitive gating ($\tau_{\text{comp}} = 0.20$) above activation threshold $\theta_{\text{gate}} = 0.50$. Irrelevant stimuli receive zero slow-field injection ($\|\mathbf{r}_{\text{slow}}\| = 0.0$).
+  3. **Continuous ODE Slow-Field Forcing**: Reactivated recollection perturbates the continuous slow differential equation via bounded auxiliary forcing:
+     $$\frac{d\mathbf{s}_{\text{slow}}}{dt} = -\frac{\mathbf{s}_{\text{slow}} - \mathbf{s}^*_{\text{philia}}}{\tau_{\text{slow, decay}}} + \frac{\tanh\Big(\mathbf{W}_{sf} \mathbf{h}_{\text{fast}} + \mathbf{W}_{sh} \Delta\mathbf{m} + \mathbf{W}_{\text{rec}} \mathbf{r}_{\text{slow}}^{\text{bounded}}\Big)}{\tau_{\text{slow, charge}}}$$
+  4. **Counterfactual & Memory Identity Protection**: Quadplet control experiments confirm that downstream trajectory modulation depends strictly on coordinate-specific latent geometry: permuted/shuffled traces invert trajectory deflection (alignment $-0.525 \le 0.20$), matched-norm random Gaussian vectors yield uncorrelated dynamics (ratio $-0.317 \le 0.20$), and orthogonal memories produce opposing deflections ($-0.965 \le 0.10$).
+  5. **Pre-Reflective Downstream Modulation**: Recollected state modulates conversation through somatic pacing latency ($\Delta\tau_{\text{pace}} \ge 100\text{ ms}$) and communication attunement policy, strictly prohibiting self-reported emotional introspection.
+* **Empirical Validation**:
+  * Retrieval specificity: Precision@1 $= 1.000$, $\text{FRR} = 0.000$, $\text{SNR} = 4.712$.
+  * Latent reconstruction fidelity: Cosine $= 0.998$, $L_2 \text{ error} = 0.317$, $\text{PAD error} = 0.138$.
+  * Temporal persistence: $t_{1/2} = 32.10\text{ s}$, Retention $= 50.00\text{ s}$, Philia return error $= 6.91 \times 10^{-5}$.
+  * Causal trajectory delta: Joy $\Delta\text{PAD}_{\text{AUC}} = 3.209$, Stress $\Delta\text{PAD}_{\text{AUC}} = 3.623$.
+  * Counterfactual quadplet controls pass 100% of pre-registered criteria.
+  * Deterministic bit-exact replay invariance, zero NaNs/Infs, maximum state norm $0.470 \le 1.00$.
+* **Consequences**:
+  * *Positive*: Authentic, persistent multi-turn affective recollection grounded in actual shared interaction history; resolves the Phase 11 vector-dependence flaw.
+  * *Discipline*: Memory trace writes and reads must remain asynchronous, bounded in memory footprint ($\le 64\text{ KB}$ for 1,000 memories), with zero GPU VRAM allocation.
+
+---
+
 ## 3. Reconciliation of Outdated Specs & Conflicting Decisions
 
 | Dimension | Outdated / Preliminary Spec | Authoritative Implemented Reality | Resolution & Rationale |
@@ -394,5 +417,6 @@ All future contributions and modifications must strictly observe the following l
 | **ARCH-021** | Fixed conversational prompt style | Communicative Strategy & Bounded Memory Contextualization (ADR-023) | Affective and relational modulation of conversation and response pacing | Phase 16 | Implementation Fact |
 | **ARCH-022** | Hardcoded blendshape/voice tags | Canonical 15-Dim Multimodal Expression Policy (`ExpressionState`, ADR-024) | Controlled, semantically consistent multimodal embodiment | Phase 16 | Implementation Fact |
 | **ARCH-023** | 10-Stage Cognitive Pipeline | Canonical 16-Stage Unified Cognitive Pipeline & Isolated Stores (ADR-025) | Unified execution contract across all cognitive subsystems | Phase 16 | Implementation Fact |
-| **ARCH-024** | Single-layer limbic ODE collapsing to origin | Coupled Multi-Timescale LNN (MT-LNN) + Philia Attractor Grounding (ADR-026) | Multi-minute affective continuity, autonomous stress-to-fatigue conversion, exact Philia attractor convergence | Phase 19 | **Promoted at Research Gate** |
+| **ARCH-024** | Single-layer limbic ODE collapsing to origin | Coupled Multi-Timescale LNN (MT-LNN) + Philia Attractor Grounding (ADR-026) | Multi-minute affective continuity, autonomous stress-to-fatigue conversion, exact Philia attractor convergence | Phase 19 | Implementation Fact |
+| **ARCH-025** | Open-loop text retrieval & uncoupled echo vector | Closed-Loop Affective Recollection via Slow-Field Latent Forcing ($\mathbf{r}_{\text{slow}}^{\text{bounded}}$, ADR-027) | Multi-turn affective reinstatement, memory-identity-dependent trajectory deflection, resolves Phase 11 flaw | Phase 20 | **Promoted at Research Gate & Approved for Architecture Gate** |
 
