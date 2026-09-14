@@ -20,6 +20,7 @@ import numpy as np
 from src.core.communication.communication_state import CommunicationState
 from src.core.expression.expression_state import ExpressionState
 from src.core.knowledge.proposition import Proposition
+from src.core.memory.ecphory import RecollectionResult
 from src.core.models import BehavioralConstraints, PADState, SomaticMarkers
 from src.core.relationship.state import RelationshipState
 
@@ -319,6 +320,9 @@ class CognitiveTurnResult:
 
     # Phase 16: Grounded knowledge propositions retrieved for this turn
     known_facts: Optional[List[Proposition]] = None
+
+    # Phase 20: Affective recollection result emitted by EcphoryEngine at Stage 6
+    recollection: Optional[RecollectionResult] = None
 
     class Config:
         # numpy arrays are not hashable — frozen dataclass still works at runtime

@@ -6,7 +6,7 @@
 > **Lifecycle Governance**: Foundation-First Research Cycle -> Production Realization  
 > **Author**: Antigravity Implementation Architect  
 > **Governing ADR**: ADR-027  
-> **Pre-Implementation Git Baseline**: `c23fe7e`  
+> **Pre-Implementation Git Baseline**: `558ae77`  
 > **Production Code Status**: STRICTLY ZERO MODIFICATIONS UNTIL GATE APPROVAL (`src/core/**` UNTOUCHED)  
 > **Date**: September 2026  
 
@@ -177,6 +177,14 @@ With canonical production parameters:
 - $\mathbf{W}_{\text{rec}} = 0.35 \cdot \mathbf{I}_{16} \in \mathbb{R}^{16 \times 16}$ (diagonal, non-mixing recollection coupling)
 - $\mathbf{s}^*_{\text{philia}} = [0.20, -0.05, 0.05, 0, \dots, 0]^T \in \mathbb{R}^{16}$
 
+#### Numerical Step-Boundary Snapshot Discipline (Zero Wall-Clock in ODE Solver):
+To ensure 100% deterministic numerical integration independent of host CPU execution timing, thread scheduling jitter, or solver sub-stepping:
+1. `time.monotonic()` is **strictly prohibited** inside the ODE derivative function `rhs(t, y)`.
+2. The active recollection forcing state is snapshotted at the step boundary of `_step_once_unlocked()` under `_step_lock` in **simulation integration time**:
+   $$\mathbf{r}_{\text{step}} = \begin{cases} \mathbf{r}_{\text{slow}}^{\text{bounded}} & \text{if } t_{\text{remaining\_sim}} > 0.0 \\ \mathbf{0} & \text{otherwise} \end{cases}$$
+   $$t_{\text{remaining\_sim}} \leftarrow \max(0.0, t_{\text{remaining\_sim}} - \Delta t_{\text{step}})$$
+3. Inside `rhs(t, y)`, $\mathbf{r}_{\text{step}}$ is held strictly constant across the `solve_ivp` step interval $[0.0, \Delta t_{\text{step}}]$. This guarantees that the trajectory depends purely on integration time, achieving bit-exact reproducibility regardless of system clock jitter.
+
 ### 4.2 Multi-Modal Scoring & Competitive Softmax Gating (Stage 6)
 
 For stored traces $i \in \{1, \dots, K\}$ in `AffectiveMemory`:
@@ -260,6 +268,25 @@ class RecollectionResult:
     echo_vector: Optional[np.ndarray]  # shape (M,), float32
 ```
 
+### Lifetime & Semantic Scope of `RecollectionResult.r_slow_bounded`:
+`RecollectionResult.r_slow_bounded` is strictly an **instantaneous retrieval-cue signal snapshot synthesized at Stage 6**:
+- It captures the exogenous memory cue excitation vector derived from retrieved memory traces for the current conversational turn.
+- Stage 6 passes this vector to `EmotionCore.inject_recollection(r_slow_bounded)` to initiate external ODE forcing.
+- Stage 12 uses this same Stage 6 signal snapshot norm $\|\mathbf{r}_{\text{slow}}^{\text{bounded}}\|_2$ to compute turn pacing modulation $\Delta\tau_{\text{pace}}$.
+- **Critical Semantic Distinction**: `RecollectionResult.r_slow_bounded` is **NOT the live physiological state** $\mathbf{s}_{\text{slow}}(t)$ of Lucia. The live physiological state evolves continuously inside `EmotionCore` across fast/slow ODE integration ticks.
+- In Stage 16.1, `CognitiveOrchestrator` queries the **actual live physiological state** via `self._emotion_core.get_slow_latent_state()` to co-encode into the newly consolidated memory trace.
+
+### Public Encapsulation & Config Access:
+`CognitiveOrchestrator` must never access private attributes of other subsystems (e.g. `self._emotion_core._config`).
+Instead, `EmotionCore` exposes the public property:
+```python
+@property
+def config(self) -> EmotionConfig:
+    """Return read-only reference to the active EmotionConfig."""
+    return self._config
+```
+All orchestrator policy checks strictly invoke `self._emotion_core.config.enable_affective_recollection`.
+
 ---
 
 ## 6. Legacy Compatibility Approximation (PAD $\to$ Slow Fallback)
@@ -274,19 +301,23 @@ Where $\mathbf{W}_{\text{pad}\to\text{slow}} \in \mathbb{R}^{16 \times 3}$ is a 
 $$\mathbf{W}_{\text{pad}\to\text{slow}}[0, 0] = 0.60, \quad \mathbf{W}_{\text{pad}\to\text{slow}}[1, 1] = 0.60, \quad \mathbf{W}_{\text{pad}\to\text{slow}}[2, 2] = 0.50$$
 All other elements are zero.
 
-### 6.2 Explicit Classification & Acceptance Requirements
+### 6.2 Explicit Classification & 3-Case Semantic Contract
 
 > [!WARNING]
 > **Deterministic Compatibility Approximation, NOT Equivalent Reconstruction**:  
 > As demonstrated in Phase 20 Ablation A4, linear projection from 3D PAD coordinates recovers only a coarse projection of the 16-dimensional slow manifold ($L_2\text{ reconstruction error} = 0.428 > 0.05$).  
 > **This fallback is explicitly classified as a deterministic compatibility approximation, not equivalent affective reconstruction.**  
-> It exists solely to provide graceful degradation for historical traces without triggering database schema crashes or state corruption.
+> It exists solely to provide graceful degradation for historical pre-Phase-20 traces without triggering schema crashes or state corruption. It must not be treated as genuine affective recollection.
 
-### Fallback Acceptance & Safety Requirements:
-1. **Boundedness**: For all $\mathbf{p}_{\text{tag}} \in [-1.0, 1.0]^3$, $\|\mathbf{s}_{\text{fallback}}\|_\infty \le 0.85$ strictly.
-2. **Determinism**: For identical $\mathbf{p}_{\text{tag}}$, the function returns bit-exact identical vectors ($\Delta < 10^{-12}$).
-3. **Philia Resting Invariance**: For $\mathbf{p}_{\text{tag}} = \mathbf{p}^*_{\text{philia}} = [0.25, -0.05, 0.05]$, $\mathbf{s}_{\text{fallback}} = \mathbf{s}^*_{\text{philia}}$ bit-exact (zero spurious energy injected into resting state).
-4. **Safety Under NaN / Inf**: If $\mathbf{p}_{\text{tag}}$ contains non-finite values, fallback returns $\mathbf{s}^*_{\text{philia}}$ defensively.
+### Strict 3-Case Semantic Acceptance Contract:
+1. **Case 1 — Canonical Resting Baseline Input**:
+   When $\mathbf{p}_{\text{tag}} = \mathbf{p}^*_{\text{philia}} = [0.25, -0.05, 0.05]$, the function returns $\mathbf{s}^*_{\text{philia}} = [0.20, -0.05, 0.05, 0, \dots, 0]^T$ **bit-exact** ($\Delta = 0.0$). This guarantees zero spurious excitation or baseline drift when reading neutral legacy memories.
+2. **Case 2 — Non-Baseline Valid Input**:
+   When $\mathbf{p}_{\text{tag}} \neq \mathbf{p}^*_{\text{philia}}$, returns a deterministic bounded compatibility approximation:
+   $$\mathbf{s}_{\text{fallback}} = \text{clip}\Big(\mathbf{W}_{\text{pad}\to\text{slow}} (\mathbf{p}_{\text{tag}} - \mathbf{p}^*_{\text{philia}}) + \mathbf{s}^*_{\text{philia}}, -0.85, +0.85\Big)$$
+   Guaranteed bounded ($\|\mathbf{s}_{\text{fallback}}\|_\infty \le 0.85$) and deterministic ($\Delta < 10^{-12}$).
+3. **Case 3 — Non-Finite / Invalid Input (NaN / Inf)**:
+   If any dimension of $\mathbf{p}_{\text{tag}}$ is NaN or Inf, the fallback returns $\mathbf{s}^*_{\text{philia}}$ defensively, preventing numerical error propagation.
 
 ---
 
@@ -337,8 +368,8 @@ All threads must adhere strictly to the audited production lock hierarchy ([`src
 ## 9. Rollback & Fail-Safe Strategy
 
 ### 9.1 Pre-Implementation Git Baseline
-- The exact pre-implementation baseline commit is **`c23fe7e`** (`feat(core): implement Phase 19 Multi-Timescale Affective Life & Temporal Continuity (MT-LNN)`).
-- In the event of an unrecoverable architectural defect, executing `git reset --hard c23fe7e` restores the clean, fully validated Phase 19 production state.
+- The exact pre-implementation baseline commit is **`558ae77`** (`docs(phase20): approve phase 20 research and production realization architecture design`).
+- In the event of an unrecoverable architectural defect, executing `git reset --hard 558ae77` restores the clean, approved repository state prior to any production code modification.
 
 ### 9.2 Instant Feature Flag Rollback
 To eliminate deployment risk, a runtime feature flag is added to `EmotionConfig` and `config/ui.json`:
@@ -351,7 +382,7 @@ When `enable_affective_recollection` is `false`:
 1. Stage 6 evaluates `RecollectionResult` but `CognitiveOrchestrator` skips dispatching `inject_recollection()`.
 2. `EmotionCore` maintains $\mathbf{r}_{\text{slow}} \equiv \mathbf{0}$.
 3. Stage 12 pacing latency delta $\Delta\tau_{\text{pace}} \equiv 0.0\text{ ms}$.
-4. The system operates identically to the baseline Phase 19 MT-LNN with zero code changes required.
+4. **Restores the Phase-19 affective execution path / disables Phase-20 recollection actuation** with zero runtime downtime (while preserving trace schema and non-destructive co-encoding).
 
 ---
 
@@ -361,6 +392,7 @@ Following Architecture Gate approval, production implementation must pass four s
 
 ```powershell
 # Gate 1: Unit Test Suite (Subsystem Level)
+.venv\Scripts\pytest tests/unit/test_phase20_production.py -v
 .venv\Scripts\pytest tests/unit/test_emotion_core.py -v
 .venv\Scripts\pytest tests/unit/test_affective_memory.py -v
 .venv\Scripts\pytest tests/unit/test_cognitive_orchestrator.py -v
@@ -376,6 +408,14 @@ Following Architecture Gate approval, production implementation must pass four s
 powershell -Command "Get-Content data/profile.json -Raw"
 # Must return bit-exact: {"is_onboarded": false}
 ```
+
+### Gate 1 Test Details (Black-Box Causal Verification):
+- `test_emotion_core_recollection_injection`: Black-box causal verification: compares trajectory with unforced control; asserts significant slow trajectory divergence during active forcing window, followed by smooth natural decay back toward Philia baseline once the forcing window expires in simulation time. Strictly zero assertions on private implementation fields.
+- `test_emotion_core_recollection_disabled_flag`: Setting `enable_affective_recollection = False` suppresses forcing identically, restoring the Phase-19 execution path.
+- `test_legacy_fallback_approximation_3_cases`: Tests the strict 3-case semantic contract: exact Philia resting state for baseline PAD, bounded deterministic vector for non-baseline PAD, and safe defensive baseline for NaN/Inf.
+- `test_ecphory_multi_modal_competitive_gating`: Rejection of orthogonal noise ($S < 0.50$) and sharp competitive selection for salient cues.
+- `test_architectural_decoupling`: Verification that memory subsystem emits `RecollectionResult` and does NOT import or actuate `EmotionCore`.
+- `test_cognitive_orchestrator_s1_s16_closed_loop`: End-to-end turn execution verifying Stage 6 injection, Stage 12 pacing modulation, and Stage 16.1 live physiological state co-encoding.
 
 ---
 

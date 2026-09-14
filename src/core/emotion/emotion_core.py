@@ -165,6 +165,11 @@ class EmotionCore:
         self._stimulus_seq: int = 0
         self._committed_stimulus_seq: int = 0
 
+        # Phase 20: External recollection forcing weight & state
+        self.W_rec = np.eye(Hs, dtype=np.float64) * config.recollection_coupling_weight
+        self._recollection_forcing = np.zeros(Hs, dtype=np.float64)
+        self._recollection_remaining_sim = 0.0
+
         # Loop control
         self._stop_event = threading.Event()
         self._thread: Optional[threading.Thread] = None
@@ -278,6 +283,59 @@ class EmotionCore:
         with self._state_lock:
             return self._s_slow.copy()
 
+    def get_slow_latent_state(self) -> np.ndarray:
+        """
+        Return a thread-safe snapshot copy of the live slow affective latent field (s_slow).
+        Adheres to <= 1ms read deadline under _state_lock.
+        """
+        with self._state_lock:
+            return self._s_slow.copy()
+
+    @property
+    def config(self) -> EmotionConfig:
+        """Return read-only reference to the active EmotionConfig."""
+        return self._config
+
+    def inject_recollection(
+        self, r_slow: np.ndarray, duration_sec: Optional[float] = None
+    ) -> None:
+        """
+        Inject an external affective recollection forcing signal into the slow latent field.
+
+        Thread-safe under _step_lock. Duration is tracked strictly in simulation/integration
+        time (dt) to ensure deterministic trajectory evolution independent of wall-clock timing.
+        """
+        if not self._config.enable_affective_recollection:
+            return
+
+        Hs = self._config.hidden_slow_dim
+        if len(r_slow) != Hs:
+            logger.warning(
+                "EmotionCore.inject_recollection: dimension mismatch (expected %d, got %d); padded/truncated.",
+                Hs,
+                len(r_slow),
+            )
+            vec = np.zeros(Hs, dtype=np.float64)
+            n = min(Hs, len(r_slow))
+            vec[:n] = r_slow[:n]
+        else:
+            vec = np.array(r_slow, dtype=np.float64)
+
+        if not np.all(np.isfinite(vec)):
+            logger.warning(
+                "EmotionCore.inject_recollection: non-finite values detected; sanitized to zeros."
+            )
+            vec = np.zeros(Hs, dtype=np.float64)
+
+        dur = (
+            duration_sec
+            if duration_sec is not None
+            else self._config.recollection_pulse_duration_sec
+        )
+        with self._step_lock:
+            self._recollection_forcing = np.clip(vec, -1.0, 1.0)
+            self._recollection_remaining_sim = max(0.0, float(dur))
+
     def get_attractor_distance(self) -> float:
         """Return the Euclidean distance from current PAD to Philia resting coordinate."""
         with self._state_lock:
@@ -385,6 +443,11 @@ class EmotionCore:
                     self.W_proj_s[1, 1] = 0.45
                     self.W_proj_s[2, 2] = 0.35
 
+                # Phase 20: Reset recollection forcing and coupling matrix
+                self.W_rec = np.eye(Hs, dtype=np.float64) * self._config.recollection_coupling_weight
+                self._recollection_forcing = np.zeros(Hs, dtype=np.float64)
+                self._recollection_remaining_sim = 0.0
+
                 with self._stimulus_lock:
                     self._pending_stimuli.clear()
                     self._stimulus_seq = 0
@@ -411,6 +474,7 @@ class EmotionCore:
         self,
         h: np.ndarray,
         x: np.ndarray,
+        r_step: Optional[np.ndarray] = None,
     ) -> Tuple[np.ndarray, np.ndarray]:
         """
         Advance the coupled fast/slow states by one ODE integration step.
@@ -428,6 +492,7 @@ class EmotionCore:
             W_fs = self.W_fs.copy()
             W_sf = self.W_sf.copy()
             W_sh = self.W_sh.copy()
+            W_rec = self.W_rec.copy()
             s_philia = self.s_philia.copy()
             m_homeo = self._m_homeo.copy()
 
@@ -436,6 +501,11 @@ class EmotionCore:
         y0 = np.concatenate([h, self._s_slow])
         dt = self._config.ode_step_size
         delta_m = m_homeo - self.m_homeo_resting
+        r_forcing = (
+            np.zeros(Hs, dtype=np.float64)
+            if r_step is None
+            else np.array(r_step, dtype=np.float64)
+        )
 
         def rhs(t: float, y: np.ndarray) -> np.ndarray:
             y_f = np.clip(y[:Hf], -1.0, 1.0)
@@ -453,7 +523,7 @@ class EmotionCore:
             tau_decay = self._config.tau_slow_decay
             tau_charge = self._config.tau_slow_charge
 
-            forcing = np.tanh(W_sf @ y_f + W_sh @ delta_m)
+            forcing = np.tanh(W_sf @ y_f + W_sh @ delta_m + W_rec @ r_forcing)
             ds_slow = (-delta_s / tau_decay) + (forcing / tau_charge)
 
             return np.concatenate([dh_fast, ds_slow])
@@ -525,7 +595,23 @@ class EmotionCore:
                 logger.warning("EmotionCore: non-finite stimulus vector received; sanitized to zeros.")
                 x = np.zeros_like(x)
 
-            h_res = self._ode_step(self._h, x)
+            # Phase 20: Snapshot recollection forcing in simulation time
+            dt = self._config.ode_step_size
+            if self._config.enable_affective_recollection and self._recollection_remaining_sim > 0.0:
+                r_step = self._recollection_forcing.copy()
+                self._recollection_remaining_sim = max(0.0, self._recollection_remaining_sim - dt)
+            else:
+                r_step = np.zeros(self._config.hidden_slow_dim, dtype=np.float64)
+
+            import inspect
+            try:
+                sig = inspect.signature(self._ode_step)
+                if "r_step" in sig.parameters:
+                    h_res = self._ode_step(self._h, x, r_step=r_step)
+                else:
+                    h_res = self._ode_step(self._h, x)
+            except Exception:
+                h_res = self._ode_step(self._h, x, r_step=r_step)
             if isinstance(h_res, tuple) and len(h_res) == 2:
                 h_new, s_new = h_res
             else:
@@ -551,9 +637,12 @@ class EmotionCore:
         except Exception:
             logger.exception("EmotionCore step_once exception — resetting to resting baseline")
             Hf = self._config.hidden_dim
+            Hs = self._config.hidden_slow_dim
             self._h = np.zeros(Hf, dtype=np.float64)
             self._s_slow = self.s_philia.copy()
             self._m_homeo = self.m_homeo_resting.copy()
+            self._recollection_forcing = np.zeros(Hs, dtype=np.float64)
+            self._recollection_remaining_sim = 0.0
             p, a, d = self._config.resting_baseline
             resting = PADState(
                 pleasure=float(p),

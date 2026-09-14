@@ -70,7 +70,7 @@ from src.core.knowledge.store import KnowledgeStore
 from src.core.language.llm_backend import LLMBackend
 from src.core.memory.affective_memory import AffectiveMemory
 from src.core.memory.decay import DecayEngine
-from src.core.memory.ecphory import EcphoryEngine
+from src.core.memory.ecphory import EcphoryEngine, RecollectionResult
 from src.core.models import BehavioralConstraints, PADState, SomaticMarkers
 from src.core.orchestrator.policies import (
     CognitiveTurnResult,
@@ -387,9 +387,24 @@ class CognitiveOrchestrator:
 
         # ── Stage 6: Affective Ecphory (Memory Retrieval) ────────────────
         echo_vector: Optional[np.ndarray] = None
+        recollection_result: Optional[RecollectionResult] = None
         try:
             traces = self._affective_memory.get_all_traces()
-            echo_vector = self._ecphory_engine.query(pad_final, traces)
+            if hasattr(self._ecphory_engine, "query_recollection"):
+                echo_vector, recollection_result = (
+                    self._ecphory_engine.query_recollection(
+                        pad_final, stimulus, traces, config=self._emotion_core.config
+                    )
+                )
+                if (
+                    recollection_result.active
+                    and self._emotion_core.config.enable_affective_recollection
+                ):
+                    self._emotion_core.inject_recollection(
+                        recollection_result.r_slow_bounded
+                    )
+            else:
+                echo_vector = self._ecphory_engine.query(pad_final, traces)
         except Exception:
             logger.error("CognitiveOrchestrator: ecphory step failed; omitting echo", exc_info=True)
 
@@ -424,7 +439,12 @@ class CognitiveOrchestrator:
         comm_state: CommunicationState
         try:
             k_dict = {"fact_count": len(known_propositions)} if known_propositions else None
-            m_dict = {"echo_active": True} if m_avail > 0 else None
+            rec_act = bool(recollection_result is not None and recollection_result.active)
+            m_dict = (
+                {"echo_active": m_avail > 0, "recollection_active": rec_act}
+                if (m_avail > 0 or rec_act)
+                else None
+            )
             comm_state = self._comm_policy.compute(
                 pad=pad_final,
                 somatic=markers,
@@ -465,8 +485,24 @@ class CognitiveOrchestrator:
         prompt: str = prompt_or_err
 
         # ── Stage 12: Conversational Pacing ──────────────────────────────
+        delta_tau_pace = 0
+        if (
+            recollection_result is not None
+            and recollection_result.active
+            and self._emotion_core.config.enable_affective_recollection
+        ):
+            r_norm = float(np.linalg.norm(recollection_result.r_slow_bounded))
+            valence_factor = 1.0 - ((pad_final.pleasure + 1.0) / 2.0)
+            delta_tau_pace = int(
+                self._emotion_core.config.recollection_pacing_weight
+                * r_norm
+                * valence_factor
+            )
+
         pacing_delay_ms = min(
-            constraints.latency_ms + comm_state.injected_pacing_latency_ms,
+            constraints.latency_ms
+            + comm_state.injected_pacing_latency_ms
+            + delta_tau_pace,
             _MAX_LATENCY_MS,
         )
         if pacing_delay_ms > 0:
@@ -537,7 +573,14 @@ class CognitiveOrchestrator:
                 content = np.zeros(M, dtype=np.float32)
                 content[: stimulus.shape[0]] = stimulus.astype(np.float32)
             content = np.clip(content, -1.0, 1.0)
-            self._affective_memory.store(content, pad_final)
+            s_slow_snapshot = (
+                self._emotion_core.get_slow_latent_state()
+                if hasattr(self._emotion_core, "get_slow_latent_state")
+                else None
+            )
+            self._affective_memory.store(
+                content, pad_final, slow_latent_trace=s_slow_snapshot
+            )
             trace_stored = True
         except Exception:
             logger.error(
@@ -622,6 +665,7 @@ class CognitiveOrchestrator:
             communication=comm_state,
             expression=expr_state,
             known_facts=known_propositions,
+            recollection=recollection_result,
         )
 
     # ------------------------------------------------------------------

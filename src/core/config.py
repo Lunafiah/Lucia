@@ -79,6 +79,13 @@ class EmotionConfig:
     w_sf_coupling: float = 1.00
     w_homeo_coupling: float = 0.40
     philia_slow_baseline: tuple = (0.20, -0.05, 0.05)
+    # Phase 20: Closed-Loop Affective Recollection via Slow-Field Latent Forcing
+    enable_affective_recollection: bool = True
+    recollection_coupling_weight: float = 0.35
+    recollection_gate_threshold: float = 0.50
+    recollection_softmax_temp: float = 0.20
+    recollection_pulse_duration_sec: float = 4.0
+    recollection_pacing_weight: float = 120.0
 
     def __post_init__(self) -> None:
         if not isinstance(self.loop_cadence_ms, int) or not (100 <= self.loop_cadence_ms <= 500):
@@ -133,6 +140,26 @@ class EmotionConfig:
         if self.w_homeo_coupling < 0.0:
             raise ValueError(
                 f"EmotionConfig.w_homeo_coupling must be >= 0, got {self.w_homeo_coupling!r}"
+            )
+        if self.recollection_coupling_weight < 0.0:
+            raise ValueError(
+                f"EmotionConfig.recollection_coupling_weight must be >= 0, got {self.recollection_coupling_weight!r}"
+            )
+        if not (0.0 <= self.recollection_gate_threshold <= 1.0):
+            raise ValueError(
+                f"EmotionConfig.recollection_gate_threshold must be in [0.0, 1.0], got {self.recollection_gate_threshold!r}"
+            )
+        if self.recollection_softmax_temp <= 0.0:
+            raise ValueError(
+                f"EmotionConfig.recollection_softmax_temp must be > 0, got {self.recollection_softmax_temp!r}"
+            )
+        if self.recollection_pulse_duration_sec <= 0.0:
+            raise ValueError(
+                f"EmotionConfig.recollection_pulse_duration_sec must be > 0, got {self.recollection_pulse_duration_sec!r}"
+            )
+        if self.recollection_pacing_weight < 0.0:
+            raise ValueError(
+                f"EmotionConfig.recollection_pacing_weight must be >= 0, got {self.recollection_pacing_weight!r}"
             )
 
 

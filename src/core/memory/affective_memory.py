@@ -33,6 +33,7 @@ class MemoryTrace:
     pad_tag: PADState  # frozen copy of PADState at encoding moment
     timestamp: float  # time.monotonic() at store() call
     decay_weight: float  # initialized to 1.0; mutated by Decay_Engine
+    slow_latent_trace: Optional[np.ndarray] = None
 
 
 @dataclass
@@ -74,9 +75,66 @@ class AffectiveMemory:
         self._index: Dict[int, MemoryTrace] = {}
         self._index_lock = threading.RLock()
 
-    def store(self, content_vector: np.ndarray, pad_state: PADState) -> int:
+    @staticmethod
+    def synthesize_legacy_latent(
+        pad_tag: PADState | np.ndarray | tuple | list,
+        philia_baseline: tuple = (0.25, -0.05, 0.05),
+        philia_slow_baseline: tuple = (0.20, -0.05, 0.05),
+        slow_dim: int = 16,
+    ) -> np.ndarray:
         """
-        Store a content vector paired with a PAD emotional state snapshot.
+        Deterministic compatibility approximation: maps a 3D PAD tag -> 16D slow latent field.
+
+        Strict 3-Case Semantic Acceptance Contract:
+        1. Case 1 — Canonical Resting Baseline Input:
+           When p_tag == p*_philia (within atol=1e-6), returns s*_philia bit-exact (zero drift).
+        2. Case 2 — Non-Baseline Valid Input:
+           When p_tag != p*_philia, returns clip(W_pad->slow @ (p_tag - p*_philia) + s*_philia, -0.85, 0.85).
+           Deterministic (Delta < 10^-12) and bounded (||s||_inf <= 0.85).
+        3. Case 3 — Non-Finite / Invalid Input (NaN / Inf):
+           Returns s*_philia defensively if any component is non-finite.
+        """
+        s_star = np.zeros(slow_dim, dtype=np.float64)
+        for i, val in enumerate(philia_slow_baseline):
+            if i < slow_dim:
+                s_star[i] = float(val)
+
+        if isinstance(pad_tag, PADState):
+            p = np.array(
+                [pad_tag.pleasure, pad_tag.arousal, pad_tag.dominance],
+                dtype=np.float64,
+            )
+        else:
+            p = np.array(pad_tag, dtype=np.float64)[:3]
+
+        # Case 3: Defensive fallback on NaN / Inf
+        if not np.all(np.isfinite(p)):
+            return s_star.copy()
+
+        p_star = np.array(philia_baseline, dtype=np.float64)
+
+        # Case 1: Canonical Resting Baseline Input -> bit-exact s*_philia
+        if np.allclose(p, p_star, atol=1e-6):
+            return s_star.copy()
+
+        # Case 2: Non-Baseline Valid Input -> bounded deterministic approximation
+        w_pad_to_slow = np.zeros((slow_dim, 3), dtype=np.float64)
+        w_pad_to_slow[0, 0] = 0.60
+        w_pad_to_slow[1, 1] = 0.60
+        w_pad_to_slow[2, 2] = 0.50
+
+        delta_p = p - p_star
+        s_approx = (w_pad_to_slow @ delta_p) + s_star
+        return np.clip(s_approx, -0.85, 0.85)
+
+    def store(
+        self,
+        content_vector: np.ndarray,
+        pad_state: PADState,
+        slow_latent_trace: Optional[np.ndarray] = None,
+    ) -> int:
+        """
+        Store a content vector paired with a PAD emotional state snapshot and slow latent trace.
 
         Parameters
         ----------
@@ -84,6 +142,9 @@ class AffectiveMemory:
             Content vector of shape (M,), float.
         pad_state : PADState
             Emotional state snapshot at the moment of encoding.
+        slow_latent_trace : Optional[np.ndarray]
+            Phase 20: 16D slow latent state snapshot s_slow(t). If None, synthesizes
+            legacy fallback via synthesize_legacy_latent(pad_state).
 
         Returns
         -------
@@ -104,6 +165,21 @@ class AffectiveMemory:
                 raise ValueError(
                     f"PAD dimension '{dim}'={val} outside [-1.0, 1.0]"
                 )
+
+        if slow_latent_trace is None:
+            latent_vec = self.synthesize_legacy_latent(pad_state)
+        else:
+            latent_arr = np.array(slow_latent_trace, dtype=np.float64)
+            if not np.all(np.isfinite(latent_arr)):
+                latent_vec = self.synthesize_legacy_latent(pad_state)
+            else:
+                if len(latent_arr) != 16:
+                    padded = np.zeros(16, dtype=np.float64)
+                    n = min(16, len(latent_arr))
+                    padded[:n] = latent_arr[:n]
+                    latent_vec = np.clip(padded, -1.0, 1.0)
+                else:
+                    latent_vec = np.clip(latent_arr, -1.0, 1.0)
 
         with self._index_lock:
             # Evict lowest decay_weight trace if at capacity
@@ -131,6 +207,7 @@ class AffectiveMemory:
                 pad_tag=pad_state,
                 timestamp=time.monotonic(),
                 decay_weight=1.0,
+                slow_latent_trace=latent_vec,
             )
             self._index[trace_id] = trace
             return trace_id
