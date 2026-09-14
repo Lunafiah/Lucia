@@ -148,14 +148,16 @@ Phase 17 — Affective Life Evaluation          [VALIDATED]
 Phase 18 — Human Longitudinal Validation      [VALIDATED]
 Phase 19 — Multi-Timescale Affective Life     [VALIDATED]
 Phase 20 — Affective Recollection             [VALIDATED]
+Phase 21 — Relational Consolidation & Synaptic Homeostasis [PLANNED RESEARCH]
+Phase 22–26 — Future Conceptual Research Horizons [CONCEPTUAL]
 First Activation (Genesis Onboarding)         [🔒 FUTURE GATE]
 ```
 
 ### Milestone Evidence Classification:
 - **`[VALIDATED]`**: Formally specified, fully implemented, and empirically verified with automated test suites.
-- **`[CURRENT RESEARCH]`**: Active research and experimental benchmark increment under controlled conditions.
-- **`[RESEARCH]`**: Research specification defined; theoretical and boundary exploration underway. *No production capabilities are implied.*
-- **`[INTEGRATION]`**: Planned system-wide convergence and end-to-end life synthesis.
+- **`[PLANNED RESEARCH]`**: Canonical next research milestone formally agreed upon; experimental spec pending prior to prototyping.
+- **`[CONCEPTUAL]`**: Long-range research horizon sequence guiding architectural direction.
+- **`[VALIDATED RES.]`**: Formally specified and empirically verified in isolated research harnesses (`tests/evaluation_*/`); promoted or awaiting integration.
 - **`[FUTURE GATE]`**: Strict existential gate requiring complete empirical support across all prior phases before activation.
 
 ### Milestone Summary:
@@ -179,6 +181,13 @@ First Activation (Genesis Onboarding)         [🔒 FUTURE GATE]
 * **Phase 18 (Human Longitudinal Validation)**: Human-grounded empirical validation across 8 scenarios; authentic on-device neural RVC v2 voice (`VaresaGIJP` + `ja-JP-NanamiNeural`), 60 FPS lip-sync, and non-introspective safety invariants. `[VALIDATED]`
 * **Phase 19 (Multi-Timescale Affective Life & Temporal Continuity)**: Coupled Multi-Timescale Liquid Neural Network (MT-LNN: $\mathbf{h}_{\text{fast}} \in \mathbb{R}^{32}, \mathbf{s}_{\text{slow}} \in \mathbb{R}^{16}$) with Philia dynamic attractor grounding, biexponential relaxation, autonomous stress-to-fatigue conversion, and sub-2ms CPU execution. `[VALIDATED]`
 * **Phase 20 (Affective Recollection & Memory Reactivation)**: Closed-Loop Affective Recollection via slow-field latent forcing ($\mathbf{W}_{\text{rec}}\mathbf{r}_{\text{slow}}^{\text{bounded}}$), multi-modal retrieval scoring, competitive softmax gating, 16D slow trace co-encoding, and conversational pacing modulation. `[VALIDATED]`
+* **Phase 21 (Long-Term Relational Consolidation & Synaptic Homeostasis)**: Investigating how repeated interaction, accumulated shared history, and episodic recollection produce longer-term relational consolidation and adaptive homeostatic/synaptic plasticity without violating architectural invariants. `[🔬 PLANNED RESEARCH — NOT IMPLEMENTED]`
+* **Future Conceptual Horizons (Phases 22–26)**:
+  - *Phase 22*: Active Inference & Information Seeking (epistemic foraging, curiosity, uncertainty reduction).
+  - *Phase 23*: Affective Communication Adaptation (long-term stylistic attunement, dialectical grounding).
+  - *Phase 24*: Temporal Embodiment & Social Feedback (interpersonal synchrony, prosody/gaze resonance).
+  - *Phase 25*: Emergent Individuality & Autonomous Preferences (asymmetric curiosity, idiosyncratic affinities).
+  - *Phase 26*: Personalized Individual Trajectory (lifelong continuous developmental arc).
 * **First Activation (Genesis Onboarding)**: The solemn, irreversible activation ceremony bringing Lucia to life. Protected by `ActivationSafetyError` and un-onboarded storage invariant. `[🔒 FUTURE GATE]`
 
 

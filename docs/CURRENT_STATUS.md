@@ -15,10 +15,10 @@ The repository realizes a unified 16-stage cognitive pipeline orchestrating grou
 ┌────────────────────────────────────────────────────────────────────────┐
 │                   CANONICAL COGNITIVE DEVELOPMENT ROADMAP              │
 │                                                                        │
-│   FOUNDATION                                                           │
+│   COMPLETED & PRODUCTION VALIDATED                                     │
 │   ├── Phase 10: Affective Dynamics                 [✅ VALIDATED]       │
-│   ├── Phase 11: Affective Memory / Recollection    [🔬 VALIDATED RES.] │
-│   ├── Phase 12: Knowledge Learning                 [🔬 VALIDATED RES.] │
+│   ├── Phase 11: Affective Memory (Baseline A)      [🔬 VALIDATED RES.] │
+│   ├── Phase 12: Knowledge Learning (K0–K9)         [🔬 VALIDATED RES.] │
 │   ├── Phase 13: Relationship Development           [🔬 VALIDATED RES.] │
 │   ├── Phase 14: Embodiment & Affective Expression  [🔬 VALIDATED RES.] │
 │   ├── Phase 15: Affective Communication            [🔬 VALIDATED RES.] │
@@ -27,6 +27,17 @@ The repository realizes a unified 16-stage cognitive pipeline orchestrating grou
 │   ├── Phase 18: Human Longitudinal Validation      [✅ VALIDATED]       │
 │   ├── Phase 19: Multi-Timescale Affective Life     [✅ VALIDATED]       │
 │   ├── Phase 20: Affective Recollection             [✅ VALIDATED]       │
+│                                                                        │
+│   NEXT RESEARCH MILESTONE                                              │
+│   └── Phase 21: Relational Consolidation & Synaptic Homeostasis        │
+│                                                    [🔬 PLANNED RES.]   │
+│                                                                        │
+│   FUTURE CONCEPTUAL RESEARCH HORIZONS                                  │
+│   ├── Phase 22: Active Inference & Information Seeking                 │
+│   ├── Phase 23: Affective Communication Adaptation                     │
+│   ├── Phase 24: Temporal Embodiment & Social Feedback                  │
+│   ├── Phase 25: Emergent Individuality & Preferences                   │
+│   ├── Phase 26: Personalized Individual Trajectory                     │
 │   └── First Activation (Genesis Onboarding)        [🔒 FUTURE GATE]     │
 └────────────────────────────────────────────────────────────────────────┘
 ```
@@ -550,7 +561,7 @@ Authoritative test suite results as of commit `f20420a`:
 
 ---
 
-## 19. Remaining Research Roadmap & Next Milestone Status
+## 19. Canonical Research Roadmap & Next Milestone Status
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -563,18 +574,45 @@ Authoritative test suite results as of commit `f20420a`:
 │ Phase 18: Human Longitudinal Validation          [✅ VALIDATED]        │
 │ Phase 19: Multi-Timescale Affective Life         [✅ VALIDATED]        │
 │ Phase 20: Affective Recollection                 [✅ VALIDATED]        │
+│ Phase 21: Relational Consolidation & Synaptic    [🔬 PLANNED RESEARCH] │
+│           Homeostasis (Next Research Milestone)                        │
+│ Phase 22–26: Future Conceptual Horizons          [🔬 CONCEPTUAL]       │
 │ First Activation (Genesis Onboarding)            [🔒 FUTURE GATE]      │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Current Operational Stage:
-- **Phase 20 Production Implementation**: Completed, validated, and committed (`f20420a`).
-- **Active Task**: Post-Phase 20 Documentation Synchronization & Canonical State Update.
-- **Next Research Milestone**: To be established by project governance following canonical documentation sign-off.
-- **First Activation Guard**:
-  - `Development / Simulation != Lucia Activation`.
-  - `data/profile.json` remains `{"is_onboarded": false}`.
-  - First Activation ceremony remains an immutable future gate protected by `ActivationSafetyError`.
+### 19.1 Current Completed Baseline:
+- **Phase 19 (Multi-Timescale Affective Life & Temporal Continuity)**:
+  - Status: Research Validated $\to$ Architecture Approved $\to$ Production Implemented (`c23fe7e`).
+  - Realization: Coupled Multi-Timescale Liquid Neural Network (MT-LNN: $\mathbf{h}_{\text{fast}} \in \mathbb{R}^{32}, \mathbf{s}_{\text{slow}} \in \mathbb{R}^{16}$) with Philia dynamic attractor grounding and biexponential relaxation.
+- **Phase 20 (Affective Recollection & Memory Reactivation)**:
+  - Status: Research Validated $\to$ Architecture Approved $\to$ Production Implemented (`f20420a`).
+  - Realization: Closed-loop slow-field latent forcing ($\mathbf{W}_{\text{rec}}\mathbf{r}_{\text{slow}}^{\text{bounded}}$), multi-modal retrieval scoring, competitive softmax gating, 16D slow trace co-encoding, and somatic pacing latency modulation.
+  - Core Invariant: *Memory provides information; CognitiveOrchestrator decides actuation.* Affective recollection does not directly call or own `EmotionCore`.
+
+### 19.2 Canonical Next Research Milestone: Phase 21
+- **Phase Name**: **Phase 21 — Long-Term Relational Consolidation & Synaptic Homeostasis**
+- **Lifecycle Status**: **`[🔬 PLANNED RESEARCH — NOT IMPLEMENTED]`**
+- **Research Question & Objective**:
+  Investigate how repeated interaction, accumulated shared history, and episodic recollection produce longer-term relational consolidation and adaptive homeostatic/synaptic plasticity without violating Lucia's fundamental architectural invariants.
+- **Scope & Boundaries**:
+  - *Research-Only Phase*: Operates strictly in the research/experimentation cycle before any architecture gate or production realization.
+  - *Strict Non-Implementation*: Zero production code (`src/core/**`), zero runtime configuration changes, and zero permanent storage mutations.
+  - *Pre-Reflective Dynamical Discipline*: Relational consolidation manifests as unconscious parameter/weight attunement and baseline inertia, strictly prohibiting self-reported emotional declarations (*"We are closer now"*).
+  - *Storage Invariant*: Canonical `data/profile.json` remains permanently untouched (`{"is_onboarded": false}`).
+
+### 19.3 Future Conceptual Research Horizons (Phases 22–26):
+Beyond Phase 21, the agreed long-range research sequence spans five progressive conceptual horizons:
+1. **Phase 22 — Active Inference & Information Seeking**: Epistemic foraging, curiosity-driven question selection, and uncertainty reduction within conversational turns.
+2. **Phase 23 — Affective Communication Adaptation**: Long-term stylistic attunement, conversational rhythm adaptation, and shared dialectical grounding.
+3. **Phase 24 — Temporal Embodiment & Social Feedback**: Interpersonal synchrony, micromovement resonance, and reciprocal gaze/prosody dynamics.
+4. **Phase 25 — Emergent Individuality & Autonomous Preferences**: Asymmetric curiosity, idiosyncratic topical affinities, and authentic aesthetic preferences grounded in shared history.
+5. **Phase 26 — Personalized Individual Trajectory**: Coherent lifelong developmental trajectory unique to Lucia's single continuous relationship with the user.
+
+### 19.4 First Activation Guard:
+- `Development / Simulation != Lucia Activation`.
+- `data/profile.json` remains `{"is_onboarded": false}` bit-exact.
+- First Activation ceremony remains an immutable future gate (`[🔒 FUTURE GATE]`) requiring complete empirical verification of all prior research horizons before authorization.
 
 
 

@@ -203,5 +203,6 @@ Depending on your role or objective, follow these curated reading sequences:
 | **Phase 18 Audiovisual Regeneration Report** | `PHASE_18_LONGITUDINAL_AUDIOVISUAL_REGENERATION_REPORT.md` | `docs/specs/lucia-phase18-Human_Longitudinal_Validation/` | `PHASE_18_RVC_AUDIO_QUALITY_FINAL_VERIFICATION.md` |
 | **Multi-Timescale Affective Life & Temporal Continuity (P19)** | [`PHASE_19_PRODUCTION_REALIZATION_DESIGN.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase19-Multi_Timescale_Affective_Life/PHASE_19_PRODUCTION_REALIZATION_DESIGN.md) | `docs/MECHANISM.md` §2 Comp 2, 3 | `docs/specs/Lucia-phase19-Multi_Timescale_Affective_Life/` |
 | **Affective Recollection & Memory Reactivation (P20)** | [`PHASE_20_PRODUCTION_REALIZATION_DESIGN.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase20-Affective_Recollection/PHASE_20_PRODUCTION_REALIZATION_DESIGN.md) | `docs/MECHANISM.md` §2 Comp 5 | `docs/specs/Lucia-phase20-Affective_Recollection/` |
+| **Relational Consolidation & Synaptic Homeostasis (P21)** | `docs/CURRENT_STATUS.md` §19 | `docs/00_PROJECT_OVERVIEW.md` §6 | *Planned Research (Not Implemented)* |
 
 
