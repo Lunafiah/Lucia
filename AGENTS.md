@@ -4,6 +4,63 @@
 
 ---
 
+## 0. Current Operating Mode — Research-First Governance (Post-Phase 20)
+
+> **CURRENT STAGE: RESEARCH / EVIDENCE BUILDING — NOT ACTIVATION**
+
+Lucia has completed the currently documented production and research milestones through **Phase 20 — Affective Recollection & Memory Reactivation**. The repository currently treats the canonical cognitive architecture as an implemented and validated baseline, while the next research milestone is established through project governance and canonical documentation rather than inferred by an AI coding agent.
+
+### Mandatory Research-First Rules
+
+1. **Research is not production.** A research hypothesis, mathematical proposal, benchmark result, ablation, prototype, or evaluation harness MUST NOT be treated as a production capability merely because tests pass.
+2. **Evidence before promotion.** New mechanisms must first be isolated, measurable, reproducible, and evaluated against explicit acceptance criteria before any production integration is proposed.
+3. **Do not invent the next phase.** Agents MUST NOT create or assume a new numbered phase, roadmap milestone, subsystem, or activation prerequisite unless it is explicitly established by the authoritative project documentation or a user-approved research specification.
+4. **Preserve the canonical baseline.** Unless a task explicitly authorizes production integration, research work must remain isolated from the canonical runtime and persistent user state. Prefer `tests/evaluation_*`, research specifications, simulation fixtures, and disposable experimental modules for exploratory work.
+5. **No silent promotion.** A successful experiment does not authorize changes to `src/core/`, `data/`, lifecycle behavior, or the production cognitive pipeline. Promotion requires an explicit architectural decision and corresponding documentation update.
+6. **No activation during research.** `Development / Simulation != Lucia Activation` remains absolute. First Activation (Genesis Onboarding) remains a locked future gate until project governance explicitly changes that status.
+7. **Evidence hierarchy is authoritative:**
+   - `[VALIDATED / PRODUCTION IMPLEMENTED]` — implemented in runtime and verified by appropriate automated tests.
+   - `[RESEARCH VALIDATED]` — empirically supported in an isolated research/evaluation harness; not automatically production.
+   - `[ARCHITECTURE APPROVED]` — architecture approved for implementation, but implementation is not implied.
+   - `[CURRENT RESEARCH]` — active experimental investigation under controlled conditions.
+   - `[RESEARCH]` — theoretical/specification work without a production claim.
+   - `[INTEGRATION]` — planned convergence work; not an implementation authorization by itself.
+   - `[FUTURE GATE]` — explicitly blocked until its entry criteria are satisfied.
+
+### Required Agent Decision Order
+
+Before editing code, an agent MUST reason in this order:
+
+`Canonical docs → current status → research specification/evidence → architectural decision → implementation scope → tests → documentation`
+
+If the requested work is exploratory, the default outcome is **research artifact + evaluation evidence**, not production mutation.
+
+### What Agents Must Not Do in the Current Stage
+
+- Do not add speculative cognitive subsystems simply because they are biologically plausible.
+- Do not turn a research metric into a claimed psychological property or subjective experience.
+- Do not equate passing unit tests with scientific validation.
+- Do not modify the First Activation gate, onboarding state, or lifecycle safeguards as part of research.
+- Do not rewrite historical research conclusions merely to make the roadmap look linear. Preserve failed hypotheses, rejected candidates, ablations, and negative results as evidence.
+- Do not optimize for feature count. Optimize for falsifiability, causal attribution, reproducibility, isolation, and evidence quality.
+
+### Research Deliverable Standard
+
+Every substantive research increment should make it possible to answer:
+
+1. **What hypothesis is being tested?**
+2. **What mechanism is proposed?**
+3. **What is the control/baseline?**
+4. **What variables are manipulated and measured?**
+5. **What would falsify or reject the hypothesis?**
+6. **What evidence was obtained?**
+7. **What remains unproven?**
+8. **Does the result justify architecture approval, production promotion, or neither?**
+
+Agents MUST record these distinctions in the appropriate research/evaluation documentation rather than hiding them inside implementation notes.
+
+---
+
 ## 1. Core Ethos & Critical Clarification on Emotion/Affect
 
 ### What Lucia's Emotion Is — And What It Is Not
@@ -75,8 +132,7 @@ Lucia/
 │   │   └── server.py                           # FastAPI server (127.0.0.1:8765)
 │   └── core/
 │       ├── sensors/                            # Layer 1: Lexical valence & density encoding
-│       ├── emotion/                            # Layer 2: Continuous Fast-Loop LNN ODE solver
-│       ├── homeostasis/                        # Layer 3: Metabolic budgeting & generation constraints
+│       ├── emotion/                            # Layers 2–3: Continuous affective dynamics & homeostasis
 │       ├── inference/                          # Layer 4: Active Inference & CPU LNNTrainer
 │       ├── memory/                             # Layer 5: Kanerva SDM, DecayEngine, Ecphory
 │       ├── language/                           # Layer 6: Local GGUF Small Language Model
@@ -120,30 +176,234 @@ Lucia/
 
 ## 6. Testing & Quality Assurance Protocols
 
-Before submitting code changes or completing tasks, agents must execute the appropriate test suites:
+Before submitting changes, agents must run the smallest relevant verification set and clearly distinguish **implementation correctness** from **research evidence**. Do not run unrelated expensive suites merely to manufacture a green status.
 
-### Python Backend Tests
+### Canonical Python Backend
 ```powershell
-# Run all unit tests
 .venv\Scripts\pytest tests/unit -v
-
-# Run property-based Hypothesis tests (P1 - P30 invariants)
 .venv\Scripts\pytest tests/property -v
-
-# Run end-to-end integration tests
 .venv\Scripts\pytest tests/integration -v
 ```
 
-### Electron Desktop Tests
+### Research / Evaluation Harnesses
+Run the evaluation suite specific to the research increment, for example:
+```powershell
+.venv\Scripts\pytest tests/evaluation_<phase> -v
+```
+Research results MUST be reported separately from production regression results.
+
+### Electron Desktop
 ```powershell
 cd electron
 npm test
 ```
 
-### Verification Checklist for Agents:
+### Verification Checklist for Agents
+- [ ] Research work is isolated unless production integration was explicitly authorized.
+- [ ] Hypothesis, baseline/control, metrics, acceptance criteria, and falsification conditions are identifiable.
+- [ ] Research evidence is not described as production capability unless the canonical docs explicitly promote it.
 - [ ] No introspective or meta-self-awareness patterns introduced into prompts or outputs.
 - [ ] No character switchers or multiple persona presets created.
 - [ ] Historical phase specifications in `.kiro/specs/` remain untouched.
+- [ ] First Activation remains blocked unless explicitly authorized by canonical governance.
+- [ ] Canonical production data remains isolated from tests/simulation.
 - [ ] All new documentation follows the authority matrix in `docs/DOCUMENTATION_INDEX.md`.
-- [ ] Any architectural trade-off or pivot is recorded in `docs/DESIGN_DECISIONS.md`.
-- [ ] All tests pass without regression.
+- [ ] Any architectural trade-off, promotion, rejection, or pivot is recorded in `docs/DESIGN_DECISIONS.md`.
+- [ ] Test results identify exactly which suite was run and whether it proves correctness, stability, or research evidence.
+
+## 7. Standard Agent Work Procedure — Mandatory Workflow
+
+> **Every coding/research agent must follow this workflow by default.** A task prompt may narrow the scope, but should not need to repeat these baseline procedures.
+
+### 7.1 Before Doing Any Work
+
+1. **Read `AGENTS.md` first.** Treat it as the mandatory operating contract for the repository.
+2. Read the relevant canonical documents before making architectural or implementation decisions:
+   - `docs/00_PROJECT_OVERVIEW.md`
+   - `docs/CURRENT_STATUS.md`
+   - `docs/ARCHITECTURE.md`
+   - `docs/MECHANISM.md`
+   - `docs/DESIGN_DECISIONS.md`
+   - `docs/DOCUMENTATION_INDEX.md` when documentation structure is involved.
+3. Inspect the repository state before editing:
+   - current branch
+   - working tree status
+   - recent commits
+   - relevant existing implementation/tests
+4. Identify the **current phase/stage, task boundary, invariants, affected components, and expected deliverables**.
+5. If the task is research, identify the hypothesis, baseline/control, variables, metrics, falsification criteria, and evidence required **before implementing the experiment**.
+6. Do not begin implementation merely because a requested idea sounds reasonable. Resolve its architectural status first: existing rule, approved decision, active research, or future proposal.
+
+### 7.2 Plan Before Implementation
+
+For non-trivial work, produce a short execution plan internally or in the agent report before modifying files. The plan should identify:
+
+- files/components expected to change;
+- files/components explicitly protected from change;
+- implementation or experiment strategy;
+- tests/evaluations to run;
+- documentation that must be created or synchronized;
+- git actions required at completion.
+
+If the repository or canonical documents contradict the task request, **stop and resolve the contradiction rather than silently choosing one interpretation**.
+
+### 7.3 Research Procedure
+
+For research/evaluation tasks, use this sequence:
+
+`Question → Hypothesis → Mechanism → Baseline/Control → Experimental Design → Implementation → Evaluation → Analysis → Decision → Documentation`
+
+Mandatory rules:
+
+- Separate **research code** from production code whenever possible.
+- Prefer isolated evaluation harnesses, fixtures, simulation data, and disposable experiment modules.
+- Use controlled comparisons and ablations when causal attribution matters.
+- Record negative results, failed hypotheses, rejected mechanisms, and unexpected findings; do not delete them because they make the roadmap less elegant.
+- Never infer psychological properties, consciousness, subjective feeling, or human-equivalent cognition from an engineering metric alone.
+- A green test suite proves the tested software behavior; it does **not** by itself prove the scientific hypothesis.
+- A research result may conclude **promote / revise / reject / insufficient evidence**. Only an explicit architectural decision can promote research into production.
+- Do not optimize the experiment to obtain a preferred result. Preserve reproducibility and falsifiability.
+
+### 7.4 Implementation Procedure
+
+1. Inspect existing code before creating new abstractions.
+2. Prefer the smallest change that satisfies the approved requirement.
+3. Reuse existing interfaces, services, fixtures, and utilities when they already represent the correct architectural boundary.
+4. Do not duplicate an existing responsibility merely because a new name or module appears convenient.
+5. Keep production behavior unchanged during research unless production integration is explicitly authorized.
+6. Do not mix unrelated refactors, formatting churn, dependency upgrades, or speculative cleanup into a focused task.
+7. After implementation, inspect the final diff and verify that every changed file is intentional.
+
+---
+
+## 8. Documentation Creation & Persistence Rules
+
+### 8.1 Documentation Is Part of the Work
+
+If a task produces a new research result, architectural decision, implementation milestone, experiment, rejection, or material behavioral change, the corresponding documentation is part of the deliverable—not optional cleanup.
+
+### 8.2 Where Documents Belong
+
+- **Active/canonical project truth:** `docs/`
+- **Historical phase specifications:** `.kiro/specs/` and immutable unless explicitly designated otherwise by project governance.
+- **Research/evaluation artifacts:** use the established research/evaluation location defined by the current project structure; prefer a dedicated research document or `tests/evaluation_*` rather than burying scientific evidence in source-code comments.
+- **Temporary notes / scratch output:** keep outside canonical documentation and do not present them as project truth.
+
+Before creating a new document:
+
+1. Search for an existing document that already owns the topic.
+2. Prefer updating the existing canonical document over creating a duplicate.
+3. If a new document is genuinely required, establish its role, authority level, and relationship to existing docs.
+4. Do not create parallel "final", "final-v2", "latest", or duplicate truth documents.
+
+### 8.3 Documentation Status & Evidence
+
+Every research or milestone document should make clear, where applicable:
+
+- status/classification (`[CURRENT RESEARCH]`, `[RESEARCH VALIDATED]`, `[ARCHITECTURE APPROVED]`, `[VALIDATED / PRODUCTION IMPLEMENTED]`, `[FUTURE GATE]`, etc.);
+- date or commit when useful for traceability;
+- hypothesis/question;
+- method and baseline;
+- results/evidence;
+- limitations and unresolved questions;
+- resulting architectural decision, if any.
+
+Never upgrade a document's status simply because implementation exists or tests pass.
+
+### 8.4 Documentation Synchronization
+
+When implementation changes project truth, update the appropriate canonical documentation in the same task when authorized. At minimum, check whether these need synchronization:
+
+- `docs/CURRENT_STATUS.md`
+- `docs/00_PROJECT_OVERVIEW.md`
+- `docs/DESIGN_DECISIONS.md`
+- `docs/ARCHITECTURE.md`
+- `docs/MECHANISM.md`
+- `docs/DOCUMENTATION_INDEX.md`
+
+Do not rewrite historical documents merely to make them agree with the latest state. Preserve history and reconcile it through canonical active documentation and ADRs.
+
+---
+
+## 9. Git & Version-Control Procedure
+
+> **Git history is part of Lucia's engineering evidence. Keep it clean, traceable, and reversible.**
+
+### 9.1 Before Editing
+
+- Check `git status`.
+- Check the current branch.
+- Inspect recent commits relevant to the task.
+- Do not discard or overwrite pre-existing user changes.
+- If unrelated uncommitted changes exist, preserve them and avoid mixing them into the task.
+
+### 9.2 During Work
+
+- Keep changes logically scoped to the task.
+- Do not use destructive commands (`reset --hard`, broad checkout/revert, force operations, history rewriting) unless explicitly authorized.
+- Do not amend, squash, rebase, or rewrite existing commits unless explicitly requested/authorized.
+- Do not commit generated caches, secrets, credentials, local model weights, environment files, or unrelated artifacts.
+- Do not change `.gitignore` merely to hide files that should not be in the repository; determine whether the artifact belongs in version control first.
+
+### 9.3 Before Commit
+
+Run:
+
+```powershell
+git status
+git diff --check
+git diff --stat
+git diff
+```
+
+Then verify:
+
+- every changed file is intentional;
+- no secrets or credentials are present;
+- no unrelated changes are included;
+- tests/evaluations correspond to the actual change;
+- documentation reflects the resulting state when required.
+
+### 9.4 Commit Rules
+
+When the task is complete and the repository is in a coherent verified state:
+
+- Make a focused commit for the completed task unless the user explicitly requests otherwise.
+- Use a clear imperative commit message describing the actual change.
+- Do not claim a commit exists until Git confirms it.
+- After committing, verify with `git status` and `git log -1 --oneline`.
+- If a remote push is explicitly part of the task, verify the push result; otherwise do not push merely for convenience.
+- Never force-push by default.
+
+### 9.5 Reporting Git State
+
+The completion report should state, when applicable:
+
+- files changed;
+- tests/evaluations run and their exact result;
+- documentation synchronized;
+- commit hash/message;
+- whether changes were committed or remain uncommitted;
+- whether anything was intentionally left untouched or unresolved.
+
+Never report "complete" if required tests, documentation, or Git verification remain unknown.
+
+---
+
+## 10. Completion & Agent Handoff Protocol
+
+Before declaring a task complete, perform this final sequence:
+
+`Diff Review → Tests/Evaluation → Documentation Sync → Git Verification → Final Report`
+
+The final report should be concise and evidence-based. It should distinguish:
+
+- **Implemented** — what changed in code/config;
+- **Research result** — what the experiment actually established;
+- **Not established** — what remains unknown or unproven;
+- **Verified** — exact tests/evaluations run;
+- **Git** — commit state/hash;
+- **Next action** — only if explicitly determined by canonical governance.
+
+Do not invent a next phase or recommend additional implementation merely to make the report feel complete.
+
