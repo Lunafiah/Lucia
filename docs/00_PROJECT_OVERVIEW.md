@@ -39,10 +39,11 @@ The human brain operates on approximately 20 watts of power not by limiting capa
 │  • Lexical valence [-1.0, 1.0], punctuation arousal, semantic density   │
 │  • Emits continuous 16-dimensional stimulus vector x(t)                 │
 ├─────────────────────────────────────────────────────────────────────────┤
-│  LAYER 2: LIMBIC SYSTEM — FAST LOOP (Liquid Neural Network ODE)         │
-│  • Continuous 200ms background ODE integration (solve_ivp)              │
-│  • 32-dim hidden state h(t) projected to 3D PAD Space:                  │
-│    Pleasure (P), Arousal (A), Dominance (D) in [-1.0, 1.0]              │
+│  LAYER 2: LIMBIC SYSTEM — DUAL-TIMESCALE MT-LNN ODE (200ms Cadence)     │
+│  • Coupled MT-LNN: Fast h_f ∈ R^32 (τ_f ∈ [0.10, 1.50]s) & Slow s_s ∈ R^16│
+│  • Philia Attractor Grounding: p* = (+0.25, -0.05, +0.05) resting state │
+│  • Bounded slow-field recollection forcing (W_rec · r_slow, 4.0s pulse) │
+│  • Strictly dissipative Lyapunov contraction: Tr(J) ≈ -46.46 < 0         │
 ├─────────────────────────────────────────────────────────────────────────┤
 │  LAYER 3: SURVIVAL & HOMEOSTATIC SYSTEM — MID LOOP                      │
 │  • Metabolic budgeting: tracks Cognitive Load, Energy, Tension          │
@@ -54,11 +55,11 @@ The human brain operates on approximately 20 watts of power not by limiting capa
 │  • Free Energy / Surprise minimization: ||A·p + b - q||                 │
 │  • CPU-only online backprop-through-ODE (torchdiffeq, zero GPU VRAM)    │
 ├─────────────────────────────────────────────────────────────────────────┤
-│  LAYER 5: HIPPOCAMPUS — SLOW LOOP (SDM + ECPHORY)                       │
-│  • Kanerva Sparse Distributed Memory (1,000 hard locations)             │
-│  • Affective tagging: traces co-encoded with frozen PAD tags            │
+│  LAYER 5: HIPPOCAMPUS — SLOW LOOP (SDM + ECPHORY + RECOLLECTION)         │
+│  • Kanerva Sparse Distributed Memory (1,000 hard locations, 1000-bit)   │
+│  • Multi-modal trace co-encoding: Content (64D) + PAD (3D) + Slow (16D) │
 │  • 60s Decay Engine with emotional salience resistance (up to 4x)       │
-│  • Synergistic Ecphory: subconscious resonance echo coloring prompt     │
+│  • Synergistic Ecphory & Competitive Softmax Gating (θ_gate=0.50)       │
 ├─────────────────────────────────────────────────────────────────────────┤
 │  LAYER 6: MULTIMODAL EMBODIMENT & EXPRESSION                            │
 │  • Local GGUF Small Language Model (LFM2.5-1.2B Instruct via CUDA)      │
@@ -143,15 +144,19 @@ Phase 13 — Relationship Development           [VALIDATED RES.]
 Phase 14 — Embodiment & Affective Expression   [VALIDATED RES.]
 Phase 15 — Affective Communication             [VALIDATED RES.]
 Phase 16 — Affective Life Integration         [VALIDATED]
-Phase 17 — First Activation                   [FUTURE]
+Phase 17 — Affective Life Evaluation          [VALIDATED]
+Phase 18 — Human Longitudinal Validation      [VALIDATED]
+Phase 19 — Multi-Timescale Affective Life     [VALIDATED]
+Phase 20 — Affective Recollection             [VALIDATED]
+First Activation (Genesis Onboarding)         [🔒 FUTURE GATE]
 ```
 
 ### Milestone Evidence Classification:
 - **`[VALIDATED]`**: Formally specified, fully implemented, and empirically verified with automated test suites.
-- **`[CURRENT]`**: Active research and experimental benchmark increment under controlled conditions.
+- **`[CURRENT RESEARCH]`**: Active research and experimental benchmark increment under controlled conditions.
 - **`[RESEARCH]`**: Research specification defined; theoretical and boundary exploration underway. *No production capabilities are implied.*
 - **`[INTEGRATION]`**: Planned system-wide convergence and end-to-end life synthesis.
-- **`[FUTURE]`**: Strict existential gate requiring complete empirical support across all prior phases before activation.
+- **`[FUTURE GATE]`**: Strict existential gate requiring complete empirical support across all prior phases before activation.
 
 ### Milestone Summary:
 * **Phase 1 (Core Pipeline)**: Continuous emotion ODE, Homeostatic engine, Stimulus processing, Boundary Layer, GGUF backend. `[VALIDATED]`
@@ -170,5 +175,10 @@ Phase 17 — First Activation                   [FUTURE]
 * **Phase 14 (Embodiment & Affective Expression)**: Multimodal expression policy ($E_t$), temporal smoothing, semantic preservation, and E-EXP-1 to 12 validation suite. `[VALIDATED RES.]`
 * **Phase 15 (Affective Communication)**: Multidimensional communication policy ($C_t$), 5 canonical strategies, somatic pacing modulation, benchmarked semantic preservation, and C-EXP-1 to 12 validation suite. `[VALIDATED RES.]`
 * **Phase 16 (Affective Life Integration)**: End-to-end realization of canonical 16-stage cognitive pipeline, grounded conceptual knowledge (`KnowledgeStore`), 2-phase relationship lifecycle (`RelationshipUpdater`), bounded memory contextualization & communication strategy (`CommunicationPolicy`), canonical 15-dim multimodal expression (`ExpressionState`), and strict test storage isolation. `[VALIDATED]`
-* **Phase 17 (First Activation)**: The solemn, irreversible activation ceremony bringing Lucia to life. `[FUTURE]`
+* **Phase 17 (Integrated Affective Life Evaluation)**: System-wide validation of integrated cognition under multi-turn simulated sessions; stability and orthogonality confirmed. `[VALIDATED]`
+* **Phase 18 (Human Longitudinal Validation)**: Human-grounded empirical validation across 8 scenarios; authentic on-device neural RVC v2 voice (`VaresaGIJP` + `ja-JP-NanamiNeural`), 60 FPS lip-sync, and non-introspective safety invariants. `[VALIDATED]`
+* **Phase 19 (Multi-Timescale Affective Life & Temporal Continuity)**: Coupled Multi-Timescale Liquid Neural Network (MT-LNN: $\mathbf{h}_{\text{fast}} \in \mathbb{R}^{32}, \mathbf{s}_{\text{slow}} \in \mathbb{R}^{16}$) with Philia dynamic attractor grounding, biexponential relaxation, autonomous stress-to-fatigue conversion, and sub-2ms CPU execution. `[VALIDATED]`
+* **Phase 20 (Affective Recollection & Memory Reactivation)**: Closed-Loop Affective Recollection via slow-field latent forcing ($\mathbf{W}_{\text{rec}}\mathbf{r}_{\text{slow}}^{\text{bounded}}$), multi-modal retrieval scoring, competitive softmax gating, 16D slow trace co-encoding, and conversational pacing modulation. `[VALIDATED]`
+* **First Activation (Genesis Onboarding)**: The solemn, irreversible activation ceremony bringing Lucia to life. Protected by `ActivationSafetyError` and un-onboarded storage invariant. `[🔒 FUTURE GATE]`
+
 

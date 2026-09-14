@@ -333,15 +333,17 @@ This document captures:
 ---
 
 ### ADR-027: Closed-Loop Affective Recollection via Slow-Field Latent Forcing ($\mathbf{r}_{\text{slow}}^{\text{bounded}}$)
-* **Status**: **PROMOTED AT RESEARCH GATE & APPROVED FOR ARCHITECTURE GATE** (Phase 20 Research Cycle)
+* **Status**: **PROMOTED, APPROVED & PRODUCTION IMPLEMENTED** (Phase 20 Production Implementation, Commit: `f20420a`)
 * **Context**: In Phase 11, memory retrieval operated as open-loop textual context injection into the prompt, while affective memory resonance was limited to an uncoupled Echo Vector. Earlier attempts to inject memory vectors directly into `EmotionCore`'s single fast layer produced rapid transient decay ($t_{1/2} \approx 0.50\text{ s}$) and suffered from a critical scientific failure: synthetic random vectors produced downstream shifts functionally indistinguishable from genuine memories (*vector-dependent rather than memory-identity-dependent*).
 * **Decision**: Implement **Closed-Loop Affective Recollection** by directly coupling retrieved episodic memory traces into the slow latent field $\mathbf{s}_{\text{slow}} \in \mathbb{R}^{16}$ of the coupled MT-LNN:
-  1. **Episodic Latent Trace Encoding**: Every episodic interaction stores an encoded 16-dimensional slow-field latent trace $\mathbf{s}_{\text{enc}} \in \mathbb{R}^{16}$ alongside its frozen 3D PAD coordinates and textual summary.
-  2. **Multi-Modal Retrieval Scoring & Competitive Softmax Gating**: Memory retrieval computes composite score $S_i = 0.60 S_{\text{sem}} + 0.25 S_{\text{aff}} + 0.15 S_\sigma$. Traces undergo sharp softmax competitive gating ($\tau_{\text{comp}} = 0.20$) above activation threshold $\theta_{\text{gate}} = 0.50$. Irrelevant stimuli receive zero slow-field injection ($\|\mathbf{r}_{\text{slow}}\| = 0.0$).
+  1. **Episodic Latent Trace Encoding**: Every episodic interaction stores an encoded 16-dimensional slow-field latent trace $\mathbf{s}_{\text{enc}} \in \mathbb{R}^{16}$ alongside its frozen 3D PAD coordinates and textual summary. In Stage 16.1, `CognitiveOrchestrator` queries the live physiological state $\mathbf{s}_{\text{slow}}(t)$ via `get_slow_latent_state()` and embeds it in `MemoryTrace`. Pre-Phase-20 memories use a deterministic 3-case legacy fallback approximation (`synthesize_legacy_latent`).
+  2. **Multi-Modal Retrieval Scoring & Competitive Softmax Gating**: Memory retrieval computes composite score $S_i = 0.60 S_{\text{sem}} + 0.25 S_{\text{aff}} + 0.15 w_{\text{decay}}$. Traces undergo sharp softmax competitive gating ($\tau_{\text{comp}} = 0.20$) above activation threshold $\theta_{\text{gate}} = 0.50$. Irrelevant stimuli receive zero slow-field injection ($\|\mathbf{r}_{\text{slow}}\| = 0.0$).
   3. **Continuous ODE Slow-Field Forcing**: Reactivated recollection perturbates the continuous slow differential equation via bounded auxiliary forcing:
      $$\frac{d\mathbf{s}_{\text{slow}}}{dt} = -\frac{\mathbf{s}_{\text{slow}} - \mathbf{s}^*_{\text{philia}}}{\tau_{\text{slow, decay}}} + \frac{\tanh\Big(\mathbf{W}_{sf} \mathbf{h}_{\text{fast}} + \mathbf{W}_{sh} \Delta\mathbf{m} + \mathbf{W}_{\text{rec}} \mathbf{r}_{\text{slow}}^{\text{bounded}}\Big)}{\tau_{\text{slow, charge}}}$$
+     Under diagonal coupling $\mathbf{W}_{\text{rec}} = 0.35 \mathbf{I}_{16}$ for an external forcing window of 4.0 seconds (tracked in simulation integration time across step boundaries).
   4. **Counterfactual & Memory Identity Protection**: Quadplet control experiments confirm that downstream trajectory modulation depends strictly on coordinate-specific latent geometry: permuted/shuffled traces invert trajectory deflection (alignment $-0.525 \le 0.20$), matched-norm random Gaussian vectors yield uncorrelated dynamics (ratio $-0.317 \le 0.20$), and orthogonal memories produce opposing deflections ($-0.965 \le 0.10$).
-  5. **Pre-Reflective Downstream Modulation**: Recollected state modulates conversation through somatic pacing latency ($\Delta\tau_{\text{pace}} \ge 100\text{ ms}$) and communication attunement policy, strictly prohibiting self-reported emotional introspection.
+  5. **Pre-Reflective Downstream Modulation**: Recollected state modulates conversation through somatic pacing latency ($\Delta\tau_{\text{pace}} = w_{\text{pace}} \cdot \|\mathbf{r}_{\text{slow}}^{\text{bounded}}\|$, observed $+111.8\text{ ms}$) and communication attunement policy, strictly prohibiting self-reported emotional introspection.
+  6. **Decoupled Ownership & Rollback Guard**: `EcphoryEngine` emits `RecollectionResult` with zero dependency on `EmotionCore`. `CognitiveOrchestrator` owns all actuation decisions. Runtime feature flag `enable_affective_recollection: bool = True` enables instant rollback to Phase-19 affective execution path.
 * **Empirical Validation**:
   * Retrieval specificity: Precision@1 $= 1.000$, $\text{FRR} = 0.000$, $\text{SNR} = 4.712$.
   * Latent reconstruction fidelity: Cosine $= 0.998$, $L_2 \text{ error} = 0.317$, $\text{PAD error} = 0.138$.
@@ -349,9 +351,10 @@ This document captures:
   * Causal trajectory delta: Joy $\Delta\text{PAD}_{\text{AUC}} = 3.209$, Stress $\Delta\text{PAD}_{\text{AUC}} = 3.623$.
   * Counterfactual quadplet controls pass 100% of pre-registered criteria.
   * Deterministic bit-exact replay invariance, zero NaNs/Infs, maximum state norm $0.470 \le 1.00$.
+  * Production test suite: 9/9 passed (`tests/unit/test_phase20_production.py`); full unit regression: 592/592 passed.
 * **Consequences**:
   * *Positive*: Authentic, persistent multi-turn affective recollection grounded in actual shared interaction history; resolves the Phase 11 vector-dependence flaw.
-  * *Discipline*: Memory trace writes and reads must remain asynchronous, bounded in memory footprint ($\le 64\text{ KB}$ for 1,000 memories), with zero GPU VRAM allocation.
+  * *Discipline*: Memory trace writes and reads remain asynchronous, bounded in memory footprint ($\le 64\text{ KB}$ for 1,000 memories), with zero GPU VRAM allocation.
 
 ---
 
@@ -373,18 +376,26 @@ This document captures:
 
 ## 4. Concurrency & Lock Invariants
 
-All future contributions and modifications must strictly observe the following locking order to prevent deadlocks:
+All future contributions and modifications must strictly observe the following verified locking hierarchy:
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
-│                        LOCK HIERARCHY DISCIPLINE                       │
+│                   CANONICAL LOCK HIERARCHY DISCIPLINE                  │
 │                                                                        │
-│   1. _state_lock  (Held ≤ 1ms for PAD state snapshot read/write)       │
-│   2. _train_lock  (Held ≤ 2ms for atomic LNN weight swaps)             │
-│   3. _index_lock  (Held for SDM trace insert & decay sweep)            │
+│   1. _turn_lock     (CognitiveOrchestrator: non-reentrant turn lock)   │
+│   2. _step_lock     (EmotionCore: serializes ODE numerical ticks)      │
+│   3. _train_lock    (EmotionCore: atomic weight swaps, held ≤ 2ms)     │
+│   4. _stimulus_lock (EmotionCore: FIFO pending stimuli queue, ≤ 0.1ms) │
+│   5. _state_lock    (EmotionCore: PAD & slow latent snapshot, ≤ 1ms)   │
 │                                                                        │
-│   RULE: Never acquire _state_lock while holding _train_lock.           │
-│   RULE: Never perform disk I/O or network requests while holding locks.│
+│   Auxiliary:                                                           │
+│   • _index_lock     (AffectiveMemory: SDM trace insert & decay sweep)  │
+│                                                                        │
+│   RULE: Always acquire _train_lock BEFORE _state_lock.                 │
+│   RULE: NEVER acquire _state_lock and then attempt to acquire _train_lock.
+│   RULE: Hold locks strictly for bounded in-memory copies (≤ 1–2ms).    │
+│   RULE: NEVER perform disk I/O, network requests, or LLM calls under   │
+│         locks.                                                         │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -405,12 +416,12 @@ All future contributions and modifications must strictly observe the following l
 | **ARCH-009** | Cloud STT/TTS | Fully offline local speech pipeline (`faster-whisper`, RVC)| 100% privacy, zero cloud costs, works offline | Phase 5/6 | Implementation Fact |
 | **ARCH-010** | Casual chat wipes | Solemn End-of-Life boundary (`POST /lifecycle/end`) | Existential gravity; prevents relational contamination | Phase 7.7 | Implementation Fact |
 | **ARCH-011** | Monolithic process startup | Runtime Isolation: `LiveRuntime` vs `SimulationRuntime` | Enforce Development $\neq$ Activation; zero live contamination | Phase 8 | Implementation Fact |
-| **ARCH-012** | 5-tier inheritance (`Orchestrator` $\rightarrow$ `PresenceOrchestrator`) | `CognitiveOrchestrator` via composition (ADR-014) | Eliminates double stimulus/input bug; single turn ownership | Phase 9 | **Approved at Architecture Gate** |
-| **ARCH-013** | Direct renderer `fetch()` calls in `chat.js` | Complete `window.lucia` IPC bridge mediation (ADR-019) | Security isolation and dynamic port resilience | Phase 9 | **Approved at Architecture Gate** |
-| **ARCH-014** | Decorative Active Inference (logged only) | Causal Active Inference modulating Homeostasis & $k=2$ (ADR-015) | Free Energy minimization actively shapes behavior | Phase 9 | **Approved at Architecture Gate** |
-| **ARCH-015** | Synchronous voice in cognitive pipeline | Decoupled Expression Service via IPC (ADR-016) | Zero text latency; failure isolation; zero compute when muted | Phase 9 | **Approved at Architecture Gate** |
-| **ARCH-016** | Arbitrary 16-turn LNN batching | Two-stage plasticity: online salience + idle consolidation (ADR-017) | Zero CPU contention during conversation; salient learning | Phase 9 | **Approved at Architecture Gate** |
-| **ARCH-017** | Unsynchronized cognitive turn execution | Serialized turn mutex (`asyncio.Lock` & `_turn_lock`) (ADR-018) | Single continuous life; prevents state corruption | Phase 9 | **Approved at Architecture Gate** |
+| **ARCH-012** | 5-tier inheritance (`Orchestrator` $\rightarrow$ `PresenceOrchestrator`) | `CognitiveOrchestrator` via composition (ADR-014) | Eliminates double stimulus/input bug; single turn ownership | Phase 9 | Implementation Fact |
+| **ARCH-013** | Direct renderer `fetch()` calls in `chat.js` | Complete `window.lucia` IPC bridge mediation (ADR-019) | Security isolation and dynamic port resilience | Phase 9 | Implementation Fact |
+| **ARCH-014** | Decorative Active Inference (logged only) | Causal Active Inference modulating Homeostasis & $k=2$ (ADR-015) | Free Energy minimization actively shapes behavior | Phase 9 | Implementation Fact |
+| **ARCH-015** | Synchronous voice in cognitive pipeline | Decoupled Expression Service via IPC (ADR-016) | Zero text latency; failure isolation; zero compute when muted | Phase 9 | Implementation Fact |
+| **ARCH-016** | Arbitrary 16-turn LNN batching | Two-stage plasticity: online salience + idle consolidation (ADR-017) | Zero CPU contention during conversation; salient learning | Phase 9 | Implementation Fact |
+| **ARCH-017** | Unsynchronized cognitive turn execution | Serialized turn mutex (`asyncio.Lock` & `_turn_lock`) (ADR-018) | Single continuous life; prevents state corruption | Phase 9 | Implementation Fact |
 | **ARCH-018** | Upstream AVX-512 `llama-cpp-python` wheel | Hybrid Ampere CUDA (`sm_86`) + Native AVX2 `ggml-cpu.dll` (ADR-020) | Resolves `0xc000001d` on Zen 2 CPUs; enables real CUDA inference | Phase 9.5 | Implementation Fact |
 | **ARCH-019** | Unstructured episodic memory only | Grounded Conceptual Knowledge Subsystem (`KnowledgeStore`, ADR-021) | Distinguishes episodic memory from structured facts with provenance | Phase 16 | Implementation Fact |
 | **ARCH-020** | Stateless relationship dynamics | Persistently evolving Interpersonal Relationship (`RelationshipState`, ADR-022) | Provides slow relational inertia without within-turn runaway feedback | Phase 16 | Implementation Fact |
@@ -418,5 +429,5 @@ All future contributions and modifications must strictly observe the following l
 | **ARCH-022** | Hardcoded blendshape/voice tags | Canonical 15-Dim Multimodal Expression Policy (`ExpressionState`, ADR-024) | Controlled, semantically consistent multimodal embodiment | Phase 16 | Implementation Fact |
 | **ARCH-023** | 10-Stage Cognitive Pipeline | Canonical 16-Stage Unified Cognitive Pipeline & Isolated Stores (ADR-025) | Unified execution contract across all cognitive subsystems | Phase 16 | Implementation Fact |
 | **ARCH-024** | Single-layer limbic ODE collapsing to origin | Coupled Multi-Timescale LNN (MT-LNN) + Philia Attractor Grounding (ADR-026) | Multi-minute affective continuity, autonomous stress-to-fatigue conversion, exact Philia attractor convergence | Phase 19 | Implementation Fact |
-| **ARCH-025** | Open-loop text retrieval & uncoupled echo vector | Closed-Loop Affective Recollection via Slow-Field Latent Forcing ($\mathbf{r}_{\text{slow}}^{\text{bounded}}$, ADR-027) | Multi-turn affective reinstatement, memory-identity-dependent trajectory deflection, resolves Phase 11 flaw | Phase 20 | **Promoted at Research Gate & Approved for Architecture Gate** |
+| **ARCH-025** | Open-loop text retrieval & uncoupled echo vector | Closed-Loop Affective Recollection via Slow-Field Latent Forcing ($\mathbf{r}_{\text{slow}}^{\text{bounded}}$, ADR-027) | Multi-turn affective reinstatement, memory-identity-dependent trajectory deflection, resolves Phase 11 flaw | Phase 20 | Implementation Fact (Commit `f20420a`) |
 

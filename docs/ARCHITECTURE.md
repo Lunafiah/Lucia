@@ -147,9 +147,8 @@ Lucia provides two presentation contexts managed by Electron:
 Lucia operates with non-blocking concurrent daemon threads coordinated by strict thread-safe locks and turn serialization:
 
 | Thread / Worker Name | Module | Cadence | Purpose | Lock Discipline |
-|---|---|---|---|---|
 | **`Cognitive Turn Mutex`** | Brain Core (`server.py`) | Per Turn | Serializes cognitive turn execution | Holds `asyncio.Lock` & `_turn_lock` during `process()` |
-| **`EmotionCore-FastLoop`** | Limbic Engine | 200ms | Solves continuous emotion ODE | Holds `_step_lock`, `_state_lock` ($\le 1\text{ms}$), copies weights via `_train_lock` |
+| **`EmotionCore-FastLoop`** | Limbic Engine | 200ms | Solves continuous Coupled MT-LNN ODE ($\mathbf{h}_{\text{fast}} \in \mathbb{R}^{32}, \mathbf{s}_{\text{slow}} \in \mathbb{R}^{16}$) with auxiliary slow-field recollection forcing | Holds `_step_lock`, `_state_lock` ($\le 1\text{ms}$), copies weights via `_train_lock` |
 | **`DecayEngine-SlowLoop`** | Memory Store | 60s | Applies emotional memory decay | Holds `_index_lock` |
 | **`LNN-Trainer`** | Offline Plasticity | Idle / Salience | CPU Backpropagation-through-ODE | Holds `_train_lock` during weight swap ($\le 2\text{ms}$) |
 | **`SimClock Background`** | Simulation | Configurable | Virtual clock advancement when resumed | Dispatches synchronous callbacks; no autonomous loops |
@@ -186,7 +185,7 @@ Temporal synchronization validation and subsequent Temporal Ablation v2 experime
 
 | Category | State Variables | Update Mechanism | Lifetime & Persistence | Downstream Causal Influence |
 |---|---|---|---|---|
-| **A. Persistent Dynamical State** | L2 hidden state $h(t) \in \mathbb{R}^{32}$, committed $PAD \in [-1, 1]^3$, Kanerva SDM traces | Continuous Liquid Neural Network ODE integration (`solve_ivp`), background FastLoop (200ms) | **Continuous & Permanent across turns**. Decays smoothly toward Philia attractor ($+0.25, -0.05, +0.05$) under background ODE relaxation. | Directly sets the initial conditions for subsequent ODE steps, determines Active Inference expectation $\hat{p} = A \cdot p + b$, and cues SDM Synergistic Ecphory retrieval. |
+| **A. Persistent Dynamical State** | Coupled MT-LNN states ($\mathbf{h}_{\text{fast}} \in \mathbb{R}^{32}, \mathbf{s}_{\text{slow}} \in \mathbb{R}^{16}$), committed $PAD \in [-1, 1]^3$, Kanerva SDM traces (Content 64D + PAD 3D + Slow 16D) | Continuous Coupled MT-LNN ODE integration (`solve_ivp`), background FastLoop (200ms) | **Continuous & Permanent across turns**. Decays smoothly toward Philia attractor ($+0.25, -0.05, +0.05$) under background ODE relaxation. | Directly sets the initial conditions for subsequent ODE steps, determines Active Inference expectation $\hat{p} = A \cdot p + b$, and cues SDM Synergistic Ecphory retrieval. |
 | **B. Accumulated Physiological State** | Energy $\mathcal{E}$, Cognitive Load $\mathcal{C}$, Input frequency window | Discrete turn depletion/recovery; 60-second rolling sliding window in `HomeostaticEngine` | **Multi-turn temporal integration**. Depletes with turns ($\Delta \mathcal{E} = -0.05$ per turn) and compounds with rapid conversational frequency. | Causal behavioral constraints: directly throttles generation token budget (`max_tokens`: $350 \to 150 \to 80$), modulates sampling temperature, and injects conversational latency. |
 | **C. Instantaneous Derived Affect** | Free Energy Surprise $\mathcal{S}$, Per-turn Somatic Tension $\mathcal{T}$, $\Delta\text{PAD}$ transition | Single-step evaluation per cognitive turn | **Instantaneous (Zero inter-turn persistence)**. Evaluated strictly on the current transition $(p_{before} \to p_{after})$. Cleared each turn. | Triggers deliberative reasoning depth ($k=2$) if single-step surprise $\mathcal{S} \ge 0.60$ or tension $\mathcal{T} \ge 0.70$. Modulates online salience tagging. |
 
@@ -218,48 +217,51 @@ Executed via `tests/ablation/run_temporal_ablation_v2.py` using `LFM2.5-1.2B-Ins
 * **[EMPIRICAL RESULT] Background Autonomous Relaxation (Exp F)**:
   * Following acute stress displacement ($0.3159$ from resting attractor), idle FastLoop ODE integration smoothly relaxes limbic coordinates back toward Philia ($0.3159 \to 0.3087 \to 0.3049 \to 0.2979$ across $t = 0 \dots 12\text{s}$), verifying continuous pre-reflective recovery.
 
-### 5.3. Memory-Affect Coupling Boundary & Self-Model Readiness
+### 5.3. Memory-Affect Coupling: From Open-Loop Retrieval to Closed-Loop Recollection
 
-Following Phase 9.6 and Temporal Ablation v2, a dedicated **Architectural Boundary Audit** was conducted to verify whether Kanerva SDM associative retrieval (Synergistic Ecphory) exerts authentic causal feedback on Lucia's internal mathematical dynamics, and whether existing primitives support an integrated self-model.
+Lucia's memory-affect integration has evolved through three distinct evolutionary milestones:
 
-#### 1. Causal Graph: Closed-Loop Dynamics vs. Open-Loop Memory Sink
+#### 1. Historical Evolution: Open-Loop Memory Sink (Phase 9–19 Baseline)
+In early architectural stages (Phases 2 through 19), memory retrieval operated strictly as an open-loop textual context injection:
+- Stored traces in Kanerva SDM were queried via PAD cosine similarity, synthesizing an `echo_vector`.
+- In early prototypes, `echo_vector` was forwarded exclusively to `PromptAssembler`, printed as numeric context lines `[MEMORY ECHO]\necho_i: ...` for LLM generation.
+- The internal dynamical systems (Limbic ODE $\mathbf{h}_{\text{fast}}$, Homeostasis $\mathcal{C}, \mathcal{E}, \mathcal{T}$, and Active Inference $\mathcal{S}$) were deaf to retrieved memories.
 
-Tracing the 10-stage pipeline of `CognitiveOrchestrator` reveals:
-- **Closed-Loop Subsystems**:
-  - **Limbic Persistence Loop**: $h_{t-1} \xrightarrow{\text{ODE}} h_t \xrightarrow{} p_t \xrightarrow{} h_{t+1}$ (Continuous dynamical feedback).
-  - **Active Inference Adaptation Loop**: $\mathcal{S}_t \to \Delta b_t \to \hat{p}_{t+1}$ (Online generative belief adaptation).
-  - **Homeostatic Metabolic Loop**: $\text{Input Freq} + \mathcal{S}_t \to \mathcal{C}_t \to \text{Constraints}$ (Dynamic token budget throttling).
-- **Open-Loop Memory Sink (Architectural Boundary)**:
-  - Memory encoding (Stage 8) captures $p_{\text{final}}$ and stores content vector into `AffectiveMemory`.
-  - Memory retrieval (Stage 6) queries traces via PAD cosine resonance, synthesizing `echo_vector`.
-  - **Crucial Boundary**: `echo_vector` is forwarded **exclusively** to Stage 7 (`PromptAssembler`), where it is printed as numeric text lines `[MEMORY ECHO]\necho_i: ...` into the LLM prompt.
-  - `echo_vector` **never** feeds back into `EmotionCore` ODE, **never** alters `ActiveInferenceEngine` prediction priors $\hat{p}$, and **never** adjusts `HomeostaticEngine` markers.
-  - **Empirical Proof (`tests/ablation/run_memory_causal_ablation.py`)**: Comparing Condition A (Retrieval Enabled, $\|\text{echo}\|_2 = 1.0152$) against Condition B (Retrieval Disabled, $\|\text{echo}\|_2 = 0.0000$) demonstrated that post-probe PAD, surprise $\mathcal{S}$, cognitive load $\mathcal{C}$, and token budget remain **identical**.
+#### 2. Canonical S1–S16 Cognitive Pipeline Realization (Phase 16)
+Phase 16 formalized the unified, non-reentrant 16-stage cognitive execution pipeline (`CognitiveOrchestrator._execute_pipeline`), establishing clear ownership boundaries across all subsystems:
+- **S1**: Sensory Gating (`StimulusProcessor`)
+- **S2**: Limbic Fast Loop Integration (`EmotionCore`)
+- **S3**: Homeostatic Assessment (`HomeostaticEngine`)
+- **S4**: Active Inference Prediction & Surprise ($\mathcal{S}$)
+- **S5**: Homeostatic Generation Constraints
+- **S6**: Affective Ecphory & Recollection Analysis
+- **S7**: Episodic Memory Contextualization
+- **S8**: Conceptual Knowledge Retrieval (`KnowledgeStore`)
+- **S9**: Interpersonal Relationship Read (`RelationshipStore`)
+- **S10**: Affective Communication Policy (`CommunicationPolicy`)
+- **S11**: Local CUDA GGUF SLM Language Generation
+- **S12**: Boundary Safety Filtering & Pacing Modulation ($\Delta\tau_{\text{pace}}$)
+- **S13**: Multimodal Expression Policy (`ExpressionPolicy`, 15-dim state)
+- **S14**: Epistemic & SDM Storage (Stage 16.1: Live slow-field co-encoding)
+- **S15**: Plasticity Salience Tagging (`LNNTrainer`)
+- **S16**: Post-Turn Relationship State Update (`RelationshipUpdater`)
 
-#### 2. Four-Tier Classification of Affective Memory
+#### 3. Closed-Loop Affective Recollection via Slow-Field Latent Forcing (Phase 20 Production)
+Phase 20 resolved the open-loop boundary limitation by realizing **Closed-Loop Affective Recollection** coupled into the Coupled MT-LNN slow latent field ($\mathbf{s}_{\text{slow}} \in \mathbb{R}^{16}$):
+1. **Episodic Co-Encoding (Stage 16.1)**: `CognitiveOrchestrator` captures the live physiological slow latent state $\mathbf{s}_{\text{slow}}(t)$ from `EmotionCore.get_slow_latent_state()` and embeds it in `MemoryTrace.slow_latent_trace`. Pre-Phase-20 traces utilize a deterministic 3-case legacy fallback approximation (`synthesize_legacy_latent`).
+2. **Multi-Modal Retrieval Scoring & Competitive Softmax Gating (Stage 6)**: `EcphoryEngine.query_recollection()` evaluates composite salience $S_i = 0.60 S_{\text{sem}} + 0.25 S_{\text{aff}} + 0.15 w_{\text{decay}}$ with competitive softmax temperature ($\tau_{\text{comp}} = 0.20$) above threshold $\theta_{\text{gate}} = 0.50$, synthesizing bounded forcing $\mathbf{r}_{\text{slow}}^{\text{bounded}} \in [-0.85, 0.85]^{16}$.
+3. **Continuous ODE Slow-Field Forcing**: `CognitiveOrchestrator` invokes `EmotionCore.inject_recollection(r_slow, duration_sec=4.0)`. Auxiliary forcing couples into the continuous slow ODE under diagonal coupling $\mathbf{W}_{\text{rec}} = 0.35 \mathbf{I}_{16}$ for a 4.0-second pulse (tracked in simulation integration time across step boundaries).
+4. **Pre-Reflective Downstream Pacing Modulation (Stage 12)**: Somatic pacing latency delta $\Delta\tau_{\text{pace}} = w_{\text{pace}} \cdot \|\mathbf{r}_{\text{slow}}^{\text{bounded}}\|$ ($+111.8\text{ms}$ observed) modulates response rhythm without introspective roleplay.
+5. **Decoupled Subsystem Discipline**: `EcphoryEngine` emits `RecollectionResult` with zero dependency on `EmotionCore`. `CognitiveOrchestrator` owns actuation. Feature flag `enable_affective_recollection` provides instant fail-safe rollback to Phase-19 dynamics.
+
+#### 4. Four-Tier Classification of Affective Memory
 
 | Memory Level | Definition | Status in Lucia | Architectural Evidence |
 |---|---|:---:|---|
 | **Level A: Storage** | Discrete event representations co-stored with affective snapshots. | **PROVEN** | `AffectiveMemory.store(content, pad_final)` writes to SDMCore and index. |
 | **Level B: Associative Retrieval** | Cue similarity reactivates resonant traces based on current limbic state. | **PROVEN** | `EcphoryEngine.query(pad_final, traces)` computes PAD cosine resonance ($r > 0.6$). |
-| **Level C: Affective Recollection** | Retrieved memory feeds back to modify current internal mathematical state ($h, p, \mathcal{S}, \mathcal{C}$). | **ABSENT** | Memory echo is injected solely into LLM prompt; L2/L3/L4 are deaf to retrieved memories. |
-| **Level D: Autobiographical Continuity** | Causal history of interrelated events shaping an enduring self-model. | **ABSENT** | Past dialogues exist as raw transcripts (`data/chat_history.json`), not an episodic causal graph. |
-
-#### 3. Self-Model Readiness & Missing Causal Edges
-
-Lucia currently possesses distinct categories of knowledge about herself, but **lacks an integrated Self-Model**:
-- **Body Knowledge**: Window physics, Quad-Avatar WebGL engines, System Tray, audio formants (Operational).
-- **State Knowledge**: Instantaneous PAD coordinates, stability, energy, cognitive load (Operational).
-- **System Knowledge**: Hardware scalability profile, active model/voice configurations (Operational).
-- **Autobiographical Knowledge**: Unstructured chat transcript history and unlinked SDM traces (Fragmented).
-- **Integrated Self-Model**: **Non-existent**. No central representation unifies operational capabilities, relational stance, and ongoing history into a coherent model of "self".
-
-#### 4. Required Prerequisite Edges Before Constructing a Self-Model
-
-To advance to authentic self-modeling without falling into anthropomorphic prompt roleplay, three missing edges must be constructed:
-1. **Edge 1 (Affective Recollection — Level C)**: Connect `echo_vector` back into Active Inference prior expectation $\hat{p}$ or provide a subtle limbic bias in L2, allowing recalled events to dynamically affect subsequent emotional processing.
-2. **Edge 2 (Self-State Observation Interface)**: Implement a read-only introspection interface translating raw numerical values ($P, A, D, \mathcal{E}, \mathcal{C}$) into an interpreted functional self-state (e.g. cognitive readiness, metabolic exhaustion), strictly separated from linguistic self-report to maintain the No-Reflective-Ego invariant.
-3. **Edge 3 (Autobiographical Episodic Graph)**: Structure past interactions into a connected causal timeline rather than isolated dialogue turns or disconnected SDM vectors.
+| **Level C: Affective Recollection** | Retrieved memory feeds back to modify current internal mathematical state ($\mathbf{s}_{\text{slow}}, p, \tau_{\text{pace}}$). | **PROVEN & PRODUCTION IMPLEMENTED** | Phase 20: Stage 6 `inject_recollection()`, Stage 12 $\Delta\tau_{\text{pace}}$, Stage 16.1 slow trace co-encoding (`f20420a`). |
+| **Level D: Autobiographical Continuity** | Causal history of interrelated events shaping an enduring self-model. | **PLANNED RESEARCH** | Past dialogues exist as structured transcripts and SDM vectors; interconnected causal graph remains future research. |
 
 ---
 

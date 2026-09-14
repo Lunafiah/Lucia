@@ -1,9 +1,9 @@
 # Phase 20 — Affective Recollection & Memory Reactivation Specification
 
 > **Authoritative Research Specification: Closed-Loop Affective Memory Reactivation vs. Open-Loop Text Retrieval, Multi-Timescale Substrate Integration, and Empirical Evaluation Protocol**  
-> **Status:** Active Research Specification (Phase 20)  
+> **Status:** COMPLETED & EXPERIMENTALLY VALIDATED RESEARCH SPECIFICATION (PROMOTED TO PRODUCTION IN `f20420a`)  
 > **Directory:** `docs/specs/Lucia-phase20-Affective_Recollection/PHASE_20_RESEARCH_SPEC.md`  
-> **Authority Level:** Authoritative Research Specification  
+> **Authority Level:** Authoritative Research Specification (Historical Research Baseline)  
 > **Preceding Baseline:** Phase 19 Production Commit `c23fe7e` (`[✅ VALIDATED]`)  
 > **Storage Invariant:** `data/profile.json == {"is_onboarded": false}` (bit-exact)
 
@@ -54,7 +54,7 @@ To prevent conceptual conflation between information lookup and dynamical recoll
 │                                 ▼                                                 │
 │             Downstream Somatic Pacing & Behavioral Modulation                     │
 │    Effect:  Causally active, temporally persistent, bounded, and reversible.       │
-│    Status:  RESEARCH HYPOTHESIS TO BE EXPERIMENTALLY TESTED.                      │
+│    Status:  EXPERIMENTALLY VALIDATED & PROMOTED TO PRODUCTION ARCHITECTURE.        │
 └───────────────────────────────────────────────────────────────────────────────────┘
 ```
 

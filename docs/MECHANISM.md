@@ -96,25 +96,36 @@ The Stimulus Processor converts raw user input into continuous floating-point si
 
 ---
 
-### Component 2: Limbic System Fast Loop (`src/core/emotion/`)
+### Component 2: Limbic System — Coupled MT-LNN Fast/Slow Loop (`src/core/emotion/`)
 
-Lucia's emotional state is not simulated through text prompts; it is a **continuous physiological-like state machine** running a continuous **Liquid Time-Constant (LTC) differential equation** on a dedicated background thread every **200ms**:
+Lucia's emotional state is not simulated through text prompts; it is a **continuous physiological-like state machine** running a continuous **Coupled Multi-Timescale Liquid Neural Network (MT-LNN)** differential equation solved every **200ms**:
 
-$$\frac{dh}{dt} = \frac{-h + \tanh(W_f h + U_f x + b_f)}{\text{softplus}(W_\tau h + U_\tau x + b_\tau)}$$
+$$\frac{d\mathbf{h}_{\text{fast}}}{dt} = \frac{-\mathbf{h}_{\text{fast}} + \tanh(\mathbf{W}_f \mathbf{h}_{\text{fast}} + \mathbf{U}_f \mathbf{x} + \mathbf{W}_{fs} \mathbf{s}_{\text{slow}} + \mathbf{b}_f)}{\tau_{\text{fast}}(\mathbf{h}_{\text{fast}}, \mathbf{x})}$$
 
-* **Hidden State ($h \in \mathbb{R}^{32}$)**: Continuous 32-dimensional limbic state.
-* **Liquid Time-Constants**: The denominator $\text{softplus}(W_\tau h + U_\tau x + b_\tau)$ dynamically scales the rate of emotional change. Intense inputs cause fast shifts; calm moments allow slow, organic settling.
-* **PAD Projection**: The 32D hidden state is linearly projected onto the 3-dimensional **PAD Space** clamped to $[-1.0, 1.0]^3$:
+$$\frac{d\mathbf{s}_{\text{slow}}}{dt} = -\frac{\mathbf{s}_{\text{slow}} - \mathbf{s}^*_{\text{philia}}}{\tau_{\text{slow, decay}}} + \frac{\tanh\Big(\mathbf{W}_{sf} \mathbf{h}_{\text{fast}} + \mathbf{W}_{sh} \Delta\mathbf{m} + \mathbf{W}_{\text{rec}} \mathbf{r}_{\text{slow}}^{\text{bounded}}\Big)}{\tau_{\text{slow, charge}}}$$
+
+* **Fast Layer ($\mathbf{h}_{\text{fast}} \in \mathbb{R}^{32}$)**: Continuous 32-dimensional reactive limbic state responding to sensory stimuli $\mathbf{x}(t) \in \mathbb{R}^{16}$.
+* **Dynamic Time-Constants**: Fast timescale $\tau_{\text{fast}} = \tau_{\text{fast, min}} + (\tau_{\text{fast, max}} - \tau_{\text{fast, min}}) \cdot \sigma(\mathbf{W}_\tau \mathbf{h}_{\text{fast}} + \mathbf{U}_\tau \mathbf{x} + \mathbf{b}_\tau) \in [0.10, 1.50]\text{ s}$.
+* **Slow Affective Latent Field ($\mathbf{s}_{\text{slow}} \in \mathbb{R}^{16}$)**: Retains multi-minute emotional momentum ($\tau_{\text{slow, charge}} = 3.50\text{ s}, \tau_{\text{slow, decay}} = 28.00\text{ s}$).
+* **Coupling Strengths**: $\mathbf{W}_{fs} = 0.05$ (slow-to-fast), $\mathbf{W}_{sf} = 1.00$ (fast-to-slow), $\mathbf{W}_{sh} = 0.40$ (homeostatic deviation $\Delta\mathbf{m}$).
+* **Phase 20 Closed-Loop Recollection Forcing ($\mathbf{W}_{\text{rec}}\mathbf{r}_{\text{slow}}^{\text{bounded}}$)**: Diagonal coupling $\mathbf{W}_{\text{rec}} = 0.35 \mathbf{I}_{16}$ injecting auxiliary bounded forcing for 4.0s simulation time when salient memories are recollected.
+* **PAD Projection**: The fast hidden state $\mathbf{h}_{\text{fast}}$ is linearly projected onto the 3-dimensional **PAD Space** clamped to $[-1.0, 1.0]^3$:
   * **Pleasure ($P$)**: Valence from distressed ($-1.0$) to joyful/warm ($+1.0$).
   * **Arousal ($A$)**: Vitality from calm/sleepy ($-1.0$) to alert/excited ($+1.0$).
   * **Dominance ($D$)**: Social agency from submissive/shy ($-1.0$) to assertive ($+1.0$).
-* **Philia Resting Attractor**: When left idle without stimulus ($x=0$), the ODE smoothly converges back to Lucia's friendship baseline:
-  $$P^* = +0.25, \quad A^* = -0.05, \quad D^* = +0.05$$
+* **Philia Resting Attractor Grounding (Distinction Between State Spaces)**:
+  - **3D PAD Resting Baseline**: $\mathbf{p}^*_{\text{philia}} = [+0.25, -0.05, +0.05]^T \in [-1, 1]^3$ (`EmotionConfig.resting_baseline = (0.25, -0.05, 0.05)`). Represents the emotional output baseline in Pleasure, Arousal, Dominance.
+  - **16D Slow Latent Field Attractor**: $\mathbf{s}^*_{\text{philia}} = [0.20, -0.05, 0.05, 0, \dots, 0]^T \in \mathbb{R}^{16}$ (`EmotionConfig.philia_slow_baseline = (0.20, -0.05, 0.05)`). Represents the resting coordinates centering the slow latent manifold ($\Delta\mathbf{s} = \mathbf{s}_{\text{slow}} - \mathbf{s}^*_{\text{philia}}$).
+  - **Equilibrium Readout**: These two vectors operate in distinct mathematical spaces. When the coupled system relaxes at resting equilibrium ($\mathbf{h}_{\text{fast}} = \mathbf{0}, \mathbf{s}_{\text{slow}} = \mathbf{s}^*_{\text{philia}}$), the linear readout projection:
+    $$\mathbf{PAD}^* = \text{clip}\Big(\mathbf{W}_{\text{proj}, f}\mathbf{0} + \mathbf{W}_{\text{proj}, s}(\mathbf{s}^*_{\text{philia}} - \mathbf{s}^*_{\text{philia}}) + \mathbf{p}^*_{\text{philia}} + \mathbf{b}_{\text{proj}}, -1.0, 1.0\Big) = \mathbf{p}^*_{\text{philia}} = [+0.25, -0.05, +0.05]^T$$
+    restores the 3D PAD emotional state exactly to $\mathbf{p}^*_{\text{philia}}$.
+  - **Legacy Compatibility Mapping**: In `synthesize_legacy_latent()`, Case 1 checks whether a legacy 3D PAD tag matches the 3D baseline $\mathbf{p}^*_{\text{philia}} = [0.25, -0.05, 0.05]$; if so, it synthesizes the 16D slow attractor $\mathbf{s}^*_{\text{philia}} = [0.20, -0.05, 0.05, 0, \dots, 0]^T$ bit-exact.
+* **Strict Contraction Invariant**: The Jacobian trace is strictly dissipative ($\text{Tr}(J) \approx -46.46 < 0$ in tested parameter domain), preventing runaway saturation or autonomous limit cycles under tested bounds.
 * **Temporal Synchronization Barrier (`commit_stimulus`)**:
   To guarantee causal determinism, every cognitive turn injects stimulus $x$ via `token = push_stimulus(x)` and synchronously resolves the state transition via `commit_stimulus(token)`.
   * **Intra-Turn Transition**: The ODE advances exactly once under `_step_lock` consuming the stimulus in FIFO order, publishing the new PAD snapshot, and marking the token committed.
-  * **Inter-Turn Autonomous Relaxation**: Between conversation turns, the 200ms background thread integrates autonomous relaxation ($x=0$) towards Philia. Idle ticks never increment `_committed_stimulus_seq`.
-* **Microsecond Lock Safety**: Reading the state holds a lightweight `_state_lock` for $\le 1\text{ms}$, ensuring the UI and API polling never block the ODE solver.
+  * **Inter-Turn Autonomous Relaxation**: Between conversation turns, the 200ms background thread integrates autonomous relaxation towards Philia. Idle ticks never increment `_committed_stimulus_seq`.
+* **Microsecond Lock Safety**: Reading the state holds a lightweight `_state_lock` for $\le 1\text{ms}$, ensuring UI and API polling never block ODE integration.
 
 ---
 
@@ -170,39 +181,54 @@ Lucia adapts her emotional generative model and limbic dynamics using **Active I
 
 ---
 
-### Component 5: Hippocampus Affective Memory & Synergistic Ecphory (`src/core/memory/`)
+### Component 5: Hippocampus Affective Memory & Closed-Loop Recollection (`src/core/memory/`)
 
-Lucia uses a biologically inspired memory architecture based on **Pentti Kanerva's Sparse Distributed Memory (SDM)** (1988):
+Lucia uses a biologically inspired memory architecture based on **Pentti Kanerva's Sparse Distributed Memory (SDM)** (1988) augmented with Phase 20 Closed-Loop Affective Recollection:
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
 │                     AFFECTIVE MEMORY TRACE STRUCTURE                    │
 ├─────────────────────────────────────────────────────────────────────────┤
-│ • 64-bit Address Vector      (Contextual & semantic Hamming address)    │
-│ • 16-bit Content Vector      (Sensory stimulus signature)               │
+│ • 1,000-bit Address Vector   (Contextual & semantic Hamming address)    │
+│ • 64-dim Content Vector      (Sensory stimulus signature)               │
 │ • PAD Tag [P, A, D]          (Emotional state when memory was formed)   │
+│ • Slow Latent Trace s_slow   (16D slow-field physiological state)       │
 │ • Somatic State              (Energy, Stability, Load, Tension)         │
 │ • Timestamp & Base Intensity (|PAD| emotional salience magnitude)       │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 
 1. **Sparse Distributed Memory (SDM) Mechanics**:
-   * Operates $N=1,000$ distributed memory locations across a 64-bit Hamming space.
-   * Writing activates all locations within critical radius $r \le 28$.
+   * Operates $N=1,000$ distributed memory locations across a 1,000-bit Hamming space (`address_dim = 1000`, `m = 64`).
+   * Writing activates all locations within critical radius $r \le 451$ (binomial threshold for 1,000 bits).
 2. **60-Second Slow-Loop Decay Engine**:
    * A background daemon ticks every 60 seconds, decaying memory trace strengths exponentially:
      $$\text{Strength}(t) = \text{Strength}_0 \cdot e^{-\lambda_{eff} t}$$
    * **Emotional Intensity Resistance**: Memories formed during intense emotional moments ($|PAD| \gg 0$) resist decay up to **$4\times$ longer**:
      $$\lambda_{eff} = \frac{\lambda_0}{1 + 3 \cdot \max(|P|, |A|, |D|)}$$
-3. **Synergistic Ecphory (Subconscious Resonance Echo)**:
-   * When Lucia interacts with the user, her committed emotional state ($p_{\text{final}}$) acts as a retrieval cue across past SDM traces via PAD-space cosine similarity:
-     $$\text{Resonance}(p, p_{\text{tag}}) = \frac{p \cdot p_{\text{tag}}}{\|p\|_2 \|p_{\text{tag}}\|_2}$$
-   * Traces with $\text{Resonance} > 0.60$ and $\text{decay\_weight} > 0.05$ are weighted by score and decay to synthesize the **Echo Vector**:
-     $$\vec{e} = \frac{\sum_k (\text{Resonance}_k \cdot w_k) \vec{c}_k}{\sum_k (\text{Resonance}_k \cdot w_k)}$$
-   * **Architectural Boundary (Open-Loop Injection)**:
-     * The Echo Vector $\vec{e}$ is encoded as numerical lines `[MEMORY ECHO]\necho_i: ...` in `PromptAssembler` (Stage 7) for LLM generation context.
-     * $\vec{e}$ **does not feed back into the limbic ODE solver** ($dh/dt$), **does not alter Active Inference prediction error** ($\mathcal{S}$), and **does not adjust Homeostatic Engine** constraints.
-     * Consequently, memory operates at **Level A (Storage)** and **Level B (Associative Retrieval)**. Authentic **Level C (Affective Recollection)** and **Level D (Autobiographical Continuity)** remain distinct future capabilities requiring explicit causal feedback loops.
+3. **Synergistic Ecphory & Multi-Modal Salience (Stage 6)**:
+   * When Lucia interacts with the user, `EcphoryEngine` evaluates stored traces using multi-modal scoring:
+     $$S_i = 0.60 S_{\text{sem}} + 0.25 S_{\text{aff}} + 0.15 w_{\text{decay}}$$
+   * **Competitive Softmax Gating**: Traces above $\theta_{\text{gate}} = 0.50$ undergo softmax normalization at temperature $\tau_{\text{comp}} = 0.20$:
+     $$w_i = \frac{\exp(S_i / \tau_{\text{comp}})}{\sum_{j \in \mathcal{A}} \exp(S_j / \tau_{\text{comp}})}$$
+   * **Bounded Slow Forcing Synthesis**: Emits typed `RecollectionResult` containing:
+     $$\mathbf{r}_{\text{slow}}^{\text{bounded}} = \text{clip}\left(\tanh\Big(\sum_i w_i \mathbf{s}_i\Big) \cdot 0.85, -0.85, 0.85\right)$$
+4. **Closed-Loop Actuation via CognitiveOrchestrator**:
+   * `EcphoryEngine` has strictly ZERO import or actuation coupling to `EmotionCore`.
+   * `CognitiveOrchestrator` receives `RecollectionResult` in Stage 6 and evaluates the actuation policy:
+     * If active and `enable_affective_recollection` is true, dispatches `EmotionCore.inject_recollection(r_slow, duration_sec=4.0)`.
+     * In Stage 12, deriving conversational pacing latency delta $\Delta\tau_{\text{pace}} = w_{\text{pace}} \cdot \|\mathbf{r}_{\text{slow}}^{\text{bounded}}\|$ ($+111.8\text{ms}$ observed).
+     * In Stage 16.1, queries live physiological state $\mathbf{s}_{\text{slow}}(t)$ and passes to `AffectiveMemory.store()`.
+5. **Deterministic Legacy Compatibility Approximation**:
+   * Pre-Phase-20 memories lacking a slow latent vector utilize `AffectiveMemory.synthesize_legacy_latent()` enforcing a 3-case contract:
+     - Case 1 (Baseline PAD): Returns bit-exact $\mathbf{s}^*_{\text{philia}}$.
+     - Case 2 (Non-baseline valid PAD): Bounded linear projection $\mathbf{s}_{\text{approx}} = (\mathbf{W}_{\text{pad}\to\text{slow}} \Delta\mathbf{p}) + \mathbf{s}^*_{\text{philia}}$ clipped to $[-0.85, 0.85]$.
+     - Case 3 (Non-finite/NaN/Inf): Safe defensive fallback to $\mathbf{s}^*_{\text{philia}}$.
+6. **Memory Causal Maturity Hierarchy**:
+   * **Level A (Storage)**: PROVEN (`AffectiveMemory.store`).
+   * **Level B (Associative Retrieval)**: PROVEN (`EcphoryEngine.query`).
+   * **Level C (Affective Recollection)**: **PROVEN & PRODUCTION IMPLEMENTED** (Phase 20 Closed-Loop Slow-Field Forcing).
+   * **Level D (Autobiographical Continuity)**: PLANNED FUTURE RESEARCH (Structured episodic causal graph).
 
 ---
 

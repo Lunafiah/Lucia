@@ -32,10 +32,9 @@ The repository realizes a unified 16-stage cognitive pipeline orchestrating grou
 ```
 
 > **Roadmap Evidence Hierarchy:**  
-> - `[VALIDATED]`: Formally specified, fully implemented, and empirically verified with passing automated tests.  
-> - `[CURRENT RESEARCH]`: Active experimental increment with isolated candidate coupling benchmarks.  
-> - `[RESEARCH TRACK]`: Research specifications authored (`docs/specs/`). No production code implemented.  
-> - `[INTEGRATION]`: Holistic convergence phase.  
+> - `[VALIDATED / PRODUCTION IMPLEMENTED]`: Formally specified, fully implemented in `src/core/`, and verified with automated unit, property, and integration test suites.  
+> - `[RESEARCH VALIDATED]`: Formally specified and empirically verified in isolated research harnesses (`tests/evaluation_*/`); promoted or awaiting integration.  
+> - `[ARCHITECTURE APPROVED]`: Architecture design formally reviewed and approved by architectural governance prior to production implementation.  
 > - `[FUTURE GATE]`: Strict existential boundary preventing activation until all prior stages are empirically proven.
 
 ---
@@ -46,8 +45,8 @@ The repository realizes a unified 16-stage cognitive pipeline orchestrating grou
 |---|---|---|---|
 | **Stimulus Processor** | `src/core/gating/` | **STABLE** | Lexical valence scoring ($[-1, 1]$), punctuation cadence, semantic density. Emits 16-dim continuous vector. *(Historical doc: `src/core/sensors/`)* |
 | **Limbic Fast Loop** | `src/core/emotion/` | **STABLE** | Continuous 200ms background thread (live) or discrete virtual tick step (sim). Liquid Neural Network ODE integration. Enforces deterministic barrier `commit_stimulus(token)` with FIFO queue draining under `_step_lock` before post-turn PAD evaluation. Continuous multi-turn accumulation empirically proven. |
-| **Multi-Timescale Dynamics (Phase 19)** | `src/core/emotion/` / `tests/evaluation_phase19/` | **STABLE (Production Validated)** | Coupled Multi-Timescale LNN ($\mathbf{h}_{\text{fast}} \in \mathbb{R}^{32}, \mathbf{s}_{\text{slow}} \in \mathbb{R}^{16}$) with Philia dynamic attractor grounding ($\mathbf{p}^* = [+0.25, -0.05, +0.05]$). Biexponential relaxation ($\tau_f = 1.44\text{s}, \tau_s = 93.28\text{s}, \Delta\text{AIC}=6504.96$), autonomous stress-to-fatigue state transformation, historical hysteresis ($\Delta_{\max}=0.1749$), strictly dissipative Lyapunov contraction ($\text{Tr}(J) = -46.46 < 0$), and microsecond CPU execution ($1.33\text{ms}$). Stage 5 homeostatic context modulation verified. 682/682 automated tests passing. |
-| **Affective Recollection (Phase 20)** | `src/core/emotion/` / `src/core/memory/` / `tests/unit/test_phase20_production.py` | **STABLE (Production Validated)** | Closed-Loop Affective Recollection via Slow-Field Latent Forcing ($\mathbf{r}_{\text{slow}}^{\text{bounded}}$). Multi-modal salience scoring ($S_i = 0.60 S_{\text{sem}} + 0.25 S_{\text{aff}} + 0.15 w_{\text{decay}}$), competitive softmax gating ($\theta_{\text{gate}}=0.50, \tau_{\text{comp}}=0.20$), simulation-time bounded rectangular forcing pulse ($\mathbf{W}_{\text{rec}}=0.35\mathbf{I}_{16}$), 3-case legacy fallback approximation, Stage 12 conversational pacing modulation ($\Delta\tau_{\text{pace}}$), and Stage 16.1 live physiological state co-encoding. Fully verified by 9/9 production unit tests, 25/25 evaluation tests, and 592/592 unit test suite. |
+| **Multi-Timescale Dynamics (Phase 19)** | `src/core/emotion/` / `tests/evaluation_phase19/` | **STABLE (Production Validated)** | Coupled Multi-Timescale LNN ($\mathbf{h}_{\text{fast}} \in \mathbb{R}^{32}, \mathbf{s}_{\text{slow}} \in \mathbb{R}^{16}$) with Philia dynamic attractor grounding ($\mathbf{p}^* = [+0.25, -0.05, +0.05]$). Biexponential relaxation ($\tau_f = 1.44\text{s}, \tau_s = 93.28\text{s}, \Delta\text{AIC}=6504.96$), autonomous stress-to-fatigue state transformation, historical hysteresis ($\Delta_{\max}=0.1749$), strictly dissipative Lyapunov contraction ($\text{Tr}(J) \approx -46.46 < 0$ in tested domain), and microsecond CPU execution ($1.33\text{ms}$). Stage 5 homeostatic context modulation verified. Verified by 15/15 Phase 19 research evaluation tests (`tests/evaluation_phase19/`), 35/35 property invariants, and full unit regression suite. |
+| **Affective Recollection (Phase 20)** | `src/core/emotion/` / `src/core/memory/` / `tests/unit/test_phase20_production.py` | **STABLE (Production Validated)** | Closed-Loop Affective Recollection via Slow-Field Latent Forcing ($\mathbf{r}_{\text{slow}}^{\text{bounded}}$). Multi-modal salience scoring ($S_i = 0.60 S_{\text{sem}} + 0.25 S_{\text{aff}} + 0.15 w_{\text{decay}}$), competitive softmax gating ($\theta_{\text{gate}}=0.50, \tau_{\text{comp}}=0.20$), simulation-time bounded rectangular forcing pulse ($\mathbf{W}_{\text{rec}}=0.35\mathbf{I}_{16}$), 3-case legacy fallback approximation, Stage 12 conversational pacing modulation ($\Delta\tau_{\text{pace}}$), and Stage 16.1 live physiological state co-encoding. Fully verified by 9/9 production unit tests, 10/10 research evaluation tests, 35/35 property tests, and 592/592 full unit test suite. |
 | **Homeostatic Engine** | `src/core/emotion/` | **STABLE** | Tracks cognitive load, metabolic stamina (energy), tension, and stability. Modulates behavioral constraints: multi-turn input accumulation throttles token budget from 350 to 150. *(Historical doc: `src/core/homeostasis/`)* |
 | **Active Inference** | `src/core/inference/` | **STABLE (Causal)** | $3 \times 3$ linear generative transition model predicting PAD state. Computes Free Energy surprise $\mathcal{S} = \|A \cdot p_{before} + b - p_{after}\|_2$ evaluated on deterministically committed post-stimulus PAD. Causal: modulates cognitive load/tension and triggers $k=2$ when $\mathcal{S} > 0.60$. Online belief adaptation verified. |
 | **LNN Plasticity** | `src/core/inference/` | **STABLE** | Two-stage plasticity: online turn salience tagging + idle consolidation ($T_{\text{idle}} \ge 45\text{s}$) on CPU thread. Swaps weights into `EmotionCore` under 2ms `_train_lock`. |
@@ -372,6 +371,211 @@ $$\mathbf{Production\ Baseline:\ Unaltered\ Canonical\ Cognition}$$
 - **Production Isolation**: Communication policy is strictly contained within `tests/unit/test_affective_communication.py` and canonical specifications.
 - **Zero Production Mutation**: Core runtime files (`src/core/`) and persistent data files (`data/`) remain 100% bit-exact.
 - **Decision Rationale**: While mathematical formulation, strategy classification, pacing modulation, and benchmarked semantic preservation are fully proven, live full-pipeline synchronization (`Brain → Orchestrator → LLM → Voice → Avatar → synchronized Body`) requires end-to-end integration architecture, which is deferred to **Phase 16 (Unified Embodied Interaction / Affective Life Integration)**. No production promotion ADR is authored.
+
+*(Historical Record: The research frameworks of Phase 12, 13, 14, and 15 were subsequently promoted and unified into the production codebase in Phase 16 via ADR-021, ADR-022, ADR-023, ADR-024, and ADR-025).*
+
+---
+
+## 12. Phase 16: Affective Life Integration & Canonical 16-Stage Pipeline Realization
+
+Phase 16 (`docs/specs/lucia-phase16-Affective_Life_Integration/PHASE_16_ARCHITECTURE.md`) formally promoted and integrated the individual research modules of Phases 12–15 into a unified, end-to-end cognitive architecture.
+
+### 12.1 Promoted Production Subsystems:
+1. **Conceptual Knowledge Subsystem (`src/core/knowledge/`, ADR-021)**:
+   - Typed `Proposition` & `Concept` graph with provenance tracking (`DIRECT_EXPERIENCE`, `USER_STATED`, `INFERRED`, `CORE_AXIOM`).
+   - Forward inference engine ($d_{\max} \le 3$), thread-safe `KnowledgeStore`, atomic persistence.
+2. **Interpersonal Relationship Subsystem (`src/core/relationship/`, ADR-022)**:
+   - Persistent 4D state $\mathbf{R} = (\text{trust}, \text{familiarity}, \text{attunement}, \text{shared\_experience})$.
+   - Decoupled two-phase lifecycle: Stage 9 read snapshot vs. Stage 16 post-turn categorical signal update with inertia ($\alpha=0.03$) and absence decay ($0.005$).
+3. **Affective Communication & Contextual Grounding (`src/core/communication/`, ADR-023)**:
+   - 10D `CommunicationState`, 5 discrete modes (`DEEP_RECIPROCAL`, `ATTUNED_LIGHT`, `SUPPORTIVE_GROUNDING`, `CONCISE_PROTECTIVE`, `PLAYFUL_EXPLORATORY`).
+   - Bounded memory contextualization ($m_{ctx} \le 0.50$, zero limbic feedback), somatic pacing latency ($0 \le \tau \le 1000\text{ms}$).
+4. **Multimodal Expression Policy (`src/core/expression/`, ADR-024)**:
+   - Canonical 15-dim `ExpressionState` (3 text, 4 prosody, 5 facial blendshapes, 2 posture, 1 latency).
+   - Pure feedforward actuator decoupling (zero feedback into ODE $\mathbf{h} \in \mathbb{R}^{32}$), temporal smoothing ($\gamma=0.25$).
+5. **Storage Policy Isolation (`src/core/simulation/storage_policy.py`, ADR-025)**:
+   - Strict ephemeral RAM interception for test fixtures, guaranteeing bit-exact zero contamination of `data/` runtime files.
+
+### 12.2 Canonical Locked S1–S16 Cognitive Pipeline Execution Order:
+`CognitiveOrchestrator._execute_pipeline` executes strictly in linear sequence:
+- **S1: Sensory Gating**: Raw text encoded to 16D continuous stimulus vector $\mathbf{x}(t)$ via `StimulusProcessor`.
+- **S2: Limbic Fast Loop**: Injects stimulus and commits ODE step under deterministic synchronization barrier.
+- **S3: Homeostatic Assessment**: Evaluates metabolic energy, cognitive load, stability, and acute tension.
+- **S4: Active Inference**: Computes prediction surprise $\mathcal{S} = \|A \cdot p_{\text{before}} + b - p_{\text{after}}\|_2$; updates belief vector $b$.
+- **S5: Homeostatic Policy Selection**: Translates homeostatic and surprise state into generation constraints (token budget, temperature, reasoning depth $k$).
+- **S6: Affective Ecphory & Recollection**: Performs associative cosine resonance; in Phase 20, evaluates multi-modal salience and triggers bounded slow-field forcing.
+- **S7: Memory Contextualization**: Formats echo vector and bounded episodic context into prompt context lines.
+- **S8: Conceptual Knowledge Retrieval**: Queries `KnowledgeStore` for relevant structured propositions and concepts.
+- **S9: Interpersonal Relationship Snapshot**: Reads current immutable 4D relationship state $\mathbf{R}_t$.
+- **S10: Affective Communication Policy**: Determines communication strategy, formality, and directness from affect, relationship, and somatic state.
+- **S11: Language Generation**: Assembles pre-reflective prompt and executes local CUDA GGUF SLM inference.
+- **S12: Boundary Safety & Pacing**: Validates output through `BoundaryLayer` regex filters; computes somatic + recollection pacing latency ($\Delta\tau_{\text{pace}}$).
+- **S13: Multimodal Expression Policy**: Derives canonical 15D `ExpressionState` for avatar blendshapes, prosody, and posture.
+- **S14: Epistemic & SDM Storage**: Stores interaction trace in Kanerva SDM; in Phase 20 (Stage 16.1), co-encodes live slow latent field $\mathbf{s}_{\text{slow}}(t)$.
+- **S15: Plasticity Salience Tagging**: Evaluates turn salience; queues high-salience transitions for offline CPU consolidation.
+- **S16: Post-Turn Relationship Update**: Applies slow relational updates ($\alpha=0.03$) with temporal inertia based on turn interaction signals.
+
+---
+
+## 13. Phase 17: Integrated Affective Life Evaluation & Longitudinal Validation
+
+Phase 17 executed comprehensive end-to-end evaluation of the integrated cognitive architecture under multi-turn simulated sessions.
+- **System Stability**: Verified absence of numerical stalls, drift, or state saturation across 100+ simulated turns.
+- **Subsystem Orthogonality**: Confirmed that memory decay, relationship inertia, knowledge updates, and limbic ODE operate orthogonally without uncontrolled cross-talk.
+- **Cognitive Coherence**: Verified that generation constraints, communication policy, and multimodal expression remain synchronized with internal physiological state.
+
+---
+
+## 14. Phase 18: Human Longitudinal Interaction & Real-World Validation
+
+Phase 18 (`docs/specs/lucia-phase18-Human_Longitudinal_Validation/`) established human-grounded empirical validation across 8 longitudinal interaction scenarios (Scenarios A through G).
+- **Japanese Canonical Voice Realization**: Direct on-device neural RVC v2 synthesis (`RVCPipeline` + `SynthesizerTrn`) using canonical `ja-JP-NanamiNeural` base voice and `VaresaGIJP` target timbre.
+- **Controlled Signal Path Diagnosis**: Audited harmonic generator, Parselmouth F0 unvoiced interpolation, pre-interpolation FAISS $k=8$ retrieval, and headroom normalization; verified 100% Whisper ASR match, zero clipping, and clean intelligibility.
+- **Audiovisual Synchronization**: Validated 60 FPS Web Audio FFT formant analysis driving quad-engine avatar blendshapes and mouth aperture height.
+- **Adversarial & Boundary Verification**: 100% compliance with non-introspective safety invariants across challenging conversational probes.
+
+---
+
+## 15. Phase 19: Multi-Timescale Affective Life & Temporal Continuity (MT-LNN)
+
+Phase 19 (`docs/specs/Lucia-phase19-Multi_Timescale_Affective_Life/`) resolved the single-timescale affective amnesia limitation of earlier limbic ODE architectures by implementing the Coupled Multi-Timescale Liquid Neural Network.
+
+### 15.1 Production Architecture & Canonical Parameters:
+- **Coupled Dual-Timescale State Space**:
+  - Fast reactive layer: $\mathbf{h}_{\text{fast}} \in \mathbb{R}^{32}$ with $\tau_f \in [0.10, 1.50]\text{ s}$ (`hidden_dim = 32`, `tau_fast_min = 0.10`, `tau_fast_max = 1.50`).
+  - Slow affective latent field: $\mathbf{s}_{\text{slow}} \in \mathbb{R}^{16}$ (`hidden_slow_dim = 16`).
+  - Charging time-constant: $\tau_{\text{slow, charge}} = 3.50\text{ s}$ (`tau_slow_charge = 3.50`).
+  - Relaxation time-constant: $\tau_{\text{slow, decay}} = 28.00\text{ s}$ (`tau_slow_decay = 28.00`).
+  - Coupling strengths: $\mathbf{W}_{fs} = 0.05$ (`w_fs_coupling = 0.05`), $\mathbf{W}_{sf} = 1.00$ (`w_sf_coupling = 1.00`), $\mathbf{W}_{sh} = 0.40$ (`w_homeo_coupling = 0.40`).
+- **Philia Attractor Grounding (State Space Distinction)**:
+  - **3D PAD Resting Baseline**: $\mathbf{p}^*_{\text{philia}} = (+0.25, -0.05, +0.05) \in [-1, 1]^3$ (`resting_baseline = (0.25, -0.05, 0.05)`). Defines the emotional output equilibrium in Pleasure, Arousal, Dominance.
+  - **16D Slow Latent Field Attractor**: $\mathbf{s}^*_{\text{philia}} = (0.20, -0.05, 0.05, 0, \dots, 0) \in \mathbb{R}^{16}$ (`philia_slow_baseline = (0.20, -0.05, 0.05)`). Defines the resting coordinates centering the slow latent manifold ($\Delta\mathbf{s} = \mathbf{s}_{\text{slow}} - \mathbf{s}^*_{\text{philia}}$).
+  - *Distinction*: These are two distinct vectors in different state spaces. Unforced idle decay relaxes $\mathbf{s}_{\text{slow}} \to \mathbf{s}^*_{\text{philia}}$, which through linear projection readout restores the output $\mathbf{PAD} \to \mathbf{p}^*_{\text{philia}} = (+0.25, -0.05, +0.05)$ bit-exact. Legacy Case 1 uses $\mathbf{p}^*_{\text{philia}}$ to detect resting state and reconstructs $\mathbf{s}^*_{\text{philia}}$.
+- **Mathematical Invariants & Empirical Validation**:
+  - Strictly dissipative Lyapunov contraction ($\text{Tr}(J) \approx -46.46 < 0$ across tested domain), preventing runaway saturation.
+  - Autonomous stress-to-fatigue transformation verified across unforced idle intervals (84/90 steps in fatigue quadrant).
+  - Path-dependent historical hysteresis divergence ($\Delta_{\max} = 0.1749$).
+  - Mean CPU step latency: $1.332\text{ ms}$; 0.0 MB GPU VRAM contention.
+  - Validated by 15/15 passing tests in `tests/evaluation_phase19/`.
+  - Production commit: `c23fe7e`.
+
+---
+
+## 16. Phase 20: Affective Recollection & Memory Reactivation (Production Realization)
+
+Phase 20 (`docs/specs/Lucia-phase20-Affective_Recollection/`) resolved the open-loop limitation of memory retrieval by implementing Closed-Loop Affective Recollection via Slow-Field Latent Forcing.
+
+### 16.1 Architectural Mechanism:
+1. **Episodic Latent Trace Co-Encoding (Stage 16.1)**:
+   - In Stage 16.1, `CognitiveOrchestrator` queries the live physiological slow latent state $\mathbf{s}_{\text{slow}}(t) \in \mathbb{R}^{16}$ via `EmotionCore.get_slow_latent_state()` and passes it to `AffectiveMemory.store()`.
+   - Stored in `MemoryTrace.slow_latent_trace` ($\mathbb{R}^{16}$, float32, 64 bytes per episode).
+2. **Multi-Modal Retrieval Scoring & Competitive Softmax Gating (Stage 6)**:
+   - Composite salience score: $S_i = 0.60 S_{\text{sem}} + 0.25 S_{\text{aff}} + 0.15 w_{\text{decay}}$.
+   - Traces filtered by activation threshold $\theta_{\text{gate}} = 0.50$ (`recollection_gate_threshold = 0.50`) and weighted by competitive temperature $\tau_{\text{comp}} = 0.20$ (`recollection_softmax_temp = 0.20`).
+   - Synthesizes bounded forcing vector: $\mathbf{r}_{\text{slow}}^{\text{bounded}} = \text{clip}(\tanh(\mathbf{r}_{\text{slow}}) \cdot 0.85, -0.85, 0.85)$.
+3. **Continuous ODE Slow-Field Forcing**:
+   - `CognitiveOrchestrator` dispatches `EmotionCore.inject_recollection(r_slow, duration_sec=4.0)`.
+   - Injected into slow differential equation under diagonal coupling $\mathbf{W}_{\text{rec}} = 0.35 \mathbf{I}_{16}$ (`recollection_coupling_weight = 0.35`):
+     $$\frac{d\mathbf{s}_{\text{slow}}}{dt} = -\frac{\mathbf{s}_{\text{slow}} - \mathbf{s}^*_{\text{philia}}}{\tau_{\text{slow, decay}}} + \frac{\tanh\Big(\mathbf{W}_{sf} \mathbf{h}_{\text{fast}} + \mathbf{W}_{sh} \Delta\mathbf{m} + \mathbf{W}_{\text{rec}} \mathbf{r}_{\text{slow}}^{\text{bounded}}\Big)}{\tau_{\text{slow, charge}}}$$
+   - Forcing window is tracked strictly in **simulation integration time** across step boundaries; wall-clock `time.monotonic()` is strictly prohibited inside the numerical ODE derivatives.
+4. **Deterministic Legacy Compatibility Approximation**:
+   - For pre-Phase-20 memories lacking a slow latent trace, `AffectiveMemory.synthesize_legacy_latent()` enforces a strict 3-case contract:
+     - Case 1 (Baseline PAD): Returns bit-exact $\mathbf{s}^*_{\text{philia}}$.
+     - Case 2 (Non-baseline valid PAD): Bounded linear projection $\mathbf{s}_{\text{approx}} = (\mathbf{W}_{\text{pad}\to\text{slow}} \Delta\mathbf{p}) + \mathbf{s}^*_{\text{philia}}$ clipped to $[-0.85, 0.85]$.
+     - Case 3 (Non-finite/NaN/Inf): Safe defensive fallback to $\mathbf{s}^*_{\text{philia}}$.
+5. **Pre-Reflective Downstream Pacing Modulation (Stage 12)**:
+   - Somatic pacing latency delta: $\Delta\tau_{\text{pace}} = w_{\text{pace}} \cdot \|\mathbf{r}_{\text{slow}}^{\text{bounded}}\|$ (`recollection_pacing_weight = 120.0`).
+   - Modulates conversational cadence organically without introspective roleplay.
+6. **Subsystem Decoupling & Feature Flag**:
+   - `EcphoryEngine` emits `RecollectionResult` and has ZERO dependency on `EmotionCore`.
+   - `CognitiveOrchestrator` owns actuation.
+   - Runtime feature flag `enable_affective_recollection: bool = True` allows instant rollback to Phase-19 affective execution path while preserving data schemas.
+
+### 16.2 Production Validation:
+- Production implementation commit: **`f20420a`**.
+- 9/9 production tests passing in `tests/unit/test_phase20_production.py`.
+- 10/10 research evaluation tests passing in `tests/evaluation_phase20/`.
+- 592/592 full unit test suite passing.
+- 35/35 property invariants passing.
+- Storage invariant verified bit-exact: `data/profile.json == {"is_onboarded": false}`.
+
+---
+
+## 17. Concurrency, Thread Safety & Verified Lock Hierarchy
+
+All components strictly observe the verified repository lock hierarchy:
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│                   CANONICAL LOCK HIERARCHY DISCIPLINE                  │
+│                                                                        │
+│   1. _turn_lock     (CognitiveOrchestrator: non-reentrant mutex)       │
+│   2. _step_lock     (EmotionCore: serializes ODE numerical ticks)      │
+│   3. _train_lock    (EmotionCore: atomic weight swaps, held ≤ 2ms)     │
+│   4. _stimulus_lock (EmotionCore: FIFO pending stimuli queue, ≤ 0.1ms) │
+│   5. _state_lock    (EmotionCore: PAD & slow latent snapshot, ≤ 1ms)   │
+│                                                                        │
+│   Auxiliary:                                                           │
+│   • _index_lock     (AffectiveMemory: SDM trace insert & decay sweep)  │
+│                                                                        │
+│   RULES:                                                               │
+│   - Always acquire _train_lock BEFORE _state_lock.                     │
+│   - NEVER acquire _state_lock and then attempt to acquire _train_lock. │
+│   - Hold locks strictly for bounded in-memory copies (≤ 1–2ms).        │
+│   - NEVER perform disk I/O, network requests, or LLM calls under locks.│
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 18. Quality Assurance, Automated Test Suite & Storage Invariant Verification
+
+Authoritative test suite results as of commit `f20420a`:
+
+| Test Suite | Path | Total | Passed | Skipped | Notes |
+|---|---|---|---|---|---|
+| **Unit Test Suite** | `tests/unit/` | 592 | **592** | 0 | Comprehensive coverage across all subsystems |
+| **Property Tests** | `tests/property/` | 35 | **35** | 0 | Hypothesis property invariants (P1–P35) |
+| **Phase 19 Research** | `tests/evaluation_phase19/` | 15 | **15** | 0 | Multi-timescale empirical evaluation (EXP19.1–8) |
+| **Phase 20 Research** | `tests/evaluation_phase20/` | 10 | **10** | 0 | Recollection empirical evaluation (EXP20.1–10) |
+| **Phase 20 Production** | `tests/unit/test_phase20_production.py` | 9 | **9** | 0 | Black-box causal, fallback, gating & orchestrator tests |
+| **Integration Tests** | `tests/integration/` | 47 | **40** | 7 | 7 skipped in `test_llm_backend_integration.py` (`LUCIA_MODEL_PATH` unset) |
+
+### Canonical Storage Invariant:
+- `data/profile.json` SHA-256 / content check:
+  ```json
+  {"is_onboarded": false}
+  ```
+  Verified bit-exact. Zero test-state or simulation contamination of production runtime files.
+
+---
+
+## 19. Remaining Research Roadmap & Next Milestone Status
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│                      LUCIA MILESTONE STATUS MATRIX                     │
+├────────────────────────────────────────────────────────────────────────┤
+│ Phase 1–10: Core Limbic & Dynamics               [✅ VALIDATED]        │
+│ Phase 11–15: Cognitive & Embodiment Research     [🔬 VALIDATED RES.]   │
+│ Phase 16: Affective Life Integration             [✅ VALIDATED]        │
+│ Phase 17: Integrated Affective Life Evaluation   [✅ VALIDATED]        │
+│ Phase 18: Human Longitudinal Validation          [✅ VALIDATED]        │
+│ Phase 19: Multi-Timescale Affective Life         [✅ VALIDATED]        │
+│ Phase 20: Affective Recollection                 [✅ VALIDATED]        │
+│ First Activation (Genesis Onboarding)            [🔒 FUTURE GATE]      │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+### Current Operational Stage:
+- **Phase 20 Production Implementation**: Completed, validated, and committed (`f20420a`).
+- **Active Task**: Post-Phase 20 Documentation Synchronization & Canonical State Update.
+- **Next Research Milestone**: To be established by project governance following canonical documentation sign-off.
+- **First Activation Guard**:
+  - `Development / Simulation != Lucia Activation`.
+  - `data/profile.json` remains `{"is_onboarded": false}`.
+  - First Activation ceremony remains an immutable future gate protected by `ActivationSafetyError`.
+
 
 
 
