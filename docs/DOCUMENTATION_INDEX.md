@@ -1,6 +1,7 @@
 # Lucia — Documentation Index & Hierarchy System
 
-> **A Comprehensive Navigation System and Document Authority Hierarchy for Lucia**
+> **A Comprehensive Navigation System and Document Authority Hierarchy for Lucia**<br/>
+> *Consolidated Documentation Hierarchy — Post-Phase 21*
 
 ---
 
@@ -8,25 +9,26 @@
 
 To prevent confusion across development phases, Lucia maintains a strict documentation classification model:
 
-```
+```text
 ┌────────────────────────────────────────────────────────────────────────┐
 │                     DOCUMENTATION CATEGORIES                           │
 │                                                                        │
-│  1. AUTHORITATIVE (CORE TRUTH)                                         │
-│     Active system specifications, architecture, mechanisms, and live   │
-│     manuals. Always reflects current codebase implementation.          │
+│  1. CONSOLIDATED AUTHORITATIVE LIVING CANON (docs/)                    │
+│     • docs/00_PROJECT_OVERVIEW.md: Project identity, philosophy,       │
+│       current system status, subsystem health, and roadmap.            │
+│     • docs/ARCHITECTURE.md: Full technical architecture, dynamical     │
+│       mechanisms, mathematical models, and the complete ADR ledger.    │
+│     • docs/USER_MANUAL.md: Operating guide, mascot controls, setup.    │
 │                                                                        │
-│  2. HISTORICAL MILESTONE SPECS (.kiro/specs/)                          │
-│     Preserved immutable point-in-time specs from earlier phases.       │
-│     Maintained for audit trail, test criteria, and design rationale.   │
-│     NEVER merged into docs/ or overwritten.                            │
+│  2. HISTORICAL RESEARCH & PHASE SPECIFICATIONS (docs/specs/, .kiro/)   │
+│     Preserved immutable point-in-time specs, evaluation reports, and   │
+│     acceptance sign-offs from earlier milestones (Phases 1–21).        │
 │                                                                        │
-│  3. SUPERSEDED & DIVERGED SPECIFICATIONS                               │
-│     Specifications that pivoted during implementation (e.g. Phase 5    │
-│     desktop agency pivoted to embodied vocal/avatar presence).         │
+│  3. SUPERSEDED SPECIFICATIONS                                          │
+│     Specifications that pivoted during engineering implementation.     │
 │                                                                        │
-│  4. DOMAIN & ASSET DOCUMENTATION                                       │
-│     Specialized guides for 3D VRM, Live2D, and sprite set integration. │
+│  4. DOMAIN & ASSET GUIDES (models/)                                    │
+│     Specialized asset layout guides for 3D VRM, Live2D, and sprites.   │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -36,109 +38,73 @@ To prevent confusion across development phases, Lucia maintains a strict documen
 
 | Category | File Path | Status | Primary Purpose / Scope |
 |---|---|---|---|
-| **Authoritative** | [`docs/00_PROJECT_OVERVIEW.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/00_PROJECT_OVERVIEW.md) | **Active Truth** | Executive summary, core philosophy (*Philia*), 6-layer architecture, roadmap. |
-| **Authoritative** | [`docs/ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/ARCHITECTURE.md) | **Active Truth** | System-level architecture, thread safety, hardware scaling, mascot IPC protocol. |
-| **Authoritative** | [`docs/MECHANISM.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/MECHANISM.md) | **Active Truth** | Detailed mathematical formulas (ODE, SDM, LSI, Ecphory, VAD, Lip-sync geometry). |
-| **Authoritative** | [`docs/CURRENT_STATUS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/CURRENT_STATUS.md) | **Active Truth** | Live implementation snapshot, subsystem health matrix, active API routes. |
-| **Authoritative** | [`docs/DESIGN_DECISIONS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/DESIGN_DECISIONS.md) | **Active Truth** | Architectural Decision Records (ADRs), trade-offs, reconciled contradictions. |
-| **Authoritative** | [`docs/USER_MANUAL.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/USER_MANUAL.md) | **Active Truth** | User guide, installation, model layout, mascot shortcuts, audio/graphics settings. |
-| **Authoritative** | [`PHASE_8_ARCHITECTURE_REVIEW.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/.kiro/specs/lucia-phase8-ISOLATION/PHASE_8_ARCHITECTURE_REVIEW.md) | **Active Truth** | Authoritative post-Phase-8 architectural audit, state map, and baseline. |
-| **Authoritative** | [`PHASE_8.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/.kiro/specs/lucia-phase8-ISOLATION/PHASE_8.md) | **Active Truth** | Phase 8 Runtime Isolation & Simulation Environment specification and evidence. |
-| **Authoritative** | [`PHASE_9_ARCHITECTURE_GATE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/phase9/PHASE_9_ARCHITECTURE_GATE.md) | **Active Truth** | Formal Phase 9 Architectural Decision Gate (Revision v2.0): F-01 to F-04, 5-tier concurrency, state ownership, simulation validation, generation policy. |
+| **Authoritative Living Canon** | [`docs/00_PROJECT_OVERVIEW.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/00_PROJECT_OVERVIEW.md) | **Active Truth** | Canonical project overview: Executive summary, *Philia* philosophy, current subsystem health matrix, test statistics, and roadmap. |
+| **Authoritative Living Canon** | [`docs/ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/ARCHITECTURE.md) | **Active Truth** | Canonical technical architecture: 6-layer pipeline, mathematical mechanisms (MT-LNN ODE, SDM, Lip-sync), concurrency locks, and ADR Ledger (ADR-001 to ADR-028). |
+| **Authoritative Living Canon** | [`docs/USER_MANUAL.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/USER_MANUAL.md) | **Active Truth** | User guide: Personal Digital Room interface, Mascot shortcuts, audio/graphics hardware profiles, and local voice setup. |
+| **Authoritative Living Canon** | [`README.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/README.md) | **Active Truth** | Public front door, quick start commands, repository structure, and newcomer orientation. |
+| **Authoritative** | [`PHASE_8_ARCHITECTURE_REVIEW.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/.kiro/specs/lucia-phase8-ISOLATION/PHASE_8_ARCHITECTURE_REVIEW.md) | **Active Truth** | Authoritative post-Phase-8 architectural audit, state map, and simulation baseline. |
+| **Authoritative** | [`PHASE_8.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/.kiro/specs/lucia-phase8-ISOLATION/PHASE_8.md) | **Active Truth** | Phase 8 Runtime Isolation & Simulation Environment specification and invariants. |
+| **Authoritative** | [`PHASE_9_ARCHITECTURE_GATE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/phase9/PHASE_9_ARCHITECTURE_GATE.md) | **Active Truth** | Formal Phase 9 Architectural Decision Gate (Revision v2.0): F-01 to F-04, 5-tier concurrency, state ownership. |
 | **Authoritative** | [`PHASE_9.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/phase9/PHASE_9.md) | **Active Truth** | Canonical Phase 9 specification: Unified Cognitive Architecture & System Convergence. |
-| **Authoritative** | [`README.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/README.md) | **Active Truth** | Project entry point, quick start commands, repository structure. |
-| **Authoritative** | [`PHASE_7_UI_REFACTORING_SPEC.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/.kiro/specs/lucia-phase7-UI_refractoring/PHASE_7_UI_REFACTORING_SPEC.md) | **Active Truth** | Phase 7 UI Design System, tokens, component layouts, mascot controls. |
-| **Authoritative** | [`new_UI_requirement.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/.kiro/specs/lucia-phase7-UI_refractoring/new_UI_requirement.md) | **Active Truth** | Product brief for Phase 7: Personal Digital Room, One Continuous Life ontology. |
-| **Governance** | [`AGENTS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/AGENTS.md) | **Active Truth** | Operational instructions and strict rules for AI coding agents. |
+| **Authoritative** | [`PHASE_7_UI_REFACTORING_SPEC.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/.kiro/specs/lucia-phase7-UI_refractoring/PHASE_7_UI_REFACTORING_SPEC.md) | **Active Truth** | Phase 7 UI Design System: CSS tokens, component layouts, and Mascot physics. |
+| **Authoritative** | [`new_UI_requirement.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/.kiro/specs/lucia-phase7-UI_refractoring/new_UI_requirement.md) | **Active Truth** | Product brief for Phase 7: Personal Digital Room, One Continuous Life companion ontology. |
+| **Governance** | [`AGENTS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/AGENTS.md) | **Active Truth** | Operational instructions, lock discipline, and strict invariants for AI coding agents. |
 | **Historical Seed** | [`docs/Triết lý thiết kế AI cảm xúc.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/Triết lý thiết kế AI cảm xúc.md) | **Historical** | Original research whitepaper (Vietnamese) founding the 20W WBA paradigm. |
 | **Historical Spec** | [`lucia-core-phase1`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/.kiro/specs/lucia-core-phase1/) | **Historical** | Phase 1 milestone specification (EmotionCore, Homeostasis, BoundaryLayer). |
 | **Historical Spec** | [`lucia-memory-phase2`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/.kiro/specs/lucia-memory-phase2/) | **Historical** | Phase 2 milestone specification (SDMCore, AffectiveMemory, Decay, Ecphory). |
 | **Historical Spec** | [`lucia-ui-phase3`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/.kiro/specs/lucia-ui-phase3/) | **Historical** | Phase 3 milestone specification (FastAPI server, Electron IPC, debug panel). |
 | **Historical Spec** | [`lucia-inference-phase4`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/.kiro/specs/lucia-inference-phase4/) | **Historical** | Phase 4 milestone specification (ActiveInference, LNNTrainer, torchdiffeq). |
 | **Historical Spec** | [`lucia-refinement-phase6`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/.kiro/specs/lucia-refinement-phase6/) | **Historical** | Phase 6 milestone specification (Packaging, System Tray, Mascot, LSI). |
-| **Active Spec** | [`lucia-phase9-cognition`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/.kiro/specs/lucia-phase9-cognition/) | **Active Truth** | Phase 9 milestone specification (Unified Cognition & Causal Inference). |
-| **Active Spec** | [`AFFECTIVE_DYNAMICS_SPEC.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase10-Affective_Dynamics/AFFECTIVE_DYNAMICS_SPEC.md) | **Active Truth** | Phase 10 canonical specification: Mathematical formulation, state taxonomy, temporal contract, causal graph, and Phase 11 memory boundary. |
-| **Active Spec** | [`AFFECTIVE_MEMORY_SPEC.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase11-Affective_Memory/AFFECTIVE_MEMORY_SPEC.md) | **Active Truth** | Phase 11 canonical specification: Retrieval vs. Recollection, Candidate Hypotheses A–E, and 8 empirical evaluation criteria. |
-| **Research Spec** | [`KNOWLEDGE_LEARNING_SPEC.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase12-Knowledge_Learning/KNOWLEDGE_LEARNING_SPEC.md) | **Research Spec** | Phase 12 research specification: Memory vs Knowledge distinction, K0–K9 maturity hierarchy, LLM-as-Teacher boundary. |
-| **Research Spec** | [`RELATIONSHIP_DEVELOPMENT_SPEC.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase13-Relationship_Development/RELATIONSHIP_DEVELOPMENT_SPEC.md) | **Research Spec** | Phase 13 research specification: Core Relational Orientation (*Philia*) vs dynamic relationship state ($R_t$), temporal inertia, R-EXP-1 to 12 validation suite. |
-| **Research Spec** | [`AFFECTIVE_EXPRESSION_SPEC.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase14-Embodiment_Affective_Expression/AFFECTIVE_EXPRESSION_SPEC.md) | **Research Spec** | Phase 14 research specification: Multimodal expression policy ($E_t$), temporal smoothing, semantic preservation, E-EXP-1 to 12 validation suite. |
-| **Research Spec** | [`AFFECTIVE_COMMUNICATION_SPEC.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase15-Affective_Communication/AFFECTIVE_COMMUNICATION_SPEC.md) | **Research Spec** | Phase 15 research specification: Multidimensional communication policy ($C_t$), 5 canonical strategies, somatic pacing modulation, benchmarked semantic preservation, C-EXP-1 to 12 validation suite. |
-| **Active Spec** | [`PHASE_16_ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase16-Affective_Life_Integration/PHASE_16_ARCHITECTURE.md) | **Active Truth** | Phase 16 canonical architecture: 16-stage cognitive pipeline, promoted subsystems (Knowledge, Relationship, Communication, Expression), two-phase lifecycle, causal graph, and test storage isolation. |
-| **Active Spec** | [`PHASE_18_SPECIFICATION.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase18-Human_Longitudinal_Validation/PHASE_18_SPECIFICATION.md) | **Active Truth** | Phase 18 canonical specification: Human Longitudinal Interaction & Real-World Validation, canonical Japanese language realization policy, 8 scenarios, audiovisual evidence standards, adversarial benchmarks. |
-| **Active Protocol** | [`HUMAN_EVALUATION_PROTOCOL.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase18-Human_Longitudinal_Validation/HUMAN_EVALUATION_PROTOCOL.md) | **Active Truth** | Phase 18 Human Longitudinal Evaluation Protocol: H1–H10 Likert rubrics, observation methodologies, and empirical scenario records. |
-| **Validation Report** | [`PHASE_18_EVALUATION_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase18-Human_Longitudinal_Validation/PHASE_18_EVALUATION_REPORT.md) | **Active Truth** | Comprehensive 26-section evaluation report: 9 invariant gates, audiovisual synchronization matrix, Columbina sprite analysis, adversarial boundary benchmarks, and longitudinal trajectories. |
-| **Verification Report** | [`PHASE_18_VOICE_RUNTIME_VERIFICATION_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase18-Human_Longitudinal_Validation/PHASE_18_VOICE_RUNTIME_VERIFICATION_REPORT.md) | **Active Truth** | Authentic on-device neural RVC v2 runtime verification (`VaresaGIJP`): real speech evidence, non-identity mathematical proof, status taxonomy, and 7/7 passing tests. |
-| **Research Proposal** | [`PHASE_19_RESEARCH_PROPOSAL.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase19-Multi_Timescale_Affective_Life/PHASE_19_RESEARCH_PROPOSAL.md) | **Active Truth** | Phase 19 research proposal: Multi-timescale affective dynamics, temporal continuity, mathematical formulation, and experimental design. |
-| **Experiment Plan** | [`PHASE_19_EXPERIMENT_PLAN.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase19-Multi_Timescale_Affective_Life/PHASE_19_EXPERIMENT_PLAN.md) | **Active Truth** | Phase 19 formal experiment plan: Protocols EXP-19.1 through EXP-19.8, empirical metrics, statistical gates, and testing procedures. |
-| **Research Results** | [`PHASE_19_RESULTS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase19-Multi_Timescale_Affective_Life/PHASE_19_RESULTS.md) | **Active Truth** | Phase 19 empirical results: Quantitative validation of H1–H6, biexponential separation, Philia convergence, stress-to-fatigue conversion, and hardware profiling. |
-| **Acceptance Report** | [`PHASE_19_ACCEPTANCE_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase19-Multi_Timescale_Affective_Life/PHASE_19_ACCEPTANCE_REPORT.md) | **Active Truth** | Phase 19 formal acceptance report: Quality assurance verification, 15/15 passing tests, promotion gate sign-off, and implementation directives. |
-| **Research Spec** | [`PHASE_20_RESEARCH_SPEC.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase20-Affective_Recollection/PHASE_20_RESEARCH_SPEC.md) | **Historical Research Spec (Completed & Validated)** | Phase 20 research specification: Affective Recollection & Memory Reactivation, closed-loop slow field coupling, operational definitions, H1–H7, C0–C6, and pre-registered criteria. |
-| **Research Results** | [`PHASE_20_RESULTS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase20-Affective_Recollection/PHASE_20_RESULTS.md) | **Active Truth** | Phase 20 empirical results: 10/10 test tracks passed, counterfactual identity proof, reconstruction fidelity, and human-interpretable traces. |
-| **Evaluation Report** | [`PHASE_20_RESEARCH_EVALUATION_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase20-Affective_Recollection/PHASE_20_RESEARCH_EVALUATION_REPORT.md) | **Active Truth** | Phase 20 formal scientific evaluation report: Hypotheses H1–H7 confirmation, resolution of Phase 11 vector-dependence flaw, ablation insights, and promotion gate recommendation. |
-| **Production Design** | [`PHASE_20_PRODUCTION_REALIZATION_DESIGN.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase20-Affective_Recollection/PHASE_20_PRODUCTION_REALIZATION_DESIGN.md) | **Active Truth** | Phase 20 production architecture design: Closed-loop slow-field forcing, multi-modal scoring, competitive softmax gating, simulation-time ODE pulse, lock hierarchy, and S1–S16 pipeline integration. |
-| **Acceptance Report** | [`PHASE_20_ACCEPTANCE_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase20-Affective_Recollection/PHASE_20_ACCEPTANCE_REPORT.md) | **Active Truth** | Phase 20 formal acceptance & closure report: Research validation sign-off, Architecture Gate approval, and production implementation acceptance (Commit `f20420a`, 9/9 production tests, 592/592 unit test suite). |
-| **Research Spec** | [`PHASE_21_RESEARCH_SPEC.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase21-Relational_Consolidation/PHASE_21_RESEARCH_SPEC.md) | **Historical Research Spec (Completed & Validated)** | Phase 21 research specification: Long-Term Relational Consolidation & Synaptic Homeostasis, 3-tier multi-timescale plasticity, spectral norm bound, and H1–H6 criteria. |
-| **Research Results** | [`PHASE_21_RESULTS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase21-Relational_Consolidation/PHASE_21_RESULTS.md) | **Active Truth** | Phase 21 empirical results: 15/15 automated tests passed, anti-vector-bias proof, Cohen's $d = 2.999$, Philia reversibility, and CPU performance benchmarks. |
-| **Evaluation Report** | [`PHASE_21_RESEARCH_EVALUATION_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase21-Relational_Consolidation/PHASE_21_RESEARCH_EVALUATION_REPORT.md) | **Active Truth** | Phase 21 formal scientific evaluation report: 8 deliverable questions answered, 6 open research questions evaluated, and promotion gate recommendation. |
-| **Production Design** | [`PHASE_21_PRODUCTION_REALIZATION_DESIGN.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase21-Relational_Consolidation/PHASE_21_PRODUCTION_REALIZATION_DESIGN.md) | **Active Truth** | Phase 21 production architecture design: Standalone ConsolidationEngine, decoupled 3-tier plasticity, spectral norm bound $\le 0.08$, ADR-022 Stage 16.2/16.3 integration, lock hierarchy, and 4-invariant fallback contract. |
-| **Acceptance Report** | [`PHASE_21_ACCEPTANCE_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase21-Relational_Consolidation/PHASE_21_ACCEPTANCE_REPORT.md) | **Active Truth** | Phase 21 formal acceptance & closure report: Quality assurance verification, 13/13 production unit tests, 15/15 research tests, 605/605 regression suite, zero Genesis activation, CPU-only verification, and promotion sign-off. |
-| **Validation Report** | [`docs/phase9/ABLATION_TEST_V1.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/phase9/ABLATION_TEST_V1.md) | **Active Truth** | Lucia Ablation Test v1 Exploratory Pilot report (Q1-Q5 evaluation, hardware profile, empirical findings). |
-| **Diverged Spec** | [`lucia-presence-phase5`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/.kiro/specs/lucia-presence-phase5/) | **Superseded** | Proposed VLM screen observation & PyAutoGUI agency (pivoted to RVC/Avatar). |
-| **Diverged Note** | [`models/voice/README.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/models/voice/README.md) | **Superseded** | Preliminary notes on Piper/Kokoro ONNX (superseded by RVC engine). |
-| **Domain Asset** | [`models/avatar/README.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/models/avatar/README.md) | **Domain Guide** | Directory layout rules for custom Live2D, VRM, and 2D sprite models. |
-| **Domain Asset** | [`models/avatar/live2d/HoshinoAi/README.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/models/avatar/live2d/HoshinoAi/README.md) | **Domain Guide** | Cubism parameter bindings and expressions for Hoshino Ai model. |
-| **Domain Asset** | [`models/avatar/sprites/columbina/README.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/models/avatar/sprites/columbina/README.md) | **Domain Guide** | 10-expression sprite atlas rules and PAD mappings for Columbina set. |
+| **Active Spec** | [`AFFECTIVE_DYNAMICS_SPEC.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase10-Affective_Dynamics/AFFECTIVE_DYNAMICS_SPEC.md) | **Active Truth** | Phase 10 canonical specification: Mathematical formulation, state taxonomy, temporal contract. |
+| **Active Spec** | [`AFFECTIVE_MEMORY_SPEC.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase11-Affective_Memory/AFFECTIVE_MEMORY_SPEC.md) | **Active Truth** | Phase 11 canonical specification: Retrieval vs. Recollection, Candidate Hypotheses A–E. |
+| **Active Spec** | [`PHASE_16_ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase16-Affective_Life_Integration/PHASE_16_ARCHITECTURE.md) | **Active Truth** | Phase 16 canonical architecture: 16-stage cognitive pipeline, promoted subsystems, two-phase lifecycle. |
+| **Active Spec** | [`PHASE_18_SPECIFICATION.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase18-Human_Longitudinal_Validation/PHASE_18_SPECIFICATION.md) | **Active Truth** | Phase 18 canonical specification: Human Longitudinal Interaction & Real-World Validation. |
+| **Validation Report** | [`PHASE_18_EVALUATION_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase18-Human_Longitudinal_Validation/PHASE_18_EVALUATION_REPORT.md) | **Active Truth** | Comprehensive Phase 18 evaluation report: 9 invariant gates, audiovisual synchronization matrix. |
+| **Acceptance Report** | [`PHASE_19_ACCEPTANCE_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase19-Multi_Timescale_Affective_Life/PHASE_19_ACCEPTANCE_REPORT.md) | **Active Truth** | Phase 19 formal acceptance report: MT-LNN biexponential separation, Philia attractor sign-off. |
+| **Production Design** | [`PHASE_20_PRODUCTION_REALIZATION_DESIGN.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase20-Affective_Recollection/PHASE_20_PRODUCTION_REALIZATION_DESIGN.md) | **Active Truth** | Phase 20 production architecture design: Closed-loop slow-field forcing, competitive softmax gating. |
+| **Acceptance Report** | [`PHASE_20_ACCEPTANCE_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase20-Affective_Recollection/PHASE_20_ACCEPTANCE_REPORT.md) | **Active Truth** | Phase 20 formal acceptance report: Closed-loop recollection sign-off (Commit `f20420a`). |
+| **Production Design** | [`PHASE_21_PRODUCTION_REALIZATION_DESIGN.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase21-Relational_Consolidation/PHASE_21_PRODUCTION_REALIZATION_DESIGN.md) | **Active Truth** | Phase 21 production architecture design: Standalone ConsolidationEngine, spectral norm bound $\le 0.08$. |
+| **Acceptance Report** | [`PHASE_21_ACCEPTANCE_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase21-Relational_Consolidation/PHASE_21_ACCEPTANCE_REPORT.md) | **Active Truth** | Phase 21 formal acceptance report: 13/13 production unit tests, 15/15 research tests, sign-off (Commit `58a509c`). |
 
 ---
 
 ## 3. Directory Map & Repository Structure
 
-```
+```text
 Lucia/
-├── AGENTS.md                                   # Master operating guide for AI coding agents
-├── README.md                                   # Public front-door & quick-start instructions
-├── PHASE_8.md                                  # Phase 8: Runtime isolation & simulation specification
-├── PHASE_8_ARCHITECTURE_REVIEW.md              # Authoritative post-Phase-8 architectural audit & baseline
-├── PHASE_9.md                                  # Phase 9: Cognitive unification & convergence specification
-├── PHASE_9_ARCHITECTURE_GATE.md                # Phase 9: Authoritative Architectural Gate (v2.0)
+├── AGENTS.md                                   # Master operating guide & invariants for AI agents
+├── README.md                                   # Public front-door & newcomer overview
 ├── config/
 │   ├── ui.json                                 # Port, default model, voice, and log settings
 │   └── window-state.json                       # Saved window coordinates and bounds
 ├── data/
-│   └── chat_history.json                       # Persistent conversation sessions & turns
+│   ├── chat_history.json                       # Persistent conversation sessions & turns
+│   └── profile.json                            # Companion identity & onboarding status
 ├── docs/
-│   ├── 00_PROJECT_OVERVIEW.md                  # Executive summary & 6-layer architecture overview
-│   ├── ARCHITECTURE.md                         # Detailed system architecture specification
-│   ├── CURRENT_STATUS.md                       # Current system state, metrics & health
-│   ├── DESIGN_DECISIONS.md                     # Architectural Decision Records (ADRs) & resolutions
+│   ├── 00_PROJECT_OVERVIEW.md                  # Canonical Executive Summary, Current Status & Roadmap
+│   ├── ARCHITECTURE.md                         # Canonical Technical Architecture, Mechanisms & ADR Ledger
 │   ├── DOCUMENTATION_INDEX.md                  # This file: navigation, hierarchy & authority index
-│   ├── MECHANISM.md                            # Mathematical formulas, lifecycle, dataflow specifications
-│   ├── Triết lý thiết kế AI cảm xúc.md         # Foundational concept paper (Vietnamese)
 │   ├── USER_MANUAL.md                          # Complete user, configuration & operating manual
+│   ├── Triết lý thiết kế AI cảm xúc.md         # Foundational concept paper (Vietnamese)
 │   ├── phase9/                                 # Phase 9: Unified cognition specifications & Gate v2.0
+│   ├── specs/                                  # Specifications & realization designs (Phases 10–21)
 │   └── screenshots/                            # Architectural UI & telemetry captures
 ├── .kiro/
-│   └── specs/                                  # IMMUTABLE HISTORICAL MILESTONE SPECS
-│       ├── lucia-core-phase1/                  # Phase 1: EmotionCore, Homeostasis, BoundaryLayer
-│       ├── lucia-memory-phase2/                # Phase 2: SDM, AffectiveMemory, Decay, Ecphory
-│       ├── lucia-ui-phase3/                    # Phase 3: Initial Electron 3-column UI & debug panel
-│       ├── lucia-inference-phase4/             # Phase 4: Active Inference & CPU LNN Plasticity
-│       ├── lucia-presence-phase5/              # Phase 5: [SUPERSEDED] Screen vision & ReAct agency
-│       ├── lucia-refinement-phase6/            # Phase 6: Packaging, Mascot mode, Chat persistence, LSI
-│       └── lucia-UI_refractoring-phase7/       # Phase 7: UI Refactoring design spec & product brief
+│   └── specs/                                  # IMMUTABLE HISTORICAL MILESTONE SPECS (Phases 1–7)
 ├── electron/                                   # Native Electron desktop application
 │   ├── main/                                   # Main process: ProcessManager, IPC, Mascot window
 │   ├── preload/                                # ContextBridge security isolation
-│   └── renderer/                               # Web client: Chat, 4-Engine Avatar, Settings, Journal, Simulation
+│   └── renderer/                               # Web client: Personal Digital Room, 4-Engine Avatar
 ├── models/                                     # Model weights & character assets
 │   ├── avatar/                                 # Avatar assets (live2d/, sprites/, vrm/)
-│   └── voice/                                  # Voice models (rvc/)
-├── src/                                        # Python core backend (FastAPI, PyTorch, NumPy)
-│   ├── api/                                    # REST API server & endpoints
+│   └── voice/rvc/                              # Voice models (.pth + .index)
+├── src/                                        # Python core backend
+│   ├── api/                                    # FastAPI server & endpoints
 │   └── core/                                   # Cognitive layers (emotion, gating, memory, simulation, voice)
 └── tests/                                      # Comprehensive test suites
-    ├── unit/                                   # Isolated unit tests
-    ├── property/                               # Hypothesis property-based tests (P1 - P35)
+    ├── unit/                                   # Isolated unit tests (605 passing)
+    ├── property/                               # Hypothesis property-based tests (35 passing)
+    ├── evaluation_phase*/                      # Research evaluation harnesses
     └── integration/                            # Multi-component pipeline tests
 ```
 
@@ -146,28 +112,23 @@ Lucia/
 
 ## 4. Reading Pathways by Persona
 
-Depending on your role or objective, follow these curated reading sequences:
-
 ### Path A: Core AI & Backend Engineers
 *Goal: Understand mathematical models, concurrency locks, and cognitive pipelines.*
-1. [`docs/00_PROJECT_OVERVIEW.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/00_PROJECT_OVERVIEW.md) — Grasp the 6-layer cognitive flow.
-2. [`docs/ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/ARCHITECTURE.md) — Review concurrency model, threads, and hardware tiers.
-3. [`docs/MECHANISM.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/MECHANISM.md) — Deep-dive into ODE differential equations, SDM Hamming space, and Ecphory.
-4. [`docs/DESIGN_DECISIONS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/DESIGN_DECISIONS.md) — Understand ADRs for CPU-only training and memory decay.
-5. [`AGENTS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/AGENTS.md) — Review coding invariants and lock disciplines.
+1. [`docs/00_PROJECT_OVERVIEW.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/00_PROJECT_OVERVIEW.md) — Grasp the 6-layer cognitive flow and active status.
+2. [`docs/ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/ARCHITECTURE.md) — Deep-dive into Coupled MT-LNN ODE, SDM Hamming space, offline BPTT consolidation, lock hierarchy, and ADR ledger.
+3. [`AGENTS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/AGENTS.md) — Review coding invariants, CPU/GPU discipline, and lock disciplines.
 
 ### Path B: Frontend & UI/UX Engineers
 *Goal: Build interfaces adhering to the Personal Digital Room and avatar animation pipelines.*
 1. [`.kiro/specs/lucia-UI_refractoring-phase7/new_UI_requirement.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/.kiro/specs/lucia-UI_refractoring-phase7/new_UI_requirement.md) — Read the product brief and companion ontology.
 2. [`.kiro/specs/lucia-UI_refractoring-phase7/PHASE_7_UI_REFACTORING_SPEC.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/.kiro/specs/lucia-UI_refractoring-phase7/PHASE_7_UI_REFACTORING_SPEC.md) — Study CSS tokens, component layouts, and Mascot rules.
-3. [`docs/MECHANISM.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/MECHANISM.md) (Section 2, Component 8) — Review `getModelBounds()` and hover zoom mathematics.
-4. [`docs/CURRENT_STATUS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/CURRENT_STATUS.md) — Review active UI refactoring tasks and open items.
+3. [`docs/ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/ARCHITECTURE.md) (§3.6) — Review `getModelBounds()` and hover zoom mathematics.
 
 ### Path C: AI Coding Agents
 *Goal: Implement features or fix bugs safely without violating architectural invariants.*
 1. [`AGENTS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/AGENTS.md) — **MANDATORY**: Rules on pre-reflective emotion, one life ontology, and forbidden actions.
-2. [`docs/CURRENT_STATUS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/CURRENT_STATUS.md) — Check live subsystem health and active work areas.
-3. [`docs/DESIGN_DECISIONS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/DESIGN_DECISIONS.md) — Understand historical trade-offs and reconciled discrepancies.
+2. [`docs/00_PROJECT_OVERVIEW.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/00_PROJECT_OVERVIEW.md) — Check live subsystem health matrix and test status.
+3. [`docs/ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/ARCHITECTURE.md) (§8) — Review ADR Ledger and historical reconciliation before proposing changes.
 
 ### Path D: End Users & Companion Guardians
 *Goal: Run, configure, and interact with Lucia.*
@@ -178,36 +139,22 @@ Depending on your role or objective, follow these curated reading sequences:
 
 ## 5. Subject Cross-Reference Matrix
 
-| Subject / Technical Topic | Primary Specification | Mathematical Deep Dive | Historical Spec |
-|---|---|---|---|
-| **Limbic Fast Loop (LTC LNN ODE)** | `docs/ARCHITECTURE.md` §3.2 | `docs/MECHANISM.md` §2 Comp 2 | `.kiro/specs/lucia-core-phase1/` |
-| **Homeostasis & Somatic Markers** | `docs/ARCHITECTURE.md` §3.3 | `docs/MECHANISM.md` §2 Comp 3 | `.kiro/specs/lucia-core-phase1/` |
-| **Active Inference & Plasticity** | `docs/ARCHITECTURE.md` §3.4 | `docs/MECHANISM.md` §2 Comp 4 | `.kiro/specs/lucia-inference-phase4/` |
-| **Affective Memory & SDM** | `docs/ARCHITECTURE.md` §3.5 | `docs/MECHANISM.md` §2 Comp 5 | `.kiro/specs/lucia-memory-phase2/` |
-| **Synergistic Ecphory** | `docs/ARCHITECTURE.md` §3.5 | `docs/MECHANISM.md` §2 Comp 5 | `.kiro/specs/lucia-memory-phase2/` |
-| **RVC Voice Synthesis** | `docs/ARCHITECTURE.md` §3.6 | `docs/MECHANISM.md` §2 Comp 7 | `docs/USER_MANUAL.md` §2 |
-| **Offline faster-whisper STT** | `docs/ARCHITECTURE.md` §4 | `docs/MECHANISM.md` §2 Comp 8 | `docs/USER_MANUAL.md` §6 |
-| **Quad-Engine Avatar (Canvas/Sprites/Live2D/VRM)** | `docs/ARCHITECTURE.md` §3.6 | `docs/MECHANISM.md` §2 Comp 8 | `models/avatar/README.md` |
-| **Mascot Window Dragging & Hover Zoom** | `docs/ARCHITECTURE.md` §4 | `docs/MECHANISM.md` §2 Comp 8 | `.kiro/specs/lucia-UI_refractoring-phase7/` |
-| **Limbic Stability Evaluator (LSI)** | `docs/ARCHITECTURE.md` §5 | `docs/MECHANISM.md` §2 Comp 9 | `.kiro/specs/lucia-refinement-phase6/` |
-| **UI Design System & Personal Room** | `PHASE_7_UI_REFACTORING_SPEC.md` | `new_UI_requirement.md` | `.kiro/specs/lucia-ui-phase3/` |
-| **Session Persistence & Chat History** | `docs/MECHANISM.md` §2 Comp 6 | `docs/USER_MANUAL.md` §6 | `.kiro/specs/lucia-refinement-phase6/` |
-| **Runtime Isolation & Dual Modes** | `PHASE_8.md` §3 | `PHASE_8_ARCHITECTURE_REVIEW.md` §2, §9 | `src/core/simulation/` |
-| **Virtual SimClock & Time Warp** | `PHASE_8.md` §2.1 | `docs/MECHANISM.md` §2 Comp 10 | `src/core/simulation/sim_clock.py` |
-| **Ephemeral Storage Policy** | `PHASE_8.md` §3 (INV-2, INV-3) | `PHASE_8_ARCHITECTURE_REVIEW.md` §5 | `src/core/simulation/storage_policy.py` |
-| **Simulation UI Canopy & Drawer** | `PHASE_8.md` §2.5 | `PHASE_8_ARCHITECTURE_REVIEW.md` §2.2 | `electron/renderer/simulation/` |
-| **Affective Dynamics & State Taxonomy** | `AFFECTIVE_DYNAMICS_SPEC.md` | `docs/MECHANISM.md` §2 Comp 2, 3 | `docs/specs/lucia-phase10-Affective_Dynamics/` |
-| **Affective Memory & Recollection Coupling** | `AFFECTIVE_MEMORY_SPEC.md` | `docs/MECHANISM.md` §2 Comp 5 | `docs/specs/lucia-phase11-Affective_Memory/` |
-| **Knowledge Learning Hierarchy (K0–K9)** | `KNOWLEDGE_LEARNING_SPEC.md` | `docs/MECHANISM.md` | `docs/specs/lucia-phase12-Knowledge_Learning/` |
-| **Relationship Development & Philia Orientation** | `RELATIONSHIP_DEVELOPMENT_SPEC.md` | `docs/MECHANISM.md` | `docs/specs/lucia-phase13-Relationship_Development/` |
-| **Embodiment & Affective Expression** | `AFFECTIVE_EXPRESSION_SPEC.md` | `docs/MECHANISM.md` | `docs/specs/lucia-phase14-Embodiment_Affective_Expression/` |
-| **Affective Communication & Strategy** | `AFFECTIVE_COMMUNICATION_SPEC.md` | `docs/MECHANISM.md` | `docs/specs/lucia-phase15-Affective_Communication/` |
-| **Human Longitudinal Validation (P18)** | `PHASE_18_SPECIFICATION.md` | `PHASE_18_EVALUATION_REPORT.md` | `docs/specs/lucia-phase18-Human_Longitudinal_Validation/` |
-| **RVC Neural Audio Quality Diagnostic** | `PHASE_18_RVC_AUDIO_QUALITY_DIAGNOSTIC.md` | `docs/specs/lucia-phase18-Human_Longitudinal_Validation/` | `PHASE_18_VOICE_RUNTIME_VERIFICATION_REPORT.md` |
-| **RVC Audio Quality Final Verification** | `PHASE_18_RVC_AUDIO_QUALITY_FINAL_VERIFICATION.md` | `docs/specs/lucia-phase18-Human_Longitudinal_Validation/` | `PHASE_18_RVC_AUDIO_QUALITY_DIAGNOSTIC.md` |
-| **Phase 18 Audiovisual Regeneration Report** | `PHASE_18_LONGITUDINAL_AUDIOVISUAL_REGENERATION_REPORT.md` | `docs/specs/lucia-phase18-Human_Longitudinal_Validation/` | `PHASE_18_RVC_AUDIO_QUALITY_FINAL_VERIFICATION.md` |
-| **Multi-Timescale Affective Life & Temporal Continuity (P19)** | [`PHASE_19_PRODUCTION_REALIZATION_DESIGN.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase19-Multi_Timescale_Affective_Life/PHASE_19_PRODUCTION_REALIZATION_DESIGN.md) | `docs/MECHANISM.md` §2 Comp 2, 3 | `docs/specs/Lucia-phase19-Multi_Timescale_Affective_Life/` |
-| **Affective Recollection & Memory Reactivation (P20)** | [`PHASE_20_PRODUCTION_REALIZATION_DESIGN.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase20-Affective_Recollection/PHASE_20_PRODUCTION_REALIZATION_DESIGN.md) | `docs/MECHANISM.md` §2 Comp 5 | `docs/specs/Lucia-phase20-Affective_Recollection/` |
-| **Relational Consolidation & Synaptic Homeostasis (P21)** | [`PHASE_21_PRODUCTION_REALIZATION_DESIGN.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase21-Relational_Consolidation/PHASE_21_PRODUCTION_REALIZATION_DESIGN.md) | `docs/MECHANISM.md` §2 Comp 2, 4 | [`PHASE_21_ACCEPTANCE_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase21-Relational_Consolidation/PHASE_21_ACCEPTANCE_REPORT.md) |
-
-
+| Subject / Technical Topic | Canonical Section in `docs/ARCHITECTURE.md` | Primary Milestone Spec |
+|---|---|---|
+| **Limbic Fast Loop (Coupled MT-LNN ODE)** | `docs/ARCHITECTURE.md` §3.2 | `.kiro/specs/lucia-core-phase1/` |
+| **Homeostasis & Somatic Markers** | `docs/ARCHITECTURE.md` §3.3 | `.kiro/specs/lucia-core-phase1/` |
+| **Active Inference & Plasticity** | `docs/ARCHITECTURE.md` §3.4 | `.kiro/specs/lucia-inference-phase4/` |
+| **Tier 3 Offline Synaptic Consolidation** | `docs/ARCHITECTURE.md` §3.4 | `docs/specs/Lucia-phase21-Relational_Consolidation/` |
+| **Affective Memory & SDM Mechanics** | `docs/ARCHITECTURE.md` §3.5 | `.kiro/specs/lucia-memory-phase2/` |
+| **Closed-Loop Affective Recollection** | `docs/ARCHITECTURE.md` §3.5 | `docs/specs/Lucia-phase20-Affective_Recollection/` |
+| **Conceptual Knowledge Store** | `docs/ARCHITECTURE.md` §8 (ADR-021) | `docs/specs/lucia-phase12-Knowledge_Learning/` |
+| **Interpersonal Relationship Lifecycle** | `docs/ARCHITECTURE.md` §8 (ADR-022) | `docs/specs/lucia-phase13-Relationship_Development/` |
+| **Affective Communication Policy** | `docs/ARCHITECTURE.md` §8 (ADR-023) | `docs/specs/lucia-phase15-Affective_Communication/` |
+| **Canonical 15-Dim Expression State** | `docs/ARCHITECTURE.md` §8 (ADR-024) | `docs/specs/lucia-phase14-Embodiment_Affective_Expression/` |
+| **Direct RVC Voice Engine** | `docs/ARCHITECTURE.md` §3.6.1 | `docs/USER_MANUAL.md` §2 |
+| **Quad-Engine Avatar Architecture** | `docs/ARCHITECTURE.md` §3.6.2 | `models/avatar/README.md` |
+| **Mascot Physics & Hover Zoom Math** | `docs/ARCHITECTURE.md` §3.6.3 | `.kiro/specs/lucia-UI_refractoring-phase7/` |
+| **Limbic Stability Evaluator (LSI)** | `docs/ARCHITECTURE.md` §5 | `.kiro/specs/lucia-refinement-phase6/` |
+| **Simulation Runtime & SimClock** | `docs/ARCHITECTURE.md` §7 | `docs/.kiro/specs/lucia-phase8-ISOLATION/PHASE_8.md` |
+| **Verified Lock Hierarchy Discipline** | `docs/ARCHITECTURE.md` §5.1 | `docs/ARCHITECTURE.md` §8 (ADR-018, ADR-028) |
+| **Full ADR Ledger (ADR-001 to ADR-028)** | `docs/ARCHITECTURE.md` §8 | `docs/ARCHITECTURE.md` §8.2 (Changelog) |

@@ -163,18 +163,15 @@ Canonical Documentation Synchronization
 
 ## 8. Repository Navigation
 
-Explore the technical foundations through the canonical documentation suite:
+Explore the technical foundations through the consolidated canonical documentation suite:
 
 | Document | Description |
 |---|---|
-| 📖 [`docs/00_PROJECT_OVERVIEW.md`](docs/00_PROJECT_OVERVIEW.md) | High-level system architecture, 6-layer cognitive breakdown, and roadmap. |
-| 🏛️ [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Detailed threading model, concurrency locks, hardware scalability tiers, and IPC. |
-| 📐 [`docs/MECHANISM.md`](docs/MECHANISM.md) | Full mathematical formulas (Coupled MT-LNN ODE, Lyapunov stability, SDM, Ecphory). |
-| 📊 [`docs/CURRENT_STATUS.md`](docs/CURRENT_STATUS.md) | Up-to-date subsystem health, test counts, API endpoints, and milestone matrices. |
-| 📝 [`docs/DESIGN_DECISIONS.md`](docs/DESIGN_DECISIONS.md) | Authoritative Architectural Decision Records (ADR-001 through ADR-028). |
-| 📑 [`docs/DOCUMENTATION_INDEX.md`](docs/DOCUMENTATION_INDEX.md) | Master documentation directory, authority tiers, and reading pathways. |
-| 🖥️ [`docs/USER_MANUAL.md`](docs/USER_MANUAL.md) | Desktop application guide, Personal Digital Room interface, Mascot Mode, and voice setup. |
-| 📜 [`AGENTS.md`](AGENTS.md) | Repository-wide operational contract, invariants, and guidelines for AI agents. |
+| 📖 [`docs/00_PROJECT_OVERVIEW.md`](docs/00_PROJECT_OVERVIEW.md) | **Canonical Project Truth**: System identity, philosophy, 6-layer cognitive pipeline, 24-subsystem health matrix, test statistics, and roadmap. |
+| 🏛️ [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | **Canonical Technical Architecture**: Subsystems, dynamical mechanisms, mathematical formulas, concurrency/locking rules, and the complete Architectural Decision Record ledger (ADR-001 through ADR-028). |
+| 📑 [`docs/DOCUMENTATION_INDEX.md`](docs/DOCUMENTATION_INDEX.md) | **Navigation Map**: Complete documentation directory, authority hierarchy, and index of historical phase specifications and research records. |
+| 🖥️ [`docs/USER_MANUAL.md`](docs/USER_MANUAL.md) | **Desktop Application Guide**: Personal Digital Room interface, Mascot Mode, and voice setup. |
+| 📜 [`AGENTS.md`](AGENTS.md) | **Agent Governance**: Repository-wide operational contract, architectural invariants, and research-first protocols for AI coding agents. |
 
 ---
 

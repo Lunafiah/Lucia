@@ -3,7 +3,7 @@
 > **Formal Quality Assurance, Verification Audit, and Production Acceptance Sign-Off for Phase 21**  
 > **Lifecycle Status**: COMPLETE — RESEARCH VALIDATED, ARCHITECTURE APPROVED & PRODUCTION IMPLEMENTED  
 > **Authoritative Baseline**: Phase 21 Production Implementation (`src/core/config.py`, `src/core/emotion/consolidation.py`, `src/core/emotion/emotion_core.py`, `src/core/orchestrator/cognitive_orchestrator.py`)  
-> **Governing ADR**: ADR-028 (`docs/DESIGN_DECISIONS.md`)  
+> **Governing ADR**: ADR-028 ([`docs/ARCHITECTURE.md#adr-028-relational-attractor-grounding-and-offline-synaptic-consolidation`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/ARCHITECTURE.md#adr-028-relational-attractor-grounding-and-offline-synaptic-consolidation))<br/>
 > **Pre-Implementation Git Baseline**: `3f80c3e`  
 > **Production Implementation Commit**: `58a509c28446f76fc7bf93bd47cef240fc59f6cf`  
 > **Storage Invariant**: `data/profile.json == {"is_onboarded": false}` BIT-EXACT  
@@ -80,7 +80,7 @@ The implementation of **Long-Term Relational Consolidation & Synaptic Homeostasi
 7. **Architectural Invariants Preserved**: Canonical Philia convergence preserved ($\epsilon < 10^{-4}$); pre-reflective boundary 100% enforced; Genesis gate `data/profile.json` untouched.
 
 ### Architectural Decision Record:
-Formally advanced to **`[✅ VALIDATED / PRODUCTION IMPLEMENTED]`** under **ADR-028** in [`docs/DESIGN_DECISIONS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/DESIGN_DECISIONS.md).
+Formally advanced to **`[✅ VALIDATED / PRODUCTION IMPLEMENTED]`** under **ADR-028** in [`docs/ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/ARCHITECTURE.md#adr-028-relational-attractor-grounding-and-offline-synaptic-consolidation).
 
 ---
 
