@@ -41,7 +41,8 @@ The human brain operates on approximately 20 watts of power not by limiting capa
 ├─────────────────────────────────────────────────────────────────────────┤
 │  LAYER 2: LIMBIC SYSTEM — DUAL-TIMESCALE MT-LNN ODE (200ms Cadence)     │
 │  • Coupled MT-LNN: Fast h_f ∈ R^32 (τ_f ∈ [0.10, 1.50]s) & Slow s_s ∈ R^16│
-│  • Philia Attractor Grounding: p* = (+0.25, -0.05, +0.05) resting state │
+│  • Tier 2 Relational Attractor Grounding: s*_eff(R) = s*_philia + W_rel(R - R0)│
+│  • Spectral norm bound ||W_rel||_2 <= 0.08, resting PAD shift <= 0.05   │
 │  • Bounded slow-field recollection forcing (W_rec · r_slow, 4.0s pulse) │
 │  • Strictly dissipative Lyapunov contraction: Tr(J) ≈ -46.46 < 0         │
 ├─────────────────────────────────────────────────────────────────────────┤
@@ -50,10 +51,11 @@ The human brain operates on approximately 20 watts of power not by limiting capa
 │  • Dynamically calculates generation constraints:                       │
 │    Token budget (max_tokens), Temperature, Latency delay, Depth (k)     │
 ├─────────────────────────────────────────────────────────────────────────┤
-│  LAYER 4: ACTIVE INFERENCE & ONLINE PLASTICITY                          │
+│  LAYER 4: ACTIVE INFERENCE & OFFLINE SYNAPTIC CONSOLIDATION             │
 │  • Short-horizon generative model predicting upcoming PAD states        │
 │  • Free Energy / Surprise minimization: ||A·p + b - q||                 │
-│  • CPU-only online backprop-through-ODE (torchdiffeq, zero GPU VRAM)    │
+│  • Tier 3 Offline Synaptic Consolidation (ConsolidationEngine on CPU)   │
+│  • BPTT-through-ODE, dual homeostatic/Philia regularization, 0 MB VRAM  │
 ├─────────────────────────────────────────────────────────────────────────┤
 │  LAYER 5: HIPPOCAMPUS — SLOW LOOP (SDM + ECPHORY + RECOLLECTION)         │
 │  • Kanerva Sparse Distributed Memory (1,000 hard locations, 1000-bit)   │
@@ -108,7 +110,7 @@ Lucia operates on three biological time horizons coordinated by non-blocking dae
 | **Fast Loop** | 200 ms (5 Hz) | `src/core/emotion/` | Solves continuous Liquid Neural Network ODE. Holds `_state_lock` ($\le 1\text{ms}$). |
 | **Mid Loop** | Per Turn | `src/core/emotion/` | Computes somatic load & behavioral parameters conditioning prompt generation. |
 | **Slow Loop** | 60 s | `src/core/memory/` | Computes time-based memory decay ($\lambda_{eff}$) and purges dead traces. |
-| **Plasticity Loop** | On Batch (16) | `src/core/inference/` | Background CPU backpropagation-through-ODE. Swaps weights under `_train_lock` ($\le 2\text{ms}$). |
+| **Plasticity Loop** | Idle / Buffer | `src/core/emotion/consolidation.py` | Tier 3 offline CPU BPTT (`ConsolidationEngine`). Swaps weights under `_train_lock` ($\le 2\text{ms}$). |
 | **SimClock Loop** | Virtual / Step | `src/core/simulation/` | Controls simulation cadence, fast/slow tick dispatching, and time warp in simulation mode. |
 | **Uvicorn Server** | Async I/O | `src/api/server.py` | Serves FastAPI REST endpoints in live mode (`POST /process`, `GET /state`) or simulation mode (`POST /sim/*`). |
 | **Render Thread** | 60 / 30 FPS | Electron Renderer | WebGL/Canvas animation, Web Audio FFT lip-sync analysis. |

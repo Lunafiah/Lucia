@@ -19,8 +19,8 @@ flowchart TD
         Sensors --> StimVector
     end
 
-    subgraph Layer2["Layer 2: Fast-Loop Limbic ODE (200ms Cadence)"]
-        LNN_ODE["Liquid Neural Network ODE\ndh/dt = [-h + tanh(Wf*h + Uf*x + bf)] / softplus(Wτ*h + Uτ*x + bτ)"]
+    subgraph Layer2["Layer 2: Dual-Timescale MT-LNN ODE (200ms Cadence)"]
+        LNN_ODE["Coupled MT-LNN ODE (Fast h ∈ R^32, Slow s ∈ R^16)\nTier 2 Relational Attractor: s*_eff(R) = s*_philia + W_rel(R - R0)\nSpectral Norm Bound: ||W_rel||_2 <= 0.08"]
         PADState["3D PAD Attractor State\n• Pleasure (P) ∈ [-1.0, 1.0]\n• Arousal (A) ∈ [-1.0, 1.0]\n• Dominance (D) ∈ [-1.0, 1.0]"]
         LNN_ODE --> PADState
     end
@@ -31,14 +31,14 @@ flowchart TD
         Homeostasis --> Constraints
     end
 
-    subgraph Layer4["Layer 4: Active Inference & LNN Plasticity"]
+    subgraph Layer4["Layer 4: Active Inference & Offline Synaptic Consolidation"]
         ActiveInf["3x3 Generative Model (Free Energy & Surprise)\nSurprise = ||A*p + b - q||"]
-        LNNTrainer["CPU Backpropagation-Through-ODE\n(torchdiffeq.odeint)"]
+        LNNTrainer["Tier 3 Offline ConsolidationEngine\n(CPU PyTorch BPTT-through-ODE, Dual Regularization)"]
         ActiveInf --> LNNTrainer
     end
 
     subgraph Layer5["Layer 5: Affective Memory Subsystem (Slow Loop)"]
-        SDM["Kanerva Sparse Distributed Memory\n(1,000 Hard Locations, 64-bit Address, 16-bit Content)"]
+        SDM["Kanerva Sparse Distributed Memory\n(1,000 Hard Locations, 1000-bit Address, 64-dim Content)"]
         Decay["60s Emotional Decay Engine\n(Salience-Resistant Forgetting: λ_eff)"]
         Ecphory["Synergistic Ecphory Engine\n(Subconscious Resonance Echo Vector)"]
         SDM <--> Decay
@@ -102,13 +102,22 @@ Lucia's emotional state is not simulated through text prompts; it is a **continu
 
 $$\frac{d\mathbf{h}_{\text{fast}}}{dt} = \frac{-\mathbf{h}_{\text{fast}} + \tanh(\mathbf{W}_f \mathbf{h}_{\text{fast}} + \mathbf{U}_f \mathbf{x} + \mathbf{W}_{fs} \mathbf{s}_{\text{slow}} + \mathbf{b}_f)}{\tau_{\text{fast}}(\mathbf{h}_{\text{fast}}, \mathbf{x})}$$
 
-$$\frac{d\mathbf{s}_{\text{slow}}}{dt} = -\frac{\mathbf{s}_{\text{slow}} - \mathbf{s}^*_{\text{philia}}}{\tau_{\text{slow, decay}}} + \frac{\tanh\Big(\mathbf{W}_{sf} \mathbf{h}_{\text{fast}} + \mathbf{W}_{sh} \Delta\mathbf{m} + \mathbf{W}_{\text{rec}} \mathbf{r}_{\text{slow}}^{\text{bounded}}\Big)}{\tau_{\text{slow, charge}}}$$
+$$\frac{d\mathbf{s}_{\text{slow}}}{dt} = -\frac{\mathbf{s}_{\text{slow}} - \mathbf{s}^*_{\text{eff}}(\mathbf{R}_t)}{\tau_{\text{slow, decay}}} + \frac{\tanh\Big(\mathbf{W}_{sf} \mathbf{h}_{\text{fast}} + \mathbf{W}_{sh} \Delta\mathbf{m} + \mathbf{W}_{\text{rec}} \mathbf{r}_{\text{slow}}^{\text{bounded}}\Big)}{\tau_{\text{slow, charge}}}$$
 
 * **Fast Layer ($\mathbf{h}_{\text{fast}} \in \mathbb{R}^{32}$)**: Continuous 32-dimensional reactive limbic state responding to sensory stimuli $\mathbf{x}(t) \in \mathbb{R}^{16}$.
 * **Dynamic Time-Constants**: Fast timescale $\tau_{\text{fast}} = \tau_{\text{fast, min}} + (\tau_{\text{fast, max}} - \tau_{\text{fast, min}}) \cdot \sigma(\mathbf{W}_\tau \mathbf{h}_{\text{fast}} + \mathbf{U}_\tau \mathbf{x} + \mathbf{b}_\tau) \in [0.10, 1.50]\text{ s}$.
 * **Slow Affective Latent Field ($\mathbf{s}_{\text{slow}} \in \mathbb{R}^{16}$)**: Retains multi-minute emotional momentum ($\tau_{\text{slow, charge}} = 3.50\text{ s}, \tau_{\text{slow, decay}} = 28.00\text{ s}$).
 * **Coupling Strengths**: $\mathbf{W}_{fs} = 0.05$ (slow-to-fast), $\mathbf{W}_{sf} = 1.00$ (fast-to-slow), $\mathbf{W}_{sh} = 0.40$ (homeostatic deviation $\Delta\mathbf{m}$).
 * **Phase 20 Closed-Loop Recollection Forcing ($\mathbf{W}_{\text{rec}}\mathbf{r}_{\text{slow}}^{\text{bounded}}$)**: Diagonal coupling $\mathbf{W}_{\text{rec}} = 0.35 \mathbf{I}_{16}$ injecting auxiliary bounded forcing for 4.0s simulation time when salient memories are recollected.
+* **Tier 2 Relational Attractor Grounding ($\mathbf{s}^*_{\text{eff}}(\mathbf{R}_t)$)**:
+  $$\mathbf{s}^*_{\text{eff}}(\mathbf{R}_t) = \mathbf{s}^*_{\text{philia}} + \mathbf{W}_{\text{rel}} (\mathbf{R}_t - \mathbf{R}_0)$$
+  where $\mathbf{R}_0 = [0, 0.50, 0, 0.50]^T$ is the stranger baseline.
+  - *Spectral Norm Bound*: $\|\mathbf{W}_{\text{rel}}\|_2 \le 0.08$ is enforced by dynamic singular value decomposition projection.
+  - *Displacement Bounds*: For any relationship state $\mathbf{R} \in [0, 1]^4$, with $\|\mathbf{R} - \mathbf{R}_0\|_2 \le 1.0$ (and maximum Euclidean distance $\sqrt{2.5} \approx 1.581$), the initialization target norm $\sigma_{\max}(\mathbf{W}_{\text{rel}}) \approx 0.0475$ ensures:
+    $$\|\Delta\mathbf{s}^*\|_2 \le 0.0475 \times 1.581 = 0.0751 \le 0.08$$
+    and the resting PAD displacement satisfies:
+    $$\|\Delta\mathbf{PAD}^*\|_2 \le \|\mathbf{W}_{\text{proj}, s}\|_2 \cdot \|\mathbf{W}_{\text{rel}}\|_2 \cdot \|\Delta\mathbf{R}\|_2 \le 0.45 \times 0.08 \times 1.0 = 0.036 \le 0.05$$
+  - *Fallback Compatibility*: When `enable_relational_consolidation = False`, $\mathbf{s}^*_{\text{eff}} = \mathbf{s}^*_{\text{philia}}$ bit-exact, bypassing $\mathbf{W}_{\text{rel}}$ and preserving pure Phase 20 limbic dynamics.
 * **PAD Projection**: The fast hidden state $\mathbf{h}_{\text{fast}}$ is linearly projected onto the 3-dimensional **PAD Space** clamped to $[-1.0, 1.0]^3$:
   * **Pleasure ($P$)**: Valence from distressed ($-1.0$) to joyful/warm ($+1.0$).
   * **Arousal ($A$)**: Vitality from calm/sleepy ($-1.0$) to alert/excited ($+1.0$).
@@ -116,9 +125,7 @@ $$\frac{d\mathbf{s}_{\text{slow}}}{dt} = -\frac{\mathbf{s}_{\text{slow}} - \math
 * **Philia Resting Attractor Grounding (Distinction Between State Spaces)**:
   - **3D PAD Resting Baseline**: $\mathbf{p}^*_{\text{philia}} = [+0.25, -0.05, +0.05]^T \in [-1, 1]^3$ (`EmotionConfig.resting_baseline = (0.25, -0.05, 0.05)`). Represents the emotional output baseline in Pleasure, Arousal, Dominance.
   - **16D Slow Latent Field Attractor**: $\mathbf{s}^*_{\text{philia}} = [0.20, -0.05, 0.05, 0, \dots, 0]^T \in \mathbb{R}^{16}$ (`EmotionConfig.philia_slow_baseline = (0.20, -0.05, 0.05)`). Represents the resting coordinates centering the slow latent manifold ($\Delta\mathbf{s} = \mathbf{s}_{\text{slow}} - \mathbf{s}^*_{\text{philia}}$).
-  - **Equilibrium Readout**: These two vectors operate in distinct mathematical spaces. When the coupled system relaxes at resting equilibrium ($\mathbf{h}_{\text{fast}} = \mathbf{0}, \mathbf{s}_{\text{slow}} = \mathbf{s}^*_{\text{philia}}$), the linear readout projection:
-    $$\mathbf{PAD}^* = \text{clip}\Big(\mathbf{W}_{\text{proj}, f}\mathbf{0} + \mathbf{W}_{\text{proj}, s}(\mathbf{s}^*_{\text{philia}} - \mathbf{s}^*_{\text{philia}}) + \mathbf{p}^*_{\text{philia}} + \mathbf{b}_{\text{proj}}, -1.0, 1.0\Big) = \mathbf{p}^*_{\text{philia}} = [+0.25, -0.05, +0.05]^T$$
-    restores the 3D PAD emotional state exactly to $\mathbf{p}^*_{\text{philia}}$.
+  - **Equilibrium Readout**: When the coupled system relaxes at unforced resting equilibrium ($\mathbf{h}_{\text{fast}} = \mathbf{0}, \mathbf{s}_{\text{slow}} = \mathbf{s}^*_{\text{eff}}$), the linear readout projection restores the baseline coordinate directly.
   - **Legacy Compatibility Mapping**: In `synthesize_legacy_latent()`, Case 1 checks whether a legacy 3D PAD tag matches the 3D baseline $\mathbf{p}^*_{\text{philia}} = [0.25, -0.05, 0.05]$; if so, it synthesizes the 16D slow attractor $\mathbf{s}^*_{\text{philia}} = [0.20, -0.05, 0.05, 0, \dots, 0]^T$ bit-exact.
 * **Strict Contraction Invariant**: The Jacobian trace is strictly dissipative ($\text{Tr}(J) \approx -46.46 < 0$ in tested parameter domain), preventing runaway saturation or autonomous limit cycles under tested bounds.
 * **Temporal Synchronization Barrier (`commit_stimulus`)**:
@@ -172,12 +179,17 @@ Lucia adapts her emotional generative model and limbic dynamics using **Active I
    * **Single-Step vs. Multi-Turn Dynamics & Hysteresis**:
      * A single ODE step ($\Delta t = 0.1$) shifts PAD by $\approx 0.06 - 0.10$, yielding an instantaneous surprise $\mathcal{S} \approx 0.06 - 0.10 < \theta_{\text{deliberative}} = 0.60$.
      * **Same-Probe Hysteresis**: Because the ODE derivative $\frac{dh}{dt} = f(h, x)$ depends nonlinearly on both the stimulus $x$ and the current hidden state $h(t)$, an identical sensory probe $x$ injected from different prior limbic histories ($h_{\text{neutral}}$ vs $h_{\text{stressed}}$ vs $h_{\text{relaxed}}$) follows distinct vector trajectories, arriving at divergent post-probe PAD coordinates, prediction errors, and cognitive load levels.
-3. **Two-Stage LNN Plasticity (CPU-Only Trainer)**:
-   * **Online Salience Tagging**: During turns, evaluates interaction salience:
+3. **Tier 3 Offline Synaptic Consolidation (`ConsolidationEngine`)**:
+   * **Online Salience Tagging (Stage 16.2)**: Evaluates composite interaction salience across Free Energy surprise and limbic displacement:
      $$\text{Salience} = 0.6 \cdot \mathcal{S} + 0.4 \cdot \|p_{actual} - p_{philia}\|_2$$
-     If $\text{Salience} > 0.35$, interaction tuple $(x, h_{before}, h_{after})$ is queued into the consolidation buffer.
-   * **Offline Consolidation (Zero Live Contention)**: Training executes on CPU during idle periods ($T_{idle} \ge 45\text{s}$) or buffer overflow ($\ge 8$ salient samples) using `torchdiffeq.odeint` (RK4 solver, clipped gradient norm 1.0).
-   * Updated weights are swapped into `EmotionCore` inside a sub-2ms `_train_lock`, producing **0 MB GPU VRAM contention**.
+     If $\text{Salience} \ge 0.50$, the interaction tuple $(x, h_{before}, h_{after})$ is queued into the consolidation buffer.
+   * **Multi-Turn Sequential Continuity**: During offline rest intervals ($T_{idle} \ge 45\text{s}$) or buffer accumulation ($\ge 8$ salient samples), initial hidden states maintain sequential historical continuity:
+     $$\mathbf{h}_0^{(k)} = 0.60\mathbf{h}_{\text{prev}} + 0.40\mathbf{h}_{\text{before}}^{(k)}$$
+     preventing single-turn overfitting.
+   * **Dual Regularization Objective**: Training executes on CPU using `torchdiffeq.odeint` under dual homeostatic and Philia regularization:
+     $$\mathcal{L} = \frac{1}{K}\sum_{k=1}^K \|\mathbf{h}_{\text{pred}}^{(k)} - \mathbf{h}_{\text{target}}^{(k)}\|_2^2 + \lambda_{\text{homeo}} \|\boldsymbol{\Theta} - \boldsymbol{\Theta}_0\|_2^2 + \lambda_{\text{philia}} \|\mathbf{h}_{\text{unforced}}(\Delta t)\|_2^2$$
+     where $\lambda_{\text{homeo}} = 0.05$ constrains parameter drift from baseline $\boldsymbol{\Theta}_0$ and $\lambda_{\text{philia}} = 0.10$ guarantees unforced Philia attractor restoration.
+   * **Sub-2ms Atomic Weight Swap**: Updated weights are swapped into `EmotionCore` inside a sub-2ms `_train_lock`, guaranteeing **0.0 MB GPU VRAM contention** and zero active turn disruption.
 
 ---
 
@@ -385,7 +397,7 @@ Phase 8 implements deterministic, inspectable simulation mechanics operating und
 |---|---|---|---|
 | **Fast-Loop ODE** | 200ms | `src/core/emotion/` | Solves continuous emotion differential equation (live mode) |
 | **Slow-Loop Decay** | 60s | `src/core/memory/` | Applies emotional memory forgetting curve (live mode) |
-| **LNN Trainer** | On Batch (16) | `src/core/inference/` | CPU backpropagation-through-ODE plasticity |
+| **ConsolidationEngine** | Idle / Buffer | `src/core/emotion/consolidation.py` | Tier 3 offline CPU BPTT plasticity with dual regularization |
 | **SimClock Driver** | Virtual / Step | `src/core/simulation/` | Synchronous callback dispatching & time-warp in simulation mode |
 | **Uvicorn Server** | Event-Driven | `src/api/server.py` | Serves FastAPI REST & telemetry endpoints |
 | **Electron UI** | 60 FPS | `electron/renderer/` | Hardware-accelerated avatar rendering & lip-sync |

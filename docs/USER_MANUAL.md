@@ -126,54 +126,60 @@ The packaged binary will be generated in `electron/dist/`.
 
 ---
 
-## 6. Desktop Interface Guide
+## 6. Desktop Interface Guide: Personal Digital Room
 
-### 3-Column Studio Layout (Main Window)
+Lucia uses a **Personal Digital Room** interface designed with progressive disclosure. Rather than cluttering the screen with dense diagnostic gauges, the primary interface prioritizes warmth, embodiment, and natural conversation, while engineering telemetry is accessible via dedicated modals.
+
+### Window Layout Structure
 
 ```
-┌──────────────────────┬───────────────────────────────────────────┬─────────────────────────────────────┐
-│ AFFECTIVE TELEMETRY  │                 CHAT PANE                 │        FULL-HEIGHT AVATAR           │
-├──────────────────────┼───────────────────────────────────────────┼─────────────────────────────────────┤
-│ • Conversation State │ ✦ Lucia (Active) [🎂 Day 1][📖][⚙️][🐾]   │ [🟢 Presence] [Engine ▼] [Model ▼]  │
-│   - Voice: Speaking  │                                           │ [🎙️ Voice Model ▼] [━●━] [🔊 Mute] │
-│   - Latency: 12ms    │ ┌───────────────────────────────────────┐ │ ┌─────────────────────────────────┐ │
-│   - Depth: k=1       │ │ ✨ Welcome to Lucia                   │ │ │                                 │ │
-│                      │ └───────────────────────────────────────┘ │ │       🎭 [AVATAR MODEL]           │ │
-│ • Limbic Stability   │                                           │ │  (2D Canvas / Sprites /         │ │
-│   - Score: 100% NOM  │ [You]: Hello Lucia!                       │ │   Live2D / 3D VRM)              │ │
-│   - Jitter: 0.2ms    │                                           │ │                                 │ │
-│                      │ [Lucia]: Hi! It's so nice to see you.     │ │  • Eye blinks & gaze tracking   │ │
-│ • Affective Memory   │          🔊 [Speaks in RVC voice]         │ │  • Dynamic blush & smile curves │ │
-│   - Active: 14 SDM   │          🎭 [Lip-syncs at 60 FPS]         │ │  • Real-time Web Audio lip-sync │ │
-│                      │                                           │ └─────────────────────────────────┘ │
-│                      │ ┌───────────────────────────────────┬─┬─┐ │ • Mouse drag to Pan model freely    │
-│                      │ │ Type message... (Shift+Enter new) │🎙│➤│ │ • Scroll wheel to Zoom (over model)│
-│                      │ └───────────────────────────────────┴─┴─┘ │ • Double-click to Reset zoom/pan   │
-└──────────────────────┴───────────────────────────────────────────┴─────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│ ✦ Lucia  [🎂 Day 1]               [💬 Talk]  [🧠 Memories]  [📖 Journal]  [⚙️ Settings]       [🐾 Mascot] ✕ │
+├─────────────────────────────────────────────────┬──────────────────────────────────────────────────────┤
+│               AVATAR STAGE                      │                  CONVERSATION PANE                   │
+│  ┌───────────────────────────────────────────┐  │  ┌────────────────────────────────────────────────┐  │
+│  │                                           │  │  │ ✨ Welcome to Lucia                            │  │
+│  │            🎭 [AVATAR MODEL]              │  │  └────────────────────────────────────────────────┘  │
+│  │         (Canvas / Sprites / Live2D / VRM) │  │                                                      │
+│  │                                           │  │  [You]: Hello Lucia!                                 │
+│  │   • Autonomous micro-gaze & blinking      │  │                                                      │
+│  │   • Real-time Web Audio lip-sync          │  │  [Lucia]: Hi! It's so nice to see you.               │
+│  │   • Emotionally responsive blendshapes    │  │           🔊 [Local RVC Voice Synthesis]             │
+│  │                                           │  │                                                      │
+│  └───────────────────────────────────────────┘  │  ┌─────────────────────────────────────────────┬─┬─┐  │
+│  [Engine ▼] [Model ▼] [Voice ▼] [━●━] [🔊 Mute] │  │ Type a message... (Shift+Enter for newline) │🎙│➤│  │
+│  • Drag to Pan • Scroll to Zoom • Double-click  │  └─────────────────────────────────────────────┴─┴─┘  │
+└─────────────────────────────────────────────────┴──────────────────────────────────────────────────────┘
 ```
 
-### 1. The Left Column: Affective Telemetry
-* **Conversation State Chips**: Real-time indicators for voice activity (Silent, Speaking), response latency, and reasoning depth.
-* **Limbic Stability (LSI)**: Real-time composite health index monitoring ODE tick jitter and stability.
-* **Affective Memory (SDM)**: Live counter of long-term emotional memory traces stored in Sparse Distributed Memory.
+### 1. Navigation Header & Companion Status
+* **Companion Identity**: Displays friendship age (`🎂 Day N`), current conversation mode, and connection status.
+* **Views**:
+  * **💬 Talk**: The primary conversational room and live avatar stage.
+  * **🧠 Memories**: Browse long-term episodic memories co-encoded with affective states.
+  * **📖 Journal**: Inspect relationship milestones, interaction history, and developmental trajectory.
+  * **⚙️ Settings**: Hardware tier selection, model configuration, audio devices, and display options.
+  * **🐾 Mascot Mode**: Switch immediately to the transparent floating desktop mascot.
 
-### 2. The Center Column: Chat & Companion Controls
-* **Header Actions**:
-  * **🎂 Companion Profile**: View friendship age, customize companion and user names, and configure birthday.
-  * **📖 Companion Journal**: Inspect relationship milestones, total turns, and limbic stability history.
-  * **⚙️ System Settings**: Adjust Hardware Scalability tiers, target framerates, and audio hardware.
-  * **🐾 Mascot Mode**: Switch instantly to the floating desktop mascot.
-  * **Hardware Badge**: Shows the currently active scalability tier (e.g. `Auto`, `Laptop Balanced`, `Desktop Performance`).
-* **Continuous Microphone Input (`🎙️`)**: Click the mic icon to activate hands-free continuous voice interaction powered by offline `faster-whisper` and Web Audio VAD. Lucia records spoken audio locally, pauses during her replies to eliminate echo feedback, and transcribes voice turns completely offline without third-party cloud keys.
+### 2. Avatar Stage (Embodied Presence)
+* **Multi-Engine Rendering**: Seamlessly toggle between `🎨 2D Canvas`, `🖼️ 2D Sprites`, `🎬 Live2D`, and `🌐 3D VRM`.
+* **Voice & Audio Controls**: Choose local RVC voice profile, adjust master volume, or mute.
+* **Stage Manipulation**:
+  * **Pan**: Click and drag to reposition the avatar.
+  * **Zoom**: Scroll wheel directly over the avatar to zoom in or out.
+  * **Reset**: Double-click the stage to restore default zoom and alignment.
 
-### 3. The Right Column: Full-Height Avatar Stage
-* **Engine Selector**: Switch seamlessly between `🎨 2D Canvas`, `🖼️ 2D Sprites`, `🎬 Live2D`, and `🌐 3D VRM`.
-* **Model Selector**: Switch between installed character models for the active engine.
-* **Voice Controls**: Select your desired RVC voice model, adjust master output volume, or toggle mute (`🔊`).
-* **Mouse Interactions**:
-  * **Pan**: Click and drag anywhere on the avatar to adjust position.
-  * **Zoom**: Scroll wheel over the model to zoom in or out.
-  * **Reset**: Double-click the stage to restore default zoom and center position.
+### 3. Conversation Pane & Voice Input
+* **Natural Dialogue Flow**: Chat history displays Lucia's responses alongside subtle prosody and voice playback.
+* **Continuous Microphone Input (`🎙️`)**: Hands-free voice chat powered by local Web Audio VAD and `faster-whisper`. Speech is transcribed offline with zero cloud API keys.
+
+### 4. Diagnostics & Telemetry Modal (`Ctrl + Shift + D`)
+To maintain a natural companion atmosphere, raw mathematical diagnostics are cleanly separated from the daily chat feed. Press **`Ctrl + Shift + D`** (or click *Diagnostics* in Settings) to open the real-time engineering telemetry panel:
+* **Limbic ODE State**: Fast reactive latent vector $\mathbf{h}_{\text{fast}} \in \mathbb{R}^{32}$, slow affective latent state $\mathbf{s}_{\text{slow}} \in \mathbb{R}^{16}$, and 3D PAD coordinates.
+* **Limbic Stability Index (LSI)** & Numerical ODE step jitter ($< 2\text{ms}$).
+* **Relational State Vector**: $\mathbf{R} = [\text{Affinity}, \text{Familiarity}, \text{Trust}, \text{Depth}] \in [0, 1]^4$ and Tier 2 attractor displacement.
+* **Consolidation Status**: Replay buffer size, offline BPTT loss, homeostatic anchor distance, and parameter swap latency.
+* **Memory & Storage Metrics**: Active SDM trace count and decay sweep statistics.
 
 ---
 

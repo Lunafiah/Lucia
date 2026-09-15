@@ -23,21 +23,23 @@ Lucia's internal limbic state is centered around **Philia** ($\phi\iota\lambda\i
 │  • Extracts text valence, punctuation arousal & semantic density        │
 │  • Produces a 16-dimensional continuous Stimulus Vector                 │
 ├─────────────────────────────────────────────────────────────────────────┤
-│  LAYER 2: LIMBIC SYSTEM — FAST LOOP (Liquid Neural Network ODE)         │
-│  • Continuous 200ms background ODE integration (solve_ivp)              │
-│  • Maintains 32-dim hidden state h and projects to 3D PAD Space:        │
-│    Pleasure (P), Arousal (A), Dominance (D) in [-1.0, 1.0]              │
+│  LAYER 2: LIMBIC SYSTEM — DUAL-TIMESCALE MT-LNN ODE (200ms Cadence)     │
+│  • Continuous Coupled MT-LNN: Fast h_fast ∈ R^32 & Slow s_slow ∈ R^16   │
+│  • Tier 2 Relational Attractor Grounding: s*_eff(R) = s*_philia + W_rel(R - R0)│
+│  • Spectral norm bound ||W_rel||_2 <= 0.08, resting PAD shift <= 0.05   │
+│  • Bounded slow-field recollection forcing (W_rec · r_slow, 4.0s pulse) │
 ├─────────────────────────────────────────────────────────────────────────┤
 │  LAYER 3: SURVIVAL SYSTEM — MID LOOP (Homeostatic Engine)               │
 │  • Tracks Cognitive Load, Energy, Metabolic Budget, and Tension         │
 │  • Computes Behavioral Constraints (Token budget, Temperature, Latency) │
 ├─────────────────────────────────────────────────────────────────────────┤
-│  LAYER 4: ACTIVE INFERENCE ENGINE (Free Energy Minimization)            │
+│  LAYER 4: ACTIVE INFERENCE & OFFLINE SYNAPTIC CONSOLIDATION             │
 │  • 3x3 linear generative model predicting upcoming PAD trajectories     │
-│  • Online backprop-through-ODE LNN trainer (torchdiffeq on CPU)         │
+│  • Tier 3 Offline Synaptic Consolidation (ConsolidationEngine on CPU)   │
+│  • BPTT-through-ODE, dual homeostatic/Philia regularization, 0 MB VRAM  │
 ├─────────────────────────────────────────────────────────────────────────┤
 │  LAYER 5: HIPPOCAMPUS — SLOW LOOP (SDM + Affective Memory)              │
-│  • Kanerva Sparse Distributed Memory (SDMCore) with PAD emotion tagging │
+│  • Kanerva Sparse Distributed Memory (1,000 hard locations, 1000-bit)   │
 │  • Synergistic Ecphory Engine (subconscious memory resonance echo)      │
 │  • Slow-loop decay engine with emotional intensity resistance           │
 ├─────────────────────────────────────────────────────────────────────────┤
@@ -60,12 +62,18 @@ Lucia's internal limbic state is centered around **Philia** ($\phi\iota\lambda\i
 * **Semantic Density**: Information-to-token ratio across the input message.
 * Outputs a 16-dimensional continuous floating-point vector injected into the limbic system.
 
-### 3.2. Layer 2: Fast-Loop Limbic ODE (`src/core/emotion/`)
-The emotional core runs a continuous **Liquid Time-Constant (LTC)** differential equation:
-$$\frac{dh}{dt} = \frac{-h + \tanh(W_f h + U_f x + b_f)}{\text{softplus}(W_\tau h + U_\tau x + b_\tau)}$$
-* **Cadence**: 200ms background daemon thread.
-* **Projection**: Linear projection $W_{proj} h + b_{proj}$ mapped and clamped to the 3D PAD space $[-1.0, 1.0]^3$.
-* **Thread Safety**: Protected by `_state_lock` (read deadline $\le 1\text{ms}$) and `_train_lock` for atomic weight swapping.
+### 3.2. Layer 2: Fast-Loop Limbic ODE & Relational Attractor (`src/core/emotion/`)
+The emotional core runs a continuous **Coupled Multi-Timescale Liquid Neural Network (MT-LNN)** differential equation solved every 200ms:
+$$\frac{d\mathbf{h}_{\text{fast}}}{dt} = \frac{-\mathbf{h}_{\text{fast}} + \tanh(\mathbf{W}_f \mathbf{h}_{\text{fast}} + \mathbf{U}_f \mathbf{x} + \mathbf{W}_{fs} \mathbf{s}_{\text{slow}} + \mathbf{b}_f)}{\tau_{\text{fast}}(\mathbf{h}_{\text{fast}}, \mathbf{x})}$$
+$$\frac{d\mathbf{s}_{\text{slow}}}{dt} = -\frac{\mathbf{s}_{\text{slow}} - \mathbf{s}^*_{\text{eff}}(\mathbf{R}_t)}{\tau_{\text{slow, decay}}} + \frac{\tanh\Big(\mathbf{W}_{sf} \mathbf{h}_{\text{fast}} + \mathbf{W}_{sh} \Delta\mathbf{m} + \mathbf{W}_{\text{rec}} \mathbf{r}_{\text{slow}}^{\text{bounded}}\Big)}{\tau_{\text{slow, charge}}}$$
+* **Coupled Substrates**: Fast reactive hidden state $\mathbf{h}_{\text{fast}} \in \mathbb{R}^{32}$ ($\tau_f \in [0.10, 1.50]\text{s}$) coupled bidirectionally with slow affective latent field $\mathbf{s}_{\text{slow}} \in \mathbb{R}^{16}$ ($\tau_{\text{charge}} = 3.5\text{s}, \tau_{\text{decay}} = 28.0\text{s}$).
+* **Tier 2 Relational Attractor Grounding**:
+  $$\mathbf{s}^*_{\text{eff}}(\mathbf{R}_t) = \mathbf{s}^*_{\text{philia}} + \mathbf{W}_{\text{rel}} (\mathbf{R}_t - \mathbf{R}_0)$$
+  where $\mathbf{R}_0 = [0, 0.50, 0, 0.50]^T$ is the stranger baseline and $\|\mathbf{W}_{\text{rel}}\|_2 \le 0.08$ is enforced by dynamic spectral norm projection.
+  * *Displacement Bounds*: Guaranteed slow attractor displacement $\|\Delta\mathbf{s}^*\|_2 \le 0.08$ and resting PAD shift $\|\Delta\mathbf{PAD}^*\|_2 \le \|\mathbf{W}_{\text{proj}, s}\|_2 \cdot \|\mathbf{W}_{\text{rel}}\|_2 \cdot \|\Delta\mathbf{R}\|_2 \le 0.45 \times 0.08 \times 1.0 = 0.036 \le 0.05$.
+* **Projection**: Linear projection $W_{\text{proj}, f} \mathbf{h}_{\text{fast}} + W_{\text{proj}, s} (\mathbf{s}_{\text{slow}} - \mathbf{s}^*_{\text{philia}}) + \mathbf{p}^*_{\text{philia}} + \mathbf{b}_{\text{proj}}$ mapped and clamped to 3D PAD space $[-1.0, 1.0]^3$.
+* **Thread Safety**: Protected by `_state_lock` (read deadline $\le 1\text{ms}$) and `_train_lock` for atomic parameter swapping.
+* **Compatibility Fallback**: Toggling `enable_relational_consolidation = False` bypasses $\mathbf{W}_{\text{rel}}$ and sets $\mathbf{s}^*_{\text{eff}} = \mathbf{s}^*_{\text{philia}}$ bit-exact, restoring pure Phase 20 limbic dynamics.
 
 ### 3.3. Layer 3: Homeostatic Engine (`src/core/emotion/homeostatic_engine.py`)
 *Historical path: `src/core/homeostasis/` (retained in historical Phase 1 specs).*
@@ -77,15 +85,21 @@ Prevents emotional burnout, runaway anxiety, or manic states:
   * High Tension $\rightarrow$ Increased reasoning depth ($k=2$).
   * Low Energy $\rightarrow$ Simulated conversational latency delay.
 
-### 3.4. Layer 4: Active Inference & LNN Plasticity (`src/core/inference/`)
+### 3.4. Layer 4: Active Inference & Tier 3 Offline Synaptic Consolidation (`src/core/inference/`, `src/core/emotion/consolidation.py`)
 * **Active Inference Engine**: Maintains belief state matrices $A \in \mathbb{R}^{3 \times 3}, b \in \mathbb{R}^3$ predicting emotional transitions. Before stimulus integration, projects expectation $\hat{p} = A \cdot p_{before} + b$. After integration, computes Free Energy Prediction Surprise:
   $$\mathcal{S} = \|A \cdot p_{before} + b - p_{after}\|_2$$
   Updates belief state via analytic gradient descent with KL regularization toward identity.
   **Causal Coupling**: Surprise $\mathcal{S}$ directly modulates `HomeostaticEngine` Cognitive Load and Tension, shifting reasoning depth to $k=2$ when $\mathcal{S} > 0.60$ or Tension $> 0.70$.
-* **Two-Stage LNN Plasticity**: Online salience tagging flags transitions where $\text{Salience} > 0.35$. A dedicated background CPU thread executes backpropagation-through-ODE (`torchdiffeq.odeint`) during idle rest periods ($T_{\text{idle}} \ge 45\text{s}$) or salient batch overflow ($\ge 8$), adapting weights without competing for GPU VRAM or interrupting active conversation.
+* **Tier 3 Offline Synaptic Consolidation (`ConsolidationEngine`)**:
+  * Decoupled from runtime `EmotionCore` to prevent god-object bloat.
+  * In Stage 16.2, salient interaction experiences ($\text{Salience} \ge 0.50$) are appended to the consolidation ring buffer.
+  * Background CPU worker executes backpropagation-through-ODE (`torchdiffeq.odeint`) during idle rest intervals ($T_{\text{idle}} \ge 45\text{s}$) or buffer accumulation ($\ge 8$ samples) with sequential multi-turn continuity ($\mathbf{h}_0^{(k)} = 0.60\mathbf{h}_{\text{prev}} + 0.40\mathbf{h}_{\text{before}}^{(k)}$).
+  * Enforces dual regularization preventing catastrophic forgetting:
+    $$\mathcal{L} = \frac{1}{K}\sum_{k=1}^K \|\mathbf{h}_{\text{pred}}^{(k)} - \mathbf{h}_{\text{target}}^{(k)}\|_2^2 + \lambda_{\text{homeo}} \|\boldsymbol{\Theta} - \boldsymbol{\Theta}_0\|_2^2 + \lambda_{\text{philia}} \|\mathbf{h}_{\text{unforced}}(\Delta t)\|_2^2$$
+  * Swaps parameters atomically into `EmotionCore` under `_train_lock` ($\le 2\text{ms}$) with **0.0 MB GPU VRAM contention**.
 
 ### 3.5. Layer 5: Affective Memory & Ecphory (`src/core/memory/`)
-* **Kanerva Sparse Distributed Memory (SDM)**: $N=1,000$ distributed locations with 64-bit Hamming addresses and 16-bit content vectors.
+* **Kanerva Sparse Distributed Memory (SDM)**: $N=1,000$ distributed locations across a 1,000-bit Hamming address space with 64-dim content vectors.
 * **Emotional Decay**: Traces decay exponentially; high-intensity emotional moments ($|PAD| \gg 0$) resist decay up to $4\times$ longer.
 * **Synergistic Ecphory**: When Lucia enters an emotional state, the engine queries past traces and generates a subconscious **Echo Vector** that softly primes her prompt without quoting past memories mechanically.
 
@@ -147,10 +161,11 @@ Lucia provides two presentation contexts managed by Electron:
 Lucia operates with non-blocking concurrent daemon threads coordinated by strict thread-safe locks and turn serialization:
 
 | Thread / Worker Name | Module | Cadence | Purpose | Lock Discipline |
+|---|---|---|---|---|
 | **`Cognitive Turn Mutex`** | Brain Core (`server.py`) | Per Turn | Serializes cognitive turn execution | Holds `asyncio.Lock` & `_turn_lock` during `process()` |
 | **`EmotionCore-FastLoop`** | Limbic Engine | 200ms | Solves continuous Coupled MT-LNN ODE ($\mathbf{h}_{\text{fast}} \in \mathbb{R}^{32}, \mathbf{s}_{\text{slow}} \in \mathbb{R}^{16}$) with auxiliary slow-field recollection forcing | Holds `_step_lock`, `_state_lock` ($\le 1\text{ms}$), copies weights via `_train_lock` |
 | **`DecayEngine-SlowLoop`** | Memory Store | 60s | Applies emotional memory decay | Holds `_index_lock` |
-| **`LNN-Trainer`** | Offline Plasticity | Idle / Salience | CPU Backpropagation-through-ODE | Holds `_train_lock` during weight swap ($\le 2\text{ms}$) |
+| **`ConsolidationEngine`** | Offline Plasticity (`src/core/emotion/consolidation.py`) | Idle / Buffer | Tier 3 CPU BPTT-through-ODE with dual regularization | Holds `_train_lock` strictly during atomic parameter swap ($\le 2\text{ms}$) |
 | **`SimClock Background`** | Simulation | Configurable | Virtual clock advancement when resumed | Dispatches synchronous callbacks; no autonomous loops |
 | **`Uvicorn Async Loop`** | FastAPI Server | Event-driven | Serves `/process`, `/state`, `/sim/*`, `/voice/*` | Async non-blocking I/O (`/state` reads under `_state_lock`) |
 | **`Electron Render Thread`**| UI / Avatar | 60 / 30 FPS | WebGL & Canvas avatar rendering | RequestAnimationFrame loop |
@@ -262,6 +277,31 @@ Phase 20 resolved the open-loop boundary limitation by realizing **Closed-Loop A
 | **Level B: Associative Retrieval** | Cue similarity reactivates resonant traces based on current limbic state. | **PROVEN** | `EcphoryEngine.query(pad_final, traces)` computes PAD cosine resonance ($r > 0.6$). |
 | **Level C: Affective Recollection** | Retrieved memory feeds back to modify current internal mathematical state ($\mathbf{s}_{\text{slow}}, p, \tau_{\text{pace}}$). | **PROVEN & PRODUCTION IMPLEMENTED** | Phase 20: Stage 6 `inject_recollection()`, Stage 12 $\Delta\tau_{\text{pace}}$, Stage 16.1 slow trace co-encoding (`f20420a`). |
 | **Level D: Autobiographical Continuity** | Causal history of interrelated events shaping an enduring self-model. | **PLANNED RESEARCH** | Past dialogues exist as structured transcripts and SDM vectors; interconnected causal graph remains future research. |
+
+#### 5. Long-Term Relational Consolidation & Synaptic Homeostasis (Phase 21 Production)
+
+Phase 21 establishes a **3-Tier Multi-Timescale Plasticity Architecture** integrating fast reactive affect, slow relational momentum, and offline synaptic consolidation without catastrophic forgetting or runtime contention:
+
+1. **Tier 1 — Fast Reactive Dynamics**:
+   - Hidden state $\mathbf{h}_{\text{fast}} \in \mathbb{R}^{32}$ integrates conversational shocks at sub-second timescales ($\tau_f \in [0.10, 1.50]\text{s}$).
+2. **Tier 2 — Slow Relational Attractor**:
+   - Slow latent field $\mathbf{s}_{\text{slow}} \in \mathbb{R}^{16}$ integrates minutes-to-hours affective momentum.
+   - Resting equilibrium shifts under interpersonal relationship state $\mathbf{R}_t \in [0, 1]^4$:
+     $$\mathbf{s}^*_{\text{eff}}(\mathbf{R}_t) = \mathbf{s}^*_{\text{philia}} + \mathbf{W}_{\text{rel}} (\mathbf{R}_t - \mathbf{R}_0)$$
+     where $\mathbf{R}_0 = [0, 0.50, 0, 0.50]^T$ represents the stranger baseline.
+   - Constrained by dynamic spectral norm projection $\|\mathbf{W}_{\text{rel}}\|_2 \le 0.08$, guaranteeing slow displacement $\|\Delta\mathbf{s}^*\|_2 \le 0.08$ and resting PAD displacement $\|\Delta\mathbf{PAD}^*\|_2 \le 0.05$.
+3. **Tier 3 — Offline Synaptic Consolidation (`ConsolidationEngine`)**:
+   - Salient interaction experiences ($\text{Salience} \ge 0.50$) are tagged in Stage 16.2 and queued in the consolidation buffer.
+   - Offline CPU backpropagation-through-ODE (`torchdiffeq.odeint`) runs during unforced rest intervals ($T_{\text{idle}} \ge 45\text{s}$) or buffer accumulation ($\ge 8$ samples) with sequential multi-turn continuity ($\mathbf{h}_0^{(k)} = 0.60\mathbf{h}_{\text{prev}} + 0.40\mathbf{h}_{\text{before}}^{(k)}$) and dual homeostatic/Philia regularization:
+     $$\mathcal{L} = \frac{1}{K}\sum_{k=1}^K \|\mathbf{h}_{\text{pred}}^{(k)} - \mathbf{h}_{\text{target}}^{(k)}\|_2^2 + \lambda_{\text{homeo}} \|\boldsymbol{\Theta} - \boldsymbol{\Theta}_0\|_2^2 + \lambda_{\text{philia}} \|\mathbf{h}_{\text{unforced}}(\Delta t)\|_2^2$$
+   - Updated weights $\boldsymbol{\Theta}$ are swapped into `EmotionCore` inside a sub-2ms `_train_lock` with **0.0 MB GPU VRAM contention**.
+4. **Subsystem Ownership & Lifecycle Synchronization (ADR-022 Compliant)**:
+   - `EmotionCore`: Owns live dynamical state ($\mathbf{h}_{\text{fast}}, \mathbf{s}_{\text{slow}}$) and runtime ODE steps. It does not own offline training.
+   - `ConsolidationEngine`: Owns offline learning and experience buffering. It never blocks active turns or trains inside runtime locks.
+   - `RelationshipUpdater`: Owns long-term relationship trajectory $\mathbf{R}_t$. It never directly mutates limbic latent state.
+   - `CognitiveOrchestrator`: Owns the canonical S1–S16 pipeline sequence. Enforces ADR-022 temporal ordering: Stage 9 reads snapshot $\mathbf{R}_{t-1}$; Stages 10–15 condition generation on $\mathbf{R}_{t-1}$; Stage 16.3 computes $\mathbf{R}_t$ and forwards it to `EmotionCore.update_relationship_context()` to modulate the subsequent turn's resting attractor, eliminating within-turn runaway positive feedback.
+5. **Compatibility & Fallback Contract**:
+   - `enable_relational_consolidation`: When toggled to `False`, relational attractor coupling is disabled ($\mathbf{s}^*_{\text{eff}} = \mathbf{s}^*_{\text{philia}}$ bit-exact) and consolidation queuing/training is bypassed, providing an instant operational fallback to pure Phase 20 behavior.
 
 ---
 

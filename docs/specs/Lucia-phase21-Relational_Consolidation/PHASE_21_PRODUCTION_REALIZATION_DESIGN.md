@@ -2,10 +2,10 @@
 ## Long-Term Relational Consolidation & Synaptic Homeostasis (3-Tier Multi-Timescale Plasticity)
 
 > **Authoritative Architectural Design & Production Integration Blueprint for Lucia Phase 21**  
-> **Status**: ARCHITECTURE APPROVED — READY FOR PRODUCTION IMPLEMENTATION  
-> **Lifecycle Governance**: Research Hypothesis -> Experimental Validation Cycle -> Production Realization Design  
+> **Status**: [✅ VALIDATED / PRODUCTION IMPLEMENTED] (Implemented in commit `58a509c`)  
+> **Lifecycle Governance**: Research Hypothesis -> Experimental Validation Cycle -> Production Realization Design -> Production Implementation  
 > **Governing ADR**: ADR-028  
-> **Pre-Promotion Git Baseline**: `558ae77` / `f20420a`  
+> **Production Implementation Git Commit**: `58a509c` (pre-promotion baseline `f20420a`)  
 > **Experimental Evidence**: 15/15 Hypotheses Validated (`tests/evaluation_phase21/`, Cohen's $d = 2.999$, AUC ratio $= 15.46$)  
 > **Target Subsystems**: `src/core/config.py`, `src/core/emotion/emotion_core.py`, `src/core/emotion/consolidation.py`, `src/core/orchestrator/cognitive_orchestrator.py`  
 > **Date**: September 2026  
@@ -354,14 +354,15 @@ EmotionCore live weights Theta updated for next interaction
 This document serves as the formal **Technical Approval Gate** for Phase 21 production promotion.
 
 ### Governance State Transition:
-1. **Pre-Promotion (Current State)**:
+1. **Pre-Promotion (Historical State)**:
    - Architecture Design: **`[ARCHITECTURE APPROVED — READY FOR PRODUCTION IMPLEMENTATION]`**
    - ADR-028 in `docs/DESIGN_DECISIONS.md`: **`[RESEARCH VALIDATED / PROMOTION DEFERRED]`**
    - Runtime `src/core/**`: Unmodified Phase 20 baseline.
-2. **Post-Implementation & Validation Gate (Following User Approval)**:
-   - Upon successful execution of the implementation plan and passing of all unit/regression tests:
-   - ADR-028 advances to: **`[✅ VALIDATED / PRODUCTION IMPLEMENTED]`**.
-   - `docs/CURRENT_STATUS.md` advances Phase 21 to **`[✅ VALIDATED]`**.
+2. **Post-Implementation & Validation Gate (Fulfilled in Commit `58a509c`)**:
+   - Implementation plan executed: `src/core/emotion/consolidation.py`, `emotion_core.py`, `cognitive_orchestrator.py`, `config.py`.
+   - ADR-028 advanced to: **`[✅ VALIDATED / PRODUCTION IMPLEMENTED]`**.
+   - `docs/CURRENT_STATUS.md` advanced Phase 21 to **`[✅ VALIDATED]`**.
+   - Full regression verified: 13/13 Phase 21 production tests, 15/15 research tests, 605/605 unit tests, 35/35 property invariants.
    - Phase 21 formal closure is established.
 
 No new speculative architectural records are created; ADR-028 remains the definitive canonical record.

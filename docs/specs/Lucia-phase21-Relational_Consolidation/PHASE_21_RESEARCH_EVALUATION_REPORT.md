@@ -1,10 +1,10 @@
 # Phase 21 — Scientific Evaluation Report
 
 > **Long-Term Relational Consolidation & Synaptic Homeostasis: Research & Evaluation Report**  
-> **Status:** `[RESEARCH VALIDATED / PROMOTION DEFERRED]`  
+> **Historical Research Status:** `[RESEARCH VALIDATED]` (15/15 Hypotheses H1–H6 Validated)  
+> **Production Realization Status:** `[VALIDATED / PRODUCTION IMPLEMENTED]` (Promoted to production in commit `58a509c`)  
 > **Directory:** `docs/specs/Lucia-phase21-Relational_Consolidation/PHASE_21_RESEARCH_EVALUATION_REPORT.md`  
 > **Preceding Production Baseline:** Phase 20 Production Commit `f20420a` (`[VALIDATED / PRODUCTION IMPLEMENTED]`)  
-> **Production Code Status:** `src/core/**` STRICTLY UNTOUCHED  
 > **Canonical Storage Invariant:** `data/profile.json == {"is_onboarded": false}` (bit-exact)
 
 ---

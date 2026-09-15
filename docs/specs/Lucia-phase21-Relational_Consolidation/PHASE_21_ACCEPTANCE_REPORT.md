@@ -5,6 +5,7 @@
 > **Authoritative Baseline**: Phase 21 Production Implementation (`src/core/config.py`, `src/core/emotion/consolidation.py`, `src/core/emotion/emotion_core.py`, `src/core/orchestrator/cognitive_orchestrator.py`)  
 > **Governing ADR**: ADR-028 (`docs/DESIGN_DECISIONS.md`)  
 > **Pre-Implementation Git Baseline**: `3f80c3e`  
+> **Production Implementation Commit**: `58a509c28446f76fc7bf93bd47cef240fc59f6cf`  
 > **Storage Invariant**: `data/profile.json == {"is_onboarded": false}` BIT-EXACT  
 
 ---

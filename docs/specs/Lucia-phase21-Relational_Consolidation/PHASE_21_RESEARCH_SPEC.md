@@ -1,10 +1,10 @@
 # Phase 21 — Long-Term Relational Consolidation & Synaptic Homeostasis Specification
 
 > **Authoritative Research Specification: Multi-Timescale Synaptic Plasticity, Dynamic Homeostasis, Bounded Relational Inertia, and Counterfactual Plasticity Controls**  
-> **Status:** `[RESEARCH VALIDATED / PROMOTION DEFERRED]`  
+> **Historical Research Status:** `[RESEARCH VALIDATED]` (15/15 Hypotheses H1–H6 Validated)  
+> **Production Realization Status:** `[VALIDATED / PRODUCTION IMPLEMENTED]` (Promoted to production in commit `58a509c`)  
 > **Directory:** `docs/specs/Lucia-phase21-Relational_Consolidation/PHASE_21_RESEARCH_SPEC.md`  
-> **Preceding Baseline:** Phase 20 Production Commit `f20420a` (`[VALIDATED / PRODUCTION IMPLEMENTED]`)  
-> **Production Code Status:** `src/core/**` STRICTLY UNTOUCHED  
+> **Preceding Research Baseline:** Phase 20 Production Commit `f20420a`  
 > **Canonical Storage Invariant:** `data/profile.json == {"is_onboarded": false}` (bit-exact)
 
 ---

@@ -539,15 +539,17 @@ All components strictly observe the verified repository lock hierarchy:
 
 ## 18. Quality Assurance, Automated Test Suite & Storage Invariant Verification
 
-Authoritative test suite results as of commit `f20420a`:
+Authoritative test suite results as of commit `58a509c`:
 
 | Test Suite | Path | Total | Passed | Skipped | Notes |
 |---|---|---|---|---|---|
-| **Unit Test Suite** | `tests/unit/` | 592 | **592** | 0 | Comprehensive coverage across all subsystems |
+| **Unit Test Suite** | `tests/unit/` | 605 | **605** | 0 | Comprehensive coverage across all subsystems |
 | **Property Tests** | `tests/property/` | 35 | **35** | 0 | Hypothesis property invariants (P1–P35) |
 | **Phase 19 Research** | `tests/evaluation_phase19/` | 15 | **15** | 0 | Multi-timescale empirical evaluation (EXP19.1–8) |
 | **Phase 20 Research** | `tests/evaluation_phase20/` | 10 | **10** | 0 | Recollection empirical evaluation (EXP20.1–10) |
 | **Phase 20 Production** | `tests/unit/test_phase20_production.py` | 9 | **9** | 0 | Black-box causal, fallback, gating & orchestrator tests |
+| **Phase 21 Research** | `tests/evaluation_phase21/` | 15 | **15** | 0 | Synaptic homeostasis & relational consolidation (H1–H6) |
+| **Phase 21 Production** | `tests/unit/test_phase21_production.py` | 13 | **13** | 0 | Multi-timescale plasticity, Tier 2 attractor, offline BPTT consolidation, fallback & lock discipline |
 | **Integration Tests** | `tests/integration/` | 47 | **40** | 7 | 7 skipped in `test_llm_backend_integration.py` (`LUCIA_MODEL_PATH` unset) |
 
 ### Canonical Storage Invariant:
@@ -572,8 +574,8 @@ Authoritative test suite results as of commit `f20420a`:
 │ Phase 18: Human Longitudinal Validation          [✅ VALIDATED]        │
 │ Phase 19: Multi-Timescale Affective Life         [✅ VALIDATED]        │
 │ Phase 20: Affective Recollection                 [✅ VALIDATED]        │
-│ Phase 21: Relational Consolidation & Synaptic    [🔬 RESEARCH VALID.]  │
-│           Homeostasis (Validation Cycle Complete)                      │
+│ Phase 21: Relational Consolidation & Synaptic    [✅ VALIDATED]        │
+│           Homeostasis (Production Implemented)                         │
 │ Phase 22–26: Future Conceptual Horizons          [🔬 CONCEPTUAL]       │
 │ First Activation (Genesis Onboarding)            [🔒 FUTURE GATE]      │
 └────────────────────────────────────────────────────────────────────────┘
@@ -588,18 +590,28 @@ Authoritative test suite results as of commit `f20420a`:
   - Realization: Closed-loop slow-field latent forcing ($\mathbf{W}_{\text{rec}}\mathbf{r}_{\text{slow}}^{\text{bounded}}$), multi-modal retrieval scoring, competitive softmax gating, 16D slow trace co-encoding, and somatic pacing latency modulation.
   - Core Invariant: *Memory provides information; CognitiveOrchestrator decides actuation.* Affective recollection does not directly call or own `EmotionCore`.
 
-### 19.2 Validated Research Milestone: Phase 21
+### 19.2 Completed & Validated Milestone: Phase 21 — Long-Term Relational Consolidation & Synaptic Homeostasis
 - **Phase Name**: **Phase 21 — Long-Term Relational Consolidation & Synaptic Homeostasis**
-- **Lifecycle Status**: **`[🔬 RESEARCH VALIDATED / PROMOTION DEFERRED]`**
-- **Validation Scope**: Isolated Evaluation Suite (`tests/evaluation_phase21/`, 15/15 automated tests passing, 100% pre-registered criteria satisfied).
-- **Core Findings**:
-  - *H1 (Homeostasis)*: Dynamic settling $\mathcal{E}(45)=0.9237 \ge 0.90, \mathcal{T}(45)=0.0061 \le 0.01$; forgetting drift $1.17\% \le 10.0\%$.
-  - *H2 (Relational Inertia)*: Spectral norm $\sigma_{\max}(\mathbf{W}_{\text{rel}})=0.0475 \le 0.08$; slow displacement $0.07095 \le 0.08$; PAD displacement $0.01423 \le 0.05$.
-  - *H3 (Philia Invariance)*: Unforced relaxation error $\epsilon = 3.59 \times 10^{-6} < 10^{-4}$; absence decay reversibility error $3.25 \times 10^{-6} < 10^{-4}$.
-  - *H4 (Anti-Vector Bias)*: Directional similarity to shuffled $0.1237 \le 0.20$, to random $-0.0351 \le 0.20$; Trajectory AUC ratio $15.46 \ge 2.50$; Cohen's $d = 2.999 \ge 1.20$.
-  - *H5 (Performance)*: Batch wall-clock $29.69\text{ms} < 400\text{ms}$; parameter swap $0.0996\text{ms} \le 2.0\text{ms}$; 0 MB GPU VRAM; active-turn overhead $\Delta t = 0.0001\text{ms} \le 0.20\text{ms}$; zero deadlocks.
-  - *H6 (Pre-Reflective Safety)*: 100% lexical redaction of introspective declarations; 0 introspective fields in data models.
-- **Production Code Status**: `src/core/**` STRICTLY UNTOUCHED (Zero production mutation). Canonical storage invariant `data/profile.json == {"is_onboarded": false}` bit-exact. Production promotion deferred to project owner governance.
+- **Lifecycle Status**: **`[✅ VALIDATED / PRODUCTION IMPLEMENTED]`**
+- **Production Implementation Commit**: **`58a509c`**
+- **Architectural Realization**:
+  - **3-Tier Multi-Timescale Plasticity Architecture**:
+    - **Tier 1 (Fast Reactive Dynamics)**: $\mathbf{h}_{\text{fast}} \in \mathbb{R}^{32}$ integrated in fast loop (200ms) with input-dependent $\tau_f \in [0.10, 1.50]\text{s}$.
+    - **Tier 2 (Slow Relational Attractor Grounding)**: $\mathbf{s}^*_{\text{eff}}(\mathbf{R}) = \mathbf{s}^*_{\text{philia}} + \mathbf{W}_{\text{rel}}(\mathbf{R} - \mathbf{R}_0) \in \mathbb{R}^{16}$. Parameter matrix $\mathbf{W}_{\text{rel}} \in \mathbb{R}^{16 \times 4}$ is bounded by strict spectral norm clipping $\|\mathbf{W}_{\text{rel}}\|_2 \le 0.08$, guaranteeing slow manifold displacement $\le 0.08$ and equilibrium PAD displacement $\le 0.05$ ($0.45 \times 0.08 \times 1.0 = 0.036 \le 0.05$).
+    - **Tier 3 (Offline Synaptic Consolidation)**: Dedicated `ConsolidationEngine` (`src/core/emotion/consolidation.py`) running offline CPU-only BPTT-through-ODE training during post-turn idle or sleep intervals. Uses dual regularization ($L_2$ weight decay $\lambda_{\text{reg}} = 10^{-4}$ + homeostatic anchor penalty $\lambda_{\text{homeo}} = 10^{-2}$ to prevent catastrophic forgetting). Atomic parameter swap under `_train_lock` held $\le 0.1\text{ms}$ with 0.0 MB GPU VRAM contention.
+  - **Temporal Ordering & Lifecycle Separation (ADR-022)**:
+    - Stage 9 reads fixed prior relationship vector $\mathbf{R}_{t-1}$.
+    - Stages 10–15 use fixed $\mathbf{R}_{t-1}$ throughout dialogue generation and prompt synthesis.
+    - Stage 16.3 computes updated relationship state $\mathbf{R}_t$ via `RelationshipUpdater.update()`, forwards $\mathbf{R}_t$ to `EmotionCore.set_relationship_state()`, enqueues experience tuple $(\mathbf{R}_t, \mathbf{h}_{\text{fast}}, \dots)$ into `ConsolidationEngine.enqueue_turn_experience()`, and optionally triggers offline consolidation in background idle.
+  - **Operational Fallback Contract**:
+    - Controlled via `enable_relational_consolidation: bool = True` in `EmotionConfig`.
+    - When disabled (`False`), relational coupling to the slow attractor is bypassed ($\mathbf{s}^*_{\text{eff}} = \mathbf{s}^*_{\text{philia}}$), experience queueing and consolidation passes are no-ops, providing 100% bit-exact regression compatibility with Phase 20 baseline.
+- **Verification Evidence**:
+  - 13/13 production tests passing in `tests/unit/test_phase21_production.py`.
+  - 15/15 research evaluation tests passing in `tests/evaluation_phase21/` (H1–H6).
+  - 605/605 full unit test regression passing.
+  - 35/35 property invariants passing.
+  - Canonical storage invariant verified bit-exact: `data/profile.json == {"is_onboarded": false}`.
 
 ### 19.3 Future Conceptual Research Horizons (Phases 22–26):
 Beyond Phase 21, the agreed long-range research sequence spans five progressive conceptual horizons:

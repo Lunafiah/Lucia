@@ -4,11 +4,11 @@
 
 ---
 
-## 0. Current Operating Mode — Research-First Governance (Post-Phase 20)
+## 0. Current Operating Mode — Research-First Governance (Post-Phase 21)
 
 > **CURRENT STAGE: RESEARCH / EVIDENCE BUILDING — NOT ACTIVATION**
 
-Lucia has completed the currently documented production and research milestones through **Phase 20 — Affective Recollection & Memory Reactivation**. The repository currently treats the canonical cognitive architecture as an implemented and validated baseline, while the next research milestone is established through project governance and canonical documentation rather than inferred by an AI coding agent.
+Lucia has completed the currently documented production and research milestones through **Phase 21 — Long-Term Relational Consolidation & Synaptic Homeostasis**. The repository currently treats the canonical cognitive architecture as an implemented and validated baseline, while the next research milestone is established through project governance and canonical documentation rather than inferred by an AI coding agent.
 
 ### Mandatory Research-First Rules
 
@@ -132,9 +132,10 @@ Lucia/
 │   │   └── server.py                           # FastAPI server (127.0.0.1:8765)
 │   └── core/
 │       ├── sensors/                            # Layer 1: Lexical valence & density encoding
-│       ├── emotion/                            # Layers 2–3: Continuous affective dynamics & homeostasis
+│       ├── emotion/                            # Layers 2–3: Coupled MT-LNN, Philia attractor & ConsolidationEngine
 │       ├── inference/                          # Layer 4: Active Inference & CPU LNNTrainer
 │       ├── memory/                             # Layer 5: Kanerva SDM, DecayEngine, Ecphory
+│       ├── orchestrator/                       # Canonical S1–S16 CognitiveOrchestrator pipeline
 │       ├── language/                           # Layer 6: Local GGUF Small Language Model
 │       ├── safety/                             # Layer 6: BoundaryLayer regex validator
 │       ├── voice/                              # Layer 6: Direct RVC synthesis & faster-whisper STT
@@ -163,14 +164,16 @@ Lucia/
 ## 5. Concurrency & Thread Safety Rules
 
 1. **Lock Hierarchy**:
+   * Follow the canonical lock sequence: `_turn_lock → _step_lock → _train_lock → _stimulus_lock → _state_lock`.
    * Always acquire `_train_lock` before `_state_lock`. **Never** acquire `_state_lock` and then attempt to acquire `_train_lock` (deadlock risk).
    * Keep critical sections under `_state_lock` under $1\text{ms}$.
-   * Keep weight copy swaps under `_train_lock` under $2\text{ms}$.
+   * Keep weight copy swaps under `_train_lock` under $2\text{ms}$ (measured $\le 0.1\text{ms}$).
+   * **Never** perform ODE integration, backward passes, disk/network I/O, or LLM generation while holding locks.
 2. **Asynchronous Non-Blocking Endpoints**:
    * `GET /state` and `GET /telemetry/stability` must respond within $10-15\text{ms}$. They must read memory snapshots under the microsecond lock and return immediately without awaiting model inference.
 3. **CPU vs. GPU Discipline**:
    * The GPU is reserved exclusively for the active LLM GGUF model and avatar WebGL rendering.
-   * All continuous background loops (`EmotionCore-FastLoop`, `DecayEngine-SlowLoop`, `LNN-Trainer`) must run on the CPU with zero GPU VRAM contention.
+   * All continuous background loops (`EmotionCore-FastLoop`, `DecayEngine-SlowLoop`, `ConsolidationEngine` offline BPTT) must run on the CPU with zero GPU VRAM contention.
 
 ---
 
@@ -188,7 +191,8 @@ Before submitting changes, agents must run the smallest relevant verification se
 ### Research / Evaluation Harnesses
 Run the evaluation suite specific to the research increment, for example:
 ```powershell
-.venv\Scripts\pytest tests/evaluation_<phase> -v
+.venv\Scripts\pytest tests/evaluation_phase21 -v
+.venv\Scripts\pytest tests/unit/test_phase21_production.py -v
 ```
 Research results MUST be reported separately from production regression results.
 
