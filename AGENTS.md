@@ -8,13 +8,13 @@
 
 > **CURRENT STAGE: RESEARCH / EVIDENCE BUILDING — NOT ACTIVATION**
 
-Lucia has completed the currently documented production and research milestones through **Phase 21 — Long-Term Relational Consolidation & Synaptic Homeostasis**. The repository currently treats the canonical cognitive architecture as an implemented and validated baseline, while the next research milestone is established through project governance and canonical documentation rather than inferred by an AI coding agent.
+Lucia has completed all documented production and research milestones through **Phase 21 — Long-Term Relational Consolidation & Synaptic Homeostasis**. The repository treats the canonical cognitive architecture as an implemented, verified baseline. The next research milestone is established through project governance and canonical documentation rather than inferred by an AI coding agent.
 
 ### Mandatory Research-First Rules
 
 1. **Research is not production.** A research hypothesis, mathematical proposal, benchmark result, ablation, prototype, or evaluation harness MUST NOT be treated as a production capability merely because tests pass.
 2. **Evidence before promotion.** New mechanisms must first be isolated, measurable, reproducible, and evaluated against explicit acceptance criteria before any production integration is proposed.
-3. **Do not invent the next phase.** Agents MUST NOT create or assume a new numbered phase, roadmap milestone, subsystem, or activation prerequisite unless it is explicitly established by the authoritative project documentation or a user-approved research specification.
+3. **Do not invent the next phase.** Agents MUST NOT create or assume a new numbered phase, roadmap milestone, subsystem, or activation prerequisite unless it is explicitly established by authoritative project documentation or a user-approved research specification.
 4. **Preserve the canonical baseline.** Unless a task explicitly authorizes production integration, research work must remain isolated from the canonical runtime and persistent user state. Prefer `tests/evaluation_*`, research specifications, simulation fixtures, and disposable experimental modules for exploratory work.
 5. **No silent promotion.** A successful experiment does not authorize changes to `src/core/`, `data/`, lifecycle behavior, or the production cognitive pipeline. Promotion requires an explicit architectural decision and corresponding documentation update.
 6. **No activation during research.** `Development / Simulation != Lucia Activation` remains absolute. First Activation (Genesis Onboarding) remains a locked future gate until project governance explicitly changes that status.
@@ -31,7 +31,7 @@ Lucia has completed the currently documented production and research milestones 
 
 Before editing code, an agent MUST reason in this order:
 
-`Canonical docs → current status → research specification/evidence → architectural decision → implementation scope → tests → documentation`
+`Canonical docs → research specification/evidence → architectural decision → implementation scope → tests → documentation`
 
 If the requested work is exploratory, the default outcome is **research artifact + evaluation evidence**, not production mutation.
 
@@ -74,7 +74,7 @@ To prevent conceptual misunderstandings when implementing features or conditioni
 
 1. **Continuous Dynamical Mechanics**:
    * Emotional state is represented by a continuous 3-dimensional vector in **PAD space** ($P \in [-1, 1]$ Pleasure/Valence, $A \in [-1, 1]$ Arousal/Vitality, $D \in [-1, 1]$ Dominance/Agency).
-   * It is integrated continuously in the background every 200 ms via an Ordinary Differential Equation (ODE) within a Liquid Neural Network (LNN).
+   * It is integrated continuously in the background every 200 ms via an Ordinary Differential Equation (ODE) within a Liquid Neural Network (Coupled MT-LNN).
    * It evolves with the physical passage of time and smoothly decays toward the **Philia resting attractor** ($P=+0.25, A=-0.05, D=+0.05$) when no stimulus is present.
 2. **Pre-Reflective Operational Consequences**:
    * Emotion manifests strictly as **functional and physical consequences** on generation behavior:
@@ -102,24 +102,54 @@ When modifying any part of the Lucia codebase, agents are strictly prohibited fr
 | **5** | **Zero Cloud Dependencies** | Introducing OpenAI, Anthropic, ElevenLabs, or cloud STT/TTS API keys. | 100% local edge execution: GGUF LLM on CUDA, Edge-TTS/RVC on CPU/GPU, faster-whisper STT. |
 | **6** | **Strict Concurrency Discipline** | Holding `_state_lock` during model inference, or acquiring `_state_lock` while holding `_train_lock`. | Hold locks strictly $\le 1-2\text{ms}$ for memory copy. Never perform network or disk I/O under locks. |
 | **7** | **Mascot Physics & Bounds Guard** | Enabling native `-webkit-app-region: drag` or allowing Aero Snap to maximize transparent windows. | Use IPC `moveMascotBy(dx, dy)`, retain 800ms trackpad inertia cooldown, and keep window unmaximizable. |
+| **8** | **Genesis Gate Invariant** | Modifying `data/profile.json` (`{"is_onboarded": false}`) during testing, simulation, or development. | Simulation $\ne$ Activation. The onboarding ceremony is a locked future gate preserved bit-exact. |
 
 ---
 
-## 3. Documentation Authority & Navigation Rules
+## 3. Documentation Hierarchy & Single Source of Truth
 
-Agents must respect the document hierarchy established in [`docs/DOCUMENTATION_INDEX.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/DOCUMENTATION_INDEX.md):
+The repository enforces a consolidated, single-source-of-truth documentation structure. Agents must consult and maintain the designated canonical authority for each topic.
 
-* **Source of Active Truth**:
-  * [`docs/00_PROJECT_OVERVIEW.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/00_PROJECT_OVERVIEW.md) — System architecture and milestone roadmap.
-  * [`docs/ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/ARCHITECTURE.md) — Concurrency, threading, hardware tiers, and IPC protocols.
-  * [`docs/MECHANISM.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/MECHANISM.md) — Mathematical formulas (ODE, SDM, LSI, Ecphory, VAD, Lip-sync).
-  * [`docs/CURRENT_STATUS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/CURRENT_STATUS.md) — Live implementation state, subsystem health, active API endpoints.
-  * [`docs/DESIGN_DECISIONS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/DESIGN_DECISIONS.md) — Architectural Decision Records and reconciled discrepancies.
-  * [`.kiro/specs/lucia-UI_refractoring-phase7/PHASE_7_UI_REFACTORING_SPEC.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/.kiro/specs/lucia-UI_refractoring-phase7/PHASE_7_UI_REFACTORING_SPEC.md) — Active UI Design System and token definitions.
-* **Historical Phase Specifications**:
-  * Directories under [`.kiro/specs/`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/.kiro/specs/) are **immutable historical artifacts**. They document the phase-by-phase requirements, designs, and tasks from earlier milestones.
-  * **DO NOT** modify, delete, or merge these files into `docs/`.
-  * If a historical specification contradicts an authoritative document (e.g. Phase 5 desktop agency vs Phase 5 voice/avatar presence), the authoritative document and `docs/DESIGN_DECISIONS.md` govern.
+### 3.1 Document Authority Matrix
+
+```text
+README.md (Public Front Door)
+    │
+    ├── docs/00_PROJECT_OVERVIEW.md (Canonical Project Truth)
+    │
+    ├── docs/ARCHITECTURE.md (Canonical Technical Truth & ADR Ledger)
+    │
+    ├── docs/DOCUMENTATION_INDEX.md (Navigation Map Only)
+    │
+    └── Historical Evidence (docs/specs/**, .kiro/specs/**, docs/reports/**)
+```
+
+| Document | Authority Tier | Role & Content Scope | Agent Operating Rules |
+|---|---|---|---|
+| [`README.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/README.md) | **Public Front Door** | High-level introduction, philosophy, public concepts, and getting started. | Use it to understand project purpose and top-level navigation. **NOT** the detailed technical specification. |
+| [`docs/00_PROJECT_OVERVIEW.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/00_PROJECT_OVERVIEW.md) | **Canonical Project Truth** | System identity, core philosophy, 6-layer cognitive pipeline summary, 24-subsystem health matrix, test statistics, active REST API surface, and milestone roadmap. | Consult for current project status, phase progress, subsystem operational state, and project-level constraints. **Do NOT recreate `CURRENT_STATUS.md`.** |
+| [`docs/ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/ARCHITECTURE.md) | **Canonical Technical Truth** | Technical architecture, 20-Watt Whole Brain Architecture, concurrency & locking rules, mathematical/dynamical mechanisms (ODEs, SDM, Ecphory, BPTT), and the complete Architectural Decision Record ledger (**ADR-001 through ADR-028**). | Primary technical authority for mechanisms, formulas, component ownership, threading, and design rationale. **Do NOT recreate `MECHANISM.md` or `DESIGN_DECISIONS.md`.** |
+| [`docs/DOCUMENTATION_INDEX.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/DOCUMENTATION_INDEX.md) | **Navigation Map** | Complete catalog of active and historical documentation, authority hierarchy, and reading paths. | Use strictly to navigate documents. **Do NOT turn the index into another source of technical truth.** |
+| **Phase / Research / Acceptance Docs** (`docs/specs/**`, `.kiro/specs/**`) | **Historical Evidence & Records** | Phase specifications, research hypotheses (H1–Hn), evaluation harness reports, mathematical proposals, and formal acceptance reports. | Preserved as evidence and historical records. They must **never** silently override the active canonical architecture in `docs/ARCHITECTURE.md`. |
+
+### 3.2 Deleted Canonical Files Notice
+
+The following standalone files were intentionally merged into canonical documentation in commit `19db677` and deleted:
+- `docs/CURRENT_STATUS.md` $\rightarrow$ Merged into `docs/00_PROJECT_OVERVIEW.md`
+- `docs/MECHANISM.md` $\rightarrow$ Merged into `docs/ARCHITECTURE.md`
+- `docs/DESIGN_DECISIONS.md` $\rightarrow$ Merged into `docs/ARCHITECTURE.md`
+
+Agents must **NEVER** recreate these files, create compatibility wrappers, or introduce parallel "current status" documents.
+
+### 3.3 Documentation Workflow
+
+Whenever work alters system behavior, mechanisms, phase status, or architecture:
+1. **Identify the canonical owner:** Project status belongs in `00_PROJECT_OVERVIEW.md`; technical mechanisms and ADRs belong in `ARCHITECTURE.md`.
+2. **Update the canonical source:** Edit the living document directly rather than creating a secondary file.
+3. **Phase-specific records:** Create a new document in `docs/specs/` only when the artifact represents a genuine research specification, evaluation report, or phase closure report.
+4. **Synchronize navigation:** Update `DOCUMENTATION_INDEX.md` whenever adding, moving, or removing documentation.
+5. **Update README sparingly:** Modify `README.md` only when the public-facing description, quickstart, or primary navigation links change.
+6. **Audit references:** Always search for and resolve stale or broken references to old file names.
 
 ---
 
@@ -153,7 +183,8 @@ Lucia/
 ├── config/                                     # RUNTIME CONFIGURATION
 │   └── ui.json                                 # Port, default model, voice, hardware profile
 ├── data/                                       # RUNTIME PERSISTENCE
-│   └── chat_history.json                       # Conversation turns & session records
+│   ├── chat_history.json                       # Conversation turns & session records
+│   └── profile.json                            # Genesis onboarding profile (is_onboarded: false)
 └── models/                                     # LOCAL ASSETS & WEIGHTS
     ├── avatar/                                 # 2D Sprites, Live2D models, 3D VRM files
     └── voice/rvc/                              # RVC voice models (.pth + .index)
@@ -161,253 +192,302 @@ Lucia/
 
 ---
 
-## 5. Concurrency & Thread Safety Rules
+## 5. Required Lucia Development Workflow
 
-1. **Lock Hierarchy**:
-   * Follow the canonical lock sequence: `_turn_lock → _step_lock → _train_lock → _stimulus_lock → _state_lock`.
-   * Always acquire `_train_lock` before `_state_lock`. **Never** acquire `_state_lock` and then attempt to acquire `_train_lock` (deadlock risk).
-   * Keep critical sections under `_state_lock` under $1\text{ms}$.
-   * Keep weight copy swaps under `_train_lock` under $2\text{ms}$ (measured $\le 0.1\text{ms}$).
-   * **Never** perform ODE integration, backward passes, disk/network I/O, or LLM generation while holding locks.
-2. **Asynchronous Non-Blocking Endpoints**:
-   * `GET /state` and `GET /telemetry/stability` must respond within $10-15\text{ms}$. They must read memory snapshots under the microsecond lock and return immediately without awaiting model inference.
-3. **CPU vs. GPU Discipline**:
-   * The GPU is reserved exclusively for the active LLM GGUF model and avatar WebGL rendering.
-   * All continuous background loops (`EmotionCore-FastLoop`, `DecayEngine-SlowLoop`, `ConsolidationEngine` offline BPTT) must run on the CPU with zero GPU VRAM contention.
+For non-trivial tasks, all agents must adhere to the following structured sequence:
+
+```text
+Step 1: Inspect Repository State & Canonical Docs
+                 │
+                 ▼
+Step 2: Classify Work (Research / Architecture / Implementation / Validation / Docs)
+                 │
+                 ▼
+Step 3: Resolve Architecture Gate (If mechanism, state, concurrency, or pipeline changes)
+                 │
+                 ▼
+Step 4: Implementation Discipline (Scoped, isolated, invariant-preserving)
+                 │
+                 ▼
+Step 5: Narrow-to-Broad Validation (Subsystem → Phase → Regression → Invariants)
+                 │
+                 ▼
+Step 6: Canonical Documentation Synchronization & Consistency Audit
+                 │
+                 ▼
+Step 7: Pre-Commit Invariant Checks & Focused Git Commit
+```
+
+### Step 1 — Inspect Before Coding
+- Run `git status` to inspect current branch and working tree.
+- Read `AGENTS.md` and check relevant canonical documentation (`00_PROJECT_OVERVIEW.md`, `ARCHITECTURE.md`).
+- Read the governing ADRs and phase specifications.
+- Inspect the existing implementation and test coverage.
+- **Do not assume the prompt's feature request accurately reflects the current codebase.** Always verify against source code first.
+
+### Step 2 — Classify the Work
+Explicitly identify whether the task is:
+- **Research:** Exploratory hypothesis testing, benchmark, ablation, or evaluation harness.
+- **Architecture / Design:** Defining mechanisms, ADR authoring, or production realization design.
+- **Production Implementation:** Mutating `src/core/`, `electron/`, or production configuration.
+- **Validation / Testing:** Authoring unit, property, regression, or performance test suites.
+- **Documentation / Governance:** Synchronizing canonical documentation or updating governance matrices.
+- **Phase Closure:** Formal acceptance audit, gate verification, and milestone sign-off.
 
 ---
 
-## 6. Testing & Quality Assurance Protocols
+## 6. Research-First & Promotion Workflow (The Gated Model)
 
-Before submitting changes, agents must run the smallest relevant verification set and clearly distinguish **implementation correctness** from **research evidence**. Do not run unrelated expensive suites merely to manufacture a green status.
+Lucia uses a strict gated progression. New cognitive or physical mechanisms must advance through defined lifecycle gates:
 
-### Canonical Python Backend
+```text
+Research Hypothesis (H1–Hn)
+       │
+       ▼
+Isolated Evaluation Harness (tests/evaluation_phaseXX/)
+       │
+       ▼
+Deterministic Empirical Verification (100% Pre-registered criteria satisfied)
+       │
+       ▼
+Architecture Gate & Production Realization Design (docs/specs/...)
+       │
+       ▼
+Formal Architectural Approval (ADR in docs/ARCHITECTURE.md)
+       │
+       ▼
+Production Implementation (src/core/**)
+       │
+       ▼
+Full Regression & Invariant Test Suite (tests/unit/, tests/property/)
+       │
+       ▼
+Promotion, Acceptance & Phase Closure Sign-Off
+```
+
+### Research Isolation Rules
+- **No Direct-to-Production:** Do NOT skip from a research concept directly into production code.
+- **Keep Research Code Isolated:** Prefer dedicated evaluation directories (`tests/evaluation_*`), disposable simulation fixtures, and isolated test models.
+- **Experimental Success $\ne$ Production Promotion:** A successful experiment in an evaluation harness demonstrates empirical feasibility; it does NOT authorize changing `src/core/` without an explicit Architecture Gate.
+- **Preserve Falsifiability:** Negative results, failed candidate models, and ablations must be documented as evidence rather than erased.
+
+---
+
+## 7. Architecture Gate
+
+Before modifying production code that introduces or materially alters:
+- Cognitive mechanisms or limbic state dynamics
+- Multi-timescale plasticity or consolidation routines
+- Memory storage, retrieval, or salience scoring
+- Relationship vectors or interpersonal dynamics
+- Pipeline turn stages or orchestrator sequences
+- Concurrency, locking hierarchy, or threading models
+- State persistence or schema definitions
+- Runtime lifecycle or boundary validators
+
+An agent MUST author or verify the **Production Realization Design** before touching production code.
+
+### Required Architecture Gate Specifications
+The architecture design must explicitly define:
+1. **Ownership Boundaries:** Which component owns the primary live state vs. transient copies.
+2. **Interface Contracts:** Method signatures, inputs, outputs, and exception behaviors.
+3. **Data Flow & Timing:** When updates occur (e.g. post-turn vs intra-turn; adherence to ADR-022).
+4. **Mathematical Bounds:** Lyapunov stability conditions, spectral norm limits, displacement bounds.
+5. **Concurrency & Locks:** Exact locks acquired, acquisition order, and holding durations.
+6. **Hardware & Resource Budgets:** CPU-only enforcement, zero GPU VRAM impact, execution SLAs.
+7. **Fallback & Feature Flags:** Configuration flags allowing 100% bit-exact rollback to the previous baseline.
+8. **Verification Strategy:** Specific unit, property, and regression test suites required for promotion.
+
+---
+
+## 8. Production Implementation Rules
+
+Once the architecture gate is approved:
+1. **Implement strictly within scope:** Do not touch unrelated subsystems or perform drive-by cleanups.
+2. **Preserve existing invariants:** Ensure all fundamental invariants in Section 2 remain intact.
+3. **No opportunistic refactors:** Do not rename files, modernize idioms, or change formatting across unrelated modules.
+4. **Surface contradictions immediately:** If implementation reveals an unresolvable contradiction with the approved architecture, stop and raise it rather than silently redesigning the system.
+5. **Preserve fallback behavior:** Ensure feature flags (`enable_*`) preserve bit-exact backward compatibility when toggled off.
+
+---
+
+## 9. Concurrency, Locking & Runtime Safety
+
+Lucia runs continuous limbic integration, background homeostatic decay, episodic memory retrieval, offline synaptic consolidation, and real-time audio-visual embodiment concurrently on local consumer hardware.
+
+### 9.1 Canonical Lock Hierarchy
+
+All locks MUST be acquired in this strict descending hierarchy:
+
+$$\text{\_turn\_lock} \longrightarrow \text{\_step\_lock} \longrightarrow \text{\_train\_lock} \longrightarrow \text{\_stimulus\_lock} \longrightarrow \text{\_state\_lock}$$
+
+* **Never invert lock acquisition order.**
+* **Never acquire `_state_lock` and subsequently attempt to acquire `_train_lock`** (immediate deadlock risk). Always acquire `_train_lock` first.
+* **Keep critical sections under `_state_lock` $\le 1-2\text{ms}$** (measured operations are $\le 0.1\text{ms}$ for memory copies and state snapshots).
+* **Never perform disk I/O, network requests, ODE integration, backward passes, or LLM token generation while holding locks.**
+* **Offline BPTT backpropagation must run strictly on disconnected local training parameters.** Parameter weight copy swaps under `_train_lock` must complete within $\le 2.0\text{ms}$.
+
+### 9.2 Non-Blocking Telemetry Invariant
+* `GET /state` and `GET /telemetry/stability` must respond within $10-15\text{ms}$. They must acquire `_state_lock` momentarily for a fast memory copy and return immediately without awaiting LLM generation or cognitive turn completion.
+
+### 9.3 20-Watt CPU vs. GPU Discipline
+* **GPU VRAM is reserved exclusively** for the active local GGUF Large Language Model (via llama.cpp/CUDA) and WebGL avatar rendering.
+* **All continuous background dynamics**, including the 200 ms Fast-Loop ODE, Slow-Loop decay, homeostatic budgeting, SDM vector operations, and Tier 3 offline synaptic consolidation (PyTorch BPTT), **must execute strictly on the CPU with 0.0 MB GPU VRAM allocation.**
+
+---
+
+## 10. Genesis Gate & Runtime Safety (Activation Invariant)
+
+> [!IMPORTANT]
+> **DEVELOPMENT / SIMULATION IS NOT LUCIA ACTIVATION.**<br/>
+> Lucia remains in a pre-activation state in the repository. The First Activation (Genesis Onboarding) is a locked future milestone.
+
+1. **Persistent State Protection**: `data/profile.json` must remain bit-exact `{"is_onboarded": false}` across all tests, simulations, and code modifications.
+2. **Never Trigger Onboarding**: Agents must never trigger the onboarding ceremony or write user identity data to simulate a populated companion.
+3. **Simulation Isolation**: All evaluation harnesses, benchmark suites, and unit tests must use isolated in-memory stores, temporary directories, or mocked profiles. Never write test chat records into `data/chat_history.json`.
+
+---
+
+## 11. Testing & Quality Assurance Protocols
+
+Validation proceeds from narrow to broad. Agents must execute the relevant test suites before declaring work complete.
+
+### Narrow-to-Broad Testing Order:
+1. **Targeted Subsystem Tests:** Run unit tests for the specific module modified.
+2. **Phase Production Tests:** Run phase-specific production suites (`tests/unit/test_phaseXX_production.py`).
+3. **Regression Suites:** Run previous phase regression tests (e.g. `test_phase20_production.py`).
+4. **Property Invariant Tests:** Run Hypothesis invariant tests (`tests/property/`).
+5. **Full Unit Regression:** Run `pytest tests/unit -v`.
+
+### Common Test Commands:
 ```powershell
+# Production unit tests
 .venv\Scripts\pytest tests/unit -v
+
+# Mathematical property invariants (Hypothesis)
 .venv\Scripts\pytest tests/property -v
-.venv\Scripts\pytest tests/integration -v
-```
 
-### Research / Evaluation Harnesses
-Run the evaluation suite specific to the research increment, for example:
-```powershell
-.venv\Scripts\pytest tests/evaluation_phase21 -v
+# Phase 21 production realization tests
 .venv\Scripts\pytest tests/unit/test_phase21_production.py -v
+
+# Isolated research evaluation suites
+.venv\Scripts\pytest tests/evaluation_phase21 -v
+
+# Electron desktop tests
+cd electron ; npm test
 ```
-Research results MUST be reported separately from production regression results.
 
-### Electron Desktop
-```powershell
-cd electron
-npm test
-```
-
-### Verification Checklist for Agents
-- [ ] Research work is isolated unless production integration was explicitly authorized.
-- [ ] Hypothesis, baseline/control, metrics, acceptance criteria, and falsification conditions are identifiable.
-- [ ] Research evidence is not described as production capability unless the canonical docs explicitly promote it.
-- [ ] No introspective or meta-self-awareness patterns introduced into prompts or outputs.
-- [ ] No character switchers or multiple persona presets created.
-- [ ] Historical phase specifications in `.kiro/specs/` remain untouched.
-- [ ] First Activation remains blocked unless explicitly authorized by canonical governance.
-- [ ] Canonical production data remains isolated from tests/simulation.
-- [ ] All new documentation follows the authority matrix in `docs/DOCUMENTATION_INDEX.md`.
-- [ ] Any architectural trade-off, promotion, rejection, or pivot is recorded in `docs/DESIGN_DECISIONS.md`.
-- [ ] Test results identify exactly which suite was run and whether it proves correctness, stability, or research evidence.
-
-## 7. Standard Agent Work Procedure — Mandatory Workflow
-
-> **Every coding/research agent must follow this workflow by default.** A task prompt may narrow the scope, but should not need to repeat these baseline procedures.
-
-### 7.1 Before Doing Any Work
-
-1. **Read `AGENTS.md` first.** Treat it as the mandatory operating contract for the repository.
-2. Read the relevant canonical documents before making architectural or implementation decisions:
-   - `docs/00_PROJECT_OVERVIEW.md`
-   - `docs/CURRENT_STATUS.md`
-   - `docs/ARCHITECTURE.md`
-   - `docs/MECHANISM.md`
-   - `docs/DESIGN_DECISIONS.md`
-   - `docs/DOCUMENTATION_INDEX.md` when documentation structure is involved.
-3. Inspect the repository state before editing:
-   - current branch
-   - working tree status
-   - recent commits
-   - relevant existing implementation/tests
-4. Identify the **current phase/stage, task boundary, invariants, affected components, and expected deliverables**.
-5. If the task is research, identify the hypothesis, baseline/control, variables, metrics, falsification criteria, and evidence required **before implementing the experiment**.
-6. Do not begin implementation merely because a requested idea sounds reasonable. Resolve its architectural status first: existing rule, approved decision, active research, or future proposal.
-
-### 7.2 Plan Before Implementation
-
-For non-trivial work, produce a short execution plan internally or in the agent report before modifying files. The plan should identify:
-
-- files/components expected to change;
-- files/components explicitly protected from change;
-- implementation or experiment strategy;
-- tests/evaluations to run;
-- documentation that must be created or synchronized;
-- git actions required at completion.
-
-If the repository or canonical documents contradict the task request, **stop and resolve the contradiction rather than silently choosing one interpretation**.
-
-### 7.3 Research Procedure
-
-For research/evaluation tasks, use this sequence:
-
-`Question → Hypothesis → Mechanism → Baseline/Control → Experimental Design → Implementation → Evaluation → Analysis → Decision → Documentation`
-
-Mandatory rules:
-
-- Separate **research code** from production code whenever possible.
-- Prefer isolated evaluation harnesses, fixtures, simulation data, and disposable experiment modules.
-- Use controlled comparisons and ablations when causal attribution matters.
-- Record negative results, failed hypotheses, rejected mechanisms, and unexpected findings; do not delete them because they make the roadmap less elegant.
-- Never infer psychological properties, consciousness, subjective feeling, or human-equivalent cognition from an engineering metric alone.
-- A green test suite proves the tested software behavior; it does **not** by itself prove the scientific hypothesis.
-- A research result may conclude **promote / revise / reject / insufficient evidence**. Only an explicit architectural decision can promote research into production.
-- Do not optimize the experiment to obtain a preferred result. Preserve reproducibility and falsifiability.
-
-### 7.4 Implementation Procedure
-
-1. Inspect existing code before creating new abstractions.
-2. Prefer the smallest change that satisfies the approved requirement.
-3. Reuse existing interfaces, services, fixtures, and utilities when they already represent the correct architectural boundary.
-4. Do not duplicate an existing responsibility merely because a new name or module appears convenient.
-5. Keep production behavior unchanged during research unless production integration is explicitly authorized.
-6. Do not mix unrelated refactors, formatting churn, dependency upgrades, or speculative cleanup into a focused task.
-7. After implementation, inspect the final diff and verify that every changed file is intentional.
+* **Never report tests as passed unless actually executed.**
+* Distinguish software verification (unit/property test passes) from empirical research validation (hypothesis verification in evaluation harnesses).
 
 ---
 
-## 8. Documentation Creation & Persistence Rules
+## 12. Agent Scope Discipline & Ambiguity Resolution
 
-### 8.1 Documentation Is Part of the Work
+### Scope Discipline
+- Make the smallest coherent change required to fulfill the task.
+- Do NOT refactor code outside the authorized task boundary.
+- Do NOT alter tests merely to make failures go away.
+- Do NOT edit `AGENTS.md` unless the task explicitly concerns agent workflow governance.
+- **Preserve pre-existing working tree changes:** If uncommitted changes exist that are unrelated to the current task, leave them intact and exclude them from your commit.
 
-If a task produces a new research result, architectural decision, implementation milestone, experiment, rejection, or material behavioral change, the corresponding documentation is part of the deliverable—not optional cleanup.
+### Resolving Ambiguity
+- When requirements are unclear, do NOT silently guess or invent architectural patterns.
+- Inspect the canonical architecture (`docs/ARCHITECTURE.md`), ADRs, and existing code first.
+- If ambiguity materially affects cognitive architecture, state dynamics, or concurrency, stop and present the trade-offs to the user.
 
-### 8.2 Where Documents Belong
-
-- **Active/canonical project truth:** `docs/`
-- **Historical phase specifications:** `.kiro/specs/` and immutable unless explicitly designated otherwise by project governance.
-- **Research/evaluation artifacts:** use the established research/evaluation location defined by the current project structure; prefer a dedicated research document or `tests/evaluation_*` rather than burying scientific evidence in source-code comments.
-- **Temporary notes / scratch output:** keep outside canonical documentation and do not present them as project truth.
-
-Before creating a new document:
-
-1. Search for an existing document that already owns the topic.
-2. Prefer updating the existing canonical document over creating a duplicate.
-3. If a new document is genuinely required, establish its role, authority level, and relationship to existing docs.
-4. Do not create parallel "final", "final-v2", "latest", or duplicate truth documents.
-
-### 8.3 Documentation Status & Evidence
-
-Every research or milestone document should make clear, where applicable:
-
-- status/classification (`[CURRENT RESEARCH]`, `[RESEARCH VALIDATED]`, `[ARCHITECTURE APPROVED]`, `[VALIDATED / PRODUCTION IMPLEMENTED]`, `[FUTURE GATE]`, etc.);
-- date or commit when useful for traceability;
-- hypothesis/question;
-- method and baseline;
-- results/evidence;
-- limitations and unresolved questions;
-- resulting architectural decision, if any.
-
-Never upgrade a document's status simply because implementation exists or tests pass.
-
-### 8.4 Documentation Synchronization
-
-When implementation changes project truth, update the appropriate canonical documentation in the same task when authorized. At minimum, check whether these need synchronization:
-
-- `docs/CURRENT_STATUS.md`
-- `docs/00_PROJECT_OVERVIEW.md`
-- `docs/DESIGN_DECISIONS.md`
-- `docs/ARCHITECTURE.md`
-- `docs/MECHANISM.md`
-- `docs/DOCUMENTATION_INDEX.md`
-
-Do not rewrite historical documents merely to make them agree with the latest state. Preserve history and reconcile it through canonical active documentation and ADRs.
+### Phase Boundary Rule
+- Routine implementation tasks should focus on local invariants and targeted verifications without performing exhaustive repository-wide governance audits.
+- Full architectural and governance audits are reserved for phase transition boundaries, research promotions, and milestone closures.
 
 ---
 
-## 9. Git & Version-Control Procedure
+## 13. Git & Version Control Procedure
 
-> **Git history is part of Lucia's engineering evidence. Keep it clean, traceable, and reversible.**
+Git history is part of Lucia's engineering evidence. Keep it clean, traceable, and reversible.
 
-### 9.1 Before Editing
+### 13.1 Before Editing
+- Run `git status` to verify the working tree and current branch.
+- Inspect recent commits with `git log -n 3 --oneline`.
+- Identify any pre-existing uncommitted modifications and preserve them.
 
-- Check `git status`.
-- Check the current branch.
-- Inspect recent commits relevant to the task.
-- Do not discard or overwrite pre-existing user changes.
-- If unrelated uncommitted changes exist, preserve them and avoid mixing them into the task.
-
-### 9.2 During Work
-
-- Keep changes logically scoped to the task.
-- Do not use destructive commands (`reset --hard`, broad checkout/revert, force operations, history rewriting) unless explicitly authorized.
-- Do not amend, squash, rebase, or rewrite existing commits unless explicitly requested/authorized.
-- Do not commit generated caches, secrets, credentials, local model weights, environment files, or unrelated artifacts.
-- Do not change `.gitignore` merely to hide files that should not be in the repository; determine whether the artifact belongs in version control first.
-
-### 9.3 Before Commit
-
-Run:
-
+### 13.2 Before Committing
+Always run:
 ```powershell
 git status
 git diff --check
 git diff --stat
 git diff
 ```
+Verify that:
+- Only intended files are staged.
+- Zero whitespace errors are reported by `git diff --check`.
+- `data/profile.json` remains `{"is_onboarded": false}`.
+- No temporary files, caches, or credentials are included.
+- Pre-existing unrelated modifications are preserved and unstaged.
 
-Then verify:
-
-- every changed file is intentional;
-- no secrets or credentials are present;
-- no unrelated changes are included;
-- tests/evaluations correspond to the actual change;
-- documentation reflects the resulting state when required.
-
-### 9.4 Commit Rules
-
-When the task is complete and the repository is in a coherent verified state:
-
-- Make a focused commit for the completed task unless the user explicitly requests otherwise.
-- Use a clear imperative commit message describing the actual change.
-- Do not claim a commit exists until Git confirms it.
-- After committing, verify with `git status` and `git log -1 --oneline`.
-- If a remote push is explicitly part of the task, verify the push result; otherwise do not push merely for convenience.
-- Never force-push by default.
-
-### 9.5 Reporting Git State
-
-The completion report should state, when applicable:
-
-- files changed;
-- tests/evaluations run and their exact result;
-- documentation synchronized;
-- commit hash/message;
-- whether changes were committed or remain uncommitted;
-- whether anything was intentionally left untouched or unresolved.
-
-Never report "complete" if required tests, documentation, or Git verification remain unknown.
+### 13.3 Commit Rules
+- Use clear, conventional commit messages:
+  - `feat(core): ...` — production feature implementation
+  - `fix(core): ...` — bug fixes
+  - `research(...): ...` — research specs, evaluations, or test harnesses
+  - `docs: ...` — canonical documentation updates
+  - `test(...): ...` — unit or property tests
+- Never amend, squash, or rewrite shared commits unless explicitly requested.
+- Never force-push.
 
 ---
 
-## 10. Completion & Agent Handoff Protocol
+## 14. Documentation + Code Consistency Check
 
-Before declaring a task complete, perform this final sequence:
+Before finishing a task, verify that:
+- Code matches the approved architecture in `docs/ARCHITECTURE.md`.
+- Milestone tables and subsystem health in `docs/00_PROJECT_OVERVIEW.md` match current reality.
+- Navigation links in `README.md` and `docs/DOCUMENTATION_INDEX.md` are valid.
+- No references point to deleted files (`CURRENT_STATUS.md`, `MECHANISM.md`, `DESIGN_DECISIONS.md`).
+- Historical phase specifications in `.kiro/specs/` and `docs/specs/` are preserved.
 
-`Diff Review → Tests/Evaluation → Documentation Sync → Git Verification → Final Report`
+---
 
-The final report should be concise and evidence-based. It should distinguish:
+## 15. Reporting Contract
 
-- **Implemented** — what changed in code/config;
-- **Research result** — what the experiment actually established;
-- **Not established** — what remains unknown or unproven;
-- **Verified** — exact tests/evaluations run;
-- **Git** — commit state/hash;
-- **Next action** — only if explicitly determined by canonical governance.
+Every task must conclude with a structured, factual report:
 
-Do not invent a next phase or recommend additional implementation merely to make the report feel complete.
+### Scope
+State precisely which files were modified, created, or deleted.
 
+### Architecture / Design
+Cite the governing design document or ADR followed during the task.
+
+### Validation
+Report the exact commands executed, test counts, execution durations, and results. Mention any observed performance metrics (e.g. lock holding times, memory usage).
+
+### Documentation
+List canonical documents updated and verify reference integrity.
+
+### Git Status
+Report the commit hash, commit message, and working tree state.
+
+### Issues / Deviations
+Report any known limitations, unresolved trade-offs, or preserved unrelated changes. Never hide test failures or make unverified claims.
+
+---
+
+## 16. Final Pre-Commit Checklist
+
+Before declaring work complete, verify every item:
+
+- [ ] I read the relevant canonical documentation before making decisions.
+- [ ] I followed the established architecture and governing ADRs.
+- [ ] I did not bypass an Architecture Gate for new cognitive mechanisms.
+- [ ] Research code remains isolated from production runtime.
+- [ ] Genesis Gate invariant is verified (`data/profile.json == {"is_onboarded": false}`).
+- [ ] Lock hierarchy is preserved (`_turn_lock → _step_lock → _train_lock → _stimulus_lock → _state_lock`).
+- [ ] CPU vs. GPU discipline is preserved (0 MB GPU VRAM for limbic/memory/consolidation).
+- [ ] Pre-reflective emotional discipline is preserved (no self-reported feelings in prompts/outputs).
+- [ ] No unrelated production or test files were modified.
+- [ ] Pre-existing unrelated working-tree modifications were preserved.
+- [ ] All relevant tests were actually executed and passed.
+- [ ] `git diff --check` reported 0 whitespace errors.
+- [ ] Canonical documentation reflects the implemented reality.
+- [ ] Commit message accurately describes the task.
