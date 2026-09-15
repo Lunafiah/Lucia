@@ -89,15 +89,15 @@ The core technical differentiator of Lucia is her **3-Tier Multi-Timescale Plast
 ┌────────────────────────────────────────────────────────────────────────────────────────┐
 │                        3-TIER MULTI-TIMESCALE PLASTICITY                               │
 ├────────────────────────────────────────────────────────────────────────────────────────┤
-│  TIER 1: Fast Reactive Dynamics (h_fast ∈ ℝ³², τ_f ∈ [0.10, 1.50] s)                   │
+│  TIER 1: Fast Reactive Dynamics                                                        │
 │  • Integrates millisecond-to-second conversational valence shocks.                     │
 │  • Evaluated continuously in background ODE fast loop every 200 ms.                    │
 ├────────────────────────────────────────────────────────────────────────────────────────┤
-│  TIER 2: Slow Relational Attractor Grounding (s_slow ∈ ℝ¹⁶, τ_decay = 28.0 s)           │
+│  TIER 2: Slow Relational Attractor Grounding                                           │
 │  • Grounded by dynamic relationship attractor:                                         │
 │        s*_eff(R) = s*_philia + W_rel (R - R₀)                                          │
-│  • Strictly bounded by spectral norm constraint: ||W_rel||₂ ≤ 0.08                    │
-│  • Guarantees resting PAD displacement ≤ 0.05, preserving Philia warmth.              │
+│  • Strictly bounded by spectral norm constraint: ||W_rel||₂ ≤ 0.08                     │
+│  • Guarantees resting PAD displacement ≤ 0.05, preserving Philia warmth.               │
 ├────────────────────────────────────────────────────────────────────────────────────────┤
 │  TIER 3: Offline Synaptic Consolidation (ConsolidationEngine)                          │
 │  • Executes offline during post-turn idle (T_idle ≥ 45s) or sleep states on CPU.       │
