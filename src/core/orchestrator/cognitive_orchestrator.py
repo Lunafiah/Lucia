@@ -611,6 +611,34 @@ class CognitiveOrchestrator:
                     exc_info=True,
                 )
 
+        # Phase 21: Tier 3 Consolidation Experience Tagging (salience >= 0.50)
+        try:
+            if hasattr(self._emotion_core, "record_consolidation_experience"):
+                salience = float(prediction_error)
+                if salience >= 0.50:
+                    h_before = getattr(self._emotion_core, "_h", np.zeros(32, dtype=np.float64))
+                    s_slow = (
+                        self._emotion_core.get_slow_latent_state()
+                        if hasattr(self._emotion_core, "get_slow_latent_state")
+                        else np.zeros(16, dtype=np.float64)
+                    )
+                    r_slow = (
+                        self._emotion_core._recollection_forcing
+                        if hasattr(self._emotion_core, "_recollection_forcing")
+                        else np.zeros(16, dtype=np.float64)
+                    )
+                    self._emotion_core.record_consolidation_experience(
+                        stimulus=stimulus,
+                        h_before=h_before,
+                        h_after=stimulus.astype(np.float64) if len(stimulus) == len(h_before) else h_before,
+                        s_slow=s_slow,
+                        salience=salience,
+                        relational_state=rel_state.to_array(),
+                        r_slow=r_slow,
+                    )
+        except Exception:
+            logger.warning("CognitiveOrchestrator: Phase 21 consolidation experience recording failed", exc_info=True)
+
         # 16.3 Structured Relationship Update (Points 1 & 3)
         rel_state_updated = rel_state
         if self._relationship_updater is not None:
@@ -623,6 +651,16 @@ class CognitiveOrchestrator:
             except Exception:
                 logger.error(
                     "CognitiveOrchestrator: relationship update step failed; continuing",
+                    exc_info=True,
+                )
+
+        # Phase 21: Forward updated relationship state to EmotionCore
+        if hasattr(self._emotion_core, "update_relationship_context"):
+            try:
+                self._emotion_core.update_relationship_context(rel_state_updated.to_array())
+            except Exception:
+                logger.warning(
+                    "CognitiveOrchestrator: failed to forward relationship context to EmotionCore",
                     exc_info=True,
                 )
 

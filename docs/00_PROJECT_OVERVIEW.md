@@ -148,7 +148,7 @@ Phase 17 — Affective Life Evaluation          [VALIDATED]
 Phase 18 — Human Longitudinal Validation      [VALIDATED]
 Phase 19 — Multi-Timescale Affective Life     [VALIDATED]
 Phase 20 — Affective Recollection             [VALIDATED]
-Phase 21 — Relational Consolidation & Synaptic Homeostasis [PLANNED RESEARCH]
+Phase 21 — Relational Consolidation & Synaptic Homeostasis [VALIDATED]
 Phase 22–26 — Future Conceptual Research Horizons [CONCEPTUAL]
 First Activation (Genesis Onboarding)         [🔒 FUTURE GATE]
 ```
@@ -181,7 +181,7 @@ First Activation (Genesis Onboarding)         [🔒 FUTURE GATE]
 * **Phase 18 (Human Longitudinal Validation)**: Human-grounded empirical validation across 8 scenarios; authentic on-device neural RVC v2 voice (`VaresaGIJP` + `ja-JP-NanamiNeural`), 60 FPS lip-sync, and non-introspective safety invariants. `[VALIDATED]`
 * **Phase 19 (Multi-Timescale Affective Life & Temporal Continuity)**: Coupled Multi-Timescale Liquid Neural Network (MT-LNN: $\mathbf{h}_{\text{fast}} \in \mathbb{R}^{32}, \mathbf{s}_{\text{slow}} \in \mathbb{R}^{16}$) with Philia dynamic attractor grounding, biexponential relaxation, autonomous stress-to-fatigue conversion, and sub-2ms CPU execution. `[VALIDATED]`
 * **Phase 20 (Affective Recollection & Memory Reactivation)**: Closed-Loop Affective Recollection via slow-field latent forcing ($\mathbf{W}_{\text{rec}}\mathbf{r}_{\text{slow}}^{\text{bounded}}$), multi-modal retrieval scoring, competitive softmax gating, 16D slow trace co-encoding, and conversational pacing modulation. `[VALIDATED]`
-* **Phase 21 (Long-Term Relational Consolidation & Synaptic Homeostasis)**: Investigating how repeated interaction, accumulated shared history, and episodic recollection produce longer-term relational consolidation and adaptive homeostatic/synaptic plasticity without violating architectural invariants. `[🔬 PLANNED RESEARCH — NOT IMPLEMENTED]`
+* **Phase 21 (Long-Term Relational Consolidation & Synaptic Homeostasis)**: 3-tier multi-timescale synaptic plasticity, relationship-conditioned resting attractor bounded by spectral norm ($\sigma_{\max}(\mathbf{W}_{\text{rel}}) \le 0.08$), and offline CPU backprop-through-ODE under homeostatic/Philia regularization. 15/15 research tests passed, 13/13 production unit tests verified. `[VALIDATED]`
 * **Future Conceptual Horizons (Phases 22–26)**:
   - *Phase 22*: Active Inference & Information Seeking (epistemic foraging, curiosity, uncertainty reduction).
   - *Phase 23*: Affective Communication Adaptation (long-term stylistic attunement, dialectical grounding).

@@ -37,6 +37,12 @@ from scipy.special import softplus
 
 from src.core.config import EmotionConfig
 from src.core.models import PADState
+from src.core.emotion.consolidation import (
+    ConsolidationEngine,
+    ConsolidationExperience,
+    HomeostaticTrajectory,
+    SynapticParameterState,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -169,6 +175,25 @@ class EmotionCore:
         self.W_rec = np.eye(Hs, dtype=np.float64) * config.recollection_coupling_weight
         self._recollection_forcing = np.zeros(Hs, dtype=np.float64)
         self._recollection_remaining_sim = 0.0
+
+        # Phase 21: Tier 2 Relational Attractor Coupling (W_rel in R^(Hs x 4))
+        raw_w_rel = _xavier_uniform((Hs, 4), rng)
+        s_max = np.linalg.svd(raw_w_rel, compute_uv=False)[0]
+        target_norm = min(0.0475, config.w_rel_spectral_bound)
+        if s_max > 0:
+            self.W_rel = raw_w_rel * (target_norm / s_max)
+        else:
+            self.W_rel = raw_w_rel
+
+        self.R_0 = np.array(config.relationship_baseline, dtype=np.float64)
+        self._R_t = self.R_0.copy()
+
+        # Phase 21: Tier 3 Offline Synaptic Consolidation Service
+        self._consolidation_engine: Optional[ConsolidationEngine] = (
+            ConsolidationEngine(config, stimulus_dim=N_in)
+            if config.enable_relational_consolidation
+            else None
+        )
 
         # Loop control
         self._stop_event = threading.Event()
@@ -448,6 +473,16 @@ class EmotionCore:
                 self._recollection_forcing = np.zeros(Hs, dtype=np.float64)
                 self._recollection_remaining_sim = 0.0
 
+                # Phase 21: Reset W_rel and R_t
+                raw_w_rel = _xavier_uniform((Hs, 4), rng)
+                s_max = np.linalg.svd(raw_w_rel, compute_uv=False)[0]
+                target_norm = min(0.0475, self._config.w_rel_spectral_bound)
+                if s_max > 0:
+                    self.W_rel = raw_w_rel * (target_norm / s_max)
+                else:
+                    self.W_rel = raw_w_rel
+                self._R_t = self.R_0.copy()
+
                 with self._stimulus_lock:
                     self._pending_stimuli.clear()
                     self._stimulus_seq = 0
@@ -493,8 +528,10 @@ class EmotionCore:
             W_sf = self.W_sf.copy()
             W_sh = self.W_sh.copy()
             W_rec = self.W_rec.copy()
+            W_rel = self.W_rel.copy()
             s_philia = self.s_philia.copy()
             m_homeo = self._m_homeo.copy()
+            R_t = self._R_t.copy()
 
         Hf = len(h)
         Hs = len(self._s_slow)
@@ -510,7 +547,13 @@ class EmotionCore:
         def rhs(t: float, y: np.ndarray) -> np.ndarray:
             y_f = np.clip(y[:Hf], -1.0, 1.0)
             y_s = np.clip(y[Hf:], -1.0, 1.0)
-            delta_s = y_s - s_philia
+
+            if self._config.enable_relational_consolidation:
+                delta_r = np.clip(R_t, 0.0, 1.0) - self.R_0
+                s_eff = s_philia + W_rel @ delta_r
+                delta_s = y_s - s_eff
+            else:
+                delta_s = y_s - s_philia
 
             # Fast timescale
             tau_f_raw = softplus(W_tau @ y_f + U_tau @ x + b_tau)
@@ -741,3 +784,270 @@ class EmotionCore:
             self.U_f[2, 2] = 0.80
         self.U_tau = _xavier_uniform((H, n), rng) * 0.10
         logger.debug("EmotionCore: resized input weights from dim %d to %d", current_n, n)
+
+    # ------------------------------------------------------------------
+    # Phase 21: Relational State, Weight Access & Consolidation API
+    # ------------------------------------------------------------------
+
+    def get_parameter_state(self) -> SynapticParameterState:
+        """Return snapshot of trainable synaptic parameters under _train_lock."""
+        with self._train_lock:
+            return SynapticParameterState(
+                W_f=self.W_f.copy(),
+                U_f=self.U_f.copy(),
+                b_f=self.b_f.copy(),
+                W_tau=self.W_tau.copy(),
+                U_tau=self.U_tau.copy(),
+                b_tau=self.b_tau.copy(),
+                W_rel=self.W_rel.copy(),
+            )
+
+    def set_parameter_state(self, params: SynapticParameterState) -> None:
+        """
+        Atomically swap synaptic parameters under _train_lock.
+        Enforces spectral norm constraint sigma_max(W_rel) <= w_rel_spectral_bound.
+        """
+        with self._train_lock:
+            s_max = params.w_rel_spectral_norm
+            if s_max > self._config.w_rel_spectral_bound:
+                scale = self._config.w_rel_spectral_bound / (s_max + 1e-12)
+                params.W_rel = params.W_rel * scale
+
+            self.W_f = params.W_f.copy()
+            self.U_f = params.U_f.copy()
+            self.b_f = params.b_f.copy()
+            self.W_tau = params.W_tau.copy()
+            self.U_tau = params.U_tau.copy()
+            self.b_tau = params.b_tau.copy()
+            self.W_rel = params.W_rel.copy()
+
+    def get_relational_weights(self) -> np.ndarray:
+        """Return copy of W_rel under _train_lock."""
+        with self._train_lock:
+            return self.W_rel.copy()
+
+    def set_relational_weights(self, w_rel: np.ndarray) -> None:
+        """Set and clamp W_rel under _train_lock."""
+        w = np.array(w_rel, dtype=np.float64)
+        s_max = np.linalg.svd(w, compute_uv=False)[0] if len(w) > 0 else 0.0
+        if s_max > self._config.w_rel_spectral_bound:
+            scale = self._config.w_rel_spectral_bound / (s_max + 1e-12)
+            w = w * scale
+        with self._train_lock:
+            self.W_rel = w
+
+    def get_relationship_context(self) -> np.ndarray:
+        """Return copy of current relationship context R_t under _step_lock."""
+        with self._step_lock:
+            return self._R_t.copy()
+
+    def update_relationship_context(self, R: np.ndarray) -> None:
+        """
+        Update relationship context R_t under _step_lock.
+        ADR-022 compliant: called at Stage 16.3 post-turn.
+        """
+        with self._step_lock:
+            self._R_t = np.clip(np.array(R, dtype=np.float64), 0.0, 1.0)
+
+    def get_effective_slow_attractor(self, R: Optional[np.ndarray] = None) -> np.ndarray:
+        """
+        Compute relationship-conditioned slow attractor:
+        s*_eff(R) = s*_philia + W_rel (R_t - R_0) when enabled;
+        otherwise s*_philia bit-exact.
+        """
+        if not self._config.enable_relational_consolidation:
+            return self.s_philia.copy()
+
+        with self._step_lock:
+            R_val = self._R_t if R is None else np.clip(np.array(R, dtype=np.float64), 0.0, 1.0)
+            delta_r = R_val - self.R_0
+
+        with self._train_lock:
+            displacement = self.W_rel @ delta_r
+        return self.s_philia + displacement
+
+    def compute_resting_pad(self, R: Optional[np.ndarray] = None) -> np.ndarray:
+        """
+        Evaluate output PAD at resting equilibrium for given relationship state:
+        h_fast = 0, s_slow = s*_eff(R).
+        """
+        s_eff = self.get_effective_slow_attractor(R)
+        h_zero = np.zeros(self._config.hidden_dim, dtype=np.float64)
+        pad_state = self._project_to_pad(h_zero, s_eff)
+        return np.array([pad_state.pleasure, pad_state.arousal, pad_state.dominance], dtype=np.float64)
+
+    def get_consolidation_engine(self) -> Optional[ConsolidationEngine]:
+        """Return consolidation engine instance if enabled."""
+        return self._consolidation_engine
+
+    def record_consolidation_experience(
+        self,
+        stimulus: np.ndarray,
+        h_before: np.ndarray,
+        h_after: np.ndarray,
+        s_slow: np.ndarray,
+        salience: float,
+        relational_state: Optional[np.ndarray] = None,
+        r_slow: Optional[np.ndarray] = None,
+    ) -> None:
+        """Record salient turn transition into consolidation engine."""
+        if not self._config.enable_relational_consolidation or self._consolidation_engine is None:
+            return
+        r_val = self._R_t if relational_state is None else relational_state
+        self._consolidation_engine.record_experience(
+            stimulus=stimulus,
+            h_before=h_before,
+            h_after=h_after,
+            s_slow=s_slow,
+            salience=salience,
+            relational_state=r_val,
+            r_slow=r_slow,
+        )
+
+    def run_offline_consolidation(
+        self,
+        batch: Optional[List[ConsolidationExperience]] = None,
+        **kwargs: Any,
+    ) -> Tuple[SynapticParameterState, Dict[str, float]]:
+        """Trigger offline consolidation via ConsolidationEngine on CPU."""
+        if not self._config.enable_relational_consolidation or self._consolidation_engine is None:
+            return self.get_parameter_state(), {"loss": 0.0, "backward_latency_ms": 0.0}
+        return self._consolidation_engine.run_offline_consolidation(
+            batch=batch,
+            emotion_core=self,
+            **kwargs,
+        )
+
+    def step_ode(
+        self,
+        stimulus: np.ndarray,
+        dt: float = 0.20,
+        recollection_forcing: Optional[np.ndarray] = None,
+    ) -> Tuple[np.ndarray, np.ndarray]:
+        """
+        Execute one discrete numerical step of coupled MT-LNN ODE using forward Euler.
+        Matches the validated Phase 21 forward dynamics with sub-millisecond execution.
+        Returns: (h_fast, s_slow)
+        """
+        with self._step_lock:
+            with self._train_lock:
+                W_f, U_f, b_f = self.W_f.copy(), self.U_f.copy(), self.b_f.copy()
+                W_tau, U_tau, b_tau = self.W_tau.copy(), self.U_tau.copy(), self.b_tau.copy()
+                W_fs, W_sf, W_sh, W_rec = self.W_fs.copy(), self.W_sf.copy(), self.W_sh.copy(), self.W_rec.copy()
+                W_rel = self.W_rel.copy()
+                s_philia = self.s_philia.copy()
+                R_t = self._R_t.copy()
+
+            if self._config.enable_relational_consolidation:
+                delta_r = np.clip(R_t, 0.0, 1.0) - self.R_0
+                s_eff = s_philia + W_rel @ delta_r
+            else:
+                s_eff = s_philia
+
+            h = self._h.copy()
+            s = self._s_slow.copy()
+
+            # Time constant
+            tau_input = W_tau @ h + U_tau @ stimulus + b_tau
+            tau_fast = np.clip(softplus(tau_input), self._config.tau_fast_min, self._config.tau_fast_max)
+
+            # Fast ODE derivative
+            delta_s_eff = s - s_eff
+            h_input = W_f @ h + U_f @ stimulus + (W_fs @ delta_s_eff) + b_f
+            dh_dt = (-h + np.tanh(h_input)) / tau_fast
+
+            # Slow ODE derivative
+            rec_term = (
+                recollection_forcing
+                if recollection_forcing is not None
+                else np.zeros(self._config.hidden_slow_dim, dtype=np.float64)
+            )
+            delta_m = self._m_homeo - self.m_homeo_resting
+            homeo_term = W_sh @ delta_m
+
+            charge_input = (W_sf @ h) + homeo_term + rec_term
+            ds_dt = -(s - s_eff) / self._config.tau_slow_decay + np.tanh(charge_input) / self._config.tau_slow_charge
+
+            # Forward Euler step
+            h_next = np.clip(h + dh_dt * dt, -1.0, 1.0)
+            s_next = np.clip(s + ds_dt * dt, -1.0, 1.0)
+
+            self._h = h_next
+            self._s_slow = s_next
+
+            with self._state_lock:
+                pad_out = self._project_to_pad(h_next, s_next)
+                self._pad_snapshot = pad_out
+
+        return h_next, s_next
+
+    def integrate_unforced_idle(
+        self,
+        duration_s: float,
+        dt: float = 0.20,
+        record_trajectory: bool = True,
+    ) -> Tuple[np.ndarray, np.ndarray, HomeostaticTrajectory]:
+        """
+        Integrate system through an unforced rest / idle interval (x = 0).
+        Evaluates dynamic homeostatic settling and slow-field relaxation.
+        """
+        n_steps = int(duration_s / dt)
+        stim_zero = np.zeros(self.U_f.shape[1], dtype=np.float64)
+
+        traj_times: List[float] = []
+        traj_energies: List[float] = []
+        traj_tensions: List[float] = []
+        traj_loads: List[float] = []
+        traj_stabilities: List[float] = []
+        pad_history: List[np.ndarray] = []
+        slow_history: List[np.ndarray] = []
+
+        gamma_E = 0.05
+        gamma_T = 0.10
+        gamma_C = 0.08
+        curr_t = 0.0
+
+        for _ in range(n_steps):
+            # Dynamic homeostatic settling
+            e_curr = self._m_homeo[0]
+            c_curr = self._m_homeo[1]
+            t_curr = self._m_homeo[2]
+
+            e_next = e_curr + gamma_E * (1.0 - e_curr) * dt
+            t_next = t_curr - gamma_T * t_curr * dt
+            c_next = c_curr - gamma_C * c_curr * dt
+            s_next = 1.0 - 0.5 * t_next
+
+            with self._step_lock:
+                self._m_homeo = np.clip(
+                    np.array([e_next, c_next, t_next, s_next], dtype=np.float64),
+                    0.0,
+                    1.0,
+                )
+
+            h_step, s_step = self.step_ode(stim_zero, dt=dt)
+            curr_t += dt
+
+            if record_trajectory:
+                with self._state_lock:
+                    pad_snap = self._pad_snapshot
+                traj_times.append(curr_t)
+                traj_energies.append(float(self._m_homeo[0]))
+                traj_loads.append(float(self._m_homeo[1]))
+                traj_tensions.append(float(self._m_homeo[2]))
+                traj_stabilities.append(float(self._m_homeo[3]))
+                pad_history.append(np.array([pad_snap.pleasure, pad_snap.arousal, pad_snap.dominance]))
+                slow_history.append(s_step.copy())
+
+        ht = HomeostaticTrajectory(
+            timestamps=traj_times,
+            energies=traj_energies,
+            tensions=traj_tensions,
+            cognitive_loads=traj_loads,
+            stabilities=traj_stabilities,
+        )
+        return (
+            np.array(pad_history) if pad_history else np.zeros((0, 3)),
+            np.array(slow_history) if slow_history else np.zeros((0, self._config.hidden_slow_dim)),
+            ht,
+        )

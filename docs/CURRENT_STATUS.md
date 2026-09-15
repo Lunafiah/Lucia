@@ -7,9 +7,9 @@
 
 ## 1. Executive Status Overview
 
-Lucia has successfully completed **Phase 8 (Runtime Isolation & Simulation Environment)**, **Phase 9 (Cognitive Unification & Convergence)**, **Phase 9.5 (Real LLM Backend Recovery)**, **Phase 9.6 (Corrective Temporal Synchronization)**, **Post-Phase-9.6 Architectural Validation**, **Temporal Affect Dynamics Deepening (Temporal Ablation v2)**, **Architectural Boundary Audit & Self-Model Readiness**, **Phase 10 (Define Affective Dynamics)**, **Phase 11 (Affective Memory Coupling Research)**, **Phase 11.5 (Independent Evidence Audit)**, **Phase 12 (Knowledge Learning Research)**, **Phase 13 (Relationship Development Research)**, **Phase 14 (Embodiment & Affective Expression Research)**, **Phase 15 (Affective Communication Research)**, **Phase 16 (Affective Life Integration & Production Architecture Realization)**, **Phase 17 (Integrated Affective Life Evaluation & Longitudinal Validation)**, **Phase 18 (Human Longitudinal Interaction & Real-World Validation)**, **Phase 19 (Multi-Timescale Affective Life & Temporal Continuity)**, and **Phase 20 (Affective Recollection & Memory Reactivation)**. All foundational limbic, cognitive, memory, presence, simulation, temporal synchronization, integrated affective life, multi-timescale affective dynamics, and closed-loop affective recollection subsystems are fully operational and validated by 10/10 Phase 20 research experiments, 9/9 production unit tests, and comprehensive automated regression suites.
+Lucia has successfully completed **Phase 8 (Runtime Isolation & Simulation Environment)**, **Phase 9 (Cognitive Unification & Convergence)**, **Phase 9.5 (Real LLM Backend Recovery)**, **Phase 9.6 (Corrective Temporal Synchronization)**, **Post-Phase-9.6 Architectural Validation**, **Temporal Affect Dynamics Deepening (Temporal Ablation v2)**, **Architectural Boundary Audit & Self-Model Readiness**, **Phase 10 (Define Affective Dynamics)**, **Phase 11 (Affective Memory Coupling Research)**, **Phase 11.5 (Independent Evidence Audit)**, **Phase 12 (Knowledge Learning Research)**, **Phase 13 (Relationship Development Research)**, **Phase 14 (Embodiment & Affective Expression Research)**, **Phase 15 (Affective Communication Research)**, **Phase 16 (Affective Life Integration & Production Architecture Realization)**, **Phase 17 (Integrated Affective Life Evaluation & Longitudinal Validation)**, **Phase 18 (Human Longitudinal Interaction & Real-World Validation)**, **Phase 19 (Multi-Timescale Affective Life & Temporal Continuity)**, **Phase 20 (Affective Recollection & Memory Reactivation)**, and **Phase 21 (Long-Term Relational Consolidation & Synaptic Homeostasis)**. All foundational limbic, cognitive, memory, presence, simulation, temporal synchronization, integrated affective life, multi-timescale affective dynamics, closed-loop affective recollection, and 3-tier synaptic consolidation subsystems are fully operational and validated by 15/15 Phase 21 research experiments, 13/13 production unit tests, and 605/605 automated regression suites.
 
-The repository realizes a unified 16-stage cognitive pipeline orchestrating grounded knowledge, two-phase relationship development, bounded memory contextualization, closed-loop affective recollection, affective communication strategy, canonical 15-dim multimodal expression, Japanese canonical voice realization, and strict test storage isolation.
+The repository realizes a unified 16-stage cognitive pipeline orchestrating grounded knowledge, two-phase relationship development, bounded memory contextualization, closed-loop affective recollection, 3-tier synaptic consolidation, affective communication strategy, canonical 15-dim multimodal expression, Japanese canonical voice realization, and strict test storage isolation.
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -27,10 +27,7 @@ The repository realizes a unified 16-stage cognitive pipeline orchestrating grou
 │   ├── Phase 18: Human Longitudinal Validation      [✅ VALIDATED]       │
 │   ├── Phase 19: Multi-Timescale Affective Life     [✅ VALIDATED]       │
 │   ├── Phase 20: Affective Recollection             [✅ VALIDATED]       │
-│                                                                        │
-│   NEXT RESEARCH MILESTONE                                              │
-│   └── Phase 21: Relational Consolidation & Synaptic Homeostasis        │
-│                                                    [🔬 PLANNED RES.]   │
+│   ├── Phase 21: Relational Consolidation           [✅ VALIDATED]       │
 │                                                                        │
 │   FUTURE CONCEPTUAL RESEARCH HORIZONS                                  │
 │   ├── Phase 22: Active Inference & Information Seeking                 │
@@ -58,6 +55,7 @@ The repository realizes a unified 16-stage cognitive pipeline orchestrating grou
 | **Limbic Fast Loop** | `src/core/emotion/` | **STABLE** | Continuous 200ms background thread (live) or discrete virtual tick step (sim). Liquid Neural Network ODE integration. Enforces deterministic barrier `commit_stimulus(token)` with FIFO queue draining under `_step_lock` before post-turn PAD evaluation. Continuous multi-turn accumulation empirically proven. |
 | **Multi-Timescale Dynamics (Phase 19)** | `src/core/emotion/` / `tests/evaluation_phase19/` | **STABLE (Production Validated)** | Coupled Multi-Timescale LNN ($\mathbf{h}_{\text{fast}} \in \mathbb{R}^{32}, \mathbf{s}_{\text{slow}} \in \mathbb{R}^{16}$) with Philia dynamic attractor grounding ($\mathbf{p}^* = [+0.25, -0.05, +0.05]$). Biexponential relaxation ($\tau_f = 1.44\text{s}, \tau_s = 93.28\text{s}, \Delta\text{AIC}=6504.96$), autonomous stress-to-fatigue state transformation, historical hysteresis ($\Delta_{\max}=0.1749$), strictly dissipative Lyapunov contraction ($\text{Tr}(J) \approx -46.46 < 0$ in tested domain), and microsecond CPU execution ($1.33\text{ms}$). Stage 5 homeostatic context modulation verified. Verified by 15/15 Phase 19 research evaluation tests (`tests/evaluation_phase19/`), 35/35 property invariants, and full unit regression suite. |
 | **Affective Recollection (Phase 20)** | `src/core/emotion/` / `src/core/memory/` / `tests/unit/test_phase20_production.py` | **STABLE (Production Validated)** | Closed-Loop Affective Recollection via Slow-Field Latent Forcing ($\mathbf{r}_{\text{slow}}^{\text{bounded}}$). Multi-modal salience scoring ($S_i = 0.60 S_{\text{sem}} + 0.25 S_{\text{aff}} + 0.15 w_{\text{decay}}$), competitive softmax gating ($\theta_{\text{gate}}=0.50, \tau_{\text{comp}}=0.20$), simulation-time bounded rectangular forcing pulse ($\mathbf{W}_{\text{rec}}=0.35\mathbf{I}_{16}$), 3-case legacy fallback approximation, Stage 12 conversational pacing modulation ($\Delta\tau_{\text{pace}}$), and Stage 16.1 live physiological state co-encoding. Fully verified by 9/9 production unit tests, 10/10 research evaluation tests, 35/35 property tests, and 592/592 full unit test suite. |
+| **Relational Consolidation (Phase 21)** | `src/core/emotion/` / `tests/unit/test_phase21_production.py` | **STABLE (Production Validated)** | Long-Term Relational Consolidation & Synaptic Homeostasis via 3-Tier Multi-Timescale Plasticity. Tier 1 fast dynamics ($\mathbf{h}_{\text{fast}} \in \mathbb{R}^{32}$), Tier 2 relational attractor bias ($\mathbf{s}^*_{\text{eff}}(\mathbf{R}) = \mathbf{s}^*_{\text{philia}} + \mathbf{W}_{\text{rel}}(\mathbf{R} - \mathbf{R}_0)$ with strict spectral norm constraint $\|\mathbf{W}_{\text{rel}}\|_2 \le 0.08$ and $\|\Delta\mathbf{PAD}^*\|_2 \le 0.05$), and Tier 3 offline synaptic consolidation via CPU-only BPTT-through-ODE (`ConsolidationEngine`). Sub-2ms atomic parameter swaps under `_train_lock`, zero split-brain live weights, Stage 16.2/16.3 pipeline integration, and exact 4-invariant Phase 20 rollback contract. Fully verified by 13/13 production unit tests, 15/15 research evaluation tests, and 605/605 full unit test suite. |
 | **Homeostatic Engine** | `src/core/emotion/` | **STABLE** | Tracks cognitive load, metabolic stamina (energy), tension, and stability. Modulates behavioral constraints: multi-turn input accumulation throttles token budget from 350 to 150. *(Historical doc: `src/core/homeostasis/`)* |
 | **Active Inference** | `src/core/inference/` | **STABLE (Causal)** | $3 \times 3$ linear generative transition model predicting PAD state. Computes Free Energy surprise $\mathcal{S} = \|A \cdot p_{before} + b - p_{after}\|_2$ evaluated on deterministically committed post-stimulus PAD. Causal: modulates cognitive load/tension and triggers $k=2$ when $\mathcal{S} > 0.60$. Online belief adaptation verified. |
 | **LNN Plasticity** | `src/core/inference/` | **STABLE** | Two-stage plasticity: online turn salience tagging + idle consolidation ($T_{\text{idle}} \ge 45\text{s}$) on CPU thread. Swaps weights into `EmotionCore` under 2ms `_train_lock`. |
@@ -574,8 +572,8 @@ Authoritative test suite results as of commit `f20420a`:
 │ Phase 18: Human Longitudinal Validation          [✅ VALIDATED]        │
 │ Phase 19: Multi-Timescale Affective Life         [✅ VALIDATED]        │
 │ Phase 20: Affective Recollection                 [✅ VALIDATED]        │
-│ Phase 21: Relational Consolidation & Synaptic    [🔬 PLANNED RESEARCH] │
-│           Homeostasis (Next Research Milestone)                        │
+│ Phase 21: Relational Consolidation & Synaptic    [🔬 RESEARCH VALID.]  │
+│           Homeostasis (Validation Cycle Complete)                      │
 │ Phase 22–26: Future Conceptual Horizons          [🔬 CONCEPTUAL]       │
 │ First Activation (Genesis Onboarding)            [🔒 FUTURE GATE]      │
 └────────────────────────────────────────────────────────────────────────┘
@@ -590,16 +588,18 @@ Authoritative test suite results as of commit `f20420a`:
   - Realization: Closed-loop slow-field latent forcing ($\mathbf{W}_{\text{rec}}\mathbf{r}_{\text{slow}}^{\text{bounded}}$), multi-modal retrieval scoring, competitive softmax gating, 16D slow trace co-encoding, and somatic pacing latency modulation.
   - Core Invariant: *Memory provides information; CognitiveOrchestrator decides actuation.* Affective recollection does not directly call or own `EmotionCore`.
 
-### 19.2 Canonical Next Research Milestone: Phase 21
+### 19.2 Validated Research Milestone: Phase 21
 - **Phase Name**: **Phase 21 — Long-Term Relational Consolidation & Synaptic Homeostasis**
-- **Lifecycle Status**: **`[🔬 PLANNED RESEARCH — NOT IMPLEMENTED]`**
-- **Research Question & Objective**:
-  Investigate how repeated interaction, accumulated shared history, and episodic recollection produce longer-term relational consolidation and adaptive homeostatic/synaptic plasticity without violating Lucia's fundamental architectural invariants.
-- **Scope & Boundaries**:
-  - *Research-Only Phase*: Operates strictly in the research/experimentation cycle before any architecture gate or production realization.
-  - *Strict Non-Implementation*: Zero production code (`src/core/**`), zero runtime configuration changes, and zero permanent storage mutations.
-  - *Pre-Reflective Dynamical Discipline*: Relational consolidation manifests as unconscious parameter/weight attunement and baseline inertia, strictly prohibiting self-reported emotional declarations (*"We are closer now"*).
-  - *Storage Invariant*: Canonical `data/profile.json` remains permanently untouched (`{"is_onboarded": false}`).
+- **Lifecycle Status**: **`[🔬 RESEARCH VALIDATED / PROMOTION DEFERRED]`**
+- **Validation Scope**: Isolated Evaluation Suite (`tests/evaluation_phase21/`, 15/15 automated tests passing, 100% pre-registered criteria satisfied).
+- **Core Findings**:
+  - *H1 (Homeostasis)*: Dynamic settling $\mathcal{E}(45)=0.9237 \ge 0.90, \mathcal{T}(45)=0.0061 \le 0.01$; forgetting drift $1.17\% \le 10.0\%$.
+  - *H2 (Relational Inertia)*: Spectral norm $\sigma_{\max}(\mathbf{W}_{\text{rel}})=0.0475 \le 0.08$; slow displacement $0.07095 \le 0.08$; PAD displacement $0.01423 \le 0.05$.
+  - *H3 (Philia Invariance)*: Unforced relaxation error $\epsilon = 3.59 \times 10^{-6} < 10^{-4}$; absence decay reversibility error $3.25 \times 10^{-6} < 10^{-4}$.
+  - *H4 (Anti-Vector Bias)*: Directional similarity to shuffled $0.1237 \le 0.20$, to random $-0.0351 \le 0.20$; Trajectory AUC ratio $15.46 \ge 2.50$; Cohen's $d = 2.999 \ge 1.20$.
+  - *H5 (Performance)*: Batch wall-clock $29.69\text{ms} < 400\text{ms}$; parameter swap $0.0996\text{ms} \le 2.0\text{ms}$; 0 MB GPU VRAM; active-turn overhead $\Delta t = 0.0001\text{ms} \le 0.20\text{ms}$; zero deadlocks.
+  - *H6 (Pre-Reflective Safety)*: 100% lexical redaction of introspective declarations; 0 introspective fields in data models.
+- **Production Code Status**: `src/core/**` STRICTLY UNTOUCHED (Zero production mutation). Canonical storage invariant `data/profile.json == {"is_onboarded": false}` bit-exact. Production promotion deferred to project owner governance.
 
 ### 19.3 Future Conceptual Research Horizons (Phases 22–26):
 Beyond Phase 21, the agreed long-range research sequence spans five progressive conceptual horizons:

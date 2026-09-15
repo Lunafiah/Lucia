@@ -86,6 +86,13 @@ class EmotionConfig:
     recollection_softmax_temp: float = 0.20
     recollection_pulse_duration_sec: float = 4.0
     recollection_pacing_weight: float = 120.0
+    # Phase 21: Long-Term Relational Consolidation & Synaptic Homeostasis
+    enable_relational_consolidation: bool = True
+    w_rel_spectral_bound: float = 0.08
+    consolidation_learning_rate: float = 1e-4
+    consolidation_lambda_homeo: float = 0.05
+    consolidation_lambda_philia: float = 0.10
+    relationship_baseline: tuple = (0.0, 0.50, 0.0, 0.50)
 
     def __post_init__(self) -> None:
         if not isinstance(self.loop_cadence_ms, int) or not (100 <= self.loop_cadence_ms <= 500):
@@ -161,6 +168,38 @@ class EmotionConfig:
             raise ValueError(
                 f"EmotionConfig.recollection_pacing_weight must be >= 0, got {self.recollection_pacing_weight!r}"
             )
+        if not isinstance(self.enable_relational_consolidation, bool):
+            raise ValueError(
+                f"EmotionConfig.enable_relational_consolidation must be a bool, got {self.enable_relational_consolidation!r}"
+            )
+        if self.w_rel_spectral_bound <= 0.0:
+            raise ValueError(
+                f"EmotionConfig.w_rel_spectral_bound must be > 0, got {self.w_rel_spectral_bound!r}"
+            )
+        if self.consolidation_learning_rate <= 0.0:
+            raise ValueError(
+                f"EmotionConfig.consolidation_learning_rate must be > 0, got {self.consolidation_learning_rate!r}"
+            )
+        if self.consolidation_lambda_homeo < 0.0:
+            raise ValueError(
+                f"EmotionConfig.consolidation_lambda_homeo must be >= 0, got {self.consolidation_lambda_homeo!r}"
+            )
+        if self.consolidation_lambda_philia < 0.0:
+            raise ValueError(
+                f"EmotionConfig.consolidation_lambda_philia must be >= 0, got {self.consolidation_lambda_philia!r}"
+            )
+        if (
+            not isinstance(self.relationship_baseline, (tuple, list))
+            or len(self.relationship_baseline) != 4
+        ):
+            raise ValueError(
+                "EmotionConfig.relationship_baseline must be a tuple of 4 floats (familiarity, trust, closeness, reciprocity)"
+            )
+        for i, v in enumerate(self.relationship_baseline):
+            if not (0.0 <= float(v) <= 1.0):
+                raise ValueError(
+                    f"EmotionConfig.relationship_baseline[{i}]={v} must be in [0.0, 1.0]"
+                )
 
 
 # ---------------------------------------------------------------------------

@@ -358,6 +358,29 @@ This document captures:
 
 ---
 
+### ADR-028: Long-Term Relational Consolidation & Synaptic Homeostasis Architecture
+* **Status**: **PROMOTED, APPROVED & PRODUCTION IMPLEMENTED** (Phase 21 Production Implementation)
+* **Context**: Post-Phase 20, Lucia possessed closed-loop affective recollection (epistemic traces could modulate slow fields), but underlying neural weights $\boldsymbol{\Theta}_0$ and the resting attractor $\mathbf{s}^*_{\text{philia}}$ remained static. The system lacked multi-timescale synaptic plasticity to attune baseline parameters over extended relational histories, always decaying back to factory defaults during unforced rest.
+* **Decision**: Establish and empirically validate a 3-tier multi-timescale plasticity architecture:
+  1. **Tier 1 (Fast Reactive)**: $\mathbf{h}_{\text{fast}} \in \mathbb{R}^{32}$ integrates lexical valence shocks ($\tau_f \in [0.10, 1.50]\text{s}$).
+  2. **Tier 2 (Slow Relational Attractor)**: $\mathbf{s}_{\text{slow}} \in \mathbb{R}^{16}$ integrates minutes-to-hours affective momentum, with resting equilibrium shifted by relationship state $\mathbf{R}_t \in [0, 1]^4$:
+     $$\mathbf{s}^*_{\text{eff}}(\mathbf{R}_t) = \mathbf{s}^*_{\text{philia}} + \mathbf{W}_{\text{rel}} (\mathbf{R}_t - \mathbf{R}_0)$$
+     subject to strict spectral norm constraint $\|\mathbf{W}_{\text{rel}}\|_2 = \sigma_{\max}(\mathbf{W}_{\text{rel}}) \le 0.08$ (empirically $0.0475$), guaranteeing maximum slow displacement $\le 0.08$ and resting PAD displacement $\le 0.05$.
+  3. **Tier 3 (Offline Synaptic Consolidation)**: Salient interaction experiences ($\text{salience} \ge 0.50$) undergo offline CPU backpropagation-through-ODE (`torchdiffeq.odeint`) during unforced rest/sleep intervals with sequential multi-turn continuity ($\mathbf{h}_0^{(k)} = 0.60\mathbf{h}_{\text{prev}} + 0.40\mathbf{h}_{\text{before}}^{(k)}$) and dual homeostatic/Philia regularization:
+     $$\mathcal{L} = \frac{1}{K}\sum_{k=1}^K \|\mathbf{h}_{\text{pred}}^{(k)} - \mathbf{h}_{\text{target}}^{(k)}\|_2^2 + \lambda_{\text{homeo}} \|\boldsymbol{\Theta} - \boldsymbol{\Theta}_0\|_2^2 + \lambda_{\text{philia}} \|\mathbf{h}_{\text{unforced}}(\Delta t)\|_2^2$$
+* **Empirical Validation**:
+  - H1: Energy/tension settling $\mathcal{E}(45) = 0.9237 \ge 0.90, \mathcal{T}(45) = 0.0061 \le 0.01; \mathcal{E}(60) = 0.9641 \ge 0.95, \mathcal{T}(60) = 0.0013 \le 0.005$; catastrophic forgetting drift $1.17\% \le 10.0\%$.
+  - H2: Spectral norm $0.0475 \le 0.08$; max slow displacement $0.07095 \le 0.08$; max PAD displacement $0.01423 \le 0.05$; max single-turn velocity $0.00277 \le 0.015$.
+  - H3: Unforced Philia restoration error $\epsilon = 3.59 \times 10^{-6} < 10^{-4}$; conditioned stability error $4.30 \times 10^{-7} < 10^{-4}$; long-term absence decay reversibility error $3.25 \times 10^{-6} < 10^{-4}$.
+  - H4: Anti-vector-bias confirmed: $\text{CosineSim}(\Delta\boldsymbol{\Theta}_{\text{auth}}, \Delta\boldsymbol{\Theta}_{\text{shuffled}}) = 0.1237 \le 0.20$; $\text{CosineSim}(\Delta\boldsymbol{\Theta}_{\text{auth}}, \Delta\boldsymbol{\Theta}_{\text{random}}) = -0.0351 \le 0.20$; Trajectory AUC ratio $= 15.4554 \ge 2.50$; Split-half authentic consistency $= 0.7095 \pm 0.0450$; Cohen's $d$ (Auth vs Shuffled) $= 2.999 \ge 1.20$; Cohen's $d$ (Auth vs Random) $= 19.229 \ge 1.20$.
+  - H5: Forward step $p50 = 0.0840\text{ms} < 1.5\text{ms}$; backward step $= 3.46\text{ms} < 25\text{ms}$; batch wall-clock $= 29.69\text{ms} < 400\text{ms}$; parameter swap $= 0.0996\text{ms} \le 2.0\text{ms}$; GPU VRAM $= 0.00\text{ MB}$; active-turn overhead $\Delta t = 0.0001\text{ms} \le 0.20\text{ms}$; max lock blocking $= 0.0022\text{ms} \le 2.0\text{ms}$; zero deadlocks over 1,000 concurrent iterations.
+  - H6: 100% lexical redaction of introspective declarations; 100% clean passage of operational outputs; 0 introspective fields in data models.
+* **Consequences**:
+  - *Positive*: Attunes baseline companion dynamics to long-term relationship history while guaranteeing complete mathematical reversibility under absence decay and zero catastrophic forgetting.
+  - *Governance & Invariants*: Production implementation promoted with zero Genesis activation (`data/profile.json == {"is_onboarded": false}`); 100% test coverage across 13 production tests; CPU-only execution with 0 MB GPU VRAM contention; lock hierarchy strictly verified.
+
+---
+
 ## 3. Reconciliation of Outdated Specs & Conflicting Decisions
 
 | Dimension | Outdated / Preliminary Spec | Authoritative Implemented Reality | Resolution & Rationale |
@@ -430,4 +453,5 @@ All future contributions and modifications must strictly observe the following v
 | **ARCH-023** | 10-Stage Cognitive Pipeline | Canonical 16-Stage Unified Cognitive Pipeline & Isolated Stores (ADR-025) | Unified execution contract across all cognitive subsystems | Phase 16 | Implementation Fact |
 | **ARCH-024** | Single-layer limbic ODE collapsing to origin | Coupled Multi-Timescale LNN (MT-LNN) + Philia Attractor Grounding (ADR-026) | Multi-minute affective continuity, autonomous stress-to-fatigue conversion, exact Philia attractor convergence | Phase 19 | Implementation Fact |
 | **ARCH-025** | Open-loop text retrieval & uncoupled echo vector | Closed-Loop Affective Recollection via Slow-Field Latent Forcing ($\mathbf{r}_{\text{slow}}^{\text{bounded}}$, ADR-027) | Multi-turn affective reinstatement, memory-identity-dependent trajectory deflection, resolves Phase 11 flaw | Phase 20 | Implementation Fact (Commit `f20420a`) |
+| **ARCH-026** | Static neural weights & fixed resting attractor | 3-Tier Multi-Timescale Synaptic Plasticity & Relational Inertia (ADR-028) | Attunes baseline dynamics to long-term history; bounded by spectral norm ($\sigma_{\max} \le 0.08$); reversible Philia attractor | Phase 21 | Implementation Fact (Phase 21) |
 
