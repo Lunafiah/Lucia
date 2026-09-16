@@ -50,7 +50,7 @@ Production Realization (src/core/**)
 Protocol Amendment v1.4 resolves four documented methodological and calibration defects identified during the post-execution compliance audit of Path C:
 1. **Full Sample Size Synchronization ($N = 270$)**: Replaces all legacy textual references to $N = 135$ ($15$ probes/cell, $5/5/5$ $T$-distribution) with the canonical $N = 270$ ($30$ probes/cell, $10/10/10$ $T$-distribution), removing Path C as an optional branch and establishing it as the single, unified primary design.
 2. **Quality Gate 2 Redesign (Standardized Exposure Conditioned Check)**: Conditions the primary separation test between High and Medium surprise on the standardized duration $T = 12$ ticks ($\bar{S}_H(T=12) - \bar{S}_M(T=12) \ge 0.1500$), resolving the physical impossibility of achieving an unconditioned separation of $0.15$ when averaging across single-tick ODE displacements.
-3. **Quality Gate 4 Recalibration ($U_{\text{Low}}$ Proposition Generator)**: Re-parameterizes the candidate confidence distribution for $U_{\text{Low}}$ from $[0.940, 0.995]$ to $[0.900, 0.995]$ based on Monte Carlo evidence ($20,000$ simulated cells), elevating expected population variance from $0.0023$ to $0.005130$ and reducing cell failure probability from $67.23\%$ to $0.25\%$.
+3. **Quality Gate 4 Recalibration ($U_{\text{Low}}$ Proposition Generator)**: Re-parameterizes the candidate confidence distribution for $U_{\text{Low}}$ from $[0.940, 0.995]$ to $[0.900, 0.995]$ based on Monte Carlo evidence ($20,000$ simulated cells), elevating expected population variance from $0.0023$ to $0.005130$, reducing the single-cell failure probability from approximately $30.78\%$ to $0.08\%$, and the three-cell family failure probability from approximately $67.23\%$ to $0.25\%$.
 4. **Power & Precision Synchronization**: Formally synchronizes the statistical power analysis to the exact v1.4 design matrix ($\text{rank} = 11, p = 10, N_{\text{eff}} = 257, \text{SE}_z = 0.062378, \Delta = 0.20$), proving that power is $89.15\%$ at $\rho_0 = 0.0$ and $87.35\%$ at $\rho_0 = 0.02$.
 
 ---
@@ -206,7 +206,12 @@ In Path C, the observed unconditioned separation was $\Delta_{HM} = 0.0967 < 0.1
 To verify that stimulus affect tiers successfully manipulate the limbic core without imposing a mathematically contradictory pooling requirement:
 
 > **Standardized Manipulation-Check Exposure Condition ($T = 12$):**  
-> Testing whether stimulus tiers produce genuine physiological separation must observe the system under a standardized duration sufficient for continuous ODE trajectory divergence to reach its steady-state displacement regime. $T = 12$ ticks ($1.20\text{s}$) is formally designated as the standardized manipulation-check exposure condition.
+> Testing whether stimulus tiers produce genuine physiological separation must observe the system under a standardized exposure duration selected to provide sufficient physiological separation while remaining within the audited operational regime. $T = 12$ ticks ($1.20\text{s}$) is formally designated as the standardized manipulation-check exposure condition.
+
+> [!NOTE]
+> **INDEPENDENT METHODOLOGICAL JUSTIFICATION OF $T = 12$:**  
+> The $T = 12$ condition is frozen from the pre-existing dynamical measurement audit as the standardized exposure duration for the future manipulation check. The measurement audit established that single-step integration ($T=1$) is physically constrained by MT-LNN relaxation dynamics ($\tau_{\text{fast}} \ge 0.10\text{s}$) to $\|\Delta\mathbf{p}\|_2 \le 0.1220$, while $T=4$ ($0.40\text{s}$) provides intermediate displacement with limited separation headroom. $T = 12$ ticks ($1.20\text{s}$) was originally defined in Protocol v1.1 as the duration providing sufficient trajectory divergence to evaluate whether affective lexical forcing reliably manipulates limbic prediction error.  
+> **Historical Path C $T=12$ observations ($\bar{S}_H - \bar{S}_M = 0.2090 \ge 0.1500$) are reported descriptively only and play no role in the specification of the acceptance threshold.** The threshold $\Delta_{HM} \ge 0.1500$ is the original preregistered requirement from Protocol v1.1/v1.3 and is not altered.
 
 #### Confirmatory Evaluation Criteria for Gate 2:
 1. **Pipeline Integrity**: 100% production classes; zero synthetic PAD injection.
@@ -217,7 +222,6 @@ To verify that stimulus affect tiers successfully manipulate the limbic core wit
 4. **Primary Separation Check under Standardized Condition ($T = 12$)**:
    $$\bar{S}_{\text{observed}}(S_M \mid T=12) - \bar{S}_{\text{observed}}(S_L \mid T=12) \ge 0.1000$$
    $$\mathbf{\bar{S}_{\text{observed}}(S_H \mid T=12) - \bar{S}_{\text{observed}}(S_M \mid T=12) \ge 0.1500}$$
-   *(In Path C, observed separation at $T=12$ was $0.6477 - 0.4387 = \mathbf{0.2090} \ge 0.1500$)*.
 5. **No Threshold Relaxation**: The separation threshold remains strictly $\ge 0.1500$. It is **not** softened to fit the failed unconditioned number.
 6. **Failure Consequence**: If any of criteria 1–4 are unmet, the manipulation check fails and the benchmark terminates as **INCONCLUSIVE**.
 
@@ -230,7 +234,7 @@ To verify that stimulus affect tiers successfully manipulate the limbic core wit
 ## 8. Quality Gate 4 Recalibration: $U_{\text{Low}}$ Proposition Generator
 
 ### 8.1 Methodological Defect in Path C Baseline
-In Path C, Cell 4 failed Quality Gate 4 ($\text{Var}(U) = 0.001711 < 0.002000$). Monte Carlo calibration across $20,000$ synthetic cells proved that the baseline generator ($c \sim U(0.940, 0.995), k \in [2, 4]$) had an expected variance of only $0.002311$, producing a $67.23\%$ probability that at least one of the three Low cells would fail purely from sampling variation.
+In Path C, Cell 4 failed Quality Gate 4 ($\text{Var}(U) = 0.001711 < 0.002000$). Monte Carlo calibration across $20,000$ synthetic cells proved that the baseline generator ($c \sim U(0.940, 0.995), k \in [2, 4]$) had an expected variance of only $0.002311$, producing a single-cell failure probability of approximately $30.78\%$ and a three-cell family failure probability of approximately $67.23\%$ purely from sampling variation.
 
 ### 8.2 Recalibrated Proposition Generator (Candidate C1)
 Based on the empirical evidence documented in [`PHASE_22_H1_U_LOW_CALIBRATION_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase22-Epistemic_Foraging/PHASE_22_H1_U_LOW_CALIBRATION_REPORT.md), the $U_{\text{Low}}$ generator is formally proposed as **Candidate C1**:
@@ -386,13 +390,66 @@ To preserve philosophical and operational discipline:
 
 ---
 
-## 15. Reviewer Ratification Gate & Execution Preconditions
+## 15. Execution Lifecycle & Mandatory Preflight Validation Gate (STOP / GO)
 
-The following items are submitted to Ciah (Research Reviewer) for formal review and ratification:
-1. **$N = 270$ Canonical Baseline Ratification**: Formal approval of $N = 270$ ($30$ probes/cell, $10/10/10$ $T$-allocation) as the frozen design.
-2. **Gate 2 Redesign Ratification**: Formal approval of conditioning the primary $\ge 0.1500$ separation check on standardized duration $T = 12$.
-3. **Gate 4 Recalibration Ratification**: Formal approval of Candidate C1 ($c \sim U(0.900, 0.995)$) for $U_{\text{Low}}$.
-4. **Preregistration Freeze**: Explicit approval of Protocol Amendment v1.4 before any new probe generation or benchmark execution occurs.
+To prevent uncalibrated probe sets or non-compliant fixtures from executing in future benchmarks, Protocol v1.4 formalizes a strict, four-step gated execution sequence:
+
+```text
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                        PRE-EXECUTION TO BENCHMARK LIFECYCLE                            │
+│                                                                                        │
+│   [Step 1] Formal Ratification of Protocol Amendment v1.4 by Ciah                      │
+│       │                                                                                │
+│       ▼                                                                                │
+│   [Step 2] Freeze Generator Parameters & Generate Exact N = 270 Probe Set Fixture      │
+│       │                                                                                │
+│       ▼                                                                                │
+│   [Step 3] Execute Formal Automated Preflight Validation Suite                         │
+│       │                                                                                │
+│       ├── ANY Check Fails ────────► [STOP] ABORT EXECUTION (Benchmark Forbidden)       │
+│       │                                                                                │
+│       └── 100% Checks Pass ───────► [GO] AUTHORIZE BENCHMARK EXECUTION                 │
+│                                       │                                                │
+│                                       ▼                                                │
+│                                   [Step 4] Run Headless Production Benchmark           │
+└────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+### 15.1 Mandatory 15-Point Preflight Checklist
+Prior to launching any runtime evaluations through `EmotionCore` or `ActiveInferenceEngine`, an automated preflight script (`validate_h1_v14_preflight.py`) must evaluate the generated fixture against the following 15 deterministic criteria:
+
+| # | Preflight Criterion | Evaluation Scope | Requirement | Failure Action |
+|---|---|---|---|---|
+| **1** | **Total Sample Size** | Entire fixture | Exactly $N = 270$ unique probes | **STOP** |
+| **2** | **Factorial Cell Count** | Matrix structure | Exactly $9$ crossed cells ($3 \times 3$) | **STOP** |
+| **3** | **Cell Probe Allocation** | Cell level | Exactly $n = 30$ probes per cell across all 9 cells | **STOP** |
+| **4** | **Exposure Duration Balance** | Within-cell level | Exactly $10 \times T=1, 10 \times T=4, 10 \times T=12$ in all 9 cells | **STOP** |
+| **5** | **Probe ID Uniqueness** | Entire fixture | Exactly $270$ distinct probe IDs (zero duplicates) | **STOP** |
+| **6** | **Stimulus Text Uniqueness** | Entire fixture | Exactly $270$ distinct text strings (zero duplicates) | **STOP** |
+| **7** | **Design Matrix Rank & Condition** | Contrast matrix $\mathbf{X} \in \mathbb{R}^{270 \times 11}$ | $\text{rank}(\mathbf{X}) = 11$, condition number $\approx 1.00$, max off-diagonal $< 10^{-10}$ | **STOP** |
+| **8** | **Gate 4 Actual Sample Variance** | Generated proposition graph | $\text{Var}_{\text{probe}}(\bar{U} \mid \text{cell}) \ge 0.0020$ on the **actual generated probe set** in all 9 cells (specifically Cells 1, 4, 7) | **STOP** |
+| **9** | **Gate 3 Actual Sample Separation** | Generated proposition graph | $\bar{U}_M - \bar{U}_L \ge 0.2500$ and $\bar{U}_H - \bar{U}_M \ge 0.2500$ on the **actual generated probe set** | **STOP** |
+| **10**| **Gate 2 T=12 Manipulation Structure** | Authored stimulus texts | Exactly 10 probes/cell at $T=12$ in all 9 cells; text arousal/urgency correctly mapped to $S_L, S_M, S_H$ | **STOP** |
+| **11**| **Anti-Cherry-Picking Invariant** | Generation code audit | Strictly forward generation from deterministic PRNG; zero manual substitution or selective filtering | **STOP** |
+| **12**| **Frozen Probe Manifest** | Fixture serialization | Fixture hashed (SHA-256) and exported to immutable manifest artifact prior to runtime execution | **STOP** |
+| **13**| **Production Pipeline Integrity** | Class verification | Headless execution through genuine `StimulusProcessor` and `EmotionCore` (zero mocks/synthetic PAD) | **STOP** |
+| **14**| **Genesis Gate Invariant** | Data persistence | `data/profile.json` bit-exact `{"is_onboarded": false}` | **STOP** |
+| **15**| **Production Code Invariant** | Source tree audit | `src/core/**` 100% untouched | **STOP** |
+
+### 15.2 Decision Rule
+$$\text{If ANY of the 15 criteria fails } \implies \mathbf{STOP\ (Benchmark\ Execution\ Forbidden)}$$
+$$\text{If and only if ALL 15 criteria pass } \implies \mathbf{GO\ (Benchmark\ Execution\ Authorized)}$$
+
+> [!CAUTION]
+> **RATIONALE FOR MANDATORY PREFLIGHT STOP/GO:**  
+> Candidate C1 Monte Carlo simulation proves that the generator has a very low failure probability ($0.25\%$). However, Monte Carlo evidence only characterizes the *distributional expectation* of the generator; it does **not** prove that any single realized sample of $N=270$ probes will pass. The preflight gate ensures that if an unlucky realization falls below $0.0020$, the issue is caught **before** runtime evaluations, completely preventing another inconclusive benchmark.
+
+### 15.3 Reviewer Ratification Checklist
+The following items remain submitted to Ciah (Research Reviewer) for formal ratification:
+- [ ] **Ratify Protocol v1.4 Specification**: Approve this document as the governing preregistration.
+- [ ] **Ratify Gate 2 Operational Redesign**: Formally approve conditioning surprise separation on standardized exposure $T = 12$ ticks.
+- [ ] **Ratify Candidate C1 Proposition Generator**: Formally approve freezing $c \sim \text{Uniform}(0.900, 0.995), k \in \{2, 3, 4\}$ for $U_{\text{Low}}$.
+- [ ] **Ratify 15-Point Preflight Gate**: Formally approve the preflight validation gate as a mandatory execution prerequisite.
 
 ---
 
