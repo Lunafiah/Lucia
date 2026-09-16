@@ -124,6 +124,8 @@
       "delta_med_low": 0.13788081103956104,
       "delta_high_med": 0.09668673462304023,
       "monotonic": true,
+      "anova_f": 38.33231792869546,
+      "anova_p": 2.318738060669592e-15,
       "passed": false
     },
     "uncertainty_separation": {
@@ -135,6 +137,8 @@
       "delta_med_low": 0.42138459779936793,
       "delta_high_med": 0.2658521415082601,
       "monotonic": true,
+      "anova_f": 3351.3873463356003,
+      "anova_p": 7.405454410020648e-190,
       "passed": true
     }
   },
@@ -165,6 +169,40 @@
     "p_tost": 0.0012020237780336895,
     "verdict": "EQUIVALENCE CONFIRMED (Decoupling Supported)",
     "equivalence_confirmed": true
+  },
+  "multiplicity_correction": {
+    "family": "Confirmatory Hypothesis Tests (Path C)",
+    "method": "Holm-Bonferroni (FWER control at family alpha)",
+    "tests": [
+      {
+        "test": "Uncertainty Manipulation Check",
+        "raw_p": 7.405454410020648e-190,
+        "nominal_alpha": 0.001,
+        "rank": 1,
+        "hb_critical_threshold": 0.0003333333333333333,
+        "adjusted_p": 2.2216363230061946e-189,
+        "passed": true
+      },
+      {
+        "test": "Surprise Manipulation Check",
+        "raw_p": 2.318738060669592e-15,
+        "nominal_alpha": 0.001,
+        "rank": 2,
+        "hb_critical_threshold": 0.0005,
+        "adjusted_p": 4.637476121339184e-15,
+        "passed": true
+      },
+      {
+        "test": "Track B TOST Equivalence (IUT)",
+        "raw_p": 0.0012020237780336895,
+        "nominal_alpha": 0.05,
+        "rank": 3,
+        "hb_critical_threshold": 0.05,
+        "adjusted_p": 0.0012020237780336895,
+        "passed": true
+      }
+    ],
+    "all_passed": true
   },
   "diagnostic_raw_observed": {
     "pearson_r": -0.008003953033056396,
