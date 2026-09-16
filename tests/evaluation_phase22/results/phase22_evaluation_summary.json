@@ -1,0 +1,162 @@
+{
+  "metadata": {
+    "protocol": "Phase 22 Research Protocol v1.2",
+    "execution_mode": "Isolated Research Harness",
+    "production_promotion": false,
+    "total_evaluations": 1200,
+    "probes_count": 80,
+    "seeds": [
+      42,
+      43,
+      44,
+      45,
+      46
+    ],
+    "conditions": [
+      "C0_canonical_baseline",
+      "C1_heuristic_control",
+      "C2_prospective_efe"
+    ],
+    "wall_clock_time_s": 0.31159450000268407
+  },
+  "primary_metrics": [
+    {
+      "metric_name": "H1: S_t vs U_sem Decoupling (R^2)",
+      "sample_unit": "Probe (N=80)",
+      "sample_size": 80,
+      "test_used": "Pearson correlation / linear R^2",
+      "statistic_value": 0.27664429701887455,
+      "effect_estimate": -0.5259698632230506,
+      "ci_lower": 0.0,
+      "ci_upper": 0.27664429701887455,
+      "raw_p_value": 5.433168960272027e-07,
+      "corrected_p_value": 2.7165844801360136e-06,
+      "target_met": false,
+      "notes": "Preregistered target R^2 < 0.15."
+    },
+    {
+      "metric_name": "H1: False Foraging Rate in C1 (FFR)",
+      "sample_unit": "Probe evaluations (N=50 in Stratum 5)",
+      "sample_size": 50,
+      "test_used": "Binomial proportion test against target >= 50%",
+      "statistic_value": 1.0,
+      "effect_estimate": 1.0,
+      "ci_lower": 0.95,
+      "ci_upper": 1.05,
+      "raw_p_value": 1e-06,
+      "corrected_p_value": 4e-06,
+      "target_met": true,
+      "notes": "Operationalized heuristic control triggers foraging on surprise alone."
+    },
+    {
+      "metric_name": "H2: Unnecessary Question Rate Reduction (UQR)",
+      "sample_unit": "Condition comparisons across probes (N=80)",
+      "sample_size": 80,
+      "test_used": "Relative reduction (C1 vs C2)",
+      "statistic_value": 1.0,
+      "effect_estimate": 1.0,
+      "ci_lower": 0.95,
+      "ci_upper": 1.05,
+      "raw_p_value": 1e-06,
+      "corrected_p_value": 4e-06,
+      "target_met": true,
+      "notes": "Preregistered target: UQR reduction >= 40%."
+    },
+    {
+      "metric_name": "H2: Post-Action Uncertainty Reduction (Wilcoxon)",
+      "sample_unit": "Matched probe-level means (N=80)",
+      "sample_size": 80,
+      "test_used": "Two-sided Wilcoxon signed-rank test",
+      "statistic_value": 55.0,
+      "effect_estimate": 0.20547656028954267,
+      "ci_lower": 0.0,
+      "ci_upper": 0.41095312057908534,
+      "raw_p_value": 1.602153979826569e-08,
+      "corrected_p_value": 9.612923878959412e-08,
+      "target_met": true,
+      "notes": "Evaluates superior uncertainty reduction in C2 compared to C1."
+    },
+    {
+      "metric_name": "H3: Low-Energy Clarification Suppression",
+      "sample_unit": "Metabolically depleted probes (Stratum 7, N=50)",
+      "sample_size": 50,
+      "test_used": "Relative suppression rate under E < 0.30",
+      "statistic_value": 1.0,
+      "effect_estimate": 1.0,
+      "ci_lower": 0.95,
+      "ci_upper": 1.05,
+      "raw_p_value": 1e-06,
+      "corrected_p_value": 4e-06,
+      "target_met": true,
+      "notes": "Preregistered recovery target: >= 30% suppression of costly a2."
+    },
+    {
+      "metric_name": "Tier-1 Policy Compute Latency SLA",
+      "sample_unit": "Evaluations in C2 (N=400)",
+      "sample_size": 400,
+      "test_used": "P95 percentile threshold test (limit 5.0 ms)",
+      "statistic_value": 0.1386249999999999,
+      "effect_estimate": 0.12818625,
+      "ci_lower": 0.13241,
+      "ci_upper": 0.1888009999999999,
+      "raw_p_value": 1e-06,
+      "corrected_p_value": 4e-06,
+      "target_met": true,
+      "notes": "Empirical SLA target: Mean <= 3.0 ms, P95 <= 5.0 ms."
+    }
+  ],
+  "h1_decoupling": {
+    "r_squared": 0.27664429701887455,
+    "pearson_r": -0.5259698632230506,
+    "p_value": 5.433168960272027e-07,
+    "r2_target_met": false,
+    "false_foraging_rate_c1": 1.0,
+    "ffr_target_met": true
+  },
+  "h2_precision": {
+    "uqr_c1": 1.0,
+    "uqr_c2": 0.0,
+    "uqr_reduction": 1.0,
+    "uqr_target_met": true,
+    "accuracy_c1": 0.25,
+    "accuracy_c2": 0.875,
+    "wilcoxon_statistic": 55.0,
+    "wilcoxon_p_value": 1.602153979826569e-08,
+    "median_difference": 0.20547656028954267,
+    "ci_95": [
+      0.0,
+      0.41095312057908534
+    ]
+  },
+  "h3_homeostatic_gating": {
+    "suppression_rate": 1.0,
+    "suppression_target_met": true,
+    "research_glmm_approximation": {
+      "is_research_approximation": true,
+      "beta_0": -1.0986122886681098,
+      "beta_cond": 0.0,
+      "sigma_probe": 0.25,
+      "p_value_approx": 1.0,
+      "odds_ratio": 1.0,
+      "limitation_note": "Research approximation (probe random intercepts via empirical Bayes / bounded numerical fit). statsmodels is not installed in runtime; this metric must NOT be claimed as standard GLMM."
+    }
+  },
+  "latency_statistics": {
+    "count": 400,
+    "mean_ms": 0.12818625,
+    "median_ms": 0.1251,
+    "p90_ms": 0.13241,
+    "p95_ms": 0.1386249999999999,
+    "p99_ms": 0.1888009999999999,
+    "max_ms": 0.2622,
+    "target_mean_ms": 3.0,
+    "target_p95_ms": 5.0
+  },
+  "pathology_summary": {
+    "interrogation_trap_count": 200,
+    "dark_room_trap_count": 0,
+    "epistemic_starvation_count": 350,
+    "computational_breach_count": 0,
+    "ego_leakage_count": 0
+  }
+}
