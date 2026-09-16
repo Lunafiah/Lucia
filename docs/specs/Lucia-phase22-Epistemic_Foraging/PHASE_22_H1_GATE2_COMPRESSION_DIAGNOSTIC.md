@@ -156,13 +156,13 @@ Quantifying the lexical and affective representations of the stimulus pools inde
 | **v1.4: High** | $12.2$ | $0.2500$ | $0.2798$ | $-0.1332 \pm 0.8476$ | $-0.1332$ | $0.4426$ | $+0.9563$ |
 
 ### 6.2 Key Stimulus Findings
-1. **Effective Input Norm Compression**:
-   - The total vector norm of the encoded input vector $\|x\| = \sqrt{x_{\text{val}}^2 + x_{\text{aro}}^2 + x_{\text{den}}^2}$:
-     - v1.4 Medium: $\|x_M\| = \sqrt{0.5846^2 + 0.0425^2 + 0.9777^2} = \mathbf{1.140}$.
-     - v1.4 High (Positive Triumph): $\|x_H^+\| = \sqrt{0.78^2 + 0.44^2 + 0.96^2} = \mathbf{1.314}$.
-     - v1.4 High (Negative Crisis): $\|x_H^-\| = \sqrt{(-0.85)^2 + 0.44^2 + 0.96^2} = \mathbf{1.352}$.
-   - While High stimuli have much higher arousal ($0.44$ vs. $0.04$), Medium stimuli compensate with higher positive valence ($0.58$ vs. $-0.13$) and high density ($0.98$).
-   - Total input energy delivered to the ODE is separated by only $\sim 15\%$, not the intended multiple.
+1. **Linguistic Diagnostic Proxy vs. Actual ODE Input Energy**:
+   - *Diagnostic Vector Norm Proxy*: In the diagnostic feature space produced by `StimulusProcessor` (where $\mathbf{x} = [\text{valence}, \text{arousal}, \text{density}]$), the Euclidean length of the encoded vector $\|\mathbf{x}\| = \sqrt{x_{\text{val}}^2 + x_{\text{aro}}^2 + x_{\text{den}}^2}$ yields:
+     - v1.4 Medium: $\|\mathbf{x}_M\| = \sqrt{0.5846^2 + 0.0425^2 + 0.9777^2} = \mathbf{1.140}$.
+     - v1.4 High (Positive Triumph): $\|\mathbf{x}_H^+\| = \sqrt{0.78^2 + 0.44^2 + 0.96^2} = \mathbf{1.314}$.
+     - v1.4 High (Negative Crisis): $\|\mathbf{x}_H^-\| = \sqrt{(-0.85)^2 + 0.44^2 + 0.96^2} = \mathbf{1.352}$.
+   - While High stimuli have much higher arousal ($0.44$ vs. $0.04$), Medium stimuli compensate with higher positive valence ($+0.58$ vs. $-0.13$) and high semantic density ($0.98$).
+   - *Epistemic Separation*: This vector norm $\|\mathbf{x}\|$ is a **linguistic/diagnostic proxy**, NOT a proven physical measure of 'total causal input energy delivered to the ODE'. Inside `EmotionCore`, $x[0], x[1], x[2]$ pass through non-uniform synaptic weights ($\mathbf{U}_f[0,0]=1.0, \mathbf{U}_f[1,1]=1.0, \mathbf{U}_f[2,2]=0.8$), $\tanh$ non-linearities, and timescale modulation ($\tau_{\text{fast}}$). Therefore, while the proxy shows that linguistic feature representations were unexpectedly close in scalar length ($\sim 15\%$ separation), it must not be conflated with the actual dynamical driving force of the differential equations.
 2. **Pervasive Companion Phrasing in $S_M$**:
    - In v1.4, all 30 templates for Medium surprise were formulated as collaborative companion affirmations (e.g., *"Working together with you feels warm, steady, and very reassuring..."*, *"I feel a gentle sense of satisfaction as these tests pass cleanly..."*).
    - This uniformly inflated VADER positivity across all four nominal domains.
@@ -243,36 +243,38 @@ Evaluating the five preregistered candidate hypotheses against all empirical and
 ### H-D1 — Stimulus Compression
 *Hypothesis*: The effective physiological input difference between $S_M$ and $S_H$ is smaller than intended.
 - **Evidence**:
-  - `StimulusProcessor.encode()` yields total input vector norms of $\|x_M\| = 1.140$ vs. $\|x_H\| = 1.314 - 1.352$ (only a $15.2\%$ input energy separation).
-  - VADER compound of Medium rose from $+0.4158$ in Path C to $+0.5846$ in v1.4, closing the input magnitude gap.
+  - `StimulusProcessor.encode()` yields diagnostic input vector norms of $\|\mathbf{x}_M\| = 1.140$ vs. $\|\mathbf{x}_H\| = 1.314 - 1.352$ (only a $15.2\%$ separation in diagnostic feature length).
+  - VADER compound of Medium rose from $+0.4158$ in Path C to $+0.5846$ in v1.4, closing the input representation gap.
+  - *Methodological Distinction*: This feature-vector norm $\|\mathbf{x}\|$ is a **linguistic/diagnostic proxy**, NOT a direct measure of physical ODE input driving energy. Synaptic input weights ($\mathbf{U}_f[i,i]$) and ODE non-linearities mediate the actual driving force. The proxy demonstrates that linguistic feature representations were unexpectedly close in scalar length, but must not be conflated with raw causal energy.
 - **Counter-evidence**:
   - Arousal input remains well-separated ($0.0425$ in Med vs. $0.4426$ in High).
-- **Status**: **SUPPORTED BY CURRENT EVIDENCE**.
+- **Status**: **SUPPORTED AS A STIMULUS-REPRESENTATION DEFECT** (Diagnostic Proxy Consistent with Compression).
 - **Remaining Uncertainty**: How much input norm separation is required to produce $\Delta_{HM} \ge 0.1500$ under Euclidean surprise.
 
 ---
 
-### H-D2 — Medium Overactivation
+### H-D2 — Medium Response Inflation (Observed) / Hypothesized Overactivation
 *Hypothesis*: $S_M$ stimuli produce unusually high cumulative displacement under long exposure.
 - **Evidence**:
-  - $S_M(T=12)$ rose by $+0.1405$ ($0.4387 \to 0.5792$) between Path C and v1.4, perfectly matching the $-0.1405$ drop in $\Delta_{HM}$.
-  - Overactivation is concentrated entirely along Pleasure ($\Delta P = +0.4204$) and Dominance ($\Delta D = +0.3963$).
-- **Counter-evidence**:
-  - Overactivation did not occur in Arousal ($A_T = -0.0363$).
-- **Status**: **SUPPORTED BY CURRENT EVIDENCE** (Affective/Valence Overactivation).
-- **Remaining Uncertainty**: None regarding empirical occurrence; confirmed across both real evaluations and simulations.
+  - Empirical response inflation is proven: $S_M(T=12)$ rose by $+0.1405$ ($0.4387 \to 0.5792$) between Path C and v1.4, perfectly matching the $-0.1405$ drop in $\Delta_{HM}$.
+  - This inflation is concentrated entirely along Pleasure ($\Delta P = +0.4204$) and Dominance ($\Delta D = +0.3963$), while Arousal was unchanged ($A_T = -0.0363$).
+- **Counter-evidence & Interpretive Boundary**:
+  - Describing this empirical response inflation as "overactivation" is an **interpretive hypothesis** (implying the limbic state moved "excessively" relative to an unpreregistered normative standard). The empirical fact established by the data is strictly **Medium Response Inflation**.
+- **Status**: **Medium Response Inflation — SUPPORTED BY CURRENT EVIDENCE** (with "overactivation" categorized as an interpretive hypothesis).
+- **Remaining Uncertainty**: None regarding empirical occurrence of response inflation; confirmed across both real evaluations and simulations.
 
 ---
 
-### H-D3 — Physiological Saturation
+### H-D3 — Bounded / Saturating Dynamics
 *Hypothesis*: The ODE system imposes a bounded displacement causing $S_M$ and $S_H$ to converge toward a common ceiling.
 - **Evidence**:
   - The ODE uses $\tanh$ activations bounded in $[-1, 1]$, and PAD projection is clipped to $[-1, 1]$.
-  - Marginal displacement per tick decelerates smoothly for both tiers ($\text{Rate}(T1 \to T4) \approx 0.07 \to \text{Rate}(T4 \to T12) \approx 0.04$).
-- **Counter-evidence**:
+  - Marginal displacement per tick decelerates smoothly across $T=1..12$ for both tiers ($\text{Rate}(T1 \to T4) \approx 0.07 \to \text{Rate}(T4 \to T12) \approx 0.04$), consistent with bounded ODE dynamics.
+- **Counter-evidence & Limitations**:
   - The states do not converge to the *same coordinate* in PAD space (separation angle $= 47.7^\circ$). Saturation operates on the radial scalar distance $\|p_T - p_0\|$, not on state collinearity.
-- **Status**: **SUPPORTED BY CURRENT EVIDENCE** (Radial Metric Saturation).
-- **Remaining Uncertainty**: Exact analytical bound of maximum possible $\|p_T - p_0\|$ under resting Philia equilibrium.
+  - Furthermore, a 12-tick trajectory is insufficient to conclude that "physiological saturation" is definitively proven or that an analytical ceiling has been established. Proving formal saturation requires asymptotic mathematical derivations and longer integration horizons ($T \gg 12$).
+- **Status**: **CONSISTENT WITH / SUPPORTED AS A WORKING HYPOTHESIS** (Bounded Radial Metric Dynamics).
+- **Remaining Uncertainty**: Exact analytical bound and asymptotic convergence ceiling of $\|p_T - p_0\|$ under resting Philia equilibrium.
 
 ---
 
@@ -303,7 +305,7 @@ Evaluating the five preregistered candidate hypotheses against all empirical and
 ### What IS Concluded (Definitive Findings)
 1. **The locus of compression is 100% in $S_M$ inflation**: High surprise is bit-exact identical to Path C ($0.6477$). Medium surprise inflated by $+0.1405$ ($0.4387 \to 0.5792$), directly collapsing $\Delta_{HM}$ from $0.2090 \to 0.0685$.
 2. **The inflation is valence- and density-driven**: Medium stimuli in v1.4 had VADER compound $+0.5846$ (vs. $+0.4158$) and semantic density $0.9777$ (vs. $0.7952$). Under $T=12$ ticks, this drove Pleasure to $+0.6704$ and Dominance to $+0.4463$.
-3. **Arousal played zero role in Medium overactivation**: Final arousal for Medium was $-0.0363$, remaining near resting baseline ($-0.05$).
+3. **Arousal played zero role in Medium response inflation**: Final arousal for Medium was $-0.0363$, remaining near resting baseline ($-0.05$).
 4. **High surprise is bipolar and asymmetric**: High surprise splits into Positive Triumph ($S = 0.7116$) and Negative Crisis ($S = 0.5838$). Negative crisis alarms matched Medium companion talk in Euclidean displacement, lowering the High tier average.
 5. **The metric is blind to direction**: $S_{\text{observed}} = \|p_T - p_0\|_2$ measures radial distance, conflating a $47.7^\circ$ directional difference (companion warmth vs. catastrophic emergency) into near-identical scalar surprise values.
 
