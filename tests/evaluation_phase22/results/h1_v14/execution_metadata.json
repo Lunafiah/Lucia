@@ -1,0 +1,19 @@
+{
+  "protocol_version": "v1.4 (Ratified / Frozen)",
+  "governance_status": "RATIFIED_EXECUTED",
+  "timestamp_utc": "2026-09-16T12:47:06Z",
+  "master_seed": 42,
+  "environmental_seeds": [
+    42,
+    43,
+    44,
+    45,
+    46
+  ],
+  "total_probes": 270,
+  "total_evaluations": 1350,
+  "equivalence_margin_delta": 0.2,
+  "manifest_sha256": "9adf33c18c30eec2d966b2d279574386ec29463356b0c3ff2353c9eda9b22255",
+  "architecture_gate": "LOCKED",
+  "execution_time_seconds": 0.14000000000032742
+}

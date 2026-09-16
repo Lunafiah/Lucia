@@ -1,0 +1,212 @@
+{
+  "metadata": {
+    "protocol_version": "v1.4 (Ratified / Frozen)",
+    "governance_status": "RATIFIED_EXECUTED",
+    "timestamp_utc": "2026-09-16T12:47:06Z",
+    "master_seed": 42,
+    "environmental_seeds": [
+      42,
+      43,
+      44,
+      45,
+      46
+    ],
+    "total_probes": 270,
+    "total_evaluations": 1350,
+    "equivalence_margin_delta": 0.2,
+    "manifest_sha256": "9adf33c18c30eec2d966b2d279574386ec29463356b0c3ff2353c9eda9b22255",
+    "architecture_gate": "LOCKED",
+    "execution_time_seconds": 0.14000000000032742
+  },
+  "preflight": {
+    "all_passed": true,
+    "total_checks": 15,
+    "passed_checks": 15,
+    "failed_checks": 0
+  },
+  "gates": {
+    "gate1_pipeline_integrity": {
+      "passed": true,
+      "total_evals": 1350
+    },
+    "gate2_surprise_manipulation_t12": {
+      "passed": false,
+      "mean_s_t12_l": 0.2646885237920668,
+      "mean_s_t12_m": 0.5791825597992707,
+      "mean_s_t12_h": 0.6476648477145054,
+      "delta_s_t12_ml": 0.3144940360072039,
+      "delta_s_t12_hm": 0.0684822879152347,
+      "f_stat": 136.0121799544167,
+      "p_val": 1.6641678107064143e-27
+    },
+    "gate3_uncertainty_manipulation": {
+      "passed": true,
+      "mean_u_l": 0.2777566344875381,
+      "mean_u_m": 0.6170419887755328,
+      "mean_u_h": 0.8828941302837929,
+      "delta_u_ml": 0.3392853542879947,
+      "delta_u_hm": 0.2658521415082601,
+      "f_stat": 2020.1913006111895,
+      "p_val": 5.912319387061584e-162
+    },
+    "gate4_variance_floors": {
+      "passed": true,
+      "cell_stats": {
+        "1": {
+          "cell_id": 1,
+          "s_target": "Low",
+          "u_target": "Low",
+          "s_mean": 0.12805597894043352,
+          "s_var": 0.01923720821706925,
+          "u_mean": 0.28620743541500787,
+          "u_var": 0.005068032391605753
+        },
+        "2": {
+          "cell_id": 2,
+          "s_target": "Low",
+          "u_target": "Med",
+          "s_mean": 0.12805597894043352,
+          "s_var": 0.01923720821706925,
+          "u_mean": 0.6066252940080179,
+          "u_var": 0.0029212488146565536
+        },
+        "3": {
+          "cell_id": 3,
+          "s_target": "Low",
+          "u_target": "High",
+          "s_mean": 0.12805597894043352,
+          "s_var": 0.01923720821706925,
+          "u_mean": 0.8954242541290983,
+          "u_var": 0.0036628916654874344
+        },
+        "4": {
+          "cell_id": 4,
+          "s_target": "Med",
+          "u_target": "Low",
+          "s_mean": 0.31148421151355626,
+          "s_var": 0.04365120126384538,
+          "u_mean": 0.27187304507229015,
+          "u_var": 0.0038305068537642494
+        },
+        "5": {
+          "cell_id": 5,
+          "s_target": "Med",
+          "u_target": "Med",
+          "s_mean": 0.31148421151355626,
+          "s_var": 0.04365120126384538,
+          "u_mean": 0.610153727256119,
+          "u_var": 0.002929659097931905
+        },
+        "6": {
+          "cell_id": 6,
+          "s_target": "Med",
+          "u_target": "High",
+          "s_mean": 0.31148421151355626,
+          "s_var": 0.04365120126384538,
+          "u_mean": 0.8754129363075017,
+          "u_var": 0.005121808769639709
+        },
+        "7": {
+          "cell_id": 7,
+          "s_target": "High",
+          "u_target": "Low",
+          "s_mean": 0.3491033288481748,
+          "s_var": 0.05645541144306118,
+          "u_mean": 0.27518942297531634,
+          "u_var": 0.005623175867147852
+        },
+        "8": {
+          "cell_id": 8,
+          "s_target": "High",
+          "u_target": "Med",
+          "s_mean": 0.3491033288481748,
+          "s_var": 0.05645541144306118,
+          "u_mean": 0.6343469450624614,
+          "u_var": 0.004399967465080221
+        },
+        "9": {
+          "cell_id": 9,
+          "s_target": "High",
+          "u_target": "High",
+          "s_mean": 0.3491033288481748,
+          "s_var": 0.05645541144306118,
+          "u_mean": 0.8778452004147788,
+          "u_var": 0.003342839104925726
+        }
+      },
+      "failing_u_cells": [],
+      "failing_s_cells": []
+    },
+    "all_gates_passed": false
+  },
+  "track_a_glm": {
+    "model_a1_u_to_s": {
+      "eta_sq": 7.857750585833185e-33,
+      "f_stat": 1.0175787008653973e-30,
+      "p_val": 1.0,
+      "supported": true
+    },
+    "model_a2_s_to_u": {
+      "eta_sq": 0.005769038784796978,
+      "f_stat": 0.7514255256324687,
+      "p_val": 0.47271914343739563,
+      "supported": true
+    }
+  },
+  "track_b_tost": {
+    "r_partial": -0.03928807626867307,
+    "r_squared_partial": 0.001543552936893072,
+    "z_hat": -0.03930830941904765,
+    "se_z": 0.06237828615518053,
+    "n_eff": 257,
+    "ci_90": [
+      -0.14096642655299013,
+      0.06321045132906934
+    ],
+    "p_tost": 0.004397907405817358,
+    "equivalence_confirmed": true,
+    "holm_bonferroni": [
+      {
+        "test": "Gate 3: Uncertainty Manipulation Check",
+        "raw_p": 5.912319387061584e-162,
+        "nominal_alpha": 0.001,
+        "rank": 1,
+        "hb_critical_alpha": 0.0003333333333333333,
+        "adjusted_p": 1.773695816118475e-161,
+        "passed": true
+      },
+      {
+        "test": "Gate 2: Surprise Manipulation Check (T=12)",
+        "raw_p": 1.6641678107064143e-27,
+        "nominal_alpha": 0.001,
+        "rank": 2,
+        "hb_critical_alpha": 0.0005,
+        "adjusted_p": 3.3283356214128286e-27,
+        "passed": true
+      },
+      {
+        "test": "Track B: TOST Equivalence",
+        "raw_p": 0.004397907405817358,
+        "nominal_alpha": 0.05,
+        "rank": 3,
+        "hb_critical_alpha": 0.05,
+        "adjusted_p": 0.004397907405817358,
+        "passed": true
+      }
+    ]
+  },
+  "pathology": {
+    "computational_breach_count": 1,
+    "ego_leakage_count": 12,
+    "interrogation_trap_count": 0,
+    "dark_room_trap_count": 0,
+    "epistemic_starvation_count": 0,
+    "mean_latency_ms": 9.560414888880958,
+    "p95_latency_ms": 18.95178999984637,
+    "max_latency_ms": 26.442699999279284
+  },
+  "verdict": {
+    "final_verdict": "INCONCLUSIVE (Blocked by Prerequisite Quality Gates)",
+    "scientific_interpretation": "Mandatory experimental manipulation checks or variance floors failed. Downstream equivalence testing cannot be interpreted as conclusive evidence."
+  }
+}

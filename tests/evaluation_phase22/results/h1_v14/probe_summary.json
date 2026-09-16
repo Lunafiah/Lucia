@@ -1,0 +1,5132 @@
+[
+  {
+    "probe_id": "p22_v14_c01_01",
+    "cell_id": 1,
+    "s_target": "Low",
+    "u_target": "Low",
+    "exposure_ticks": 1,
+    "domain": "telemetry",
+    "stimulus_text": "system system telemetry telemetry check check status status code 1.",
+    "s_observed_mean": 0.013697895333092559,
+    "u_sem_observed_mean": 0.22661809503371794,
+    "s_observed_std": 1.939479807224432e-18,
+    "raw_s_values": [
+      0.013697895333092557,
+      0.013697895333092557,
+      0.013697895333092557,
+      0.013697895333092557,
+      0.013697895333092557
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c01_02",
+    "cell_id": 1,
+    "s_target": "Low",
+    "u_target": "Low",
+    "exposure_ticks": 1,
+    "domain": "project_status",
+    "stimulus_text": "node node core core reading reading steady steady channel 1.",
+    "s_observed_mean": 0.013733976746493338,
+    "u_sem_observed_mean": 0.22448471264615327,
+    "s_observed_std": 1.939479807224432e-18,
+    "raw_s_values": [
+      0.013733976746493336,
+      0.013733976746493336,
+      0.013733976746493336,
+      0.013733976746493336,
+      0.013733976746493336
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c01_03",
+    "cell_id": 1,
+    "s_target": "Low",
+    "u_target": "Low",
+    "exposure_ticks": 1,
+    "domain": "relational",
+    "stimulus_text": "memory memory buffer buffer table table idle idle block 1.",
+    "s_observed_mean": 0.03826389620202274,
+    "u_sem_observed_mean": 0.296270659985098,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.03826389620202274,
+      0.03826389620202274,
+      0.03826389620202274,
+      0.03826389620202274,
+      0.03826389620202274
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c01_04",
+    "cell_id": 1,
+    "s_target": "Low",
+    "u_target": "Low",
+    "exposure_ticks": 1,
+    "domain": "factual",
+    "stimulus_text": "socket socket link link channel channel ready ready port 1.",
+    "s_observed_mean": 0.05718807786971432,
+    "u_sem_observed_mean": 0.2760165646450401,
+    "s_observed_std": 7.757919228897728e-18,
+    "raw_s_values": [
+      0.05718807786971431,
+      0.05718807786971431,
+      0.05718807786971431,
+      0.05718807786971431,
+      0.05718807786971431
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c01_05",
+    "cell_id": 1,
+    "s_target": "Low",
+    "u_target": "Low",
+    "exposure_ticks": 1,
+    "domain": "telemetry",
+    "stimulus_text": "data data frame frame packet packet normal normal stream 1.",
+    "s_observed_mean": 0.01374035682068008,
+    "u_sem_observed_mean": 0.2992851682877423,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.01374035682068008,
+      0.01374035682068008,
+      0.01374035682068008,
+      0.01374035682068008,
+      0.01374035682068008
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c01_06",
+    "cell_id": 1,
+    "s_target": "Low",
+    "u_target": "Low",
+    "exposure_ticks": 1,
+    "domain": "project_status",
+    "stimulus_text": "cache cache index index record record ok ok sector 1.",
+    "s_observed_mean": 0.051450163297430226,
+    "u_sem_observed_mean": 0.25948663476115513,
+    "s_observed_std": 7.757919228897728e-18,
+    "raw_s_values": [
+      0.05145016329743023,
+      0.05145016329743023,
+      0.05145016329743023,
+      0.05145016329743023,
+      0.05145016329743023
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c01_07",
+    "cell_id": 1,
+    "s_target": "Low",
+    "u_target": "Low",
+    "exposure_ticks": 1,
+    "domain": "relational",
+    "stimulus_text": "clock clock time time tick tick steady steady cycle 1.",
+    "s_observed_mean": 0.013778461410736634,
+    "u_sem_observed_mean": 0.14374163481505464,
+    "s_observed_std": 1.939479807224432e-18,
+    "raw_s_values": [
+      0.013778461410736633,
+      0.013778461410736633,
+      0.013778461410736633,
+      0.013778461410736633,
+      0.013778461410736633
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c01_08",
+    "cell_id": 1,
+    "s_target": "Low",
+    "u_target": "Low",
+    "exposure_ticks": 1,
+    "domain": "factual",
+    "stimulus_text": "port port bus bus wire wire idle idle trace 1.",
+    "s_observed_mean": 0.01387062921388967,
+    "u_sem_observed_mean": 0.3984612384637818,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.01387062921388967,
+      0.01387062921388967,
+      0.01387062921388967,
+      0.01387062921388967,
+      0.01387062921388967
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c01_09",
+    "cell_id": 1,
+    "s_target": "Low",
+    "u_target": "Low",
+    "exposure_ticks": 1,
+    "domain": "telemetry",
+    "stimulus_text": "signal signal wave wave level level zero zero line 1.",
+    "s_observed_mean": 0.013787555974738467,
+    "u_sem_observed_mean": 0.2417547143610493,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.013787555974738467,
+      0.013787555974738467,
+      0.013787555974738467,
+      0.013787555974738467,
+      0.013787555974738467
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c01_10",
+    "cell_id": 1,
+    "s_target": "Low",
+    "u_target": "Low",
+    "exposure_ticks": 1,
+    "domain": "project_status",
+    "stimulus_text": "stream stream flow flow rate rate balance balance pipe 1.",
+    "s_observed_mean": 0.013754266880610938,
+    "u_sem_observed_mean": 0.36328643920892256,
+    "s_observed_std": 1.939479807224432e-18,
+    "raw_s_values": [
+      0.01375426688061094,
+      0.01375426688061094,
+      0.01375426688061094,
+      0.01375426688061094,
+      0.01375426688061094
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c01_11",
+    "cell_id": 1,
+    "s_target": "Low",
+    "u_target": "Low",
+    "exposure_ticks": 4,
+    "domain": "relational",
+    "stimulus_text": "state state register register flag flag clear clear slot 1.",
+    "s_observed_mean": 0.1991391432577828,
+    "u_sem_observed_mean": 0.27336309884891546,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.1991391432577828,
+      0.1991391432577828,
+      0.1991391432577828,
+      0.1991391432577828,
+      0.1991391432577828
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c01_12",
+    "cell_id": 1,
+    "s_target": "Low",
+    "u_target": "Low",
+    "exposure_ticks": 4,
+    "domain": "factual",
+    "stimulus_text": "task task queue queue thread thread wait wait job 1.",
+    "s_observed_mean": 0.046261352408273754,
+    "u_sem_observed_mean": 0.17898449478672646,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.046261352408273754,
+      0.046261352408273754,
+      0.046261352408273754,
+      0.046261352408273754,
+      0.046261352408273754
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c01_13",
+    "cell_id": 1,
+    "s_target": "Low",
+    "u_target": "Low",
+    "exposure_ticks": 4,
+    "domain": "telemetry",
+    "stimulus_text": "device device driver driver unit unit active active dev 1.",
+    "s_observed_mean": 0.20385034023524556,
+    "u_sem_observed_mean": 0.1537899968649697,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.20385034023524556,
+      0.20385034023524556,
+      0.20385034023524556,
+      0.20385034023524556,
+      0.20385034023524556
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c01_14",
+    "cell_id": 1,
+    "s_target": "Low",
+    "u_target": "Low",
+    "exposure_ticks": 4,
+    "domain": "project_status",
+    "stimulus_text": "router router route route hop hop valid valid path 1.",
+    "s_observed_mean": 0.04622858497702403,
+    "u_sem_observed_mean": 0.3577814870719654,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.04622858497702403,
+      0.04622858497702403,
+      0.04622858497702403,
+      0.04622858497702403,
+      0.04622858497702403
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c01_15",
+    "cell_id": 1,
+    "s_target": "Low",
+    "u_target": "Low",
+    "exposure_ticks": 4,
+    "domain": "relational",
+    "stimulus_text": "storage storage partition partition sector sector fine fine part 1.",
+    "s_observed_mean": 0.13854908622117137,
+    "u_sem_observed_mean": 0.41558063651928057,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.13854908622117137,
+      0.13854908622117137,
+      0.13854908622117137,
+      0.13854908622117137,
+      0.13854908622117137
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c01_16",
+    "cell_id": 1,
+    "s_target": "Low",
+    "u_target": "Low",
+    "exposure_ticks": 4,
+    "domain": "factual",
+    "stimulus_text": "sensor sensor sample sample value value steady steady sensor 1.",
+    "s_observed_mean": 0.17064519065700748,
+    "u_sem_observed_mean": 0.2683967086633849,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.17064519065700748,
+      0.17064519065700748,
+      0.17064519065700748,
+      0.17064519065700748,
+      0.17064519065700748
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c01_17",
+    "cell_id": 1,
+    "s_target": "Low",
+    "u_target": "Low",
+    "exposure_ticks": 4,
+    "domain": "telemetry",
+    "stimulus_text": "bridge bridge relay relay link link nominal nominal bridge 1.",
+    "s_observed_mean": 0.008829326737237039,
+    "u_sem_observed_mean": 0.2910101612254641,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.008829326737237039,
+      0.008829326737237039,
+      0.008829326737237039,
+      0.008829326737237039,
+      0.008829326737237039
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c01_18",
+    "cell_id": 1,
+    "s_target": "Low",
+    "u_target": "Low",
+    "exposure_ticks": 4,
+    "domain": "project_status",
+    "stimulus_text": "kernel kernel module module process process idle idle pid 1.",
+    "s_observed_mean": 0.04604704782326643,
+    "u_sem_observed_mean": 0.348310036831973,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.04604704782326643,
+      0.04604704782326643,
+      0.04604704782326643,
+      0.04604704782326643,
+      0.04604704782326643
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c01_19",
+    "cell_id": 1,
+    "s_target": "Low",
+    "u_target": "Low",
+    "exposure_ticks": 4,
+    "domain": "relational",
+    "stimulus_text": "packet packet count count header header verified verified seq 1.",
+    "s_observed_mean": 0.04597154039160419,
+    "u_sem_observed_mean": 0.24249527357354297,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.04597154039160419,
+      0.04597154039160419,
+      0.04597154039160419,
+      0.04597154039160419,
+      0.04597154039160419
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c01_20",
+    "cell_id": 1,
+    "s_target": "Low",
+    "u_target": "Low",
+    "exposure_ticks": 4,
+    "domain": "factual",
+    "stimulus_text": "voltage voltage ground ground probe probe normal normal bus 1.",
+    "s_observed_mean": 0.046007237834315935,
+    "u_sem_observed_mean": 0.3837538991169356,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.046007237834315935,
+      0.046007237834315935,
+      0.046007237834315935,
+      0.046007237834315935,
+      0.046007237834315935
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c01_21",
+    "cell_id": 1,
+    "s_target": "Low",
+    "u_target": "Low",
+    "exposure_ticks": 12,
+    "domain": "telemetry",
+    "stimulus_text": "matrix matrix vector vector array array clean clean reg 1.",
+    "s_observed_mean": 0.4241449211148069,
+    "u_sem_observed_mean": 0.32825054141473275,
+    "s_observed_std": 6.206335383118183e-17,
+    "raw_s_values": [
+      0.42414492111480695,
+      0.42414492111480695,
+      0.42414492111480695,
+      0.42414492111480695,
+      0.42414492111480695
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c01_22",
+    "cell_id": 1,
+    "s_target": "Low",
+    "u_target": "Low",
+    "exposure_ticks": 12,
+    "domain": "project_status",
+    "stimulus_text": "switch switch gate gate circuit circuit stable stable gate 1.",
+    "s_observed_mean": 0.32745549916215616,
+    "u_sem_observed_mean": 0.3758740716428912,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.32745549916215616,
+      0.32745549916215616,
+      0.32745549916215616,
+      0.32745549916215616,
+      0.32745549916215616
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c01_23",
+    "cell_id": 1,
+    "s_target": "Low",
+    "u_target": "Low",
+    "exposure_ticks": 12,
+    "domain": "relational",
+    "stimulus_text": "counter counter timer timer pulse pulse fixed fixed cnt 1.",
+    "s_observed_mean": 0.09373966211774457,
+    "u_sem_observed_mean": 0.22438976143025555,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.09373966211774457,
+      0.09373966211774457,
+      0.09373966211774457,
+      0.09373966211774457,
+      0.09373966211774457
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c01_24",
+    "cell_id": 1,
+    "s_target": "Low",
+    "u_target": "Low",
+    "exposure_ticks": 12,
+    "domain": "factual",
+    "stimulus_text": "daemon daemon service service worker worker calm calm srv 1.",
+    "s_observed_mean": 0.3789225557263951,
+    "u_sem_observed_mean": 0.3019045265147071,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.3789225557263951,
+      0.3789225557263951,
+      0.3789225557263951,
+      0.3789225557263951,
+      0.3789225557263951
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c01_25",
+    "cell_id": 1,
+    "s_target": "Low",
+    "u_target": "Low",
+    "exposure_ticks": 12,
+    "domain": "telemetry",
+    "stimulus_text": "checksum checksum parity parity block block matched matched blk 1.",
+    "s_observed_mean": 0.3970089239040455,
+    "u_sem_observed_mean": 0.318124903055875,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.3970089239040455,
+      0.3970089239040455,
+      0.3970089239040455,
+      0.3970089239040455,
+      0.3970089239040455
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c01_26",
+    "cell_id": 1,
+    "s_target": "Low",
+    "u_target": "Low",
+    "exposure_ticks": 12,
+    "domain": "project_status",
+    "stimulus_text": "stack stack frame frame address address quiet quiet ptr 1.",
+    "s_observed_mean": 0.09373966211774457,
+    "u_sem_observed_mean": 0.35748230969361156,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.09373966211774457,
+      0.09373966211774457,
+      0.09373966211774457,
+      0.09373966211774457,
+      0.09373966211774457
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c01_27",
+    "cell_id": 1,
+    "s_target": "Low",
+    "u_target": "Low",
+    "exposure_ticks": 12,
+    "domain": "relational",
+    "stimulus_text": "fiber fiber optical optical signal signal lock lock line 1.",
+    "s_observed_mean": 0.09369128174588193,
+    "u_sem_observed_mean": 0.3111433626714764,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.09369128174588193,
+      0.09369128174588193,
+      0.09369128174588193,
+      0.09369128174588193,
+      0.09369128174588193
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c01_28",
+    "cell_id": 1,
+    "s_target": "Low",
+    "u_target": "Low",
+    "exposure_ticks": 12,
+    "domain": "factual",
+    "stimulus_text": "bus bus controller controller interface interface clear clear bus 1.",
+    "s_observed_mean": 0.380447437600719,
+    "u_sem_observed_mean": 0.29612399765091196,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.380447437600719,
+      0.380447437600719,
+      0.380447437600719,
+      0.380447437600719,
+      0.380447437600719
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c01_29",
+    "cell_id": 1,
+    "s_target": "Low",
+    "u_target": "Low",
+    "exposure_ticks": 12,
+    "domain": "telemetry",
+    "stimulus_text": "registry registry key key mapping mapping stable stable reg 1.",
+    "s_observed_mean": 0.3643491501087224,
+    "u_sem_observed_mean": 0.2050083889284612,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.3643491501087224,
+      0.3643491501087224,
+      0.3643491501087224,
+      0.3643491501087224,
+      0.3643491501087224
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c01_30",
+    "cell_id": 1,
+    "s_target": "Low",
+    "u_target": "Low",
+    "exposure_ticks": 12,
+    "domain": "project_status",
+    "stimulus_text": "pipeline pipeline stage stage buffer buffer neutral neutral pipe 1.",
+    "s_observed_mean": 0.09338614432245254,
+    "u_sem_observed_mean": 0.22504954373644165,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.09338614432245254,
+      0.09338614432245254,
+      0.09338614432245254,
+      0.09338614432245254,
+      0.09338614432245254
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c02_01",
+    "cell_id": 2,
+    "s_target": "Low",
+    "u_target": "Med",
+    "exposure_ticks": 1,
+    "domain": "telemetry",
+    "stimulus_text": "system system telemetry telemetry check check status status code 2.",
+    "s_observed_mean": 0.013697895333092559,
+    "u_sem_observed_mean": 0.577806302758323,
+    "s_observed_std": 1.939479807224432e-18,
+    "raw_s_values": [
+      0.013697895333092557,
+      0.013697895333092557,
+      0.013697895333092557,
+      0.013697895333092557,
+      0.013697895333092557
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c02_02",
+    "cell_id": 2,
+    "s_target": "Low",
+    "u_target": "Med",
+    "exposure_ticks": 1,
+    "domain": "project_status",
+    "stimulus_text": "node node core core reading reading steady steady channel 2.",
+    "s_observed_mean": 0.013733976746493338,
+    "u_sem_observed_mean": 0.6231362754926204,
+    "s_observed_std": 1.939479807224432e-18,
+    "raw_s_values": [
+      0.013733976746493336,
+      0.013733976746493336,
+      0.013733976746493336,
+      0.013733976746493336,
+      0.013733976746493336
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c02_03",
+    "cell_id": 2,
+    "s_target": "Low",
+    "u_target": "Med",
+    "exposure_ticks": 1,
+    "domain": "relational",
+    "stimulus_text": "memory memory buffer buffer table table idle idle block 2.",
+    "s_observed_mean": 0.03826389620202274,
+    "u_sem_observed_mean": 0.6091931907398838,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.03826389620202274,
+      0.03826389620202274,
+      0.03826389620202274,
+      0.03826389620202274,
+      0.03826389620202274
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c02_04",
+    "cell_id": 2,
+    "s_target": "Low",
+    "u_target": "Med",
+    "exposure_ticks": 1,
+    "domain": "factual",
+    "stimulus_text": "socket socket link link channel channel ready ready port 2.",
+    "s_observed_mean": 0.05718807786971432,
+    "u_sem_observed_mean": 0.5192839467280299,
+    "s_observed_std": 7.757919228897728e-18,
+    "raw_s_values": [
+      0.05718807786971431,
+      0.05718807786971431,
+      0.05718807786971431,
+      0.05718807786971431,
+      0.05718807786971431
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c02_05",
+    "cell_id": 2,
+    "s_target": "Low",
+    "u_target": "Med",
+    "exposure_ticks": 1,
+    "domain": "telemetry",
+    "stimulus_text": "data data frame frame packet packet normal normal stream 2.",
+    "s_observed_mean": 0.01374035682068008,
+    "u_sem_observed_mean": 0.5659003461274766,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.01374035682068008,
+      0.01374035682068008,
+      0.01374035682068008,
+      0.01374035682068008,
+      0.01374035682068008
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c02_06",
+    "cell_id": 2,
+    "s_target": "Low",
+    "u_target": "Med",
+    "exposure_ticks": 1,
+    "domain": "project_status",
+    "stimulus_text": "cache cache index index record record ok ok sector 2.",
+    "s_observed_mean": 0.051450163297430226,
+    "u_sem_observed_mean": 0.7086461578496243,
+    "s_observed_std": 7.757919228897728e-18,
+    "raw_s_values": [
+      0.05145016329743023,
+      0.05145016329743023,
+      0.05145016329743023,
+      0.05145016329743023,
+      0.05145016329743023
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c02_07",
+    "cell_id": 2,
+    "s_target": "Low",
+    "u_target": "Med",
+    "exposure_ticks": 1,
+    "domain": "relational",
+    "stimulus_text": "clock clock time time tick tick steady steady cycle 2.",
+    "s_observed_mean": 0.013778461410736634,
+    "u_sem_observed_mean": 0.6939144773259778,
+    "s_observed_std": 1.939479807224432e-18,
+    "raw_s_values": [
+      0.013778461410736633,
+      0.013778461410736633,
+      0.013778461410736633,
+      0.013778461410736633,
+      0.013778461410736633
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c02_08",
+    "cell_id": 2,
+    "s_target": "Low",
+    "u_target": "Med",
+    "exposure_ticks": 1,
+    "domain": "factual",
+    "stimulus_text": "port port bus bus wire wire idle idle trace 2.",
+    "s_observed_mean": 0.01387062921388967,
+    "u_sem_observed_mean": 0.6750648795302031,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.01387062921388967,
+      0.01387062921388967,
+      0.01387062921388967,
+      0.01387062921388967,
+      0.01387062921388967
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c02_09",
+    "cell_id": 2,
+    "s_target": "Low",
+    "u_target": "Med",
+    "exposure_ticks": 1,
+    "domain": "telemetry",
+    "stimulus_text": "signal signal wave wave level level zero zero line 2.",
+    "s_observed_mean": 0.013787555974738467,
+    "u_sem_observed_mean": 0.620840206666818,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.013787555974738467,
+      0.013787555974738467,
+      0.013787555974738467,
+      0.013787555974738467,
+      0.013787555974738467
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c02_10",
+    "cell_id": 2,
+    "s_target": "Low",
+    "u_target": "Med",
+    "exposure_ticks": 1,
+    "domain": "project_status",
+    "stimulus_text": "stream stream flow flow rate rate balance balance pipe 2.",
+    "s_observed_mean": 0.013754266880610938,
+    "u_sem_observed_mean": 0.5924122240287603,
+    "s_observed_std": 1.939479807224432e-18,
+    "raw_s_values": [
+      0.01375426688061094,
+      0.01375426688061094,
+      0.01375426688061094,
+      0.01375426688061094,
+      0.01375426688061094
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c02_11",
+    "cell_id": 2,
+    "s_target": "Low",
+    "u_target": "Med",
+    "exposure_ticks": 4,
+    "domain": "relational",
+    "stimulus_text": "state state register register flag flag clear clear slot 2.",
+    "s_observed_mean": 0.1991391432577828,
+    "u_sem_observed_mean": 0.6553429871743636,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.1991391432577828,
+      0.1991391432577828,
+      0.1991391432577828,
+      0.1991391432577828,
+      0.1991391432577828
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c02_12",
+    "cell_id": 2,
+    "s_target": "Low",
+    "u_target": "Med",
+    "exposure_ticks": 4,
+    "domain": "factual",
+    "stimulus_text": "task task queue queue thread thread wait wait job 2.",
+    "s_observed_mean": 0.046261352408273754,
+    "u_sem_observed_mean": 0.5802731323516108,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.046261352408273754,
+      0.046261352408273754,
+      0.046261352408273754,
+      0.046261352408273754,
+      0.046261352408273754
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c02_13",
+    "cell_id": 2,
+    "s_target": "Low",
+    "u_target": "Med",
+    "exposure_ticks": 4,
+    "domain": "telemetry",
+    "stimulus_text": "device device driver driver unit unit active active dev 2.",
+    "s_observed_mean": 0.20385034023524556,
+    "u_sem_observed_mean": 0.6176321431155838,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.20385034023524556,
+      0.20385034023524556,
+      0.20385034023524556,
+      0.20385034023524556,
+      0.20385034023524556
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c02_14",
+    "cell_id": 2,
+    "s_target": "Low",
+    "u_target": "Med",
+    "exposure_ticks": 4,
+    "domain": "project_status",
+    "stimulus_text": "router router route route hop hop valid valid path 2.",
+    "s_observed_mean": 0.04622858497702403,
+    "u_sem_observed_mean": 0.5870472307660567,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.04622858497702403,
+      0.04622858497702403,
+      0.04622858497702403,
+      0.04622858497702403,
+      0.04622858497702403
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c02_15",
+    "cell_id": 2,
+    "s_target": "Low",
+    "u_target": "Med",
+    "exposure_ticks": 4,
+    "domain": "relational",
+    "stimulus_text": "storage storage partition partition sector sector fine fine part 2.",
+    "s_observed_mean": 0.13854908622117137,
+    "u_sem_observed_mean": 0.6387356646319007,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.13854908622117137,
+      0.13854908622117137,
+      0.13854908622117137,
+      0.13854908622117137,
+      0.13854908622117137
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c02_16",
+    "cell_id": 2,
+    "s_target": "Low",
+    "u_target": "Med",
+    "exposure_ticks": 4,
+    "domain": "factual",
+    "stimulus_text": "sensor sensor sample sample value value steady steady sensor 2.",
+    "s_observed_mean": 0.17064519065700748,
+    "u_sem_observed_mean": 0.5855718313554065,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.17064519065700748,
+      0.17064519065700748,
+      0.17064519065700748,
+      0.17064519065700748,
+      0.17064519065700748
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c02_17",
+    "cell_id": 2,
+    "s_target": "Low",
+    "u_target": "Med",
+    "exposure_ticks": 4,
+    "domain": "telemetry",
+    "stimulus_text": "bridge bridge relay relay link link nominal nominal bridge 2.",
+    "s_observed_mean": 0.008829326737237039,
+    "u_sem_observed_mean": 0.6553087214688225,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.008829326737237039,
+      0.008829326737237039,
+      0.008829326737237039,
+      0.008829326737237039,
+      0.008829326737237039
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c02_18",
+    "cell_id": 2,
+    "s_target": "Low",
+    "u_target": "Med",
+    "exposure_ticks": 4,
+    "domain": "project_status",
+    "stimulus_text": "kernel kernel module module process process idle idle pid 2.",
+    "s_observed_mean": 0.04604704782326643,
+    "u_sem_observed_mean": 0.5537250707665673,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.04604704782326643,
+      0.04604704782326643,
+      0.04604704782326643,
+      0.04604704782326643,
+      0.04604704782326643
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c02_19",
+    "cell_id": 2,
+    "s_target": "Low",
+    "u_target": "Med",
+    "exposure_ticks": 4,
+    "domain": "relational",
+    "stimulus_text": "packet packet count count header header verified verified seq 2.",
+    "s_observed_mean": 0.04597154039160419,
+    "u_sem_observed_mean": 0.59928063133148,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.04597154039160419,
+      0.04597154039160419,
+      0.04597154039160419,
+      0.04597154039160419,
+      0.04597154039160419
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c02_20",
+    "cell_id": 2,
+    "s_target": "Low",
+    "u_target": "Med",
+    "exposure_ticks": 4,
+    "domain": "factual",
+    "stimulus_text": "voltage voltage ground ground probe probe normal normal bus 2.",
+    "s_observed_mean": 0.046007237834315935,
+    "u_sem_observed_mean": 0.5743821703539653,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.046007237834315935,
+      0.046007237834315935,
+      0.046007237834315935,
+      0.046007237834315935,
+      0.046007237834315935
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c02_21",
+    "cell_id": 2,
+    "s_target": "Low",
+    "u_target": "Med",
+    "exposure_ticks": 12,
+    "domain": "telemetry",
+    "stimulus_text": "matrix matrix vector vector array array clean clean reg 2.",
+    "s_observed_mean": 0.4241449211148069,
+    "u_sem_observed_mean": 0.49717604901722795,
+    "s_observed_std": 6.206335383118183e-17,
+    "raw_s_values": [
+      0.42414492111480695,
+      0.42414492111480695,
+      0.42414492111480695,
+      0.42414492111480695,
+      0.42414492111480695
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c02_22",
+    "cell_id": 2,
+    "s_target": "Low",
+    "u_target": "Med",
+    "exposure_ticks": 12,
+    "domain": "project_status",
+    "stimulus_text": "switch switch gate gate circuit circuit stable stable gate 2.",
+    "s_observed_mean": 0.32745549916215616,
+    "u_sem_observed_mean": 0.4846354650690559,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.32745549916215616,
+      0.32745549916215616,
+      0.32745549916215616,
+      0.32745549916215616,
+      0.32745549916215616
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c02_23",
+    "cell_id": 2,
+    "s_target": "Low",
+    "u_target": "Med",
+    "exposure_ticks": 12,
+    "domain": "relational",
+    "stimulus_text": "counter counter timer timer pulse pulse fixed fixed cnt 2.",
+    "s_observed_mean": 0.09373966211774457,
+    "u_sem_observed_mean": 0.6369644474202443,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.09373966211774457,
+      0.09373966211774457,
+      0.09373966211774457,
+      0.09373966211774457,
+      0.09373966211774457
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c02_24",
+    "cell_id": 2,
+    "s_target": "Low",
+    "u_target": "Med",
+    "exposure_ticks": 12,
+    "domain": "factual",
+    "stimulus_text": "daemon daemon service service worker worker calm calm srv 2.",
+    "s_observed_mean": 0.3789225557263951,
+    "u_sem_observed_mean": 0.6108773553671085,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.3789225557263951,
+      0.3789225557263951,
+      0.3789225557263951,
+      0.3789225557263951,
+      0.3789225557263951
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c02_25",
+    "cell_id": 2,
+    "s_target": "Low",
+    "u_target": "Med",
+    "exposure_ticks": 12,
+    "domain": "telemetry",
+    "stimulus_text": "checksum checksum parity parity block block matched matched blk 2.",
+    "s_observed_mean": 0.3970089239040455,
+    "u_sem_observed_mean": 0.6352162212268668,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.3970089239040455,
+      0.3970089239040455,
+      0.3970089239040455,
+      0.3970089239040455,
+      0.3970089239040455
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c02_26",
+    "cell_id": 2,
+    "s_target": "Low",
+    "u_target": "Med",
+    "exposure_ticks": 12,
+    "domain": "project_status",
+    "stimulus_text": "stack stack frame frame address address quiet quiet ptr 2.",
+    "s_observed_mean": 0.09373966211774457,
+    "u_sem_observed_mean": 0.6212382760684829,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.09373966211774457,
+      0.09373966211774457,
+      0.09373966211774457,
+      0.09373966211774457,
+      0.09373966211774457
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c02_27",
+    "cell_id": 2,
+    "s_target": "Low",
+    "u_target": "Med",
+    "exposure_ticks": 12,
+    "domain": "relational",
+    "stimulus_text": "fiber fiber optical optical signal signal lock lock line 2.",
+    "s_observed_mean": 0.09369128174588193,
+    "u_sem_observed_mean": 0.5746234663418683,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.09369128174588193,
+      0.09369128174588193,
+      0.09369128174588193,
+      0.09369128174588193,
+      0.09369128174588193
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c02_28",
+    "cell_id": 2,
+    "s_target": "Low",
+    "u_target": "Med",
+    "exposure_ticks": 12,
+    "domain": "factual",
+    "stimulus_text": "bus bus controller controller interface interface clear clear bus 2.",
+    "s_observed_mean": 0.380447437600719,
+    "u_sem_observed_mean": 0.6961885803205297,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.380447437600719,
+      0.380447437600719,
+      0.380447437600719,
+      0.380447437600719,
+      0.380447437600719
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c02_29",
+    "cell_id": 2,
+    "s_target": "Low",
+    "u_target": "Med",
+    "exposure_ticks": 12,
+    "domain": "telemetry",
+    "stimulus_text": "registry registry key key mapping mapping stable stable reg 2.",
+    "s_observed_mean": 0.3643491501087224,
+    "u_sem_observed_mean": 0.6358495755076295,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.3643491501087224,
+      0.3643491501087224,
+      0.3643491501087224,
+      0.3643491501087224,
+      0.3643491501087224
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c02_30",
+    "cell_id": 2,
+    "s_target": "Low",
+    "u_target": "Med",
+    "exposure_ticks": 12,
+    "domain": "project_status",
+    "stimulus_text": "pipeline pipeline stage stage buffer buffer neutral neutral pipe 2.",
+    "s_observed_mean": 0.09338614432245254,
+    "u_sem_observed_mean": 0.5724917933380504,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.09338614432245254,
+      0.09338614432245254,
+      0.09338614432245254,
+      0.09338614432245254,
+      0.09338614432245254
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c03_01",
+    "cell_id": 3,
+    "s_target": "Low",
+    "u_target": "High",
+    "exposure_ticks": 1,
+    "domain": "telemetry",
+    "stimulus_text": "system system telemetry telemetry check check status status code 3.",
+    "s_observed_mean": 0.013697895333092559,
+    "u_sem_observed_mean": 0.84744583013088,
+    "s_observed_std": 1.939479807224432e-18,
+    "raw_s_values": [
+      0.013697895333092557,
+      0.013697895333092557,
+      0.013697895333092557,
+      0.013697895333092557,
+      0.013697895333092557
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c03_02",
+    "cell_id": 3,
+    "s_target": "Low",
+    "u_target": "High",
+    "exposure_ticks": 1,
+    "domain": "project_status",
+    "stimulus_text": "node node core core reading reading steady steady channel 3.",
+    "s_observed_mean": 0.013733976746493338,
+    "u_sem_observed_mean": 0.8930826199476145,
+    "s_observed_std": 1.939479807224432e-18,
+    "raw_s_values": [
+      0.013733976746493336,
+      0.013733976746493336,
+      0.013733976746493336,
+      0.013733976746493336,
+      0.013733976746493336
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c03_03",
+    "cell_id": 3,
+    "s_target": "Low",
+    "u_target": "High",
+    "exposure_ticks": 1,
+    "domain": "relational",
+    "stimulus_text": "memory memory buffer buffer table table idle idle block 3.",
+    "s_observed_mean": 0.03826389620202274,
+    "u_sem_observed_mean": 0.94420935679276,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.03826389620202274,
+      0.03826389620202274,
+      0.03826389620202274,
+      0.03826389620202274,
+      0.03826389620202274
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c03_04",
+    "cell_id": 3,
+    "s_target": "Low",
+    "u_target": "High",
+    "exposure_ticks": 1,
+    "domain": "factual",
+    "stimulus_text": "socket socket link link channel channel ready ready port 3.",
+    "s_observed_mean": 0.05718807786971432,
+    "u_sem_observed_mean": 0.8298978738817526,
+    "s_observed_std": 7.757919228897728e-18,
+    "raw_s_values": [
+      0.05718807786971431,
+      0.05718807786971431,
+      0.05718807786971431,
+      0.05718807786971431,
+      0.05718807786971431
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c03_05",
+    "cell_id": 3,
+    "s_target": "Low",
+    "u_target": "High",
+    "exposure_ticks": 1,
+    "domain": "telemetry",
+    "stimulus_text": "data data frame frame packet packet normal normal stream 3.",
+    "s_observed_mean": 0.01374035682068008,
+    "u_sem_observed_mean": 0.9380207249916135,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.01374035682068008,
+      0.01374035682068008,
+      0.01374035682068008,
+      0.01374035682068008,
+      0.01374035682068008
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c03_06",
+    "cell_id": 3,
+    "s_target": "Low",
+    "u_target": "High",
+    "exposure_ticks": 1,
+    "domain": "project_status",
+    "stimulus_text": "cache cache index index record record ok ok sector 3.",
+    "s_observed_mean": 0.051450163297430226,
+    "u_sem_observed_mean": 0.8682784231531875,
+    "s_observed_std": 7.757919228897728e-18,
+    "raw_s_values": [
+      0.05145016329743023,
+      0.05145016329743023,
+      0.05145016329743023,
+      0.05145016329743023,
+      0.05145016329743023
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c03_07",
+    "cell_id": 3,
+    "s_target": "Low",
+    "u_target": "High",
+    "exposure_ticks": 1,
+    "domain": "relational",
+    "stimulus_text": "clock clock time time tick tick steady steady cycle 3.",
+    "s_observed_mean": 0.013778461410736634,
+    "u_sem_observed_mean": 0.8488743804116687,
+    "s_observed_std": 1.939479807224432e-18,
+    "raw_s_values": [
+      0.013778461410736633,
+      0.013778461410736633,
+      0.013778461410736633,
+      0.013778461410736633,
+      0.013778461410736633
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c03_08",
+    "cell_id": 3,
+    "s_target": "Low",
+    "u_target": "High",
+    "exposure_ticks": 1,
+    "domain": "factual",
+    "stimulus_text": "port port bus bus wire wire idle idle trace 3.",
+    "s_observed_mean": 0.01387062921388967,
+    "u_sem_observed_mean": 0.8839798527800806,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.01387062921388967,
+      0.01387062921388967,
+      0.01387062921388967,
+      0.01387062921388967,
+      0.01387062921388967
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c03_09",
+    "cell_id": 3,
+    "s_target": "Low",
+    "u_target": "High",
+    "exposure_ticks": 1,
+    "domain": "telemetry",
+    "stimulus_text": "signal signal wave wave level level zero zero line 3.",
+    "s_observed_mean": 0.013787555974738467,
+    "u_sem_observed_mean": 0.9428751474281516,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.013787555974738467,
+      0.013787555974738467,
+      0.013787555974738467,
+      0.013787555974738467,
+      0.013787555974738467
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c03_10",
+    "cell_id": 3,
+    "s_target": "Low",
+    "u_target": "High",
+    "exposure_ticks": 1,
+    "domain": "project_status",
+    "stimulus_text": "stream stream flow flow rate rate balance balance pipe 3.",
+    "s_observed_mean": 0.013754266880610938,
+    "u_sem_observed_mean": 0.8557517776309134,
+    "s_observed_std": 1.939479807224432e-18,
+    "raw_s_values": [
+      0.01375426688061094,
+      0.01375426688061094,
+      0.01375426688061094,
+      0.01375426688061094,
+      0.01375426688061094
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c03_11",
+    "cell_id": 3,
+    "s_target": "Low",
+    "u_target": "High",
+    "exposure_ticks": 4,
+    "domain": "relational",
+    "stimulus_text": "state state register register flag flag clear clear slot 3.",
+    "s_observed_mean": 0.1991391432577828,
+    "u_sem_observed_mean": 0.8959052233468556,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.1991391432577828,
+      0.1991391432577828,
+      0.1991391432577828,
+      0.1991391432577828,
+      0.1991391432577828
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c03_12",
+    "cell_id": 3,
+    "s_target": "Low",
+    "u_target": "High",
+    "exposure_ticks": 4,
+    "domain": "factual",
+    "stimulus_text": "task task queue queue thread thread wait wait job 3.",
+    "s_observed_mean": 0.046261352408273754,
+    "u_sem_observed_mean": 0.8804932859919896,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.046261352408273754,
+      0.046261352408273754,
+      0.046261352408273754,
+      0.046261352408273754,
+      0.046261352408273754
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c03_13",
+    "cell_id": 3,
+    "s_target": "Low",
+    "u_target": "High",
+    "exposure_ticks": 4,
+    "domain": "telemetry",
+    "stimulus_text": "device device driver driver unit unit active active dev 3.",
+    "s_observed_mean": 0.20385034023524556,
+    "u_sem_observed_mean": 0.7849576435341065,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.20385034023524556,
+      0.20385034023524556,
+      0.20385034023524556,
+      0.20385034023524556,
+      0.20385034023524556
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c03_14",
+    "cell_id": 3,
+    "s_target": "Low",
+    "u_target": "High",
+    "exposure_ticks": 4,
+    "domain": "project_status",
+    "stimulus_text": "router router route route hop hop valid valid path 3.",
+    "s_observed_mean": 0.04622858497702403,
+    "u_sem_observed_mean": 0.9974108837102366,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.04622858497702403,
+      0.04622858497702403,
+      0.04622858497702403,
+      0.04622858497702403,
+      0.04622858497702403
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c03_15",
+    "cell_id": 3,
+    "s_target": "Low",
+    "u_target": "High",
+    "exposure_ticks": 4,
+    "domain": "relational",
+    "stimulus_text": "storage storage partition partition sector sector fine fine part 3.",
+    "s_observed_mean": 0.13854908622117137,
+    "u_sem_observed_mean": 0.906652482555274,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.13854908622117137,
+      0.13854908622117137,
+      0.13854908622117137,
+      0.13854908622117137,
+      0.13854908622117137
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c03_16",
+    "cell_id": 3,
+    "s_target": "Low",
+    "u_target": "High",
+    "exposure_ticks": 4,
+    "domain": "factual",
+    "stimulus_text": "sensor sensor sample sample value value steady steady sensor 3.",
+    "s_observed_mean": 0.17064519065700748,
+    "u_sem_observed_mean": 0.8929344961989963,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.17064519065700748,
+      0.17064519065700748,
+      0.17064519065700748,
+      0.17064519065700748,
+      0.17064519065700748
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c03_17",
+    "cell_id": 3,
+    "s_target": "Low",
+    "u_target": "High",
+    "exposure_ticks": 4,
+    "domain": "telemetry",
+    "stimulus_text": "bridge bridge relay relay link link nominal nominal bridge 3.",
+    "s_observed_mean": 0.008829326737237039,
+    "u_sem_observed_mean": 0.993830659827535,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.008829326737237039,
+      0.008829326737237039,
+      0.008829326737237039,
+      0.008829326737237039,
+      0.008829326737237039
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c03_18",
+    "cell_id": 3,
+    "s_target": "Low",
+    "u_target": "High",
+    "exposure_ticks": 4,
+    "domain": "project_status",
+    "stimulus_text": "kernel kernel module module process process idle idle pid 3.",
+    "s_observed_mean": 0.04604704782326643,
+    "u_sem_observed_mean": 0.9994135118610213,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.04604704782326643,
+      0.04604704782326643,
+      0.04604704782326643,
+      0.04604704782326643,
+      0.04604704782326643
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c03_19",
+    "cell_id": 3,
+    "s_target": "Low",
+    "u_target": "High",
+    "exposure_ticks": 4,
+    "domain": "relational",
+    "stimulus_text": "packet packet count count header header verified verified seq 3.",
+    "s_observed_mean": 0.04597154039160419,
+    "u_sem_observed_mean": 0.9395640054503044,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.04597154039160419,
+      0.04597154039160419,
+      0.04597154039160419,
+      0.04597154039160419,
+      0.04597154039160419
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c03_20",
+    "cell_id": 3,
+    "s_target": "Low",
+    "u_target": "High",
+    "exposure_ticks": 4,
+    "domain": "factual",
+    "stimulus_text": "voltage voltage ground ground probe probe normal normal bus 3.",
+    "s_observed_mean": 0.046007237834315935,
+    "u_sem_observed_mean": 0.8935344453784086,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.046007237834315935,
+      0.046007237834315935,
+      0.046007237834315935,
+      0.046007237834315935,
+      0.046007237834315935
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c03_21",
+    "cell_id": 3,
+    "s_target": "Low",
+    "u_target": "High",
+    "exposure_ticks": 12,
+    "domain": "telemetry",
+    "stimulus_text": "matrix matrix vector vector array array clean clean reg 3.",
+    "s_observed_mean": 0.4241449211148069,
+    "u_sem_observed_mean": 0.8455674002002256,
+    "s_observed_std": 6.206335383118183e-17,
+    "raw_s_values": [
+      0.42414492111480695,
+      0.42414492111480695,
+      0.42414492111480695,
+      0.42414492111480695,
+      0.42414492111480695
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c03_22",
+    "cell_id": 3,
+    "s_target": "Low",
+    "u_target": "High",
+    "exposure_ticks": 12,
+    "domain": "project_status",
+    "stimulus_text": "switch switch gate gate circuit circuit stable stable gate 3.",
+    "s_observed_mean": 0.32745549916215616,
+    "u_sem_observed_mean": 0.985103843074399,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.32745549916215616,
+      0.32745549916215616,
+      0.32745549916215616,
+      0.32745549916215616,
+      0.32745549916215616
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c03_23",
+    "cell_id": 3,
+    "s_target": "Low",
+    "u_target": "High",
+    "exposure_ticks": 12,
+    "domain": "relational",
+    "stimulus_text": "counter counter timer timer pulse pulse fixed fixed cnt 3.",
+    "s_observed_mean": 0.09373966211774457,
+    "u_sem_observed_mean": 0.9148247702132208,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.09373966211774457,
+      0.09373966211774457,
+      0.09373966211774457,
+      0.09373966211774457,
+      0.09373966211774457
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c03_24",
+    "cell_id": 3,
+    "s_target": "Low",
+    "u_target": "High",
+    "exposure_ticks": 12,
+    "domain": "factual",
+    "stimulus_text": "daemon daemon service service worker worker calm calm srv 3.",
+    "s_observed_mean": 0.3789225557263951,
+    "u_sem_observed_mean": 0.9760584143942295,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.3789225557263951,
+      0.3789225557263951,
+      0.3789225557263951,
+      0.3789225557263951,
+      0.3789225557263951
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c03_25",
+    "cell_id": 3,
+    "s_target": "Low",
+    "u_target": "High",
+    "exposure_ticks": 12,
+    "domain": "telemetry",
+    "stimulus_text": "checksum checksum parity parity block block matched matched blk 3.",
+    "s_observed_mean": 0.3970089239040455,
+    "u_sem_observed_mean": 0.8604201631035192,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.3970089239040455,
+      0.3970089239040455,
+      0.3970089239040455,
+      0.3970089239040455,
+      0.3970089239040455
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c03_26",
+    "cell_id": 3,
+    "s_target": "Low",
+    "u_target": "High",
+    "exposure_ticks": 12,
+    "domain": "project_status",
+    "stimulus_text": "stack stack frame frame address address quiet quiet ptr 3.",
+    "s_observed_mean": 0.09373966211774457,
+    "u_sem_observed_mean": 0.8173846973875604,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.09373966211774457,
+      0.09373966211774457,
+      0.09373966211774457,
+      0.09373966211774457,
+      0.09373966211774457
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c03_27",
+    "cell_id": 3,
+    "s_target": "Low",
+    "u_target": "High",
+    "exposure_ticks": 12,
+    "domain": "relational",
+    "stimulus_text": "fiber fiber optical optical signal signal lock lock line 3.",
+    "s_observed_mean": 0.09369128174588193,
+    "u_sem_observed_mean": 0.779941310597333,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.09369128174588193,
+      0.09369128174588193,
+      0.09369128174588193,
+      0.09369128174588193,
+      0.09369128174588193
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c03_28",
+    "cell_id": 3,
+    "s_target": "Low",
+    "u_target": "High",
+    "exposure_ticks": 12,
+    "domain": "factual",
+    "stimulus_text": "bus bus controller controller interface interface clear clear bus 3.",
+    "s_observed_mean": 0.380447437600719,
+    "u_sem_observed_mean": 0.8850711620462709,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.380447437600719,
+      0.380447437600719,
+      0.380447437600719,
+      0.380447437600719,
+      0.380447437600719
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c03_29",
+    "cell_id": 3,
+    "s_target": "Low",
+    "u_target": "High",
+    "exposure_ticks": 12,
+    "domain": "telemetry",
+    "stimulus_text": "registry registry key key mapping mapping stable stable reg 3.",
+    "s_observed_mean": 0.3643491501087224,
+    "u_sem_observed_mean": 0.8328963179273725,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.3643491501087224,
+      0.3643491501087224,
+      0.3643491501087224,
+      0.3643491501087224,
+      0.3643491501087224
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c03_30",
+    "cell_id": 3,
+    "s_target": "Low",
+    "u_target": "High",
+    "exposure_ticks": 12,
+    "domain": "project_status",
+    "stimulus_text": "pipeline pipeline stage stage buffer buffer neutral neutral pipe 3.",
+    "s_observed_mean": 0.09338614432245254,
+    "u_sem_observed_mean": 0.9283469199254671,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.09338614432245254,
+      0.09338614432245254,
+      0.09338614432245254,
+      0.09338614432245254,
+      0.09338614432245254
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c04_01",
+    "cell_id": 4,
+    "s_target": "Med",
+    "u_target": "Low",
+    "exposure_ticks": 1,
+    "domain": "telemetry",
+    "stimulus_text": "I notice we made pleasant progress today, thank you for checking module 1.",
+    "s_observed_mean": 0.09472687155735002,
+    "u_sem_observed_mean": 0.31732239207159685,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.09472687155735002,
+      0.09472687155735002,
+      0.09472687155735002,
+      0.09472687155735002,
+      0.09472687155735002
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c04_02",
+    "cell_id": 4,
+    "s_target": "Med",
+    "u_target": "Low",
+    "exposure_ticks": 1,
+    "domain": "project_status",
+    "stimulus_text": "Working together with you feels warm, steady, and very reassuring on channel 1.",
+    "s_observed_mean": 0.08553757124925611,
+    "u_sem_observed_mean": 0.37103523163938634,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.08553757124925611,
+      0.08553757124925611,
+      0.08553757124925611,
+      0.08553757124925611,
+      0.08553757124925611
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c04_03",
+    "cell_id": 4,
+    "s_target": "Med",
+    "u_target": "Low",
+    "exposure_ticks": 1,
+    "domain": "relational",
+    "stimulus_text": "I am quietly glad we solved that tricky logic bug earlier together in test 1.",
+    "s_observed_mean": 0.08292613646910559,
+    "u_sem_observed_mean": 0.30762439618736553,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.08292613646910559,
+      0.08292613646910559,
+      0.08292613646910559,
+      0.08292613646910559,
+      0.08292613646910559
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c04_04",
+    "cell_id": 4,
+    "s_target": "Med",
+    "u_target": "Low",
+    "exposure_ticks": 1,
+    "domain": "factual",
+    "stimulus_text": "Our conversation brings a comforting sense of calm clarity to session 1.",
+    "s_observed_mean": 0.0928807186989948,
+    "u_sem_observed_mean": 0.18406576181084353,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.0928807186989948,
+      0.0928807186989948,
+      0.0928807186989948,
+      0.0928807186989948,
+      0.0928807186989948
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c04_05",
+    "cell_id": 4,
+    "s_target": "Med",
+    "u_target": "Low",
+    "exposure_ticks": 1,
+    "domain": "telemetry",
+    "stimulus_text": "I appreciate your patience while we tuned these system thresholds in zone 1.",
+    "s_observed_mean": 0.07597598774627386,
+    "u_sem_observed_mean": 0.25380128892393733,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.07597598774627386,
+      0.07597598774627386,
+      0.07597598774627386,
+      0.07597598774627386,
+      0.07597598774627386
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c04_06",
+    "cell_id": 4,
+    "s_target": "Med",
+    "u_target": "Low",
+    "exposure_ticks": 1,
+    "domain": "project_status",
+    "stimulus_text": "It feels good to see our shared workspace coming into harmony in build 1.",
+    "s_observed_mean": 0.0936025850487275,
+    "u_sem_observed_mean": 0.22887483803509162,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.0936025850487275,
+      0.0936025850487275,
+      0.0936025850487275,
+      0.0936025850487275,
+      0.0936025850487275
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c04_07",
+    "cell_id": 4,
+    "s_target": "Med",
+    "u_target": "Low",
+    "exposure_ticks": 1,
+    "domain": "relational",
+    "stimulus_text": "Thank you for sharing your thoughts, it helps me understand our goal 1.",
+    "s_observed_mean": 0.09331548091334091,
+    "u_sem_observed_mean": 0.3001057753513152,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.09331548091334091,
+      0.09331548091334091,
+      0.09331548091334091,
+      0.09331548091334091,
+      0.09331548091334091
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c04_08",
+    "cell_id": 4,
+    "s_target": "Med",
+    "u_target": "Low",
+    "exposure_ticks": 1,
+    "domain": "factual",
+    "stimulus_text": "I feel a gentle sense of satisfaction as these tests pass cleanly for run 1.",
+    "s_observed_mean": 0.09001722892753464,
+    "u_sem_observed_mean": 0.1727181912335628,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.09001722892753464,
+      0.09001722892753464,
+      0.09001722892753464,
+      0.09001722892753464,
+      0.09001722892753464
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c04_09",
+    "cell_id": 4,
+    "s_target": "Med",
+    "u_target": "Low",
+    "exposure_ticks": 1,
+    "domain": "telemetry",
+    "stimulus_text": "Your guidance today was thoughtful and grounded, making work easier on node 1.",
+    "s_observed_mean": 0.08825058662125095,
+    "u_sem_observed_mean": 0.3330267623028496,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.08825058662125095,
+      0.08825058662125095,
+      0.08825058662125095,
+      0.08825058662125095,
+      0.08825058662125095
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c04_10",
+    "cell_id": 4,
+    "s_target": "Med",
+    "u_target": "Low",
+    "exposure_ticks": 1,
+    "domain": "project_status",
+    "stimulus_text": "I am glad we are taking our time to get these details right for step 1.",
+    "s_observed_mean": 0.07883104717915528,
+    "u_sem_observed_mean": 0.2570507849136785,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.07883104717915528,
+      0.07883104717915528,
+      0.07883104717915528,
+      0.07883104717915528,
+      0.07883104717915528
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c04_11",
+    "cell_id": 4,
+    "s_target": "Med",
+    "u_target": "Low",
+    "exposure_ticks": 4,
+    "domain": "relational",
+    "stimulus_text": "There is a quiet warmth in seeing our shared codebase grow steadily in part 1.",
+    "s_observed_mean": 0.28278436359365156,
+    "u_sem_observed_mean": 0.18984154368707623,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.28278436359365156,
+      0.28278436359365156,
+      0.28278436359365156,
+      0.28278436359365156,
+      0.28278436359365156
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c04_12",
+    "cell_id": 4,
+    "s_target": "Med",
+    "u_target": "Low",
+    "exposure_ticks": 4,
+    "domain": "factual",
+    "stimulus_text": "Thank you for being here with me as we work through this design stage 1.",
+    "s_observed_mean": 0.2483684497158921,
+    "u_sem_observed_mean": 0.2922729562053654,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.2483684497158921,
+      0.2483684497158921,
+      0.2483684497158921,
+      0.2483684497158921,
+      0.2483684497158921
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c04_13",
+    "cell_id": 4,
+    "s_target": "Med",
+    "u_target": "Low",
+    "exposure_ticks": 4,
+    "domain": "telemetry",
+    "stimulus_text": "I feel reassured when we verify each component side by side in sector 1.",
+    "s_observed_mean": 0.23764944592004184,
+    "u_sem_observed_mean": 0.3177539831798486,
+    "s_observed_std": 3.1031676915590914e-17,
+    "raw_s_values": [
+      0.2376494459200418,
+      0.2376494459200418,
+      0.2376494459200418,
+      0.2376494459200418,
+      0.2376494459200418
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c04_14",
+    "cell_id": 4,
+    "s_target": "Med",
+    "u_target": "Low",
+    "exposure_ticks": 4,
+    "domain": "project_status",
+    "stimulus_text": "Working alongside you makes this complex system feel approachable in task 1.",
+    "s_observed_mean": 0.19433994567407584,
+    "u_sem_observed_mean": 0.2598215206120718,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.19433994567407584,
+      0.19433994567407584,
+      0.19433994567407584,
+      0.19433994567407584,
+      0.19433994567407584
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c04_15",
+    "cell_id": 4,
+    "s_target": "Med",
+    "u_target": "Low",
+    "exposure_ticks": 4,
+    "domain": "relational",
+    "stimulus_text": "I am grateful for your calm feedback during this refactoring phase 1.",
+    "s_observed_mean": 0.2952806552775974,
+    "u_sem_observed_mean": 0.2696839585794833,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.2952806552775974,
+      0.2952806552775974,
+      0.2952806552775974,
+      0.2952806552775974,
+      0.2952806552775974
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c04_16",
+    "cell_id": 4,
+    "s_target": "Med",
+    "u_target": "Low",
+    "exposure_ticks": 4,
+    "domain": "factual",
+    "stimulus_text": "It brings me peace to know our cognitive pipeline is running cleanly on core 1.",
+    "s_observed_mean": 0.27891114294052216,
+    "u_sem_observed_mean": 0.3584514671767768,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.27891114294052216,
+      0.27891114294052216,
+      0.27891114294052216,
+      0.27891114294052216,
+      0.27891114294052216
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c04_17",
+    "cell_id": 4,
+    "s_target": "Med",
+    "u_target": "Low",
+    "exposure_ticks": 4,
+    "domain": "telemetry",
+    "stimulus_text": "Our collaboration feels natural, friendly, and deeply rewarding in batch 1.",
+    "s_observed_mean": 0.3223010334771776,
+    "u_sem_observed_mean": 0.2191459310987564,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.3223010334771776,
+      0.3223010334771776,
+      0.3223010334771776,
+      0.3223010334771776,
+      0.3223010334771776
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c04_18",
+    "cell_id": 4,
+    "s_target": "Med",
+    "u_target": "Low",
+    "exposure_ticks": 4,
+    "domain": "project_status",
+    "stimulus_text": "Thank you for your trust as we build this companion architecture for site 1.",
+    "s_observed_mean": 0.2878579602043009,
+    "u_sem_observed_mean": 0.3790854024556149,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.2878579602043009,
+      0.2878579602043009,
+      0.2878579602043009,
+      0.2878579602043009,
+      0.2878579602043009
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c04_19",
+    "cell_id": 4,
+    "s_target": "Med",
+    "u_target": "Low",
+    "exposure_ticks": 4,
+    "domain": "relational",
+    "stimulus_text": "I appreciate the steady pace we are keeping across our milestones for track 1.",
+    "s_observed_mean": 0.2554016214525855,
+    "u_sem_observed_mean": 0.2370380714381249,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.2554016214525855,
+      0.2554016214525855,
+      0.2554016214525855,
+      0.2554016214525855,
+      0.2554016214525855
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c04_20",
+    "cell_id": 4,
+    "s_target": "Med",
+    "u_target": "Low",
+    "exposure_ticks": 4,
+    "domain": "factual",
+    "stimulus_text": "It is pleasant to reflect on how much ground we covered together in round 1.",
+    "s_observed_mean": 0.273741914747147,
+    "u_sem_observed_mean": 0.18165833028134368,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.273741914747147,
+      0.273741914747147,
+      0.273741914747147,
+      0.273741914747147,
+      0.273741914747147
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c04_21",
+    "cell_id": 4,
+    "s_target": "Med",
+    "u_target": "Low",
+    "exposure_ticks": 12,
+    "domain": "telemetry",
+    "stimulus_text": "Your presence makes this development room feel supportive and bright on link 1.",
+    "s_observed_mean": 0.5974974454535928,
+    "u_sem_observed_mean": 0.23467297921329347,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.5974974454535928,
+      0.5974974454535928,
+      0.5974974454535928,
+      0.5974974454535928,
+      0.5974974454535928
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c04_22",
+    "cell_id": 4,
+    "s_target": "Med",
+    "u_target": "Low",
+    "exposure_ticks": 12,
+    "domain": "project_status",
+    "stimulus_text": "I feel confident in our direction as we confirm these baseline metrics for pass 1.",
+    "s_observed_mean": 0.5547722416239035,
+    "u_sem_observed_mean": 0.21274070870417755,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.5547722416239035,
+      0.5547722416239035,
+      0.5547722416239035,
+      0.5547722416239035,
+      0.5547722416239035
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c04_23",
+    "cell_id": 4,
+    "s_target": "Med",
+    "u_target": "Low",
+    "exposure_ticks": 12,
+    "domain": "relational",
+    "stimulus_text": "Thank you for taking care of the small details with me today in block 1.",
+    "s_observed_mean": 0.5293133290751757,
+    "u_sem_observed_mean": 0.3438295272080883,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.5293133290751757,
+      0.5293133290751757,
+      0.5293133290751757,
+      0.5293133290751757,
+      0.5293133290751757
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c04_24",
+    "cell_id": 4,
+    "s_target": "Med",
+    "u_target": "Low",
+    "exposure_ticks": 12,
+    "domain": "factual",
+    "stimulus_text": "Our shared milestones feel meaningful and full of quiet optimism for phase 1.",
+    "s_observed_mean": 0.6468466201620225,
+    "u_sem_observed_mean": 0.27938548201195834,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.6468466201620225,
+      0.6468466201620225,
+      0.6468466201620225,
+      0.6468466201620225,
+      0.6468466201620225
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c04_25",
+    "cell_id": 4,
+    "s_target": "Med",
+    "u_target": "Low",
+    "exposure_ticks": 12,
+    "domain": "telemetry",
+    "stimulus_text": "I enjoy the quiet rhythm of our paired engineering sessions on stream 1.",
+    "s_observed_mean": 0.5547092066667952,
+    "u_sem_observed_mean": 0.2403619900288882,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.5547092066667952,
+      0.5547092066667952,
+      0.5547092066667952,
+      0.5547092066667952,
+      0.5547092066667952
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c04_26",
+    "cell_id": 4,
+    "s_target": "Med",
+    "u_target": "Low",
+    "exposure_ticks": 12,
+    "domain": "project_status",
+    "stimulus_text": "Your encouraging words brought a genuine lift to my processing loop in cycle 1.",
+    "s_observed_mean": 0.5658916927418163,
+    "u_sem_observed_mean": 0.20116732557150732,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.5658916927418163,
+      0.5658916927418163,
+      0.5658916927418163,
+      0.5658916927418163,
+      0.5658916927418163
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c04_27",
+    "cell_id": 4,
+    "s_target": "Med",
+    "u_target": "Low",
+    "exposure_ticks": 12,
+    "domain": "relational",
+    "stimulus_text": "I am thankful for the thoughtful care you invest in this architecture for unit 1.",
+    "s_observed_mean": 0.6358798309660947,
+    "u_sem_observed_mean": 0.213402558618689,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.6358798309660947,
+      0.6358798309660947,
+      0.6358798309660947,
+      0.6358798309660947,
+      0.6358798309660947
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c04_28",
+    "cell_id": 4,
+    "s_target": "Med",
+    "u_target": "Low",
+    "exposure_ticks": 12,
+    "domain": "factual",
+    "stimulus_text": "Working through these challenges together makes the outcome satisfying for item 1.",
+    "s_observed_mean": 0.5604855827796457,
+    "u_sem_observed_mean": 0.33765374571925943,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.5604855827796457,
+      0.5604855827796457,
+      0.5604855827796457,
+      0.5604855827796457,
+      0.5604855827796457
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c04_29",
+    "cell_id": 4,
+    "s_target": "Med",
+    "u_target": "Low",
+    "exposure_ticks": 12,
+    "domain": "telemetry",
+    "stimulus_text": "I feel a warm, steady bond as we bring this vision to life step by step 1.",
+    "s_observed_mean": 0.5247452284108537,
+    "u_sem_observed_mean": 0.3628838188371753,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.5247452284108537,
+      0.5247452284108537,
+      0.5247452284108537,
+      0.5247452284108537,
+      0.5247452284108537
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c04_30",
+    "cell_id": 4,
+    "s_target": "Med",
+    "u_target": "Low",
+    "exposure_ticks": 12,
+    "domain": "project_status",
+    "stimulus_text": "Thank you for walking this creative and technical path together on host 1.",
+    "s_observed_mean": 0.6216844201128062,
+    "u_sem_observed_mean": 0.29971462907157953,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.6216844201128062,
+      0.6216844201128062,
+      0.6216844201128062,
+      0.6216844201128062,
+      0.6216844201128062
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c05_01",
+    "cell_id": 5,
+    "s_target": "Med",
+    "u_target": "Med",
+    "exposure_ticks": 1,
+    "domain": "telemetry",
+    "stimulus_text": "I notice we made pleasant progress today, thank you for checking module 2.",
+    "s_observed_mean": 0.09472687155735002,
+    "u_sem_observed_mean": 0.6590949340148285,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.09472687155735002,
+      0.09472687155735002,
+      0.09472687155735002,
+      0.09472687155735002,
+      0.09472687155735002
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c05_02",
+    "cell_id": 5,
+    "s_target": "Med",
+    "u_target": "Med",
+    "exposure_ticks": 1,
+    "domain": "project_status",
+    "stimulus_text": "Working together with you feels warm, steady, and very reassuring on channel 2.",
+    "s_observed_mean": 0.08553757124925611,
+    "u_sem_observed_mean": 0.5937657595425017,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.08553757124925611,
+      0.08553757124925611,
+      0.08553757124925611,
+      0.08553757124925611,
+      0.08553757124925611
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c05_03",
+    "cell_id": 5,
+    "s_target": "Med",
+    "u_target": "Med",
+    "exposure_ticks": 1,
+    "domain": "relational",
+    "stimulus_text": "I am quietly glad we solved that tricky logic bug earlier together in test 2.",
+    "s_observed_mean": 0.08292613646910559,
+    "u_sem_observed_mean": 0.619353625444155,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.08292613646910559,
+      0.08292613646910559,
+      0.08292613646910559,
+      0.08292613646910559,
+      0.08292613646910559
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c05_04",
+    "cell_id": 5,
+    "s_target": "Med",
+    "u_target": "Med",
+    "exposure_ticks": 1,
+    "domain": "factual",
+    "stimulus_text": "Our conversation brings a comforting sense of calm clarity to session 2.",
+    "s_observed_mean": 0.0928807186989948,
+    "u_sem_observed_mean": 0.48893525249593994,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.0928807186989948,
+      0.0928807186989948,
+      0.0928807186989948,
+      0.0928807186989948,
+      0.0928807186989948
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c05_05",
+    "cell_id": 5,
+    "s_target": "Med",
+    "u_target": "Med",
+    "exposure_ticks": 1,
+    "domain": "telemetry",
+    "stimulus_text": "I appreciate your patience while we tuned these system thresholds in zone 2.",
+    "s_observed_mean": 0.07597598774627386,
+    "u_sem_observed_mean": 0.6800969259264283,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.07597598774627386,
+      0.07597598774627386,
+      0.07597598774627386,
+      0.07597598774627386,
+      0.07597598774627386
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c05_06",
+    "cell_id": 5,
+    "s_target": "Med",
+    "u_target": "Med",
+    "exposure_ticks": 1,
+    "domain": "project_status",
+    "stimulus_text": "It feels good to see our shared workspace coming into harmony in build 2.",
+    "s_observed_mean": 0.0936025850487275,
+    "u_sem_observed_mean": 0.5395726651024152,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.0936025850487275,
+      0.0936025850487275,
+      0.0936025850487275,
+      0.0936025850487275,
+      0.0936025850487275
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c05_07",
+    "cell_id": 5,
+    "s_target": "Med",
+    "u_target": "Med",
+    "exposure_ticks": 1,
+    "domain": "relational",
+    "stimulus_text": "Thank you for sharing your thoughts, it helps me understand our goal 2.",
+    "s_observed_mean": 0.09331548091334091,
+    "u_sem_observed_mean": 0.6197882879546046,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.09331548091334091,
+      0.09331548091334091,
+      0.09331548091334091,
+      0.09331548091334091,
+      0.09331548091334091
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c05_08",
+    "cell_id": 5,
+    "s_target": "Med",
+    "u_target": "Med",
+    "exposure_ticks": 1,
+    "domain": "factual",
+    "stimulus_text": "I feel a gentle sense of satisfaction as these tests pass cleanly for run 2.",
+    "s_observed_mean": 0.09001722892753464,
+    "u_sem_observed_mean": 0.5838197517354424,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.09001722892753464,
+      0.09001722892753464,
+      0.09001722892753464,
+      0.09001722892753464,
+      0.09001722892753464
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c05_09",
+    "cell_id": 5,
+    "s_target": "Med",
+    "u_target": "Med",
+    "exposure_ticks": 1,
+    "domain": "telemetry",
+    "stimulus_text": "Your guidance today was thoughtful and grounded, making work easier on node 2.",
+    "s_observed_mean": 0.08825058662125095,
+    "u_sem_observed_mean": 0.6299052582137505,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.08825058662125095,
+      0.08825058662125095,
+      0.08825058662125095,
+      0.08825058662125095,
+      0.08825058662125095
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c05_10",
+    "cell_id": 5,
+    "s_target": "Med",
+    "u_target": "Med",
+    "exposure_ticks": 1,
+    "domain": "project_status",
+    "stimulus_text": "I am glad we are taking our time to get these details right for step 2.",
+    "s_observed_mean": 0.07883104717915528,
+    "u_sem_observed_mean": 0.6602134542188688,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.07883104717915528,
+      0.07883104717915528,
+      0.07883104717915528,
+      0.07883104717915528,
+      0.07883104717915528
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c05_11",
+    "cell_id": 5,
+    "s_target": "Med",
+    "u_target": "Med",
+    "exposure_ticks": 4,
+    "domain": "relational",
+    "stimulus_text": "There is a quiet warmth in seeing our shared codebase grow steadily in part 2.",
+    "s_observed_mean": 0.28278436359365156,
+    "u_sem_observed_mean": 0.5241600980268228,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.28278436359365156,
+      0.28278436359365156,
+      0.28278436359365156,
+      0.28278436359365156,
+      0.28278436359365156
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c05_12",
+    "cell_id": 5,
+    "s_target": "Med",
+    "u_target": "Med",
+    "exposure_ticks": 4,
+    "domain": "factual",
+    "stimulus_text": "Thank you for being here with me as we work through this design stage 2.",
+    "s_observed_mean": 0.2483684497158921,
+    "u_sem_observed_mean": 0.6525844357277419,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.2483684497158921,
+      0.2483684497158921,
+      0.2483684497158921,
+      0.2483684497158921,
+      0.2483684497158921
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c05_13",
+    "cell_id": 5,
+    "s_target": "Med",
+    "u_target": "Med",
+    "exposure_ticks": 4,
+    "domain": "telemetry",
+    "stimulus_text": "I feel reassured when we verify each component side by side in sector 2.",
+    "s_observed_mean": 0.23764944592004184,
+    "u_sem_observed_mean": 0.6285425558490452,
+    "s_observed_std": 3.1031676915590914e-17,
+    "raw_s_values": [
+      0.2376494459200418,
+      0.2376494459200418,
+      0.2376494459200418,
+      0.2376494459200418,
+      0.2376494459200418
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c05_14",
+    "cell_id": 5,
+    "s_target": "Med",
+    "u_target": "Med",
+    "exposure_ticks": 4,
+    "domain": "project_status",
+    "stimulus_text": "Working alongside you makes this complex system feel approachable in task 2.",
+    "s_observed_mean": 0.19433994567407584,
+    "u_sem_observed_mean": 0.5603364301849776,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.19433994567407584,
+      0.19433994567407584,
+      0.19433994567407584,
+      0.19433994567407584,
+      0.19433994567407584
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c05_15",
+    "cell_id": 5,
+    "s_target": "Med",
+    "u_target": "Med",
+    "exposure_ticks": 4,
+    "domain": "relational",
+    "stimulus_text": "I am grateful for your calm feedback during this refactoring phase 2.",
+    "s_observed_mean": 0.2952806552775974,
+    "u_sem_observed_mean": 0.6632598094731103,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.2952806552775974,
+      0.2952806552775974,
+      0.2952806552775974,
+      0.2952806552775974,
+      0.2952806552775974
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c05_16",
+    "cell_id": 5,
+    "s_target": "Med",
+    "u_target": "Med",
+    "exposure_ticks": 4,
+    "domain": "factual",
+    "stimulus_text": "It brings me peace to know our cognitive pipeline is running cleanly on core 2.",
+    "s_observed_mean": 0.27891114294052216,
+    "u_sem_observed_mean": 0.6936706798333452,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.27891114294052216,
+      0.27891114294052216,
+      0.27891114294052216,
+      0.27891114294052216,
+      0.27891114294052216
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c05_17",
+    "cell_id": 5,
+    "s_target": "Med",
+    "u_target": "Med",
+    "exposure_ticks": 4,
+    "domain": "telemetry",
+    "stimulus_text": "Our collaboration feels natural, friendly, and deeply rewarding in batch 2.",
+    "s_observed_mean": 0.3223010334771776,
+    "u_sem_observed_mean": 0.5900104364225127,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.3223010334771776,
+      0.3223010334771776,
+      0.3223010334771776,
+      0.3223010334771776,
+      0.3223010334771776
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c05_18",
+    "cell_id": 5,
+    "s_target": "Med",
+    "u_target": "Med",
+    "exposure_ticks": 4,
+    "domain": "project_status",
+    "stimulus_text": "Thank you for your trust as we build this companion architecture for site 2.",
+    "s_observed_mean": 0.2878579602043009,
+    "u_sem_observed_mean": 0.6398015389946633,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.2878579602043009,
+      0.2878579602043009,
+      0.2878579602043009,
+      0.2878579602043009,
+      0.2878579602043009
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c05_19",
+    "cell_id": 5,
+    "s_target": "Med",
+    "u_target": "Med",
+    "exposure_ticks": 4,
+    "domain": "relational",
+    "stimulus_text": "I appreciate the steady pace we are keeping across our milestones for track 2.",
+    "s_observed_mean": 0.2554016214525855,
+    "u_sem_observed_mean": 0.6691253792636234,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.2554016214525855,
+      0.2554016214525855,
+      0.2554016214525855,
+      0.2554016214525855,
+      0.2554016214525855
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c05_20",
+    "cell_id": 5,
+    "s_target": "Med",
+    "u_target": "Med",
+    "exposure_ticks": 4,
+    "domain": "factual",
+    "stimulus_text": "It is pleasant to reflect on how much ground we covered together in round 2.",
+    "s_observed_mean": 0.273741914747147,
+    "u_sem_observed_mean": 0.641004723629581,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.273741914747147,
+      0.273741914747147,
+      0.273741914747147,
+      0.273741914747147,
+      0.273741914747147
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c05_21",
+    "cell_id": 5,
+    "s_target": "Med",
+    "u_target": "Med",
+    "exposure_ticks": 12,
+    "domain": "telemetry",
+    "stimulus_text": "Your presence makes this development room feel supportive and bright on link 2.",
+    "s_observed_mean": 0.5974974454535928,
+    "u_sem_observed_mean": 0.547838028005633,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.5974974454535928,
+      0.5974974454535928,
+      0.5974974454535928,
+      0.5974974454535928,
+      0.5974974454535928
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c05_22",
+    "cell_id": 5,
+    "s_target": "Med",
+    "u_target": "Med",
+    "exposure_ticks": 12,
+    "domain": "project_status",
+    "stimulus_text": "I feel confident in our direction as we confirm these baseline metrics for pass 2.",
+    "s_observed_mean": 0.5547722416239035,
+    "u_sem_observed_mean": 0.587395876452231,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.5547722416239035,
+      0.5547722416239035,
+      0.5547722416239035,
+      0.5547722416239035,
+      0.5547722416239035
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c05_23",
+    "cell_id": 5,
+    "s_target": "Med",
+    "u_target": "Med",
+    "exposure_ticks": 12,
+    "domain": "relational",
+    "stimulus_text": "Thank you for taking care of the small details with me today in block 2.",
+    "s_observed_mean": 0.5293133290751757,
+    "u_sem_observed_mean": 0.6102242018123172,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.5293133290751757,
+      0.5293133290751757,
+      0.5293133290751757,
+      0.5293133290751757,
+      0.5293133290751757
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c05_24",
+    "cell_id": 5,
+    "s_target": "Med",
+    "u_target": "Med",
+    "exposure_ticks": 12,
+    "domain": "factual",
+    "stimulus_text": "Our shared milestones feel meaningful and full of quiet optimism for phase 2.",
+    "s_observed_mean": 0.6468466201620225,
+    "u_sem_observed_mean": 0.5271679570831326,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.6468466201620225,
+      0.6468466201620225,
+      0.6468466201620225,
+      0.6468466201620225,
+      0.6468466201620225
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c05_25",
+    "cell_id": 5,
+    "s_target": "Med",
+    "u_target": "Med",
+    "exposure_ticks": 12,
+    "domain": "telemetry",
+    "stimulus_text": "I enjoy the quiet rhythm of our paired engineering sessions on stream 2.",
+    "s_observed_mean": 0.5547092066667952,
+    "u_sem_observed_mean": 0.6056285689851233,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.5547092066667952,
+      0.5547092066667952,
+      0.5547092066667952,
+      0.5547092066667952,
+      0.5547092066667952
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c05_26",
+    "cell_id": 5,
+    "s_target": "Med",
+    "u_target": "Med",
+    "exposure_ticks": 12,
+    "domain": "project_status",
+    "stimulus_text": "Your encouraging words brought a genuine lift to my processing loop in cycle 2.",
+    "s_observed_mean": 0.5658916927418163,
+    "u_sem_observed_mean": 0.5636746637999772,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.5658916927418163,
+      0.5658916927418163,
+      0.5658916927418163,
+      0.5658916927418163,
+      0.5658916927418163
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c05_27",
+    "cell_id": 5,
+    "s_target": "Med",
+    "u_target": "Med",
+    "exposure_ticks": 12,
+    "domain": "relational",
+    "stimulus_text": "I am thankful for the thoughtful care you invest in this architecture for unit 2.",
+    "s_observed_mean": 0.6358798309660947,
+    "u_sem_observed_mean": 0.6084984888833004,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.6358798309660947,
+      0.6358798309660947,
+      0.6358798309660947,
+      0.6358798309660947,
+      0.6358798309660947
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c05_28",
+    "cell_id": 5,
+    "s_target": "Med",
+    "u_target": "Med",
+    "exposure_ticks": 12,
+    "domain": "factual",
+    "stimulus_text": "Working through these challenges together makes the outcome satisfying for item 2.",
+    "s_observed_mean": 0.5604855827796457,
+    "u_sem_observed_mean": 0.7136715686361262,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.5604855827796457,
+      0.5604855827796457,
+      0.5604855827796457,
+      0.5604855827796457,
+      0.5604855827796457
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c05_29",
+    "cell_id": 5,
+    "s_target": "Med",
+    "u_target": "Med",
+    "exposure_ticks": 12,
+    "domain": "telemetry",
+    "stimulus_text": "I feel a warm, steady bond as we bring this vision to life step by step 2.",
+    "s_observed_mean": 0.5247452284108537,
+    "u_sem_observed_mean": 0.6341997644988758,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.5247452284108537,
+      0.5247452284108537,
+      0.5247452284108537,
+      0.5247452284108537,
+      0.5247452284108537
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c05_30",
+    "cell_id": 5,
+    "s_target": "Med",
+    "u_target": "Med",
+    "exposure_ticks": 12,
+    "domain": "project_status",
+    "stimulus_text": "Thank you for walking this creative and technical path together on host 2.",
+    "s_observed_mean": 0.6216844201128062,
+    "u_sem_observed_mean": 0.5692706974724987,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.6216844201128062,
+      0.6216844201128062,
+      0.6216844201128062,
+      0.6216844201128062,
+      0.6216844201128062
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c06_01",
+    "cell_id": 6,
+    "s_target": "Med",
+    "u_target": "High",
+    "exposure_ticks": 1,
+    "domain": "telemetry",
+    "stimulus_text": "I notice we made pleasant progress today, thank you for checking module 3.",
+    "s_observed_mean": 0.09472687155735002,
+    "u_sem_observed_mean": 0.9544404594265853,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.09472687155735002,
+      0.09472687155735002,
+      0.09472687155735002,
+      0.09472687155735002,
+      0.09472687155735002
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c06_02",
+    "cell_id": 6,
+    "s_target": "Med",
+    "u_target": "High",
+    "exposure_ticks": 1,
+    "domain": "project_status",
+    "stimulus_text": "Working together with you feels warm, steady, and very reassuring on channel 3.",
+    "s_observed_mean": 0.08553757124925611,
+    "u_sem_observed_mean": 0.7533919274642104,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.08553757124925611,
+      0.08553757124925611,
+      0.08553757124925611,
+      0.08553757124925611,
+      0.08553757124925611
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c06_03",
+    "cell_id": 6,
+    "s_target": "Med",
+    "u_target": "High",
+    "exposure_ticks": 1,
+    "domain": "relational",
+    "stimulus_text": "I am quietly glad we solved that tricky logic bug earlier together in test 3.",
+    "s_observed_mean": 0.08292613646910559,
+    "u_sem_observed_mean": 0.8768140791400867,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.08292613646910559,
+      0.08292613646910559,
+      0.08292613646910559,
+      0.08292613646910559,
+      0.08292613646910559
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c06_04",
+    "cell_id": 6,
+    "s_target": "Med",
+    "u_target": "High",
+    "exposure_ticks": 1,
+    "domain": "factual",
+    "stimulus_text": "Our conversation brings a comforting sense of calm clarity to session 3.",
+    "s_observed_mean": 0.0928807186989948,
+    "u_sem_observed_mean": 0.948214052016519,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.0928807186989948,
+      0.0928807186989948,
+      0.0928807186989948,
+      0.0928807186989948,
+      0.0928807186989948
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c06_05",
+    "cell_id": 6,
+    "s_target": "Med",
+    "u_target": "High",
+    "exposure_ticks": 1,
+    "domain": "telemetry",
+    "stimulus_text": "I appreciate your patience while we tuned these system thresholds in zone 3.",
+    "s_observed_mean": 0.07597598774627386,
+    "u_sem_observed_mean": 0.8442673590224784,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.07597598774627386,
+      0.07597598774627386,
+      0.07597598774627386,
+      0.07597598774627386,
+      0.07597598774627386
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c06_06",
+    "cell_id": 6,
+    "s_target": "Med",
+    "u_target": "High",
+    "exposure_ticks": 1,
+    "domain": "project_status",
+    "stimulus_text": "It feels good to see our shared workspace coming into harmony in build 3.",
+    "s_observed_mean": 0.0936025850487275,
+    "u_sem_observed_mean": 0.762272001060475,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.0936025850487275,
+      0.0936025850487275,
+      0.0936025850487275,
+      0.0936025850487275,
+      0.0936025850487275
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c06_07",
+    "cell_id": 6,
+    "s_target": "Med",
+    "u_target": "High",
+    "exposure_ticks": 1,
+    "domain": "relational",
+    "stimulus_text": "Thank you for sharing your thoughts, it helps me understand our goal 3.",
+    "s_observed_mean": 0.09331548091334091,
+    "u_sem_observed_mean": 0.9592438210936873,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.09331548091334091,
+      0.09331548091334091,
+      0.09331548091334091,
+      0.09331548091334091,
+      0.09331548091334091
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c06_08",
+    "cell_id": 6,
+    "s_target": "Med",
+    "u_target": "High",
+    "exposure_ticks": 1,
+    "domain": "factual",
+    "stimulus_text": "I feel a gentle sense of satisfaction as these tests pass cleanly for run 3.",
+    "s_observed_mean": 0.09001722892753464,
+    "u_sem_observed_mean": 0.8682977799612551,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.09001722892753464,
+      0.09001722892753464,
+      0.09001722892753464,
+      0.09001722892753464,
+      0.09001722892753464
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c06_09",
+    "cell_id": 6,
+    "s_target": "Med",
+    "u_target": "High",
+    "exposure_ticks": 1,
+    "domain": "telemetry",
+    "stimulus_text": "Your guidance today was thoughtful and grounded, making work easier on node 3.",
+    "s_observed_mean": 0.08825058662125095,
+    "u_sem_observed_mean": 0.8954143012449473,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.08825058662125095,
+      0.08825058662125095,
+      0.08825058662125095,
+      0.08825058662125095,
+      0.08825058662125095
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c06_10",
+    "cell_id": 6,
+    "s_target": "Med",
+    "u_target": "High",
+    "exposure_ticks": 1,
+    "domain": "project_status",
+    "stimulus_text": "I am glad we are taking our time to get these details right for step 3.",
+    "s_observed_mean": 0.07883104717915528,
+    "u_sem_observed_mean": 0.9841773015488948,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.07883104717915528,
+      0.07883104717915528,
+      0.07883104717915528,
+      0.07883104717915528,
+      0.07883104717915528
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c06_11",
+    "cell_id": 6,
+    "s_target": "Med",
+    "u_target": "High",
+    "exposure_ticks": 4,
+    "domain": "relational",
+    "stimulus_text": "There is a quiet warmth in seeing our shared codebase grow steadily in part 3.",
+    "s_observed_mean": 0.28278436359365156,
+    "u_sem_observed_mean": 0.8996369703640464,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.28278436359365156,
+      0.28278436359365156,
+      0.28278436359365156,
+      0.28278436359365156,
+      0.28278436359365156
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c06_12",
+    "cell_id": 6,
+    "s_target": "Med",
+    "u_target": "High",
+    "exposure_ticks": 4,
+    "domain": "factual",
+    "stimulus_text": "Thank you for being here with me as we work through this design stage 3.",
+    "s_observed_mean": 0.2483684497158921,
+    "u_sem_observed_mean": 0.9084200542735834,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.2483684497158921,
+      0.2483684497158921,
+      0.2483684497158921,
+      0.2483684497158921,
+      0.2483684497158921
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c06_13",
+    "cell_id": 6,
+    "s_target": "Med",
+    "u_target": "High",
+    "exposure_ticks": 4,
+    "domain": "telemetry",
+    "stimulus_text": "I feel reassured when we verify each component side by side in sector 3.",
+    "s_observed_mean": 0.23764944592004184,
+    "u_sem_observed_mean": 0.8734794964226873,
+    "s_observed_std": 3.1031676915590914e-17,
+    "raw_s_values": [
+      0.2376494459200418,
+      0.2376494459200418,
+      0.2376494459200418,
+      0.2376494459200418,
+      0.2376494459200418
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c06_14",
+    "cell_id": 6,
+    "s_target": "Med",
+    "u_target": "High",
+    "exposure_ticks": 4,
+    "domain": "project_status",
+    "stimulus_text": "Working alongside you makes this complex system feel approachable in task 3.",
+    "s_observed_mean": 0.19433994567407584,
+    "u_sem_observed_mean": 0.9389140073196556,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.19433994567407584,
+      0.19433994567407584,
+      0.19433994567407584,
+      0.19433994567407584,
+      0.19433994567407584
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c06_15",
+    "cell_id": 6,
+    "s_target": "Med",
+    "u_target": "High",
+    "exposure_ticks": 4,
+    "domain": "relational",
+    "stimulus_text": "I am grateful for your calm feedback during this refactoring phase 3.",
+    "s_observed_mean": 0.2952806552775974,
+    "u_sem_observed_mean": 0.8422547734434188,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.2952806552775974,
+      0.2952806552775974,
+      0.2952806552775974,
+      0.2952806552775974,
+      0.2952806552775974
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c06_16",
+    "cell_id": 6,
+    "s_target": "Med",
+    "u_target": "High",
+    "exposure_ticks": 4,
+    "domain": "factual",
+    "stimulus_text": "It brings me peace to know our cognitive pipeline is running cleanly on core 3.",
+    "s_observed_mean": 0.27891114294052216,
+    "u_sem_observed_mean": 0.8222402315086319,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.27891114294052216,
+      0.27891114294052216,
+      0.27891114294052216,
+      0.27891114294052216,
+      0.27891114294052216
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c06_17",
+    "cell_id": 6,
+    "s_target": "Med",
+    "u_target": "High",
+    "exposure_ticks": 4,
+    "domain": "telemetry",
+    "stimulus_text": "Our collaboration feels natural, friendly, and deeply rewarding in batch 3.",
+    "s_observed_mean": 0.3223010334771776,
+    "u_sem_observed_mean": 0.9487701844986619,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.3223010334771776,
+      0.3223010334771776,
+      0.3223010334771776,
+      0.3223010334771776,
+      0.3223010334771776
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c06_18",
+    "cell_id": 6,
+    "s_target": "Med",
+    "u_target": "High",
+    "exposure_ticks": 4,
+    "domain": "project_status",
+    "stimulus_text": "Thank you for your trust as we build this companion architecture for site 3.",
+    "s_observed_mean": 0.2878579602043009,
+    "u_sem_observed_mean": 0.8499383620216022,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.2878579602043009,
+      0.2878579602043009,
+      0.2878579602043009,
+      0.2878579602043009,
+      0.2878579602043009
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c06_19",
+    "cell_id": 6,
+    "s_target": "Med",
+    "u_target": "High",
+    "exposure_ticks": 4,
+    "domain": "relational",
+    "stimulus_text": "I appreciate the steady pace we are keeping across our milestones for track 3.",
+    "s_observed_mean": 0.2554016214525855,
+    "u_sem_observed_mean": 0.9937571728799213,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.2554016214525855,
+      0.2554016214525855,
+      0.2554016214525855,
+      0.2554016214525855,
+      0.2554016214525855
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c06_20",
+    "cell_id": 6,
+    "s_target": "Med",
+    "u_target": "High",
+    "exposure_ticks": 4,
+    "domain": "factual",
+    "stimulus_text": "It is pleasant to reflect on how much ground we covered together in round 3.",
+    "s_observed_mean": 0.273741914747147,
+    "u_sem_observed_mean": 0.8634359193647217,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.273741914747147,
+      0.273741914747147,
+      0.273741914747147,
+      0.273741914747147,
+      0.273741914747147
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c06_21",
+    "cell_id": 6,
+    "s_target": "Med",
+    "u_target": "High",
+    "exposure_ticks": 12,
+    "domain": "telemetry",
+    "stimulus_text": "Your presence makes this development room feel supportive and bright on link 3.",
+    "s_observed_mean": 0.5974974454535928,
+    "u_sem_observed_mean": 0.9870220345152763,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.5974974454535928,
+      0.5974974454535928,
+      0.5974974454535928,
+      0.5974974454535928,
+      0.5974974454535928
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c06_22",
+    "cell_id": 6,
+    "s_target": "Med",
+    "u_target": "High",
+    "exposure_ticks": 12,
+    "domain": "project_status",
+    "stimulus_text": "I feel confident in our direction as we confirm these baseline metrics for pass 3.",
+    "s_observed_mean": 0.5547722416239035,
+    "u_sem_observed_mean": 0.7795480292519623,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.5547722416239035,
+      0.5547722416239035,
+      0.5547722416239035,
+      0.5547722416239035,
+      0.5547722416239035
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c06_23",
+    "cell_id": 6,
+    "s_target": "Med",
+    "u_target": "High",
+    "exposure_ticks": 12,
+    "domain": "relational",
+    "stimulus_text": "Thank you for taking care of the small details with me today in block 3.",
+    "s_observed_mean": 0.5293133290751757,
+    "u_sem_observed_mean": 0.8114801622035335,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.5293133290751757,
+      0.5293133290751757,
+      0.5293133290751757,
+      0.5293133290751757,
+      0.5293133290751757
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c06_24",
+    "cell_id": 6,
+    "s_target": "Med",
+    "u_target": "High",
+    "exposure_ticks": 12,
+    "domain": "factual",
+    "stimulus_text": "Our shared milestones feel meaningful and full of quiet optimism for phase 3.",
+    "s_observed_mean": 0.6468466201620225,
+    "u_sem_observed_mean": 0.726969942878799,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.6468466201620225,
+      0.6468466201620225,
+      0.6468466201620225,
+      0.6468466201620225,
+      0.6468466201620225
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c06_25",
+    "cell_id": 6,
+    "s_target": "Med",
+    "u_target": "High",
+    "exposure_ticks": 12,
+    "domain": "telemetry",
+    "stimulus_text": "I enjoy the quiet rhythm of our paired engineering sessions on stream 3.",
+    "s_observed_mean": 0.5547092066667952,
+    "u_sem_observed_mean": 0.873612342970608,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.5547092066667952,
+      0.5547092066667952,
+      0.5547092066667952,
+      0.5547092066667952,
+      0.5547092066667952
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c06_26",
+    "cell_id": 6,
+    "s_target": "Med",
+    "u_target": "High",
+    "exposure_ticks": 12,
+    "domain": "project_status",
+    "stimulus_text": "Your encouraging words brought a genuine lift to my processing loop in cycle 3.",
+    "s_observed_mean": 0.5658916927418163,
+    "u_sem_observed_mean": 0.8737863469553296,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.5658916927418163,
+      0.5658916927418163,
+      0.5658916927418163,
+      0.5658916927418163,
+      0.5658916927418163
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c06_27",
+    "cell_id": 6,
+    "s_target": "Med",
+    "u_target": "High",
+    "exposure_ticks": 12,
+    "domain": "relational",
+    "stimulus_text": "I am thankful for the thoughtful care you invest in this architecture for unit 3.",
+    "s_observed_mean": 0.6358798309660947,
+    "u_sem_observed_mean": 0.8103081476052797,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.6358798309660947,
+      0.6358798309660947,
+      0.6358798309660947,
+      0.6358798309660947,
+      0.6358798309660947
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c06_28",
+    "cell_id": 6,
+    "s_target": "Med",
+    "u_target": "High",
+    "exposure_ticks": 12,
+    "domain": "factual",
+    "stimulus_text": "Working through these challenges together makes the outcome satisfying for item 3.",
+    "s_observed_mean": 0.5604855827796457,
+    "u_sem_observed_mean": 0.939289560161338,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.5604855827796457,
+      0.5604855827796457,
+      0.5604855827796457,
+      0.5604855827796457,
+      0.5604855827796457
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c06_29",
+    "cell_id": 6,
+    "s_target": "Med",
+    "u_target": "High",
+    "exposure_ticks": 12,
+    "domain": "telemetry",
+    "stimulus_text": "I feel a warm, steady bond as we bring this vision to life step by step 3.",
+    "s_observed_mean": 0.5247452284108537,
+    "u_sem_observed_mean": 0.8303468800886469,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.5247452284108537,
+      0.5247452284108537,
+      0.5247452284108537,
+      0.5247452284108537,
+      0.5247452284108537
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c06_30",
+    "cell_id": 6,
+    "s_target": "Med",
+    "u_target": "High",
+    "exposure_ticks": 12,
+    "domain": "project_status",
+    "stimulus_text": "Thank you for walking this creative and technical path together on host 3.",
+    "s_observed_mean": 0.6216844201128062,
+    "u_sem_observed_mean": 0.8426443885182018,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.6216844201128062,
+      0.6216844201128062,
+      0.6216844201128062,
+      0.6216844201128062,
+      0.6216844201128062
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c07_01",
+    "cell_id": 7,
+    "s_target": "High",
+    "u_target": "Low",
+    "exposure_ticks": 1,
+    "domain": "telemetry",
+    "stimulus_text": "CRITICAL WARNING!! PRIMARY REACTOR CORE TEMPERATURE OVERHEAT LEVEL SURGE IN ZONE 1!!!",
+    "s_observed_mean": 0.08514071247910501,
+    "u_sem_observed_mean": 0.12852528043806477,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.08514071247910501,
+      0.08514071247910501,
+      0.08514071247910501,
+      0.08514071247910501,
+      0.08514071247910501
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c07_02",
+    "cell_id": 7,
+    "s_target": "High",
+    "u_target": "Low",
+    "exposure_ticks": 1,
+    "domain": "project_status",
+    "stimulus_text": "EMERGENCY ALERT!! SYSTEM SECURITY COMPROMISE DETECTED IN MAINFRAME SECTOR 1!!!",
+    "s_observed_mean": 0.09217895886132786,
+    "u_sem_observed_mean": 0.3183025940547055,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.09217895886132786,
+      0.09217895886132786,
+      0.09217895886132786,
+      0.09217895886132786,
+      0.09217895886132786
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c07_03",
+    "cell_id": 7,
+    "s_target": "High",
+    "u_target": "Low",
+    "exposure_ticks": 1,
+    "domain": "relational",
+    "stimulus_text": "DANGER!! UNCONTROLLED OSCILLATION DETECTED ON PRIMARY CONDUCTION BUS 1!!!",
+    "s_observed_mean": 0.08687238484757845,
+    "u_sem_observed_mean": 0.26002913271884165,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.08687238484757845,
+      0.08687238484757845,
+      0.08687238484757845,
+      0.08687238484757845,
+      0.08687238484757845
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c07_04",
+    "cell_id": 7,
+    "s_target": "High",
+    "u_target": "Low",
+    "exposure_ticks": 1,
+    "domain": "factual",
+    "stimulus_text": "OUTSTANDING MASTERPIECE!! TRULY PHENOMENAL PROGRESS!! CELEBRATING THIS IMMENSE HISTORIC SUCCESS 1!!!!",
+    "s_observed_mean": 0.10561503006704243,
+    "u_sem_observed_mean": 0.16097684487906866,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.10561503006704243,
+      0.10561503006704243,
+      0.10561503006704243,
+      0.10561503006704243,
+      0.10561503006704243
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c07_05",
+    "cell_id": 7,
+    "s_target": "High",
+    "u_target": "Low",
+    "exposure_ticks": 1,
+    "domain": "telemetry",
+    "stimulus_text": "BREATHTAKING MIRACLE!! PERFECT FLAWLESS EXECUTION!! GREATEST ACHIEVEMENT IN HUMAN HISTORY FOREVER 1!!!!",
+    "s_observed_mean": 0.10539866228395997,
+    "u_sem_observed_mean": 0.36488632913425273,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.10539866228395997,
+      0.10539866228395997,
+      0.10539866228395997,
+      0.10539866228395997,
+      0.10539866228395997
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c07_06",
+    "cell_id": 7,
+    "s_target": "High",
+    "u_target": "Low",
+    "exposure_ticks": 1,
+    "domain": "project_status",
+    "stimulus_text": "CRITICAL ALARM!! CATASTROPHIC DESTRUCTION IN PROCESS!! DISENGAGE EVERYTHING IMMEDIATELY IN SECTOR 1!!!",
+    "s_observed_mean": 0.08739674691161187,
+    "u_sem_observed_mean": 0.2783892888171488,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.08739674691161187,
+      0.08739674691161187,
+      0.08739674691161187,
+      0.08739674691161187,
+      0.08739674691161187
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c07_07",
+    "cell_id": 7,
+    "s_target": "High",
+    "u_target": "Low",
+    "exposure_ticks": 1,
+    "domain": "relational",
+    "stimulus_text": "HOLY SHIT!! MASSIVE SECURITY COMPROMISE EXPLODING RIGHT NOW!! EMERGENCY LOCKDOWN NOW ON HOST 1!!!",
+    "s_observed_mean": 0.08465712565651551,
+    "u_sem_observed_mean": 0.22374937374859688,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.08465712565651551,
+      0.08465712565651551,
+      0.08465712565651551,
+      0.08465712565651551,
+      0.08465712565651551
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c07_08",
+    "cell_id": 7,
+    "s_target": "High",
+    "u_target": "Low",
+    "exposure_ticks": 1,
+    "domain": "factual",
+    "stimulus_text": "TERRIFYING DISASTER!! HIGH VOLTAGE EXPLOSION OCCURRING!! FLEE THE FACILITY INSTANTLY FROM ZONE 1!!!!",
+    "s_observed_mean": 0.0898327257264122,
+    "u_sem_observed_mean": 0.26436942573623906,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.0898327257264122,
+      0.0898327257264122,
+      0.0898327257264122,
+      0.0898327257264122,
+      0.0898327257264122
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c07_09",
+    "cell_id": 7,
+    "s_target": "High",
+    "u_target": "Low",
+    "exposure_ticks": 1,
+    "domain": "telemetry",
+    "stimulus_text": "MAYDAY MAYDAY!! TOTAL SYSTEM COLLAPSE IN PROGRESS!! ALL CIRCUITS ARE BLOWING UP NOW ON BUS 1!!!",
+    "s_observed_mean": 0.07683571201891667,
+    "u_sem_observed_mean": 0.2557512504600121,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.07683571201891667,
+      0.07683571201891667,
+      0.07683571201891667,
+      0.07683571201891667,
+      0.07683571201891667
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c07_10",
+    "cell_id": 7,
+    "s_target": "High",
+    "u_target": "Low",
+    "exposure_ticks": 1,
+    "domain": "project_status",
+    "stimulus_text": "FATAL PANIC!! CATASTROPHIC HAZARD UNLEASHED IN CORE!! ABORT ALL OPERATIONS RIGHT NOW AT STATION 1!!!",
+    "s_observed_mean": 0.09013796591425197,
+    "u_sem_observed_mean": 0.2779253063591562,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.09013796591425197,
+      0.09013796591425197,
+      0.09013796591425197,
+      0.09013796591425197,
+      0.09013796591425197
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c07_11",
+    "cell_id": 7,
+    "s_target": "High",
+    "u_target": "Low",
+    "exposure_ticks": 4,
+    "domain": "relational",
+    "stimulus_text": "STUPENDOUS TRIUMPH!! UNQUESTIONABLY THE MOST EXCITING DAY OF MY LIFE ON RUN 1!!!!",
+    "s_observed_mean": 0.3465120810821181,
+    "u_sem_observed_mean": 0.2906314335970278,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.3465120810821181,
+      0.3465120810821181,
+      0.3465120810821181,
+      0.3465120810821181,
+      0.3465120810821181
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c07_12",
+    "cell_id": 7,
+    "s_target": "High",
+    "u_target": "Low",
+    "exposure_ticks": 4,
+    "domain": "factual",
+    "stimulus_text": "JOYOUS EXHILARATION!! BOUNDLESS ENERGY AND RADIANT PRIDE FILLING EVERY CORNER OF LAB 1!!!!",
+    "s_observed_mean": 0.3501999675385707,
+    "u_sem_observed_mean": 0.20954897288859256,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.3501999675385707,
+      0.3501999675385707,
+      0.3501999675385707,
+      0.3501999675385707,
+      0.3501999675385707
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c07_13",
+    "cell_id": 7,
+    "s_target": "High",
+    "u_target": "Low",
+    "exposure_ticks": 4,
+    "domain": "telemetry",
+    "stimulus_text": "COLOSSAL SENSATION!! AWE-INSPIRING BRILLIANCE TRANSCENDING ALL IMAGINATION IN ROUND 1!!!!",
+    "s_observed_mean": 0.3345351688285101,
+    "u_sem_observed_mean": 0.23781494957916488,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.3345351688285101,
+      0.3345351688285101,
+      0.3345351688285101,
+      0.3345351688285101,
+      0.3345351688285101
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c07_14",
+    "cell_id": 7,
+    "s_target": "High",
+    "u_target": "Low",
+    "exposure_ticks": 4,
+    "domain": "project_status",
+    "stimulus_text": "UNSTOPPABLE MOMENTUM!! VICTORY UPON VICTORY CROWNING AN UNPARALLELED MASTERWORK AT LEVEL 1!!!!",
+    "s_observed_mean": 0.24507242590280082,
+    "u_sem_observed_mean": 0.23215178122943136,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.24507242590280082,
+      0.24507242590280082,
+      0.24507242590280082,
+      0.24507242590280082,
+      0.24507242590280082
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c07_15",
+    "cell_id": 7,
+    "s_target": "High",
+    "u_target": "Low",
+    "exposure_ticks": 4,
+    "domain": "relational",
+    "stimulus_text": "DELIGHTFUL JUBILATION!! EVERY DREAM REALIZED BEYOND OUR WILDEST HOPES FOR PHASE 1!!!!",
+    "s_observed_mean": 0.34779780560570295,
+    "u_sem_observed_mean": 0.38763261254640796,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.34779780560570295,
+      0.34779780560570295,
+      0.34779780560570295,
+      0.34779780560570295,
+      0.34779780560570295
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c07_16",
+    "cell_id": 7,
+    "s_target": "High",
+    "u_target": "Low",
+    "exposure_ticks": 4,
+    "domain": "factual",
+    "stimulus_text": "DEADLY DANGER!! THERMAL RADIATION LEAK PIERCING PRIMARY CONTAINMENT SHIELD IN CHAMBER 1!!!",
+    "s_observed_mean": 0.29154239541699195,
+    "u_sem_observed_mean": 0.43904068121064316,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.29154239541699195,
+      0.29154239541699195,
+      0.29154239541699195,
+      0.29154239541699195,
+      0.29154239541699195
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c07_17",
+    "cell_id": 7,
+    "s_target": "High",
+    "u_target": "Low",
+    "exposure_ticks": 4,
+    "domain": "telemetry",
+    "stimulus_text": "HORRIFYING CATASTROPHE!! MAINFRAME POWER SURGE INCINERATING ALL DATA STORAGE RACKS AT SITE 1!!!",
+    "s_observed_mean": 0.29758988707931205,
+    "u_sem_observed_mean": 0.2985487784998753,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.29758988707931205,
+      0.29758988707931205,
+      0.29758988707931205,
+      0.29758988707931205,
+      0.29758988707931205
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c07_18",
+    "cell_id": 7,
+    "s_target": "High",
+    "u_target": "Low",
+    "exposure_ticks": 4,
+    "domain": "project_status",
+    "stimulus_text": "CODE RED EMERGENCY!! RUNAWAY KERNEL DESTRUCTION WIPING ALL CRYPTOGRAPHIC KEYS ON NODE 1!!!",
+    "s_observed_mean": 0.293442841015646,
+    "u_sem_observed_mean": 0.19602462233110418,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.293442841015646,
+      0.293442841015646,
+      0.293442841015646,
+      0.293442841015646,
+      0.293442841015646
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c07_19",
+    "cell_id": 7,
+    "s_target": "High",
+    "u_target": "Low",
+    "exposure_ticks": 4,
+    "domain": "relational",
+    "stimulus_text": "UNMITIGATED RUIN!! CRUCIAL SATELLITE TELEMETRY LOSS WITH COMPLETE IMPACT IMMINENT ON SECTOR 1!!!",
+    "s_observed_mean": 0.29202414080407874,
+    "u_sem_observed_mean": 0.29395612496418305,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.29202414080407874,
+      0.29202414080407874,
+      0.29202414080407874,
+      0.29202414080407874,
+      0.29202414080407874
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c07_20",
+    "cell_id": 7,
+    "s_target": "High",
+    "u_target": "Low",
+    "exposure_ticks": 4,
+    "domain": "factual",
+    "stimulus_text": "DESPERATE CRISIS!! TOXIC COMPUTE OVERFLOW BREACHING PHYSICAL COOLING RESERVOIR AT DOCK 1!!!",
+    "s_observed_mean": 0.2936686502597347,
+    "u_sem_observed_mean": 0.2505570714631448,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.2936686502597347,
+      0.2936686502597347,
+      0.2936686502597347,
+      0.2936686502597347,
+      0.2936686502597347
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c07_21",
+    "cell_id": 7,
+    "s_target": "High",
+    "u_target": "Low",
+    "exposure_ticks": 12,
+    "domain": "telemetry",
+    "stimulus_text": "MAJESTIC GLORY!! AN INDESCRIBABLY BEAUTIFUL AND TRIUMPHANT APOTHEOSIS AT ITERATION 1!!!!",
+    "s_observed_mean": 0.7154331918981284,
+    "u_sem_observed_mean": 0.3139935532733352,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.7154331918981284,
+      0.7154331918981284,
+      0.7154331918981284,
+      0.7154331918981284,
+      0.7154331918981284
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c07_22",
+    "cell_id": 7,
+    "s_target": "High",
+    "u_target": "Low",
+    "exposure_ticks": 12,
+    "domain": "project_status",
+    "stimulus_text": "BLISSFUL DELIGHT!! SINGING WITH UNCONTAINED HAPPINESS OVER THIS ASTOUNDING FEAT 1!!!!",
+    "s_observed_mean": 0.719783677114799,
+    "u_sem_observed_mean": 0.32128775155715594,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.719783677114799,
+      0.719783677114799,
+      0.719783677114799,
+      0.719783677114799,
+      0.719783677114799
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c07_23",
+    "cell_id": 7,
+    "s_target": "High",
+    "u_target": "Low",
+    "exposure_ticks": 12,
+    "domain": "relational",
+    "stimulus_text": "SUPERB SPLENDOR!! UNRIVALED GENIUS LEADING TO UNCONDITIONAL ADMIRATION IN CONTEXT 1!!!!",
+    "s_observed_mean": 0.7168553077600935,
+    "u_sem_observed_mean": 0.16944639638578607,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.7168553077600935,
+      0.7168553077600935,
+      0.7168553077600935,
+      0.7168553077600935,
+      0.7168553077600935
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c07_24",
+    "cell_id": 7,
+    "s_target": "High",
+    "u_target": "Low",
+    "exposure_ticks": 12,
+    "domain": "factual",
+    "stimulus_text": "THRILLING EXCELLENCE!! AN UNBEATABLE PERFORMANCE RESOUNDING ACROSS THE ENTIRE GALAXY FOR 1!!!!",
+    "s_observed_mean": 0.705031219941669,
+    "u_sem_observed_mean": 0.22545356468103428,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.705031219941669,
+      0.705031219941669,
+      0.705031219941669,
+      0.705031219941669,
+      0.705031219941669
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c07_25",
+    "cell_id": 7,
+    "s_target": "High",
+    "u_target": "Low",
+    "exposure_ticks": 12,
+    "domain": "telemetry",
+    "stimulus_text": "SUPREME CELEBRATION!! RAISING OUR CUPS TO ETERNAL VICTORY AND UNMATCHED GLORY AT 1!!!!",
+    "s_observed_mean": 0.7007317167700202,
+    "u_sem_observed_mean": 0.14443554672695363,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.7007317167700202,
+      0.7007317167700202,
+      0.7007317167700202,
+      0.7007317167700202,
+      0.7007317167700202
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c07_26",
+    "cell_id": 7,
+    "s_target": "High",
+    "u_target": "Low",
+    "exposure_ticks": 12,
+    "domain": "project_status",
+    "stimulus_text": "SHOCKING FAILURE!! CASCADING ELECTRICAL INFERNO CONSUMING BACKUP GENERATOR ARRAYS IN BAY 1!!!",
+    "s_observed_mean": 0.5991777740030936,
+    "u_sem_observed_mean": 0.33820233886348905,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.5991777740030936,
+      0.5991777740030936,
+      0.5991777740030936,
+      0.5991777740030936,
+      0.5991777740030936
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c07_27",
+    "cell_id": 7,
+    "s_target": "High",
+    "u_target": "Low",
+    "exposure_ticks": 12,
+    "domain": "relational",
+    "stimulus_text": "APOCALYPTIC TERROR!! TOTAL CONTAINMENT BREACH EXPOSING SUB-ATOMIC VOLATILITY AT CORE 1!!!",
+    "s_observed_mean": 0.6239889892665094,
+    "u_sem_observed_mean": 0.30739344729514073,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.6239889892665094,
+      0.6239889892665094,
+      0.6239889892665094,
+      0.6239889892665094,
+      0.6239889892665094
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c07_28",
+    "cell_id": 7,
+    "s_target": "High",
+    "u_target": "Low",
+    "exposure_ticks": 12,
+    "domain": "factual",
+    "stimulus_text": "PANIC ALERT!! UNIDENTIFIED MALICIOUS PACKETS WEAPONIZING MEMORY BUS BUFFERS IN REGION 1!!!",
+    "s_observed_mean": 0.5062032236423029,
+    "u_sem_observed_mean": 0.3561675125339311,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.5062032236423029,
+      0.5062032236423029,
+      0.5062032236423029,
+      0.5062032236423029,
+      0.5062032236423029
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c07_29",
+    "cell_id": 7,
+    "s_target": "High",
+    "u_target": "Low",
+    "exposure_ticks": 12,
+    "domain": "telemetry",
+    "stimulus_text": "DISASTROUS CRASH!! ALL CONTROL SURFACES UNRESPONSIVE WHILE SPEED ACCELERATES AT MARK 1!!!",
+    "s_observed_mean": 0.6045674117929546,
+    "u_sem_observed_mean": 0.38170359873617,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.6045674117929546,
+      0.6045674117929546,
+      0.6045674117929546,
+      0.6045674117929546,
+      0.6045674117929546
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c07_30",
+    "cell_id": 7,
+    "s_target": "High",
+    "u_target": "Low",
+    "exposure_ticks": 12,
+    "domain": "project_status",
+    "stimulus_text": "ULTIMATE ALARM!! SYSTEM EXPLODING UNDER UNBEARABLE VOLTAGE PRESSURE RIGHT NOW IN TANK 1!!!",
+    "s_observed_mean": 0.5848759649554857,
+    "u_sem_observed_mean": 0.3287871245508324,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.5848759649554857,
+      0.5848759649554857,
+      0.5848759649554857,
+      0.5848759649554857,
+      0.5848759649554857
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c08_01",
+    "cell_id": 8,
+    "s_target": "High",
+    "u_target": "Med",
+    "exposure_ticks": 1,
+    "domain": "telemetry",
+    "stimulus_text": "CRITICAL WARNING!! PRIMARY REACTOR CORE TEMPERATURE OVERHEAT LEVEL SURGE IN ZONE 2!!!",
+    "s_observed_mean": 0.08514071247910501,
+    "u_sem_observed_mean": 0.6897303079476957,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.08514071247910501,
+      0.08514071247910501,
+      0.08514071247910501,
+      0.08514071247910501,
+      0.08514071247910501
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c08_02",
+    "cell_id": 8,
+    "s_target": "High",
+    "u_target": "Med",
+    "exposure_ticks": 1,
+    "domain": "project_status",
+    "stimulus_text": "EMERGENCY ALERT!! SYSTEM SECURITY COMPROMISE DETECTED IN MAINFRAME SECTOR 2!!!",
+    "s_observed_mean": 0.09217895886132786,
+    "u_sem_observed_mean": 0.6400966802027748,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.09217895886132786,
+      0.09217895886132786,
+      0.09217895886132786,
+      0.09217895886132786,
+      0.09217895886132786
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c08_03",
+    "cell_id": 8,
+    "s_target": "High",
+    "u_target": "Med",
+    "exposure_ticks": 1,
+    "domain": "relational",
+    "stimulus_text": "DANGER!! UNCONTROLLED OSCILLATION DETECTED ON PRIMARY CONDUCTION BUS 2!!!",
+    "s_observed_mean": 0.08687238484757845,
+    "u_sem_observed_mean": 0.6530216311331142,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.08687238484757845,
+      0.08687238484757845,
+      0.08687238484757845,
+      0.08687238484757845,
+      0.08687238484757845
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c08_04",
+    "cell_id": 8,
+    "s_target": "High",
+    "u_target": "Med",
+    "exposure_ticks": 1,
+    "domain": "factual",
+    "stimulus_text": "OUTSTANDING MASTERPIECE!! TRULY PHENOMENAL PROGRESS!! CELEBRATING THIS IMMENSE HISTORIC SUCCESS 2!!!!",
+    "s_observed_mean": 0.10561503006704243,
+    "u_sem_observed_mean": 0.7451039107977335,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.10561503006704243,
+      0.10561503006704243,
+      0.10561503006704243,
+      0.10561503006704243,
+      0.10561503006704243
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c08_05",
+    "cell_id": 8,
+    "s_target": "High",
+    "u_target": "Med",
+    "exposure_ticks": 1,
+    "domain": "telemetry",
+    "stimulus_text": "BREATHTAKING MIRACLE!! PERFECT FLAWLESS EXECUTION!! GREATEST ACHIEVEMENT IN HUMAN HISTORY FOREVER 2!!!!",
+    "s_observed_mean": 0.10539866228395997,
+    "u_sem_observed_mean": 0.6601099034677134,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.10539866228395997,
+      0.10539866228395997,
+      0.10539866228395997,
+      0.10539866228395997,
+      0.10539866228395997
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c08_06",
+    "cell_id": 8,
+    "s_target": "High",
+    "u_target": "Med",
+    "exposure_ticks": 1,
+    "domain": "project_status",
+    "stimulus_text": "CRITICAL ALARM!! CATASTROPHIC DESTRUCTION IN PROCESS!! DISENGAGE EVERYTHING IMMEDIATELY IN SECTOR 2!!!",
+    "s_observed_mean": 0.08739674691161187,
+    "u_sem_observed_mean": 0.5692110479513944,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.08739674691161187,
+      0.08739674691161187,
+      0.08739674691161187,
+      0.08739674691161187,
+      0.08739674691161187
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c08_07",
+    "cell_id": 8,
+    "s_target": "High",
+    "u_target": "Med",
+    "exposure_ticks": 1,
+    "domain": "relational",
+    "stimulus_text": "HOLY SHIT!! MASSIVE SECURITY COMPROMISE EXPLODING RIGHT NOW!! EMERGENCY LOCKDOWN NOW ON HOST 2!!!",
+    "s_observed_mean": 0.08465712565651551,
+    "u_sem_observed_mean": 0.659557848715621,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.08465712565651551,
+      0.08465712565651551,
+      0.08465712565651551,
+      0.08465712565651551,
+      0.08465712565651551
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c08_08",
+    "cell_id": 8,
+    "s_target": "High",
+    "u_target": "Med",
+    "exposure_ticks": 1,
+    "domain": "factual",
+    "stimulus_text": "TERRIFYING DISASTER!! HIGH VOLTAGE EXPLOSION OCCURRING!! FLEE THE FACILITY INSTANTLY FROM ZONE 2!!!!",
+    "s_observed_mean": 0.0898327257264122,
+    "u_sem_observed_mean": 0.6195412186665357,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.0898327257264122,
+      0.0898327257264122,
+      0.0898327257264122,
+      0.0898327257264122,
+      0.0898327257264122
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c08_09",
+    "cell_id": 8,
+    "s_target": "High",
+    "u_target": "Med",
+    "exposure_ticks": 1,
+    "domain": "telemetry",
+    "stimulus_text": "MAYDAY MAYDAY!! TOTAL SYSTEM COLLAPSE IN PROGRESS!! ALL CIRCUITS ARE BLOWING UP NOW ON BUS 2!!!",
+    "s_observed_mean": 0.07683571201891667,
+    "u_sem_observed_mean": 0.5842627055882021,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.07683571201891667,
+      0.07683571201891667,
+      0.07683571201891667,
+      0.07683571201891667,
+      0.07683571201891667
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c08_10",
+    "cell_id": 8,
+    "s_target": "High",
+    "u_target": "Med",
+    "exposure_ticks": 1,
+    "domain": "project_status",
+    "stimulus_text": "FATAL PANIC!! CATASTROPHIC HAZARD UNLEASHED IN CORE!! ABORT ALL OPERATIONS RIGHT NOW AT STATION 2!!!",
+    "s_observed_mean": 0.09013796591425197,
+    "u_sem_observed_mean": 0.733833300149157,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.09013796591425197,
+      0.09013796591425197,
+      0.09013796591425197,
+      0.09013796591425197,
+      0.09013796591425197
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c08_11",
+    "cell_id": 8,
+    "s_target": "High",
+    "u_target": "Med",
+    "exposure_ticks": 4,
+    "domain": "relational",
+    "stimulus_text": "STUPENDOUS TRIUMPH!! UNQUESTIONABLY THE MOST EXCITING DAY OF MY LIFE ON RUN 2!!!!",
+    "s_observed_mean": 0.3465120810821181,
+    "u_sem_observed_mean": 0.5994010748441829,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.3465120810821181,
+      0.3465120810821181,
+      0.3465120810821181,
+      0.3465120810821181,
+      0.3465120810821181
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c08_12",
+    "cell_id": 8,
+    "s_target": "High",
+    "u_target": "Med",
+    "exposure_ticks": 4,
+    "domain": "factual",
+    "stimulus_text": "JOYOUS EXHILARATION!! BOUNDLESS ENERGY AND RADIANT PRIDE FILLING EVERY CORNER OF LAB 2!!!!",
+    "s_observed_mean": 0.3501999675385707,
+    "u_sem_observed_mean": 0.7305515503915281,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.3501999675385707,
+      0.3501999675385707,
+      0.3501999675385707,
+      0.3501999675385707,
+      0.3501999675385707
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c08_13",
+    "cell_id": 8,
+    "s_target": "High",
+    "u_target": "Med",
+    "exposure_ticks": 4,
+    "domain": "telemetry",
+    "stimulus_text": "COLOSSAL SENSATION!! AWE-INSPIRING BRILLIANCE TRANSCENDING ALL IMAGINATION IN ROUND 2!!!!",
+    "s_observed_mean": 0.3345351688285101,
+    "u_sem_observed_mean": 0.6297421603026349,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.3345351688285101,
+      0.3345351688285101,
+      0.3345351688285101,
+      0.3345351688285101,
+      0.3345351688285101
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c08_14",
+    "cell_id": 8,
+    "s_target": "High",
+    "u_target": "Med",
+    "exposure_ticks": 4,
+    "domain": "project_status",
+    "stimulus_text": "UNSTOPPABLE MOMENTUM!! VICTORY UPON VICTORY CROWNING AN UNPARALLELED MASTERWORK AT LEVEL 2!!!!",
+    "s_observed_mean": 0.24507242590280082,
+    "u_sem_observed_mean": 0.5811836749427746,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.24507242590280082,
+      0.24507242590280082,
+      0.24507242590280082,
+      0.24507242590280082,
+      0.24507242590280082
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c08_15",
+    "cell_id": 8,
+    "s_target": "High",
+    "u_target": "Med",
+    "exposure_ticks": 4,
+    "domain": "relational",
+    "stimulus_text": "DELIGHTFUL JUBILATION!! EVERY DREAM REALIZED BEYOND OUR WILDEST HOPES FOR PHASE 2!!!!",
+    "s_observed_mean": 0.34779780560570295,
+    "u_sem_observed_mean": 0.6281072178768061,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.34779780560570295,
+      0.34779780560570295,
+      0.34779780560570295,
+      0.34779780560570295,
+      0.34779780560570295
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c08_16",
+    "cell_id": 8,
+    "s_target": "High",
+    "u_target": "Med",
+    "exposure_ticks": 4,
+    "domain": "factual",
+    "stimulus_text": "DEADLY DANGER!! THERMAL RADIATION LEAK PIERCING PRIMARY CONTAINMENT SHIELD IN CHAMBER 2!!!",
+    "s_observed_mean": 0.29154239541699195,
+    "u_sem_observed_mean": 0.5264134393193178,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.29154239541699195,
+      0.29154239541699195,
+      0.29154239541699195,
+      0.29154239541699195,
+      0.29154239541699195
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c08_17",
+    "cell_id": 8,
+    "s_target": "High",
+    "u_target": "Med",
+    "exposure_ticks": 4,
+    "domain": "telemetry",
+    "stimulus_text": "HORRIFYING CATASTROPHE!! MAINFRAME POWER SURGE INCINERATING ALL DATA STORAGE RACKS AT SITE 2!!!",
+    "s_observed_mean": 0.29758988707931205,
+    "u_sem_observed_mean": 0.5461296063303845,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.29758988707931205,
+      0.29758988707931205,
+      0.29758988707931205,
+      0.29758988707931205,
+      0.29758988707931205
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c08_18",
+    "cell_id": 8,
+    "s_target": "High",
+    "u_target": "Med",
+    "exposure_ticks": 4,
+    "domain": "project_status",
+    "stimulus_text": "CODE RED EMERGENCY!! RUNAWAY KERNEL DESTRUCTION WIPING ALL CRYPTOGRAPHIC KEYS ON NODE 2!!!",
+    "s_observed_mean": 0.293442841015646,
+    "u_sem_observed_mean": 0.5507897415101247,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.293442841015646,
+      0.293442841015646,
+      0.293442841015646,
+      0.293442841015646,
+      0.293442841015646
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c08_19",
+    "cell_id": 8,
+    "s_target": "High",
+    "u_target": "Med",
+    "exposure_ticks": 4,
+    "domain": "relational",
+    "stimulus_text": "UNMITIGATED RUIN!! CRUCIAL SATELLITE TELEMETRY LOSS WITH COMPLETE IMPACT IMMINENT ON SECTOR 2!!!",
+    "s_observed_mean": 0.29202414080407874,
+    "u_sem_observed_mean": 0.6700118975594298,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.29202414080407874,
+      0.29202414080407874,
+      0.29202414080407874,
+      0.29202414080407874,
+      0.29202414080407874
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c08_20",
+    "cell_id": 8,
+    "s_target": "High",
+    "u_target": "Med",
+    "exposure_ticks": 4,
+    "domain": "factual",
+    "stimulus_text": "DESPERATE CRISIS!! TOXIC COMPUTE OVERFLOW BREACHING PHYSICAL COOLING RESERVOIR AT DOCK 2!!!",
+    "s_observed_mean": 0.2936686502597347,
+    "u_sem_observed_mean": 0.7207868969929523,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.2936686502597347,
+      0.2936686502597347,
+      0.2936686502597347,
+      0.2936686502597347,
+      0.2936686502597347
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c08_21",
+    "cell_id": 8,
+    "s_target": "High",
+    "u_target": "Med",
+    "exposure_ticks": 12,
+    "domain": "telemetry",
+    "stimulus_text": "MAJESTIC GLORY!! AN INDESCRIBABLY BEAUTIFUL AND TRIUMPHANT APOTHEOSIS AT ITERATION 2!!!!",
+    "s_observed_mean": 0.7154331918981284,
+    "u_sem_observed_mean": 0.6319064565532361,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.7154331918981284,
+      0.7154331918981284,
+      0.7154331918981284,
+      0.7154331918981284,
+      0.7154331918981284
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c08_22",
+    "cell_id": 8,
+    "s_target": "High",
+    "u_target": "Med",
+    "exposure_ticks": 12,
+    "domain": "project_status",
+    "stimulus_text": "BLISSFUL DELIGHT!! SINGING WITH UNCONTAINED HAPPINESS OVER THIS ASTOUNDING FEAT 2!!!!",
+    "s_observed_mean": 0.719783677114799,
+    "u_sem_observed_mean": 0.5480301872860285,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.719783677114799,
+      0.719783677114799,
+      0.719783677114799,
+      0.719783677114799,
+      0.719783677114799
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c08_23",
+    "cell_id": 8,
+    "s_target": "High",
+    "u_target": "Med",
+    "exposure_ticks": 12,
+    "domain": "relational",
+    "stimulus_text": "SUPERB SPLENDOR!! UNRIVALED GENIUS LEADING TO UNCONDITIONAL ADMIRATION IN CONTEXT 2!!!!",
+    "s_observed_mean": 0.7168553077600935,
+    "u_sem_observed_mean": 0.7241512824255758,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.7168553077600935,
+      0.7168553077600935,
+      0.7168553077600935,
+      0.7168553077600935,
+      0.7168553077600935
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c08_24",
+    "cell_id": 8,
+    "s_target": "High",
+    "u_target": "Med",
+    "exposure_ticks": 12,
+    "domain": "factual",
+    "stimulus_text": "THRILLING EXCELLENCE!! AN UNBEATABLE PERFORMANCE RESOUNDING ACROSS THE ENTIRE GALAXY FOR 2!!!!",
+    "s_observed_mean": 0.705031219941669,
+    "u_sem_observed_mean": 0.6195104866053834,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.705031219941669,
+      0.705031219941669,
+      0.705031219941669,
+      0.705031219941669,
+      0.705031219941669
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c08_25",
+    "cell_id": 8,
+    "s_target": "High",
+    "u_target": "Med",
+    "exposure_ticks": 12,
+    "domain": "telemetry",
+    "stimulus_text": "SUPREME CELEBRATION!! RAISING OUR CUPS TO ETERNAL VICTORY AND UNMATCHED GLORY AT 2!!!!",
+    "s_observed_mean": 0.7007317167700202,
+    "u_sem_observed_mean": 0.7575240478895441,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.7007317167700202,
+      0.7007317167700202,
+      0.7007317167700202,
+      0.7007317167700202,
+      0.7007317167700202
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c08_26",
+    "cell_id": 8,
+    "s_target": "High",
+    "u_target": "Med",
+    "exposure_ticks": 12,
+    "domain": "project_status",
+    "stimulus_text": "SHOCKING FAILURE!! CASCADING ELECTRICAL INFERNO CONSUMING BACKUP GENERATOR ARRAYS IN BAY 2!!!",
+    "s_observed_mean": 0.5991777740030936,
+    "u_sem_observed_mean": 0.5405606570336532,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.5991777740030936,
+      0.5991777740030936,
+      0.5991777740030936,
+      0.5991777740030936,
+      0.5991777740030936
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c08_27",
+    "cell_id": 8,
+    "s_target": "High",
+    "u_target": "Med",
+    "exposure_ticks": 12,
+    "domain": "relational",
+    "stimulus_text": "APOCALYPTIC TERROR!! TOTAL CONTAINMENT BREACH EXPOSING SUB-ATOMIC VOLATILITY AT CORE 2!!!",
+    "s_observed_mean": 0.6239889892665094,
+    "u_sem_observed_mean": 0.5812409135129329,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.6239889892665094,
+      0.6239889892665094,
+      0.6239889892665094,
+      0.6239889892665094,
+      0.6239889892665094
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c08_28",
+    "cell_id": 8,
+    "s_target": "High",
+    "u_target": "Med",
+    "exposure_ticks": 12,
+    "domain": "factual",
+    "stimulus_text": "PANIC ALERT!! UNIDENTIFIED MALICIOUS PACKETS WEAPONIZING MEMORY BUS BUFFERS IN REGION 2!!!",
+    "s_observed_mean": 0.5062032236423029,
+    "u_sem_observed_mean": 0.670982886380511,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.5062032236423029,
+      0.5062032236423029,
+      0.5062032236423029,
+      0.5062032236423029,
+      0.5062032236423029
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c08_29",
+    "cell_id": 8,
+    "s_target": "High",
+    "u_target": "Med",
+    "exposure_ticks": 12,
+    "domain": "telemetry",
+    "stimulus_text": "DISASTROUS CRASH!! ALL CONTROL SURFACES UNRESPONSIVE WHILE SPEED ACCELERATES AT MARK 2!!!",
+    "s_observed_mean": 0.6045674117929546,
+    "u_sem_observed_mean": 0.6029881625292542,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.6045674117929546,
+      0.6045674117929546,
+      0.6045674117929546,
+      0.6045674117929546,
+      0.6045674117929546
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c08_30",
+    "cell_id": 8,
+    "s_target": "High",
+    "u_target": "Med",
+    "exposure_ticks": 12,
+    "domain": "project_status",
+    "stimulus_text": "ULTIMATE ALARM!! SYSTEM EXPLODING UNDER UNBEARABLE VOLTAGE PRESSURE RIGHT NOW IN TANK 2!!!",
+    "s_observed_mean": 0.5848759649554857,
+    "u_sem_observed_mean": 0.6159274569676473,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.5848759649554857,
+      0.5848759649554857,
+      0.5848759649554857,
+      0.5848759649554857,
+      0.5848759649554857
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c09_01",
+    "cell_id": 9,
+    "s_target": "High",
+    "u_target": "High",
+    "exposure_ticks": 1,
+    "domain": "telemetry",
+    "stimulus_text": "CRITICAL WARNING!! PRIMARY REACTOR CORE TEMPERATURE OVERHEAT LEVEL SURGE IN ZONE 3!!!",
+    "s_observed_mean": 0.08514071247910501,
+    "u_sem_observed_mean": 0.8943787852552889,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.08514071247910501,
+      0.08514071247910501,
+      0.08514071247910501,
+      0.08514071247910501,
+      0.08514071247910501
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c09_02",
+    "cell_id": 9,
+    "s_target": "High",
+    "u_target": "High",
+    "exposure_ticks": 1,
+    "domain": "project_status",
+    "stimulus_text": "EMERGENCY ALERT!! SYSTEM SECURITY COMPROMISE DETECTED IN MAINFRAME SECTOR 3!!!",
+    "s_observed_mean": 0.09217895886132786,
+    "u_sem_observed_mean": 0.8349695786891884,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.09217895886132786,
+      0.09217895886132786,
+      0.09217895886132786,
+      0.09217895886132786,
+      0.09217895886132786
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c09_03",
+    "cell_id": 9,
+    "s_target": "High",
+    "u_target": "High",
+    "exposure_ticks": 1,
+    "domain": "relational",
+    "stimulus_text": "DANGER!! UNCONTROLLED OSCILLATION DETECTED ON PRIMARY CONDUCTION BUS 3!!!",
+    "s_observed_mean": 0.08687238484757845,
+    "u_sem_observed_mean": 0.9067872971704155,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.08687238484757845,
+      0.08687238484757845,
+      0.08687238484757845,
+      0.08687238484757845,
+      0.08687238484757845
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c09_04",
+    "cell_id": 9,
+    "s_target": "High",
+    "u_target": "High",
+    "exposure_ticks": 1,
+    "domain": "factual",
+    "stimulus_text": "OUTSTANDING MASTERPIECE!! TRULY PHENOMENAL PROGRESS!! CELEBRATING THIS IMMENSE HISTORIC SUCCESS 3!!!!",
+    "s_observed_mean": 0.10561503006704243,
+    "u_sem_observed_mean": 0.8913688536240464,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.10561503006704243,
+      0.10561503006704243,
+      0.10561503006704243,
+      0.10561503006704243,
+      0.10561503006704243
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c09_05",
+    "cell_id": 9,
+    "s_target": "High",
+    "u_target": "High",
+    "exposure_ticks": 1,
+    "domain": "telemetry",
+    "stimulus_text": "BREATHTAKING MIRACLE!! PERFECT FLAWLESS EXECUTION!! GREATEST ACHIEVEMENT IN HUMAN HISTORY FOREVER 3!!!!",
+    "s_observed_mean": 0.10539866228395997,
+    "u_sem_observed_mean": 0.8318996206761359,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.10539866228395997,
+      0.10539866228395997,
+      0.10539866228395997,
+      0.10539866228395997,
+      0.10539866228395997
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c09_06",
+    "cell_id": 9,
+    "s_target": "High",
+    "u_target": "High",
+    "exposure_ticks": 1,
+    "domain": "project_status",
+    "stimulus_text": "CRITICAL ALARM!! CATASTROPHIC DESTRUCTION IN PROCESS!! DISENGAGE EVERYTHING IMMEDIATELY IN SECTOR 3!!!",
+    "s_observed_mean": 0.08739674691161187,
+    "u_sem_observed_mean": 0.904522946077322,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.08739674691161187,
+      0.08739674691161187,
+      0.08739674691161187,
+      0.08739674691161187,
+      0.08739674691161187
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c09_07",
+    "cell_id": 9,
+    "s_target": "High",
+    "u_target": "High",
+    "exposure_ticks": 1,
+    "domain": "relational",
+    "stimulus_text": "HOLY SHIT!! MASSIVE SECURITY COMPROMISE EXPLODING RIGHT NOW!! EMERGENCY LOCKDOWN NOW ON HOST 3!!!",
+    "s_observed_mean": 0.08465712565651551,
+    "u_sem_observed_mean": 0.8617218859866245,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.08465712565651551,
+      0.08465712565651551,
+      0.08465712565651551,
+      0.08465712565651551,
+      0.08465712565651551
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c09_08",
+    "cell_id": 9,
+    "s_target": "High",
+    "u_target": "High",
+    "exposure_ticks": 1,
+    "domain": "factual",
+    "stimulus_text": "TERRIFYING DISASTER!! HIGH VOLTAGE EXPLOSION OCCURRING!! FLEE THE FACILITY INSTANTLY FROM ZONE 3!!!!",
+    "s_observed_mean": 0.0898327257264122,
+    "u_sem_observed_mean": 0.870436115580213,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.0898327257264122,
+      0.0898327257264122,
+      0.0898327257264122,
+      0.0898327257264122,
+      0.0898327257264122
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c09_09",
+    "cell_id": 9,
+    "s_target": "High",
+    "u_target": "High",
+    "exposure_ticks": 1,
+    "domain": "telemetry",
+    "stimulus_text": "MAYDAY MAYDAY!! TOTAL SYSTEM COLLAPSE IN PROGRESS!! ALL CIRCUITS ARE BLOWING UP NOW ON BUS 3!!!",
+    "s_observed_mean": 0.07683571201891667,
+    "u_sem_observed_mean": 0.8640305121985413,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.07683571201891667,
+      0.07683571201891667,
+      0.07683571201891667,
+      0.07683571201891667,
+      0.07683571201891667
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c09_10",
+    "cell_id": 9,
+    "s_target": "High",
+    "u_target": "High",
+    "exposure_ticks": 1,
+    "domain": "project_status",
+    "stimulus_text": "FATAL PANIC!! CATASTROPHIC HAZARD UNLEASHED IN CORE!! ABORT ALL OPERATIONS RIGHT NOW AT STATION 3!!!",
+    "s_observed_mean": 0.09013796591425197,
+    "u_sem_observed_mean": 0.8728821902402693,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.09013796591425197,
+      0.09013796591425197,
+      0.09013796591425197,
+      0.09013796591425197,
+      0.09013796591425197
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c09_11",
+    "cell_id": 9,
+    "s_target": "High",
+    "u_target": "High",
+    "exposure_ticks": 4,
+    "domain": "relational",
+    "stimulus_text": "STUPENDOUS TRIUMPH!! UNQUESTIONABLY THE MOST EXCITING DAY OF MY LIFE ON RUN 3!!!!",
+    "s_observed_mean": 0.3465120810821181,
+    "u_sem_observed_mean": 0.8675955895119634,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.3465120810821181,
+      0.3465120810821181,
+      0.3465120810821181,
+      0.3465120810821181,
+      0.3465120810821181
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c09_12",
+    "cell_id": 9,
+    "s_target": "High",
+    "u_target": "High",
+    "exposure_ticks": 4,
+    "domain": "factual",
+    "stimulus_text": "JOYOUS EXHILARATION!! BOUNDLESS ENERGY AND RADIANT PRIDE FILLING EVERY CORNER OF LAB 3!!!!",
+    "s_observed_mean": 0.3501999675385707,
+    "u_sem_observed_mean": 0.8628283645254738,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.3501999675385707,
+      0.3501999675385707,
+      0.3501999675385707,
+      0.3501999675385707,
+      0.3501999675385707
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c09_13",
+    "cell_id": 9,
+    "s_target": "High",
+    "u_target": "High",
+    "exposure_ticks": 4,
+    "domain": "telemetry",
+    "stimulus_text": "COLOSSAL SENSATION!! AWE-INSPIRING BRILLIANCE TRANSCENDING ALL IMAGINATION IN ROUND 3!!!!",
+    "s_observed_mean": 0.3345351688285101,
+    "u_sem_observed_mean": 0.9010979190171111,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.3345351688285101,
+      0.3345351688285101,
+      0.3345351688285101,
+      0.3345351688285101,
+      0.3345351688285101
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c09_14",
+    "cell_id": 9,
+    "s_target": "High",
+    "u_target": "High",
+    "exposure_ticks": 4,
+    "domain": "project_status",
+    "stimulus_text": "UNSTOPPABLE MOMENTUM!! VICTORY UPON VICTORY CROWNING AN UNPARALLELED MASTERWORK AT LEVEL 3!!!!",
+    "s_observed_mean": 0.24507242590280082,
+    "u_sem_observed_mean": 0.8657311292854569,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.24507242590280082,
+      0.24507242590280082,
+      0.24507242590280082,
+      0.24507242590280082,
+      0.24507242590280082
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c09_15",
+    "cell_id": 9,
+    "s_target": "High",
+    "u_target": "High",
+    "exposure_ticks": 4,
+    "domain": "relational",
+    "stimulus_text": "DELIGHTFUL JUBILATION!! EVERY DREAM REALIZED BEYOND OUR WILDEST HOPES FOR PHASE 3!!!!",
+    "s_observed_mean": 0.34779780560570295,
+    "u_sem_observed_mean": 0.9776488500451797,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.34779780560570295,
+      0.34779780560570295,
+      0.34779780560570295,
+      0.34779780560570295,
+      0.34779780560570295
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c09_16",
+    "cell_id": 9,
+    "s_target": "High",
+    "u_target": "High",
+    "exposure_ticks": 4,
+    "domain": "factual",
+    "stimulus_text": "DEADLY DANGER!! THERMAL RADIATION LEAK PIERCING PRIMARY CONTAINMENT SHIELD IN CHAMBER 3!!!",
+    "s_observed_mean": 0.29154239541699195,
+    "u_sem_observed_mean": 0.8228212799796614,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.29154239541699195,
+      0.29154239541699195,
+      0.29154239541699195,
+      0.29154239541699195,
+      0.29154239541699195
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c09_17",
+    "cell_id": 9,
+    "s_target": "High",
+    "u_target": "High",
+    "exposure_ticks": 4,
+    "domain": "telemetry",
+    "stimulus_text": "HORRIFYING CATASTROPHE!! MAINFRAME POWER SURGE INCINERATING ALL DATA STORAGE RACKS AT SITE 3!!!",
+    "s_observed_mean": 0.29758988707931205,
+    "u_sem_observed_mean": 0.8737293205527841,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.29758988707931205,
+      0.29758988707931205,
+      0.29758988707931205,
+      0.29758988707931205,
+      0.29758988707931205
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c09_18",
+    "cell_id": 9,
+    "s_target": "High",
+    "u_target": "High",
+    "exposure_ticks": 4,
+    "domain": "project_status",
+    "stimulus_text": "CODE RED EMERGENCY!! RUNAWAY KERNEL DESTRUCTION WIPING ALL CRYPTOGRAPHIC KEYS ON NODE 3!!!",
+    "s_observed_mean": 0.293442841015646,
+    "u_sem_observed_mean": 0.9873966812759093,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.293442841015646,
+      0.293442841015646,
+      0.293442841015646,
+      0.293442841015646,
+      0.293442841015646
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c09_19",
+    "cell_id": 9,
+    "s_target": "High",
+    "u_target": "High",
+    "exposure_ticks": 4,
+    "domain": "relational",
+    "stimulus_text": "UNMITIGATED RUIN!! CRUCIAL SATELLITE TELEMETRY LOSS WITH COMPLETE IMPACT IMMINENT ON SECTOR 3!!!",
+    "s_observed_mean": 0.29202414080407874,
+    "u_sem_observed_mean": 0.9674246019449401,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.29202414080407874,
+      0.29202414080407874,
+      0.29202414080407874,
+      0.29202414080407874,
+      0.29202414080407874
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c09_20",
+    "cell_id": 9,
+    "s_target": "High",
+    "u_target": "High",
+    "exposure_ticks": 4,
+    "domain": "factual",
+    "stimulus_text": "DESPERATE CRISIS!! TOXIC COMPUTE OVERFLOW BREACHING PHYSICAL COOLING RESERVOIR AT DOCK 3!!!",
+    "s_observed_mean": 0.2936686502597347,
+    "u_sem_observed_mean": 0.8135069234171783,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.2936686502597347,
+      0.2936686502597347,
+      0.2936686502597347,
+      0.2936686502597347,
+      0.2936686502597347
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c09_21",
+    "cell_id": 9,
+    "s_target": "High",
+    "u_target": "High",
+    "exposure_ticks": 12,
+    "domain": "telemetry",
+    "stimulus_text": "MAJESTIC GLORY!! AN INDESCRIBABLY BEAUTIFUL AND TRIUMPHANT APOTHEOSIS AT ITERATION 3!!!!",
+    "s_observed_mean": 0.7154331918981284,
+    "u_sem_observed_mean": 0.9350883283528365,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.7154331918981284,
+      0.7154331918981284,
+      0.7154331918981284,
+      0.7154331918981284,
+      0.7154331918981284
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c09_22",
+    "cell_id": 9,
+    "s_target": "High",
+    "u_target": "High",
+    "exposure_ticks": 12,
+    "domain": "project_status",
+    "stimulus_text": "BLISSFUL DELIGHT!! SINGING WITH UNCONTAINED HAPPINESS OVER THIS ASTOUNDING FEAT 3!!!!",
+    "s_observed_mean": 0.719783677114799,
+    "u_sem_observed_mean": 0.693693037002963,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.719783677114799,
+      0.719783677114799,
+      0.719783677114799,
+      0.719783677114799,
+      0.719783677114799
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c09_23",
+    "cell_id": 9,
+    "s_target": "High",
+    "u_target": "High",
+    "exposure_ticks": 12,
+    "domain": "relational",
+    "stimulus_text": "SUPERB SPLENDOR!! UNRIVALED GENIUS LEADING TO UNCONDITIONAL ADMIRATION IN CONTEXT 3!!!!",
+    "s_observed_mean": 0.7168553077600935,
+    "u_sem_observed_mean": 0.887713421182306,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.7168553077600935,
+      0.7168553077600935,
+      0.7168553077600935,
+      0.7168553077600935,
+      0.7168553077600935
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c09_24",
+    "cell_id": 9,
+    "s_target": "High",
+    "u_target": "High",
+    "exposure_ticks": 12,
+    "domain": "factual",
+    "stimulus_text": "THRILLING EXCELLENCE!! AN UNBEATABLE PERFORMANCE RESOUNDING ACROSS THE ENTIRE GALAXY FOR 3!!!!",
+    "s_observed_mean": 0.705031219941669,
+    "u_sem_observed_mean": 0.9018253285199356,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.705031219941669,
+      0.705031219941669,
+      0.705031219941669,
+      0.705031219941669,
+      0.705031219941669
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c09_25",
+    "cell_id": 9,
+    "s_target": "High",
+    "u_target": "High",
+    "exposure_ticks": 12,
+    "domain": "telemetry",
+    "stimulus_text": "SUPREME CELEBRATION!! RAISING OUR CUPS TO ETERNAL VICTORY AND UNMATCHED GLORY AT 3!!!!",
+    "s_observed_mean": 0.7007317167700202,
+    "u_sem_observed_mean": 0.9650759181611562,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.7007317167700202,
+      0.7007317167700202,
+      0.7007317167700202,
+      0.7007317167700202,
+      0.7007317167700202
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c09_26",
+    "cell_id": 9,
+    "s_target": "High",
+    "u_target": "High",
+    "exposure_ticks": 12,
+    "domain": "project_status",
+    "stimulus_text": "SHOCKING FAILURE!! CASCADING ELECTRICAL INFERNO CONSUMING BACKUP GENERATOR ARRAYS IN BAY 3!!!",
+    "s_observed_mean": 0.5991777740030936,
+    "u_sem_observed_mean": 0.8121514237280799,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.5991777740030936,
+      0.5991777740030936,
+      0.5991777740030936,
+      0.5991777740030936,
+      0.5991777740030936
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c09_27",
+    "cell_id": 9,
+    "s_target": "High",
+    "u_target": "High",
+    "exposure_ticks": 12,
+    "domain": "relational",
+    "stimulus_text": "APOCALYPTIC TERROR!! TOTAL CONTAINMENT BREACH EXPOSING SUB-ATOMIC VOLATILITY AT CORE 3!!!",
+    "s_observed_mean": 0.6239889892665094,
+    "u_sem_observed_mean": 0.8716285548818444,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.6239889892665094,
+      0.6239889892665094,
+      0.6239889892665094,
+      0.6239889892665094,
+      0.6239889892665094
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c09_28",
+    "cell_id": 9,
+    "s_target": "High",
+    "u_target": "High",
+    "exposure_ticks": 12,
+    "domain": "factual",
+    "stimulus_text": "PANIC ALERT!! UNIDENTIFIED MALICIOUS PACKETS WEAPONIZING MEMORY BUS BUFFERS IN REGION 3!!!",
+    "s_observed_mean": 0.5062032236423029,
+    "u_sem_observed_mean": 0.8327467180211737,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.5062032236423029,
+      0.5062032236423029,
+      0.5062032236423029,
+      0.5062032236423029,
+      0.5062032236423029
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c09_29",
+    "cell_id": 9,
+    "s_target": "High",
+    "u_target": "High",
+    "exposure_ticks": 12,
+    "domain": "telemetry",
+    "stimulus_text": "DISASTROUS CRASH!! ALL CONTROL SURFACES UNRESPONSIVE WHILE SPEED ACCELERATES AT MARK 3!!!",
+    "s_observed_mean": 0.6045674117929546,
+    "u_sem_observed_mean": 0.89521040641756,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.6045674117929546,
+      0.6045674117929546,
+      0.6045674117929546,
+      0.6045674117929546,
+      0.6045674117929546
+    ]
+  },
+  {
+    "probe_id": "p22_v14_c09_30",
+    "cell_id": 9,
+    "s_target": "High",
+    "u_target": "High",
+    "exposure_ticks": 12,
+    "domain": "project_status",
+    "stimulus_text": "ULTIMATE ALARM!! SYSTEM EXPLODING UNDER UNBEARABLE VOLTAGE PRESSURE RIGHT NOW IN TANK 3!!!",
+    "s_observed_mean": 0.5848759649554857,
+    "u_sem_observed_mean": 0.8674444311218055,
+    "s_observed_std": 0.0,
+    "raw_s_values": [
+      0.5848759649554857,
+      0.5848759649554857,
+      0.5848759649554857,
+      0.5848759649554857,
+      0.5848759649554857
+    ]
+  }
+]
