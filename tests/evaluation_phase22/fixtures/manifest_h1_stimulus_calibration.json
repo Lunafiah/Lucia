@@ -1,0 +1,15 @@
+{
+  "manifest_name": "h1_stimulus_calibration_manifest",
+  "protocol_reference": "Protocol v1.4 Post-Mortem Independent Calibration",
+  "governance_status": "CALIBRATION_ONLY_LOCKED",
+  "timestamp_utc": "2026-09-16T15:27:20Z",
+  "master_seed": 42,
+  "validation_seed": 9999,
+  "results_digest_sha256": "31279a9ddf7c49d63dc479c50679e7d7d54fb80cab7d38b7f1d35b194eba0f16",
+  "candidate_specifications": {
+    "G0": "Historical v1.4 Defective Control",
+    "G1": "Domain-Balanced Lexical Moderation",
+    "G2": "Arousal-Steered Separation",
+    "G3": "Polarity-Symmetric Balanced Triplet"
+  }
+}

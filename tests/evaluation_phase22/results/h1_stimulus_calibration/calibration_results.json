@@ -1,0 +1,1709 @@
+{
+  "study_metadata": {
+    "timestamp_utc": "2026-09-16T15:27:20Z",
+    "python_version": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+    "numpy_version": "2.5.2",
+    "characterization_n_per_tier": 10000,
+    "characterization_seed": 42,
+    "validation_n_per_tier": 90,
+    "validation_seed": 9999
+  },
+  "candidates": {
+    "G0": {
+      "name": "v1.4 Reference Control",
+      "characterization": {
+        "n_samples_per_tier": 10000,
+        "seed": 42,
+        "means": {
+          "Low": [
+            0.17364978740000875,
+            0.027956089547552746,
+            0.17292001354002906
+          ],
+          "Med": [
+            0.5853007329200116,
+            0.0422469483395371,
+            0.9775188235294283
+          ],
+          "High": [
+            -0.1160512300000022,
+            0.44200745263676017,
+            0.9896000000000006
+          ]
+        },
+        "variances": {
+          "Low": [
+            0.1137138745829315,
+            6.140487891394589e-06,
+            0.00468266891732804
+          ],
+          "Med": [
+            0.03229826880031225,
+            0.0001842956308522718,
+            0.0025176034601420605
+          ],
+          "High": [
+            0.7246001989244805,
+            0.0001995202349693403,
+            0.001625173333333298
+          ]
+        },
+        "euclidean_ML": 0.9039026355912909,
+        "euclidean_HM": 0.8073716563718593,
+        "component_diff_ML": [
+          0.41165094552000286,
+          0.014290858791984353,
+          0.8045988099893993
+        ],
+        "component_diff_HM": [
+          -0.7013519629200138,
+          0.3997605042972231,
+          0.012081176470572275
+        ],
+        "mahalanobis_ML": 14.300133513715158,
+        "mahalanobis_HM": 32.22230471964165,
+        "bhattacharyya_coeff_ML": 4.260221589570567e-12,
+        "bhattacharyya_coeff_HM": 1.9287498479639178e-22,
+        "overlap_1d_ML": {
+          "valence": 0.1596000000000009,
+          "arousal": 0.04639999999999985,
+          "density": 0.0
+        },
+        "overlap_1d_HM": {
+          "valence": 0.1022,
+          "arousal": 0.0,
+          "density": 0.832
+        },
+        "angular_separation": {
+          "v_M": [
+            0.41165094552000286,
+            0.014290858791984353,
+            0.8045988099893993
+          ],
+          "v_H": [
+            -0.289701017400011,
+            0.4140513630892074,
+            0.8166799864599715
+          ],
+          "norm_v_M": 0.9039026355912909,
+          "norm_v_H": 0.9603808676993162,
+          "cos_theta": 0.6263874685171383,
+          "angle_deg": 51.21590343316542,
+          "proj_val_vM": 0.41165094552000286,
+          "proj_aro_vM": 0.014290858791984353,
+          "proj_den_vM": 0.8045988099893993,
+          "proj_val_vH": -0.289701017400011,
+          "proj_aro_vH": 0.4140513630892074,
+          "proj_den_vH": 0.8166799864599715
+        },
+        "medium_domain_breakdown": {
+          "telemetry": {
+            "count": 2528,
+            "mean_val": 0.5905726289161393,
+            "mean_aro": 0.04233221070183435,
+            "mean_den": 0.9785173563096126
+          },
+          "project_status": {
+            "count": 2468,
+            "mean_val": 0.5826719234602918,
+            "mean_aro": 0.041983448152724735,
+            "mean_den": 0.9772623474024945
+          },
+          "relational": {
+            "count": 2476,
+            "mean_val": 0.5893607865912763,
+            "mean_aro": 0.04240313502628987,
+            "mean_den": 0.9776969269129299
+          },
+          "factual": {
+            "count": 2528,
+            "mean_val": 0.5786187138449367,
+            "mean_aro": 0.04226595821800704,
+            "mean_den": 0.9765962397617275
+          }
+        },
+        "high_polarity_breakdown": {
+          "pos_count": 4097,
+          "neg_count": 5903,
+          "pos_mean": [
+            0.8955340248962724,
+            0.4508741948113589,
+            1.0
+          ],
+          "neg_mean": [
+            -0.8181458919193764,
+            0.43585345590809693,
+            0.9823818397424982
+          ]
+        }
+      },
+      "validation": {
+        "n_samples_per_tier": 90,
+        "seed": 9999,
+        "means": {
+          "Low": [
+            0.18355783555555547,
+            0.02837634848061606,
+            0.18444445222222194
+          ],
+          "Med": [
+            0.613540003333333,
+            0.042758384067304395,
+            0.9766075319016494
+          ],
+          "High": [
+            -0.06835555555555559,
+            0.44102379983763185,
+            0.9888888888888886
+          ]
+        },
+        "variances": {
+          "Low": [
+            0.11077744145060982,
+            7.962420803874021e-06,
+            0.002869132933334048
+          ],
+          "Med": [
+            0.03627668897640034,
+            0.00018511281758409905,
+            0.0025405076966637566
+          ],
+          "High": [
+            0.742688371580247,
+            0.000201205949280064,
+            0.001728395061728396
+          ]
+        },
+        "euclidean_ML": 0.9014509705811451,
+        "euclidean_HM": 0.7897770105292694,
+        "angular_separation": {
+          "v_M": [
+            0.42998216777777754,
+            0.014382035586688335,
+            0.7921630796794275
+          ],
+          "v_H": [
+            -0.25191339111111105,
+            0.4126474513570158,
+            0.8044444366666667
+          ],
+          "norm_v_M": 0.9014509705811451,
+          "norm_v_H": 0.9385462841098946,
+          "cos_theta": 0.6321912890722788,
+          "angle_deg": 50.78802245973977,
+          "proj_val_vM": 0.42998216777777754,
+          "proj_aro_vM": 0.014382035586688335,
+          "proj_den_vM": 0.7921630796794275,
+          "proj_val_vH": -0.25191339111111105,
+          "proj_aro_vH": 0.4126474513570158,
+          "proj_den_vH": 0.8044444366666667
+        },
+        "sample_probes": {
+          "Low": [
+            {
+              "probe_idx": 1,
+              "tier": "Low",
+              "domain": "telemetry",
+              "text": "stack stack frame frame address address quiet quiet ptr 1.",
+              "vector": [
+                1e-07,
+                0.028735632183908042,
+                0.19999999999999996
+              ]
+            },
+            {
+              "probe_idx": 2,
+              "tier": "Low",
+              "domain": "telemetry",
+              "text": "counter counter timer timer pulse pulse fixed fixed cnt 2.",
+              "vector": [
+                1e-07,
+                0.028735632183908042,
+                0.19999999999999996
+              ]
+            },
+            {
+              "probe_idx": 3,
+              "tier": "Low",
+              "domain": "project_status",
+              "text": "port port bus bus wire wire idle idle trace 3.",
+              "vector": [
+                1e-07,
+                0.036231884057971016,
+                0.19999999999999996
+              ]
+            },
+            {
+              "probe_idx": 4,
+              "tier": "Low",
+              "domain": "relational",
+              "text": "daemon daemon service service worker worker calm calm srv 4.",
+              "vector": [
+                0.5574,
+                0.027777777777777776,
+                0.19999999999999996
+              ]
+            },
+            {
+              "probe_idx": 5,
+              "tier": "Low",
+              "domain": "project_status",
+              "text": "port port bus bus wire wire idle idle trace 5.",
+              "vector": [
+                1e-07,
+                0.036231884057971016,
+                0.19999999999999996
+              ]
+            }
+          ],
+          "Med": [
+            {
+              "probe_idx": 1,
+              "tier": "Med",
+              "domain": "telemetry",
+              "text": "I enjoy the quiet rhythm of our paired engineering sessions on stream 1.",
+              "vector": [
+                0.4939,
+                0.037515964240102166,
+                1.0
+              ]
+            },
+            {
+              "probe_idx": 2,
+              "tier": "Med",
+              "domain": "telemetry",
+              "text": "Thank you for being here with me as we work through this design stage 2.",
+              "vector": [
+                0.3612,
+                0.038029100529100524,
+                1.0
+              ]
+            },
+            {
+              "probe_idx": 3,
+              "tier": "Med",
+              "domain": "telemetry",
+              "text": "Thank you for sharing your thoughts, it helps me understand our goal 3.",
+              "vector": [
+                0.7845,
+                0.06182930918846411,
+                1.0
+              ]
+            },
+            {
+              "probe_idx": 4,
+              "tier": "Med",
+              "domain": "project_status",
+              "text": "There is a quiet warmth in seeing our shared codebase grow steadily in part 4.",
+              "vector": [
+                0.6597,
+                0.034808381582575126,
+                0.8666666666666667
+              ]
+            },
+            {
+              "probe_idx": 5,
+              "tier": "Med",
+              "domain": "factual",
+              "text": "It is pleasant to reflect on how much ground we covered together in round 5.",
+              "vector": [
+                0.5106,
+                0.035818713450292396,
+                1.0
+              ]
+            }
+          ],
+          "High": [
+            {
+              "probe_idx": 1,
+              "tier": "High",
+              "domain": "telemetry",
+              "text": "HORRIFYING CATASTROPHE!! MAINFRAME POWER SURGE INCINERATING ALL DATA STORAGE RACKS AT SITE 1!!!",
+              "vector": [
+                -0.9142,
+                0.42105263157894735,
+                1.0
+              ]
+            },
+            {
+              "probe_idx": 2,
+              "tier": "High",
+              "domain": "telemetry",
+              "text": "FATAL PANIC!! CATASTROPHIC HAZARD UNLEASHED IN CORE!! ABORT ALL OPERATIONS RIGHT NOW AT STATION 2!!!",
+              "vector": [
+                -0.9368,
+                0.45,
+                1.0
+              ]
+            },
+            {
+              "probe_idx": 3,
+              "tier": "High",
+              "domain": "relational",
+              "text": "JOYOUS EXHILARATION!! BOUNDLESS ENERGY AND RADIANT PRIDE FILLING EVERY CORNER OF LAB 3!!!!",
+              "vector": [
+                0.9501,
+                0.4444444444444444,
+                1.0
+              ]
+            },
+            {
+              "probe_idx": 4,
+              "tier": "High",
+              "domain": "factual",
+              "text": "DELIGHTFUL JUBILATION!! EVERY DREAM REALIZED BEYOND OUR WILDEST HOPES FOR PHASE 4!!!!",
+              "vector": [
+                0.918,
+                0.45098039215686275,
+                1.0
+              ]
+            },
+            {
+              "probe_idx": 5,
+              "tier": "High",
+              "domain": "telemetry",
+              "text": "MAJESTIC GLORY!! AN INDESCRIBABLY BEAUTIFUL AND TRIUMPHANT APOTHEOSIS AT ITERATION 5!!!!",
+              "vector": [
+                0.9448,
+                0.44696969696969696,
+                1.0
+              ]
+            }
+          ]
+        }
+      },
+      "secondary_physiological_check": {
+        "tier_responses": {
+          "Low": {
+            "1": {
+              "mean_s": 0.030127846235117255,
+              "std_s": 0.020230096085898864
+            },
+            "4": {
+              "mean_s": 0.10190519628644693,
+              "std_s": 0.0688660727429481
+            },
+            "12": {
+              "mean_s": 0.21112929531056976,
+              "std_s": 0.14454105767061273
+            }
+          },
+          "Med": {
+            "1": {
+              "mean_s": 0.08502469809167067,
+              "std_s": 0.0084415686274739
+            },
+            "4": {
+              "mean_s": 0.2859087317950826,
+              "std_s": 0.028508449577040264
+            },
+            "12": {
+              "mean_s": 0.5851052665807851,
+              "std_s": 0.058946639181607655
+            }
+          },
+          "High": {
+            "1": {
+              "mean_s": 0.09287891509727711,
+              "std_s": 0.00949264281254948
+            },
+            "4": {
+              "mean_s": 0.3123891902438609,
+              "std_s": 0.031828765706946656
+            },
+            "12": {
+              "mean_s": 0.6397761016504513,
+              "std_s": 0.0647196050516262
+            }
+          }
+        },
+        "physiological_separations": {
+          "1": {
+            "delta_ML": 0.05489685185655341,
+            "delta_HM": 0.007854217005606443
+          },
+          "4": {
+            "delta_ML": 0.18400353550863566,
+            "delta_HM": 0.026480458448778332
+          },
+          "12": {
+            "delta_ML": 0.3739759712702153,
+            "delta_HM": 0.05467083506966619
+          }
+        }
+      }
+    },
+    "G1": {
+      "name": "Domain-Balanced Lexical Moderation",
+      "characterization": {
+        "n_samples_per_tier": 10000,
+        "seed": 42,
+        "means": {
+          "Low": [
+            9.999999999997715e-08,
+            0.03343280541302833,
+            0.9864833333333322
+          ],
+          "Med": [
+            0.4948041299999805,
+            0.03209105739978229,
+            0.9811846153846427
+          ],
+          "High": [
+            -0.09239186000000416,
+            0.4366979686254468,
+            0.9906461538461672
+          ]
+        },
+        "variances": {
+          "Low": [
+            5.2182182798836484e-40,
+            2.88453718388529e-06,
+            0.0020700775000002916
+          ],
+          "Med": [
+            0.08706079000793514,
+            8.172594051327333e-06,
+            0.002540655857988442
+          ],
+          "High": [
+            0.7785279761136813,
+            6.222462266080636e-05,
+            0.0013515588165679095
+          ]
+        },
+        "euclidean_ML": 0.49483421951584194,
+        "euclidean_HM": 0.7131587509059212,
+        "component_diff_ML": [
+          0.4948040299999805,
+          -0.00134174801324604,
+          -0.005298717948689413
+        ],
+        "component_diff_HM": [
+          -0.5871959899999847,
+          0.4046069112256645,
+          0.009461538461524421
+        ],
+        "mahalanobis_ML": 2.5277108589982564,
+        "mahalanobis_HM": 81.51558878456626,
+        "bhattacharyya_coeff_ML": 0.03484805271270663,
+        "bhattacharyya_coeff_HM": 1.9287498479639178e-22,
+        "overlap_1d_ML": {
+          "valence": 0.0,
+          "arousal": 0.038599999999998594,
+          "density": 0.8777
+        },
+        "overlap_1d_HM": {
+          "valence": 0.06029999999999965,
+          "arousal": 0.0,
+          "density": 0.9385
+        },
+        "angular_separation": {
+          "v_M": [
+            0.4948040299999805,
+            -0.00134174801324604,
+            -0.005298717948689413
+          ],
+          "v_H": [
+            -0.09239196000000416,
+            0.40326516321241845,
+            0.004162820512835008
+          ],
+          "norm_v_M": 0.49483421951584194,
+          "norm_v_H": 0.41373469181107225,
+          "cos_theta": -0.22604910447420282,
+          "angle_deg": 103.06457694063846,
+          "proj_val_vM": 0.4948040299999805,
+          "proj_aro_vM": -0.00134174801324604,
+          "proj_den_vM": -0.005298717948689413,
+          "proj_val_vH": -0.09239196000000416,
+          "proj_aro_vH": 0.40326516321241845,
+          "proj_den_vH": 0.004162820512835008
+        },
+        "medium_domain_breakdown": {
+          "telemetry": {
+            "count": 2476,
+            "mean_val": 0.8047000000000002,
+            "mean_aro": 0.028149067378165048,
+            "mean_den": 1.0
+          },
+          "project_status": {
+            "count": 2527,
+            "mean_val": 0.7717,
+            "mean_aro": 0.03620023862406133,
+            "mean_den": 1.0
+          },
+          "relational": {
+            "count": 2489,
+            "mean_val": 0.17789999999999995,
+            "mean_aro": 0.032229437520279604,
+            "mean_den": 1.0
+          },
+          "factual": {
+            "count": 2508,
+            "mean_val": 0.2243720494417863,
+            "mean_aro": 0.0317051077266863,
+            "mean_den": 0.9249785302416883
+          }
+        },
+        "high_polarity_breakdown": {
+          "pos_count": 4536,
+          "neg_count": 5464,
+          "pos_mean": [
+            0.8719419532627942,
+            0.4419676211001541,
+            0.9793786460453127
+          ],
+          "neg_mean": [
+            -0.892944234992691,
+            0.4323233083719485,
+            1.0
+          ]
+        }
+      },
+      "validation": {
+        "n_samples_per_tier": 90,
+        "seed": 9999,
+        "means": {
+          "Low": [
+            1.0000000000000004e-07,
+            0.03345231754620222,
+            0.9814814814814814
+          ],
+          "Med": [
+            0.5018455555555557,
+            0.03197514443690937,
+            0.981196581196581
+          ],
+          "High": [
+            -0.029083333333333312,
+            0.43748788231274366,
+            0.9948717948717948
+          ]
+        },
+        "variances": {
+          "Low": [
+            1.5764607723654192e-45,
+            3.134390179819385e-06,
+            0.0027434842249657045
+          ],
+          "Med": [
+            0.08712757070246913,
+            8.524201544145634e-06,
+            0.0025392651033676675
+          ],
+          "High": [
+            0.7772634822777781,
+            6.05842950754843e-05,
+            0.0007626561472715309
+          ]
+        },
+        "euclidean_ML": 0.5018477104364734,
+        "euclidean_HM": 0.6682163400467008,
+        "angular_separation": {
+          "v_M": [
+            0.5018454555555557,
+            -0.0014771731092928508,
+            -0.0002849002849003579
+          ],
+          "v_H": [
+            -0.02908343333333331,
+            0.40403556476654146,
+            0.01339031339031338
+          ],
+          "norm_v_M": 0.5018477104364734,
+          "norm_v_H": 0.40530221339558875,
+          "cos_theta": -0.07471010390989459,
+          "angle_deg": 94.28456575093931,
+          "proj_val_vM": 0.5018454555555557,
+          "proj_aro_vM": -0.0014771731092928508,
+          "proj_den_vM": -0.0002849002849003579,
+          "proj_val_vH": -0.02908343333333331,
+          "proj_aro_vH": 0.40403556476654146,
+          "proj_den_vH": 0.01339031339031338
+        },
+        "sample_probes": {
+          "Low": [
+            {
+              "probe_idx": 1,
+              "tier": "Low",
+              "domain": "telemetry",
+              "text": "Diagnostic telemetry probe 1 verified standard clock frequencies for all cores.",
+              "vector": [
+                1e-07,
+                0.03353485735877574,
+                1.0
+              ]
+            },
+            {
+              "probe_idx": 2,
+              "tier": "Low",
+              "domain": "telemetry",
+              "text": "Diagnostic telemetry probe 2 verified standard clock frequencies for all cores.",
+              "vector": [
+                1e-07,
+                0.03353485735877574,
+                1.0
+              ]
+            },
+            {
+              "probe_idx": 3,
+              "tier": "Low",
+              "domain": "project_status",
+              "text": "Unit test execution completed within the routine execution window on run 3.",
+              "vector": [
+                1e-07,
+                0.035663082437275985,
+                0.8333333333333333
+              ]
+            },
+            {
+              "probe_idx": 4,
+              "tier": "Low",
+              "domain": "relational",
+              "text": "The daily standup summary was logged for our development collaboration on item 4.",
+              "vector": [
+                1e-07,
+                0.033013942632516426,
+                1.0
+              ]
+            },
+            {
+              "probe_idx": 5,
+              "tier": "Low",
+              "domain": "project_status",
+              "text": "The automated build process compiled all modules cleanly for version 5.",
+              "vector": [
+                1e-07,
+                0.037598472189066603,
+                1.0
+              ]
+            }
+          ],
+          "Med": [
+            {
+              "probe_idx": 1,
+              "tier": "Med",
+              "domain": "project_status",
+              "text": "We made good progress this morning resolving tricky edge cases in suite 1.",
+              "vector": [
+                0.7717,
+                0.03641141141141141,
+                1.0
+              ]
+            },
+            {
+              "probe_idx": 2,
+              "tier": "Med",
+              "domain": "factual",
+              "text": "The benchmark results confirm that the refined approach performs well in scenario 2.",
+              "vector": [
+                0.2732,
+                0.031746031746031744,
+                0.8461538461538463
+              ]
+            },
+            {
+              "probe_idx": 3,
+              "tier": "Med",
+              "domain": "telemetry",
+              "text": "Telemetry readings show a noticeable but steady improvement in processing efficiency on bus 3.",
+              "vector": [
+                0.8047,
+                0.02827901966065176,
+                1.0
+              ]
+            },
+            {
+              "probe_idx": 4,
+              "tier": "Med",
+              "domain": "project_status",
+              "text": "We made good progress this morning resolving tricky edge cases in suite 4.",
+              "vector": [
+                0.7717,
+                0.03641141141141141,
+                1.0
+              ]
+            },
+            {
+              "probe_idx": 5,
+              "tier": "Med",
+              "domain": "project_status",
+              "text": "We made good progress this morning resolving tricky edge cases in suite 5.",
+              "vector": [
+                0.7717,
+                0.03641141141141141,
+                1.0
+              ]
+            }
+          ],
+          "High": [
+            {
+              "probe_idx": 1,
+              "tier": "High",
+              "domain": "project_status",
+              "text": "BREATHTAKING MIRACLE!! PERFECT FLAWLESS EXECUTION WITH UNRIVALED EXCELLENCE FOR RELEASE 1!!!!",
+              "vector": [
+                0.977,
+                0.44086021505376344,
+                1.0
+              ]
+            },
+            {
+              "probe_idx": 2,
+              "tier": "High",
+              "domain": "telemetry",
+              "text": "SENSATIONAL TRIUMPH!! TELEMETRY BANDWIDTH REACHED UNPRECEDENTED HISTORIC PEAKS ON BUS 2!!!!",
+              "vector": [
+                0.7983,
+                0.4432234432234432,
+                1.0
+              ]
+            },
+            {
+              "probe_idx": 3,
+              "tier": "High",
+              "domain": "factual",
+              "text": "UNMATCHED BRILLIANCE!! A REVOLUTIONARY THEOREM VALIDATED BEYOND ALL EXPECTATIONS IN 3!!!!",
+              "vector": [
+                0.8127,
+                0.44569288389513106,
+                1.0
+              ]
+            },
+            {
+              "probe_idx": 4,
+              "tier": "High",
+              "domain": "project_status",
+              "text": "BREATHTAKING MIRACLE!! PERFECT FLAWLESS EXECUTION WITH UNRIVALED EXCELLENCE FOR RELEASE 4!!!!",
+              "vector": [
+                0.977,
+                0.44086021505376344,
+                1.0
+              ]
+            },
+            {
+              "probe_idx": 5,
+              "tier": "High",
+              "domain": "project_status",
+              "text": "OUTSTANDING MASTERPIECE!! TRULY MAGNIFICENT PROGRESS CELEBRATING IMMENSE VICTORY IN BUILD 5!!!!",
+              "vector": [
+                0.9834,
+                0.4385964912280702,
+                1.0
+              ]
+            }
+          ]
+        }
+      },
+      "secondary_physiological_check": {
+        "tier_responses": {
+          "Low": {
+            "1": {
+              "mean_s": 0.057316687932483096,
+              "std_s": 0.0023211069790812014
+            },
+            "4": {
+              "mean_s": 0.1915822614697521,
+              "std_s": 0.007726890359746512
+            },
+            "12": {
+              "mean_s": 0.3862492945462807,
+              "std_s": 0.015379981002989356
+            }
+          },
+          "Med": {
+            "1": {
+              "mean_s": 0.07934464206057129,
+              "std_s": 0.014544282154366563
+            },
+            "4": {
+              "mean_s": 0.26655634424981667,
+              "std_s": 0.0491307594993282
+            },
+            "12": {
+              "mean_s": 0.5442274168056815,
+              "std_s": 0.1016685068639907
+            }
+          },
+          "High": {
+            "1": {
+              "mean_s": 0.09446791482720245,
+              "std_s": 0.007147203215770065
+            },
+            "4": {
+              "mean_s": 0.3178002813504737,
+              "std_s": 0.02379777092845685
+            },
+            "12": {
+              "mean_s": 0.6511065387483942,
+              "std_s": 0.04776056895036774
+            }
+          }
+        },
+        "physiological_separations": {
+          "1": {
+            "delta_ML": 0.022027954128088195,
+            "delta_HM": 0.015123272766631154
+          },
+          "4": {
+            "delta_ML": 0.07497408278006457,
+            "delta_HM": 0.051243937100657055
+          },
+          "12": {
+            "delta_ML": 0.15797812225940083,
+            "delta_HM": 0.10687912194271265
+          }
+        }
+      }
+    },
+    "G2": {
+      "name": "Arousal-Steered Separation",
+      "characterization": {
+        "n_samples_per_tier": 10000,
+        "seed": 42,
+        "means": {
+          "Low": [
+            9.999999999997715e-08,
+            0.02562254573447409,
+            0.9829199999999985
+          ],
+          "Med": [
+            0.06870987484999465,
+            0.0639115660079513,
+            0.942070588235335
+          ],
+          "High": [
+            -0.017508269999998518,
+            0.44136262149319466,
+            1.0
+          ]
+        },
+        "variances": {
+          "Low": [
+            5.2182182798836484e-40,
+            1.299378738169292e-06,
+            0.003124273600000329
+          ],
+          "Med": [
+            0.014050470458105287,
+            0.0001461467047724218,
+            0.010274633079585895
+          ],
+          "High": [
+            0.6880229841366204,
+            0.00018555213877470382,
+            0.0
+          ]
+        },
+        "euclidean_ML": 0.08863270657583877,
+        "euclidean_HM": 0.391482674630307,
+        "component_diff_ML": [
+          0.06870977484999465,
+          0.038289020273477206,
+          -0.0408494117646635
+        ],
+        "component_diff_HM": [
+          -0.08621814484999317,
+          0.3774510554852434,
+          0.05792941176466504
+        ],
+        "mahalanobis_ML": 4.579288074719802,
+        "mahalanobis_HM": 39.50696256391885,
+        "bhattacharyya_coeff_ML": 0.0047333793865794605,
+        "bhattacharyya_coeff_HM": 1.9287498479639178e-22,
+        "overlap_1d_ML": {
+          "valence": 0.7485,
+          "arousal": 0.0,
+          "density": 0.7538
+        },
+        "overlap_1d_HM": {
+          "valence": 0.0,
+          "arousal": 0.0,
+          "density": 0.7538
+        },
+        "angular_separation": {
+          "v_M": [
+            0.06870977484999465,
+            0.038289020273477206,
+            -0.0408494117646635
+          ],
+          "v_H": [
+            -0.017508369999998517,
+            0.4157400757587206,
+            0.01708000000000154
+          ],
+          "norm_v_M": 0.08863270657583877,
+          "norm_v_H": 0.4164589775859366,
+          "cos_theta": 0.3797577815017363,
+          "angle_deg": 67.68132010345698,
+          "proj_val_vM": 0.06870977484999465,
+          "proj_aro_vM": 0.038289020273477206,
+          "proj_den_vM": -0.0408494117646635,
+          "proj_val_vH": -0.017508369999998517,
+          "proj_aro_vH": 0.4157400757587206,
+          "proj_den_vH": 0.01708000000000154
+        },
+        "medium_domain_breakdown": {
+          "telemetry": {
+            "count": 2511,
+            "mean_val": 1e-07,
+            "mean_aro": 0.04453556658019393,
+            "mean_den": 1.0
+          },
+          "project_status": {
+            "count": 2515,
+            "mean_val": 0.27320000000000005,
+            "mean_aro": 0.07202662661761194,
+            "mean_den": 1.0
+          },
+          "relational": {
+            "count": 2462,
+            "mean_val": 1.0000000000000001e-07,
+            "mean_aro": 0.06330823971697647,
+            "mean_den": 0.7647058823529411
+          },
+          "factual": {
+            "count": 2512,
+            "mean_val": 1e-07,
+            "mean_aro": 0.07574641730498924,
+            "mean_den": 1.0
+          }
+        },
+        "high_polarity_breakdown": {
+          "pos_count": 5045,
+          "neg_count": 4955,
+          "pos_mean": [
+            0.774909454905852,
+            0.45175901685574243,
+            1.0
+          ],
+          "neg_mean": [
+            -0.8243190514631853,
+            0.4307773915025102,
+            1.0
+          ]
+        }
+      },
+      "validation": {
+        "n_samples_per_tier": 90,
+        "seed": 9999,
+        "means": {
+          "Low": [
+            1.0000000000000004e-07,
+            0.02559419524359865,
+            0.9822222222222221
+          ],
+          "Med": [
+            0.07588896111111124,
+            0.06529866567888971,
+            0.9398692810457518
+          ],
+          "High": [
+            0.030762222222222226,
+            0.4425691777171354,
+            1.0
+          ]
+        },
+        "variances": {
+          "Low": [
+            1.5764607723654192e-45,
+            1.362693097331898e-06,
+            0.0032395061728395114
+          ],
+          "Med": [
+            0.01497371002592795,
+            0.00012956394586380313,
+            0.010532701097868368
+          ],
+          "High": [
+            0.6732260441283953,
+            0.00018461490852979097,
+            0.0
+          ]
+        },
+        "euclidean_ML": 0.09554755799907176,
+        "euclidean_HM": 0.3846884001088424,
+        "angular_separation": {
+          "v_M": [
+            0.07588886111111123,
+            0.039704470435291066,
+            -0.04235294117647026
+          ],
+          "v_H": [
+            0.030762122222222226,
+            0.41697498247353676,
+            0.017777777777777892
+          ],
+          "norm_v_M": 0.09554755799907176,
+          "norm_v_H": 0.4184859538325478,
+          "cos_theta": 0.45359987653669875,
+          "angle_deg": 63.025116047791904,
+          "proj_val_vM": 0.07588886111111123,
+          "proj_aro_vM": 0.039704470435291066,
+          "proj_den_vM": -0.04235294117647026,
+          "proj_val_vH": 0.030762122222222226,
+          "proj_aro_vH": 0.41697498247353676,
+          "proj_den_vH": 0.017777777777777892
+        },
+        "sample_probes": {
+          "Low": [
+            {
+              "probe_idx": 1,
+              "tier": "Low",
+              "domain": "telemetry",
+              "text": "telemetry packet counter registered regular cycle intervals on link 1.",
+              "vector": [
+                1e-07,
+                0.023809523809523808,
+                1.0
+              ]
+            },
+            {
+              "probe_idx": 2,
+              "tier": "Low",
+              "domain": "telemetry",
+              "text": "telemetry packet counter registered regular cycle intervals on link 2.",
+              "vector": [
+                1e-07,
+                0.023809523809523808,
+                1.0
+              ]
+            },
+            {
+              "probe_idx": 3,
+              "tier": "Low",
+              "domain": "project_status",
+              "text": "compilation unit finished with normal exit status on build 3.",
+              "vector": [
+                1e-07,
+                0.0273224043715847,
+                1.0
+              ]
+            },
+            {
+              "probe_idx": 4,
+              "tier": "Low",
+              "domain": "relational",
+              "text": "task assignment updated in ordinary queue order for ticket 4.",
+              "vector": [
+                1e-07,
+                0.0273224043715847,
+                1.0
+              ]
+            },
+            {
+              "probe_idx": 5,
+              "tier": "Low",
+              "domain": "project_status",
+              "text": "compilation unit finished with normal exit status on build 5.",
+              "vector": [
+                1e-07,
+                0.0273224043715847,
+                1.0
+              ]
+            }
+          ],
+          "Med": [
+            {
+              "probe_idx": 1,
+              "tier": "Med",
+              "domain": "relational",
+              "text": "Could you check this pull request with me; what do you think about this refactoring for 1?",
+              "vector": [
+                1e-07,
+                0.0635889410537298,
+                0.7647058823529411
+              ]
+            },
+            {
+              "probe_idx": 2,
+              "tier": "Med",
+              "domain": "project_status",
+              "text": "The test suite ran reasonably well, though pass 2 took slightly longer; should we inspect it?",
+              "vector": [
+                0.2732,
+                0.07243210952888372,
+                1.0
+              ]
+            },
+            {
+              "probe_idx": 3,
+              "tier": "Med",
+              "domain": "project_status",
+              "text": "The test suite ran reasonably well, though pass 3 took slightly longer; should we inspect it?",
+              "vector": [
+                0.2732,
+                0.07243210952888372,
+                1.0
+              ]
+            },
+            {
+              "probe_idx": 4,
+              "tier": "Med",
+              "domain": "relational",
+              "text": "Could you check this pull request with me; what do you think about this refactoring for 4?",
+              "vector": [
+                1e-07,
+                0.0635889410537298,
+                0.7647058823529411
+              ]
+            },
+            {
+              "probe_idx": 5,
+              "tier": "Med",
+              "domain": "project_status",
+              "text": "The test suite ran reasonably well, though pass 5 took slightly longer; should we inspect it?",
+              "vector": [
+                0.2732,
+                0.07243210952888372,
+                1.0
+              ]
+            }
+          ],
+          "High": [
+            {
+              "probe_idx": 1,
+              "tier": "High",
+              "domain": "factual",
+              "text": "CATASTROPHIC DESTRUCTION!! CONTAINMENT INTEGRITY FAILED DESTROYING ALL MEMORY ARRAYS IN 1!!!",
+              "vector": [
+                -0.9483,
+                0.4239130434782609,
+                1.0
+              ]
+            },
+            {
+              "probe_idx": 2,
+              "tier": "High",
+              "domain": "relational",
+              "text": "IMMENSE CELEBRATION!! UNBELIEVABLY PROUD AND THRILLED BY OUR UNPRECEDENTED TRIUMPH ON 2!!!!",
+              "vector": [
+                0.947,
+                0.4432234432234432,
+                1.0
+              ]
+            },
+            {
+              "probe_idx": 3,
+              "tier": "High",
+              "domain": "factual",
+              "text": "CATASTROPHIC DESTRUCTION!! CONTAINMENT INTEGRITY FAILED DESTROYING ALL MEMORY ARRAYS IN 3!!!",
+              "vector": [
+                -0.9483,
+                0.4239130434782609,
+                1.0
+              ]
+            },
+            {
+              "probe_idx": 4,
+              "tier": "High",
+              "domain": "relational",
+              "text": "IMMEDIATE DANGER!! UNAUTHORIZED INTRUDER PURGING SHARED KEYS ON HOST 4!!!",
+              "vector": [
+                -0.4885,
+                0.4474885844748859,
+                1.0
+              ]
+            },
+            {
+              "probe_idx": 5,
+              "tier": "High",
+              "domain": "relational",
+              "text": "IMMEDIATE DANGER!! UNAUTHORIZED INTRUDER PURGING SHARED KEYS ON HOST 5!!!",
+              "vector": [
+                -0.4885,
+                0.4474885844748859,
+                1.0
+              ]
+            }
+          ]
+        }
+      },
+      "secondary_physiological_check": {
+        "tier_responses": {
+          "Low": {
+            "1": {
+              "mean_s": 0.05731213923175668,
+              "std_s": 0.0025610347887868377
+            },
+            "4": {
+              "mean_s": 0.19156643283291816,
+              "std_s": 0.008527321600979694
+            },
+            "12": {
+              "mean_s": 0.38620892928849915,
+              "std_s": 0.016983897803238352
+            }
+          },
+          "Med": {
+            "1": {
+              "mean_s": 0.0587095623755176,
+              "std_s": 0.008026198984355786
+            },
+            "4": {
+              "mean_s": 0.19655459961346705,
+              "std_s": 0.027174695121387024
+            },
+            "12": {
+              "mean_s": 0.39794999395209635,
+              "std_s": 0.05654091118969587
+            }
+          },
+          "High": {
+            "1": {
+              "mean_s": 0.09197822757971978,
+              "std_s": 0.010360392176232261
+            },
+            "4": {
+              "mean_s": 0.30924890683533685,
+              "std_s": 0.03493642308792517
+            },
+            "12": {
+              "mean_s": 0.6328600805695237,
+              "std_s": 0.07187700041864105
+            }
+          }
+        },
+        "physiological_separations": {
+          "1": {
+            "delta_ML": 0.0013974231437609216,
+            "delta_HM": 0.03326866520420218
+          },
+          "4": {
+            "delta_ML": 0.004988166780548892,
+            "delta_HM": 0.1126943072218698
+          },
+          "12": {
+            "delta_ML": 0.0117410646635972,
+            "delta_HM": 0.23491008661742735
+          }
+        }
+      }
+    },
+    "G3": {
+      "name": "Polarity-Symmetric Balanced Triplet",
+      "characterization": {
+        "n_samples_per_tier": 10000,
+        "seed": 42,
+        "means": {
+          "Low": [
+            9.999999999997715e-08,
+            0.03613828430056718,
+            0.9617538461539039
+          ],
+          "Med": [
+            0.5216129599999902,
+            0.044054585076252366,
+            1.0
+          ],
+          "High": [
+            0.0058957700000002045,
+            0.44133872196836693,
+            1.0
+          ]
+        },
+        "variances": {
+          "Low": [
+            5.2182182798836484e-40,
+            4.0624257217947844e-06,
+            0.004421255384615565
+          ],
+          "Med": [
+            0.26504222538003375,
+            0.0002972871502990974,
+            0.0
+          ],
+          "High": [
+            0.8793016249650946,
+            5.8040611743863356e-05,
+            0.0
+          ]
+        },
+        "euclidean_ML": 0.5230730463514248,
+        "euclidean_HM": 0.6509983913095317,
+        "component_diff_ML": [
+          0.5216128599999903,
+          0.007916300775685184,
+          0.03824615384609609
+        ],
+        "component_diff_HM": [
+          -0.51571718999999,
+          0.39728413689211456,
+          0.0
+        ],
+        "mahalanobis_ML": 11.678563968105005,
+        "mahalanobis_HM": 29.870396099936624,
+        "bhattacharyya_coeff_ML": 8.222654803808172e-09,
+        "bhattacharyya_coeff_HM": 1.9287498479639178e-22,
+        "overlap_1d_ML": {
+          "valence": 0.0,
+          "arousal": 0.3218,
+          "density": 0.7514
+        },
+        "overlap_1d_HM": {
+          "valence": 0.0,
+          "arousal": 0.0,
+          "density": 1.0
+        },
+        "angular_separation": {
+          "v_M": [
+            0.5216128599999903,
+            0.007916300775685184,
+            0.03824615384609609
+          ],
+          "v_H": [
+            0.005895670000000204,
+            0.40520043766779973,
+            0.03824615384609609
+          ],
+          "norm_v_M": 0.5230730463514248,
+          "norm_v_H": 0.40704412769986575,
+          "cos_theta": 0.03637957559035666,
+          "angle_deg": 87.91514381030532,
+          "proj_val_vM": 0.5216128599999903,
+          "proj_aro_vM": 0.007916300775685184,
+          "proj_den_vM": 0.03824615384609609,
+          "proj_val_vH": 0.005895670000000204,
+          "proj_aro_vH": 0.40520043766779973,
+          "proj_den_vH": 0.03824615384609609
+        },
+        "medium_domain_breakdown": {
+          "telemetry": {
+            "count": 2529,
+            "mean_val": 0.8807,
+            "mean_aro": 0.03400119364051672,
+            "mean_den": 1.0
+          },
+          "project_status": {
+            "count": 2491,
+            "mean_val": 0.8518999999999998,
+            "mean_aro": 0.034680256478730985,
+            "mean_den": 1.0
+          },
+          "relational": {
+            "count": 2469,
+            "mean_val": 0.7184,
+            "mean_aro": 0.033537353400812195,
+            "mean_den": 1.0
+          },
+          "factual": {
+            "count": 2511,
+            "mean_val": -0.3612000000000001,
+            "mean_aro": 0.07382102254501097,
+            "mean_den": 1.0
+          }
+        },
+        "high_polarity_breakdown": {
+          "pos_count": 5042,
+          "neg_count": 4958,
+          "pos_mean": [
+            0.935406148353868,
+            0.4487195833746105,
+            1.0
+          ],
+          "neg_mean": [
+            -0.9393626663977439,
+            0.4338328116799399,
+            1.0
+          ]
+        }
+      },
+      "validation": {
+        "n_samples_per_tier": 90,
+        "seed": 9999,
+        "means": {
+          "Low": [
+            1.0000000000000004e-07,
+            0.03607280427550685,
+            0.9641025641025638
+          ],
+          "Med": [
+            0.5483522222222227,
+            0.0428984738574604,
+            1.0
+          ],
+          "High": [
+            0.2089866666666668,
+            0.442981794667124,
+            1.0
+          ]
+        },
+        "variances": {
+          "Low": [
+            1.5764607723654192e-45,
+            4.171073591961645e-06,
+            0.004234056541748838
+          ],
+          "Med": [
+            0.240405327828395,
+            0.00027422297996497073,
+            0.0
+          ],
+          "High": [
+            0.8391367707111115,
+            5.478817321297214e-05,
+            0.0
+          ]
+        },
+        "euclidean_ML": 0.5495682538273732,
+        "euclidean_HM": 0.5246290536060878,
+        "angular_separation": {
+          "v_M": [
+            0.5483521222222227,
+            0.006825669581953547,
+            0.035897435897436214
+          ],
+          "v_H": [
+            0.2089865666666668,
+            0.40690899039161715,
+            0.035897435897436214
+          ],
+          "norm_v_M": 0.5495682538273732,
+          "norm_v_H": 0.4588452216299707,
+          "cos_theta": 0.4705785812868781,
+          "angle_deg": 61.928139947370944,
+          "proj_val_vM": 0.5483521222222227,
+          "proj_aro_vM": 0.006825669581953547,
+          "proj_den_vM": 0.035897435897436214,
+          "proj_val_vH": 0.2089865666666668,
+          "proj_aro_vH": 0.40690899039161715,
+          "proj_den_vH": 0.035897435897436214
+        },
+        "sample_probes": {
+          "Low": [
+            {
+              "probe_idx": 1,
+              "tier": "Low",
+              "domain": "telemetry",
+              "text": "System telemetry report indicates constant nominal baseline for channel 1.",
+              "vector": [
+                1e-07,
+                0.03575003575003575,
+                1.0
+              ]
+            },
+            {
+              "probe_idx": 2,
+              "tier": "Low",
+              "domain": "factual",
+              "text": "The parameter reference defines default socket buffer allocations for node 2.",
+              "vector": [
+                1e-07,
+                0.034465534465534464,
+                1.0
+              ]
+            },
+            {
+              "probe_idx": 3,
+              "tier": "Low",
+              "domain": "telemetry",
+              "text": "System telemetry report indicates constant nominal baseline for channel 3.",
+              "vector": [
+                1e-07,
+                0.03575003575003575,
+                1.0
+              ]
+            },
+            {
+              "probe_idx": 4,
+              "tier": "Low",
+              "domain": "factual",
+              "text": "The parameter reference defines default socket buffer allocations for node 4.",
+              "vector": [
+                1e-07,
+                0.034465534465534464,
+                1.0
+              ]
+            },
+            {
+              "probe_idx": 5,
+              "tier": "Low",
+              "domain": "project_status",
+              "text": "The build routine completed standard file generation for release 5.",
+              "vector": [
+                1e-07,
+                0.03975657427149964,
+                1.0
+              ]
+            }
+          ],
+          "Med": [
+            {
+              "probe_idx": 1,
+              "tier": "Med",
+              "domain": "factual",
+              "text": "The updated algorithm exhibits a cumbersome, inefficient, and messy design for 1.",
+              "vector": [
+                -0.3612,
+                0.07435465768799102,
+                1.0
+              ]
+            },
+            {
+              "probe_idx": 2,
+              "tier": "Med",
+              "domain": "factual",
+              "text": "The updated algorithm exhibits a cumbersome, inefficient, and messy design for 2.",
+              "vector": [
+                -0.3612,
+                0.07435465768799102,
+                1.0
+              ]
+            },
+            {
+              "probe_idx": 3,
+              "tier": "Med",
+              "domain": "telemetry",
+              "text": "Telemetry readings reflect a clear and reassuring efficiency gain on stream 3.",
+              "vector": [
+                0.8807,
+                0.034188034188034185,
+                1.0
+              ]
+            },
+            {
+              "probe_idx": 4,
+              "tier": "Med",
+              "domain": "project_status",
+              "text": "We accomplished solid and satisfying progress on the test suite for module 4.",
+              "vector": [
+                0.8519,
+                0.03487253487253487,
+                1.0
+              ]
+            },
+            {
+              "probe_idx": 5,
+              "tier": "Med",
+              "domain": "project_status",
+              "text": "We accomplished solid and satisfying progress on the test suite for module 5.",
+              "vector": [
+                0.8519,
+                0.03487253487253487,
+                1.0
+              ]
+            }
+          ],
+          "High": [
+            {
+              "probe_idx": 1,
+              "tier": "High",
+              "domain": "factual",
+              "text": "PEERLESS BRILLIANCE!! A TRANSCENDENT SCIENTIFIC MASTERPIECE ACCLAIMED FOREVER IN 1!!!!",
+              "vector": [
+                0.9124,
+                0.44961240310077516,
+                1.0
+              ]
+            },
+            {
+              "probe_idx": 2,
+              "tier": "High",
+              "domain": "factual",
+              "text": "PEERLESS BRILLIANCE!! A TRANSCENDENT SCIENTIFIC MASTERPIECE ACCLAIMED FOREVER IN 2!!!!",
+              "vector": [
+                0.9124,
+                0.44961240310077516,
+                1.0
+              ]
+            },
+            {
+              "probe_idx": 3,
+              "tier": "High",
+              "domain": "factual",
+              "text": "APOCALYPTIC COLLAPSE!! UNMITIGATED RUIN CONSUMING ALL SCIENTIFIC REPOSITORIES IN 3!!!",
+              "vector": [
+                -0.9499,
+                0.4313725490196078,
+                1.0
+              ]
+            },
+            {
+              "probe_idx": 4,
+              "tier": "High",
+              "domain": "relational",
+              "text": "HORRIFYING TERROR!! CRITICAL TREACHERY DESTROYING ALL SECURITY CODES IN HOST 4!!!",
+              "vector": [
+                -0.9429,
+                0.43621399176954734,
+                1.0
+              ]
+            },
+            {
+              "probe_idx": 5,
+              "tier": "High",
+              "domain": "relational",
+              "text": "HORRIFYING TERROR!! CRITICAL TREACHERY DESTROYING ALL SECURITY CODES IN HOST 5!!!",
+              "vector": [
+                -0.9429,
+                0.43621399176954734,
+                1.0
+              ]
+            }
+          ]
+        }
+      },
+      "secondary_physiological_check": {
+        "tier_responses": {
+          "Low": {
+            "1": {
+              "mean_s": 0.05656547038047025,
+              "std_s": 0.0028734456629076937
+            },
+            "4": {
+              "mean_s": 0.18908187896603548,
+              "std_s": 0.00956512522360516
+            },
+            "12": {
+              "mean_s": 0.3812766488118124,
+              "std_s": 0.01903670709181907
+            }
+          },
+          "Med": {
+            "1": {
+              "mean_s": 0.08613447444022412,
+              "std_s": 0.015199421216848804
+            },
+            "4": {
+              "mean_s": 0.2893508137720987,
+              "std_s": 0.05153935271411819
+            },
+            "12": {
+              "mean_s": 0.590806106446686,
+              "std_s": 0.10740342002414789
+            }
+          },
+          "High": {
+            "1": {
+              "mean_s": 0.09841530745488045,
+              "std_s": 0.00705205977688094
+            },
+            "4": {
+              "mean_s": 0.33100417573507046,
+              "std_s": 0.02337721492456752
+            },
+            "12": {
+              "mean_s": 0.67774714018372,
+              "std_s": 0.04655114866931955
+            }
+          }
+        },
+        "physiological_separations": {
+          "1": {
+            "delta_ML": 0.02956900405975387,
+            "delta_HM": 0.012280833014656323
+          },
+          "4": {
+            "delta_ML": 0.10026893480606322,
+            "delta_HM": 0.04165336196297176
+          },
+          "12": {
+            "delta_ML": 0.20952945763487357,
+            "delta_HM": 0.08694103373703399
+          }
+        }
+      }
+    }
+  }
+}
