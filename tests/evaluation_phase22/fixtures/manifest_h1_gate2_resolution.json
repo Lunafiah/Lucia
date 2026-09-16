@@ -1,0 +1,27 @@
+{
+  "manifest_name": "h1_gate2_resolution_manifest",
+  "study_reference": "Phase 22 H1 Gate 2 Resolution Research Study",
+  "governance_status": "RESEARCH_ONLY_LOCKED",
+  "timestamp_utc": "2026-09-16T16:34:40Z",
+  "seed": 9999,
+  "generator": "Candidate G1",
+  "sample_size": 270,
+  "conversational_grid": [
+    1,
+    2,
+    4,
+    8,
+    12,
+    16,
+    25
+  ],
+  "exploratory_grid": [
+    50,
+    100
+  ],
+  "input_artifact_hashes": {
+    "dynamical_headroom_results_sha256": "d2fb505167a393298ea90a132d2672dea51ff3a7f62ca931553a5fabec60467b"
+  },
+  "results_digest_sha256": "8c36351a700ee9554825a16ff9e0ff65d24b6c9ecb61b30933a6d6855ef97008",
+  "governance_confirmation": "Architecture Gate remains STRICTLY LOCKED; 0 production mutations; Protocol v1.5 NOT AUTHORIZED."
+}
