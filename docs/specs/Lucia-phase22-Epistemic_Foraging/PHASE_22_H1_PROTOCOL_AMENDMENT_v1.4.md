@@ -39,6 +39,13 @@ Architecture Approval Gate (LOCKED)
 Production Realization (src/core/**)
 ```
 
+> [!IMPORTANT]
+> **GOVERNANCE STATUS DECLARATION (Ciah Sign-Off Baseline):**  
+> **Phase 22 H1: INCONCLUSIVE — Path C archived. Protocol v1.4 DRAFT — not yet ratified. Architecture Gate LOCKED.**  
+> 1. **Path C Verdict Immutable**: Path C retains its permanent verdict of **INCONCLUSIVE**. Retracting the downstream TOST conclusion ("Decoupling Supported") is mathematically and scientifically mandatory. Quality Gate 2 and Gate 4 are strict preconditions; downstream TOST equivalence cannot override failed manipulation gates.
+> 2. **Gate 2 Operational Redefinition**: Transitioning Gate 2 from unconditioned pooled separation to standardized exposure-conditioned separation ($T=12$) is an **explicit operational redesign of the manipulation check** derived from MT-LNN ODE dynamical bounds, **NOT** an attempt to "modify metrics so Path C passes". Path C remains permanently failed under its historical preregistered protocol.
+> 3. **Candidate C1 Validation Precondition**: While Monte Carlo calibration proves favorable properties ($E[\text{Var}] \approx 0.00513, P(\text{fail}) \approx 0.25\%$), Candidate C1 is **NOT yet validated** merely by synthetic simulation. It is a proposed specification that requires freezing the generator followed by rigorous **pre-execution validation on the realized $N=270$ probe set** prior to benchmark execution.
+
 ### 0.2 Purpose of Amendment v1.4
 Protocol Amendment v1.4 resolves four documented methodological and calibration defects identified during the post-execution compliance audit of Path C:
 1. **Full Sample Size Synchronization ($N = 270$)**: Replaces all legacy textual references to $N = 135$ ($15$ probes/cell, $5/5/5$ $T$-distribution) with the canonical $N = 270$ ($30$ probes/cell, $10/10/10$ $T$-distribution), removing Path C as an optional branch and establishing it as the single, unified primary design.
@@ -214,6 +221,10 @@ To verify that stimulus affect tiers successfully manipulate the limbic core wit
 5. **No Threshold Relaxation**: The separation threshold remains strictly $\ge 0.1500$. It is **not** softened to fit the failed unconditioned number.
 6. **Failure Consequence**: If any of criteria 1–4 are unmet, the manipulation check fails and the benchmark terminates as **INCONCLUSIVE**.
 
+> [!CAUTION]
+> **OPERATIONAL REDESIGN VS. RETROSPECTIVE ALTERATION:**  
+> Conditioning Gate 2 on $T = 12$ represents an **explicit operational redefinition of the manipulation check** required by MT-LNN ODE physics. This is **NOT** a retroactive modification to turn historical Path C into a pass. Path C evaluated against its own preregistered pooled gate remains permanently recorded as **FAILED on Gate 2 $\implies$ INCONCLUSIVE**.
+
 ---
 
 ## 8. Quality Gate 4 Recalibration: $U_{\text{Low}}$ Proposition Generator
@@ -222,7 +233,11 @@ To verify that stimulus affect tiers successfully manipulate the limbic core wit
 In Path C, Cell 4 failed Quality Gate 4 ($\text{Var}(U) = 0.001711 < 0.002000$). Monte Carlo calibration across $20,000$ synthetic cells proved that the baseline generator ($c \sim U(0.940, 0.995), k \in [2, 4]$) had an expected variance of only $0.002311$, producing a $67.23\%$ probability that at least one of the three Low cells would fail purely from sampling variation.
 
 ### 8.2 Recalibrated Proposition Generator (Candidate C1)
-Based on the empirical evidence documented in [`PHASE_22_H1_U_LOW_CALIBRATION_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase22-Epistemic_Foraging/PHASE_22_H1_U_LOW_CALIBRATION_REPORT.md), the $U_{\text{Low}}$ generator is formally re-parameterized to **Candidate C1**:
+Based on the empirical evidence documented in [`PHASE_22_H1_U_LOW_CALIBRATION_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase22-Epistemic_Foraging/PHASE_22_H1_U_LOW_CALIBRATION_REPORT.md), the $U_{\text{Low}}$ generator is formally proposed as **Candidate C1**:
+
+> [!IMPORTANT]
+> **PRE-EXECUTION PROBE SET VALIDATION MANDATE:**  
+> Candidate C1 is a calibration proposal supported by Monte Carlo simulation ($E[\text{Var}] \approx 0.00513, P(\text{fail}) \approx 0.25\%$). It is **NOT** pre-validated. Once Protocol v1.4 is ratified, the generator will be frozen and the realized $N=270$ probe set must undergo **deterministic pre-execution variance validation** across all cells to empirically verify $\text{Var}_{\text{probe}} \ge 0.0020$ before launching any runtime evaluations.
 
 ```text
 ┌────────────────────────────────────────────────────────────────────────────────────────┐
