@@ -1,0 +1,179 @@
+{
+  "metadata": {
+    "phase": "Phase 22 \u2014 Active Inference & Prospective Epistemic Foraging",
+    "hypothesis": "H1 \u2014 Physiological Surprise & Semantic Uncertainty Decoupling",
+    "protocol": "PHASE_22_H1_PROTOCOL_AMENDMENT_v1.3.md",
+    "execution_path": "Path C (N=270, \u0394=0.20)",
+    "governance": "[CURRENT RESEARCH / ARCHITECTURE GATE LOCKED]",
+    "sample_size_n": 270,
+    "effective_n": 257,
+    "seeds": [
+      42,
+      43,
+      44,
+      45,
+      46
+    ],
+    "total_evaluations": 1350
+  },
+  "manipulation_checks": {
+    "design_matrix": {
+      "shape": [
+        270,
+        11
+      ],
+      "rank": 11,
+      "cond": 1.0000000000000013,
+      "max_off_diagonal": 2.886579864025407e-15,
+      "passed": true
+    },
+    "cell_variance_floors": {
+      "var_floor_s": 0.0005,
+      "var_floor_u": 0.002,
+      "passed": false,
+      "cell_stats": {
+        "1": {
+          "cell_id": 1,
+          "s_target": "Low",
+          "u_target": "Low",
+          "s_mean": 0.11626550747702581,
+          "s_var": 0.01737635246703609,
+          "u_mean": 0.20112630971623222,
+          "u_var": 0.002289276671753859
+        },
+        "2": {
+          "cell_id": 2,
+          "s_target": "Low",
+          "u_target": "Med",
+          "s_mean": 0.11626550747702581,
+          "s_var": 0.01737635246703609,
+          "u_mean": 0.6066252940080179,
+          "u_var": 0.0029212488146565536
+        },
+        "3": {
+          "cell_id": 3,
+          "s_target": "Low",
+          "u_target": "High",
+          "s_mean": 0.11626550747702581,
+          "s_var": 0.01737635246703609,
+          "u_mean": 0.8954242541290983,
+          "u_var": 0.0036628916654874344
+        },
+        "4": {
+          "cell_id": 4,
+          "s_target": "Med",
+          "u_target": "Low",
+          "s_mean": 0.254146318516587,
+          "s_var": 0.027210799316833928,
+          "u_mean": 0.19177297408766963,
+          "u_var": 0.001711234698444234
+        },
+        "5": {
+          "cell_id": 5,
+          "s_target": "Med",
+          "u_target": "Med",
+          "s_mean": 0.254146318516587,
+          "s_var": 0.027210799316833928,
+          "u_mean": 0.610153727256119,
+          "u_var": 0.002929659097931905
+        },
+        "6": {
+          "cell_id": 6,
+          "s_target": "Med",
+          "u_target": "High",
+          "s_mean": 0.254146318516587,
+          "s_var": 0.027210799316833928,
+          "u_mean": 0.8754129363075017,
+          "u_var": 0.005121808769639709
+        },
+        "7": {
+          "cell_id": 7,
+          "s_target": "High",
+          "u_target": "Low",
+          "s_mean": 0.35083305313962715,
+          "s_var": 0.05554815783748671,
+          "u_mean": 0.1940728891245928,
+          "u_var": 0.002545882229895693
+        },
+        "8": {
+          "cell_id": 8,
+          "s_target": "High",
+          "u_target": "Med",
+          "s_mean": 0.35083305313962715,
+          "s_var": 0.05554815783748671,
+          "u_mean": 0.6343469450624614,
+          "u_var": 0.004399967465080221
+        },
+        "9": {
+          "cell_id": 9,
+          "s_target": "High",
+          "u_target": "High",
+          "s_mean": 0.35083305313962715,
+          "s_var": 0.05554815783748671,
+          "u_mean": 0.8778452004147788,
+          "u_var": 0.003342839104925726
+        }
+      }
+    },
+    "surprise_separation": {
+      "tier_means": {
+        "Low": 0.11626550747702583,
+        "Med": 0.25414631851658687,
+        "High": 0.3508330531396271
+      },
+      "delta_med_low": 0.13788081103956104,
+      "delta_high_med": 0.09668673462304023,
+      "monotonic": true,
+      "passed": false
+    },
+    "uncertainty_separation": {
+      "tier_means": {
+        "Low": 0.1956573909761649,
+        "Med": 0.6170419887755328,
+        "High": 0.8828941302837929
+      },
+      "delta_med_low": 0.42138459779936793,
+      "delta_high_med": 0.2658521415082601,
+      "monotonic": true,
+      "passed": true
+    }
+  },
+  "track_a_spillover_glm": {
+    "model_a1_u_to_s": {
+      "eta_sq": 1.6547979909024185e-32,
+      "f_stat": 2.1429633982186316e-30,
+      "p_val": 1.0,
+      "decoupling_supported": true
+    },
+    "model_a2_s_to_u": {
+      "eta_sq": 0.006045778835987242,
+      "f_stat": 0.7876905621905463,
+      "p_val": 0.45598076716382396,
+      "decoupling_supported": true
+    }
+  },
+  "track_b_tost_equivalence": {
+    "equivalence_margin_delta": 0.2,
+    "r_partial": 0.013403409602799472,
+    "r_squared_partial": 0.0001796513889804171,
+    "fisher_z": 0.013404212336379395,
+    "se_z": 0.06237828615518053,
+    "ci_90_r": [
+      -0.08896311939323921,
+      0.11548975098591768
+    ],
+    "p_tost": 0.0012020237780336895,
+    "verdict": "EQUIVALENCE CONFIRMED (Decoupling Supported)",
+    "equivalence_confirmed": true
+  },
+  "diagnostic_raw_observed": {
+    "pearson_r": -0.008003953033056396,
+    "p_value": 0.8958462799693828,
+    "r_squared": 6.406326415537268e-05
+  },
+  "conclusion": {
+    "h1_decoupling_hypothesis": "SUPPORTED",
+    "historical_h1_status": "Preserved immutable (R^2=0.2766 FAILED); deconfounded under Path C N=270, Delta=0.20.",
+    "architecture_gate_status": "LOCKED"
+  }
+}
