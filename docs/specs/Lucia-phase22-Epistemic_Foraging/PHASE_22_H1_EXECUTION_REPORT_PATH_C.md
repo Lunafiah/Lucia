@@ -33,16 +33,19 @@ Under the approved **Protocol Amendment v1.3 (Path C: $N = 270, \Delta = 0.20$)*
 │   • Multiplicity Correction       : Holm-Bonferroni across all 3 confirmatory tests:   │
 │                                     All 3 passed at adjusted thresholds                │
 │                                                                                        │
-│   PRIMARY VERDICT: EQUIVALENCE CONFIRMED (DECOUPLING SUPPORTED UNDER TOST)             │
-│   QUALITY GATES  : QUALIFIED (6/8 Passed; 2 Dynamically Bounded with Documented Caveats│
-│   GOVERNANCE     : RESEARCH EVIDENCE ONLY — ARCHITECTURE GATE LOCKED                   │
+│   FINAL PREREGISTERED VERDICT     : INCONCLUSIVE (BLOCKED BY GATES 2 & 4)              │
+│   DOWNSTREAM EQUIVALENCE METRIC   : DECOUPLING OBSERVED UNDER TOST (UNCONFIRMED)       │
+│   QUALITY GATES EVALUATION        : FAILED (Gate 2: Δ_HM = 0.0967; Gate 4: Var = 0.0017)│
+│   GOVERNANCE STATUS               : CURRENT RESEARCH ONLY — ARCHITECTURE GATE LOCKED   │
 └────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Architectural Finding
-Retrospective physiological surprise ($S_{\text{observed}}$) and semantic/propositional uncertainty ($U_{\text{sem\_observed}}$) are **empirically separable operational dimensions** in Lucia's cognitive architecture under orthogonal sampling. The historical benchmark failure ($r = -0.5260, R^2 = 0.2766, p = 5.43 \times 10^{-7}$) was conclusively an artifact of fixture stratum construction (Simpson's paradox caused by discrete macro-clusters) rather than an inherent coupling between limbic dynamics and propositional entropy.
+### Architectural Finding & Governance Ruling
+Under Protocol v1.3 Section 14, failing any preregistered manipulation check or variance floor strictly mandates that the benchmark terminate as **INCONCLUSIVE**. 
 
-However, because two quality gates reached dynamic boundaries (Cell 4 uncertainty variance slightly below target; High-tier surprise separation constrained by resting Philia attractor geometry), this document **does NOT proclaim an unreserved "Full Pass" or complete Phase 22 architectural promotion**. Phase 22 remains **isolated research evidence**, and the **Architecture Gate remains LOCKED** pending formal review.
+Although downstream partial correlation conditioning on the design matrix yielded near-zero association ($\hat{\rho}_{\text{partial}} = +0.0134, 90\%\text{ CI } [-0.089, +0.115] \subset \pm 0.20$) and negligible spillover ($\eta_p^2 < 0.01$), **H1 CANNOT BE CONCLUDED AS "SUPPORTED" OR "EQUIVALENCE CONFIRMED"**. The failure of Gate 2 ($\Delta_{HM} = 0.0967 < 0.15$) and Gate 4 (Cell 4 $\text{Var}(U) = 0.001711 < 0.0020$) establishes that the independent variable manipulations did not fully meet their preregistered quality standards.
+
+The formal verdict of the Path C execution is therefore **INCONCLUSIVE**. Detailed root-cause analyses of these failures (demonstrating an unconditioned threshold mismatch under multi-tick averaging for Gate 2, and a fixture parameterization defect with a $66.8\%$ failure probability for Gate 4) are documented in [`PHASE_22_H1_POST_EXECUTION_COMPLIANCE_AUDIT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase22-Epistemic_Foraging/PHASE_22_H1_POST_EXECUTION_COMPLIANCE_AUDIT.md). The **Architecture Gate remains strictly LOCKED**.
 
 ---
 
@@ -252,17 +255,17 @@ In accordance with Protocol v1.3 Section 14 Criterion 8, the family of confirmat
 
 ## 8. Consolidated Quality Gates Matrix
 
-Protocol v1.3 Section 14 established 8 pre-registered evaluation criteria. The empirical status of each gate is summarized below:
+Protocol v1.3 Section 14 established 8 pre-registered evaluation criteria. Under the governing Decision Matrix:
 
 | # | Protocol Criterion | Pre-registered Requirement | Empirical Result | Status |
 |---|---|---|---|---|
 | **1** | **Measurement Validity** | Headless production path; zero synthetic PAD injection; $T$ balanced in all cells. | 100% production classes; $10/10/10$ balance in 9/9 cells verified. | **PASS** |
-| **2** | **Surprise Manipulation Check** | Monotonic separation; $p < 0.001$; $\Delta_{ML} \ge 0.10, \Delta_{HM} \ge 0.15$. | Monotonic; $p = 2.32 \times 10^{-15}$; $\Delta_{ML} = 0.1379$; $\Delta_{HM} = 0.0967$. | **QUALIFIED** *(Bounded by MT-LNN Philia attractor)* |
+| **2** | **Surprise Manipulation Check** | Monotonic separation; $p < 0.001$; $\Delta_{ML} \ge 0.10, \Delta_{HM} \ge 0.15$. | Monotonic; $p = 2.32 \times 10^{-15}$; $\Delta_{ML} = 0.1379$; $\mathbf{\Delta_{HM} = 0.0967 < 0.15}$. | **FAILED / INCONCLUSIVE** *(Blocked by $\Delta_{HM}$)* |
 | **3** | **Uncertainty Manipulation Check** | Monotonic separation; $p < 0.001$; $\Delta_{ML} \ge 0.25, \Delta_{HM} \ge 0.25$. | Monotonic; $p = 7.41 \times 10^{-190}$; $\Delta_{ML} = 0.4214$; $\Delta_{HM} = 0.2659$. | **PASS** |
-| **4** | **Within-Cell Variance Floors** | $\text{Var}(\bar{S}) \ge 0.0005, \text{Var}(\bar{U}) \ge 0.0020$ in all 9 cells. | $S$-variance passed in 9/9 cells; $U$-variance passed in 8/9 cells (Cell 4: $0.001711$). | **QUALIFIED** *(Cell 4 at $85.6\%$ of target)* |
-| **5** | **Spillover $U \to S$ ($\eta_p^2$)** | Partial effect size controlling for $S_{\text{target}}$ and $T$: $\eta_p^2 < 0.02$. | $\eta_p^2 = 0.000000$ (Diagnostic: $F = 0.0000, p = 1.0000$). | **PASS** |
-| **6** | **Spillover $S \to U$ ($\eta_p^2$)** | Partial effect size controlling for $U_{\text{target}}$ and $T$: $\eta_p^2 < 0.02$. | $\eta_p^2 = 0.006046$ (Diagnostic: $F = 0.7877, p = 0.4560$). | **PASS** |
-| **7** | **Partial Equivalence (TOST)** | 90% CI of residual $\hat{\rho}_{\text{partial}} \subset (-\Delta, +\Delta)$ ($\Delta = 0.20$). | $\hat{\rho} = +0.0134, \text{CI}_{90\%} = [-0.0890, +0.1155] \subset \pm 0.20, p = 0.0012$. | **PASS** |
+| **4** | **Within-Cell Variance Floors** | $\text{Var}(\bar{S}) \ge 0.0005, \text{Var}(\bar{U}) \ge 0.0020$ in all 9 cells. | $S$-variance passed in 9/9 cells; $U$-variance failed in Cell 4 ($\mathbf{0.001711 < 0.0020}$). | **FAILED / INCONCLUSIVE** *(Blocked by Cell 4 floor)* |
+| **5** | **Spillover $U \to S$ ($\eta_p^2$)** | Partial effect size controlling for $S_{\text{target}}$ and $T$: $\eta_p^2 < 0.02$. | $\eta_p^2 = 0.000000$ (Diagnostic: $F = 0.0000, p = 1.0000$). | **MET** |
+| **6** | **Spillover $S \to U$ ($\eta_p^2$)** | Partial effect size controlling for $U_{\text{target}}$ and $T$: $\eta_p^2 < 0.02$. | $\eta_p^2 = 0.006046$ (Diagnostic: $F = 0.7877, p = 0.4560$). | **MET** |
+| **7** | **Partial Equivalence (TOST)** | 90% CI of residual $\hat{\rho}_{\text{partial}} \subset (-\Delta, +\Delta)$ ($\Delta = 0.20$). | $\hat{\rho} = +0.0134, \text{CI}_{90\%} = [-0.0890, +0.1155] \subset \pm 0.20, p = 0.0012$. | **MET** |
 | **8** | **Multiplicity Correction** | Holm-Bonferroni control across confirmatory tests. | All 3 confirmatory tests pass adjusted alpha thresholds. | **PASS** |
 
 ---
@@ -277,31 +280,34 @@ Protocol v1.3 Section 14 established 8 pre-registered evaluation criteria. The e
 | **Measurement Path** | Synthetic bypass (`surprise_s` assigned) | **Headless Production Path** | Genuine `StimulusProcessor` $\to$ `EmotionCore` $\to$ `ActiveInferenceEngine`. |
 | **Within-Cell Variance** | Zero within-stratum variance ($\text{Var}=0.0$) | **Positive Continuous Variation** | Natural stimulus text and proposition distributions. |
 | **Observed Fit ($R^2$)** | $R^2 = 0.2766$ ($27.66\%$ shared variance) | **$R^2_{\text{partial}} = 0.00018$ ($0.018\%$ shared variance)** | **$1,536\times$ reduction in shared variance**. |
-| **Correlation ($r$)** | $r = -0.5260, \quad p = 5.43 \times 10^{-7}$ | **$r_{\text{partial}} = +0.0134, \quad 90\%\text{ CI } [-0.089, +0.115]$** | Decoupling rigorously confirmed inside $\pm 0.20$. |
+| **Correlation ($r$)** | $r = -0.5260, \quad p = 5.43 \times 10^{-7}$ | **$r_{\text{partial}} = +0.0134, \quad 90\%\text{ CI } [-0.089, +0.115]$** | Decoupling observed inside $\pm 0.20$ under TOST. |
 | **Spillover $\eta_p^2$** | Not evaluated | **$U \to S: 0.0000, \quad S \to U: 0.0060$** | Both well below negligible threshold ($< 0.02$). |
 | **Multiplicity** | Unadjusted reporting | **Holm-Bonferroni Confirmed** | Confirmatory family passes family-wise error control. |
-| **H1 Status** | **FAILED** | **DECOUPLING CONFIRMED (QUALIFIED)** | Confounding resolved; empirical separability demonstrated. |
+| **Final Preregistered Verdict** | **FAILED** | **INCONCLUSIVE (Blocked by Gate 2 & 4)** | Independent variable manipulation checks failed preregistered thresholds. |
 
 ---
 
 ## 10. Threats to Validity & Methodological Boundaries
 
-1. **Cell 4 Variance Floor**: Cell 4 obtained $U_{\text{var}} = 0.001711$ ($85.6\%$ of the $0.0020$ target). Because the remaining 8 cells passed ($0.0023 - 0.0051$) and the overall variance of $U$ across the benchmark was high ($\text{Var} = 0.0807$), this minor boundary condition does not compromise the inferential validity of the test, but prevents an unreserved "Full Pass" sign-off.
-2. **Surprise Separation Upper Bound**: The observed separation between $S_{\text{High}}$ and $S_{\text{Med}}$ was $0.0967$, below the nominal $0.15$ threshold due to the asymmetrical saturation of negative valence around Philia ($P=+0.25$). However, the main effect of $S_{\text{target}}$ remained overwhelmingly significant ($F = 38.33, p = 2.32 \times 10^{-15}$), and separation was strictly monotonic across all three tiers.
+1. **Cell 4 Variance Floor Defect**: Cell 4 obtained $U_{\text{var}} = 0.001711$ ($85.6\%$ of the $0.0020$ target). Monte Carlo analysis reveals that the generative fixture parameterization $c \sim U(0.94, 0.995)$ with proposition averaging has an expected variance of $0.0023$, causing a $66.8\%$ probability that at least one Low cell falls below $0.0020$ purely from sampling variation.
+2. **Surprise Separation Upper Bound Defect**: The observed unconditioned separation between $S_{\text{High}}$ and $S_{\text{Med}}$ was $0.0967$, below the nominal $0.15$ threshold. Mathematical decomposition reveals that at $T=1$, ODE displacement from Philia is physically capped at $\le 0.1220$ (yielding a maximum separation of $\sim 0.0290$ at $T=1$). The threshold $\ge 0.15$ was a legacy of the confounded single-duration v1.1 protocol, and is mathematically incompatible with unconditioned pooling across $T \in \{1, 4, 12\}$.
 3. **Ontological Scope**: These findings establish that retrospective limbic prediction error ($S_t$) and propositional Shannon entropy ($U_{\text{sem}}$) are decoupled operational variables in Lucia's algorithmic architecture. This does **NOT** imply psychological sentience, subjective feeling, or conscious reflection.
-4. **Governance Boundary**: A successful H1 result does **not** authorize production code changes, promote epistemic policy models into `src/core/`, or modify Genesis onboarding.
+4. **Governance Boundary**: A failed manipulation check aborts the benchmark to **INCONCLUSIVE**. No production code changes, architecture promotion, or Genesis onboarding modifications are permitted.
 
 ---
 
 ## 11. Conclusion & Governance Recommendation
 
-Hypothesis 1 (H1) of Phase 22, executed under approved **Path C ($N = 270, \Delta = 0.20$)**, has produced rigorous empirical evidence resolving the historical benchmark confounding:
+Hypothesis 1 (H1) of Phase 22, executed under **Path C ($N = 270, \Delta = 0.20$)**, terminates with the formal preregistered status:
 
-- **Primary Decoupling Criterion**: **CONFIRMED**. Residual partial correlation $\hat{\rho}_{\text{partial}} = +0.013403$, with 90% CI $[-0.088963, +0.115490] \subset (-0.20, +0.20)$ ($p_{\text{TOST}} = 1.202 \times 10^{-3}$).
-- **Spillover Effects**: **NEGLIGIBLE**. $\eta_p^2(U \to S) = 0.000000$ and $\eta_p^2(S \to U) = 0.006046$, both well below the $0.02$ threshold.
-- **Multiplicity**: **CONFIRMED**. All 3 confirmatory tests pass Holm-Bonferroni FWER control.
-- **Quality Gates Status**: **QUALIFIED**. 6 of 8 quality criteria passed completely; 2 criteria reached dynamic/sampling boundaries that are explicitly documented above.
+$$\mathbf{FINAL\ VERDICT:\ INCONCLUSIVE\ (BLOCKED\ BY\ GATES\ 2\ \&\ 4)}$$
+
+### Summary of Inferential State:
+- **Downstream Decoupling Metric**: Highly encouraging. Partial correlation $\hat{\rho}_{\text{partial}} = +0.013403$, with 90% CI $[-0.088963, +0.115490] \subset (-0.20, +0.20)$ ($p_{\text{TOST}} = 1.202 \times 10^{-3}$) and directional spillover $\eta_p^2 < 0.01$.
+- **Preregistration Precondition Status**: **UNMET**. Because Gate 2 ($\Delta_{HM} = 0.0967 < 0.15$) and Gate 4 (Cell 4 $\text{Var}(U) = 0.001711 < 0.0020$) failed, Protocol v1.3 Section 14 strictly forbids concluding that H1 is confirmed.
+- **Root Cause & Compliance Analysis**: Full mathematical proofs, Monte Carlo simulations, and protocol consistency audits are detailed in [`PHASE_22_H1_POST_EXECUTION_COMPLIANCE_AUDIT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase22-Epistemic_Foraging/PHASE_22_H1_POST_EXECUTION_COMPLIANCE_AUDIT.md).
 
 ### Recommended Governance Action
-1. Record this report and its accompanying datasets (`phase22_h1_path_c_matrix.json`, `phase22_h1_path_c_summary.json`) as **authoritative evidence demonstrating H1 deconfounding**.
-2. **Maintain the Architecture Gate as LOCKED**. Do not promote Phase 22 policy modules into production `src/core/` until Ciah formally reviews the qualified quality gates and authorizes an Architectural Decision Record (ADR).
+1. Record this report and its accompanying datasets (`phase22_h1_path_c_matrix.json`, `phase22_h1_path_c_summary.json`) as **research evidence demonstrating the necessity of protocol calibration refinement**.
+2. Draft and submit **Protocol Amendment v1.4** to formally synchronize $N = 270$, calibrate conditional surprise separation, and parameterize the proposition generator for variance robustness prior to any re-execution.
+3. **The Architecture Gate REMAINS STRICTLY LOCKED**.

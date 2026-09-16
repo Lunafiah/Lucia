@@ -167,8 +167,9 @@
       0.11548975098591768
     ],
     "p_tost": 0.0012020237780336895,
-    "verdict": "EQUIVALENCE CONFIRMED (Decoupling Supported)",
-    "equivalence_confirmed": true
+    "verdict": "INCONCLUSIVE (Blocked by Gate 2 Surprise Separation & Gate 4 Variance Floor)",
+    "equivalence_confirmed": false,
+    "tost_equivalence_observed": true
   },
   "multiplicity_correction": {
     "family": "Confirmatory Hypothesis Tests (Path C)",
@@ -210,8 +211,8 @@
     "r_squared": 6.406326415537268e-05
   },
   "conclusion": {
-    "h1_decoupling_hypothesis": "SUPPORTED",
-    "historical_h1_status": "Preserved immutable (R^2=0.2766 FAILED); deconfounded under Path C N=270, Delta=0.20.",
+    "h1_decoupling_hypothesis": "INCONCLUSIVE (Blocked by Gate 2 Surprise Separation & Gate 4 Variance Floor)",
+    "historical_h1_status": "Preserved immutable (R^2=0.2766 FAILED); deconfounding Path C N=270, Delta=0.20 reached INCONCLUSIVE under preregistered quality gates.",
     "architecture_gate_status": "LOCKED"
   }
 }
