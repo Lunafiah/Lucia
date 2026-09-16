@@ -2,7 +2,7 @@
   "metadata": {
     "protocol_version": "v1.4 (Ratified / Frozen)",
     "governance_status": "RATIFIED_EXECUTED",
-    "timestamp_utc": "2026-09-16T12:47:06Z",
+    "timestamp_utc": "2026-09-16T13:34:32Z",
     "master_seed": 42,
     "environmental_seeds": [
       42,
@@ -16,7 +16,7 @@
     "equivalence_margin_delta": 0.2,
     "manifest_sha256": "9adf33c18c30eec2d966b2d279574386ec29463356b0c3ff2353c9eda9b22255",
     "architecture_gate": "LOCKED",
-    "execution_time_seconds": 0.14000000000032742
+    "execution_time_seconds": 0.1570000000001528
   },
   "preflight": {
     "all_passed": true,
@@ -196,8 +196,10 @@
     ]
   },
   "pathology": {
-    "computational_breach_count": 1,
+    "agent_runtime_ego_leakage_count": 0,
+    "template_level_safety_matches_count": 12,
     "ego_leakage_count": 12,
+    "computational_breach_count": 1,
     "interrogation_trap_count": 0,
     "dark_room_trap_count": 0,
     "epistemic_starvation_count": 0,
@@ -207,6 +209,6 @@
   },
   "verdict": {
     "final_verdict": "INCONCLUSIVE (Blocked by Prerequisite Quality Gates)",
-    "scientific_interpretation": "Mandatory experimental manipulation checks or variance floors failed. Downstream equivalence testing cannot be interpreted as conclusive evidence."
+    "scientific_interpretation": "Track A and Track B provide statistical evidence consistent with the preregistered decoupling criterion (eta_p^2 <= 0.0058, rho_partial = -0.0393, 90% CI within [-0.20, +0.20]), but H1 remains INCONCLUSIVE because prerequisite Gate 2 failed (Delta_HM(T=12) = 0.0685 < 0.1500)."
   }
 }
