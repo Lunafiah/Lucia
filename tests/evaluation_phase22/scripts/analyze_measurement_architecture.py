@@ -530,9 +530,9 @@ class MeasurementArchitectureStudyEngine:
 
             # Decisive RQ3 statement
             if n_matched > 0 and mean_matched_angle >= 30.0:
-                verdict_str = "EVIDENCE CONSISTENT WITH INDEPENDENT DIRECTIONAL INFORMATION"
+                verdict_str = "EVIDENCE CONSISTENT WITH DIRECTIONAL/COMPONENT INFORMATION PERSISTING AFTER MAGNITUDE MATCHING"
             else:
-                verdict_str = "DIRECTIONAL EFFECT NOT SHOWN TO BE INDEPENDENT OF MAGNITUDE"
+                verdict_str = "DIRECTIONAL EFFECT NOT SHOWN TO PERSIST AFTER MAGNITUDE MATCHING"
 
             rq3_results_by_t[T] = {
                 "T": T,
@@ -687,15 +687,16 @@ class MeasurementArchitectureStudyEngine:
                 "formulation": "Delta_p = [Delta P, Delta A, Delta D] = p_T - p_0",
                 "dimension": 3,
                 "tier_separability": (
-                    "Massive separation across primary conversational T <= 25. At T=12: Pleasure separates Med from High "
-                    "with Cohen's d = -3.85 (Delta_HM = -0.1983, CI95 [-0.218, -0.178]); Arousal separates Med from High with "
-                    "Cohen's d = +3.32 (Delta_HM = +0.1789, CI95 [+0.158, +0.200])."
+                    "Massive separation across primary conversational T <= 25. Overall pool separation: Arousal Cohen's d_HM "
+                    "in [+9.33, +9.61] across all T <= 25 (Delta_HM = +0.2754 at T=12, CI95 [+0.268, +0.283]), while Pleasure "
+                    "separates in the opposite direction with Cohen's d_HM in [-0.92, -0.95] (Delta_HM = -0.3179 at T=12, CI95 [-0.390, -0.246]). "
+                    "Within magnitude-matched strata, component separation remains extreme."
                 ),
                 "information_retained": "100% of limbic kinematic trajectory displacement retained; lossless 3D representation.",
                 "collapse_behavior": "Zero isotropic collapse: completely uncouples orthogonal affective axes.",
-                "robustness_across_T": "Extremely robust: component divergence manifests as early as T=2 and stabilizes across all T.",
+                "robustness_across_T": "Extremely robust: component divergence manifests as early as T=1 to T=2 and stabilizes across all T.",
                 "sensitivity_to_baseline": "High: explicitly measures displacement from resting baseline p_0.",
-                "sensitivity_to_exposure": "Low: strong statistical effect sizes (d > 2.0) present at conversational T=4 to T=12.",
+                "sensitivity_to_exposure": "Low: strong statistical effect sizes (Arousal d > 9.0) present across all conversational T in [1, 25].",
                 "numerical_stability": "Extremely high: bounded strictly within [-2.0, 2.0]^3 by PAD state invariants.",
                 "interpretability": "Extremely high: directly reflects psychological PAD space (Pleasure, Arousal, Dominance).",
                 "computational_cost": "Negligible O(1): element-wise vector subtraction (~0.1 microseconds).",
@@ -707,7 +708,7 @@ class MeasurementArchitectureStudyEngine:
                 "id": "M2",
                 "name": "Magnitude + Direction",
                 "formulation": "[||Delta_p||_2, Delta_p / ||Delta_p||_2]",
-                "dimension": "1 scalar + 3D unit vector (4 elements)",
+                "dimension": "scalar magnitude + 3-component unit direction (4 elements, 3 effective DOF)",
                 "tier_separability": (
                     "Decouples cognitive urgency/intensity (magnitude) from affective quality/tone (direction). "
                     "Tiers clearly separated by direction even when magnitudes collide."
@@ -730,7 +731,7 @@ class MeasurementArchitectureStudyEngine:
                 "id": "M3",
                 "name": "Residual Magnitude + Direction",
                 "formulation": "[||r_T||_2, r_T / ||r_T||_2] where r_T = p_T - (A p_0 + b)",
-                "dimension": "1 scalar + 3D unit vector (4 elements)",
+                "dimension": "scalar magnitude + 3-component unit direction (4 elements, 3 effective DOF)",
                 "tier_separability": (
                     "Maintains directional uncoupling relative to generative expectation. Identical to M2 when beliefs are unadapted, "
                     "diverging cleanly as expectations adapt."
@@ -786,11 +787,11 @@ class MeasurementArchitectureStudyEngine:
             "findings_by_representation": {
                 "M0_canonical_scalar": {
                     "earliest_separation_T": "T = 50 (exploratory non-conversational regime only)",
-                    "conversational_viability": "NOT VIABLE under current dual scalar thresholds (Delta_HM fails at all T <= 25)",
+                    "conversational_viability": "M0 does not satisfy the current preregistered dual Gate 2 thresholds at T <= 25 under frozen G1/current dynamics (Delta_HM fails at all T <= 25)",
                     "failure_mechanism": "Isotropic radial collision: High and Med trajectories reach similar Euclidean distances from p_0 despite moving in orthogonal directions.",
                 },
                 "M1_displacement_vector": {
-                    "earliest_separation_T": "T = 2 (0.20s): Cohen's d > 1.5 in Pleasure and Arousal",
+                    "earliest_separation_T": "T = 1 to 2 (0.10s to 0.20s): Arousal Cohen's d > 9.0, well exceeding the large effect size threshold |d| >= 1.0",
                     "conversational_viability": "HIGHLY VIABLE across all T in {2, 4, 8, 12, 16, 25}",
                     "stability_across_neighboring_T": "Extremely stable: monotonic growth in |Delta P| and |Delta A| with consistent CI95 bounds.",
                 },
@@ -805,7 +806,7 @@ class MeasurementArchitectureStudyEngine:
                     "stability_across_neighboring_T": "Stable across conversational exposures.",
                 },
                 "M4_full_residual_vector": {
-                    "earliest_separation_T": "T = 2 (0.20s): identical to M1 in unadapted state",
+                    "earliest_separation_T": "T = 1 to 2 (0.10s to 0.20s): identical to M1 in unadapted state",
                     "conversational_viability": "HIGHLY VIABLE across all T in {2, 4, 8, 12, 16, 25}",
                     "stability_across_neighboring_T": "Stable: component residuals exhibit high statistical separation without magnitude conflation.",
                 },
@@ -829,12 +830,12 @@ class MeasurementArchitectureStudyEngine:
         # State D: Evidence is insufficient
         evidence_state = "State B — Direction/Component Information Demonstrably Omitted Under Scalar S"
         evidence_rationale = (
-            "Empirical evidence demonstrates that canonical scalar S routinely collapses orthogonal affective states "
-            "into identical scalar distances (|diff_S| <= 0.02). Magnitude-controlled analysis reveals that within S-matched "
-            "strata, directional angles (48-63 deg) and component divergences (Pleasure Cohen's d ~ -3.85, Arousal Cohen's d ~ +3.32) "
-            "consistently distinguish Medium from High probes. Furthermore, under unadapted beliefs, prediction residual r_T "
-            "degenerates mathematically to displacement Delta_p, proving that canonical S measures displacement rather than "
-            "directional prediction error."
+            "Scalar S demonstrably omits directional/component information; whether that omission is architecturally "
+            "unacceptable remains unresolved. Empirical evidence demonstrates that canonical scalar S routinely collapses "
+            "orthogonal affective states into identical scalar distances (|diff_S| <= 0.02). Magnitude-matching analysis reveals "
+            "that within S-matched strata, directional angles (48-103 deg) and component divergences consistently distinguish "
+            "Medium from High probes. Furthermore, under unadapted beliefs, prediction residual r_T degenerates mathematically "
+            "to displacement Delta_p, proving that canonical S measures displacement rather than directional prediction error."
         )
 
         study_results = {
@@ -874,13 +875,15 @@ class MeasurementArchitectureStudyEngine:
                 "rationale": evidence_rationale,
                 "competing_interpretations_assessment": {
                     "M_S_scalar_sufficiency": (
-                        "Weakened under the current dynamical regime and frozen G1 stimulus set: canonical S fails "
-                        "to distinguish Medium from High at all conversational T <= 25, not because the limbic system "
-                        "fails to differentiate them, but because scalar Euclidean projection collapses orthogonal states."
+                        "Weakened under the frozen G1 stimulus set and current dynamical regime: canonical S fails "
+                        "to satisfy dual Gate 2 thresholds at conversational T <= 25 because scalar Euclidean reduction collapses "
+                        "orthogonal affective states into near-identical magnitudes. However, whether scalar sufficiency can be "
+                        "recovered under modified thresholds or dynamical regimes remains unresolved."
                     ),
                     "M_V_vector_information_requirement": (
-                        "Strongly supported as an empirical finding under frozen G1: direction and individual PAD components "
-                        "retain strong affective separation (Cohen's d > 3.0) that is completely discarded by scalar S."
+                        "Supported at the diagnostic level under frozen G1: directional angles and individual PAD components "
+                        "consistently persist after magnitude matching (Arousal d_HM > 9.0). However, this demonstrates that scalar S "
+                        "omits directional information, not that vector architecture is proven mandatory for production."
                     ),
                 },
                 "protocol_v15_readiness": "NO (Protocol v1.5 is NOT AUTHORIZED; requires formal Architecture Gate approval first)",

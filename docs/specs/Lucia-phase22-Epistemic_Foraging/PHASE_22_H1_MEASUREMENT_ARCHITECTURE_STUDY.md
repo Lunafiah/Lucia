@@ -23,10 +23,10 @@ The study investigated two competing hypotheses without bias:
 ### Key Empirical Findings:
 1. **Semantic Audit (RQ1):** In the unadapted baseline state ($\mathbf{A}=\mathbf{I}, \mathbf{b}=\mathbf{0}$), canonical Active Inference surprise $S_t = \|\hat{\mathbf{p}}_t - \mathbf{p}_t\|_2$ degenerates kinematically and numerically to state displacement $S = \|\mathbf{p}_T - \mathbf{p}_0\|_2$. Architecturally, it is designed as a generative prediction error, but under the static identity persistence prior, $\mathbf{p}_0$ is the actual prediction target.
 2. **Scalar Collapse & Hidden Vector Divergence (RQ2):** Under the frozen Candidate G1 stimulus set ($N=270$), canonical scalar $S$ routinely collapses materially different affective states into near-identical scalar distances ($|S_i - S_j| \le 0.02$). At conversational exposure $T=12$ (1.20s), 18.5% of all probe pairs (6,734 pairs) collapse in scalar magnitude, including 358 Medium-High cross-tier collapse pairs. These collapsed pairs hide an average angular separation of $86.0^\circ$ and vector distance of $0.835$. In extreme cases, diametrically opposite states (e.g., mild positive progress vs. critical code-red emergency) exhibit $|S_A - S_B| = 0.0173$ while separated by $101.8^\circ$ and $\Delta P = 0.918$.
-3. **Magnitude-Controlled Directional Information (RQ3):** When controlling strictly for scalar magnitude $S$ (matching pairs with $|S_{\text{Med}} - S_{\text{High}}| \le 0.02$), directional and component structure remains strongly informative across all conversational exposures ($T \le 25$). Matched pairs exhibit average angular divergence of $61.2^\circ$ to $103.7^\circ$ and pronounced component divergence (Medium: high positive Pleasure $\Delta P \approx +0.49$, zero Arousal $\Delta A \approx 0.00$; High: negative/low Pleasure $\Delta P \approx -0.43$, high Arousal $\Delta A \approx +0.33$). The result is **EVIDENCE CONSISTENT WITH INDEPENDENT DIRECTIONAL INFORMATION**.
+3. **Magnitude-Controlled Directional Information (RQ3):** When controlling strictly for scalar magnitude $S$ (matching pairs with $|S_{\text{Med}} - S_{\text{High}}| \le 0.02$), directional and component structure remains strongly informative across all conversational exposures ($T \le 25$). Matched pairs exhibit average angular divergence of $61.2^\circ$ to $103.7^\circ$ and pronounced component divergence (Medium: high positive Pleasure $\Delta P \approx +0.49$, zero Arousal $\Delta A \approx 0.00$; High: negative/low Pleasure $\Delta P \approx -0.43$, high Arousal $\Delta A \approx +0.33$). The result is **EVIDENCE CONSISTENT WITH DIRECTIONAL/COMPONENT INFORMATION PERSISTING AFTER MAGNITUDE MATCHING**.
 4. **Prediction Residual vs. Displacement (RQ4):** Unadapted prediction residual $\mathbf{r}_T^{(0)} = \mathbf{p}_T - (\mathbf{I}\mathbf{p}_0 + \mathbf{0})$ is mathematically identical to displacement $\Delta \mathbf{p} = \mathbf{p}_T - \mathbf{p}_0$. However, when belief matrices $\mathbf{A}, \mathbf{b}$ adapt online via Free Energy minimization, $\mathbf{r}_T$ structurally diverges from displacement, embodying epistemic expectation failure rather than bodily trajectory displacement.
-5. **Representation Characterization (RQ5 & RQ6):** Canonical scalar M0 fails conversational separation ($T \le 25$) due to isotropic radial collision. In contrast, 3D representations (M1 displacement vector, M2 magnitude+direction, M3 residual magnitude+direction, M4 prediction residual vector) achieve statistically massive separation (Cohen's $d > 3.0$ in Pleasure and Arousal) as early as $T=2$ (0.20s).
-6. **Final Decision State:** The study concludes at **State B — Direction/Component Information Demonstrably Omitted Under Scalar S**.
+5. **Representation Characterization (RQ5 & RQ6):** Canonical scalar M0 does not satisfy the current preregistered dual Gate 2 thresholds at $T \le 25$ under frozen G1/current dynamics due to isotropic radial collision. In contrast, 3D representations (M1 displacement vector, M2 magnitude+direction, M3 residual magnitude+direction, M4 prediction residual vector) achieve statistically pronounced separation across conversational exposures, with Arousal Cohen's $d_{\text{HM}} \in [+9.33, +9.61]$ across all $T \in [1, 25]$ (well exceeding conventional benchmark thresholds of $|d| \ge 1.0$), appearing as early as $T = 1$ to $T = 2$ (0.10s to 0.20s).
+6. **Final Decision State:** The study concludes at **State B — Direction/Component Information Demonstrably Omitted Under Scalar S**. Crucially, while scalar $S$ demonstrably omits directional/component information, whether that omission is architecturally unacceptable remains unresolved; vector architecture is not proven to be mandatory.
 
 ---
 
@@ -157,15 +157,17 @@ To determine whether directional information is truly independent of magnitude o
 
 | $T$ (ticks) | Exposure | Matched MH Pairs | Matched Angle | Matched Vector Dist | Matched $\Delta P$ Divergence | Matched $\Delta A$ Divergence | Decisive Verdict |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---|
-| **1** | 0.10s | 4,371 | $61.2^\circ$ | 0.0883 | $-0.0644$ | $+0.0424$ | **EVIDENCE CONSISTENT WITH INDEPENDENT DIRECTIONAL INFORMATION** |
-| **2** | 0.20s | 3,374 | $66.1^\circ$ | 0.1796 | $-0.1385$ | $+0.0817$ | **EVIDENCE CONSISTENT WITH INDEPENDENT DIRECTIONAL INFORMATION** |
-| **4** | 0.40s | 2,082 | $78.5^\circ$ | 0.3756 | $-0.3188$ | $+0.1520$ | **EVIDENCE CONSISTENT WITH INDEPENDENT DIRECTIONAL INFORMATION** |
-| **8** | 0.80s | 622 | $83.3^\circ$ | 0.6452 | $-0.5652$ | $+0.2493$ | **EVIDENCE CONSISTENT WITH INDEPENDENT DIRECTIONAL INFORMATION** |
-| **12** | 1.20s | 358 | $86.0^\circ$ | 0.8348 | $-0.7396$ | $+0.3125$ | **EVIDENCE CONSISTENT WITH INDEPENDENT DIRECTIONAL INFORMATION** |
-| **16** | 1.60s | 204 | $74.8^\circ$ | 0.8375 | $-0.6981$ | $+0.3489$ | **EVIDENCE CONSISTENT WITH INDEPENDENT DIRECTIONAL INFORMATION** |
-| **25** | 2.50s | 286 | $103.7^\circ$ | 1.3520 | $-1.2696$ | $+0.4469$ | **EVIDENCE CONSISTENT WITH INDEPENDENT DIRECTIONAL INFORMATION** |
+| **1** | 0.10s | 4,371 | $61.2^\circ$ | 0.0883 | $-0.0644$ | $+0.0424$ | **EVIDENCE CONSISTENT WITH DIRECTIONAL/COMPONENT INFORMATION PERSISTING AFTER MAGNITUDE MATCHING** |
+| **2** | 0.20s | 3,374 | $66.1^\circ$ | 0.1796 | $-0.1385$ | $+0.0817$ | **EVIDENCE CONSISTENT WITH DIRECTIONAL/COMPONENT INFORMATION PERSISTING AFTER MAGNITUDE MATCHING** |
+| **4** | 0.40s | 2,082 | $78.5^\circ$ | 0.3756 | $-0.3188$ | $+0.1520$ | **EVIDENCE CONSISTENT WITH DIRECTIONAL/COMPONENT INFORMATION PERSISTING AFTER MAGNITUDE MATCHING** |
+| **8** | 0.80s | 622 | $83.3^\circ$ | 0.6452 | $-0.5652$ | $+0.2493$ | **EVIDENCE CONSISTENT WITH DIRECTIONAL/COMPONENT INFORMATION PERSISTING AFTER MAGNITUDE MATCHING** |
+| **12** | 1.20s | 358 | $86.0^\circ$ | 0.8348 | $-0.7396$ | $+0.3125$ | **EVIDENCE CONSISTENT WITH DIRECTIONAL/COMPONENT INFORMATION PERSISTING AFTER MAGNITUDE MATCHING** |
+| **16** | 1.60s | 204 | $74.8^\circ$ | 0.8375 | $-0.6981$ | $+0.3489$ | **EVIDENCE CONSISTENT WITH DIRECTIONAL/COMPONENT INFORMATION PERSISTING AFTER MAGNITUDE MATCHING** |
+| **25** | 2.50s | 286 | $103.7^\circ$ | 1.3520 | $-1.2696$ | $+0.4469$ | **EVIDENCE CONSISTENT WITH DIRECTIONAL/COMPONENT INFORMATION PERSISTING AFTER MAGNITUDE MATCHING** |
 
-**Empirical Conclusion:** Across all conversationally realistic exposures ($T \le 25$), holding scalar magnitude $S$ constant does not eliminate tier separation. Even when Medium and High probes have indistinguishable scalar surprise, they diverge by $61.2^\circ$ to $103.7^\circ$ in direction, driven by large, consistent differences in Pleasure ($\Delta P$) and Arousal ($\Delta A$).
+**Empirical Conclusion & Methodological Scoping:** Across all conversationally realistic exposures ($T \le 25$), holding scalar magnitude $S$ constant does not eliminate tier separation. Even when Medium and High probes have indistinguishable scalar surprise, they diverge by $61.2^\circ$ to $103.7^\circ$ in direction, driven by large, consistent differences in Pleasure ($\Delta P$) and Arousal ($\Delta A$).
+
+*Methodological Note on Independence:* Matching $|S_{\text{Med}} - S_{\text{High}}| \le 0.0200$ demonstrates that directional and component differences persist under approximate magnitude matching. However, this describes geometric persistence within magnitude-matched strata rather than formal statistical independence in an inferential modeling sense. Directional features are not claimed to be orthogonal predictors in an unconstrained statistical model.
 
 ---
 
@@ -202,13 +204,13 @@ We characterized five candidate representations across 10 evaluation criteria wi
 
 | Evaluation Dimension | M0: Canonical Scalar $S$ | M1: Full Displacement Vector $\Delta \mathbf{p}$ | M2: Magnitude + Direction $[\|\Delta\mathbf{p}\|, \hat{\mathbf{v}}]$ | M3: Residual Mag + Dir $[\|\mathbf{r}\|, \hat{\mathbf{v}}_r]$ | M4: Full Prediction Residual $\mathbf{r}_T$ |
 |---|---|---|---|---|---|
-| **Dimensionality** | 1D scalar | 3D vector | 4D polar (1 scalar + 3D unit) | 4D polar (1 scalar + 3D unit) | 3D vector |
-| **Tier Separability** | Fails Gate 2 at $T \le 25$; $\Delta_{\text{HM}}$ compressed to $+0.02$ to $+0.10$ | Massive separation at $T \ge 2$; Cohen's $d > 3.0$ in $P$ and $A$ | High: magnitude captures urgency; direction separates tiers | High: preserves epistemic separation | High: separates component prediction errors |
+| **Dimensionality** | 1D scalar | 3D vector | scalar magnitude + 3-component unit direction (4 elements, 3 effective DOF) | scalar magnitude + 3-component unit direction (4 elements, 3 effective DOF) | 3D vector |
+| **Tier Separability** | Fails Gate 2 at $T \le 25$; $\Delta_{\text{HM}}$ compressed to $+0.02$ to $+0.10$ | Massive separation across $T \le 25$. Arousal Cohen's $d_{\text{HM}} \in [+9.33, +9.61]$, Pleasure $d_{\text{HM}} \in [-0.92, -0.95]$ | High: magnitude captures urgency; direction separates tiers | High: preserves epistemic separation | High: separates component prediction errors |
 | **Information Retained** | 1D Euclidean norm only; 0% directional info | 100% limbic trajectory displacement | Full 3D displacement in polar form | Full 3D residual in polar form | 100% epistemic prediction residual |
 | **Collapse Behavior** | Severely prone to isotropic collapse (18-50% pairs) | Zero isotropic collapse | Robust against collapse via angular separation | Robust against collapse via epistemic orientation | Zero isotropic collapse |
-| **Robustness Across $T$** | Magnitude grows monotonically, but $\Delta_{\text{HM}}$ stays compressed | Stable effect sizes across all conversational $T \ge 2$ | Angular divergence remains stable ($48^\circ$–$103^\circ$) | Stable across conversational exposures | Stable across conversational exposures |
+| **Robustness Across $T$** | Magnitude grows monotonically, but $\Delta_{\text{HM}}$ stays compressed | Stable effect sizes across all conversational $T \ge 1$ | Angular divergence remains stable ($48^\circ$–$103^\circ$) | Stable across conversational exposures | Stable across conversational exposures |
 | **Sensitivity to Baseline** | High: strictly anchored to $\mathbf{p}_0$ | High: strictly anchored to $\mathbf{p}_0$ | High: centered at $\mathbf{p}_0$ | Low-Mod: anchored to $\mathbf{A}\mathbf{p}_0 + \mathbf{b}$ | Low: conditioned on expectation |
-| **Sensitivity to Exposure** | High: requires $T \ge 50$ to pass dual scalar thresholds | Low: strong effect sizes present by $T=4$ | Moderate: direction stable once norm $> 0$ | Moderate: depends on adaptation state | Moderate: depends on adaptation state |
+| **Sensitivity to Exposure** | High: requires $T \ge 50$ to pass dual scalar thresholds | Low: strong effect sizes present across all $T \in [1, 25]$ | Moderate: direction stable once norm $> 0$ | Moderate: depends on adaptation state | Moderate: depends on adaptation state |
 | **Numerical Stability** | Extremely high: non-negative scalar | Extremely high: bounded in $[-2, 2]^3$ | Moderate: requires $\epsilon$ at $\|\Delta\mathbf{p}\| \to 0$ | Moderate: requires $\epsilon$ at $\|\mathbf{r}\| \to 0$ | High: linear transformation |
 | **Interpretability** | Low: conflates threat with joy | Extremely high: direct PAD psychological space | High: intuitive intensity vs. quality | Moderate: deviation from expectation | High for Active Inference diagnostics |
 | **Computational Cost** | $\approx 0.1\,\mu\text{s}$ (norm) | $\approx 0.1\,\mu\text{s}$ (subtraction) | $\approx 0.2\,\mu\text{s}$ (norm + division) | $\approx 0.3\,\mu\text{s}$ (matrix mul + norm) | $\approx 0.2\,\mu\text{s}$ (matrix mul + sub) |
@@ -222,8 +224,8 @@ We evaluated representation performance across primary conversational exposures 
 
 ```text
 Conversational Regime: T = 1, 2, 4, 8, 12, 16, 25 (0.10s to 2.50s)
-  • M0 (Canonical Scalar): NOT VIABLE under current dual scalar thresholds (Delta_HM <= 0.107 at all T <= 25).
-  • M1 (Displacement Vector): HIGHLY VIABLE. Statistically significant separation (Cohen's d > 1.5) appears at T = 2 (0.20s).
+  • M0 (Canonical Scalar): M0 does not satisfy the current preregistered dual Gate 2 thresholds at T <= 25 under frozen G1/current dynamics (Delta_HM <= 0.107 at all T <= 25).
+  • M1 (Displacement Vector): HIGHLY VIABLE. Statistically pronounced separation (Arousal Cohen's d > 9.0, exceeding large effect threshold |d| >= 1.0) appears at T = 1 to 2 (0.10s to 0.20s).
   • M2 (Magnitude + Direction): HIGHLY VIABLE. Angular separation reaches 66.1° at T = 2 (0.20s) and remains stable.
   • M3 (Residual Mag + Dir): HIGHLY VIABLE. Mirrors M2 under unadapted prior.
   • M4 (Prediction Residual Vector): HIGHLY VIABLE. Mirrors M1 under unadapted prior.
@@ -241,12 +243,12 @@ Exploratory Baseline Regime: T = 50, 100 (5.0s to 10.0s)
 ### Established Evidence:
 1. Canonical scalar surprise $S$ is mathematically identical to Euclidean displacement $\|\mathbf{p}_T - \mathbf{p}_0\|_2$ when Active Inference beliefs are unadapted ($\mathbf{A}=\mathbf{I}, \mathbf{b}=\mathbf{0}$).
 2. Canonical scalar $S$ collapses materially different affective states into near-identical scalar magnitudes ($|S_i - S_j| \le 0.02$) across all conversational exposures ($T \le 25$).
-3. When controlling strictly for scalar magnitude, directional separation between Medium and High probes remains large ($61.2^\circ$ to $103.7^\circ$) and statistically pronounced.
+3. When controlling strictly for scalar magnitude, directional and component differences consistently persist after magnitude matching ($61.2^\circ$ to $103.7^\circ$ angular separation).
 4. Component-wise analysis reveals that Medium stimuli induce large positive Pleasure ($\Delta P \approx +0.36$ to $+0.50$) with near-zero Arousal, whereas High stimuli induce large positive Arousal ($\Delta A \approx +0.29$ to $+0.40$) with negligible Pleasure.
-5. In 3D space (M1/M2/M4), Medium and High stimuli are clearly separable within $T=2$ to $T=4$ ticks ($0.2\text{s}$ to $0.4\text{s}$).
+5. In 3D space (M1/M2/M4), Medium and High stimuli are clearly separable within $T=1$ to $T=2$ ticks ($0.1\text{s}$ to $0.2\text{s}$).
 
 ### Supported Interpretation:
-- **M-V (Vector Information Requirement) is strongly supported under the frozen G1 / current dynamical regime.** The failure of Gate 2 under scalar $S$ at $T \le 25$ is primarily attributable to isotropic projection loss (collapsing orthogonal affective axes) rather than an inability of the limbic system to differentiate the stimuli.
+- **Scalar $S$ demonstrably omits directional/component information; whether that omission is architecturally unacceptable remains unresolved.** Under the frozen G1 / current dynamical regime, directional and component differences consistently persist after magnitude matching (supporting M-V at the diagnostic level). However, this empirical finding demonstrates what scalar $S$ omits, not that vector architecture is proven mandatory for production.
 
 ### Working Hypothesis:
 - Downstream cognitive routing (e.g., somatic modulation, conversational latency, prompt conditioning) would benefit from receiving directional affective orientation rather than an unoriented scalar magnitude.

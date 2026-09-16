@@ -173,7 +173,7 @@ def test_rq3_magnitude_controlled_direction(study_data):
         assert T_str in rq3
         t_res = rq3[T_str]
         # Verify decisive RQ3 verdict
-        assert t_res["rq3_verdict"] == "EVIDENCE CONSISTENT WITH INDEPENDENT DIRECTIONAL INFORMATION"
+        assert t_res["rq3_verdict"] == "EVIDENCE CONSISTENT WITH DIRECTIONAL/COMPONENT INFORMATION PERSISTING AFTER MAGNITUDE MATCHING"
         # Verify matched pairs have substantial angular divergence
         assert t_res["matched_mh_mean_angle_deg"] > 50.0
         # Verify component divergence: Med has positive Pleasure displacement, High has higher Arousal
@@ -229,6 +229,12 @@ def test_rq5_representation_hierarchy(study_data):
             assert axis in r
             assert len(str(r[axis])) > 0
 
+    # Verify M2 and M3 specify 3 effective DOF
+    m2 = next(r for r in reps if r["id"] == "M2")
+    m3 = next(r for r in reps if r["id"] == "M3")
+    assert "3 effective DOF" in m2["dimension"]
+    assert "3 effective DOF" in m3["dimension"]
+
     # Ensure NO composite ranking score was computed (per prompt instructions)
     for r in reps:
         assert "composite_score" not in r
@@ -245,7 +251,7 @@ def test_rq6_conversational_timescale_viability(study_data):
     findings = rq6["findings_by_representation"]
 
     assert "M0_canonical_scalar" in findings
-    assert "NOT VIABLE" in findings["M0_canonical_scalar"]["conversational_viability"]
+    assert "does not satisfy the current preregistered dual Gate 2 thresholds" in findings["M0_canonical_scalar"]["conversational_viability"]
 
     for rep in ["M1_displacement_vector", "M2_magnitude_direction", "M3_residual_magnitude_direction", "M4_full_residual_vector"]:
         assert rep in findings

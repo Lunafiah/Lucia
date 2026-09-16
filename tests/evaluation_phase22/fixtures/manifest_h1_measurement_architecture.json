@@ -1,11 +1,11 @@
 {
   "metadata": {
     "title": "Phase 22 H1 Measurement Architecture Study Manifest",
-    "timestamp_utc": "2026-09-16T17:10:15Z"
+    "timestamp_utc": "2026-09-16T17:38:34Z"
   },
   "file_hashes": {
-    "script_hash": "da063318e58c0f3ab7fd5dbd65ec3eae92376a86d2ad6425f7ce30789ca3b717",
-    "results_hash": "3858219ed6482408aefb0d9fb9d3d20f7d01aca1e54b651cc31e4cd812442a34"
+    "script_hash": "5218b075ceea6331c2c0dbc48870a79b3747af6ab4af845408a8e30f118f8087",
+    "results_hash": "54a8c77d7de597a4902d2ac54f58c244bc948f58fda06d3014abf2558d605081"
   },
   "governance_invariants": {
     "h1_status": "INCONCLUSIVE \u2014 GATE 2 UNRESOLVED",
