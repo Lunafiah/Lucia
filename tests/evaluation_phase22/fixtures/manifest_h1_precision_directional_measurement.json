@@ -1,0 +1,17 @@
+{
+  "metadata": {
+    "study_name": "Phase 22 H1 \u2014 Precision-Weighted & Directional Measurement Architecture Research",
+    "timestamp_iso": "2026-09-16T18:14:19Z",
+    "random_seed": 9999
+  },
+  "file_hashes": {
+    "script_hash": "be225284d063b9f2db1b0c1a97f0621e1cb607737373b786990b85e88d47e7ab",
+    "results_hash": "fa3fac958537b03fadaad8047d061b7df36bbe4515d1dd0bfe44f908bf963b87"
+  },
+  "governance_invariants": {
+    "src_core_mutations": 0,
+    "genesis_onboarding_bit_exact": true,
+    "protocol_v15_authorized": false,
+    "architecture_gate_locked": true
+  }
+}

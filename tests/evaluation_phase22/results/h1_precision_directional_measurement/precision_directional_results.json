@@ -1,0 +1,2678 @@
+{
+  "metadata": {
+    "study_name": "Phase 22 H1 \u2014 Precision-Weighted & Directional Measurement Architecture Research",
+    "timestamp_iso": "2026-09-16T18:14:19Z",
+    "random_seed": 9999,
+    "stimulus_generator": "GeneratorG1 (Seed 9999, N=270, 90/tier)",
+    "conversational_exposure_grid": [
+      1,
+      2,
+      4,
+      8,
+      12,
+      16,
+      25
+    ],
+    "exploratory_exposure_grid": [
+      50,
+      100
+    ],
+    "collapse_threshold_s": 0.02
+  },
+  "rq1_representations": [
+    {
+      "id": "M0",
+      "name": "Canonical Scalar Surprise",
+      "formula": "S = ||r_T||_2",
+      "dimension": "1D scalar",
+      "effective_dof": 1,
+      "sign_polarity_preservation": "None (strictly non-negative magnitude >= 0)",
+      "component_preservation": "None (collapses 3 axes into single Euclidean distance)",
+      "angular_information": "None (direction discarded)",
+      "prediction_error_semantics": "Degenerates to state displacement ||p_T - p_0||_2 under unadapted beliefs",
+      "baseline_dependence": "High: anchored to baseline resting attractor p_0",
+      "transition_model_dependence": "Conditional on belief adaptation (A, b)",
+      "interpretability": "Low: conflates orthogonal emotional trajectories (joy vs panic)",
+      "computational_cost": "O(1): ~0.1 us (vector norm)"
+    },
+    {
+      "id": "M1",
+      "name": "Raw PAD Displacement Vector",
+      "formula": "Delta_p = p_T - p_0 = [Delta P, Delta A, Delta D]",
+      "dimension": "3D vector",
+      "effective_dof": 3,
+      "sign_polarity_preservation": "Complete (preserves positive/negative direction per axis)",
+      "component_preservation": "Complete (preserves individual Pleasure, Arousal, Dominance)",
+      "angular_information": "Complete (implicit in Cartesian coordinates)",
+      "prediction_error_semantics": "None (pure state displacement; do NOT call prediction error)",
+      "baseline_dependence": "High: explicitly computed relative to p_0",
+      "transition_model_dependence": "None (independent of generative transition matrix)",
+      "interpretability": "High: direct psychological mapping to PAD emotional space",
+      "computational_cost": "O(1): ~0.1 us (vector subtraction)"
+    },
+    {
+      "id": "M2",
+      "name": "Displacement Magnitude + Direction",
+      "formula": "[m, v] where m = ||Delta_p||_2, v = Delta_p / ||Delta_p||_2",
+      "dimension": "scalar magnitude + 3-component unit direction (4 elements, 3 effective DOF)",
+      "effective_dof": 3,
+      "sign_polarity_preservation": "Complete (carried by unit direction v)",
+      "component_preservation": "Complete (recoverable via m * v)",
+      "angular_information": "Explicit (unit direction vector v)",
+      "prediction_error_semantics": "None (pure state displacement in polar coordinates)",
+      "baseline_dependence": "High: anchored to p_0",
+      "transition_model_dependence": "None",
+      "interpretability": "High: intuitively separates affective intensity (m) from affective quality (v)",
+      "computational_cost": "O(1): ~0.2 us (norm + vector normalization)"
+    },
+    {
+      "id": "M3",
+      "name": "Residual Magnitude + Direction",
+      "formula": "[m_r, v_r] where m_r = ||r_T||_2, v_r = r_T / ||r_T||_2",
+      "dimension": "scalar magnitude + 3-component unit direction (4 elements, 3 effective DOF)",
+      "effective_dof": 3,
+      "sign_polarity_preservation": "Complete (carried by unit residual direction v_r)",
+      "component_preservation": "Complete (recoverable via m_r * v_r)",
+      "angular_information": "Explicit (unit vector of epistemic violation)",
+      "prediction_error_semantics": "Complete: captures magnitude and orientation of model expectation failure",
+      "baseline_dependence": "Conditioned on generative prediction p_hat_T",
+      "transition_model_dependence": "High: depends directly on learned transition model (A, b)",
+      "interpretability": "High: separates epistemic surprise magnitude from semantic orientation",
+      "computational_cost": "O(1): ~0.3 us (matrix prediction + norm + normalization)"
+    },
+    {
+      "id": "M4",
+      "name": "Full Vector Prediction Residual",
+      "formula": "r_T = p_hat_T - p_T = [r_P, r_A, r_D]",
+      "dimension": "3D vector",
+      "effective_dof": 3,
+      "sign_polarity_preservation": "Complete (signed prediction error per axis)",
+      "component_preservation": "Complete (full 3D residual vector)",
+      "angular_information": "Complete (Cartesian orientation of residual)",
+      "prediction_error_semantics": "Complete Active Inference prediction error (no scalarization)",
+      "baseline_dependence": "Conditioned on generative expectation p_hat_T",
+      "transition_model_dependence": "High: directly computed from generative expectation",
+      "interpretability": "High for Active Inference diagnostics (component surprise)",
+      "computational_cost": "O(1): ~0.2 us (matrix multiplication + vector subtraction)"
+    },
+    {
+      "id": "M5",
+      "name": "Precision-Weighted Vector Residual",
+      "formula": "S_Pi = sqrt(r_T^T Pi r_T)",
+      "dimension": "1D scalar (quadratic form over 3D residual)",
+      "effective_dof": 1,
+      "sign_polarity_preservation": "None (non-negative scalar result)",
+      "component_preservation": "Weighted composite (reweights axes before summing squares)",
+      "angular_information": "Ellipsoidal (direction modulates scalar via Pi geometry)",
+      "prediction_error_semantics": "Precision-weighted surprise (Mahalanobis-like energy)",
+      "baseline_dependence": "Conditioned on expectation and metric tensor Pi",
+      "transition_model_dependence": "High: depends on generative prediction and precision matrix Pi",
+      "interpretability": "Moderate: single scalar metric, but geometry reflects metric tensor",
+      "computational_cost": "O(1): ~0.3 us (matrix-vector multiplication + dot product + sqrt)"
+    }
+  ],
+  "rq2_precision_weighting": {
+    "precision_candidates_definitions": {
+      "Pi_0_identity": {
+        "name": "Pi_0: Isotropic Identity Matrix",
+        "matrix": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "classification": "Canonical baseline (isotropic Euclidean)",
+        "rationale": "Degenerates mathematically to canonical scalar S = ||r_T||_2.",
+        "guardrail_note": "Reference control baseline."
+      },
+      "Pi_1_arousal_exploratory": {
+        "name": "Pi_1: Somatic/Arousal Prioritization",
+        "matrix": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            4.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "classification": "Predefined exploratory theoretical candidate",
+        "rationale": "Explores hypothetical 2:1 precision ratio on the somatic activation axis.",
+        "guardrail_note": "Unvalidated exploratory theoretical candidate. Any empirical separation under Pi_1 is strictly reported as a mathematical property of this formula, and must NOT be claimed as evidence for higher physiological importance of Arousal in Lucia."
+      },
+      "Pi_2_geometric_headroom": {
+        "name": "Pi_2: Philia Headroom Normalization",
+        "matrix": [
+          [
+            1.778,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.108,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.108
+          ]
+        ],
+        "classification": "Fixed geometric normalization metric / exploratory precision candidate",
+        "rationale": "Inverse square of distance from Philia resting attractor to [-1, 1] bounds (h_i^-2).",
+        "guardrail_note": "Valid geometric distance-to-boundary normalization, but NOT automatically biological precision in the Active Inference sense. Must not be conflated with a validated biological precision model."
+      },
+      "Pi_3_mt_lnn_coupled": {
+        "name": "Pi_3: Coupled Limbic Interaction Metric",
+        "matrix": [
+          [
+            1.0,
+            -0.3,
+            0.0
+          ],
+          [
+            -0.3,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "classification": "Fixed non-diagonal metric tensor",
+        "rationale": "Off-diagonal Valence-Arousal cross-coupling (rho_PA = -0.3) reflecting MT-LNN limbic ODE dynamics.",
+        "guardrail_note": "Positive definite metric tensor with eigenvalues 1.3, 0.7, 1.0; explores limbic cross-drag."
+      }
+    },
+    "results_by_exposure_t": {
+      "1": {
+        "T": 1,
+        "exposure_sec": 0.1,
+        "candidates": {
+          "Pi_0_identity": {
+            "name": "Pi_0: Isotropic Identity Matrix",
+            "classification": "Canonical baseline (isotropic Euclidean)",
+            "mean_low": 0.057316687932483096,
+            "mean_med": 0.07934464206057129,
+            "mean_high": 0.09446791482720245,
+            "std_low": 0.0023211069790812014,
+            "std_med": 0.014544282154366563,
+            "std_high": 0.007147203215770065,
+            "delta_ml": 0.022027954128088195,
+            "delta_hm": 0.015123272766631154,
+            "gate2_ml_pass": false,
+            "gate2_hm_pass": false,
+            "total_collapse_pairs": 18231,
+            "total_collapse_rate": 0.5020239570425444,
+            "mh_collapse_pairs": 4371,
+            "mh_collapse_rate": 0.5396296296296297,
+            "mh_collapsed_mean_angle_deg": 61.21464450993462,
+            "mh_collapsed_mean_vdist": 0.08825023567024991,
+            "mh_collapsed_mean_diff_pleasure": 0.06765422460263704,
+            "mh_collapsed_mean_diff_arousal": 0.04240388290722649
+          },
+          "Pi_1_arousal_exploratory": {
+            "name": "Pi_1: Somatic/Arousal Prioritization",
+            "classification": "Predefined exploratory theoretical candidate",
+            "mean_low": 0.058357239125625585,
+            "mean_med": 0.07958467653789135,
+            "mean_high": 0.12024320635979839,
+            "std_low": 0.0023174282394478486,
+            "std_med": 0.01430663823261338,
+            "std_high": 0.0020621239371581947,
+            "delta_ml": 0.021227437412265765,
+            "delta_hm": 0.04065852982190704,
+            "gate2_ml_pass": false,
+            "gate2_hm_pass": false,
+            "total_collapse_pairs": 13951,
+            "total_collapse_rate": 0.3841663224562853,
+            "mh_collapse_pairs": 0,
+            "mh_collapse_rate": 0.0,
+            "mh_collapsed_mean_angle_deg": 0.0,
+            "mh_collapsed_mean_vdist": 0.0,
+            "mh_collapsed_mean_diff_pleasure": 0.0,
+            "mh_collapsed_mean_diff_arousal": 0.0
+          },
+          "Pi_2_geometric_headroom": {
+            "name": "Pi_2: Philia Headroom Normalization",
+            "classification": "Fixed geometric normalization metric / exploratory precision candidate",
+            "mean_low": 0.061310926615690736,
+            "mean_med": 0.09378740590301897,
+            "mean_high": 0.11283977874174766,
+            "std_low": 0.0025010911792251425,
+            "std_med": 0.02077894940193987,
+            "std_high": 0.010107943081720448,
+            "delta_ml": 0.03247647928732823,
+            "delta_hm": 0.019052372838728696,
+            "gate2_ml_pass": false,
+            "gate2_hm_pass": false,
+            "total_collapse_pairs": 17220,
+            "total_collapse_rate": 0.4741842213961173,
+            "mh_collapse_pairs": 4140,
+            "mh_collapse_rate": 0.5111111111111111,
+            "mh_collapsed_mean_angle_deg": 60.49996543246526,
+            "mh_collapsed_mean_vdist": 0.08812312861464652,
+            "mh_collapsed_mean_diff_pleasure": 0.06698178516487555,
+            "mh_collapsed_mean_diff_arousal": 0.042438998923988044
+          },
+          "Pi_3_mt_lnn_coupled": {
+            "name": "Pi_3: Coupled Limbic Interaction Metric",
+            "classification": "Fixed non-diagonal metric tensor",
+            "mean_low": 0.05687345659401811,
+            "mean_med": 0.07902927764041442,
+            "mean_high": 0.09491398718740193,
+            "std_low": 0.0023084491775815005,
+            "std_med": 0.01487836368421646,
+            "std_high": 0.0031885114346366025,
+            "delta_ml": 0.022155821046396316,
+            "delta_hm": 0.015884709546987508,
+            "gate2_ml_pass": false,
+            "gate2_hm_pass": false,
+            "total_collapse_pairs": 18091,
+            "total_collapse_rate": 0.49816880077103126,
+            "mh_collapse_pairs": 4140,
+            "mh_collapse_rate": 0.5111111111111111,
+            "mh_collapsed_mean_angle_deg": 60.49996543246526,
+            "mh_collapsed_mean_vdist": 0.08812312861464652,
+            "mh_collapsed_mean_diff_pleasure": 0.06698178516487555,
+            "mh_collapsed_mean_diff_arousal": 0.042438998923988044
+          }
+        }
+      },
+      "2": {
+        "T": 2,
+        "exposure_sec": 0.2,
+        "candidates": {
+          "Pi_0_identity": {
+            "name": "Pi_0: Isotropic Identity Matrix",
+            "classification": "Canonical baseline (isotropic Euclidean)",
+            "mean_low": 0.10775709887338494,
+            "mean_med": 0.1494172966924817,
+            "mean_high": 0.17798588967256906,
+            "std_low": 0.0043579579905045915,
+            "std_med": 0.027436349878569438,
+            "std_high": 0.013409956242915579,
+            "delta_ml": 0.041660197819096745,
+            "delta_hm": 0.028568592980087376,
+            "gate2_ml_pass": false,
+            "gate2_hm_pass": false,
+            "total_collapse_pairs": 15389,
+            "total_collapse_rate": 0.4237642847308275,
+            "mh_collapse_pairs": 3374,
+            "mh_collapse_rate": 0.4165432098765432,
+            "mh_collapsed_mean_angle_deg": 66.09958601023693,
+            "mh_collapsed_mean_vdist": 0.17955197745820198,
+            "mh_collapsed_mean_diff_pleasure": 0.1413074401690867,
+            "mh_collapsed_mean_diff_arousal": 0.08165630790382311
+          },
+          "Pi_1_arousal_exploratory": {
+            "name": "Pi_1: Somatic/Arousal Prioritization",
+            "classification": "Predefined exploratory theoretical candidate",
+            "mean_low": 0.10971818769827506,
+            "mean_med": 0.1498680073567484,
+            "mean_high": 0.2264274652780621,
+            "std_low": 0.004350713033369892,
+            "std_med": 0.02698999972036319,
+            "std_high": 0.003878215557717898,
+            "delta_ml": 0.04014981965847335,
+            "delta_hm": 0.07655945792131369,
+            "gate2_ml_pass": false,
+            "gate2_hm_pass": false,
+            "total_collapse_pairs": 13511,
+            "total_collapse_rate": 0.3720501170315297,
+            "mh_collapse_pairs": 0,
+            "mh_collapse_rate": 0.0,
+            "mh_collapsed_mean_angle_deg": 0.0,
+            "mh_collapsed_mean_vdist": 0.0,
+            "mh_collapsed_mean_diff_pleasure": 0.0,
+            "mh_collapsed_mean_diff_arousal": 0.0
+          },
+          "Pi_2_geometric_headroom": {
+            "name": "Pi_2: Philia Headroom Normalization",
+            "classification": "Fixed geometric normalization metric / exploratory precision candidate",
+            "mean_low": 0.1153133937493809,
+            "mean_med": 0.17675548263499,
+            "mean_high": 0.2127308866112845,
+            "std_low": 0.004698410773027258,
+            "std_med": 0.039202921607709856,
+            "std_high": 0.01898857769554779,
+            "delta_ml": 0.06144208888560909,
+            "delta_hm": 0.03597540397629451,
+            "gate2_ml_pass": false,
+            "gate2_hm_pass": false,
+            "total_collapse_pairs": 13508,
+            "total_collapse_rate": 0.3719675065399973,
+            "mh_collapse_pairs": 2850,
+            "mh_collapse_rate": 0.35185185185185186,
+            "mh_collapsed_mean_angle_deg": 62.86705412106511,
+            "mh_collapsed_mean_vdist": 0.17191414321101647,
+            "mh_collapsed_mean_diff_pleasure": 0.13110260228498416,
+            "mh_collapsed_mean_diff_arousal": 0.08101082943941529
+          },
+          "Pi_3_mt_lnn_coupled": {
+            "name": "Pi_3: Coupled Limbic Interaction Metric",
+            "classification": "Fixed non-diagonal metric tensor",
+            "mean_low": 0.10691204820249287,
+            "mean_med": 0.14882299709324043,
+            "mean_high": 0.17882082757761988,
+            "std_low": 0.004333985676157809,
+            "std_med": 0.028071718963343505,
+            "std_high": 0.006061342026263228,
+            "delta_ml": 0.04191094889074756,
+            "delta_hm": 0.029997830484379456,
+            "gate2_ml_pass": false,
+            "gate2_hm_pass": false,
+            "total_collapse_pairs": 17606,
+            "total_collapse_rate": 0.4848134379732893,
+            "mh_collapse_pairs": 4140,
+            "mh_collapse_rate": 0.5111111111111111,
+            "mh_collapsed_mean_angle_deg": 60.648698485703605,
+            "mh_collapsed_mean_vdist": 0.16631701153997547,
+            "mh_collapsed_mean_diff_pleasure": 0.1265456596729526,
+            "mh_collapsed_mean_diff_arousal": 0.07987983185674374
+          }
+        }
+      },
+      "4": {
+        "T": 4,
+        "exposure_sec": 0.4,
+        "candidates": {
+          "Pi_0_identity": {
+            "name": "Pi_0: Isotropic Identity Matrix",
+            "classification": "Canonical baseline (isotropic Euclidean)",
+            "mean_low": 0.1915822614697521,
+            "mean_med": 0.26655634424981667,
+            "mean_high": 0.3178002813504737,
+            "std_low": 0.007726890359746512,
+            "std_med": 0.0491307594993282,
+            "std_high": 0.02379777092845685,
+            "delta_ml": 0.07497408278006457,
+            "delta_hm": 0.051243937100657055,
+            "gate2_ml_pass": false,
+            "gate2_hm_pass": false,
+            "total_collapse_pairs": 10002,
+            "total_collapse_rate": 0.27542337876910367,
+            "mh_collapse_pairs": 2082,
+            "mh_collapse_rate": 0.25703703703703706,
+            "mh_collapsed_mean_angle_deg": 78.45465675803008,
+            "mh_collapsed_mean_vdist": 0.37559504344244715,
+            "mh_collapsed_mean_diff_pleasure": 0.3190188886424048,
+            "mh_collapsed_mean_diff_arousal": 0.15204397111873516
+          },
+          "Pi_1_arousal_exploratory": {
+            "name": "Pi_1: Somatic/Arousal Prioritization",
+            "classification": "Predefined exploratory theoretical candidate",
+            "mean_low": 0.1950852066183372,
+            "mean_med": 0.2673554450862844,
+            "mean_high": 0.4039081240311679,
+            "std_low": 0.0077128796359452675,
+            "std_med": 0.04833902072474879,
+            "std_high": 0.006900552176335527,
+            "delta_ml": 0.0722702384679472,
+            "delta_hm": 0.1365526789448835,
+            "gate2_ml_pass": false,
+            "gate2_hm_pass": false,
+            "total_collapse_pairs": 9896,
+            "total_collapse_rate": 0.272504474734958,
+            "mh_collapse_pairs": 0,
+            "mh_collapse_rate": 0.0,
+            "mh_collapsed_mean_angle_deg": 0.0,
+            "mh_collapsed_mean_vdist": 0.0,
+            "mh_collapsed_mean_diff_pleasure": 0.0,
+            "mh_collapsed_mean_diff_arousal": 0.0
+          },
+          "Pi_2_geometric_headroom": {
+            "name": "Pi_2: Philia Headroom Normalization",
+            "classification": "Fixed geometric normalization metric / exploratory precision candidate",
+            "mean_low": 0.2051716320590806,
+            "mean_med": 0.3157947086684019,
+            "mean_high": 0.38028583929537213,
+            "std_low": 0.008339001792925375,
+            "std_med": 0.07020924802203078,
+            "std_high": 0.03376020965819515,
+            "delta_ml": 0.11062307660932133,
+            "delta_hm": 0.0644911306269702,
+            "gate2_ml_pass": true,
+            "gate2_hm_pass": false,
+            "total_collapse_pairs": 7194,
+            "total_collapse_rate": 0.19809995869475425,
+            "mh_collapse_pairs": 642,
+            "mh_collapse_rate": 0.07925925925925927,
+            "mh_collapsed_mean_angle_deg": 22.589618229040706,
+            "mh_collapsed_mean_vdist": 0.12818433041004068,
+            "mh_collapsed_mean_diff_pleasure": 0.0043473331817370535,
+            "mh_collapsed_mean_diff_arousal": 0.1276494719566918
+          },
+          "Pi_3_mt_lnn_coupled": {
+            "name": "Pi_3: Coupled Limbic Interaction Metric",
+            "classification": "Fixed non-diagonal metric tensor",
+            "mean_low": 0.1900414492304299,
+            "mean_med": 0.26549658957042815,
+            "mean_high": 0.3192797418561505,
+            "std_low": 0.007683690677876609,
+            "std_med": 0.05028563417524484,
+            "std_high": 0.010981920747115622,
+            "delta_ml": 0.07545514033999826,
+            "delta_hm": 0.053783152285722335,
+            "gate2_ml_pass": false,
+            "gate2_hm_pass": false,
+            "total_collapse_pairs": 12915,
+            "total_collapse_rate": 0.355638166047088,
+            "mh_collapse_pairs": 3782,
+            "mh_collapse_rate": 0.4669135802469136,
+            "mh_collapsed_mean_angle_deg": 58.7023106150999,
+            "mh_collapsed_mean_vdist": 0.2880871304889265,
+            "mh_collapsed_mean_diff_pleasure": 0.21501314373312164,
+            "mh_collapsed_mean_diff_arousal": 0.1413759209940711
+          }
+        }
+      },
+      "8": {
+        "T": 8,
+        "exposure_sec": 0.8,
+        "candidates": {
+          "Pi_0_identity": {
+            "name": "Pi_0: Isotropic Identity Matrix",
+            "classification": "Canonical baseline (isotropic Euclidean)",
+            "mean_low": 0.30975647178158905,
+            "mean_med": 0.4338516192288793,
+            "mean_high": 0.518088516495782,
+            "std_low": 0.012417605603929125,
+            "std_med": 0.08055544866675124,
+            "std_high": 0.03843951295673472,
+            "delta_ml": 0.12409514744729028,
+            "delta_hm": 0.0842368972669027,
+            "gate2_ml_pass": true,
+            "gate2_hm_pass": false,
+            "total_collapse_pairs": 7087,
+            "total_collapse_rate": 0.19515351783009777,
+            "mh_collapse_pairs": 622,
+            "mh_collapse_rate": 0.07679012345679012,
+            "mh_collapsed_mean_angle_deg": 83.33363337205854,
+            "mh_collapsed_mean_vdist": 0.6451617956268212,
+            "mh_collapsed_mean_diff_pleasure": 0.5652329342669818,
+            "mh_collapsed_mean_diff_arousal": 0.24933124186797725
+          },
+          "Pi_1_arousal_exploratory": {
+            "name": "Pi_1: Somatic/Arousal Prioritization",
+            "classification": "Predefined exploratory theoretical candidate",
+            "mean_low": 0.31547773815687913,
+            "mean_med": 0.43513798293025874,
+            "mean_high": 0.6575830515715849,
+            "std_low": 0.012391689792948553,
+            "std_med": 0.07928040445324039,
+            "std_high": 0.011185234440168383,
+            "delta_ml": 0.11966024477337961,
+            "delta_hm": 0.22244506864132618,
+            "gate2_ml_pass": true,
+            "gate2_hm_pass": true,
+            "total_collapse_pairs": 8306,
+            "total_collapse_rate": 0.22872091422277296,
+            "mh_collapse_pairs": 0,
+            "mh_collapse_rate": 0.0,
+            "mh_collapsed_mean_angle_deg": 0.0,
+            "mh_collapsed_mean_vdist": 0.0,
+            "mh_collapsed_mean_diff_pleasure": 0.0,
+            "mh_collapsed_mean_diff_arousal": 0.0
+          },
+          "Pi_2_geometric_headroom": {
+            "name": "Pi_2: Philia Headroom Normalization",
+            "classification": "Fixed geometric normalization metric / exploratory precision candidate",
+            "mean_low": 0.33215255520963627,
+            "mean_med": 0.5153050847720304,
+            "mean_high": 0.621233241637998,
+            "std_low": 0.013425639412834147,
+            "std_med": 0.11509703921751298,
+            "std_high": 0.05465062335675825,
+            "delta_ml": 0.18315252956239414,
+            "delta_hm": 0.10592815686596757,
+            "gate2_ml_pass": true,
+            "gate2_hm_pass": false,
+            "total_collapse_pairs": 6417,
+            "total_collapse_rate": 0.17670384138785625,
+            "mh_collapse_pairs": 138,
+            "mh_collapse_rate": 0.017037037037037038,
+            "mh_collapsed_mean_angle_deg": 23.478453085142405,
+            "mh_collapsed_mean_vdist": 0.21148472937540785,
+            "mh_collapsed_mean_diff_pleasure": 0.026142647218530192,
+            "mh_collapsed_mean_diff_arousal": 0.2091672022287034
+          },
+          "Pi_3_mt_lnn_coupled": {
+            "name": "Pi_3: Coupled Limbic Interaction Metric",
+            "classification": "Fixed non-diagonal metric tensor",
+            "mean_low": 0.3071592555526569,
+            "mean_med": 0.43213651344512194,
+            "mean_high": 0.5204985224778103,
+            "std_low": 0.012346030185937487,
+            "std_med": 0.08250152854756794,
+            "std_high": 0.01832021521844375,
+            "delta_ml": 0.12497725789246505,
+            "delta_hm": 0.08836200903268832,
+            "gate2_ml_pass": true,
+            "gate2_hm_pass": false,
+            "total_collapse_pairs": 9966,
+            "total_collapse_rate": 0.2744320528707146,
+            "mh_collapse_pairs": 2682,
+            "mh_collapse_rate": 0.33111111111111113,
+            "mh_collapsed_mean_angle_deg": 44.20507918781944,
+            "mh_collapsed_mean_vdist": 0.3644373175973699,
+            "mh_collapsed_mean_diff_pleasure": 0.22107097950247026,
+            "mh_collapsed_mean_diff_arousal": 0.21785689915893694
+          }
+        }
+      },
+      "12": {
+        "T": 12,
+        "exposure_sec": 1.2000000000000002,
+        "candidates": {
+          "Pi_0_identity": {
+            "name": "Pi_0: Isotropic Identity Matrix",
+            "classification": "Canonical baseline (isotropic Euclidean)",
+            "mean_low": 0.3862492945462807,
+            "mean_med": 0.5442274168056815,
+            "mean_high": 0.6511065387483942,
+            "std_low": 0.015379981002989356,
+            "std_med": 0.1016685068639907,
+            "std_high": 0.04776056895036774,
+            "delta_ml": 0.15797812225940083,
+            "delta_hm": 0.10687912194271265,
+            "gate2_ml_pass": true,
+            "gate2_hm_pass": false,
+            "total_collapse_pairs": 6734,
+            "total_collapse_rate": 0.18543301665978246,
+            "mh_collapse_pairs": 358,
+            "mh_collapse_rate": 0.04419753086419753,
+            "mh_collapsed_mean_angle_deg": 86.0399995791269,
+            "mh_collapsed_mean_vdist": 0.8348004456119102,
+            "mh_collapsed_mean_diff_pleasure": 0.7395840715131828,
+            "mh_collapsed_mean_diff_arousal": 0.3125110128224888
+          },
+          "Pi_1_arousal_exploratory": {
+            "name": "Pi_1: Somatic/Arousal Prioritization",
+            "classification": "Predefined exploratory theoretical candidate",
+            "mean_low": 0.3934749700948831,
+            "mean_med": 0.5458303520383825,
+            "mean_high": 0.8259614835444922,
+            "std_low": 0.015344283732436077,
+            "std_med": 0.10008020792470311,
+            "std_high": 0.014021362753084542,
+            "delta_ml": 0.1523553819434994,
+            "delta_hm": 0.2801311315061097,
+            "gate2_ml_pass": true,
+            "gate2_hm_pass": true,
+            "total_collapse_pairs": 7898,
+            "total_collapse_rate": 0.21748588737436322,
+            "mh_collapse_pairs": 0,
+            "mh_collapse_rate": 0.0,
+            "mh_collapsed_mean_angle_deg": 0.0,
+            "mh_collapsed_mean_vdist": 0.0,
+            "mh_collapsed_mean_diff_pleasure": 0.0,
+            "mh_collapsed_mean_diff_arousal": 0.0
+          },
+          "Pi_2_geometric_headroom": {
+            "name": "Pi_2: Philia Headroom Normalization",
+            "classification": "Fixed geometric normalization metric / exploratory precision candidate",
+            "mean_low": 0.4145877543950203,
+            "mean_med": 0.6477457553517936,
+            "mean_high": 0.7820191632427095,
+            "std_low": 0.01665419603756866,
+            "std_med": 0.14521323727841087,
+            "std_high": 0.06800593353399009,
+            "delta_ml": 0.23315800095677325,
+            "delta_hm": 0.1342734078909159,
+            "gate2_ml_pass": true,
+            "gate2_hm_pass": false,
+            "total_collapse_pairs": 6345,
+            "total_collapse_rate": 0.17472118959107807,
+            "mh_collapse_pairs": 138,
+            "mh_collapse_rate": 0.017037037037037038,
+            "mh_collapsed_mean_angle_deg": 23.505512691143082,
+            "mh_collapsed_mean_vdist": 0.2659377500171551,
+            "mh_collapsed_mean_diff_pleasure": 0.03225294829595417,
+            "mh_collapsed_mean_diff_arousal": 0.26310179285278235
+          },
+          "Pi_3_mt_lnn_coupled": {
+            "name": "Pi_3: Coupled Limbic Interaction Metric",
+            "classification": "Fixed non-diagonal metric tensor",
+            "mean_low": 0.38290140735428435,
+            "mean_med": 0.5420954098209579,
+            "mean_high": 0.6541641081090966,
+            "std_low": 0.01528865679009393,
+            "std_med": 0.104190876427214,
+            "std_high": 0.023576570964765786,
+            "delta_ml": 0.1591940024666736,
+            "delta_hm": 0.1120686982881387,
+            "gate2_ml_pass": true,
+            "gate2_hm_pass": false,
+            "total_collapse_pairs": 8849,
+            "total_collapse_rate": 0.24367341319014182,
+            "mh_collapse_pairs": 1940,
+            "mh_collapse_rate": 0.23950617283950618,
+            "mh_collapsed_mean_angle_deg": 45.46959756782163,
+            "mh_collapsed_mean_vdist": 0.4670536110460938,
+            "mh_collapsed_mean_diff_pleasure": 0.2876947740878649,
+            "mh_collapsed_mean_diff_arousal": 0.2749705113148101
+          }
+        }
+      },
+      "16": {
+        "T": 16,
+        "exposure_sec": 1.6,
+        "candidates": {
+          "Pi_0_identity": {
+            "name": "Pi_0: Isotropic Identity Matrix",
+            "classification": "Canonical baseline (isotropic Euclidean)",
+            "mean_low": 0.43889230519632044,
+            "mean_med": 0.6215999508467025,
+            "mean_high": 0.7454056837768834,
+            "std_low": 0.017352754014510138,
+            "std_med": 0.11667783773587814,
+            "std_high": 0.05378648257884741,
+            "delta_ml": 0.18270764565038206,
+            "delta_hm": 0.12380573293018093,
+            "gate2_ml_pass": true,
+            "gate2_hm_pass": false,
+            "total_collapse_pairs": 6503,
+            "total_collapse_rate": 0.17907200881178575,
+            "mh_collapse_pairs": 204,
+            "mh_collapse_rate": 0.025185185185185185,
+            "mh_collapsed_mean_angle_deg": 74.7502663696391,
+            "mh_collapsed_mean_vdist": 0.8375155880967606,
+            "mh_collapsed_mean_diff_pleasure": 0.6980880323585142,
+            "mh_collapsed_mean_diff_arousal": 0.3489278640419721
+          },
+          "Pi_1_arousal_exploratory": {
+            "name": "Pi_1: Somatic/Arousal Prioritization",
+            "classification": "Predefined exploratory theoretical candidate",
+            "mean_low": 0.44723271311721546,
+            "mean_med": 0.6234278699508482,
+            "mean_high": 0.9457153041022882,
+            "std_low": 0.017309009691894892,
+            "std_med": 0.11486855736632168,
+            "std_high": 0.016095290838617084,
+            "delta_ml": 0.17619515683363274,
+            "delta_hm": 0.32228743415144,
+            "gate2_ml_pass": true,
+            "gate2_hm_pass": true,
+            "total_collapse_pairs": 7550,
+            "total_collapse_rate": 0.20790307035660197,
+            "mh_collapse_pairs": 0,
+            "mh_collapse_rate": 0.0,
+            "mh_collapsed_mean_angle_deg": 0.0,
+            "mh_collapsed_mean_vdist": 0.0,
+            "mh_collapsed_mean_diff_pleasure": 0.0,
+            "mh_collapsed_mean_diff_arousal": 0.0
+          },
+          "Pi_2_geometric_headroom": {
+            "name": "Pi_2: Philia Headroom Normalization",
+            "classification": "Fixed geometric normalization metric / exploratory precision candidate",
+            "mean_low": 0.4714501826433046,
+            "mean_med": 0.741101176418225,
+            "mean_high": 0.896421189706897,
+            "std_low": 0.018815026643924797,
+            "std_med": 0.16659740296989678,
+            "std_high": 0.07672058702337985,
+            "delta_ml": 0.2696509937749204,
+            "delta_hm": 0.15532001328867195,
+            "gate2_ml_pass": true,
+            "gate2_hm_pass": true,
+            "total_collapse_pairs": 6270,
+            "total_collapse_rate": 0.17265592730276746,
+            "mh_collapse_pairs": 138,
+            "mh_collapse_rate": 0.017037037037037038,
+            "mh_collapsed_mean_angle_deg": 23.579275145499842,
+            "mh_collapsed_mean_vdist": 0.30510626742438046,
+            "mh_collapsed_mean_diff_pleasure": 0.0362278148370804,
+            "mh_collapsed_mean_diff_arousal": 0.3019598321925738
+          },
+          "Pi_3_mt_lnn_coupled": {
+            "name": "Pi_3: Coupled Limbic Interaction Metric",
+            "classification": "Fixed non-diagonal metric tensor",
+            "mean_low": 0.4349822251297034,
+            "mean_med": 0.6191903506291156,
+            "mean_high": 0.7489533887251647,
+            "std_low": 0.017246638964793094,
+            "std_med": 0.11965121265354249,
+            "std_high": 0.027796331467256727,
+            "delta_ml": 0.18420812549941223,
+            "delta_hm": 0.12976303809604905,
+            "gate2_ml_pass": true,
+            "gate2_hm_pass": false,
+            "total_collapse_pairs": 8055,
+            "total_collapse_rate": 0.2218091697645601,
+            "mh_collapse_pairs": 1418,
+            "mh_collapse_rate": 0.17506172839506173,
+            "mh_collapsed_mean_angle_deg": 42.74662157568886,
+            "mh_collapsed_mean_vdist": 0.5056266779874456,
+            "mh_collapsed_mean_diff_pleasure": 0.2979942768713936,
+            "mh_collapsed_mean_diff_arousal": 0.31066096958872313
+          }
+        }
+      },
+      "25": {
+        "T": 25,
+        "exposure_sec": 2.5,
+        "candidates": {
+          "Pi_0_identity": {
+            "name": "Pi_0: Isotropic Identity Matrix",
+            "classification": "Canonical baseline (isotropic Euclidean)",
+            "mean_low": 0.5156075050622677,
+            "mean_med": 0.7369107399820668,
+            "mean_high": 0.8895212246414731,
+            "std_low": 0.020066302470573505,
+            "std_med": 0.13929437749867657,
+            "std_high": 0.06079398912172795,
+            "delta_ml": 0.22130323491979909,
+            "delta_hm": 0.1526104846594063,
+            "gate2_ml_pass": true,
+            "gate2_hm_pass": true,
+            "total_collapse_pairs": 6481,
+            "total_collapse_rate": 0.178466198540548,
+            "mh_collapse_pairs": 286,
+            "mh_collapse_rate": 0.03530864197530864,
+            "mh_collapsed_mean_angle_deg": 103.69099588513069,
+            "mh_collapsed_mean_vdist": 1.3520422083080523,
+            "mh_collapsed_mean_diff_pleasure": 1.2696005070576775,
+            "mh_collapsed_mean_diff_arousal": 0.44692265532743136
+          },
+          "Pi_1_arousal_exploratory": {
+            "name": "Pi_1: Somatic/Arousal Prioritization",
+            "classification": "Predefined exploratory theoretical candidate",
+            "mean_low": 0.5258320133310609,
+            "mean_med": 0.7391011437949502,
+            "mean_high": 1.1308303285182877,
+            "std_low": 0.020008461912874576,
+            "std_med": 0.1371366143727376,
+            "std_high": 0.019913309819912673,
+            "delta_ml": 0.2132691304638893,
+            "delta_hm": 0.3917291847233375,
+            "gate2_ml_pass": true,
+            "gate2_hm_pass": true,
+            "total_collapse_pairs": 7063,
+            "total_collapse_rate": 0.19449263389783836,
+            "mh_collapse_pairs": 0,
+            "mh_collapse_rate": 0.0,
+            "mh_collapsed_mean_angle_deg": 0.0,
+            "mh_collapsed_mean_vdist": 0.0,
+            "mh_collapsed_mean_diff_pleasure": 0.0,
+            "mh_collapsed_mean_diff_arousal": 0.0
+          },
+          "Pi_2_geometric_headroom": {
+            "name": "Pi_2: Philia Headroom Normalization",
+            "classification": "Fixed geometric normalization metric / exploratory precision candidate",
+            "mean_low": 0.554481945747579,
+            "mean_med": 0.8811937976904529,
+            "mean_high": 1.0717465656026803,
+            "std_low": 0.021807776322290116,
+            "std_med": 0.19881128835109366,
+            "std_high": 0.08724412307043343,
+            "delta_ml": 0.3267118519428739,
+            "delta_hm": 0.19055276791222742,
+            "gate2_ml_pass": true,
+            "gate2_hm_pass": true,
+            "total_collapse_pairs": 6220,
+            "total_collapse_rate": 0.17127908577722703,
+            "mh_collapse_pairs": 138,
+            "mh_collapse_rate": 0.017037037037037038,
+            "mh_collapsed_mean_angle_deg": 23.87169456083784,
+            "mh_collapsed_mean_vdist": 0.36730199054070306,
+            "mh_collapsed_mean_diff_pleasure": 0.041616535305602845,
+            "mh_collapsed_mean_diff_arousal": 0.3638307743607957
+          },
+          "Pi_3_mt_lnn_coupled": {
+            "name": "Pi_3: Coupled Limbic Interaction Metric",
+            "classification": "Fixed non-diagonal metric tensor",
+            "mean_low": 0.5107815393876455,
+            "mean_med": 0.7341247030471542,
+            "mean_high": 0.8938884598622792,
+            "std_low": 0.019935431452099275,
+            "std_med": 0.14306522568535993,
+            "std_high": 0.036190311233328554,
+            "delta_ml": 0.22334316365950868,
+            "delta_hm": 0.159763756815125,
+            "gate2_ml_pass": true,
+            "gate2_hm_pass": true,
+            "total_collapse_pairs": 7812,
+            "total_collapse_rate": 0.21511771995043372,
+            "mh_collapse_pairs": 1346,
+            "mh_collapse_rate": 0.16617283950617284,
+            "mh_collapsed_mean_angle_deg": 40.21587005254797,
+            "mh_collapsed_mean_vdist": 0.5710587064923719,
+            "mh_collapsed_mean_diff_pleasure": 0.3112767586595604,
+            "mh_collapsed_mean_diff_arousal": 0.370295956603522
+          }
+        }
+      },
+      "50": {
+        "T": 50,
+        "exposure_sec": 5.0,
+        "candidates": {
+          "Pi_0_identity": {
+            "name": "Pi_0: Isotropic Identity Matrix",
+            "classification": "Canonical baseline (isotropic Euclidean)",
+            "mean_low": 0.649402693470975,
+            "mean_med": 0.8880817209023724,
+            "mean_high": 1.098406085505719,
+            "std_low": 0.024381648959283575,
+            "std_med": 0.12599610755867774,
+            "std_high": 0.020044066467198023,
+            "delta_ml": 0.23867902743139735,
+            "delta_hm": 0.21032436460334658,
+            "gate2_ml_pass": true,
+            "gate2_hm_pass": true,
+            "total_collapse_pairs": 7690,
+            "total_collapse_rate": 0.2117582266281151,
+            "mh_collapse_pairs": 0,
+            "mh_collapse_rate": 0.0,
+            "mh_collapsed_mean_angle_deg": 0.0,
+            "mh_collapsed_mean_vdist": 0.0,
+            "mh_collapsed_mean_diff_pleasure": 0.0,
+            "mh_collapsed_mean_diff_arousal": 0.0
+          },
+          "Pi_1_arousal_exploratory": {
+            "name": "Pi_1: Somatic/Arousal Prioritization",
+            "classification": "Predefined exploratory theoretical candidate",
+            "mean_low": 0.6638747114081017,
+            "mean_med": 0.891067836876079,
+            "mean_high": 1.4363071134407845,
+            "std_low": 0.024294803268613344,
+            "std_med": 0.12313410317771319,
+            "std_high": 0.07910585005705625,
+            "delta_ml": 0.22719312546797732,
+            "delta_hm": 0.5452392765647055,
+            "gate2_ml_pass": true,
+            "gate2_hm_pass": true,
+            "total_collapse_pairs": 6151,
+            "total_collapse_rate": 0.16937904447198127,
+            "mh_collapse_pairs": 0,
+            "mh_collapse_rate": 0.0,
+            "mh_collapsed_mean_angle_deg": 0.0,
+            "mh_collapsed_mean_vdist": 0.0,
+            "mh_collapsed_mean_diff_pleasure": 0.0,
+            "mh_collapsed_mean_diff_arousal": 0.0
+          },
+          "Pi_2_geometric_headroom": {
+            "name": "Pi_2: Philia Headroom Normalization",
+            "classification": "Fixed geometric normalization metric / exploratory precision candidate",
+            "mean_low": 0.6995611129423192,
+            "mean_med": 1.0542460265421747,
+            "mean_high": 1.3101644611826895,
+            "std_low": 0.026618102799485215,
+            "std_med": 0.17875087809330678,
+            "std_high": 0.02843582686574834,
+            "delta_ml": 0.35468491359985554,
+            "delta_hm": 0.2559184346405148,
+            "gate2_ml_pass": true,
+            "gate2_hm_pass": true,
+            "total_collapse_pairs": 7086,
+            "total_collapse_rate": 0.19512598099958695,
+            "mh_collapse_pairs": 322,
+            "mh_collapse_rate": 0.039753086419753086,
+            "mh_collapsed_mean_angle_deg": 97.96423413144997,
+            "mh_collapsed_mean_vdist": 1.5514395362260853,
+            "mh_collapsed_mean_diff_pleasure": 1.426877911089096,
+            "mh_collapsed_mean_diff_arousal": 0.5931799679983243
+          },
+          "Pi_3_mt_lnn_coupled": {
+            "name": "Pi_3: Coupled Limbic Interaction Metric",
+            "classification": "Fixed non-diagonal metric tensor",
+            "mean_low": 0.6426936860495912,
+            "mean_med": 0.8846615169314469,
+            "mean_high": 1.1093904331475921,
+            "std_low": 0.02419657452735544,
+            "std_med": 0.13150516855899147,
+            "std_high": 0.11251900692237163,
+            "delta_ml": 0.2419678308818557,
+            "delta_hm": 0.2247289162161452,
+            "gate2_ml_pass": true,
+            "gate2_hm_pass": true,
+            "total_collapse_pairs": 8395,
+            "total_collapse_rate": 0.23117169213823488,
+            "mh_collapse_pairs": 1886,
+            "mh_collapse_rate": 0.2328395061728395,
+            "mh_collapsed_mean_angle_deg": 25.49332551874534,
+            "mh_collapsed_mean_vdist": 0.4733542916806956,
+            "mh_collapsed_mean_diff_pleasure": 0.0,
+            "mh_collapsed_mean_diff_arousal": 0.47278011754958027
+          }
+        }
+      },
+      "100": {
+        "T": 100,
+        "exposure_sec": 10.0,
+        "candidates": {
+          "Pi_0_identity": {
+            "name": "Pi_0: Isotropic Identity Matrix",
+            "classification": "Canonical baseline (isotropic Euclidean)",
+            "mean_low": 0.8116891234152169,
+            "mean_med": 1.0435098599357813,
+            "mean_high": 1.3775599023122882,
+            "std_low": 0.018890458656944442,
+            "std_med": 0.06267190492525065,
+            "std_high": 0.10279256894360986,
+            "delta_ml": 0.23182073652056434,
+            "delta_hm": 0.33405004237650693,
+            "gate2_ml_pass": true,
+            "gate2_hm_pass": true,
+            "total_collapse_pairs": 6342,
+            "total_collapse_rate": 0.17463857909954564,
+            "mh_collapse_pairs": 0,
+            "mh_collapse_rate": 0.0,
+            "mh_collapsed_mean_angle_deg": 0.0,
+            "mh_collapsed_mean_vdist": 0.0,
+            "mh_collapsed_mean_diff_pleasure": 0.0,
+            "mh_collapsed_mean_diff_arousal": 0.0
+          },
+          "Pi_1_arousal_exploratory": {
+            "name": "Pi_1: Somatic/Arousal Prioritization",
+            "classification": "Predefined exploratory theoretical candidate",
+            "mean_low": 0.8355873411810288,
+            "mean_med": 1.048262372663399,
+            "mean_high": 1.90026776974437,
+            "std_low": 0.01909601449115661,
+            "std_med": 0.058241689808453255,
+            "std_high": 0.18118211287774746,
+            "delta_ml": 0.2126750314823702,
+            "delta_hm": 0.8520053970809709,
+            "gate2_ml_pass": true,
+            "gate2_hm_pass": true,
+            "total_collapse_pairs": 5963,
+            "total_collapse_rate": 0.16420212033594933,
+            "mh_collapse_pairs": 0,
+            "mh_collapse_rate": 0.0,
+            "mh_collapsed_mean_angle_deg": 0.0,
+            "mh_collapsed_mean_vdist": 0.0,
+            "mh_collapsed_mean_diff_pleasure": 0.0,
+            "mh_collapsed_mean_diff_arousal": 0.0
+          },
+          "Pi_2_geometric_headroom": {
+            "name": "Pi_2: Philia Headroom Normalization",
+            "classification": "Fixed geometric normalization metric / exploratory precision candidate",
+            "mean_low": 0.8795425855456627,
+            "mean_med": 1.2306161872444141,
+            "mean_high": 1.6188190766560127,
+            "std_low": 0.02169199101522712,
+            "std_med": 0.08792140691503698,
+            "std_high": 0.14256631722710464,
+            "delta_ml": 0.35107360169875146,
+            "delta_hm": 0.38820288941159853,
+            "gate2_ml_pass": true,
+            "gate2_hm_pass": true,
+            "total_collapse_pairs": 6240,
+            "total_collapse_rate": 0.1718298223874432,
+            "mh_collapse_pairs": 0,
+            "mh_collapse_rate": 0.0,
+            "mh_collapsed_mean_angle_deg": 0.0,
+            "mh_collapsed_mean_vdist": 0.0,
+            "mh_collapsed_mean_diff_pleasure": 0.0,
+            "mh_collapsed_mean_diff_arousal": 0.0
+          },
+          "Pi_3_mt_lnn_coupled": {
+            "name": "Pi_3: Coupled Limbic Interaction Metric",
+            "classification": "Fixed non-diagonal metric tensor",
+            "mean_low": 0.8008256799082244,
+            "mean_med": 1.0386204638575876,
+            "mean_high": 1.4001181202256903,
+            "std_low": 0.018444965773911665,
+            "std_med": 0.07163686130540282,
+            "std_high": 0.24505311956939194,
+            "delta_ml": 0.23779478394936315,
+            "delta_hm": 0.3614976563681027,
+            "gate2_ml_pass": true,
+            "gate2_hm_pass": true,
+            "total_collapse_pairs": 6450,
+            "total_collapse_rate": 0.17761255679471294,
+            "mh_collapse_pairs": 138,
+            "mh_collapse_rate": 0.017037037037037038,
+            "mh_collapsed_mean_angle_deg": 32.61660644413215,
+            "mh_collapsed_mean_vdist": 0.673378619087028,
+            "mh_collapsed_mean_diff_pleasure": 0.0,
+            "mh_collapsed_mean_diff_arousal": 0.6707065111308116
+          }
+        }
+      }
+    }
+  },
+  "rq3_component_wise": {
+    "results_by_exposure_t": {
+      "1": {
+        "T": 1,
+        "exposure_sec": 0.1,
+        "components": {
+          "Pleasure": {
+            "signed_displacement": {
+              "mean_low": 0.013327867189565875,
+              "std_low": 0.0006665904571223165,
+              "mean_med": 0.05121470083102413,
+              "std_med": 0.01972166904705256,
+              "mean_high": 0.006885472319722375,
+              "std_high": 0.06531922890779775
+            },
+            "absolute_displacement": {
+              "mean_low": 0.013327867189565875,
+              "mean_med": 0.05121470083102413,
+              "mean_high": 0.0650559067724292
+            },
+            "unadapted_residual": {
+              "mean_low": -0.013327867189565875,
+              "mean_med": -0.05121470083102413,
+              "mean_high": -0.006885472319722375
+            },
+            "comparisons": {
+              "Med_vs_Low": {
+                "diff_mean": 0.037886833641458256,
+                "cohens_d": 2.715261787026518,
+                "ci95": [
+                  0.03380996782264012,
+                  0.041963699460276394
+                ]
+              },
+              "High_vs_Med": {
+                "diff_mean": -0.044329228511301756,
+                "cohens_d": -0.9187976267201247,
+                "ci95": [
+                  -0.058426015028746656,
+                  -0.030232441993856857
+                ]
+              }
+            }
+          },
+          "Arousal": {
+            "signed_displacement": {
+              "mean_low": 0.0063306769554720135,
+              "std_low": 0.00019593086264489435,
+              "mean_med": 0.002203697601402869,
+              "std_med": 0.00236103230942023,
+              "mean_high": 0.0423984384508687,
+              "std_high": 0.005613342319684116
+            },
+            "absolute_displacement": {
+              "mean_low": 0.0063306769554720135,
+              "mean_med": 0.0024964408785908207,
+              "mean_high": 0.0423984384508687
+            },
+            "unadapted_residual": {
+              "mean_low": -0.0063306769554720135,
+              "mean_med": -0.002203697601402869,
+              "mean_high": -0.0423984384508687
+            },
+            "comparisons": {
+              "Med_vs_Low": {
+                "diff_mean": -0.004126979354069145,
+                "cohens_d": -2.463514334323766,
+                "ci95": [
+                  -0.004616450411676259,
+                  -0.0036375082964620305
+                ]
+              },
+              "High_vs_Med": {
+                "diff_mean": 0.04019474084946583,
+                "cohens_d": 9.334486749574031,
+                "ci95": [
+                  0.03893660191038433,
+                  0.04145287978854733
+                ]
+              }
+            }
+          },
+          "Dominance": {
+            "signed_displacement": {
+              "mean_low": 0.055384375256476825,
+              "std_low": 0.0022291218741997136,
+              "mean_med": 0.05894529824461085,
+              "std_med": 0.003199939696705203,
+              "mean_high": 0.05284783314205899,
+              "std_high": 0.006263177193021002
+            },
+            "absolute_displacement": {
+              "mean_low": 0.055384375256476825,
+              "mean_med": 0.05894529824461085,
+              "mean_high": 0.05284783314205899
+            },
+            "unadapted_residual": {
+              "mean_low": -0.055384375256476825,
+              "mean_med": -0.05894529824461085,
+              "mean_high": -0.05284783314205899
+            },
+            "comparisons": {
+              "Med_vs_Low": {
+                "diff_mean": 0.003560922988134027,
+                "cohens_d": 1.291317341218384,
+                "ci95": [
+                  0.002755211766190222,
+                  0.004366634210077832
+                ]
+              },
+              "High_vs_Med": {
+                "diff_mean": -0.006097465102551859,
+                "cohens_d": -1.2260453185868276,
+                "ci95": [
+                  -0.007550555438662753,
+                  -0.004644374766440965
+                ]
+              }
+            }
+          }
+        }
+      },
+      "2": {
+        "T": 2,
+        "exposure_sec": 0.2,
+        "components": {
+          "Pleasure": {
+            "signed_displacement": {
+              "mean_low": 0.025377536446315692,
+              "std_low": 0.001265871754882999,
+              "mean_med": 0.09684767799509073,
+              "std_med": 0.03714406579839084,
+              "mean_high": 0.012937452853595878,
+              "std_high": 0.12340503924744194
+            },
+            "absolute_displacement": {
+              "mean_low": 0.025377536446315692,
+              "mean_med": 0.09684767799509073,
+              "mean_high": 0.12291034499847166
+            },
+            "unadapted_residual": {
+              "mean_low": -0.025377536446315692,
+              "mean_med": -0.09684767799509073,
+              "mean_high": -0.012937452853595878
+            },
+            "comparisons": {
+              "Med_vs_Low": {
+                "diff_mean": 0.07147014154877504,
+                "cohens_d": 2.719556843471632,
+                "ci95": [
+                  0.06379164283340472,
+                  0.07914864026414536
+                ]
+              },
+              "High_vs_Med": {
+                "diff_mean": -0.08391022514149485,
+                "cohens_d": -0.920799066853231,
+                "ci95": [
+                  -0.11053585132414014,
+                  -0.05728459895884956
+                ]
+              }
+            }
+          },
+          "Arousal": {
+            "signed_displacement": {
+              "mean_low": 0.011916645919194056,
+              "std_low": 0.0003678361713477665,
+              "mean_med": 0.00412983932411349,
+              "std_med": 0.004450885676291156,
+              "mean_high": 0.07977859427310345,
+              "std_high": 0.010516042135866648
+            },
+            "absolute_displacement": {
+              "mean_low": 0.011916645919194056,
+              "mean_med": 0.004693865960282061,
+              "mean_high": 0.07977859427310345
+            },
+            "unadapted_residual": {
+              "mean_low": -0.011916645919194056,
+              "mean_med": -0.00412983932411349,
+              "mean_high": -0.07977859427310345
+            },
+            "comparisons": {
+              "Med_vs_Low": {
+                "diff_mean": -0.007786806595080566,
+                "cohens_d": -2.4657548089106505,
+                "ci95": [
+                  -0.008709504030910774,
+                  -0.006864109159250359
+                ]
+              },
+              "High_vs_Med": {
+                "diff_mean": 0.07564875494898995,
+                "cohens_d": 9.368759864341385,
+                "ci95": [
+                  0.07328952924270721,
+                  0.0780079806552727
+                ]
+              }
+            }
+          },
+          "Dominance": {
+            "signed_displacement": {
+              "mean_low": 0.10404488712524337,
+              "std_low": 0.004181157465886975,
+              "mean_med": 0.11066443220642705,
+              "std_med": 0.005970341427013105,
+              "mean_high": 0.09925534673140919,
+              "std_high": 0.011652782920964175
+            },
+            "absolute_displacement": {
+              "mean_low": 0.10404488712524337,
+              "mean_med": 0.11066443220642705,
+              "mean_high": 0.09925534673140919
+            },
+            "unadapted_residual": {
+              "mean_low": -0.10404488712524337,
+              "mean_med": -0.11066443220642705,
+              "mean_high": -0.09925534673140919
+            },
+            "comparisons": {
+              "Med_vs_Low": {
+                "diff_mean": 0.006619545081183675,
+                "cohens_d": 1.2843555681966259,
+                "ci95": [
+                  0.0051136570353070305,
+                  0.00812543312706032
+                ]
+              },
+              "High_vs_Med": {
+                "diff_mean": -0.011409085475017858,
+                "cohens_d": -1.2323085794210278,
+                "ci95": [
+                  -0.014114172094510168,
+                  -0.008703998855525547
+                ]
+              }
+            }
+          }
+        }
+      },
+      "4": {
+        "T": 4,
+        "exposure_sec": 0.4,
+        "components": {
+          "Pleasure": {
+            "signed_displacement": {
+              "mean_low": 0.04615832067093657,
+              "std_low": 0.0022919755506899987,
+              "mean_med": 0.17411041470777178,
+              "std_med": 0.066293190169102,
+              "mean_high": 0.02299302728885081,
+              "std_high": 0.22149647539040415
+            },
+            "absolute_displacement": {
+              "mean_low": 0.04615832067093657,
+              "mean_med": 0.17411041470777178,
+              "mean_high": 0.22061805255719077
+            },
+            "unadapted_residual": {
+              "mean_low": -0.04615832067093657,
+              "mean_med": -0.17411041470777178,
+              "mean_high": -0.02299302728885081
+            },
+            "comparisons": {
+              "Med_vs_Low": {
+                "diff_mean": 0.12795209403683522,
+                "cohens_d": 2.7279353445455987,
+                "ci95": [
+                  0.11424759579360833,
+                  0.1416565922800621
+                ]
+              },
+              "High_vs_Med": {
+                "diff_mean": -0.15111738741892097,
+                "cohens_d": -0.9243433801940267,
+                "ci95": [
+                  -0.19888471183240175,
+                  -0.1033500630054402
+                ]
+              }
+            }
+          },
+          "Arousal": {
+            "signed_displacement": {
+              "mean_low": 0.02123661760650683,
+              "std_low": 0.0006523871567608432,
+              "mean_med": 0.00729205967513607,
+              "std_med": 0.007957310060317361,
+              "mean_high": 0.14211280812153315,
+              "std_high": 0.01860006142058827
+            },
+            "absolute_displacement": {
+              "mean_low": 0.02123661760650683,
+              "mean_med": 0.008346206788547444,
+              "mean_high": 0.14211280812153315
+            },
+            "unadapted_residual": {
+              "mean_low": -0.02123661760650683,
+              "mean_med": -0.00729205967513607,
+              "mean_high": -0.14211280812153315
+            },
+            "comparisons": {
+              "Med_vs_Low": {
+                "diff_mean": -0.01394455793137076,
+                "cohens_d": -2.4700102516376887,
+                "ci95": [
+                  -0.015594071185628382,
+                  -0.012295044677113138
+                ]
+              },
+              "High_vs_Med": {
+                "diff_mean": 0.13482074844639708,
+                "cohens_d": 9.424556089006753,
+                "ci95": [
+                  0.1306410433109006,
+                  0.13900045358189356
+                ]
+              }
+            }
+          },
+          "Dominance": {
+            "signed_displacement": {
+              "mean_low": 0.18471992144954213,
+              "std_low": 0.0073996695005717796,
+              "mean_med": 0.1962917374435006,
+              "std_med": 0.010485871924101792,
+              "mean_high": 0.17611350391773475,
+              "std_high": 0.020396225977040276
+            },
+            "absolute_displacement": {
+              "mean_low": 0.18471992144954213,
+              "mean_med": 0.1962917374435006,
+              "mean_high": 0.17611350391773475
+            },
+            "unadapted_residual": {
+              "mean_low": -0.18471992144954213,
+              "mean_med": -0.1962917374435006,
+              "mean_high": -0.17611350391773475
+            },
+            "comparisons": {
+              "Med_vs_Low": {
+                "diff_mean": 0.011571815993958456,
+                "cohens_d": 1.2751414242807066,
+                "ci95": [
+                  0.008920307765506879,
+                  0.014223324222410034
+                ]
+              },
+              "High_vs_Med": {
+                "diff_mean": -0.020178233525765837,
+                "cohens_d": -1.2442910335569624,
+                "ci95": [
+                  -0.024916407323845518,
+                  -0.015440059727686157
+                ]
+              }
+            }
+          }
+        }
+      },
+      "8": {
+        "T": 8,
+        "exposure_sec": 0.8,
+        "components": {
+          "Pleasure": {
+            "signed_displacement": {
+              "mean_low": 0.07739586699377406,
+              "std_low": 0.0038177531061628217,
+              "mean_med": 0.28710833661240953,
+              "std_med": 0.10797993877231293,
+              "mean_high": 0.037121664543721296,
+              "std_high": 0.364368959426808
+            },
+            "absolute_displacement": {
+              "mean_low": 0.07739586699377406,
+              "mean_med": 0.28710833661240953,
+              "mean_high": 0.3629550548695818
+            },
+            "unadapted_residual": {
+              "mean_low": -0.07739586699377406,
+              "mean_med": -0.28710833661240953,
+              "mean_high": -0.037121664543721296
+            },
+            "comparisons": {
+              "Med_vs_Low": {
+                "diff_mean": 0.2097124696186355,
+                "cohens_d": 2.74488970821551,
+                "ci95": [
+                  0.18738964381545925,
+                  0.23203529542181173
+                ]
+              },
+              "High_vs_Med": {
+                "diff_mean": -0.24998667206868824,
+                "cohens_d": -0.9302754460847132,
+                "ci95": [
+                  -0.32850211974974125,
+                  -0.17147122438763523
+                ]
+              }
+            }
+          },
+          "Arousal": {
+            "signed_displacement": {
+              "mean_low": 0.03451168121426695,
+              "std_low": 0.0010519962430814577,
+              "mean_med": 0.011620970889206673,
+              "std_med": 0.013024310707774458,
+              "mean_high": 0.23091129172701017,
+              "std_high": 0.02992879417004561
+            },
+            "absolute_displacement": {
+              "mean_low": 0.03451168121426695,
+              "mean_med": 0.013505849592051629,
+              "mean_high": 0.23091129172701017
+            },
+            "unadapted_residual": {
+              "mean_low": -0.03451168121426695,
+              "mean_med": -0.011620970889206673,
+              "mean_high": -0.23091129172701017
+            },
+            "comparisons": {
+              "Med_vs_Low": {
+                "diff_mean": -0.022890710325060272,
+                "cohens_d": -2.47746447521035,
+                "ci95": [
+                  -0.025590324179208757,
+                  -0.020191096470911787
+                ]
+              },
+              "High_vs_Med": {
+                "diff_mean": 0.2192903208378035,
+                "cohens_d": 9.501346770789965,
+                "ci95": [
+                  0.21254684029748858,
+                  0.22603380137811843
+                ]
+              }
+            }
+          },
+          "Dominance": {
+            "signed_displacement": {
+              "mean_low": 0.29793612802634517,
+              "std_low": 0.011852175047397514,
+              "mean_med": 0.31629555677100996,
+              "std_med": 0.016672876803400277,
+              "mean_high": 0.28369828555852283,
+              "std_high": 0.03240487482656405
+            },
+            "absolute_displacement": {
+              "mean_low": 0.29793612802634517,
+              "mean_med": 0.31629555677100996,
+              "mean_high": 0.28369828555852283
+            },
+            "unadapted_residual": {
+              "mean_low": -0.29793612802634517,
+              "mean_med": -0.31629555677100996,
+              "mean_high": -0.28369828555852283
+            },
+            "comparisons": {
+              "Med_vs_Low": {
+                "diff_mean": 0.018359428744664785,
+                "cohens_d": 1.2692517492411868,
+                "ci95": [
+                  0.01413312012242193,
+                  0.02258573736690764
+                ]
+              },
+              "High_vs_Med": {
+                "diff_mean": -0.03259727121248712,
+                "cohens_d": -1.2649905338315965,
+                "ci95": [
+                  -0.04012638368307739,
+                  -0.025068158741896857
+                ]
+              }
+            }
+          }
+        }
+      },
+      "12": {
+        "T": 12,
+        "exposure_sec": 1.2000000000000002,
+        "components": {
+          "Pleasure": {
+            "signed_displacement": {
+              "mean_low": 0.09911186664180342,
+              "std_low": 0.004868685729683485,
+              "mean_med": 0.36392871042434666,
+              "std_med": 0.13549122229390445,
+              "mean_high": 0.046023763042707486,
+              "std_high": 0.46119078634806693
+            },
+            "absolute_displacement": {
+              "mean_low": 0.09911186664180342,
+              "mean_med": 0.36392871042434666,
+              "mean_high": 0.4594429300228201
+            },
+            "unadapted_residual": {
+              "mean_low": -0.09911186664180342,
+              "mean_med": -0.36392871042434666,
+              "mean_high": -0.046023763042707486
+            },
+            "comparisons": {
+              "Med_vs_Low": {
+                "diff_mean": 0.2648168437825432,
+                "cohens_d": 2.7622897870365484,
+                "ci95": [
+                  0.23680600061793902,
+                  0.2928276869471474
+                ]
+              },
+              "High_vs_Med": {
+                "diff_mean": -0.31790494738163916,
+                "cohens_d": -0.9353082712329581,
+                "ci95": [
+                  -0.4172147974350945,
+                  -0.21859509732818383
+                ]
+              }
+            }
+          },
+          "Arousal": {
+            "signed_displacement": {
+              "mean_low": 0.04331192561671854,
+              "std_low": 0.0013126410266304561,
+              "mean_med": 0.014291280003603708,
+              "std_med": 0.016473541222558178,
+              "mean_high": 0.28983129549547054,
+              "std_high": 0.03733467833594921
+            },
+            "absolute_displacement": {
+              "mean_low": 0.04331192561671854,
+              "mean_med": 0.016883795662322724,
+              "mean_high": 0.28983129549547054
+            },
+            "unadapted_residual": {
+              "mean_low": -0.04331192561671854,
+              "mean_med": -0.014291280003603708,
+              "mean_high": -0.28983129549547054
+            },
+            "comparisons": {
+              "Med_vs_Low": {
+                "diff_mean": -0.02902064561311483,
+                "cohens_d": -2.4834804807397965,
+                "ci95": [
+                  -0.0324349020223874,
+                  -0.025606389203842266
+                ]
+              },
+              "High_vs_Med": {
+                "diff_mean": 0.27554001549186685,
+                "cohens_d": 9.549028799622459,
+                "ci95": [
+                  0.2671090892517476,
+                  0.2839709417319861
+                ]
+              }
+            }
+          },
+          "Dominance": {
+            "signed_displacement": {
+              "mean_low": 0.3707914304520981,
+              "std_low": 0.014637770301134681,
+              "mean_med": 0.3934718462759636,
+              "std_med": 0.02054937577508949,
+              "mean_high": 0.3527110880329944,
+              "std_high": 0.04005619669872857
+            },
+            "absolute_displacement": {
+              "mean_low": 0.3707914304520981,
+              "mean_med": 0.3934718462759636,
+              "mean_high": 0.3527110880329944
+            },
+            "unadapted_residual": {
+              "mean_low": -0.3707914304520981,
+              "mean_med": -0.3934718462759636,
+              "mean_high": -0.3527110880329944
+            },
+            "comparisons": {
+              "Med_vs_Low": {
+                "diff_mean": 0.022680415823865485,
+                "cohens_d": 1.2713138065335272,
+                "ci95": [
+                  0.01746789187120052,
+                  0.02789293977653045
+                ]
+              },
+              "High_vs_Med": {
+                "diff_mean": -0.04076075824296921,
+                "cohens_d": -1.2804257623275546,
+                "ci95": [
+                  -0.05006193001971034,
+                  -0.031459586466228075
+                ]
+              }
+            }
+          }
+        }
+      },
+      "16": {
+        "T": 16,
+        "exposure_sec": 1.6,
+        "components": {
+          "Pleasure": {
+            "signed_displacement": {
+              "mean_low": 0.11482833969552375,
+              "std_low": 0.005626624759315587,
+              "mean_med": 0.41920290739373794,
+              "std_med": 0.15475346922299532,
+              "mean_high": 0.051733039792959505,
+              "std_high": 0.53086919698645
+            },
+            "absolute_displacement": {
+              "mean_low": 0.11482833969552375,
+              "mean_med": 0.41920290739373794,
+              "mean_high": 0.5289078340015464
+            },
+            "unadapted_residual": {
+              "mean_low": -0.11482833969552375,
+              "mean_med": -0.41920290739373794,
+              "mean_high": -0.051733039792959505
+            },
+            "comparisons": {
+              "Med_vs_Low": {
+                "diff_mean": 0.3043745676982142,
+                "cohens_d": 2.7796882903270466,
+                "ci95": [
+                  0.2723810437319263,
+                  0.3363680916645021
+                ]
+              },
+              "High_vs_Med": {
+                "diff_mean": -0.36746986760077843,
+                "cohens_d": -0.9398072006309444,
+                "ci95": [
+                  -0.4817137041415516,
+                  -0.25322603106000524
+                ]
+              }
+            }
+          },
+          "Arousal": {
+            "signed_displacement": {
+              "mean_low": 0.0496064670598988,
+              "std_low": 0.0014970130011704027,
+              "mean_med": 0.016035676796524016,
+              "std_med": 0.019021470330138547,
+              "mean_high": 0.3319993146037014,
+              "std_high": 0.04259593483496209
+            },
+            "absolute_displacement": {
+              "mean_low": 0.0496064670598988,
+              "mean_med": 0.019268990476943287,
+              "mean_high": 0.3319993146037014
+            },
+            "unadapted_residual": {
+              "mean_low": -0.0496064670598988,
+              "mean_med": -0.016035676796524016,
+              "mean_high": -0.3319993146037014
+            },
+            "comparisons": {
+              "Med_vs_Low": {
+                "diff_mean": -0.03357079026337478,
+                "cohens_d": -2.488236417523111,
+                "ci95": [
+                  -0.0375128185576571,
+                  -0.02962876196909247
+                ]
+              },
+              "High_vs_Med": {
+                "diff_mean": 0.3159636378071774,
+                "cohens_d": 9.57854859660073,
+                "ci95": [
+                  0.30632563135110413,
+                  0.32560164426325067
+                ]
+              }
+            }
+          },
+          "Dominance": {
+            "signed_displacement": {
+              "mean_low": 0.42068502802739405,
+              "std_low": 0.01647518438487178,
+              "mean_med": 0.44628136150727205,
+              "std_med": 0.023119040092532343,
+              "mean_high": 0.39992672071185154,
+              "std_high": 0.04522020454069787
+            },
+            "absolute_displacement": {
+              "mean_low": 0.42068502802739405,
+              "mean_med": 0.44628136150727205,
+              "mean_high": 0.39992672071185154
+            },
+            "unadapted_residual": {
+              "mean_low": -0.42068502802739405,
+              "mean_med": -0.44628136150727205,
+              "mean_high": -0.39992672071185154
+            },
+            "comparisons": {
+              "Med_vs_Low": {
+                "diff_mean": 0.025596333479877997,
+                "cohens_d": 1.2751061153479197,
+                "ci95": [
+                  0.019731154822414797,
+                  0.0314615121373412
+                ]
+              },
+              "High_vs_Med": {
+                "diff_mean": -0.04635464079542051,
+                "cohens_d": -1.290780801897993,
+                "ci95": [
+                  -0.056847420068654,
+                  -0.03586186152218702
+                ]
+              }
+            }
+          }
+        }
+      },
+      "25": {
+        "T": 25,
+        "exposure_sec": 2.5,
+        "components": {
+          "Pleasure": {
+            "signed_displacement": {
+              "mean_low": 0.138681675344081,
+              "std_low": 0.006780033502446496,
+              "mean_med": 0.5041874110060536,
+              "std_med": 0.18336491063152144,
+              "mean_high": 0.05846808821492642,
+              "std_high": 0.6385197082096042
+            },
+            "absolute_displacement": {
+              "mean_low": 0.138681675344081,
+              "mean_med": 0.5041874110060536,
+              "mean_high": 0.6363008090758966
+            },
+            "unadapted_residual": {
+              "mean_low": -0.138681675344081,
+              "mean_med": -0.5041874110060536,
+              "mean_high": -0.05846808821492642
+            },
+            "comparisons": {
+              "Med_vs_Low": {
+                "diff_mean": 0.3655057356619726,
+                "cohens_d": 2.817061204932534,
+                "ci95": [
+                  0.3275962643173107,
+                  0.40341520700663447
+                ]
+              },
+              "High_vs_Med": {
+                "diff_mean": -0.44571932279112714,
+                "cohens_d": -0.9488437067867214,
+                "ci95": [
+                  -0.5829706633532674,
+                  -0.30846798222898686
+                ]
+              }
+            }
+          },
+          "Arousal": {
+            "signed_displacement": {
+              "mean_low": 0.05954359025007766,
+              "std_low": 0.0017862064953125536,
+              "mean_med": 0.018391816371650133,
+              "std_med": 0.023250897678825544,
+              "mean_high": 0.39852152550412684,
+              "std_high": 0.05089739591686485
+            },
+            "absolute_displacement": {
+              "mean_low": 0.05954359025007766,
+              "mean_med": 0.02296908971170418,
+              "mean_high": 0.39852152550412684
+            },
+            "unadapted_residual": {
+              "mean_low": -0.05954359025007766,
+              "mean_med": -0.018391816371650133,
+              "mean_high": -0.39852152550412684
+            },
+            "comparisons": {
+              "Med_vs_Low": {
+                "diff_mean": -0.04115177387842753,
+                "cohens_d": -2.495663587507439,
+                "ci95": [
+                  -0.04596961342819861,
+                  -0.03633393432865645
+                ]
+              },
+              "High_vs_Med": {
+                "diff_mean": 0.3801297091324767,
+                "cohens_d": 9.607157999462824,
+                "ci95": [
+                  0.36856894090061915,
+                  0.3916904773643342
+                ]
+              }
+            }
+          },
+          "Dominance": {
+            "signed_displacement": {
+              "mean_low": 0.49301797497028516,
+              "std_low": 0.018969093903707893,
+              "mean_med": 0.5225211466871584,
+              "std_med": 0.026561523830257512,
+              "mean_high": 0.4687088801904418,
+              "std_high": 0.05215378719498737
+            },
+            "absolute_displacement": {
+              "mean_low": 0.49301797497028516,
+              "mean_med": 0.5225211466871584,
+              "mean_high": 0.4687088801904418
+            },
+            "unadapted_residual": {
+              "mean_low": -0.49301797497028516,
+              "mean_med": -0.5225211466871584,
+              "mean_high": -0.4687088801904418
+            },
+            "comparisons": {
+              "Med_vs_Low": {
+                "diff_mean": 0.029503171716873278,
+                "cohens_d": 1.278319369561304,
+                "ci95": [
+                  0.02275976814079098,
+                  0.03624657529295558
+                ]
+              },
+              "High_vs_Med": {
+                "diff_mean": -0.05381226649671661,
+                "cohens_d": -1.3002661703487,
+                "ci95": [
+                  -0.06590428589816673,
+                  -0.04172024709526649
+                ]
+              }
+            }
+          }
+        }
+      },
+      "50": {
+        "T": 50,
+        "exposure_sec": 5.0,
+        "components": {
+          "Pleasure": {
+            "signed_displacement": {
+              "mean_low": 0.18167012911489552,
+              "std_low": 0.008883000356383577,
+              "mean_med": 0.5906163149521206,
+              "std_med": 0.16488329736502197,
+              "mean_high": -0.01939065828507593,
+              "std_high": 0.7529493739636547
+            },
+            "absolute_displacement": {
+              "mean_low": 0.18167012911489552,
+              "mean_med": 0.5906163149521206,
+              "mean_high": 0.7527239916184093
+            },
+            "unadapted_residual": {
+              "mean_low": -0.18167012911489552,
+              "mean_med": -0.5906163149521206,
+              "mean_high": 0.01939065828507593
+            },
+            "comparisons": {
+              "Med_vs_Low": {
+                "diff_mean": 0.4089461858372251,
+                "cohens_d": 3.5024758371018287,
+                "ci95": [
+                  0.374831543017423,
+                  0.4430608286570272
+                ]
+              },
+              "High_vs_Med": {
+                "diff_mean": -0.6100069732371965,
+                "cohens_d": -1.1192136061785989,
+                "ci95": [
+                  -0.769254110137569,
+                  -0.45075983633682415
+                ]
+              }
+            }
+          },
+          "Arousal": {
+            "signed_displacement": {
+              "mean_low": 0.07955012971475556,
+              "std_low": 0.0023718773729373074,
+              "mean_med": 0.022036030746676333,
+              "std_med": 0.032367551685454056,
+              "mean_high": 0.5318486141387468,
+              "std_high": 0.06769864910861378
+            },
+            "absolute_displacement": {
+              "mean_low": 0.07955012971475556,
+              "mean_med": 0.0310449918745014,
+              "mean_high": 0.5318486141387468
+            },
+            "unadapted_residual": {
+              "mean_low": -0.07955012971475556,
+              "mean_med": -0.022036030746676333,
+              "mean_high": -0.5318486141387468
+            },
+            "comparisons": {
+              "Med_vs_Low": {
+                "diff_mean": -0.05751409896807923,
+                "cohens_d": -2.5062046565601013,
+                "ci95": [
+                  -0.06421923514165453,
+                  -0.05080896279450392
+                ]
+              },
+              "High_vs_Med": {
+                "diff_mean": 0.5098125833920705,
+                "cohens_d": 9.608195436178113,
+                "ci95": [
+                  0.4943094838027634,
+                  0.5253156829813775
+                ]
+              }
+            }
+          },
+          "Dominance": {
+            "signed_displacement": {
+              "mean_low": 0.6183682822665776,
+              "std_low": 0.022851654910582758,
+              "mean_med": 0.6527119273588796,
+              "std_med": 0.03136755829754939,
+              "mean_high": 0.5902804856056497,
+              "std_high": 0.06092477949300553
+            },
+            "absolute_displacement": {
+              "mean_low": 0.6183682822665776,
+              "mean_med": 0.6527119273588796,
+              "mean_high": 0.5902804856056497
+            },
+            "unadapted_residual": {
+              "mean_low": -0.6183682822665776,
+              "mean_med": -0.6527119273588796,
+              "mean_high": -0.5902804856056497
+            },
+            "comparisons": {
+              "Med_vs_Low": {
+                "diff_mean": 0.03434364509230203,
+                "cohens_d": 1.251501375885142,
+                "ci95": [
+                  0.026325666902667605,
+                  0.04236162328193646
+                ]
+              },
+              "High_vs_Med": {
+                "diff_mean": -0.0624314417532299,
+                "cohens_d": -1.2884446437013248,
+                "ci95": [
+                  -0.07658896927123102,
+                  -0.04827391423522878
+                ]
+              }
+            }
+          }
+        }
+      },
+      "100": {
+        "T": 100,
+        "exposure_sec": 10.0,
+        "components": {
+          "Pleasure": {
+            "signed_displacement": {
+              "mean_low": 0.2550175637814379,
+              "std_low": 0.0124403713917269,
+              "mean_med": 0.6768181633855945,
+              "std_med": 0.0807012246271276,
+              "mean_high": -0.14421403091955387,
+              "std_high": 0.8747184199583384
+            },
+            "absolute_displacement": {
+              "mean_low": 0.2550175637814379,
+              "mean_med": 0.6768181633855945,
+              "mean_high": 0.8775473642528872
+            },
+            "unadapted_residual": {
+              "mean_low": -0.2550175637814379,
+              "mean_med": -0.6768181633855945,
+              "mean_high": 0.14421403091955387
+            },
+            "comparisons": {
+              "Med_vs_Low": {
+                "diff_mean": 0.4218005996041566,
+                "cohens_d": 7.305371241702844,
+                "ci95": [
+                  0.4049306138213613,
+                  0.4386705853869519
+                ]
+              },
+              "High_vs_Med": {
+                "diff_mean": -0.8210321943051484,
+                "cohens_d": -1.3218020195537974,
+                "ci95": [
+                  -1.0025183872047307,
+                  -0.6395460014055661
+                ]
+              }
+            }
+          },
+          "Arousal": {
+            "signed_displacement": {
+              "mean_low": 0.1145134255016374,
+              "std_low": 0.0034061783197340337,
+              "mean_med": 0.02770283775885158,
+              "std_med": 0.048659220653470274,
+              "mean_high": 0.7553001799792562,
+              "std_high": 0.08976241313847741
+            },
+            "absolute_displacement": {
+              "mean_low": 0.1145134255016374,
+              "mean_med": 0.04683945267331747,
+              "mean_high": 0.7553001799792562
+            },
+            "unadapted_residual": {
+              "mean_low": -0.1145134255016374,
+              "mean_med": -0.02770283775885158,
+              "mean_high": -0.7553001799792562
+            },
+            "comparisons": {
+              "Med_vs_Low": {
+                "diff_mean": -0.08681058774278583,
+                "cohens_d": -2.5168718421452247,
+                "ci95": [
+                  -0.09688828735211492,
+                  -0.07673288813345673
+                ]
+              },
+              "High_vs_Med": {
+                "diff_mean": 0.7275973422204046,
+                "cohens_d": 10.077849070076411,
+                "ci95": [
+                  0.706502656055832,
+                  0.7486920283849773
+                ]
+              }
+            }
+          },
+          "Dominance": {
+            "signed_displacement": {
+              "mean_low": 0.7619929528094856,
+              "std_low": 0.015785278561531037,
+              "mean_med": 0.7902980684695001,
+              "std_med": 0.023213735245902888,
+              "mean_high": 0.7357408332518719,
+              "std_high": 0.04957186053490026
+            },
+            "absolute_displacement": {
+              "mean_low": 0.7619929528094856,
+              "mean_med": 0.7902980684695001,
+              "mean_high": 0.7357408332518719
+            },
+            "unadapted_residual": {
+              "mean_low": -0.7619929528094856,
+              "mean_med": -0.7902980684695001,
+              "mean_high": -0.7357408332518719
+            },
+            "comparisons": {
+              "Med_vs_Low": {
+                "diff_mean": 0.02830511566001448,
+                "cohens_d": 1.4259436044791836,
+                "ci95": [
+                  0.022505323926558074,
+                  0.034104907393470885
+                ]
+              },
+              "High_vs_Med": {
+                "diff_mean": -0.05455723521762823,
+                "cohens_d": -1.409543734291849,
+                "ci95": [
+                  -0.06586621981742423,
+                  -0.04324825061783223
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "rq4_directional_magnitude_matched": {
+    "results_by_exposure_t": {
+      "1": {
+        "T": 1,
+        "exposure_sec": 0.1,
+        "matched_mh_pairs_count": 4371,
+        "matched_mh_mean_diff_s": 0.007332261965992335,
+        "matched_mh_mean_cosine_similarity": 0.37950312039709055,
+        "matched_mh_mean_angle_deg": 61.21464450993462,
+        "matched_mh_mean_vector_distance": 0.08825023567024991,
+        "matched_mh_mean_sign_agreement_rate": 0.6562952794936323,
+        "matched_mh_mean_dP": -0.06437583568648397,
+        "matched_mh_mean_dA": 0.04240388290722649,
+        "matched_mh_mean_dD": -0.008813129373736146,
+        "rq4_verdict": "EVIDENCE CONSISTENT WITH DIRECTIONAL/COMPONENT INFORMATION PERSISTING AFTER MAGNITUDE MATCHING"
+      },
+      "2": {
+        "T": 2,
+        "exposure_sec": 0.2,
+        "matched_mh_pairs_count": 3374,
+        "matched_mh_mean_diff_s": 0.010654303264229645,
+        "matched_mh_mean_cosine_similarity": 0.3077057930468522,
+        "matched_mh_mean_angle_deg": 66.09958601023693,
+        "matched_mh_mean_vector_distance": 0.17955197745820198,
+        "matched_mh_mean_sign_agreement_rate": 0.6415728116972931,
+        "matched_mh_mean_dP": -0.13846411182673543,
+        "matched_mh_mean_dA": 0.08165630790382311,
+        "matched_mh_mean_dD": -0.01828726948867973,
+        "rq4_verdict": "EVIDENCE CONSISTENT WITH DIRECTIONAL/COMPONENT INFORMATION PERSISTING AFTER MAGNITUDE MATCHING"
+      },
+      "4": {
+        "T": 4,
+        "exposure_sec": 0.4,
+        "matched_mh_pairs_count": 2082,
+        "matched_mh_mean_diff_s": 0.014987990099688209,
+        "matched_mh_mean_cosine_similarity": 0.13281043471321904,
+        "matched_mh_mean_angle_deg": 78.45465675803008,
+        "matched_mh_mean_vector_distance": 0.37559504344244715,
+        "matched_mh_mean_sign_agreement_rate": 0.5619596541786743,
+        "matched_mh_mean_dP": -0.3188223224597269,
+        "matched_mh_mean_dA": 0.15204397111873516,
+        "matched_mh_mean_dD": -0.038151825697041016,
+        "rq4_verdict": "EVIDENCE CONSISTENT WITH DIRECTIONAL/COMPONENT INFORMATION PERSISTING AFTER MAGNITUDE MATCHING"
+      },
+      "8": {
+        "T": 8,
+        "exposure_sec": 0.8,
+        "matched_mh_pairs_count": 622,
+        "matched_mh_mean_diff_s": 0.01623369228229441,
+        "matched_mh_mean_cosine_similarity": 0.06303402718465251,
+        "matched_mh_mean_angle_deg": 83.33363337205854,
+        "matched_mh_mean_vector_distance": 0.6451617956268212,
+        "matched_mh_mean_sign_agreement_rate": 0.7020364415862809,
+        "matched_mh_mean_dP": -0.5652329342669818,
+        "matched_mh_mean_dA": 0.24933124186797725,
+        "matched_mh_mean_dD": -0.06479824127020296,
+        "rq4_verdict": "EVIDENCE CONSISTENT WITH DIRECTIONAL/COMPONENT INFORMATION PERSISTING AFTER MAGNITUDE MATCHING"
+      },
+      "12": {
+        "T": 12,
+        "exposure_sec": 1.2000000000000002,
+        "matched_mh_pairs_count": 358,
+        "matched_mh_mean_diff_s": 0.01714915768393774,
+        "matched_mh_mean_cosine_similarity": 0.021927908549998244,
+        "matched_mh_mean_angle_deg": 86.0399995791269,
+        "matched_mh_mean_vector_distance": 0.8348004456119102,
+        "matched_mh_mean_sign_agreement_rate": 0.6666666666666667,
+        "matched_mh_mean_dP": -0.7395840715131828,
+        "matched_mh_mean_dA": 0.3125110128224888,
+        "matched_mh_mean_dD": -0.08256976850425361,
+        "rq4_verdict": "EVIDENCE CONSISTENT WITH DIRECTIONAL/COMPONENT INFORMATION PERSISTING AFTER MAGNITUDE MATCHING"
+      },
+      "16": {
+        "T": 16,
+        "exposure_sec": 1.6,
+        "matched_mh_pairs_count": 204,
+        "matched_mh_mean_diff_s": 0.016730237598027786,
+        "matched_mh_mean_cosine_similarity": 0.18274947606745837,
+        "matched_mh_mean_angle_deg": 74.7502663696391,
+        "matched_mh_mean_vector_distance": 0.8375155880967606,
+        "matched_mh_mean_sign_agreement_rate": 0.6666666666666666,
+        "matched_mh_mean_dP": -0.6980880323585142,
+        "matched_mh_mean_dA": 0.3489278640419721,
+        "matched_mh_mean_dD": -0.08053824133197178,
+        "rq4_verdict": "EVIDENCE CONSISTENT WITH DIRECTIONAL/COMPONENT INFORMATION PERSISTING AFTER MAGNITUDE MATCHING"
+      },
+      "25": {
+        "T": 25,
+        "exposure_sec": 2.5,
+        "matched_mh_pairs_count": 286,
+        "matched_mh_mean_diff_s": 0.014944111199654955,
+        "matched_mh_mean_cosine_similarity": -0.23668532709336187,
+        "matched_mh_mean_angle_deg": 103.69099588513069,
+        "matched_mh_mean_vector_distance": 1.3520422083080523,
+        "matched_mh_mean_sign_agreement_rate": 0.6666666666666665,
+        "matched_mh_mean_dP": -1.2696005070576775,
+        "matched_mh_mean_dA": 0.44692265532743136,
+        "matched_mh_mean_dD": -0.1280331598453311,
+        "rq4_verdict": "EVIDENCE CONSISTENT WITH DIRECTIONAL/COMPONENT INFORMATION PERSISTING AFTER MAGNITUDE MATCHING"
+      },
+      "50": {
+        "T": 50,
+        "exposure_sec": 5.0,
+        "matched_mh_pairs_count": 0,
+        "matched_mh_mean_diff_s": 0.0,
+        "matched_mh_mean_cosine_similarity": 0.0,
+        "matched_mh_mean_angle_deg": 0.0,
+        "matched_mh_mean_vector_distance": 0.0,
+        "matched_mh_mean_sign_agreement_rate": 0.0,
+        "matched_mh_mean_dP": 0.0,
+        "matched_mh_mean_dA": 0.0,
+        "matched_mh_mean_dD": 0.0,
+        "rq4_verdict": "EVIDENCE CONSISTENT WITH DIRECTIONAL/COMPONENT INFORMATION PERSISTING AFTER MAGNITUDE MATCHING"
+      },
+      "100": {
+        "T": 100,
+        "exposure_sec": 10.0,
+        "matched_mh_pairs_count": 0,
+        "matched_mh_mean_diff_s": 0.0,
+        "matched_mh_mean_cosine_similarity": 0.0,
+        "matched_mh_mean_angle_deg": 0.0,
+        "matched_mh_mean_vector_distance": 0.0,
+        "matched_mh_mean_sign_agreement_rate": 0.0,
+        "matched_mh_mean_dP": 0.0,
+        "matched_mh_mean_dA": 0.0,
+        "matched_mh_mean_dD": 0.0,
+        "rq4_verdict": "EVIDENCE CONSISTENT WITH DIRECTIONAL/COMPONENT INFORMATION PERSISTING AFTER MAGNITUDE MATCHING"
+      }
+    }
+  },
+  "rq5_displacement_vs_residual": {
+    "results_by_exposure_t": {
+      "1": {
+        "T": 1,
+        "exposure_sec": 0.1,
+        "tiers": {
+          "Low": {
+            "mean_norm_displacement": 0.057316687932483096,
+            "mean_norm_unadapted_residual": 0.057316687932483096,
+            "max_unadapted_norm_diff": 0.0,
+            "mean_norm_adapted_residual": 0.031955380995776536,
+            "mean_adapted_divergence_diff": 0.025361306936706553,
+            "mean_adapted_angle_deg": 164.02250127928735
+          },
+          "Med": {
+            "mean_norm_displacement": 0.07934464206057129,
+            "mean_norm_unadapted_residual": 0.07934464206057129,
+            "max_unadapted_norm_diff": 0.0,
+            "mean_norm_adapted_residual": 0.05236168654663709,
+            "mean_adapted_divergence_diff": 0.026982955513934197,
+            "mean_adapted_angle_deg": 174.79407721572076
+          },
+          "High": {
+            "mean_norm_displacement": 0.09446791482720245,
+            "mean_norm_unadapted_residual": 0.09446791482720245,
+            "max_unadapted_norm_diff": 0.0,
+            "mean_norm_adapted_residual": 0.08279715946190969,
+            "mean_adapted_divergence_diff": 0.012135832851988559,
+            "mean_adapted_angle_deg": 166.16294887023724
+          }
+        }
+      },
+      "2": {
+        "T": 2,
+        "exposure_sec": 0.2,
+        "tiers": {
+          "Low": {
+            "mean_norm_displacement": 0.10775709887338494,
+            "mean_norm_unadapted_residual": 0.10775709887338494,
+            "max_unadapted_norm_diff": 0.0,
+            "mean_norm_adapted_residual": 0.08160458241794855,
+            "mean_adapted_divergence_diff": 0.02615251645543639,
+            "mean_adapted_angle_deg": 173.88676471587726
+          },
+          "Med": {
+            "mean_norm_displacement": 0.1494172966924817,
+            "mean_norm_unadapted_residual": 0.1494172966924817,
+            "max_unadapted_norm_diff": 0.0,
+            "mean_norm_adapted_residual": 0.12228094085859643,
+            "mean_adapted_divergence_diff": 0.02713635583388526,
+            "mean_adapted_angle_deg": 177.74833150777826
+          },
+          "High": {
+            "mean_norm_displacement": 0.17798588967256906,
+            "mean_norm_unadapted_residual": 0.17798588967256906,
+            "max_unadapted_norm_diff": 0.0,
+            "mean_norm_adapted_residual": 0.1650273888753497,
+            "mean_adapted_divergence_diff": 0.01295850079721939,
+            "mean_adapted_angle_deg": 172.94499547373076
+          }
+        }
+      },
+      "4": {
+        "T": 4,
+        "exposure_sec": 0.4,
+        "tiers": {
+          "Low": {
+            "mean_norm_displacement": 0.1915822614697521,
+            "mean_norm_unadapted_residual": 0.1915822614697521,
+            "max_unadapted_norm_diff": 0.0,
+            "mean_norm_adapted_residual": 0.16514015174300645,
+            "mean_adapted_divergence_diff": 0.026442109726745603,
+            "mean_adapted_angle_deg": 177.03700187043748
+          },
+          "Med": {
+            "mean_norm_displacement": 0.26655634424981667,
+            "mean_norm_unadapted_residual": 0.26655634424981667,
+            "max_unadapted_norm_diff": 0.0,
+            "mean_norm_adapted_residual": 0.2393792640184279,
+            "mean_adapted_divergence_diff": 0.02717708023138879,
+            "mean_adapted_angle_deg": 178.84181077523246
+          },
+          "High": {
+            "mean_norm_displacement": 0.3178002813504737,
+            "mean_norm_unadapted_residual": 0.3178002813504737,
+            "max_unadapted_norm_diff": 0.0,
+            "mean_norm_adapted_residual": 0.3042910275912968,
+            "mean_adapted_divergence_diff": 0.013509253759176934,
+            "mean_adapted_angle_deg": 176.12462995729248
+          }
+        }
+      },
+      "8": {
+        "T": 8,
+        "exposure_sec": 0.8,
+        "tiers": {
+          "Low": {
+            "mean_norm_displacement": 0.30975647178158905,
+            "mean_norm_unadapted_residual": 0.30975647178158905,
+            "max_unadapted_norm_diff": 0.0,
+            "mean_norm_adapted_residual": 0.283139400980746,
+            "mean_adapted_divergence_diff": 0.02661707080084307,
+            "mean_adapted_angle_deg": 178.32191108609615
+          },
+          "Med": {
+            "mean_norm_displacement": 0.4338516192288793,
+            "mean_norm_unadapted_residual": 0.4338516192288793,
+            "max_unadapted_norm_diff": 0.0,
+            "mean_norm_adapted_residual": 0.4066880497113738,
+            "mean_adapted_divergence_diff": 0.027163569517505617,
+            "mean_adapted_angle_deg": 179.31519905076308
+          },
+          "High": {
+            "mean_norm_displacement": 0.518088516495782,
+            "mean_norm_unadapted_residual": 0.518088516495782,
+            "max_unadapted_norm_diff": 0.0,
+            "mean_norm_adapted_residual": 0.5044396104031328,
+            "mean_adapted_divergence_diff": 0.013648906092649285,
+            "mean_adapted_angle_deg": 177.6391222874467
+          }
+        }
+      },
+      "12": {
+        "T": 12,
+        "exposure_sec": 1.2000000000000002,
+        "tiers": {
+          "Low": {
+            "mean_norm_displacement": 0.3862492945462807,
+            "mean_norm_unadapted_residual": 0.3862492945462807,
+            "max_unadapted_norm_diff": 0.0,
+            "mean_norm_adapted_residual": 0.3595467239327193,
+            "mean_adapted_divergence_diff": 0.026702570613561398,
+            "mean_adapted_angle_deg": 178.70778871934604
+          },
+          "Med": {
+            "mean_norm_displacement": 0.5442274168056815,
+            "mean_norm_unadapted_residual": 0.5442274168056815,
+            "max_unadapted_norm_diff": 0.0,
+            "mean_norm_adapted_residual": 0.517091222662953,
+            "mean_adapted_divergence_diff": 0.027136194142728432,
+            "mean_adapted_angle_deg": 179.46037631476005
+          },
+          "High": {
+            "mean_norm_displacement": 0.6511065387483942,
+            "mean_norm_unadapted_residual": 0.6511065387483942,
+            "max_unadapted_norm_diff": 0.0,
+            "mean_norm_adapted_residual": 0.6375105007604464,
+            "mean_adapted_divergence_diff": 0.013596037987947793,
+            "mean_adapted_angle_deg": 178.12175991017253
+          }
+        }
+      },
+      "16": {
+        "T": 16,
+        "exposure_sec": 1.6,
+        "tiers": {
+          "Low": {
+            "mean_norm_displacement": 0.43889230519632044,
+            "mean_norm_unadapted_residual": 0.43889230519632044,
+            "max_unadapted_norm_diff": 0.0,
+            "mean_norm_adapted_residual": 0.4121351474606663,
+            "mean_adapted_divergence_diff": 0.02675715773565399,
+            "mean_adapted_angle_deg": 178.8915400395586
+          },
+          "Med": {
+            "mean_norm_displacement": 0.6215999508467025,
+            "mean_norm_unadapted_residual": 0.6215999508467025,
+            "max_unadapted_norm_diff": 0.0,
+            "mean_norm_adapted_residual": 0.5944911168757419,
+            "mean_adapted_divergence_diff": 0.02710883397096056,
+            "mean_adapted_angle_deg": 179.52993279041874
+          },
+          "High": {
+            "mean_norm_displacement": 0.7454056837768834,
+            "mean_norm_unadapted_residual": 0.7454056837768834,
+            "max_unadapted_norm_diff": 0.0,
+            "mean_norm_adapted_residual": 0.7318949243226915,
+            "mean_adapted_divergence_diff": 0.013510759454191973,
+            "mean_adapted_angle_deg": 178.35770401719606
+          }
+        }
+      },
+      "25": {
+        "T": 25,
+        "exposure_sec": 2.5,
+        "tiers": {
+          "Low": {
+            "mean_norm_displacement": 0.5156075050622677,
+            "mean_norm_unadapted_residual": 0.5156075050622677,
+            "max_unadapted_norm_diff": 0.0,
+            "mean_norm_adapted_residual": 0.4887789758284822,
+            "mean_adapted_divergence_diff": 0.026828529233785408,
+            "mean_adapted_angle_deg": 179.0880188530273
+          },
+          "Med": {
+            "mean_norm_displacement": 0.7369107399820668,
+            "mean_norm_unadapted_residual": 0.7369107399820668,
+            "max_unadapted_norm_diff": 0.0,
+            "mean_norm_adapted_residual": 0.7098569120436964,
+            "mean_adapted_divergence_diff": 0.027053827938370488,
+            "mean_adapted_angle_deg": 179.6042159768545
+          },
+          "High": {
+            "mean_norm_displacement": 0.8895212246414731,
+            "mean_norm_unadapted_residual": 0.8895212246414731,
+            "max_unadapted_norm_diff": 0.0,
+            "mean_norm_adapted_residual": 0.8762000961223306,
+            "mean_adapted_divergence_diff": 0.013321128519142538,
+            "mean_adapted_angle_deg": 178.62021402654804
+          }
+        }
+      },
+      "50": {
+        "T": 50,
+        "exposure_sec": 5.0,
+        "tiers": {
+          "Low": {
+            "mean_norm_displacement": 0.649402693470975,
+            "mean_norm_unadapted_residual": 0.649402693470975,
+            "max_unadapted_norm_diff": 0.0,
+            "mean_norm_adapted_residual": 0.6224823439429787,
+            "mean_adapted_divergence_diff": 0.02692034952799634,
+            "mean_adapted_angle_deg": 179.3085197227639
+          },
+          "Med": {
+            "mean_norm_displacement": 0.8880817209023724,
+            "mean_norm_unadapted_residual": 0.8880817209023724,
+            "max_unadapted_norm_diff": 0.0,
+            "mean_norm_adapted_residual": 0.8607594682119353,
+            "mean_adapted_divergence_diff": 0.027322252690437213,
+            "mean_adapted_angle_deg": 179.70642880383494
+          },
+          "High": {
+            "mean_norm_displacement": 1.098406085505719,
+            "mean_norm_unadapted_residual": 1.098406085505719,
+            "max_unadapted_norm_diff": 0.0,
+            "mean_norm_adapted_residual": 1.0852148597858144,
+            "mean_adapted_divergence_diff": 0.01319122571990453,
+            "mean_adapted_angle_deg": 178.92180918273957
+          }
+        }
+      },
+      "100": {
+        "T": 100,
+        "exposure_sec": 10.0,
+        "tiers": {
+          "Low": {
+            "mean_norm_displacement": 0.8116891234152169,
+            "mean_norm_unadapted_residual": 0.8116891234152169,
+            "max_unadapted_norm_diff": 0.0,
+            "mean_norm_adapted_residual": 0.784535606403798,
+            "mean_adapted_divergence_diff": 0.02715351701141892,
+            "mean_adapted_angle_deg": 179.512560357221
+          },
+          "Med": {
+            "mean_norm_displacement": 1.0435098599357813,
+            "mean_norm_unadapted_residual": 1.0435098599357813,
+            "max_unadapted_norm_diff": 0.0,
+            "mean_norm_adapted_residual": 1.0159511346731986,
+            "mean_adapted_divergence_diff": 0.027558725262582573,
+            "mean_adapted_angle_deg": 179.74833844510113
+          },
+          "High": {
+            "mean_norm_displacement": 1.3775599023122882,
+            "mean_norm_unadapted_residual": 1.3775599023122882,
+            "max_unadapted_norm_diff": 0.0,
+            "mean_norm_adapted_residual": 1.3647742582461977,
+            "mean_adapted_divergence_diff": 0.012785644066090542,
+            "mean_adapted_angle_deg": 179.13159827926353
+          }
+        }
+      }
+    },
+    "belief_state_adapted": {
+      "A_matrix": [
+        [
+          1.003424916943939,
+          -0.0006849833887878661,
+          0.0006849833887878661
+        ],
+        [
+          0.00041158517693497027,
+          0.9999176829646133,
+          8.231703538699407e-05
+        ],
+        [
+          0.005571490676737928,
+          -0.001114298135347586,
+          1.0011142981353485
+        ]
+      ],
+      "b_vector": [
+        0.013702556354281427,
+        0.0016469488364984207,
+        0.02229237454777937
+      ],
+      "p_pred_adapted": [
+        0.264627283929145,
+        -0.04824192316572916,
+        0.07379667703049866
+      ]
+    }
+  },
+  "rq6_homeostatic_relevance": {
+    "conceptual_forms_reviewed": {
+      "form_1_dynamic_precision": {
+        "formula": "Pi = f(homeostatic_state)",
+        "description": "Dynamic precision matrix modulation conditioned on metabolic energy / fatigue state",
+        "theoretical_appeal": "High: matches Active Inference biological principle that high metabolic fatigue attenuates sensory precision",
+        "lucia_architectural_hook": "EmotionCore maintains physiological energy E in [0, 1] and fatigue, but ActiveInferenceEngine operates on state uncoupled from energy"
+      },
+      "form_2_effective_surprise": {
+        "formula": "S_eff = g(S_vector, homeostatic_state)",
+        "description": "Post-hoc modulation of surprise magnitude or vector by metabolic gating factors (e.g. beta_epist(E, C))",
+        "theoretical_appeal": "Moderate: preserves underlying measurement while scaling behavioral downstream impact",
+        "lucia_architectural_hook": "Already present in ActionSelectionEngine where beta_epist(E, C) modulates epistemic foraging bonus"
+      }
+    },
+    "evidence_inventory": {
+      "emotion_core_energy_decay": "Validated in Phase 21: EmotionCore integrates metabolic consumption during arousal spikes and recovers during rest",
+      "active_inference_coupling": "Currently decoupled: ActiveInferenceEngine.step() consumes only PADState, with 0 homeostatic inputs",
+      "action_selection_homeostatic_gating": "Validated in Phase 22 H1: beta_epist(E, C) attenuates information gain under low energy, preventing epistemic exploration when depleted"
+    },
+    "conceptual_status_classification": "B \u2014 Plausible future research direction, but currently unsupported by validated production evidence",
+    "classification_rationale": "While homeostatic state (energy, fatigue) is validated in Lucia's EmotionCore and modulates action selection policy, coupling homeostatic state directly into measurement precision Pi is currently unsupported by existing empirical evidence. Any formulation of Pi = f(homeostatic_state) remains an exploratory hypothesis for future research.",
+    "guardrail_compliance": "Verified: No parameter fitting performed; no claims of biological validation made."
+  },
+  "rq7_conversational_timescale": {
+    "evaluation_grid": {
+      "conversational_regime": [
+        1,
+        2,
+        4,
+        8,
+        12,
+        16,
+        25
+      ],
+      "exploratory_reference": [
+        50,
+        100
+      ]
+    },
+    "preregistered_gate2_thresholds": {
+      "delta_ml_threshold": 0.1,
+      "delta_hm_threshold": 0.15
+    },
+    "findings_by_representation": {
+      "M0_canonical_scalar": {
+        "earliest_separation_T": "T = 50 (exploratory non-conversational regime only)",
+        "conversational_viability": "M0 does not satisfy the current preregistered dual Gate 2 thresholds at T <= 25 under frozen G1/current dynamics (Delta_HM remains compressed <= 0.107 across all conversational exposures)",
+        "mechanism": "Radial Euclidean projection collapses orthogonal trajectories into similar scalar distances from p0."
+      },
+      "M1_displacement_vector": {
+        "earliest_separation_T": "T = 1 to 2 (0.10s to 0.20s)",
+        "conversational_viability": "HIGHLY VIABLE across all T in {1, 2, 4, 8, 12, 16, 25} (Arousal Cohen's d > 9.0, Pleasure d ~ -0.94)",
+        "mechanism": "Component preservation prevents orthogonal cancellation."
+      },
+      "M2_magnitude_direction": {
+        "earliest_separation_T": "T = 1 to 2 (0.10s to 0.20s)",
+        "conversational_viability": "HIGHLY VIABLE: angular separation reaches 66.1 deg by T=2 and stays stable across conversational exposures",
+        "mechanism": "Directional unit vector preserves affective quality even when scalar magnitude is compressed."
+      },
+      "M3_residual_magnitude_direction": {
+        "earliest_separation_T": "T = 1 to 2 (0.10s to 0.20s)",
+        "conversational_viability": "HIGHLY VIABLE: mirrors M2 under unadapted prior, preserves epistemic violation orientation under adapted prior",
+        "mechanism": "Unit residual vector captures epistemic expectation violation orientation."
+      },
+      "M4_full_residual_vector": {
+        "earliest_separation_T": "T = 1 to 2 (0.10s to 0.20s)",
+        "conversational_viability": "HIGHLY VIABLE: full 3D prediction residual retains component-specific surprise",
+        "mechanism": "Preserves Active Inference prediction error without projection loss."
+      },
+      "M5_precision_weighted_scalar": {
+        "Pi_0_identity": "Identical to M0; fails Gate 2 at all T <= 25",
+        "Pi_1_arousal_exploratory": "Passes dual Gate 2 at T >= 8 (Delta_ML=0.22, Delta_HM=0.55 at T=12) due to selective amplification of Arousal, but collapses Pleasure and represents an unvalidated theoretical formula",
+        "Pi_2_geometric_headroom": "Fails Gate 2 at T <= 25 (Delta_HM=0.106 at T=12); geometric headroom weighting does not resolve orthogonal collapse",
+        "Pi_3_mt_lnn_coupled": "Fails Gate 2 at T <= 25 (Delta_HM=0.098 at T=12); off-diagonal drag does not overcome radial collapse"
+      }
+    }
+  },
+  "rq8_architectural_semantics": {
+    "conceptual_distinction": {
+      "physiological_surprise": {
+        "definition": "What happened differs from what the current generative model predicted (prediction residual r_T != 0)",
+        "representation_requirements": "Requires retaining prediction residual r_T = p_hat_T - p_T. Scalar reduction S = ||r_T|| collapses orientation, whereas vector residual preserves component-specific expectation failure.",
+        "cognitive_role": "Triggers immediate somatic modulation, arousal spike, and Free Energy model parameter updates."
+      },
+      "epistemic_uncertainty": {
+        "definition": "The system does not sufficiently know what state/action/outcome is relevant (entropy H(P) or H_Ecphory)",
+        "representation_requirements": "Evaluated across probability distributions over discrete beliefs or memory competing attractors. Independent of emotional state magnitude.",
+        "cognitive_role": "Governs exploratory epistemic foraging policy (seeking clarifying actions to reduce entropy)."
+      }
+    },
+    "impact_of_measurement_architecture": {
+      "scalar_conflation_risk": "When surprise is measured as scalar S, orthogonal physiological events (e.g. a high-arousal crisis vs a high-valence success) produce identical surprise magnitudes. If downstream cognitive routing conditions on S alone, the system cannot distinguish whether uncertainty requires somatic stabilization (calming arousal) or epistemic inquiry (clarification).",
+      "vector_residual_benefit": "Retaining vector residual r_T provides downstream routing with both the magnitude (urgency) and the affective orientation (component polarity) of expectation failure, allowing clean decoupling between physiological adjustment and epistemic foraging."
+    }
+  },
+  "final_synthesis": {
+    "final_state": "State B \u2014 Direction/Component Information Demonstrably Omitted Under Scalar S",
+    "rationale": "Scalar S demonstrably omits directional/component information; whether that omission is architecturally unacceptable remains unresolved. Empirical evidence across T <= 25 demonstrates that canonical scalar S collapses orthogonal emotional trajectories into identical scalar distances (|diff_S| <= 0.02). Magnitude-matched analysis (RQ4) confirms evidence consistent with directional/component information persisting after magnitude matching (61-104 deg separation). Furthermore, while predefined exploratory precision weighting (Pi_1) can numerically separate tiers by prioritizing Arousal, it does so as an unvalidated exploratory candidate that discards Pleasure, whereas geometrically grounded normalization (Pi_2) and coupled metric (Pi_3) fail to resolve collapse. Vector representations (M1-M4) preserve complete information across all conversational exposures (T >= 1), but promoting them requires an explicit Architecture Gate decision, which remains strictly locked.",
+    "protocol_v15_status": "NOT AUTHORIZED",
+    "architecture_gate_status": "STRICTLY LOCKED",
+    "production_mutation_status": "0 mutations allowed / 0 performed"
+  }
+}
