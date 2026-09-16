@@ -4,7 +4,7 @@
 **Document Version:** 1.0.0  
 **Author:** Agency UI Designer  
 **Target Milestone:** Phase 7 (UI Refactoring)  
-**Reference Document:** [`new_UI_requirement.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/new_UI_requirement.md)  
+**Reference Document:** [`Phase_7_new_UI_requirement.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase7-UI_refractoring/Phase_7_new_UI_requirement.md)  
 **Related Documents:** [`docs/ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/ARCHITECTURE.md), [`docs/MECHANISM.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/MECHANISM.md)
 
 ---

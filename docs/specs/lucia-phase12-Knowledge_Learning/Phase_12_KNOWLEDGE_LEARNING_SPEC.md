@@ -2,7 +2,7 @@
 
 > **Authoritative Specification: Memory vs. Knowledge Ontology, K0–K9 Knowledge Maturity Ladder, Provenance Architecture, and the LLM-as-Teacher Boundary**  
 > **Status:** Active Research Specification (Phase 12 Track)  
-> **Directory:** `docs/specs/lucia-phase12-Knowledge_Learning/KNOWLEDGE_LEARNING_SPEC.md`  
+> **Directory:** `docs/specs/lucia-phase12-Knowledge_Learning/Phase_12_KNOWLEDGE_LEARNING_SPEC.md`  
 > **Authority Level:** Authoritative Specification
 
 ---

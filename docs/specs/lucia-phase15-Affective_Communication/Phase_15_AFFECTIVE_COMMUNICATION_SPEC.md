@@ -2,7 +2,7 @@
 
 > **Authoritative Specification: Affective Communication Strategy Architecture, Multidimensional State Formulation, Semantic Preservation Evidence, and the C-EXP-1 to C-EXP-12 Empirical Validation Suite**  
 > **Status:** Active Research Specification (Phase 15 Track)  
-> **Directory:** `docs/specs/lucia-phase15-Affective_Communication/AFFECTIVE_COMMUNICATION_SPEC.md`  
+> **Directory:** `docs/specs/lucia-phase15-Affective_Communication/Phase_15_AFFECTIVE_COMMUNICATION_SPEC.md`  
 > **Authority Level:** Authoritative Specification  
 
 ---

@@ -121,7 +121,7 @@ README.md (Public Front Door)
     │
     ├── docs/DOCUMENTATION_INDEX.md (Navigation Map Only)
     │
-    └── Historical Evidence (docs/specs/**, .kiro/specs/**, docs/reports/**)
+    └── Historical Evidence (docs/specs/**)
 ```
 
 | Document | Authority Tier | Role & Content Scope | Agent Operating Rules |
@@ -130,7 +130,7 @@ README.md (Public Front Door)
 | [`docs/00_PROJECT_OVERVIEW.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/00_PROJECT_OVERVIEW.md) | **Canonical Project Truth** | System identity, core philosophy, 6-layer cognitive pipeline summary, 24-subsystem health matrix, test statistics, active REST API surface, and milestone roadmap. | Consult for current project status, phase progress, subsystem operational state, and project-level constraints. **Do NOT recreate `CURRENT_STATUS.md`.** |
 | [`docs/ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/ARCHITECTURE.md) | **Canonical Technical Truth** | Technical architecture, 20-Watt Whole Brain Architecture, concurrency & locking rules, mathematical/dynamical mechanisms (ODEs, SDM, Ecphory, BPTT), and the complete Architectural Decision Record ledger (**ADR-001 through ADR-028**). | Primary technical authority for mechanisms, formulas, component ownership, threading, and design rationale. **Do NOT recreate `MECHANISM.md` or `DESIGN_DECISIONS.md`.** |
 | [`docs/DOCUMENTATION_INDEX.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/DOCUMENTATION_INDEX.md) | **Navigation Map** | Complete catalog of active and historical documentation, authority hierarchy, and reading paths. | Use strictly to navigate documents. **Do NOT turn the index into another source of technical truth.** |
-| **Phase / Research / Acceptance Docs** (`docs/specs/**`, `.kiro/specs/**`) | **Historical Evidence & Records** | Phase specifications, research hypotheses (H1–Hn), evaluation harness reports, mathematical proposals, and formal acceptance reports. | Preserved as evidence and historical records. They must **never** silently override the active canonical architecture in `docs/ARCHITECTURE.md`. |
+| **Phase / Research / Acceptance Docs** (`docs/specs/**`) | **Historical Evidence & Records** | Phase specifications, research hypotheses (H1–Hn), evaluation harness reports, mathematical proposals, and formal acceptance reports. | Preserved as evidence and historical records. They must **never** silently override the active canonical architecture in `docs/ARCHITECTURE.md`. |
 
 ### 3.2 Deleted Canonical Files Notice
 

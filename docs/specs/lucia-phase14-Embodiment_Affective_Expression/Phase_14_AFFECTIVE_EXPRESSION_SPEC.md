@@ -2,7 +2,7 @@
 
 > **Authoritative Specification: Multimodal Affective Expression Architecture, Actuator Decoupling, Semantic Preservation, and the E-EXP-1 to E-EXP-12 Empirical Validation Suite**  
 > **Status:** Active Research Specification (Phase 14 Track)  
-> **Directory:** `docs/specs/lucia-phase14-Embodiment_Affective_Expression/AFFECTIVE_EXPRESSION_SPEC.md`  
+> **Directory:** `docs/specs/lucia-phase14-Embodiment_Affective_Expression/Phase_14_AFFECTIVE_EXPRESSION_SPEC.md`  
 > **Authority Level:** Authoritative Specification
 
 ---

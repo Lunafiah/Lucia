@@ -2,7 +2,7 @@
 
 > **Authoritative Specification: Memory Retrieval vs. Affective Recollection, Candidate Coupling Hypotheses, and Empirical Evaluation Framework**  
 > **Status:** Active Research Specification (Phase 11)  
-> **Directory:** `docs/specs/lucia-phase11-Affective_Memory/AFFECTIVE_MEMORY_SPEC.md`  
+> **Directory:** `docs/specs/lucia-phase11-Affective_Memory/Phase_11_AFFECTIVE_MEMORY_SPEC.md`  
 > **Authority Level:** Authoritative Specification
 
 ---

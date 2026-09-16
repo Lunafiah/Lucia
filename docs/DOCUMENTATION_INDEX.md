@@ -20,9 +20,9 @@ To prevent confusion across development phases, Lucia maintains a strict documen
 │       mechanisms, mathematical models, and the complete ADR ledger.    │
 │     • docs/USER_MANUAL.md: Operating guide, mascot controls, setup.    │
 │                                                                        │
-│  2. HISTORICAL RESEARCH & PHASE SPECIFICATIONS (docs/specs/, .kiro/)   │
+│  2. HISTORICAL RESEARCH & PHASE SPECIFICATIONS (docs/specs/)           │
 │     Preserved immutable point-in-time specs, evaluation reports, and   │
-│     acceptance sign-offs from earlier milestones (Phases 1–21).        │
+│     acceptance sign-offs across milestones (Phases 1–21).              │
 │                                                                        │
 │  3. SUPERSEDED SPECIFICATIONS                                          │
 │     Specifications that pivoted during engineering implementation.     │
@@ -42,21 +42,26 @@ To prevent confusion across development phases, Lucia maintains a strict documen
 | **Authoritative Living Canon** | [`docs/ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/ARCHITECTURE.md) | **Active Truth** | Canonical technical architecture: 6-layer pipeline, mathematical mechanisms (MT-LNN ODE, SDM, Lip-sync), concurrency locks, and ADR Ledger (ADR-001 to ADR-028). |
 | **Authoritative Living Canon** | [`docs/USER_MANUAL.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/USER_MANUAL.md) | **Active Truth** | User guide: Personal Digital Room interface, Mascot shortcuts, audio/graphics hardware profiles, and local voice setup. |
 | **Authoritative Living Canon** | [`README.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/README.md) | **Active Truth** | Public front door, quick start commands, repository structure, and newcomer orientation. |
-| **Authoritative** | [`PHASE_8_ARCHITECTURE_REVIEW.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/.kiro/specs/lucia-phase8-ISOLATION/PHASE_8_ARCHITECTURE_REVIEW.md) | **Active Truth** | Authoritative post-Phase-8 architectural audit, state map, and simulation baseline. |
-| **Authoritative** | [`PHASE_8.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/.kiro/specs/lucia-phase8-ISOLATION/PHASE_8.md) | **Active Truth** | Phase 8 Runtime Isolation & Simulation Environment specification and invariants. |
-| **Authoritative** | [`PHASE_9_ARCHITECTURE_GATE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/phase9/PHASE_9_ARCHITECTURE_GATE.md) | **Active Truth** | Formal Phase 9 Architectural Decision Gate (Revision v2.0): F-01 to F-04, 5-tier concurrency, state ownership. |
-| **Authoritative** | [`PHASE_9.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/phase9/PHASE_9.md) | **Active Truth** | Canonical Phase 9 specification: Unified Cognitive Architecture & System Convergence. |
-| **Authoritative** | [`PHASE_7_UI_REFACTORING_SPEC.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/.kiro/specs/lucia-phase7-UI_refractoring/PHASE_7_UI_REFACTORING_SPEC.md) | **Active Truth** | Phase 7 UI Design System: CSS tokens, component layouts, and Mascot physics. |
-| **Authoritative** | [`new_UI_requirement.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/.kiro/specs/lucia-phase7-UI_refractoring/new_UI_requirement.md) | **Active Truth** | Product brief for Phase 7: Personal Digital Room, One Continuous Life companion ontology. |
+| **Authoritative** | [`PHASE_8_ARCHITECTURE_REVIEW.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase8-ISOLATION/PHASE_8_ARCHITECTURE_REVIEW.md) | **Active Truth** | Authoritative post-Phase-8 architectural audit, state map, and simulation baseline. |
+| **Authoritative** | [`PHASE_8.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase8-ISOLATION/PHASE_8.md) | **Active Truth** | Phase 8 Runtime Isolation & Simulation Environment specification and invariants. |
+| **Authoritative** | [`PHASE_9_ARCHITECTURE_GATE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase9-Cognition_Unifying/PHASE_9_ARCHITECTURE_GATE.md) | **Active Truth** | Formal Phase 9 Architectural Decision Gate (Revision v2.0): F-01 to F-04, 5-tier concurrency, state ownership. |
+| **Authoritative** | [`PHASE_9.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase9-Cognition_Unifying/PHASE_9.md) | **Active Truth** | Canonical Phase 9 specification: Unified Cognitive Architecture & System Convergence. |
+| **Authoritative** | [`PHASE_7_UI_REFACTORING_SPEC.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase7-UI_refractoring/PHASE_7_UI_REFACTORING_SPEC.md) | **Active Truth** | Phase 7 UI Design System: CSS tokens, component layouts, and Mascot physics. |
+| **Authoritative** | [`Phase_7_new_UI_requirement.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase7-UI_refractoring/Phase_7_new_UI_requirement.md) | **Active Truth** | Product brief for Phase 7: Personal Digital Room, One Continuous Life companion ontology. |
 | **Governance** | [`AGENTS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/AGENTS.md) | **Active Truth** | Operational instructions, lock discipline, and strict invariants for AI coding agents. |
 | **Historical Seed** | [`docs/Triết lý thiết kế AI cảm xúc.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/Triết lý thiết kế AI cảm xúc.md) | **Historical** | Original research whitepaper (Vietnamese) founding the 20W WBA paradigm. |
-| **Historical Spec** | [`lucia-core-phase1`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/.kiro/specs/lucia-core-phase1/) | **Historical** | Phase 1 milestone specification (EmotionCore, Homeostasis, BoundaryLayer). |
-| **Historical Spec** | [`lucia-memory-phase2`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/.kiro/specs/lucia-memory-phase2/) | **Historical** | Phase 2 milestone specification (SDMCore, AffectiveMemory, Decay, Ecphory). |
-| **Historical Spec** | [`lucia-ui-phase3`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/.kiro/specs/lucia-ui-phase3/) | **Historical** | Phase 3 milestone specification (FastAPI server, Electron IPC, debug panel). |
-| **Historical Spec** | [`lucia-inference-phase4`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/.kiro/specs/lucia-inference-phase4/) | **Historical** | Phase 4 milestone specification (ActiveInference, LNNTrainer, torchdiffeq). |
-| **Historical Spec** | [`lucia-refinement-phase6`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/.kiro/specs/lucia-refinement-phase6/) | **Historical** | Phase 6 milestone specification (Packaging, System Tray, Mascot, LSI). |
-| **Active Spec** | [`AFFECTIVE_DYNAMICS_SPEC.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase10-Affective_Dynamics/AFFECTIVE_DYNAMICS_SPEC.md) | **Active Truth** | Phase 10 canonical specification: Mathematical formulation, state taxonomy, temporal contract. |
-| **Active Spec** | [`AFFECTIVE_MEMORY_SPEC.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase11-Affective_Memory/AFFECTIVE_MEMORY_SPEC.md) | **Active Truth** | Phase 11 canonical specification: Retrieval vs. Recollection, Candidate Hypotheses A–E. |
+| **Historical Spec** | [`lucia-phase1-core`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase1-core/) | **Historical** | Phase 1 milestone specification (EmotionCore, Homeostasis, BoundaryLayer). |
+| **Historical Spec** | [`lucia-phase2-memory`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase2-memory/) | **Historical** | Phase 2 milestone specification (SDMCore, AffectiveMemory, Decay, Ecphory). |
+| **Historical Spec** | [`lucia-phase3-ui`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase3-ui/) | **Historical** | Phase 3 milestone specification (FastAPI server, Electron IPC, debug panel). |
+| **Historical Spec** | [`lucia-phase4-inference`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase4-inference/) | **Historical** | Phase 4 milestone specification (ActiveInference, LNNTrainer, torchdiffeq). |
+| **Historical Spec** | [`lucia-phase5-presence`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase5-presence/) | **Historical** | Phase 5 milestone specification (PresenceOrchestrator, multimodal synchronization). |
+| **Historical Spec** | [`lucia-phase6-refinement`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase6-refinement/) | **Historical** | Phase 6 milestone specification (Packaging, System Tray, Mascot, LSI). |
+| **Active Spec** | [`Phase_10_AFFECTIVE_DYNAMICS_SPEC.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase10-Affective_Dynamics/Phase_10_AFFECTIVE_DYNAMICS_SPEC.md) | **Active Truth** | Phase 10 canonical specification: Mathematical formulation, state taxonomy, temporal contract. |
+| **Active Spec** | [`Phase_11_AFFECTIVE_MEMORY_SPEC.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase11-Affective_Memory/Phase_11_AFFECTIVE_MEMORY_SPEC.md) | **Active Truth** | Phase 11 canonical specification: Retrieval vs. Recollection, Candidate Hypotheses A–E. |
+| **Active Spec** | [`Phase_12_KNOWLEDGE_LEARNING_SPEC.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase12-Knowledge_Learning/Phase_12_KNOWLEDGE_LEARNING_SPEC.md) | **Active Truth** | Phase 12 canonical specification: Memory vs. Knowledge ontology, K0–K9 maturity ladder. |
+| **Active Spec** | [`Phase_13_RELATIONSHIP_DEVELOPMENT_SPEC.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase13-Relationship_Development/Phase_13_RELATIONSHIP_DEVELOPMENT_SPEC.md) | **Active Truth** | Phase 13 canonical specification: Philia core, relationship dynamics & inertia. |
+| **Active Spec** | [`Phase_14_AFFECTIVE_EXPRESSION_SPEC.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase14-Embodiment_Affective_Expression/Phase_14_AFFECTIVE_EXPRESSION_SPEC.md) | **Active Truth** | Phase 14 canonical specification: 15-dim expression state, blendshapes, prosody. |
+| **Active Spec** | [`Phase_15_AFFECTIVE_COMMUNICATION_SPEC.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase15-Affective_Communication/Phase_15_AFFECTIVE_COMMUNICATION_SPEC.md) | **Active Truth** | Phase 15 canonical specification: Affective communication policy, pragmatic framing. |
 | **Active Spec** | [`PHASE_16_ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase16-Affective_Life_Integration/PHASE_16_ARCHITECTURE.md) | **Active Truth** | Phase 16 canonical architecture: 16-stage cognitive pipeline, promoted subsystems, two-phase lifecycle. |
 | **Active Spec** | [`PHASE_18_SPECIFICATION.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase18-Human_Longitudinal_Validation/PHASE_18_SPECIFICATION.md) | **Active Truth** | Phase 18 canonical specification: Human Longitudinal Interaction & Real-World Validation. |
 | **Validation Report** | [`PHASE_18_EVALUATION_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase18-Human_Longitudinal_Validation/PHASE_18_EVALUATION_REPORT.md) | **Active Truth** | Comprehensive Phase 18 evaluation report: 9 invariant gates, audiovisual synchronization matrix. |
@@ -86,11 +91,8 @@ Lucia/
 │   ├── DOCUMENTATION_INDEX.md                  # This file: navigation, hierarchy & authority index
 │   ├── USER_MANUAL.md                          # Complete user, configuration & operating manual
 │   ├── Triết lý thiết kế AI cảm xúc.md         # Foundational concept paper (Vietnamese)
-│   ├── phase9/                                 # Phase 9: Unified cognition specifications & Gate v2.0
-│   ├── specs/                                  # Specifications & realization designs (Phases 10–21)
+│   ├── specs/                                  # Specifications & realization designs (Phases 1–21)
 │   └── screenshots/                            # Architectural UI & telemetry captures
-├── .kiro/
-│   └── specs/                                  # IMMUTABLE HISTORICAL MILESTONE SPECS (Phases 1–7)
 ├── electron/                                   # Native Electron desktop application
 │   ├── main/                                   # Main process: ProcessManager, IPC, Mascot window
 │   ├── preload/                                # ContextBridge security isolation
@@ -120,8 +122,8 @@ Lucia/
 
 ### Path B: Frontend & UI/UX Engineers
 *Goal: Build interfaces adhering to the Personal Digital Room and avatar animation pipelines.*
-1. [`.kiro/specs/lucia-UI_refractoring-phase7/new_UI_requirement.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/.kiro/specs/lucia-UI_refractoring-phase7/new_UI_requirement.md) — Read the product brief and companion ontology.
-2. [`.kiro/specs/lucia-UI_refractoring-phase7/PHASE_7_UI_REFACTORING_SPEC.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/.kiro/specs/lucia-UI_refractoring-phase7/PHASE_7_UI_REFACTORING_SPEC.md) — Study CSS tokens, component layouts, and Mascot rules.
+1. [`docs/specs/lucia-phase7-UI_refractoring/Phase_7_new_UI_requirement.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase7-UI_refractoring/Phase_7_new_UI_requirement.md) — Read the product brief and companion ontology.
+2. [`docs/specs/lucia-phase7-UI_refractoring/PHASE_7_UI_REFACTORING_SPEC.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/lucia-phase7-UI_refractoring/PHASE_7_UI_REFACTORING_SPEC.md) — Study CSS tokens, component layouts, and Mascot rules.
 3. [`docs/ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/ARCHITECTURE.md) (§3.6) — Review `getModelBounds()` and hover zoom mathematics.
 
 ### Path C: AI Coding Agents
@@ -141,11 +143,11 @@ Lucia/
 
 | Subject / Technical Topic | Canonical Section in `docs/ARCHITECTURE.md` | Primary Milestone Spec |
 |---|---|---|
-| **Limbic Fast Loop (Coupled MT-LNN ODE)** | `docs/ARCHITECTURE.md` §3.2 | `.kiro/specs/lucia-core-phase1/` |
-| **Homeostasis & Somatic Markers** | `docs/ARCHITECTURE.md` §3.3 | `.kiro/specs/lucia-core-phase1/` |
-| **Active Inference & Plasticity** | `docs/ARCHITECTURE.md` §3.4 | `.kiro/specs/lucia-inference-phase4/` |
+| **Limbic Fast Loop (Coupled MT-LNN ODE)** | `docs/ARCHITECTURE.md` §3.2 | `docs/specs/lucia-phase1-core/` |
+| **Homeostasis & Somatic Markers** | `docs/ARCHITECTURE.md` §3.3 | `docs/specs/lucia-phase1-core/` |
+| **Active Inference & Plasticity** | `docs/ARCHITECTURE.md` §3.4 | `docs/specs/lucia-phase4-inference/` |
 | **Tier 3 Offline Synaptic Consolidation** | `docs/ARCHITECTURE.md` §3.4 | `docs/specs/Lucia-phase21-Relational_Consolidation/` |
-| **Affective Memory & SDM Mechanics** | `docs/ARCHITECTURE.md` §3.5 | `.kiro/specs/lucia-memory-phase2/` |
+| **Affective Memory & SDM Mechanics** | `docs/ARCHITECTURE.md` §3.5 | `docs/specs/lucia-phase2-memory/` |
 | **Closed-Loop Affective Recollection** | `docs/ARCHITECTURE.md` §3.5 | `docs/specs/Lucia-phase20-Affective_Recollection/` |
 | **Conceptual Knowledge Store** | `docs/ARCHITECTURE.md` §8 (ADR-021) | `docs/specs/lucia-phase12-Knowledge_Learning/` |
 | **Interpersonal Relationship Lifecycle** | `docs/ARCHITECTURE.md` §8 (ADR-022) | `docs/specs/lucia-phase13-Relationship_Development/` |
@@ -153,8 +155,8 @@ Lucia/
 | **Canonical 15-Dim Expression State** | `docs/ARCHITECTURE.md` §8 (ADR-024) | `docs/specs/lucia-phase14-Embodiment_Affective_Expression/` |
 | **Direct RVC Voice Engine** | `docs/ARCHITECTURE.md` §3.6.1 | `docs/USER_MANUAL.md` §2 |
 | **Quad-Engine Avatar Architecture** | `docs/ARCHITECTURE.md` §3.6.2 | `models/avatar/README.md` |
-| **Mascot Physics & Hover Zoom Math** | `docs/ARCHITECTURE.md` §3.6.3 | `.kiro/specs/lucia-UI_refractoring-phase7/` |
-| **Limbic Stability Evaluator (LSI)** | `docs/ARCHITECTURE.md` §5 | `.kiro/specs/lucia-refinement-phase6/` |
-| **Simulation Runtime & SimClock** | `docs/ARCHITECTURE.md` §7 | `docs/.kiro/specs/lucia-phase8-ISOLATION/PHASE_8.md` |
+| **Mascot Physics & Hover Zoom Math** | `docs/ARCHITECTURE.md` §3.6.3 | `docs/specs/lucia-phase7-UI_refractoring/` |
+| **Limbic Stability Evaluator (LSI)** | `docs/ARCHITECTURE.md` §5 | `docs/specs/lucia-phase6-refinement/` |
+| **Simulation Runtime & SimClock** | `docs/ARCHITECTURE.md` §7 | `docs/specs/lucia-phase8-ISOLATION/PHASE_8.md` |
 | **Verified Lock Hierarchy Discipline** | `docs/ARCHITECTURE.md` §5.1 | `docs/ARCHITECTURE.md` §8 (ADR-018, ADR-028) |
 | **Full ADR Ledger (ADR-001 to ADR-028)** | `docs/ARCHITECTURE.md` §8 | `docs/ARCHITECTURE.md` §8.2 (Changelog) |

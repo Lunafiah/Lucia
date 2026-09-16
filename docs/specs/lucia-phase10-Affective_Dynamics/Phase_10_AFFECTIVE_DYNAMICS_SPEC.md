@@ -2,7 +2,7 @@
 
 > **Authoritative Specification: Mathematical Formulation, State Taxonomy, Temporal Execution Contract, Causal Mechanics, and Epistemic Foundation for Lucia's Affective System**  
 > **Status:** Active Truth (Phase 10)  
-> **Directory:** `docs/specs/lucia-phase10-Affective_Dynamics/AFFECTIVE_DYNAMICS_SPEC.md`  
+> **Directory:** `docs/specs/lucia-phase10-Affective_Dynamics/Phase_10_AFFECTIVE_DYNAMICS_SPEC.md`  
 > **Authority Level:** Authoritative Specification
 
 ---

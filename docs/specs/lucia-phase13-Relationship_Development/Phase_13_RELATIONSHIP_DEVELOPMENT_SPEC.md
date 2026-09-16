@@ -2,7 +2,7 @@
 
 > **Authoritative Specification: Core Relational Orientation (*Philia*) vs. Dynamic Relationship State, Temporal Inertia Dynamics, and the R-EXP-1 to R-EXP-12 Empirical Validation Suite**  
 > **Status:** Active Research Specification (Phase 13 Track)  
-> **Directory:** `docs/specs/lucia-phase13-Relationship_Development/RELATIONSHIP_DEVELOPMENT_SPEC.md`  
+> **Directory:** `docs/specs/lucia-phase13-Relationship_Development/Phase_13_RELATIONSHIP_DEVELOPMENT_SPEC.md`  
 > **Authority Level:** Authoritative Specification
 
 ---
