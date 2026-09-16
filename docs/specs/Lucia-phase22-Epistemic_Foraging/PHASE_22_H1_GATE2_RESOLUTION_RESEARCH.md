@@ -212,12 +212,12 @@ Scalar Euclidean distance $S = \|\mathbf{p}_T - \mathbf{p}_0\|_2$ computes only 
 3. **Affective polarity:** It conflates positive valence progress with negative valence threats.
 
 ### 2. Is the M-H compression primarily magnitude, direction, component, or exposure related under the frozen regime?
-**Answer (Supported):**  
-Under the frozen G1 regime, the apparent Medium–High compression is **primarily a geometric-measurement interaction between component orthogonality and isotropic scalar projection**:
-- It is **NOT** an input magnitude defect: Candidate G1 has clean, widely separated input features ($D_M = 81.52$, angle $103^\circ$).
-- It is **NOT** a physiological saturation of `EmotionCore`: the ODE continues to displace linearly through $T=25$ and up to $T=100$.
-- It **IS** a component divergence: Medium activates Pleasure; High activates Arousal. Both share a common-mode Dominance displacement ($\Delta D \approx +0.37$).
-- When both vectors are measured with isotropic Euclidean norm $S$, their scalar lengths happen to fall within $0.10$ of each other at $T=12$ ($S_M = 0.5364, S_H = 0.6418$). Thus, the compression is an artifact of measuring orthogonal multi-dimensional displacements with a 1-dimensional isotropic ruler.
+**Answer (Consistent with):**  
+Under the frozen G1 regime, **the observed compression is more consistent with a geometric/measurement interaction than with the previously observed dynamical headroom effect alone**:
+- It is **NOT** an input feature representation defect: Candidate G1 has clean, widely separated input features ($D_M = 81.52$, angle $103.06^\circ$).
+- Rather than asserting complete absence of physiological saturation, the empirical evidence demonstrates that limbic state displacement continues through $T=25$ and up to $T=100$; thus, compression is more consistently explained by component divergence projected onto an isotropic norm than by an absolute dynamical limit of the ODE.
+- It **IS** a component divergence: Medium activates Pleasure; High activates Arousal. Both share a common-mode Dominance displacement ($\Delta D \approx +0.35 - +0.39$).
+- When both vectors are measured with isotropic Euclidean norm $S$, their scalar lengths happen to fall within $0.10$ of each other at $T=12$ ($S_M = 0.5364, S_H = 0.6418$). Thus, the apparent compression under scalar $S$ is primarily driven by measuring orthogonal multi-dimensional displacements with a 1-dimensional isotropic ruler.
 
 ### 3. Can conversationally realistic $T \le 25$ satisfy the existing scalar Gate 2 thresholds?
 **Answer (Observed):**  
@@ -234,12 +234,10 @@ These diagnostics demonstrate that Medium and High are cleanly and stably distin
 
 ### 5. What evidence is required before considering Protocol v1.5?
 **Answer (Governance & Methodological Requirement):**  
-Before any Protocol v1.5 can be considered:
-1. **Architectural Decision on Manipulation Check Scope:** An architectural decision must determine whether quality manipulation checks should evaluate component-wise displacements ($[\Delta P, \Delta A]$) or directional projections ($\text{Proj}$), or whether manipulation checks must remain strictly scalar Euclidean.
-2. **Threshold Recalibration to Headroom:** If scalar Euclidean surprise is retained for the manipulation check, thresholds must be mathematically calibrated to available empirical headroom:
-   $$\Delta_{ML} + \Delta_{HM} \le 0.60 \times H(T)$$
-   At $T=12$ ($H \approx 0.257$), total demand cannot exceed $0.15$ ($\Delta_{ML} \ge 0.06, \Delta_{HM} \ge 0.09$).
-3. **Formal Architecture Gate Approval:** An ADR must be authored and approved in `docs/ARCHITECTURE.md` before any protocol amendment is drafted.
+Before any Protocol v1.5 can even be contemplated:
+1. **Measurement Direction Determination:** An architectural decision must first determine whether manipulation checks should evaluate component-wise displacements ($[\Delta P, \Delta A]$) or directional projections ($\text{Proj}$), or whether manipulation checks must strictly remain scalar Euclidean.
+2. **Exploratory Headroom Calculations (Hypothetical Only):** If future research explores retaining scalar Euclidean surprise, any proposed threshold feasibility would require formal mathematical calibration to empirical headroom. For example, hypothetical calculations such as $\Delta_{\text{demand}} \le 0.60 \times H(T)$ (which would correspond to $\approx 0.15$ total demand at $T=12$) are strictly exploratory illustrative figures. They are **NOT** proposed thresholds, are **NOT** authorized, and possess no independent empirical justification in this study. No threshold adjustment is authorized by this report.
+3. **Architectural Decision Pending (Not Premature):** Because Gate 2 remains `UNRESOLVED` and Protocol v1.5 is `NOT AUTHORIZED`, an Architectural Decision Record (ADR) is not a scheduled requirement at this stage. Any architectural decision must follow project governance choices on the measurement direction and independently ratified methodology. This study provides empirical evidence to inform that future governance decision, but does not trigger or predetermine it.
 
 ### 6. What should remain explicitly unresolved?
 **Answer (Epistemic Boundaries):**  
