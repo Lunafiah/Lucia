@@ -1,0 +1,17 @@
+{
+  "metadata": {
+    "study_name": "Phase 22 H1 \u2014 Minimal Sufficient Measurement Architecture Study",
+    "timestamp_iso": "2026-09-16T18:35:42Z",
+    "random_seed": 9999
+  },
+  "file_hashes": {
+    "script_hash": "104c10a2f5ac91f240b7de802f604444fe9e97e52437581f0e6241b36b0d4997",
+    "results_hash": "5aa9f8abd4129b9608d5de8968e538f113c415c46e2ded833a08d16eaddb5fbd"
+  },
+  "governance_invariants": {
+    "src_core_mutations": 0,
+    "genesis_onboarding_bit_exact": true,
+    "protocol_v15_authorized": false,
+    "architecture_gate_locked": true
+  }
+}
