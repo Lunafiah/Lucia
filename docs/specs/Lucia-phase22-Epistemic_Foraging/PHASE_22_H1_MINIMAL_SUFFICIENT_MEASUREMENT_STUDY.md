@@ -17,23 +17,23 @@ This study investigates the **minimum measurement information that must be prese
 The objective of this study is **not** to select a winner between scalar and vector architectures, but to systematically identify the smallest empirically defensible information set that avoids collapse while preserving the semantic integrity of canonical Active Inference physiological prediction error.
 
 ### Primary Empirical Findings:
-1. **Information Decomposition (RQ1)**: At $T=12$ (1.20s standard conversational exposure), 358 Medium–High collapse pairs ($|S_{\text{Med}} - S_{\text{High}}| \le 0.02$) occur under scalar $S$. These collapsed pairs hide an average angular separation of **$86.0^\circ$**, a vector distance of **$0.8348$**, a Pleasure difference of **$0.7396$**, and an Arousal difference of **$0.3125$**. Scalar $S$ consistently discards orthogonal trajectory divergence.
+1. **Information Decomposition (RQ1)**: At $T=12$ (1.20s standard conversational exposure), 358 Medium–High collapse pairs ($|S_{\text{Med}} - S_{\text{High}}| \le 0.02$) occur under scalar $S$. These collapsed pairs hide an average angular separation of **$86.0^\circ$** (range $61.2^\circ$ to $103.7^\circ$), a vector distance of **$0.8348$** in $[-2, 2]^3$ PAD space, an absolute Pleasure difference $|\Delta P| = \mathbf{0.7396}$, an absolute Arousal difference $|\Delta A| = \mathbf{0.3125}$, and a Dominance difference $|\Delta D| = \mathbf{0.0826}$. Furthermore, Pleasure sign agreement is **$0.0\%$** (opposing polarity: Medium is positive $+0.19$, High is negative $-0.13$), while Arousal sign agreement is $100\%$ (same polarity $+$, but distinct magnitudes). Canonical scalar $S$ collapses fundamentally orthogonal trajectories into identical scalar surprise magnitudes.
 2. **Predefined Ablation Analysis (RQ2 & RQ3)**:
    - Full 3D Vector $\mathbf{r}_T$ (A0) completely eliminates cross-tier collapse (**0 collapses**).
-   - Ablating Dominance (A3: $[r_P, r_A]$) also achieves **0 collapses**, demonstrating that continuous Dominance information is **not strictly necessary** to resolve Medium–High collapse under the frozen evaluation regime.
+   - Ablating Dominance (A3: $[r_P, r_A]$) also achieves **0 collapses**. **A3 demonstrates that Dominance is dispensable for collapse resolution under the frozen G1 evaluation regime, therefore R5 is not minimal with respect to this criterion.**
    - Ablating Arousal (A2: $[r_P, r_D]$) increases collapse pairs to **746 (9.2%)**, confirming Arousal is an empirically critical discriminative axis.
    - Magnitude Only (A4) yields 358 collapses (4.4%).
    - Sign-Only descriptor (A5: $[S, \text{sign}(\mathbf{r})]$) achieves **0 collapses** at $T=12$, because Medium and High probes have opposing sign signatures on Pleasure and Arousal.
 3. **Component Necessity (RQ4)**: Under the frozen Candidate G1 stimulus set, Arousal exhibits massive High-Med separation ($+0.2755$, Cohen's $d_{\text{HM}} = +9.55$), while Pleasure diverges in the opposite direction ($-0.3179$, Cohen's $d_{\text{HM}} = -0.94$). Dominance displays common-mode displacement ($-0.0408$, Cohen's $d_{\text{HM}} = -1.28$).
    - *Language Lock:* Described strictly as **empirically discriminative under the frozen evaluation regime**, not physiologically primary.
-4. **Directional Sufficiency (RQ5)**: Magnitude + normalized direction ($[m, \hat{\mathbf{v}}]$) achieves **0 collapses**, matching full vector residual in collapse resolution while using polar coordinates (3 effective DOF).
+4. **Directional Sufficiency (RQ5)**: Magnitude + normalized direction ($[m, \hat{\mathbf{v}}]$) achieves **0 collapses**, matching full vector residual in collapse resolution while representing orientation via 4 stored elements with 3 independent mathematical degrees of freedom (1 magnitude + 2 directional angles on $S^2$).
 5. **Scalar + Side-Channel Hybrids (RQ6)**:
-   - **R3 ($[S, \text{sign}(\mathbf{r})]$)**: Retains scalar $S$ and adds a 3-element discrete sign descriptor $\{-1, 0, +1\}^3$. Eliminates Medium–High collapse ($0$ collapses at $T \ge 12$) with minimal overhead (1 float + 3 bits).
-   - **R2 ($[S, \hat{\mathbf{v}}_r]$)**: Retains scalar $S$ and adds a continuous unit vector. Eliminates collapse across all exposures $T \in [1, 25]$ (0 collapses).
-   - **R1-A ($[S, r_A]$)**: Retains scalar $S$ and adds Arousal residual. Eliminates collapse (0 collapses), but is contingent on Arousal-specific tier separation.
-6. **Conversational Timescale (RQ7)**: Canonical scalar $S$ suffers severe collapse across all conversational exposures ($T=1$ to $T=25$, 204 to 4,371 collapses). Side-channel architectures R2 and R3 eliminate or drastically reduce collapse across the conversational grid.
+   - **R3 ($[S, \text{sign}(\mathbf{r})]$)**: Retains scalar $S$ and adds a 3-element discrete sign descriptor $\{-1, 0, +1\}^3$. Eliminates Medium–High collapse under conversational exposures ($0$ collapses at $T \ge 12$; $T \in \{12, 16, 25\}$) with minimal overhead (1 float + 3 bits). At shorter exposures ($T \in \{1, 2, 4, 8\}$), R3 retains non-zero collapses ($968, 682, 66, 66$).
+   - **R2 ($[S, \hat{\mathbf{v}}_r]$)**: Retains scalar $S$ and adds a 3D unit vector (4 stored elements representing 3 independent mathematical DOF). Eliminates collapse across all exposures $T \in [1, 25]$ (0 collapses).
+   - **R1-A ($[S, r_A]$)**: Retains scalar $S$ and adds Arousal residual (2 continuous floats, 2 mathematical DOF). Eliminates collapse (0 collapses), but is contingent on Arousal-specific tier separation.
+6. **Conversational Timescale (RQ7)**: Canonical scalar $S$ suffers severe collapse across all conversational exposures ($T=1$ to $T=25$, 204 to 4,371 collapses). Side-channel architecture R2 maintains **0 collapses** across all $T \in [1, 25]$, while R3 eliminates collapse under conversational exposures $T \ge 12$.
 7. **Prediction-Error Semantics (RQ8)**: While unadapted beliefs produce mathematical equivalence ($\mathbf{r}_T^{(0)} \equiv -\Delta \mathbf{p}$), online-adapted beliefs diverge by $179.5^\circ$ at $T=12$, confirming that prediction residuals capture generative expectation violations rather than raw bodily movement.
-8. **Minimality Assessment (RQ9)**: Full vector R5 is **sufficient but not minimal** (since Dominance can be ablated). Discrete sign side-channel R3 is **potentially minimally sufficient** for discrete quadrant separation, while normalized direction R2 provides continuous angular orientation.
+8. **Minimality Assessment (RQ9)**: Full vector R5 is **sufficient but not minimal with respect to collapse resolution** (since Dominance is dispensable for this criterion under G1). Discrete sign side-channel R3 is **potentially minimally sufficient under the predefined evaluated representations and $T \ge 12$** (not an absolute proof of global minimality, as other configurations like $[S, r_A]$ also achieve 0 collapse on G1). Continuous direction R2 provides continuous angular orientation with 4 stored elements representing 3 independent mathematical degrees of freedom.
 
 ### Final Governance Conclusion:
 Classified as **State B — Minimal Side-Channel Appears Sufficient to Avoid Collapse**:
@@ -55,17 +55,21 @@ Classified as **State B — Minimal Side-Channel Appears Sufficient to Avoid Col
 
 ---
 
-## 3. Research Questions
+## 3. Research Questions & Master Evaluation Matrix
 
-- **RQ1: Information Decomposition**: What specific component, angular, and vector information is discarded when scalar $S$ collapses?
-- **RQ2: Minimum Information Ablation**: What happens to collapse resolution when individual dimensions are ablated from the full prediction residual?
-- **RQ3: Information Retention**: How much collapse-resolution and geometric information is retained across candidate representations relative to the full 3D vector?
-- **RQ4: Component Necessity**: Is each PAD component individually necessary to preserve tier distinction?
-- **RQ5: Directional Sufficiency**: Does normalized direction alone restore the distinctions lost by scalarization?
-- **RQ6: Scalar + Side-Channel Architecture**: Can canonical scalar surprise remain primary while a minimal side-channel resolves directional collapse?
-- **RQ7: Conversational Timescale**: How do candidate representations perform across realistic conversational exposures ($T \in \{1, 2, 4, 8, 12, 16, 25\}$)?
-- **RQ8: Prediction-Error Semantics**: Does each representation preserve prediction-residual semantics vs. bodily displacement?
-- **RQ9: Minimality Assessment**: Which representation satisfies the 6-point non-composite minimality criteria?
+The study investigates nine formal research questions without computing a composite ranking score:
+
+| Research Question | Focus & Scope | Empirical & Analytical Finding | Status |
+|---|---|---|---|
+| **RQ1: Information Decomposition** | Deconstruct component, angular, and vector information omitted by scalar collapse pairs ($|S_{\text{Med}} - S_{\text{High}}| \le 0.02$). | At $T=12$ (1.20s), 358 Medium–High collapse pairs occur under scalar $S$. These pairs hide an average angular separation of **$86.0^\circ$** (range $61.2^\circ$ to $103.7^\circ$), a vector distance of **$0.8348$** in $[-2, 2]^3$ PAD space, an absolute Pleasure difference $|\Delta P| = \mathbf{0.7396}$, an absolute Arousal difference $|\Delta A| = \mathbf{0.3125}$, and a Dominance difference $|\Delta D| = \mathbf{0.0826}$. Pleasure sign agreement is **$0.0\%$** (opposing polarity: Medium is positive $+0.19$, High is negative $-0.13$), while Arousal sign agreement is $100\%$ (same polarity $+$, but distinct magnitudes). Canonical scalar $S$ collapses fundamentally orthogonal trajectories into identical scalar surprise magnitudes. | **COMPLETED** |
+| **RQ2: Predefined Ablation Analysis** | Predefined ablations A0–A8 starting from full 3D residual $\mathbf{r}_T$. | - **A0** (Full Vector $[r_P, r_A, r_D]$): **0 collapses** (complete resolution).<br/>- **A3** (Remove Dominance $[r_P, r_A]$): **0 collapses** (demonstrates Dominance is dispensable for collapse resolution under frozen G1).<br/>- **A2** (Remove Arousal $[r_P, r_D]$): **746 collapses (9.2%)** (severe degradation).<br/>- **A4** (Magnitude Only $\|\mathbf{r}\|$): 358 collapses (4.4%).<br/>- **A5** (Sign Only $[S, \text{sign}(\mathbf{r})]$): **0 collapses** at $T=12$. | **COMPLETED** |
+| **RQ3: Information Retention** | Collapse resolution vs. dimensional overhead across representations R0–R5. | Dominance can be ablated without loss of collapse resolution. Retaining discrete quadrant signs (R3) or normalized direction (R2) achieves complete collapse resolution with lower dimensionality than full 3D coordinates. | **COMPLETED** |
+| **RQ4: Component Necessity** | Independent necessity of Pleasure, Arousal, Dominance under frozen G1. | Under the frozen G1 evaluation set: Arousal exhibits massive High-Med separation ($+0.2755$, Cohen's $d_{\text{HM}} = +9.55$), Pleasure exhibits opposing divergence ($-0.3179$, Cohen's $d_{\text{HM}} = -0.94$), Dominance is common-mode ($-0.0408$, Cohen's $d_{\text{HM}} = -1.28$).<br/>*Language Lock:* Described strictly as **empirically discriminative under the frozen evaluation regime**, not physiologically primary. | **COMPLETED** |
+| **RQ5: Directional Sufficiency** | Does normalized direction restore distinctions lost by scalarization? | Magnitude + normalized direction $[m, \hat{\mathbf{v}}]$ achieves **0 collapses** at $T=12$, matching full vector residual in collapse resolution while representing orientation with 4 stored elements (3 independent mathematical DOF). | **COMPLETED** |
+| **RQ6: Scalar + Side-Channel Hybrids** | Hybrid formulations retaining scalar $S$ with minimal side-channels. | - **R3 ($[S, \text{sign}(\mathbf{r})]$)**: 1 continuous scalar + 3 discrete signs in $\{-1, 0, +1\}^3$. Eliminates Medium–High collapse under conversational exposures ($0$ collapses at $T \ge 12$; $T \in \{12, 16, 25\}$) with minimal storage overhead (1 float + 3 bits).<br/>- **R2 ($[S, \hat{\mathbf{v}}_r]$)**: 4 stored elements (1 scalar + 3 unit vector components), representing 3 independent mathematical DOF (1 magnitude + 2 directional angles on $S^2$). Eliminates collapse across all exposures $T \in [1, 25]$ (0 collapses). | **COMPLETED** |
+| **RQ7: Conversational Timescale Viability** | Performance across conversational exposures $T \in \{1, 2, 4, 8, 12, 16, 25\}$. | - R0 (scalar $S$) collapses across all conversational exposures $T \le 25$ (204 to 4,371 collapses).<br/>- R2 maintains **0 collapses** across all $T \in [1, 25]$.<br/>- R3 resolves all collapses under conversational exposures $T \ge 12$ (0 collapses at $T \in \{12, 16, 25\}$), while retaining non-zero collapses at $T \in \{1, 2, 4, 8\}$ ($968, 682, 66, 66$). | **COMPLETED** |
+| **RQ8: Prediction-Error Semantics** | Bodily displacement ($\Delta \mathbf{p}$) vs. prediction residual ($\mathbf{r}_T$). | Mathematical identity under unadapted beliefs ($\mathbf{r}_T^{(0)} \equiv -\Delta \mathbf{p}$) contrasts with empirical divergence under online-adapted beliefs ($179.5^\circ$ at $T=12$), confirming prediction residuals capture generative expectation violations rather than raw bodily displacement. | **COMPLETED** |
+| **RQ9: Minimality Assessment** | 6-point non-composite minimality criteria. | - Full vector R5 is **sufficient but not minimal with respect to collapse resolution** (A3 demonstrates Dominance is dispensable under frozen G1).<br/>- Discrete sign side-channel R3 is **potentially minimally sufficient under predefined evaluated representations and $T \ge 12$** (not an absolute proof of global minimality).<br/>- Continuous direction R2 is **potentially sufficient for continuous orientation** (4 stored elements representing 3 independent mathematical DOF). | **COMPLETED** |
 
 ---
 
@@ -87,12 +91,13 @@ R4: Magnitude + Direction                                       R5: Full Vector 
     [||r_T||_2, r_T / ||r_T||_2]                                    r_T = [rP, rA, rD]^T
 ```
 
-1. **R0 (Scalar Only)**: $S = \|\mathbf{r}_T\|_2$ (1 continuous float, 1 effective DOF).
-2. **R1 (Scalar + Component Side-Channel)**: $[S, r_P, r_A, r_D]$ (4 floats, 3 effective DOF due to $S = \sqrt{\sum r_i^2}$).
-3. **R2 (Scalar + Directional Side-Channel)**: $[S, \hat{\mathbf{v}}_r]$ where $\hat{\mathbf{v}}_r = \mathbf{r}_T / \|\mathbf{r}_T\|_2$ (4 floats, 3 effective DOF).
-4. **R3 (Scalar + Minimal Directional Descriptor)**: $[S, \text{sign}(r_P), \text{sign}(r_A), \text{sign}(r_D)]$ (1 float + 3 discrete signs in $\{-1, 0, +1\}^3$).
-5. **R4 (Magnitude + Direction)**: $[\|\mathbf{r}_T\|_2, \hat{\mathbf{v}}_r]$ (4 floats, 3 effective DOF).
-6. **R5 (Full Vector Residual)**: $\mathbf{r}_T = [r_P, r_A, r_D]^\top$ (3 continuous floats, 3 effective DOF).
+1. **R0 (Scalar Only)**: $S = \|\mathbf{r}_T\|_2$ (1 continuous float, 1 independent mathematical DOF).
+2. **R1 (Scalar + Component Side-Channel)**: $[S, r_P, r_A, r_D]$ (4 stored floats, 3 independent mathematical DOF due to $S = \sqrt{\sum r_i^2}$).
+3. **R2 (Scalar + Directional Side-Channel)**: $[S, \hat{\mathbf{v}}_r]$ where $\hat{\mathbf{v}}_r = \mathbf{r}_T / \|\mathbf{r}_T\|_2$ (4 stored floats: 1 scalar magnitude $+ 3$-component unit vector, representing 3 independent mathematical degrees of freedom: 1 magnitude $+ 2$ directional angles on $S^2$).
+4. **R3 (Scalar + Minimal Directional Descriptor)**: $[S, \text{sign}(r_P), \text{sign}(r_A), \text{sign}(r_D)]$ (1 continuous float + 3 discrete signs in $\{-1, 0, +1\}^3$, 1 continuous DOF + 3 bits discrete orientation).
+5. **R4 (Magnitude + Direction)**: $[\|\mathbf{r}_T\|_2, \hat{\mathbf{v}}_r]$ (4 stored floats, representing 3 independent mathematical degrees of freedom).
+6. **R5 (Full Vector Residual)**: $\mathbf{r}_T = [r_P, r_A, r_D]^\top$ (3 continuous floats representing 3 Cartesian coordinates, 3 independent mathematical degrees of freedom).
+
 
 ---
 
@@ -129,15 +134,15 @@ We audited all 36,315 pairwise probe comparisons across exposures. At $T=12$ (1.
 
 We performed a predefined ablation analysis starting from the full 3D prediction residual $\mathbf{r}_T$ at $T=12$ (1.20s):
 
-| Ablation ID | Description | Retained Elements | Effective DOF | Med–High Collapses | MH Collapse Rate | Collapse Resolution Status |
+| Ablation ID | Description | Retained Elements | Independent Mathematical DOF | Med–High Collapses | MH Collapse Rate | Collapse Resolution Status |
 |---|---|---|---|---|---|---|
-| **A0** | Full Vector Residual | $[r_P, r_A, r_D]$ | 3 | **0** | **0.0%** | Complete resolution |
+| **A0** | Full Vector Residual | $[r_P, r_A, r_D]$ | 3 (Cartesian coords) | **0** | **0.0%** | Complete resolution |
 | **A1** | Remove Pleasure | $[r_A, r_D]$ | 2 | **0** | **0.0%** | Complete resolution |
 | **A2** | Remove Arousal | $[r_P, r_D]$ | 2 | **746** | **9.2%** | **Severe degradation** |
 | **A3** | Remove Dominance | $[r_P, r_A]$ | 2 | **0** | **0.0%** | Complete resolution |
 | **A4** | Magnitude Only | $\|\mathbf{r}_T\|_2$ (Canonical $S$) | 1 | **358** | **4.4%** | Baseline collapse |
-| **A5** | Sign-Only Descriptor | $[S, \text{sign}(\mathbf{r})]$ | 1 + 3 signs | **0** | **0.0%** | Complete resolution |
-| **A6** | Normalized Direction | $[S, \mathbf{r} / \|\mathbf{r}\|]$ | 3 | **0** | **0.0%** | Complete resolution |
+| **A5** | Sign-Only Descriptor | $[S, \text{sign}(\mathbf{r})]$ | 1 continuous + 3 bits | **0** | **0.0%** | Complete resolution |
+| **A6** | Normalized Direction | $[S, \mathbf{r} / \|\mathbf{r}\|]$ (4 stored floats) | 3 (1 mag + 2 angles on $S^2$) | **0** | **0.0%** | Complete resolution |
 | **A7-P** | Scalar + Pleasure | $[S, r_P]$ | 2 | **0** | **0.0%** | Complete resolution |
 | **A7-A** | Scalar + Arousal | $[S, r_A]$ | 2 | **0** | **0.0%** | Complete resolution |
 | **A7-D** | Scalar + Dominance | $[S, r_D]$ | 2 | **0** | **0.0%** | Complete resolution |
@@ -146,7 +151,7 @@ We performed a predefined ablation analysis starting from the full 3D prediction
 | **A8-AD** | Scalar + [Arousal, Dominance] | $[S, r_A, r_D]$ | 3 | **0** | **0.0%** | Complete resolution |
 
 ### Key Diagnostic Observations:
-1. **Dominance is Non-Critical for Collapse Resolution**: Removing Dominance (A3) results in **0 collapses**, exactly matching A0. This proves that full 3D vector coordinates are **not minimal**; Dominance is common-mode and does not drive tier separation.
+1. **Dominance is Non-Critical for Collapse Resolution**: Removing Dominance (A3) results in **0 collapses**, exactly matching A0. **A3 demonstrates that Dominance is dispensable for collapse resolution under the frozen G1 evaluation regime, therefore R5 is not minimal with respect to this criterion.** This finding establishes non-necessity of Dominance for the collapse-resolution criterion under G1 specifically, without implying Dominance is dispensable for downstream somatic or expressive functions.
 2. **Arousal is Highly Sensitive**: Removing Arousal (A2) dramatically increases collapses from 0 to 746 (9.2%), more than doubling the collapse rate of canonical scalar $S$. Arousal is an empirically critical discriminative axis under this stimulus set.
 3. **Discrete Signs are Sufficient**: Simply knowing the quadrant signs (A5: $[S, \text{sign}(\mathbf{r})]$) completely eliminates cross-tier collapse at $T=12$.
 
@@ -172,8 +177,8 @@ We compared scalar magnitude, magnitude + direction, and full vector residual:
 
 | Metric / Dimension | R0: Scalar Magnitude ($S$) | R4: Magnitude + Direction ($[m, \hat{\mathbf{v}}]$) | R5: Full Vector Residual ($\mathbf{r}_T$) |
 |---|---|---|---|
-| **Dimensionality** | 1 float | 4 floats | 3 floats |
-| **Effective Degrees of Freedom** | 1 | **3** | **3** |
+| **Dimensionality / Stored Elements** | 1 float | 4 stored floats | 3 stored floats |
+| **Independent Mathematical Degrees of Freedom** | 1 | **3 (1 magnitude + 2 directional angles on $S^2$)** | **3 (Cartesian coordinates)** |
 | **Med–High Collapses at $T=12$** | 358 (4.4%) | **0 (0.0%)** | **0 (0.0%)** |
 | **Preserves Angular Separation** | No ($0\%$) | **Yes ($100\%$)** | **Yes ($100\%$)** |
 | **Preserves Component Displacements** | No ($0\%$) | **Yes (via $m \cdot \hat{\mathbf{v}}$)** | **Yes (directly)** |
@@ -200,14 +205,14 @@ We evaluated four hybrid side-channel architectures:
 
 ### Comparative Side-Channel Properties:
 
-| Side-Channel Candidate | Mathematical Form | Storage Overhead | MH Collapses ($T=12$) | Information Preserved |
+| Side-Channel Candidate | Mathematical Form | Stored Elements & Mathematical DOF | MH Collapses ($T=12$) | Information Preserved |
 |---|---|---|---|---|
-| **R3: Discrete Sign** | $[S, \text{sign}(\mathbf{r}_T)]$ | 1 float + 3 bits | **0** | Octant/quadrant orientation; distinguishes positive valence from crisis |
-| **R2: Unit Direction** | $[S, \hat{\mathbf{v}}_r]$ | 4 floats (3 DOF) | **0** | Continuous 3D orientation; enables smooth blendshape modulation |
-| **R1-A: Single Component** | $[S, r_A]$ | 2 floats (2 DOF) | **0** | Somatic urgency driver; highly effective under G1 |
-| **R1-PA: Dual Component** | $[S, r_P, r_A]$ | 3 floats (3 DOF) | **0** | Complete hedonic and somatic coordinates |
+| **R3: Discrete Sign** | $[S, \text{sign}(\mathbf{r}_T)]$ | 1 float + 3 bits (1 cont DOF + 3 bits) | **0** ($0$ at $T \ge 12$) | Octant/quadrant orientation; distinguishes positive valence from crisis |
+| **R2: Unit Direction** | $[S, \hat{\mathbf{v}}_r]$ | 4 floats (3 independent mathematical DOF) | **0** (0 at all $T$) | Continuous 3D orientation; enables smooth blendshape modulation |
+| **R1-A: Single Component** | $[S, r_A]$ | 2 floats (2 independent mathematical DOF) | **0** | Somatic urgency driver; highly effective under G1 |
+| **R1-PA: Dual Component** | $[S, r_P, r_A]$ | 3 floats (3 independent mathematical DOF) | **0** | Complete hedonic and somatic coordinates |
 
-*Architectural Takeaway:* Canonical scalar surprise $S$ can remain the primary scalar intensity metric for gating and latency budgeting, while a minimal side-channel (as compact as 3 sign bits in R3, or a unit vector in R2) completely resolves directional collapse.
+*Architectural Takeaway:* Canonical scalar surprise $S$ can remain the primary scalar intensity metric for gating and latency budgeting, while a minimal side-channel (such as discrete quadrant signs in R3 under conversational exposures $T \ge 12$, or a continuous unit vector in R2 across all $T$) completely resolves directional collapse.
 
 ---
 
@@ -229,7 +234,7 @@ We tracked collapse counts across primary conversational exposures ($T \in \{1, 
 
 ### Observations:
 - **Continuous Unit Direction (R2) is Universally Viable**: R2 achieves **0 collapses** starting from the very first tick ($T=1$, $0.10\text{s}$), because angular divergence ($61.2^\circ$) is present immediately upon stimulus integration.
-- **Discrete Sign (R3) Resolves by $T=12$**: At very short exposures ($T \le 8$), tiny numerical displacements before full lexical integration can produce matching signs. By $T=12$, R3 achieves **0 collapses**.
+- **Discrete Sign (R3) Resolves under Conversational Exposures $T \ge 12$**: At short exposures ($T \in \{1, 2, 4, 8\}$), tiny numerical displacements before full lexical integration can produce matching signs, resulting in non-zero collapses ($968, 682, 66, 66$). From $T=12$ onwards ($T \in \{12, 16, 25\}$), R3 achieves **0 collapses**.
 - **Scalar $S$ (R0) Collapses Across the Entire Conversational Range**: Fails at all $T \le 25$.
 
 ---
@@ -251,28 +256,28 @@ We evaluated candidate representations against the 6-point non-composite minimal
 | Criterion | R0 (Scalar) | R3 ($[S, \text{sign}]$) | R2 ($[S, \hat{\mathbf{v}}]$) | R1-A ($[S, r_A]$) | R5 (Full Vector) |
 |---|---|---|---|---|---|
 | **1. Collapse Resolution** | Fails (358 collapses) | **Passes (0 at $T \ge 12$)** | **Passes (0 at all $T$)** | Passes (0 collapses) | Passes (0 collapses) |
-| **2. Dimension Degradation** | Fails | **Passes** (removing sign causes 358 collapses) | **Passes** (removing direction causes 358 collapses) | Passes | Fails (Dominance can be removed) |
+| **2. Dimension Degradation** | Fails | **Passes** (removing sign causes 358 collapses) | **Passes** (removing direction causes 358 collapses) | Passes | Fails (Dominance is dispensable under G1) |
 | **3. Conversational Grid** | Fails ($T \le 25$) | Passes ($T \ge 12$) | **Passes ($T \in [1, 25]$)** | Passes | Passes |
 | **4. Threshold Independence** | Passes | Passes | Passes | Passes | Passes |
 | **5. Stimulus Independence** | Passes | Passes | Passes | Fails (contingent on Arousal) | Passes |
 | **6. Prediction Semantics** | Passes | Passes | Passes | Passes | Passes |
-| **Minimality Verdict** | **NOT MINIMAL (Fails)** | **POTENTIALLY MINIMALLY SUFFICIENT (Discrete)** | **POTENTIALLY SUFFICIENT (Continuous, higher dim)** | **CONTINGENT** | **NOT MINIMAL (Overspecified)** |
+| **Minimality Verdict** | **NOT MINIMAL (Fails)** | **POTENTIALLY MINIMALLY SUFFICIENT UNDER EVALUATED SET & $T \ge 12$** | **POTENTIALLY SUFFICIENT (4 floats, 3 mathematical DOF)** | **CONTINGENT** | **SUFFICIENT BUT NOT MINIMAL WITH RESPECT TO COLLAPSE RESOLUTION** |
 
 *Assessment Summary:*
-- **R5 is NOT minimal**: It retains continuous Dominance, which ablation A3 proved is completely unnecessary for collapse resolution.
-- **R3 is potentially minimally sufficient for discrete quadrant classification**: It requires only 1 continuous float and 3 sign bits.
-- **R2 is potentially sufficient for continuous orientation**: It requires 4 continuous floats (3 effective DOF) and eliminates collapse across all conversational exposures ($T \ge 1$).
+- **R5 is NOT minimal with respect to collapse resolution**: A3 demonstrates that Dominance is dispensable for collapse resolution under the frozen G1 evaluation regime, therefore R5 is not minimal with respect to this criterion.
+- **R3 is potentially minimally sufficient under the predefined evaluated representations and $T \ge 12$**: It requires only 1 continuous float and 3 sign bits. This does not constitute an absolute proof of global minimality, as other configurations like $[S, r_A]$ also achieve 0 collapses on G1.
+- **R2 is potentially sufficient for continuous orientation**: It requires 4 stored floats (representing 3 independent mathematical degrees of freedom: 1 magnitude + 2 directional angles on $S^2$) and eliminates collapse across all conversational exposures ($T \in [1, 25]$).
 
 ---
 
 ## 14. Evidence Classification
 
 In accordance with Section 20 language locks:
-- **SUPPORTED**: Full vector representation R5 is not minimal, because Dominance can be ablated without loss of collapse resolution.
+- **SUPPORTED**: A3 demonstrates that Dominance is dispensable for collapse resolution under the frozen G1 evaluation regime, therefore R5 is not minimal with respect to this criterion.
 - **SUPPORTED**: Normalized direction $\hat{\mathbf{v}}$ completely resolves cross-tier collapse across all conversational exposures $T \in [1, 25]$.
 - **SUPPORTED**: Prediction residual $\mathbf{r}_T$ diverges from state displacement $\Delta \mathbf{p}$ under online-adapted beliefs ($179.5^\circ$ at $T=12$).
-- **OBSERVED**: R3 ($[S, \text{sign}(\mathbf{r})]$) achieves 0 collapses at $T \ge 12$ under Candidate G1.
-- **POTENTIALLY SUFFICIENT**: R3 (discrete) and R2 (continuous) represent candidate side-channel architectures capable of resolving collapse without full 3D vector replacement.
+- **OBSERVED**: R3 ($[S, \text{sign}(\mathbf{r})]$) achieves 0 collapses under conversational exposures $T \ge 12$ ($0$ collapses for $T \in \{12, 16, 25\}$) under Candidate G1, while retaining non-zero collapses at $T \le 8$.
+- **POTENTIALLY SUFFICIENT**: R3 (discrete, $T \ge 12$) and R2 (continuous, all $T$) represent candidate side-channel architectures capable of resolving collapse without full 3D vector replacement.
 - **UNRESOLVED**: Whether downstream cognitive routing (LLM prompt conditioning, voice modulation) requires continuous unit vectors (R2) or discrete quadrant descriptors (R3).
 - **NOT TESTED**: Real-world conversational dialogue beyond calibrated synthetic G1 probes.
 
@@ -282,13 +287,13 @@ In accordance with Section 20 language locks:
 
 ### Descriptive Decision Matrix (Non-Composite):
 
-| Representation | Collapse Resolution | Direction Retention | Component Retention | Prediction Semantics | Conversational Viability | Storage Overhead |
+| Representation | Collapse Resolution | Direction Retention | Component Retention | Prediction Semantics | Conversational Viability | Stored Elements & Mathematical DOF |
 |---|---|---|---|---|---|---|
 | **R0: Scalar Only ($S$)** | Fails (358 collapses) | None ($0\%$) | None ($0\%$) | Degenerates to $\Delta \mathbf{p}$ | Fails ($T \le 25$) | 1 float (1 DOF) |
-| **R3: $[S, \text{sign}(\mathbf{r})]$** | Complete at $T \ge 12$ | Discrete octant | Sign polarity only | Preserved | Viable ($T \ge 12$) | 1 float + 3 bits |
-| **R2: $[S, \hat{\mathbf{v}}_r]$** | Complete across all $T$ | Continuous 3D ($100\%$) | Complete ($m \cdot \hat{\mathbf{v}}$) | Preserved | Viable ($T \ge 1$) | 4 floats (3 DOF) |
+| **R3: $[S, \text{sign}(\mathbf{r})]$** | Complete at $T \ge 12$ | Discrete octant | Sign polarity only | Preserved | Viable ($T \ge 12$) | 1 float + 3 bits (1 cont DOF + 3 bits) |
+| **R2: $[S, \hat{\mathbf{v}}_r]$** | Complete across all $T$ | Continuous 3D ($100\%$) | Complete ($m \cdot \hat{\mathbf{v}}$) | Preserved | Viable ($T \ge 1$) | 4 stored floats (3 independent mathematical DOF) |
 | **R1-A: $[S, r_A]$** | Complete at $T \ge 12$ | None | Arousal only | Preserved | Viable ($T \ge 12$) | 2 floats (2 DOF) |
-| **R5: Full Vector ($\mathbf{r}_T$)** | Complete across all $T$ | Continuous 3D ($100\%$) | Complete ($P, A, D$) | Preserved | Viable ($T \ge 1$) | 3 floats (3 DOF) |
+| **R5: Full Vector ($\mathbf{r}_T$)** | Complete across all $T$ | Continuous 3D ($100\%$) | Complete ($P, A, D$) | Preserved | Viable ($T \ge 1$) | 3 floats (3 Cartesian DOF) |
 
 ---
 

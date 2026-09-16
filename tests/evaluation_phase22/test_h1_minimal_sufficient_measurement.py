@@ -162,10 +162,11 @@ def test_rq9_minimality_and_final_state(study_data):
     """Verify minimality evaluation and final state classification."""
     minimality = study_data["rq9_minimality_assessment"]
     r3_eval = next(m for m in minimality if m["id"] == "R3")
-    assert "POTENTIALLY MINIMALLY SUFFICIENT" in r3_eval["verdict"]
+    assert "POTENTIALLY MINIMALLY SUFFICIENT UNDER PREDEFINED EVALUATED REPRESENTATIONS AND T >= 12" in r3_eval["verdict"]
 
     r5_eval = next(m for m in minimality if m["id"] == "R5")
-    assert "SUFFICIENT BUT NOT MINIMAL" in r5_eval["verdict"]
+    assert "SUFFICIENT BUT NOT MINIMAL WITH RESPECT TO COLLAPSE RESOLUTION" in r5_eval["verdict"]
+    assert "A3 demonstrates that Dominance is dispensable for collapse resolution under the frozen G1 evaluation regime" in r5_eval["verdict"]
 
     synth = study_data["final_synthesis"]
     assert synth["final_state"] == "State B — Minimal Side-Channel Appears Sufficient to Avoid Collapse"

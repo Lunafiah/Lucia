@@ -1,7 +1,7 @@
 {
   "metadata": {
     "study_name": "Phase 22 H1 \u2014 Minimal Sufficient Measurement Architecture Study",
-    "timestamp_iso": "2026-09-16T18:35:42Z",
+    "timestamp_iso": "2026-09-16T19:11:34Z",
     "random_seed": 9999,
     "stimulus_generator": "GeneratorG1 (Seed 9999, N=270, 90/tier)",
     "conversational_exposure_grid": [
@@ -365,7 +365,7 @@
   },
   "rq5_directional_sufficiency": {
     "R0_scalar_magnitude": {
-      "dimensionality": "1D scalar",
+      "dimensionality": "1D scalar (1 stored element, 1 DOF)",
       "mh_collapses_t12": 358,
       "mh_collapse_rate": 0.04419753086419753,
       "retains_direction": false,
@@ -373,7 +373,7 @@
       "prediction_error_semantics": "Degenerates to state displacement ||p_T - p_0|| under unadapted prior"
     },
     "R4_magnitude_plus_direction": {
-      "dimensionality": "scalar magnitude + 3-component unit direction (4 elements, 3 effective DOF)",
+      "dimensionality": "4 stored elements (1 scalar magnitude + 3-component unit direction), representing 3 independent mathematical degrees of freedom (1 magnitude + 2 directional angles on S^2)",
       "mh_collapses_t12": 0,
       "mh_collapse_rate": 0.0,
       "retains_direction": true,
@@ -381,7 +381,7 @@
       "prediction_error_semantics": "Preserves both prediction error intensity (m) and orientation (v)"
     },
     "R5_full_vector_residual": {
-      "dimensionality": "3D vector (3 effective DOF)",
+      "dimensionality": "3 stored elements (3D vector coordinates), representing 3 independent mathematical degrees of freedom",
       "mh_collapses_t12": 0,
       "mh_collapse_rate": 0.0,
       "retains_direction": true,
@@ -396,19 +396,19 @@
       "storage_overhead": "1 float + 3 bits",
       "mh_collapses_t12": 0,
       "mh_collapse_rate": 0.0,
-      "eval": "Reduces Med-High collapses from 358 to 0, because Med (positive P) and High (negative P, positive A) have opposing signs!"
+      "eval": "Reduces Med-High collapses from 358 to 0 at T=12 and resolves all collapses under conversational exposures T >= 12 (0 collapses at T in {12, 16, 25}), because Med (positive P) and High (negative P, positive A) have opposing signs!"
     },
     "S_plus_unit_direction": {
       "name": "R2: [S, r / ||r||] (Normalized Direction Side-Channel)",
-      "elements": "1 continuous scalar + 3-component unit vector (3 effective DOF)",
+      "elements": "4 stored elements (1 continuous scalar + 3-component unit vector), representing 3 independent mathematical degrees of freedom (1 magnitude + 2 directional angles on S^2)",
       "storage_overhead": "4 floats",
       "mh_collapses_t12": 0,
       "mh_collapse_rate": 0.0,
-      "eval": "Completely eliminates collapse (0 collapses); preserves continuous angular orientation for somatic modulation."
+      "eval": "Completely eliminates collapse across all T (0 collapses); preserves continuous angular orientation for somatic modulation."
     },
     "S_plus_arousal_component": {
       "name": "R1-A: [S, rA] (Single Dominant Component Side-Channel)",
-      "elements": "2 continuous floats (2 effective DOF)",
+      "elements": "2 continuous floats (2 mathematical DOF)",
       "storage_overhead": "2 floats",
       "mh_collapses_t12": 0,
       "mh_collapse_rate": 0.0,
@@ -416,7 +416,7 @@
     },
     "S_plus_pleasure_arousal": {
       "name": "R1-PA: [S, rP, rA] (Dual Component Side-Channel)",
-      "elements": "3 continuous floats (3 effective DOF)",
+      "elements": "3 continuous floats (3 mathematical DOF)",
       "storage_overhead": "3 floats",
       "mh_collapses_t12": 0,
       "mh_collapse_rate": 0.0,
@@ -523,7 +523,7 @@
       "criterion_4_independent_of_threshold_change": true,
       "criterion_5_independent_of_stimulus_selection": true,
       "criterion_6_prediction_error_semantics": true,
-      "verdict": "POTENTIALLY MINIMALLY SUFFICIENT (Preserves discrete collapse resolution with lowest dimensional overhead: 1 continuous scalar + 3 discrete signs; removing signs immediately reintroduces collapse)"
+      "verdict": "POTENTIALLY MINIMALLY SUFFICIENT UNDER PREDEFINED EVALUATED REPRESENTATIONS AND T >= 12 (Preserves discrete collapse resolution with low dimensional overhead: 1 continuous scalar + 3 discrete signs; not an absolute proof of global minimality, as other configurations like [S, rA] also achieve 0 collapse on G1)"
     },
     {
       "id": "R2_R4",
@@ -534,7 +534,7 @@
       "criterion_4_independent_of_threshold_change": true,
       "criterion_5_independent_of_stimulus_selection": true,
       "criterion_6_prediction_error_semantics": true,
-      "verdict": "POTENTIALLY SUFFICIENT BUT HIGHER DIMENSIONALITY (4 floats, 3 effective DOF; provides continuous angular orientation beyond discrete quadrant signs, but contains more information than R3)"
+      "verdict": "POTENTIALLY SUFFICIENT BUT HIGHER DIMENSIONALITY (4 stored elements representing 3 independent mathematical degrees of freedom: 1 magnitude + 2 directional angles on S^2; provides continuous angular orientation beyond discrete quadrant signs, but contains more information than R3)"
     },
     {
       "id": "R1_A",
@@ -556,12 +556,12 @@
       "criterion_4_independent_of_threshold_change": true,
       "criterion_5_independent_of_stimulus_selection": true,
       "criterion_6_prediction_error_semantics": true,
-      "verdict": "SUFFICIENT BUT NOT MINIMAL (Contains full 3D coordinates; Dominance can be ablated without loss of collapse resolution)"
+      "verdict": "SUFFICIENT BUT NOT MINIMAL WITH RESPECT TO COLLAPSE RESOLUTION (A3 demonstrates that Dominance is dispensable for collapse resolution under the frozen G1 evaluation regime, therefore R5 is not minimal with respect to this criterion)"
     }
   ],
   "final_synthesis": {
     "final_state": "State B \u2014 Minimal Side-Channel Appears Sufficient to Avoid Collapse",
-    "rationale": "Empirical ablation evidence across T <= 25 demonstrates that canonical scalar S loses directional/component information, resulting in 358 cross-tier collapse pairs at T=12. However, full 3D vector replacement (R5) is NOT minimal because Dominance can be ablated (A3) without degrading collapse resolution. A minimal side-channel retaining discrete sign polarity [S, sign(r)] (R3) or normalized direction [S, r/||r||] (R2) completely eliminates cross-tier collapse (0 collapses) while preserving canonical scalar surprise as the primary intensity metric. Therefore, a minimal side-channel appears sufficient to avoid directional collapse under the evaluated conditions. However, this finding is strictly an empirical property of the frozen G1 evaluation set; promoting any side-channel to production remains strictly unauthorized.",
+    "rationale": "Empirical ablation evidence across T <= 25 demonstrates that canonical scalar S loses directional/component information, resulting in 358 cross-tier collapse pairs at T=12. However, full 3D vector replacement (R5) is NOT minimal with respect to collapse resolution because A3 demonstrates that Dominance is dispensable for collapse resolution under the frozen G1 evaluation regime. A minimal side-channel retaining discrete sign polarity [S, sign(r)] (R3) under conversational exposures (T >= 12) or normalized direction [S, r/||r||] (R2) across all T completely eliminates cross-tier collapse (0 collapses) while preserving canonical scalar surprise as the primary intensity metric. Therefore, a minimal side-channel appears sufficient to avoid directional collapse under the evaluated conditions. However, this finding is strictly an empirical property of the frozen G1 evaluation set; promoting any side-channel to production remains strictly unauthorized.",
     "protocol_v15_status": "NOT AUTHORIZED",
     "architecture_gate_status": "STRICTLY LOCKED",
     "production_mutation_status": "0 mutations allowed / 0 performed"
