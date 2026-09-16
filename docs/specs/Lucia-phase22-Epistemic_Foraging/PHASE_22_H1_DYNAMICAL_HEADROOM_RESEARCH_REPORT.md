@@ -292,8 +292,8 @@ Three competing models were formulated to explain Medium–High surprise compres
 
 ### Model B: Dynamical Headroom & Saturation Compression
 - **Hypothesis:** Natural semantic density continuously drives Dominance through structural weights, raising $S_{\text{floor}}$ and compressing available dynamic headroom $H(T)$ below the margin required to robustly pass dual thresholds.
-- **Empirical Evaluation:** Confirmed. At $T=12$, $S_{\text{floor}}$ reaches $0.3812$, squeezing total headroom to $H(12) = 0.2574$. Against the required dual demand of $0.2500$, the margin is barely $+0.0074$.
-- **Verdict:** **STRONGLY SUPPORTED BY EMPIRICAL EVIDENCE**.
+- **Empirical Evaluation:** Confirmed under current conditions. At $T=12$, $S_{\text{floor}}$ reaches $0.3812$, squeezing total headroom to $H(12) = 0.2574$. Against the required dual demand of $0.2500$, the margin is barely $+0.0074$.
+- **Verdict:** **SUPPORTED AS THE DOMINANT EMPIRICAL EXPLANATION UNDER THE FROZEN G1 / CURRENT DYNAMICAL REGIME** (Strongly consistent with dynamical headroom compression under the current experimental regime; does not assert that ODE dynamics are the universal cause across all conceivable stimulus regimes).
 
 ### Model C: Measurement Defect (Scalar Isotropic Surprise)
 - **Hypothesis:** Active Inference scalar surprise $S = \|\mathbf{p}_T - \mathbf{p}_0\|_2$ is isotropic, projecting multidimensional affective displacements onto a 1D scalar radius and conflating orthogonal directions (companion warmth vs. crisis alarm) into identical lengths.
@@ -310,7 +310,7 @@ No, not for the current dual scalar thresholds ($\Delta_{ML} \ge 0.10, \Delta_{H
 
 ### Question B: Are the current Gate 2 thresholds feasible under the current architecture?
 **Answer:**  
-The current thresholds ($\Delta_{ML} \ge 0.1000, \Delta_{HM} \ge 0.1500$) are **infeasible at $T \le 25$** for natural-language stimuli under isotropic scalar Euclidean surprise. They are only feasible at $T \ge 50$ ticks ($5.0\text{s}$), where headroom expands to $H(50) = 0.4175$. However, forcing $T \ge 50$ merely to satisfy a scalar threshold is an artificial constraint that distorts runtime behavior.
+**Current dual Gate 2 thresholds are not simultaneously achieved for $T \le 25$ under the frozen G1 stimulus set and current scalar $S$ measurement.** This is an empirical finding for this stimulus set and measurement regime, not an assertion of universal architectural impossibility across all imaginable trajectories. Within this regime, both thresholds are simultaneously achieved only from $T \ge 50$ ticks ($5.0\text{s}$), where headroom expands to $H(50) = 0.4175$ ($\Delta_{ML} = 0.2193, \Delta_{HM} = 0.1964$). However, extending integration to $T \ge 50$ merely to satisfy a scalar threshold introduces an unphysiological 5.0-second conversational lag.
 
 ### Question C: Does the scalar surprise metric discard critical directional information?
 **Answer:**  

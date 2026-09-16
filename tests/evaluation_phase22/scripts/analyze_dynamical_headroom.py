@@ -483,7 +483,7 @@ class DynamicalHeadroomStudyEngine:
         model_b = {
             "model_name": "Model B — Dynamical Headroom Compression",
             "description": "Natural semantic density continuously drives Dominance through structural weights, raising S_floor and compressing available dynamic headroom H(T) below the margin required to robustly pass dual thresholds.",
-            "verdict": "STRONGLY SUPPORTED BY EMPIRICAL EVIDENCE",
+            "verdict": "SUPPORTED AS THE DOMINANT EMPIRICAL EXPLANATION UNDER THE FROZEN G1 / CURRENT DYNAMICAL REGIME",
             "evidence": f"At T=12, S_floor reaches {headroom_data['t_grid_evaluations'][12]['S_floor']:.4f}, squeezing headroom to H(12) = {headroom_data['t_grid_evaluations'][12]['headroom_H']:.4f}. Dual demand of 0.2500 leaves a fragile margin of barely {headroom_data['t_grid_evaluations'][12]['headroom_margin']:+.4f}.",
         }
 
