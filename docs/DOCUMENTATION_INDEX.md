@@ -75,6 +75,7 @@ To prevent confusion across development phases, Lucia maintains a strict documen
 | **Compliance Audit** | [`PHASE_22_H1_POST_EXECUTION_COMPLIANCE_AUDIT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase22-Epistemic_Foraging/PHASE_22_H1_POST_EXECUTION_COMPLIANCE_AUDIT.md) | **Research Truth** | Phase 22 H1 Path C post-execution protocol compliance audit & defect root-cause analysis. |
 | **Execution Report**  | [`PHASE_22_H1_EXECUTION_REPORT_PATH_C.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase22-Epistemic_Foraging/PHASE_22_H1_EXECUTION_REPORT_PATH_C.md) | **Historical Truth** | Phase 22 H1 Path C execution report: INCONCLUSIVE (Blocked by Gate 2 & Gate 4). |
 | **Execution Report**  | [`PHASE_22_H1_EXECUTION_REPORT_v1.4.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase22-Epistemic_Foraging/PHASE_22_H1_EXECUTION_REPORT_v1.4.md) | **Research Truth** | Phase 22 H1 Protocol v1.4 execution report: INCONCLUSIVE (Blocked by Quality Gate 2 $\Delta_{HM} < 0.15$). |
+| **Diagnostic Report** | [`PHASE_22_H1_GATE2_COMPRESSION_DIAGNOSTIC.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase22-Epistemic_Foraging/PHASE_22_H1_GATE2_COMPRESSION_DIAGNOSTIC.md) | **Diagnostic Truth** | Phase 22 H1 Gate 2 surprise compression diagnostic investigation: empirical dissection of Medium-surprise valence inflation at $T=12$. |
 
 ---
 
