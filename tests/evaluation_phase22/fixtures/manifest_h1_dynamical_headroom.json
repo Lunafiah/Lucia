@@ -1,0 +1,22 @@
+{
+  "manifest_name": "h1_dynamical_headroom_manifest",
+  "study_reference": "Phase 22 H1 Dynamical Headroom & Directional Geometry Methodology Research",
+  "governance_status": "RESEARCH_ONLY_LOCKED",
+  "timestamp_utc": "2026-09-16T15:58:21Z",
+  "seed": 9999,
+  "generator": "Candidate G1",
+  "sample_size": 270,
+  "t_grid": [
+    1,
+    2,
+    4,
+    8,
+    12,
+    16,
+    25,
+    50,
+    100
+  ],
+  "results_digest_sha256": "97e3dfa32234edde615c31099a6547ae72be50f46312467b4b2f3093a76c326b",
+  "governance_confirmation": "Architecture Gate remains STRICTLY LOCKED; 0 production mutations."
+}
