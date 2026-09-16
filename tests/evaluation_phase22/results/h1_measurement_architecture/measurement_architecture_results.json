@@ -1,0 +1,2049 @@
+{
+  "metadata": {
+    "study_title": "Phase 22 H1 \u2014 Measurement Architecture Study",
+    "timestamp_utc": "2026-09-16T17:10:15Z",
+    "python_version": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+    "numpy_version": "2.5.2",
+    "frozen_seed": 9999,
+    "stimulus_generator": "Candidate G1 (Domain-Balanced Lexical Moderation)",
+    "sample_allocation": "N = 270 (90 Low, 90 Med, 90 High)",
+    "conversational_grid": [
+      1,
+      2,
+      4,
+      8,
+      12,
+      16,
+      25
+    ],
+    "exploratory_grid": [
+      50,
+      100
+    ],
+    "collapse_threshold_s": 0.02,
+    "governance_locks": [
+      "Research-only study; Architecture Gate remains STRICTLY LOCKED.",
+      "Protocol v1.5 is NOT AUTHORIZED.",
+      "Production code src/core/**: 0 mutations.",
+      "Genesis onboarding profile: bit-exact untouched.",
+      "Historical H1 datasets: immutable."
+    ]
+  },
+  "rq1_semantic_audit": {
+    "canonical_S_formula": "S = ||p_T - p_0||_2",
+    "active_inference_step_formula": "S_t = ||A p_before + b - p_after||_2",
+    "resting_baseline_p0": [
+      0.25,
+      -0.05,
+      0.05
+    ],
+    "initial_generative_beliefs": {
+      "A_matrix": "np.eye(3)",
+      "b_vector": "np.zeros(3)",
+      "prior_predicted_state": "p_pred = A p_0 + b = I p_0 + 0 = p_0"
+    },
+    "subquestion_audits": {
+      "1_is_canonical_S_displacement": {
+        "verdict": "YES (Kinematically & Numerically in Initial Baseline State)",
+        "rationale": "Under initial generative beliefs (A=I, b=0), the predicted state p_pred is identically p_0. Consequently, ActiveInferenceEngine.step(p_0, p_T) computes ||p_0 - p_T||_2, which is mathematically identical to Euclidean state displacement Delta_p = ||p_T - p_0||_2."
+      },
+      "2_is_canonical_S_prediction_error": {
+        "verdict": "YES (Architecturally & Conceptually in Generative Specification)",
+        "rationale": "In S4 and Layer 4 Active Inference, surprise is architecturally formalized as generative prediction error Free Energy against the transition model q_hat = A p + b. The fact that it degenerates to displacement is an artifact of the static persistence prior (A=I, b=0)."
+      },
+      "3_is_p0_actual_prediction_target": {
+        "verdict": "YES (Under Unadapted Initial Persistence Prior)",
+        "rationale": "In single-turn evaluations from resting baseline with unadapted beliefs, p_0 is the exact prediction target because the unadapted prior assumes identity persistence: p_hat = p_0."
+      },
+      "4_is_A_p0_plus_b_actual_S4_predicted_state": {
+        "verdict": "YES (Confirmed in Production Code)",
+        "rationale": "Verified in src/core/orchestrator/cognitive_orchestrator.py:L335-341 and src/core/inference/active_inference.py:L120: predicted = self._A @ p + self._b."
+      },
+      "5_do_quantities_have_equivalent_or_different_causal_semantics": {
+        "verdict": "DIFFERENT CAUSAL SEMANTICS",
+        "rationale": "State displacement Delta_p = p_T - p_0 measures physical limbic trajectory change (a bodily dynamical state). Prediction residual r_T = p_T - (A p_0 + b) measures generative model expectation failure (an epistemic state). When beliefs adapt online (A != I or b != 0), r_T structurally diverges from Delta_p."
+      }
+    }
+  },
+  "rq2_scalar_collapse_analysis": {
+    "results_by_t": {
+      "1": {
+        "T": 1,
+        "exposure_sec": 0.1,
+        "regime": "Conversational (T <= 25)",
+        "total_pairs": 36315,
+        "total_collapse_pairs": 18231,
+        "collapse_proportion": 0.5020239570425444,
+        "probes_involved_count": 270,
+        "probes_involved_fraction": 1.0,
+        "pair_type_counts": {
+          "cross_tier": {
+            "Med_High": 4371,
+            "Low_Med": 3960,
+            "Low_High": 0
+          },
+          "within_tier": {
+            "Low_Low": 4005,
+            "Med_Med": 1981,
+            "High_High": 3914
+          }
+        },
+        "cross_tier_med_high_count": 4371,
+        "all_collapse_vec_dist": {
+          "mean": 0.04010559956165826,
+          "std": 0.05239001474770753,
+          "median": 0.016140000962399436,
+          "max": 0.14086902745038862,
+          "min": 0.0
+        },
+        "all_collapse_angle_deg": {
+          "mean": 27.829723216577534,
+          "std": 36.50959281917019,
+          "median": 13.7000312034562,
+          "max": 99.81612325507595,
+          "min": 0.0
+        },
+        "med_high_collapse_vec_dist": {
+          "mean": 0.08825023567024991,
+          "std": 0.04851834573791496,
+          "max": 0.14086902745038862
+        },
+        "med_high_collapse_angle_deg": {
+          "mean": 61.21464450993462,
+          "std": 37.28746412625236,
+          "max": 99.81612325507595
+        }
+      },
+      "2": {
+        "T": 2,
+        "exposure_sec": 0.2,
+        "regime": "Conversational (T <= 25)",
+        "total_pairs": 36315,
+        "total_collapse_pairs": 15389,
+        "collapse_proportion": 0.4237642847308275,
+        "probes_involved_count": 270,
+        "probes_involved_fraction": 1.0,
+        "pair_type_counts": {
+          "cross_tier": {
+            "Med_High": 3374,
+            "Low_Med": 3520,
+            "Low_High": 0
+          },
+          "within_tier": {
+            "Low_Low": 4005,
+            "Med_Med": 1981,
+            "High_High": 2509
+          }
+        },
+        "cross_tier_med_high_count": 3374,
+        "all_collapse_vec_dist": {
+          "mean": 0.05782865948774893,
+          "std": 0.08952793054369543,
+          "median": 0.016006069630970475,
+          "max": 0.2660009008855352,
+          "min": 0.0
+        },
+        "all_collapse_angle_deg": {
+          "mean": 21.60722058099238,
+          "std": 33.59600360215574,
+          "median": 7.46810132808932,
+          "max": 100.10476670784037,
+          "min": 0.0
+        },
+        "med_high_collapse_vec_dist": {
+          "mean": 0.17955197745820198,
+          "std": 0.09334576535241917,
+          "max": 0.2660009008855352
+        },
+        "med_high_collapse_angle_deg": {
+          "mean": 66.09958601023693,
+          "std": 37.74988369962943,
+          "max": 100.10476670784037
+        }
+      },
+      "4": {
+        "T": 4,
+        "exposure_sec": 0.4,
+        "regime": "Conversational (T <= 25)",
+        "total_pairs": 36315,
+        "total_collapse_pairs": 10002,
+        "collapse_proportion": 0.27542337876910367,
+        "probes_involved_count": 270,
+        "probes_involved_fraction": 1.0,
+        "pair_type_counts": {
+          "cross_tier": {
+            "Med_High": 2082,
+            "Low_Med": 880,
+            "Low_High": 0
+          },
+          "within_tier": {
+            "Low_Low": 3205,
+            "Med_Med": 1981,
+            "High_High": 1854
+          }
+        },
+        "cross_tier_med_high_count": 2082,
+        "all_collapse_vec_dist": {
+          "mean": 0.08945611695014322,
+          "std": 0.16447504308397318,
+          "median": 0.006156217621858827,
+          "max": 0.4769835788449351,
+          "min": 0.0
+        },
+        "all_collapse_angle_deg": {
+          "mean": 19.021598137287622,
+          "std": 34.9070386549045,
+          "median": 0.8052700066077811,
+          "max": 100.66291420834304,
+          "min": 0.0
+        },
+        "med_high_collapse_vec_dist": {
+          "mean": 0.37559504344244715,
+          "std": 0.1519699743194134,
+          "max": 0.4769835788449351
+        },
+        "med_high_collapse_angle_deg": {
+          "mean": 78.45465675803008,
+          "std": 34.28923327239766,
+          "max": 100.66291420834304
+        }
+      },
+      "8": {
+        "T": 8,
+        "exposure_sec": 0.8,
+        "regime": "Conversational (T <= 25)",
+        "total_pairs": 36315,
+        "total_collapse_pairs": 7087,
+        "collapse_proportion": 0.19515351783009777,
+        "probes_involved_count": 270,
+        "probes_involved_fraction": 1.0,
+        "pair_type_counts": {
+          "cross_tier": {
+            "Med_High": 622,
+            "Low_Med": 0,
+            "Low_High": 0
+          },
+          "within_tier": {
+            "Low_Low": 3205,
+            "Med_Med": 1981,
+            "High_High": 1279
+          }
+        },
+        "cross_tier_med_high_count": 622,
+        "all_collapse_vec_dist": {
+          "mean": 0.06228109029879487,
+          "std": 0.19370933590422523,
+          "median": 0.0011377925475545608,
+          "max": 0.7738761918416405,
+          "min": 0.0
+        },
+        "all_collapse_angle_deg": {
+          "mean": 8.029769287545184,
+          "std": 25.259514950930058,
+          "median": 0.1912291580705097,
+          "max": 100.92725230954802,
+          "min": 0.0
+        },
+        "med_high_collapse_vec_dist": {
+          "mean": 0.6451617956268212,
+          "std": 0.2316103807045051,
+          "max": 0.7738761918416405
+        },
+        "med_high_collapse_angle_deg": {
+          "mean": 83.33363337205854,
+          "std": 31.964640170214913,
+          "max": 100.92725230954802
+        }
+      },
+      "12": {
+        "T": 12,
+        "exposure_sec": 1.2000000000000002,
+        "regime": "Conversational (T <= 25)",
+        "total_pairs": 36315,
+        "total_collapse_pairs": 6734,
+        "collapse_proportion": 0.18543301665978246,
+        "probes_involved_count": 270,
+        "probes_involved_fraction": 1.0,
+        "pair_type_counts": {
+          "cross_tier": {
+            "Med_High": 358,
+            "Low_Med": 0,
+            "Low_High": 0
+          },
+          "within_tier": {
+            "Low_Low": 3205,
+            "Med_Med": 1981,
+            "High_High": 1190
+          }
+        },
+        "cross_tier_med_high_count": 358,
+        "all_collapse_vec_dist": {
+          "mean": 0.05137452284045484,
+          "std": 0.19731082244468515,
+          "median": 0.0011398241544149038,
+          "max": 0.9786790628666318,
+          "min": 0.0
+        },
+        "all_collapse_angle_deg": {
+          "mean": 5.2964928217595135,
+          "std": 20.513115473681367,
+          "median": 0.15971695123805205,
+          "max": 101.79271499489816,
+          "min": 0.0
+        },
+        "med_high_collapse_vec_dist": {
+          "mean": 0.8348004456119102,
+          "std": 0.28338229847269103,
+          "max": 0.9786790628666318
+        },
+        "med_high_collapse_angle_deg": {
+          "mean": 86.0399995791269,
+          "std": 31.21945753378754,
+          "max": 101.79271499489816
+        }
+      },
+      "16": {
+        "T": 16,
+        "exposure_sec": 1.6,
+        "regime": "Conversational (T <= 25)",
+        "total_pairs": 36315,
+        "total_collapse_pairs": 6503,
+        "collapse_proportion": 0.17907200881178575,
+        "probes_involved_count": 270,
+        "probes_involved_fraction": 1.0,
+        "pair_type_counts": {
+          "cross_tier": {
+            "Med_High": 204,
+            "Low_Med": 0,
+            "Low_High": 0
+          },
+          "within_tier": {
+            "Low_Low": 3205,
+            "Med_Med": 1981,
+            "High_High": 1113
+          }
+        },
+        "cross_tier_med_high_count": 204,
+        "all_collapse_vec_dist": {
+          "mean": 0.034149977443911045,
+          "std": 0.16103335133459334,
+          "median": 0.0011807072419449344,
+          "max": 1.126009832771511,
+          "min": 0.0
+        },
+        "all_collapse_angle_deg": {
+          "mean": 3.0721710357201357,
+          "std": 14.617246122582658,
+          "median": 0.1449196418380347,
+          "max": 102.51952312681162,
+          "min": 0.0
+        },
+        "med_high_collapse_vec_dist": {
+          "mean": 0.8375155880967606,
+          "std": 0.3897745445741126,
+          "max": 1.126009832771511
+        },
+        "med_high_collapse_angle_deg": {
+          "mean": 74.7502663696391,
+          "std": 37.56070208689495,
+          "max": 102.51952312681162
+        }
+      },
+      "25": {
+        "T": 25,
+        "exposure_sec": 2.5,
+        "regime": "Conversational (T <= 25)",
+        "total_pairs": 36315,
+        "total_collapse_pairs": 6481,
+        "collapse_proportion": 0.178466198540548,
+        "probes_involved_count": 270,
+        "probes_involved_fraction": 1.0,
+        "pair_type_counts": {
+          "cross_tier": {
+            "Med_High": 286,
+            "Low_Med": 0,
+            "Low_High": 0
+          },
+          "within_tier": {
+            "Low_Low": 3205,
+            "Med_Med": 1981,
+            "High_High": 1009
+          }
+        },
+        "cross_tier_med_high_count": 286,
+        "all_collapse_vec_dist": {
+          "mean": 0.0684240655293966,
+          "std": 0.27645270253359816,
+          "median": 0.0014264745752735576,
+          "max": 1.354291490282246,
+          "min": 0.0
+        },
+        "all_collapse_angle_deg": {
+          "mean": 5.275591079643841,
+          "std": 21.217299578168507,
+          "median": 0.1465333578499682,
+          "max": 103.7741958204029,
+          "min": 0.0
+        },
+        "med_high_collapse_vec_dist": {
+          "mean": 1.3520422083080523,
+          "std": 0.0016237080044033817,
+          "max": 1.354291490282246
+        },
+        "med_high_collapse_angle_deg": {
+          "mean": 103.69099588513069,
+          "std": 0.06133176922088991,
+          "max": 103.7741958204029
+        }
+      },
+      "50": {
+        "T": 50,
+        "exposure_sec": 5.0,
+        "regime": "Exploratory Reference (T >= 50)",
+        "total_pairs": 36315,
+        "total_collapse_pairs": 7690,
+        "collapse_proportion": 0.2117582266281151,
+        "probes_involved_count": 270,
+        "probes_involved_fraction": 1.0,
+        "pair_type_counts": {
+          "cross_tier": {
+            "Med_High": 0,
+            "Low_Med": 0,
+            "Low_High": 0
+          },
+          "within_tier": {
+            "Low_Low": 3205,
+            "Med_Med": 1981,
+            "High_High": 2504
+          }
+        },
+        "cross_tier_med_high_count": 0,
+        "all_collapse_vec_dist": {
+          "mean": 0.2240187417733045,
+          "std": 0.5257218625157526,
+          "median": 0.003023547350444771,
+          "max": 1.531610202006339,
+          "min": 0.0
+        },
+        "all_collapse_angle_deg": {
+          "mean": 12.958702193339798,
+          "std": 30.191416762958895,
+          "median": 0.2428790798412605,
+          "max": 88.08835603773169,
+          "min": 0.0
+        },
+        "med_high_collapse_vec_dist": {
+          "mean": 0.0,
+          "std": 0.0,
+          "max": 0.0
+        },
+        "med_high_collapse_angle_deg": {
+          "mean": 0.0,
+          "std": 0.0,
+          "max": 0.0
+        }
+      },
+      "100": {
+        "T": 100,
+        "exposure_sec": 10.0,
+        "regime": "Exploratory Reference (T >= 50)",
+        "total_pairs": 36315,
+        "total_collapse_pairs": 6342,
+        "collapse_proportion": 0.17463857909954564,
+        "probes_involved_count": 270,
+        "probes_involved_fraction": 1.0,
+        "pair_type_counts": {
+          "cross_tier": {
+            "Med_High": 0,
+            "Low_Med": 0,
+            "Low_High": 0
+          },
+          "within_tier": {
+            "Low_Low": 3205,
+            "Med_Med": 1618,
+            "High_High": 1519
+          }
+        },
+        "cross_tier_med_high_count": 0,
+        "all_collapse_vec_dist": {
+          "mean": 0.006959520360295195,
+          "std": 0.00894929727139527,
+          "median": 0.0024161156068472586,
+          "max": 0.04590915357405612,
+          "min": 0.0
+        },
+        "all_collapse_angle_deg": {
+          "mean": 0.34049593533139455,
+          "std": 0.39202922706495746,
+          "median": 0.16426252211054745,
+          "max": 1.9349138413874567,
+          "min": 0.0
+        },
+        "med_high_collapse_vec_dist": {
+          "mean": 0.0,
+          "std": 0.0,
+          "max": 0.0
+        },
+        "med_high_collapse_angle_deg": {
+          "mean": 0.0,
+          "std": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    "representative_examples": {
+      "1": {
+        "probe_A": {
+          "global_idx": 100,
+          "tier": "Med",
+          "domain": "telemetry",
+          "text": "Telemetry readings show a noticeable but steady improvement in processing efficiency on bus 10.",
+          "S": 0.09416762142628328,
+          "Delta_p": [
+            0.07112296248322675,
+            -0.0005511503941066642,
+            0.06171516317677854
+          ]
+        },
+        "probe_B": {
+          "global_idx": 200,
+          "tier": "High",
+          "domain": "relational",
+          "text": "HORRIFYING CRISIS!! UNMITIGATED RUIN IMPACTING ALL OPERATIONAL PROTOCOLS ON HOST 20!!!",
+          "S": 0.08989932869079595,
+          "Delta_p": [
+            -0.06017910240195756,
+            0.04803959405228837,
+            0.04639571463445534
+          ]
+        },
+        "diff_S": 0.004268292735487331,
+        "vec_dist": 0.1408402577128035,
+        "angle_deg": 99.81612325507595,
+        "dP_diff": 0.1313020648851843,
+        "dA_diff": 0.04859074444639504,
+        "dD_diff": 0.0153194485423232
+      },
+      "2": {
+        "probe_A": {
+          "global_idx": 100,
+          "tier": "Med",
+          "domain": "telemetry",
+          "text": "Telemetry readings show a noticeable but steady improvement in processing efficiency on bus 10.",
+          "S": 0.17737620752223224,
+          "Delta_p": [
+            0.13433859175326718,
+            -0.0010617962575261292,
+            0.11582026743807199
+          ]
+        },
+        "probe_B": {
+          "global_idx": 200,
+          "tier": "High",
+          "domain": "relational",
+          "text": "HORRIFYING CRISIS!! UNMITIGATED RUIN IMPACTING ALL OPERATIONAL PROTOCOLS ON HOST 20!!!",
+          "S": 0.16946354650287482,
+          "Delta_p": [
+            -0.11376884364875717,
+            0.09034055195591446,
+            0.08725324338073275
+          ]
+        },
+        "diff_S": 0.00791266101935742,
+        "vec_dist": 0.2659469188093619,
+        "angle_deg": 100.10476670784037,
+        "dP_diff": 0.24810743540202435,
+        "dA_diff": 0.09140234821344059,
+        "dD_diff": 0.02856702405733924
+      },
+      "4": {
+        "probe_A": {
+          "global_idx": 100,
+          "tier": "Med",
+          "domain": "telemetry",
+          "text": "Telemetry readings show a noticeable but steady improvement in processing efficiency on bus 10.",
+          "S": 0.3166117445446265,
+          "Delta_p": [
+            0.24100620960610708,
+            -0.001984090572079676,
+            0.2053169917456682
+          ]
+        },
+        "probe_B": {
+          "global_idx": 200,
+          "tier": "High",
+          "domain": "relational",
+          "text": "HORRIFYING CRISIS!! UNMITIGATED RUIN IMPACTING ALL OPERATIONAL PROTOCOLS ON HOST 20!!!",
+          "S": 0.3028186413567611,
+          "Delta_p": [
+            -0.20442727235345315,
+            0.16077529548530564,
+            0.15511261790355574
+          ]
+        },
+        "diff_S": 0.013793103187865363,
+        "vec_dist": 0.4768879152938072,
+        "angle_deg": 100.66291420834304,
+        "dP_diff": 0.44543348195956023,
+        "dA_diff": 0.16275938605738532,
+        "dD_diff": 0.05020437384211246
+      },
+      "8": {
+        "probe_A": {
+          "global_idx": 107,
+          "tier": "Med",
+          "domain": "project_status",
+          "text": "We made good progress this morning resolving tricky edge cases in suite 17.",
+          "S": 0.508960381118515,
+          "Delta_p": [
+            0.3879849810970324,
+            0.0021754157999772372,
+            0.3293988335703949
+          ]
+        },
+        "probe_B": {
+          "global_idx": 200,
+          "tier": "High",
+          "domain": "relational",
+          "text": "HORRIFYING CRISIS!! UNMITIGATED RUIN IMPACTING ALL OPERATIONAL PROTOCOLS ON HOST 20!!!",
+          "S": 0.49421130199564606,
+          "Delta_p": [
+            -0.33690324095714497,
+            0.26089605074906436,
+            0.25034829329624997
+          ]
+        },
+        "diff_S": 0.014749079122868991,
+        "vec_dist": 0.7737236517898101,
+        "angle_deg": 100.92725230954802,
+        "dP_diff": 0.7248882220541774,
+        "dA_diff": 0.25872063494908715,
+        "dD_diff": 0.07905054027414493
+      },
+      "12": {
+        "probe_A": {
+          "global_idx": 107,
+          "tier": "Med",
+          "domain": "project_status",
+          "text": "We made good progress this morning resolving tricky edge cases in suite 17.",
+          "S": 0.6390961832044361,
+          "Delta_p": [
+            0.4905649692685947,
+            0.002317904604532621,
+            0.4096151481955046
+          ]
+        },
+        "probe_B": {
+          "global_idx": 200,
+          "tier": "High",
+          "domain": "relational",
+          "text": "HORRIFYING CRISIS!! UNMITIGATED RUIN IMPACTING ALL OPERATIONAL PROTOCOLS ON HOST 20!!!",
+          "S": 0.6217544938891704,
+          "Delta_p": [
+            -0.4271855949923268,
+            0.32719975116813277,
+            0.3114987013423043
+          ]
+        },
+        "diff_S": 0.017341689315265696,
+        "vec_dist": 0.9784892179124466,
+        "angle_deg": 101.79271499489816,
+        "dP_diff": 0.9177505642609215,
+        "dA_diff": 0.32488184656360014,
+        "dD_diff": 0.09811644685320031
+      },
+      "16": {
+        "probe_A": {
+          "global_idx": 107,
+          "tier": "Med",
+          "domain": "project_status",
+          "text": "We made good progress this morning resolving tricky edge cases in suite 17.",
+          "S": 0.7305513060321764,
+          "Delta_p": [
+            0.5639038921207875,
+            0.0021833064900224006,
+            0.46444896853057666
+          ]
+        },
+        "probe_B": {
+          "global_idx": 200,
+          "tier": "High",
+          "domain": "relational",
+          "text": "HORRIFYING CRISIS!! UNMITIGATED RUIN IMPACTING ALL OPERATIONAL PROTOCOLS ON HOST 20!!!",
+          "S": 0.7127198838026666,
+          "Delta_p": [
+            -0.49268613251349397,
+            0.37460792060647063,
+            0.3534104036605015
+          ]
+        },
+        "diff_S": 0.01783142222950984,
+        "vec_dist": 1.1257940025798958,
+        "angle_deg": 102.51952312681162,
+        "dP_diff": 1.0565900246342814,
+        "dA_diff": 0.3724246141164482,
+        "dD_diff": 0.11103856487007513
+      },
+      "25": {
+        "probe_A": {
+          "global_idx": 107,
+          "tier": "Med",
+          "domain": "project_status",
+          "text": "We made good progress this morning resolving tricky edge cases in suite 17.",
+          "S": 0.8671539559512849,
+          "Delta_p": [
+            0.675779671565105,
+            0.0013952985274413507,
+            0.5433929259415704
+          ]
+        },
+        "probe_B": {
+          "global_idx": 200,
+          "tier": "High",
+          "domain": "relational",
+          "text": "HORRIFYING CRISIS!! UNMITIGATED RUIN IMPACTING ALL OPERATIONAL PROTOCOLS ON HOST 20!!!",
+          "S": 0.8537630797699787,
+          "Delta_p": [
+            -0.5955333557012497,
+            0.44940344332003596,
+            0.4150758530167987
+          ]
+        },
+        "diff_S": 0.013390876181306188,
+        "vec_dist": 1.3540359604905723,
+        "angle_deg": 103.7741958204029,
+        "dP_diff": 1.2713130272663546,
+        "dA_diff": 0.4480081447925946,
+        "dD_diff": 0.12831707292477168
+      }
+    }
+  },
+  "rq3_magnitude_controlled_direction": {
+    "1": {
+      "T": 1,
+      "exposure_sec": 0.1,
+      "overlap_bins_count": 1,
+      "overlap_bins": [
+        {
+          "bin_index": 2,
+          "s_range": [
+            0.0907512710361368,
+            0.1107512710361368
+          ],
+          "n_med": 46,
+          "n_high": 44,
+          "mean_s_med": 0.09355377435197533,
+          "mean_s_high": 0.10134725419674319,
+          "mean_dpad_med": [
+            0.07040594396950012,
+            -4.056047311934565e-05,
+            0.06160247020060342
+          ],
+          "mean_dpad_high": [
+            0.07357641043515502,
+            0.03672075987332941,
+            0.05915612179727781
+          ],
+          "angle_deg": 21.405828409484247,
+          "vec_dist": 0.036978793270393814,
+          "cohens_d_pleasure": 1.1662876927935817,
+          "cohens_d_arousal": 51.44569670269724
+        }
+      ],
+      "matched_mh_pairs_count": 4371,
+      "matched_mh_mean_diff_s": 0.007332261965992335,
+      "matched_mh_mean_angle_deg": 61.21464450993462,
+      "matched_mh_mean_vec_dist": 0.08825023567024991,
+      "matched_mh_mean_dP": -0.06437583568648397,
+      "matched_mh_mean_dA": 0.04240388290722649,
+      "rq3_verdict": "EVIDENCE CONSISTENT WITH INDEPENDENT DIRECTIONAL INFORMATION"
+    },
+    "2": {
+      "T": 2,
+      "exposure_sec": 0.2,
+      "overlap_bins_count": 2,
+      "overlap_bins": [
+        {
+          "bin_index": 3,
+          "s_range": [
+            0.15543030042623435,
+            0.17543030042623436
+          ],
+          "n_med": 22,
+          "n_high": 46,
+          "mean_s_med": 0.17496433949065107,
+          "mean_s_high": 0.1656471619966807,
+          "mean_dpad_med": [
+            0.13152365598320834,
+            0.0009420122627332717,
+            0.11538266712970541
+          ],
+          "mean_dpad_high": [
+            -0.10758217709824805,
+            0.08995256073016844,
+            0.08803098516034868
+          ],
+          "angle_deg": 97.75207235661945,
+          "vec_dist": 0.25659811312362324,
+          "cohens_d_pleasure": -55.30154275081839,
+          "cohens_d_arousal": 85.64488147792204
+        },
+        {
+          "bin_index": 4,
+          "s_range": [
+            0.17543030042623436,
+            0.19543030042623438
+          ],
+          "n_med": 24,
+          "n_high": 31,
+          "mean_s_med": 0.17737600908489592,
+          "mean_s_high": 0.1881107461898133,
+          "mean_dpad_med": [
+            0.1343385989600265,
+            -0.0010575499428160723,
+            0.11581999348123063
+          ],
+          "mean_dpad_high": [
+            0.13536906826847825,
+            0.06993866750554069,
+            0.1101876214037106
+          ],
+          "angle_deg": 22.233456613148604,
+          "vec_dist": 0.07122673917981677,
+          "cohens_d_pleasure": 0.27526840825689314,
+          "cohens_d_arousal": 81.38667803187707
+        }
+      ],
+      "matched_mh_pairs_count": 3374,
+      "matched_mh_mean_diff_s": 0.010654303264229645,
+      "matched_mh_mean_angle_deg": 66.09958601023693,
+      "matched_mh_mean_vec_dist": 0.17955197745820198,
+      "matched_mh_mean_dP": -0.13846411182673543,
+      "matched_mh_mean_dA": 0.08165630790382311,
+      "rq3_verdict": "EVIDENCE CONSISTENT WITH INDEPENDENT DIRECTIONAL INFORMATION"
+    },
+    "4": {
+      "T": 4,
+      "exposure_sec": 0.4,
+      "overlap_bins_count": 1,
+      "overlap_bins": [
+        {
+          "bin_index": 7,
+          "s_range": [
+            0.3097261865661498,
+            0.3297261865661498
+          ],
+          "n_med": 46,
+          "n_high": 3,
+          "mean_s_med": 0.31456107821159035,
+          "mean_s_high": 0.3221337721064437,
+          "mean_dpad_med": [
+            0.23861829482107744,
+            -0.0002734226300940109,
+            0.20495111775101832
+          ],
+          "mean_dpad_high": [
+            0.22233511544789675,
+            0.1281358141091306,
+            0.19472667180662995
+          ],
+          "angle_deg": 23.494922418758645,
+          "vec_dist": 0.1298407228311639,
+          "cohens_d_pleasure": -9.232916795567315,
+          "cohens_d_arousal": 102.06665351656396
+        }
+      ],
+      "matched_mh_pairs_count": 2082,
+      "matched_mh_mean_diff_s": 0.014987990099688209,
+      "matched_mh_mean_angle_deg": 78.45465675803008,
+      "matched_mh_mean_vec_dist": 0.37559504344244715,
+      "matched_mh_mean_dP": -0.3188223224597269,
+      "matched_mh_mean_dA": 0.15204397111873516,
+      "rq3_verdict": "EVIDENCE CONSISTENT WITH INDEPENDENT DIRECTIONAL INFORMATION"
+    },
+    "8": {
+      "T": 8,
+      "exposure_sec": 0.8,
+      "overlap_bins_count": 1,
+      "overlap_bins": [
+        {
+          "bin_index": 12,
+          "s_range": [
+            0.5146323329695285,
+            0.5346323329695285
+          ],
+          "n_med": 24,
+          "n_high": 3,
+          "mean_s_med": 0.5158856658421492,
+          "mean_s_high": 0.5249721686369694,
+          "mean_dpad_med": [
+            0.3960135859956884,
+            -0.003534147567834295,
+            0.3306036428527575
+          ],
+          "mean_dpad_high": [
+            0.36603121198915983,
+            0.20840159176236192,
+            0.3133459848858178
+          ],
+          "angle_deg": 23.791810331016634,
+          "vec_dist": 0.2147406042531503,
+          "cohens_d_pleasure": -29982.37400652859,
+          "cohens_d_arousal": 9207.966163910254
+        }
+      ],
+      "matched_mh_pairs_count": 622,
+      "matched_mh_mean_diff_s": 0.01623369228229441,
+      "matched_mh_mean_angle_deg": 83.33363337205854,
+      "matched_mh_mean_vec_dist": 0.6451617956268212,
+      "matched_mh_mean_dP": -0.5652329342669818,
+      "matched_mh_mean_dA": 0.24933124186797725,
+      "rq3_verdict": "EVIDENCE CONSISTENT WITH INDEPENDENT DIRECTIONAL INFORMATION"
+    },
+    "12": {
+      "T": 12,
+      "exposure_sec": 1.2000000000000002,
+      "overlap_bins_count": 1,
+      "overlap_bins": [
+        {
+          "bin_index": 15,
+          "s_range": [
+            0.6427457783964854,
+            0.6627457783964854
+          ],
+          "n_med": 24,
+          "n_high": 3,
+          "mean_s_med": 0.6477154599380586,
+          "mean_s_high": 0.6595269819172679,
+          "mean_dpad_med": [
+            0.5005080115715537,
+            -0.004860966860098152,
+            0.41110025141981743
+          ],
+          "mean_dpad_high": [
+            0.46349977746405435,
+            0.2617218357297841,
+            0.3894168420470591
+          ],
+          "angle_deg": 23.818374670529025,
+          "vec_dist": 0.2700114261850009,
+          "cohens_d_pleasure": -37008.23410749932,
+          "cohens_d_arousal": 9209.730920566799
+        }
+      ],
+      "matched_mh_pairs_count": 358,
+      "matched_mh_mean_diff_s": 0.01714915768393774,
+      "matched_mh_mean_angle_deg": 86.0399995791269,
+      "matched_mh_mean_vec_dist": 0.8348004456119102,
+      "matched_mh_mean_dP": -0.7395840715131828,
+      "matched_mh_mean_dA": 0.3125110128224888,
+      "rq3_verdict": "EVIDENCE CONSISTENT WITH INDEPENDENT DIRECTIONAL INFORMATION"
+    },
+    "16": {
+      "T": 16,
+      "exposure_sec": 1.6,
+      "overlap_bins_count": 0,
+      "overlap_bins": [],
+      "matched_mh_pairs_count": 204,
+      "matched_mh_mean_diff_s": 0.016730237598027786,
+      "matched_mh_mean_angle_deg": 74.7502663696391,
+      "matched_mh_mean_vec_dist": 0.8375155880967606,
+      "matched_mh_mean_dP": -0.6980880323585142,
+      "matched_mh_mean_dA": 0.3489278640419721,
+      "rq3_verdict": "EVIDENCE CONSISTENT WITH INDEPENDENT DIRECTIONAL INFORMATION"
+    },
+    "25": {
+      "T": 25,
+      "exposure_sec": 2.5,
+      "overlap_bins_count": 0,
+      "overlap_bins": [],
+      "matched_mh_pairs_count": 286,
+      "matched_mh_mean_diff_s": 0.014944111199654955,
+      "matched_mh_mean_angle_deg": 103.69099588513069,
+      "matched_mh_mean_vec_dist": 1.3520422083080523,
+      "matched_mh_mean_dP": -1.2696005070576775,
+      "matched_mh_mean_dA": 0.44692265532743136,
+      "rq3_verdict": "EVIDENCE CONSISTENT WITH INDEPENDENT DIRECTIONAL INFORMATION"
+    },
+    "50": {
+      "T": 50,
+      "exposure_sec": 5.0,
+      "overlap_bins_count": 0,
+      "overlap_bins": [],
+      "matched_mh_pairs_count": 0,
+      "matched_mh_mean_diff_s": 0.0,
+      "matched_mh_mean_angle_deg": 0.0,
+      "matched_mh_mean_vec_dist": 0.0,
+      "matched_mh_mean_dP": 0.0,
+      "matched_mh_mean_dA": 0.0,
+      "rq3_verdict": "DIRECTIONAL EFFECT NOT SHOWN TO BE INDEPENDENT OF MAGNITUDE"
+    },
+    "100": {
+      "T": 100,
+      "exposure_sec": 10.0,
+      "overlap_bins_count": 0,
+      "overlap_bins": [],
+      "matched_mh_pairs_count": 0,
+      "matched_mh_mean_diff_s": 0.0,
+      "matched_mh_mean_angle_deg": 0.0,
+      "matched_mh_mean_vec_dist": 0.0,
+      "matched_mh_mean_dP": 0.0,
+      "matched_mh_mean_dA": 0.0,
+      "rq3_verdict": "DIRECTIONAL EFFECT NOT SHOWN TO BE INDEPENDENT OF MAGNITUDE"
+    }
+  },
+  "rq4_prediction_residual_vs_displacement": {
+    "records": [
+      {
+        "T": 1,
+        "exposure_sec": 0.1,
+        "tier": "Low",
+        "norm_delta_p_mean": 0.057316687932483096,
+        "norm_delta_p_std": 0.0023211069790812014,
+        "norm_r_unadapted_mean": 0.057316687932483096,
+        "norm_r_adapted_mean": 0.031955380995776536,
+        "norm_r_adapted_std": 0.002164526837956474,
+        "delta_P_mean": 0.01332786718956588,
+        "delta_A_mean": 0.006330676955472015,
+        "delta_D_mean": 0.05538437525647682,
+        "rP_adapted_mean": -0.0012994167395790981,
+        "rA_adapted_mean": 0.004572600121201169,
+        "rD_adapted_mean": 0.03158769822597816
+      },
+      {
+        "T": 1,
+        "exposure_sec": 0.1,
+        "tier": "Med",
+        "norm_delta_p_mean": 0.07934464206057129,
+        "norm_delta_p_std": 0.014544282154366563,
+        "norm_r_unadapted_mean": 0.07934464206057129,
+        "norm_r_adapted_mean": 0.05236168654663709,
+        "norm_r_adapted_std": 0.015403743905136222,
+        "delta_P_mean": 0.0512147008310241,
+        "delta_A_mean": 0.0022036976014028686,
+        "delta_D_mean": 0.05894529824461084,
+        "rP_adapted_mean": 0.036587416901879166,
+        "rA_adapted_mean": 0.0004456207671320248,
+        "rD_adapted_mean": 0.035148621214112205
+      },
+      {
+        "T": 1,
+        "exposure_sec": 0.1,
+        "tier": "High",
+        "norm_delta_p_mean": 0.09446791482720245,
+        "norm_delta_p_std": 0.007147203215770065,
+        "norm_r_unadapted_mean": 0.09446791482720245,
+        "norm_r_adapted_mean": 0.08279715946190969,
+        "norm_r_adapted_std": 0.006124815216755093,
+        "delta_P_mean": 0.006885472319722375,
+        "delta_A_mean": 0.0423984384508687,
+        "delta_D_mean": 0.05284783314205897,
+        "rP_adapted_mean": -0.007741811609422596,
+        "rA_adapted_mean": 0.04064036161659785,
+        "rD_adapted_mean": 0.029051156111560332
+      },
+      {
+        "T": 2,
+        "exposure_sec": 0.2,
+        "tier": "Low",
+        "norm_delta_p_mean": 0.10775709887338494,
+        "norm_delta_p_std": 0.0043579579905045915,
+        "norm_r_unadapted_mean": 0.10775709887338494,
+        "norm_r_adapted_mean": 0.08160458241794855,
+        "norm_r_adapted_std": 0.004295534814423437,
+        "delta_P_mean": 0.025377536446315692,
+        "delta_A_mean": 0.01191664591919405,
+        "delta_D_mean": 0.10404488712524332,
+        "rP_adapted_mean": 0.010750252517170716,
+        "rA_adapted_mean": 0.010158569084923208,
+        "rD_adapted_mean": 0.08024821009474473
+      },
+      {
+        "T": 2,
+        "exposure_sec": 0.2,
+        "tier": "Med",
+        "norm_delta_p_mean": 0.1494172966924817,
+        "norm_delta_p_std": 0.027436349878569438,
+        "norm_r_unadapted_mean": 0.1494172966924817,
+        "norm_r_adapted_mean": 0.12228094085859643,
+        "norm_r_adapted_std": 0.028183928643871176,
+        "delta_P_mean": 0.09684767799509077,
+        "delta_A_mean": 0.004129839324113491,
+        "delta_D_mean": 0.11066443220642712,
+        "rP_adapted_mean": 0.0822203940659458,
+        "rA_adapted_mean": 0.002371762489842645,
+        "rD_adapted_mean": 0.08686775517592844
+      },
+      {
+        "T": 2,
+        "exposure_sec": 0.2,
+        "tier": "High",
+        "norm_delta_p_mean": 0.17798588967256906,
+        "norm_delta_p_std": 0.013409956242915579,
+        "norm_r_unadapted_mean": 0.17798588967256906,
+        "norm_r_adapted_mean": 0.1650273888753497,
+        "norm_r_adapted_std": 0.005020620297474158,
+        "delta_P_mean": 0.012937452853595873,
+        "delta_A_mean": 0.07977859427310346,
+        "delta_D_mean": 0.09925534673140922,
+        "rP_adapted_mean": -0.0016898310755490828,
+        "rA_adapted_mean": 0.07802051743883263,
+        "rD_adapted_mean": 0.07545866970091053
+      },
+      {
+        "T": 4,
+        "exposure_sec": 0.4,
+        "tier": "Low",
+        "norm_delta_p_mean": 0.1915822614697521,
+        "norm_delta_p_std": 0.007726890359746512,
+        "norm_r_unadapted_mean": 0.1915822614697521,
+        "norm_r_adapted_mean": 0.16514015174300645,
+        "norm_r_adapted_std": 0.007685998628729955,
+        "delta_P_mean": 0.04615832067093657,
+        "delta_A_mean": 0.021236617606506834,
+        "delta_D_mean": 0.18471992144954222,
+        "rP_adapted_mean": 0.031531036741791606,
+        "rA_adapted_mean": 0.019478540772235983,
+        "rD_adapted_mean": 0.16092324441904368
+      },
+      {
+        "T": 4,
+        "exposure_sec": 0.4,
+        "tier": "Med",
+        "norm_delta_p_mean": 0.26655634424981667,
+        "norm_delta_p_std": 0.0491307594993282,
+        "norm_r_unadapted_mean": 0.26655634424981667,
+        "norm_r_adapted_mean": 0.2393792640184279,
+        "norm_r_adapted_std": 0.0498564654795942,
+        "delta_P_mean": 0.1741104147077717,
+        "delta_A_mean": 0.00729205967513607,
+        "delta_D_mean": 0.1962917374435006,
+        "rP_adapted_mean": 0.15948313077862683,
+        "rA_adapted_mean": 0.005533982840865221,
+        "rD_adapted_mean": 0.17249506041300197
+      },
+      {
+        "T": 4,
+        "exposure_sec": 0.4,
+        "tier": "High",
+        "norm_delta_p_mean": 0.3178002813504737,
+        "norm_delta_p_std": 0.02379777092845685,
+        "norm_r_unadapted_mean": 0.3178002813504737,
+        "norm_r_adapted_mean": 0.3042910275912968,
+        "norm_r_adapted_std": 0.014123719992871177,
+        "delta_P_mean": 0.02299302728885083,
+        "delta_A_mean": 0.142112808121533,
+        "delta_D_mean": 0.17611350391773467,
+        "rP_adapted_mean": 0.008365743359705833,
+        "rA_adapted_mean": 0.14035473128726234,
+        "rD_adapted_mean": 0.15231682688723608
+      },
+      {
+        "T": 8,
+        "exposure_sec": 0.8,
+        "tier": "Low",
+        "norm_delta_p_mean": 0.30975647178158905,
+        "norm_delta_p_std": 0.012417605603929125,
+        "norm_r_unadapted_mean": 0.30975647178158905,
+        "norm_r_adapted_mean": 0.283139400980746,
+        "norm_r_adapted_std": 0.01238417589588461,
+        "delta_P_mean": 0.07739586699377403,
+        "delta_A_mean": 0.03451168121426696,
+        "delta_D_mean": 0.2979361280263453,
+        "rP_adapted_mean": 0.06276858306462905,
+        "rA_adapted_mean": 0.032753604379996075,
+        "rD_adapted_mean": 0.2741394509958466
+      },
+      {
+        "T": 8,
+        "exposure_sec": 0.8,
+        "tier": "Med",
+        "norm_delta_p_mean": 0.4338516192288793,
+        "norm_delta_p_std": 0.08055544866675124,
+        "norm_r_unadapted_mean": 0.4338516192288793,
+        "norm_r_adapted_mean": 0.4066880497113738,
+        "norm_r_adapted_std": 0.0813075045092311,
+        "delta_P_mean": 0.2871083366124097,
+        "delta_A_mean": 0.011620970889206677,
+        "delta_D_mean": 0.31629555677100996,
+        "rP_adapted_mean": 0.27248105268326467,
+        "rA_adapted_mean": 0.009862894054935829,
+        "rD_adapted_mean": 0.29249887974051136
+      },
+      {
+        "T": 8,
+        "exposure_sec": 0.8,
+        "tier": "High",
+        "norm_delta_p_mean": 0.518088516495782,
+        "norm_delta_p_std": 0.03843951295673472,
+        "norm_r_unadapted_mean": 0.518088516495782,
+        "norm_r_adapted_mean": 0.5044396104031328,
+        "norm_r_adapted_std": 0.02858786199551209,
+        "delta_P_mean": 0.037121664543721324,
+        "delta_A_mean": 0.2309112917270101,
+        "delta_D_mean": 0.2836982855585228,
+        "rP_adapted_mean": 0.02249438061457635,
+        "rA_adapted_mean": 0.22915321489273935,
+        "rD_adapted_mean": 0.2599016085280241
+      },
+      {
+        "T": 12,
+        "exposure_sec": 1.2000000000000002,
+        "tier": "Low",
+        "norm_delta_p_mean": 0.3862492945462807,
+        "norm_delta_p_std": 0.015379981002989356,
+        "norm_r_unadapted_mean": 0.3862492945462807,
+        "norm_r_adapted_mean": 0.3595467239327193,
+        "norm_r_adapted_std": 0.015348313350984298,
+        "delta_P_mean": 0.0991118666418034,
+        "delta_A_mean": 0.04331192561671854,
+        "delta_D_mean": 0.37079143045209784,
+        "rP_adapted_mean": 0.08448458271265837,
+        "rA_adapted_mean": 0.04155384878244772,
+        "rD_adapted_mean": 0.3469947534215995
+      },
+      {
+        "T": 12,
+        "exposure_sec": 1.2000000000000002,
+        "tier": "Med",
+        "norm_delta_p_mean": 0.5442274168056815,
+        "norm_delta_p_std": 0.1016685068639907,
+        "norm_r_unadapted_mean": 0.5442274168056815,
+        "norm_r_adapted_mean": 0.517091222662953,
+        "norm_r_adapted_std": 0.10245238727679991,
+        "delta_P_mean": 0.36392871042434644,
+        "delta_A_mean": 0.0142912800036037,
+        "delta_D_mean": 0.39347184627596377,
+        "rP_adapted_mean": 0.3493014264952018,
+        "rA_adapted_mean": 0.01253320316933287,
+        "rD_adapted_mean": 0.36967516924546473
+      },
+      {
+        "T": 12,
+        "exposure_sec": 1.2000000000000002,
+        "tier": "High",
+        "norm_delta_p_mean": 0.6511065387483942,
+        "norm_delta_p_std": 0.04776056895036774,
+        "norm_r_unadapted_mean": 0.6511065387483942,
+        "norm_r_adapted_mean": 0.6375105007604464,
+        "norm_r_adapted_std": 0.03784557977623666,
+        "delta_P_mean": 0.04602376304270751,
+        "delta_A_mean": 0.2898312954954704,
+        "delta_D_mean": 0.3527110880329944,
+        "rP_adapted_mean": 0.031396479113562525,
+        "rA_adapted_mean": 0.28807321866119967,
+        "rD_adapted_mean": 0.3289144110024954
+      },
+      {
+        "T": 16,
+        "exposure_sec": 1.6,
+        "tier": "Low",
+        "norm_delta_p_mean": 0.43889230519632044,
+        "norm_delta_p_std": 0.017352754014510138,
+        "norm_r_unadapted_mean": 0.43889230519632044,
+        "norm_r_adapted_mean": 0.4121351474606663,
+        "norm_r_adapted_std": 0.01732152023102726,
+        "delta_P_mean": 0.11482833969552371,
+        "delta_A_mean": 0.04960646705989878,
+        "delta_D_mean": 0.4206850280273941,
+        "rP_adapted_mean": 0.1002010557663788,
+        "rA_adapted_mean": 0.04784839022562799,
+        "rD_adapted_mean": 0.3968883509968952
+      },
+      {
+        "T": 16,
+        "exposure_sec": 1.6,
+        "tier": "Med",
+        "norm_delta_p_mean": 0.6215999508467025,
+        "norm_delta_p_std": 0.11667783773587814,
+        "norm_r_unadapted_mean": 0.6215999508467025,
+        "norm_r_adapted_mean": 0.5944911168757419,
+        "norm_r_adapted_std": 0.11748977879199073,
+        "delta_P_mean": 0.41920290739373783,
+        "delta_A_mean": 0.016035676796524012,
+        "delta_D_mean": 0.44628136150727177,
+        "rP_adapted_mean": 0.4045756234645931,
+        "rA_adapted_mean": 0.014277599962253184,
+        "rD_adapted_mean": 0.42248468447677356
+      },
+      {
+        "T": 16,
+        "exposure_sec": 1.6,
+        "tier": "High",
+        "norm_delta_p_mean": 0.7454056837768834,
+        "norm_delta_p_std": 0.05378648257884741,
+        "norm_r_unadapted_mean": 0.7454056837768834,
+        "norm_r_adapted_mean": 0.7318949243226915,
+        "norm_r_adapted_std": 0.043830658497606874,
+        "delta_P_mean": 0.05173303979295951,
+        "delta_A_mean": 0.33199931460370147,
+        "delta_D_mean": 0.3999267207118515,
+        "rP_adapted_mean": 0.03710575586381456,
+        "rA_adapted_mean": 0.33024123776943054,
+        "rD_adapted_mean": 0.376130043681353
+      },
+      {
+        "T": 25,
+        "exposure_sec": 2.5,
+        "tier": "Low",
+        "norm_delta_p_mean": 0.5156075050622677,
+        "norm_delta_p_std": 0.020066302470573505,
+        "norm_r_unadapted_mean": 0.5156075050622677,
+        "norm_r_adapted_mean": 0.4887789758284822,
+        "norm_r_adapted_std": 0.02003453842448959,
+        "delta_P_mean": 0.13868167534408105,
+        "delta_A_mean": 0.05954359025007767,
+        "delta_D_mean": 0.4930179749702855,
+        "rP_adapted_mean": 0.124054391414936,
+        "rA_adapted_mean": 0.057785513415806775,
+        "rD_adapted_mean": 0.46922129793978656
+      },
+      {
+        "T": 25,
+        "exposure_sec": 2.5,
+        "tier": "Med",
+        "norm_delta_p_mean": 0.7369107399820668,
+        "norm_delta_p_std": 0.13929437749867657,
+        "norm_r_unadapted_mean": 0.7369107399820668,
+        "norm_r_adapted_mean": 0.7098569120436964,
+        "norm_r_adapted_std": 0.14015658962254793,
+        "delta_P_mean": 0.5041874110060534,
+        "delta_A_mean": 0.018391816371650126,
+        "delta_D_mean": 0.5225211466871585,
+        "rP_adapted_mean": 0.48956012707690816,
+        "rA_adapted_mean": 0.01663373953737929,
+        "rD_adapted_mean": 0.4987244696566602
+      },
+      {
+        "T": 25,
+        "exposure_sec": 2.5,
+        "tier": "High",
+        "norm_delta_p_mean": 0.8895212246414731,
+        "norm_delta_p_std": 0.06079398912172795,
+        "norm_r_unadapted_mean": 0.8895212246414731,
+        "norm_r_adapted_mean": 0.8762000961223306,
+        "norm_r_adapted_std": 0.05080837134420851,
+        "delta_P_mean": 0.05846808821492642,
+        "delta_A_mean": 0.39852152550412673,
+        "delta_D_mean": 0.4687088801904418,
+        "rP_adapted_mean": 0.04384080428578141,
+        "rA_adapted_mean": 0.39676344866985597,
+        "rD_adapted_mean": 0.44491220315994306
+      },
+      {
+        "T": 50,
+        "exposure_sec": 5.0,
+        "tier": "Low",
+        "norm_delta_p_mean": 0.649402693470975,
+        "norm_delta_p_std": 0.024381648959283575,
+        "norm_r_unadapted_mean": 0.649402693470975,
+        "norm_r_adapted_mean": 0.6224823439429787,
+        "norm_r_adapted_std": 0.024346919335504914,
+        "delta_P_mean": 0.1816701291148955,
+        "delta_A_mean": 0.07955012971475552,
+        "delta_D_mean": 0.6183682822665776,
+        "rP_adapted_mean": 0.16704284518575063,
+        "rA_adapted_mean": 0.07779205288048471,
+        "rD_adapted_mean": 0.5945716052360791
+      },
+      {
+        "T": 50,
+        "exposure_sec": 5.0,
+        "tier": "Med",
+        "norm_delta_p_mean": 0.8880817209023724,
+        "norm_delta_p_std": 0.12599610755867774,
+        "norm_r_unadapted_mean": 0.8880817209023724,
+        "norm_r_adapted_mean": 0.8607594682119353,
+        "norm_r_adapted_std": 0.12657082253979213,
+        "delta_P_mean": 0.5906163149521204,
+        "delta_A_mean": 0.022036030746676313,
+        "delta_D_mean": 0.6527119273588794,
+        "rP_adapted_mean": 0.575989031022976,
+        "rA_adapted_mean": 0.020277953912405482,
+        "rD_adapted_mean": 0.6289152503283808
+      },
+      {
+        "T": 50,
+        "exposure_sec": 5.0,
+        "tier": "High",
+        "norm_delta_p_mean": 1.098406085505719,
+        "norm_delta_p_std": 0.020044066467198023,
+        "norm_r_unadapted_mean": 1.098406085505719,
+        "norm_r_adapted_mean": 1.0852148597858144,
+        "norm_r_adapted_std": 0.02436200340210133,
+        "delta_P_mean": -0.019390658285075905,
+        "delta_A_mean": 0.5318486141387468,
+        "delta_D_mean": 0.5902804856056497,
+        "rP_adapted_mean": -0.03401794221422093,
+        "rA_adapted_mean": 0.530090537304476,
+        "rD_adapted_mean": 0.5664838085751513
+      },
+      {
+        "T": 100,
+        "exposure_sec": 10.0,
+        "tier": "Low",
+        "norm_delta_p_mean": 0.8116891234152169,
+        "norm_delta_p_std": 0.018890458656944442,
+        "norm_r_unadapted_mean": 0.8116891234152169,
+        "norm_r_adapted_mean": 0.784535606403798,
+        "norm_r_adapted_std": 0.018826021075349367,
+        "delta_P_mean": 0.25501756378143786,
+        "delta_A_mean": 0.11451342550163746,
+        "delta_D_mean": 0.7619929528094858,
+        "rP_adapted_mean": 0.24039027985229278,
+        "rA_adapted_mean": 0.11275534866736656,
+        "rD_adapted_mean": 0.738196275778987
+      },
+      {
+        "T": 100,
+        "exposure_sec": 10.0,
+        "tier": "Med",
+        "norm_delta_p_mean": 1.0435098599357813,
+        "norm_delta_p_std": 0.06267190492525065,
+        "norm_r_unadapted_mean": 1.0435098599357813,
+        "norm_r_adapted_mean": 1.0159511346731986,
+        "norm_r_adapted_std": 0.06290350867712778,
+        "delta_P_mean": 0.6768181633855943,
+        "delta_A_mean": 0.02770283775885159,
+        "delta_D_mean": 0.7902980684695003,
+        "rP_adapted_mean": 0.6621908794564499,
+        "rA_adapted_mean": 0.025944760924580708,
+        "rD_adapted_mean": 0.7665013914390022
+      },
+      {
+        "T": 100,
+        "exposure_sec": 10.0,
+        "tier": "High",
+        "norm_delta_p_mean": 1.3775599023122882,
+        "norm_delta_p_std": 0.10279256894360986,
+        "norm_r_unadapted_mean": 1.3775599023122882,
+        "norm_r_adapted_mean": 1.3647742582461977,
+        "norm_r_adapted_std": 0.11383735988277978,
+        "delta_P_mean": -0.14421403091955384,
+        "delta_A_mean": 0.7553001799792564,
+        "delta_D_mean": 0.7357408332518718,
+        "rP_adapted_mean": -0.1588413148486989,
+        "rA_adapted_mean": 0.7535421031449856,
+        "rD_adapted_mean": 0.7119441562213739
+      }
+    ],
+    "by_t": {
+      "1": {
+        "T": 1,
+        "exposure_sec": 0.1,
+        "tiers": {
+          "Low": {
+            "T": 1,
+            "exposure_sec": 0.1,
+            "tier": "Low",
+            "norm_delta_p_mean": 0.057316687932483096,
+            "norm_delta_p_std": 0.0023211069790812014,
+            "norm_r_unadapted_mean": 0.057316687932483096,
+            "norm_r_adapted_mean": 0.031955380995776536,
+            "norm_r_adapted_std": 0.002164526837956474,
+            "delta_P_mean": 0.01332786718956588,
+            "delta_A_mean": 0.006330676955472015,
+            "delta_D_mean": 0.05538437525647682,
+            "rP_adapted_mean": -0.0012994167395790981,
+            "rA_adapted_mean": 0.004572600121201169,
+            "rD_adapted_mean": 0.03158769822597816
+          },
+          "Med": {
+            "T": 1,
+            "exposure_sec": 0.1,
+            "tier": "Med",
+            "norm_delta_p_mean": 0.07934464206057129,
+            "norm_delta_p_std": 0.014544282154366563,
+            "norm_r_unadapted_mean": 0.07934464206057129,
+            "norm_r_adapted_mean": 0.05236168654663709,
+            "norm_r_adapted_std": 0.015403743905136222,
+            "delta_P_mean": 0.0512147008310241,
+            "delta_A_mean": 0.0022036976014028686,
+            "delta_D_mean": 0.05894529824461084,
+            "rP_adapted_mean": 0.036587416901879166,
+            "rA_adapted_mean": 0.0004456207671320248,
+            "rD_adapted_mean": 0.035148621214112205
+          },
+          "High": {
+            "T": 1,
+            "exposure_sec": 0.1,
+            "tier": "High",
+            "norm_delta_p_mean": 0.09446791482720245,
+            "norm_delta_p_std": 0.007147203215770065,
+            "norm_r_unadapted_mean": 0.09446791482720245,
+            "norm_r_adapted_mean": 0.08279715946190969,
+            "norm_r_adapted_std": 0.006124815216755093,
+            "delta_P_mean": 0.006885472319722375,
+            "delta_A_mean": 0.0423984384508687,
+            "delta_D_mean": 0.05284783314205897,
+            "rP_adapted_mean": -0.007741811609422596,
+            "rA_adapted_mean": 0.04064036161659785,
+            "rD_adapted_mean": 0.029051156111560332
+          }
+        }
+      },
+      "2": {
+        "T": 2,
+        "exposure_sec": 0.2,
+        "tiers": {
+          "Low": {
+            "T": 2,
+            "exposure_sec": 0.2,
+            "tier": "Low",
+            "norm_delta_p_mean": 0.10775709887338494,
+            "norm_delta_p_std": 0.0043579579905045915,
+            "norm_r_unadapted_mean": 0.10775709887338494,
+            "norm_r_adapted_mean": 0.08160458241794855,
+            "norm_r_adapted_std": 0.004295534814423437,
+            "delta_P_mean": 0.025377536446315692,
+            "delta_A_mean": 0.01191664591919405,
+            "delta_D_mean": 0.10404488712524332,
+            "rP_adapted_mean": 0.010750252517170716,
+            "rA_adapted_mean": 0.010158569084923208,
+            "rD_adapted_mean": 0.08024821009474473
+          },
+          "Med": {
+            "T": 2,
+            "exposure_sec": 0.2,
+            "tier": "Med",
+            "norm_delta_p_mean": 0.1494172966924817,
+            "norm_delta_p_std": 0.027436349878569438,
+            "norm_r_unadapted_mean": 0.1494172966924817,
+            "norm_r_adapted_mean": 0.12228094085859643,
+            "norm_r_adapted_std": 0.028183928643871176,
+            "delta_P_mean": 0.09684767799509077,
+            "delta_A_mean": 0.004129839324113491,
+            "delta_D_mean": 0.11066443220642712,
+            "rP_adapted_mean": 0.0822203940659458,
+            "rA_adapted_mean": 0.002371762489842645,
+            "rD_adapted_mean": 0.08686775517592844
+          },
+          "High": {
+            "T": 2,
+            "exposure_sec": 0.2,
+            "tier": "High",
+            "norm_delta_p_mean": 0.17798588967256906,
+            "norm_delta_p_std": 0.013409956242915579,
+            "norm_r_unadapted_mean": 0.17798588967256906,
+            "norm_r_adapted_mean": 0.1650273888753497,
+            "norm_r_adapted_std": 0.005020620297474158,
+            "delta_P_mean": 0.012937452853595873,
+            "delta_A_mean": 0.07977859427310346,
+            "delta_D_mean": 0.09925534673140922,
+            "rP_adapted_mean": -0.0016898310755490828,
+            "rA_adapted_mean": 0.07802051743883263,
+            "rD_adapted_mean": 0.07545866970091053
+          }
+        }
+      },
+      "4": {
+        "T": 4,
+        "exposure_sec": 0.4,
+        "tiers": {
+          "Low": {
+            "T": 4,
+            "exposure_sec": 0.4,
+            "tier": "Low",
+            "norm_delta_p_mean": 0.1915822614697521,
+            "norm_delta_p_std": 0.007726890359746512,
+            "norm_r_unadapted_mean": 0.1915822614697521,
+            "norm_r_adapted_mean": 0.16514015174300645,
+            "norm_r_adapted_std": 0.007685998628729955,
+            "delta_P_mean": 0.04615832067093657,
+            "delta_A_mean": 0.021236617606506834,
+            "delta_D_mean": 0.18471992144954222,
+            "rP_adapted_mean": 0.031531036741791606,
+            "rA_adapted_mean": 0.019478540772235983,
+            "rD_adapted_mean": 0.16092324441904368
+          },
+          "Med": {
+            "T": 4,
+            "exposure_sec": 0.4,
+            "tier": "Med",
+            "norm_delta_p_mean": 0.26655634424981667,
+            "norm_delta_p_std": 0.0491307594993282,
+            "norm_r_unadapted_mean": 0.26655634424981667,
+            "norm_r_adapted_mean": 0.2393792640184279,
+            "norm_r_adapted_std": 0.0498564654795942,
+            "delta_P_mean": 0.1741104147077717,
+            "delta_A_mean": 0.00729205967513607,
+            "delta_D_mean": 0.1962917374435006,
+            "rP_adapted_mean": 0.15948313077862683,
+            "rA_adapted_mean": 0.005533982840865221,
+            "rD_adapted_mean": 0.17249506041300197
+          },
+          "High": {
+            "T": 4,
+            "exposure_sec": 0.4,
+            "tier": "High",
+            "norm_delta_p_mean": 0.3178002813504737,
+            "norm_delta_p_std": 0.02379777092845685,
+            "norm_r_unadapted_mean": 0.3178002813504737,
+            "norm_r_adapted_mean": 0.3042910275912968,
+            "norm_r_adapted_std": 0.014123719992871177,
+            "delta_P_mean": 0.02299302728885083,
+            "delta_A_mean": 0.142112808121533,
+            "delta_D_mean": 0.17611350391773467,
+            "rP_adapted_mean": 0.008365743359705833,
+            "rA_adapted_mean": 0.14035473128726234,
+            "rD_adapted_mean": 0.15231682688723608
+          }
+        }
+      },
+      "8": {
+        "T": 8,
+        "exposure_sec": 0.8,
+        "tiers": {
+          "Low": {
+            "T": 8,
+            "exposure_sec": 0.8,
+            "tier": "Low",
+            "norm_delta_p_mean": 0.30975647178158905,
+            "norm_delta_p_std": 0.012417605603929125,
+            "norm_r_unadapted_mean": 0.30975647178158905,
+            "norm_r_adapted_mean": 0.283139400980746,
+            "norm_r_adapted_std": 0.01238417589588461,
+            "delta_P_mean": 0.07739586699377403,
+            "delta_A_mean": 0.03451168121426696,
+            "delta_D_mean": 0.2979361280263453,
+            "rP_adapted_mean": 0.06276858306462905,
+            "rA_adapted_mean": 0.032753604379996075,
+            "rD_adapted_mean": 0.2741394509958466
+          },
+          "Med": {
+            "T": 8,
+            "exposure_sec": 0.8,
+            "tier": "Med",
+            "norm_delta_p_mean": 0.4338516192288793,
+            "norm_delta_p_std": 0.08055544866675124,
+            "norm_r_unadapted_mean": 0.4338516192288793,
+            "norm_r_adapted_mean": 0.4066880497113738,
+            "norm_r_adapted_std": 0.0813075045092311,
+            "delta_P_mean": 0.2871083366124097,
+            "delta_A_mean": 0.011620970889206677,
+            "delta_D_mean": 0.31629555677100996,
+            "rP_adapted_mean": 0.27248105268326467,
+            "rA_adapted_mean": 0.009862894054935829,
+            "rD_adapted_mean": 0.29249887974051136
+          },
+          "High": {
+            "T": 8,
+            "exposure_sec": 0.8,
+            "tier": "High",
+            "norm_delta_p_mean": 0.518088516495782,
+            "norm_delta_p_std": 0.03843951295673472,
+            "norm_r_unadapted_mean": 0.518088516495782,
+            "norm_r_adapted_mean": 0.5044396104031328,
+            "norm_r_adapted_std": 0.02858786199551209,
+            "delta_P_mean": 0.037121664543721324,
+            "delta_A_mean": 0.2309112917270101,
+            "delta_D_mean": 0.2836982855585228,
+            "rP_adapted_mean": 0.02249438061457635,
+            "rA_adapted_mean": 0.22915321489273935,
+            "rD_adapted_mean": 0.2599016085280241
+          }
+        }
+      },
+      "12": {
+        "T": 12,
+        "exposure_sec": 1.2000000000000002,
+        "tiers": {
+          "Low": {
+            "T": 12,
+            "exposure_sec": 1.2000000000000002,
+            "tier": "Low",
+            "norm_delta_p_mean": 0.3862492945462807,
+            "norm_delta_p_std": 0.015379981002989356,
+            "norm_r_unadapted_mean": 0.3862492945462807,
+            "norm_r_adapted_mean": 0.3595467239327193,
+            "norm_r_adapted_std": 0.015348313350984298,
+            "delta_P_mean": 0.0991118666418034,
+            "delta_A_mean": 0.04331192561671854,
+            "delta_D_mean": 0.37079143045209784,
+            "rP_adapted_mean": 0.08448458271265837,
+            "rA_adapted_mean": 0.04155384878244772,
+            "rD_adapted_mean": 0.3469947534215995
+          },
+          "Med": {
+            "T": 12,
+            "exposure_sec": 1.2000000000000002,
+            "tier": "Med",
+            "norm_delta_p_mean": 0.5442274168056815,
+            "norm_delta_p_std": 0.1016685068639907,
+            "norm_r_unadapted_mean": 0.5442274168056815,
+            "norm_r_adapted_mean": 0.517091222662953,
+            "norm_r_adapted_std": 0.10245238727679991,
+            "delta_P_mean": 0.36392871042434644,
+            "delta_A_mean": 0.0142912800036037,
+            "delta_D_mean": 0.39347184627596377,
+            "rP_adapted_mean": 0.3493014264952018,
+            "rA_adapted_mean": 0.01253320316933287,
+            "rD_adapted_mean": 0.36967516924546473
+          },
+          "High": {
+            "T": 12,
+            "exposure_sec": 1.2000000000000002,
+            "tier": "High",
+            "norm_delta_p_mean": 0.6511065387483942,
+            "norm_delta_p_std": 0.04776056895036774,
+            "norm_r_unadapted_mean": 0.6511065387483942,
+            "norm_r_adapted_mean": 0.6375105007604464,
+            "norm_r_adapted_std": 0.03784557977623666,
+            "delta_P_mean": 0.04602376304270751,
+            "delta_A_mean": 0.2898312954954704,
+            "delta_D_mean": 0.3527110880329944,
+            "rP_adapted_mean": 0.031396479113562525,
+            "rA_adapted_mean": 0.28807321866119967,
+            "rD_adapted_mean": 0.3289144110024954
+          }
+        }
+      },
+      "16": {
+        "T": 16,
+        "exposure_sec": 1.6,
+        "tiers": {
+          "Low": {
+            "T": 16,
+            "exposure_sec": 1.6,
+            "tier": "Low",
+            "norm_delta_p_mean": 0.43889230519632044,
+            "norm_delta_p_std": 0.017352754014510138,
+            "norm_r_unadapted_mean": 0.43889230519632044,
+            "norm_r_adapted_mean": 0.4121351474606663,
+            "norm_r_adapted_std": 0.01732152023102726,
+            "delta_P_mean": 0.11482833969552371,
+            "delta_A_mean": 0.04960646705989878,
+            "delta_D_mean": 0.4206850280273941,
+            "rP_adapted_mean": 0.1002010557663788,
+            "rA_adapted_mean": 0.04784839022562799,
+            "rD_adapted_mean": 0.3968883509968952
+          },
+          "Med": {
+            "T": 16,
+            "exposure_sec": 1.6,
+            "tier": "Med",
+            "norm_delta_p_mean": 0.6215999508467025,
+            "norm_delta_p_std": 0.11667783773587814,
+            "norm_r_unadapted_mean": 0.6215999508467025,
+            "norm_r_adapted_mean": 0.5944911168757419,
+            "norm_r_adapted_std": 0.11748977879199073,
+            "delta_P_mean": 0.41920290739373783,
+            "delta_A_mean": 0.016035676796524012,
+            "delta_D_mean": 0.44628136150727177,
+            "rP_adapted_mean": 0.4045756234645931,
+            "rA_adapted_mean": 0.014277599962253184,
+            "rD_adapted_mean": 0.42248468447677356
+          },
+          "High": {
+            "T": 16,
+            "exposure_sec": 1.6,
+            "tier": "High",
+            "norm_delta_p_mean": 0.7454056837768834,
+            "norm_delta_p_std": 0.05378648257884741,
+            "norm_r_unadapted_mean": 0.7454056837768834,
+            "norm_r_adapted_mean": 0.7318949243226915,
+            "norm_r_adapted_std": 0.043830658497606874,
+            "delta_P_mean": 0.05173303979295951,
+            "delta_A_mean": 0.33199931460370147,
+            "delta_D_mean": 0.3999267207118515,
+            "rP_adapted_mean": 0.03710575586381456,
+            "rA_adapted_mean": 0.33024123776943054,
+            "rD_adapted_mean": 0.376130043681353
+          }
+        }
+      },
+      "25": {
+        "T": 25,
+        "exposure_sec": 2.5,
+        "tiers": {
+          "Low": {
+            "T": 25,
+            "exposure_sec": 2.5,
+            "tier": "Low",
+            "norm_delta_p_mean": 0.5156075050622677,
+            "norm_delta_p_std": 0.020066302470573505,
+            "norm_r_unadapted_mean": 0.5156075050622677,
+            "norm_r_adapted_mean": 0.4887789758284822,
+            "norm_r_adapted_std": 0.02003453842448959,
+            "delta_P_mean": 0.13868167534408105,
+            "delta_A_mean": 0.05954359025007767,
+            "delta_D_mean": 0.4930179749702855,
+            "rP_adapted_mean": 0.124054391414936,
+            "rA_adapted_mean": 0.057785513415806775,
+            "rD_adapted_mean": 0.46922129793978656
+          },
+          "Med": {
+            "T": 25,
+            "exposure_sec": 2.5,
+            "tier": "Med",
+            "norm_delta_p_mean": 0.7369107399820668,
+            "norm_delta_p_std": 0.13929437749867657,
+            "norm_r_unadapted_mean": 0.7369107399820668,
+            "norm_r_adapted_mean": 0.7098569120436964,
+            "norm_r_adapted_std": 0.14015658962254793,
+            "delta_P_mean": 0.5041874110060534,
+            "delta_A_mean": 0.018391816371650126,
+            "delta_D_mean": 0.5225211466871585,
+            "rP_adapted_mean": 0.48956012707690816,
+            "rA_adapted_mean": 0.01663373953737929,
+            "rD_adapted_mean": 0.4987244696566602
+          },
+          "High": {
+            "T": 25,
+            "exposure_sec": 2.5,
+            "tier": "High",
+            "norm_delta_p_mean": 0.8895212246414731,
+            "norm_delta_p_std": 0.06079398912172795,
+            "norm_r_unadapted_mean": 0.8895212246414731,
+            "norm_r_adapted_mean": 0.8762000961223306,
+            "norm_r_adapted_std": 0.05080837134420851,
+            "delta_P_mean": 0.05846808821492642,
+            "delta_A_mean": 0.39852152550412673,
+            "delta_D_mean": 0.4687088801904418,
+            "rP_adapted_mean": 0.04384080428578141,
+            "rA_adapted_mean": 0.39676344866985597,
+            "rD_adapted_mean": 0.44491220315994306
+          }
+        }
+      },
+      "50": {
+        "T": 50,
+        "exposure_sec": 5.0,
+        "tiers": {
+          "Low": {
+            "T": 50,
+            "exposure_sec": 5.0,
+            "tier": "Low",
+            "norm_delta_p_mean": 0.649402693470975,
+            "norm_delta_p_std": 0.024381648959283575,
+            "norm_r_unadapted_mean": 0.649402693470975,
+            "norm_r_adapted_mean": 0.6224823439429787,
+            "norm_r_adapted_std": 0.024346919335504914,
+            "delta_P_mean": 0.1816701291148955,
+            "delta_A_mean": 0.07955012971475552,
+            "delta_D_mean": 0.6183682822665776,
+            "rP_adapted_mean": 0.16704284518575063,
+            "rA_adapted_mean": 0.07779205288048471,
+            "rD_adapted_mean": 0.5945716052360791
+          },
+          "Med": {
+            "T": 50,
+            "exposure_sec": 5.0,
+            "tier": "Med",
+            "norm_delta_p_mean": 0.8880817209023724,
+            "norm_delta_p_std": 0.12599610755867774,
+            "norm_r_unadapted_mean": 0.8880817209023724,
+            "norm_r_adapted_mean": 0.8607594682119353,
+            "norm_r_adapted_std": 0.12657082253979213,
+            "delta_P_mean": 0.5906163149521204,
+            "delta_A_mean": 0.022036030746676313,
+            "delta_D_mean": 0.6527119273588794,
+            "rP_adapted_mean": 0.575989031022976,
+            "rA_adapted_mean": 0.020277953912405482,
+            "rD_adapted_mean": 0.6289152503283808
+          },
+          "High": {
+            "T": 50,
+            "exposure_sec": 5.0,
+            "tier": "High",
+            "norm_delta_p_mean": 1.098406085505719,
+            "norm_delta_p_std": 0.020044066467198023,
+            "norm_r_unadapted_mean": 1.098406085505719,
+            "norm_r_adapted_mean": 1.0852148597858144,
+            "norm_r_adapted_std": 0.02436200340210133,
+            "delta_P_mean": -0.019390658285075905,
+            "delta_A_mean": 0.5318486141387468,
+            "delta_D_mean": 0.5902804856056497,
+            "rP_adapted_mean": -0.03401794221422093,
+            "rA_adapted_mean": 0.530090537304476,
+            "rD_adapted_mean": 0.5664838085751513
+          }
+        }
+      },
+      "100": {
+        "T": 100,
+        "exposure_sec": 10.0,
+        "tiers": {
+          "Low": {
+            "T": 100,
+            "exposure_sec": 10.0,
+            "tier": "Low",
+            "norm_delta_p_mean": 0.8116891234152169,
+            "norm_delta_p_std": 0.018890458656944442,
+            "norm_r_unadapted_mean": 0.8116891234152169,
+            "norm_r_adapted_mean": 0.784535606403798,
+            "norm_r_adapted_std": 0.018826021075349367,
+            "delta_P_mean": 0.25501756378143786,
+            "delta_A_mean": 0.11451342550163746,
+            "delta_D_mean": 0.7619929528094858,
+            "rP_adapted_mean": 0.24039027985229278,
+            "rA_adapted_mean": 0.11275534866736656,
+            "rD_adapted_mean": 0.738196275778987
+          },
+          "Med": {
+            "T": 100,
+            "exposure_sec": 10.0,
+            "tier": "Med",
+            "norm_delta_p_mean": 1.0435098599357813,
+            "norm_delta_p_std": 0.06267190492525065,
+            "norm_r_unadapted_mean": 1.0435098599357813,
+            "norm_r_adapted_mean": 1.0159511346731986,
+            "norm_r_adapted_std": 0.06290350867712778,
+            "delta_P_mean": 0.6768181633855943,
+            "delta_A_mean": 0.02770283775885159,
+            "delta_D_mean": 0.7902980684695003,
+            "rP_adapted_mean": 0.6621908794564499,
+            "rA_adapted_mean": 0.025944760924580708,
+            "rD_adapted_mean": 0.7665013914390022
+          },
+          "High": {
+            "T": 100,
+            "exposure_sec": 10.0,
+            "tier": "High",
+            "norm_delta_p_mean": 1.3775599023122882,
+            "norm_delta_p_std": 0.10279256894360986,
+            "norm_r_unadapted_mean": 1.3775599023122882,
+            "norm_r_adapted_mean": 1.3647742582461977,
+            "norm_r_adapted_std": 0.11383735988277978,
+            "delta_P_mean": -0.14421403091955384,
+            "delta_A_mean": 0.7553001799792564,
+            "delta_D_mean": 0.7357408332518718,
+            "rP_adapted_mean": -0.1588413148486989,
+            "rA_adapted_mean": 0.7535421031449856,
+            "rD_adapted_mean": 0.7119441562213739
+          }
+        }
+      }
+    }
+  },
+  "rq5_representation_hierarchy": [
+    {
+      "id": "M0",
+      "name": "Canonical Scalar Surprise",
+      "formulation": "S = ||p_T - p_0||_2",
+      "dimension": 1,
+      "tier_separability": "Fails Gate 2 dual criteria (Delta_ML >= 0.10, Delta_HM >= 0.15) for all conversational T <= 25. At T=12, Delta_HM is compressed to +0.0216 due to isotropic radial collision.",
+      "information_retained": "1D scalar distance only; 0% directional or component-specific information retained.",
+      "collapse_behavior": "Severely vulnerable to scalar collapse: 1,600+ Med-High collapse pairs (|diff_S| <= 0.02) at T=12, hiding average angular divergences of ~50 degrees.",
+      "robustness_across_T": "Smooth, monotonically increasing magnitude across T, but chronically compressed in Delta_HM.",
+      "sensitivity_to_baseline": "High: anchored strictly to Euclidean distance from resting attractor p_0.",
+      "sensitivity_to_exposure": "High: requires unphysiological non-conversational T >= 50 to clear dual scalar thresholds.",
+      "numerical_stability": "Extremely high: non-negative scalar, zero risk of division by zero or singularity.",
+      "interpretability": "Low: a single scalar conflates orthogonal emotional dimensions (e.g. positive joy vs threatening fear).",
+      "computational_cost": "Negligible O(1): Euclidean norm of a 3-element vector (~0.1 microseconds).",
+      "relation_to_active_inference": "Canonical S4 implementation baseline: represents unadapted generative prediction error when A=I, b=0."
+    },
+    {
+      "id": "M1",
+      "name": "Full Displacement Vector",
+      "formulation": "Delta_p = [Delta P, Delta A, Delta D] = p_T - p_0",
+      "dimension": 3,
+      "tier_separability": "Massive separation across primary conversational T <= 25. At T=12: Pleasure separates Med from High with Cohen's d = -3.85 (Delta_HM = -0.1983, CI95 [-0.218, -0.178]); Arousal separates Med from High with Cohen's d = +3.32 (Delta_HM = +0.1789, CI95 [+0.158, +0.200]).",
+      "information_retained": "100% of limbic kinematic trajectory displacement retained; lossless 3D representation.",
+      "collapse_behavior": "Zero isotropic collapse: completely uncouples orthogonal affective axes.",
+      "robustness_across_T": "Extremely robust: component divergence manifests as early as T=2 and stabilizes across all T.",
+      "sensitivity_to_baseline": "High: explicitly measures displacement from resting baseline p_0.",
+      "sensitivity_to_exposure": "Low: strong statistical effect sizes (d > 2.0) present at conversational T=4 to T=12.",
+      "numerical_stability": "Extremely high: bounded strictly within [-2.0, 2.0]^3 by PAD state invariants.",
+      "interpretability": "Extremely high: directly reflects psychological PAD space (Pleasure, Arousal, Dominance).",
+      "computational_cost": "Negligible O(1): element-wise vector subtraction (~0.1 microseconds).",
+      "relation_to_active_inference": "Directly maps to the unadapted prediction error vector delta = p_pred - q before L2 scalarization."
+    },
+    {
+      "id": "M2",
+      "name": "Magnitude + Direction",
+      "formulation": "[||Delta_p||_2, Delta_p / ||Delta_p||_2]",
+      "dimension": "1 scalar + 3D unit vector (4 elements)",
+      "tier_separability": "Decouples cognitive urgency/intensity (magnitude) from affective quality/tone (direction). Tiers clearly separated by direction even when magnitudes collide.",
+      "information_retained": "Full 3D displacement information retained, decomposed into polar coordinates.",
+      "collapse_behavior": "Robust against collapse: direction completely resolves scalar collisions by exposing 40-100 degree angles.",
+      "robustness_across_T": "High: directional unit vectors are stable from T=4 through T=25.",
+      "sensitivity_to_baseline": "High: centered at resting baseline p_0.",
+      "sensitivity_to_exposure": "Moderate: direction becomes stable after initial non-zero displacement (T >= 2).",
+      "numerical_stability": "Moderate: requires epsilon protection against division by zero at ||Delta_p|| -> 0.",
+      "interpretability": "High: polar decomposition mirrors intuitive intensity vs valence/arousal direction.",
+      "computational_cost": "Minimal O(1): vector norm + element-wise division (~0.2 microseconds).",
+      "relation_to_active_inference": "Provides precision-separable representation: magnitude sets cognitive effort; direction guides somatic routing."
+    },
+    {
+      "id": "M3",
+      "name": "Residual Magnitude + Direction",
+      "formulation": "[||r_T||_2, r_T / ||r_T||_2] where r_T = p_T - (A p_0 + b)",
+      "dimension": "1 scalar + 3D unit vector (4 elements)",
+      "tier_separability": "Maintains directional uncoupling relative to generative expectation. Identical to M2 when beliefs are unadapted, diverging cleanly as expectations adapt.",
+      "information_retained": "Full prediction residual information decomposed into magnitude and direction of expectation violation.",
+      "collapse_behavior": "Robust against collapse: directional component preserves nature of expectation failure.",
+      "robustness_across_T": "High: tracks generative belief evolution across varying exposure durations.",
+      "sensitivity_to_baseline": "Low to Moderate: anchored to generative expectation A p_0 + b rather than static baseline p_0.",
+      "sensitivity_to_exposure": "Moderate: dependent on both ODE integration time and belief adaptation state.",
+      "numerical_stability": "Moderate: requires epsilon protection when ||r_T|| -> 0.",
+      "interpretability": "Moderate: measures directional deviation from prior expectation rather than absolute limbic state.",
+      "computational_cost": "Low O(1): matrix-vector multiply + vector norm (~0.3 microseconds).",
+      "relation_to_active_inference": "Directly embodies Active Inference: represents generative surprise decomposed into magnitude and epistemic direction."
+    },
+    {
+      "id": "M4",
+      "name": "Full Prediction Residual Vector",
+      "formulation": "r_T = [rP, rA, rD] = p_T - (A p_0 + b)",
+      "dimension": 3,
+      "tier_separability": "High: preserves component-wise prediction failures. Under unadapted prior, identically matches M1 separation. Under adapted beliefs, selectively emphasizes unexpected dimensional transitions.",
+      "information_retained": "100% of epistemic expectation violation retained across all 3 PAD dimensions.",
+      "collapse_behavior": "Zero isotropic collapse: independent component residuals cannot mask one another.",
+      "robustness_across_T": "High across conversational T; continuously aligned with generative transition model.",
+      "sensitivity_to_baseline": "Low: conditioned on dynamic expectation A p_0 + b.",
+      "sensitivity_to_exposure": "Moderate: reflects cumulative divergence between continuous ODE and linear transition model.",
+      "numerical_stability": "High: bounded linear transformation and subtraction; zero singularities.",
+      "interpretability": "High for Active Inference diagnostics; requires understanding generative prior.",
+      "computational_cost": "Low O(1): 3x3 matrix-vector multiplication and subtraction (~0.2 microseconds).",
+      "relation_to_active_inference": "Exact un-scalarized prediction error vector delta in ActiveInferenceEngine before Euclidean norm is applied."
+    }
+  ],
+  "rq6_conversational_timescale_viability": {
+    "conversational_focus": "T <= 25 ticks (0.10s to 2.50s)",
+    "exploratory_reference": "T in {50, 100} ticks (5.0s to 10.0s)",
+    "findings_by_representation": {
+      "M0_canonical_scalar": {
+        "earliest_separation_T": "T = 50 (exploratory non-conversational regime only)",
+        "conversational_viability": "NOT VIABLE under current dual scalar thresholds (Delta_HM fails at all T <= 25)",
+        "failure_mechanism": "Isotropic radial collision: High and Med trajectories reach similar Euclidean distances from p_0 despite moving in orthogonal directions."
+      },
+      "M1_displacement_vector": {
+        "earliest_separation_T": "T = 2 (0.20s): Cohen's d > 1.5 in Pleasure and Arousal",
+        "conversational_viability": "HIGHLY VIABLE across all T in {2, 4, 8, 12, 16, 25}",
+        "stability_across_neighboring_T": "Extremely stable: monotonic growth in |Delta P| and |Delta A| with consistent CI95 bounds."
+      },
+      "M2_magnitude_direction": {
+        "earliest_separation_T": "T = 2 (0.20s): Directional angle between Med and High reaches 48+ degrees",
+        "conversational_viability": "HIGHLY VIABLE across all T in {2, 4, 8, 12, 16, 25}",
+        "stability_across_neighboring_T": "Stable: angular separation remains within 48-63 degrees across entire conversational grid."
+      },
+      "M3_residual_magnitude_direction": {
+        "earliest_separation_T": "T = 2 (0.20s): mirrors M2 under unadapted prior",
+        "conversational_viability": "HIGHLY VIABLE across all T in {2, 4, 8, 12, 16, 25}",
+        "stability_across_neighboring_T": "Stable across conversational exposures."
+      },
+      "M4_full_residual_vector": {
+        "earliest_separation_T": "T = 2 (0.20s): identical to M1 in unadapted state",
+        "conversational_viability": "HIGHLY VIABLE across all T in {2, 4, 8, 12, 16, 25}",
+        "stability_across_neighboring_T": "Stable: component residuals exhibit high statistical separation without magnitude conflation."
+      }
+    }
+  },
+  "evidence_synthesis": {
+    "decision_state": "State B \u2014 Direction/Component Information Demonstrably Omitted Under Scalar S",
+    "rationale": "Empirical evidence demonstrates that canonical scalar S routinely collapses orthogonal affective states into identical scalar distances (|diff_S| <= 0.02). Magnitude-controlled analysis reveals that within S-matched strata, directional angles (48-63 deg) and component divergences (Pleasure Cohen's d ~ -3.85, Arousal Cohen's d ~ +3.32) consistently distinguish Medium from High probes. Furthermore, under unadapted beliefs, prediction residual r_T degenerates mathematically to displacement Delta_p, proving that canonical S measures displacement rather than directional prediction error.",
+    "competing_interpretations_assessment": {
+      "M_S_scalar_sufficiency": "Weakened under the current dynamical regime and frozen G1 stimulus set: canonical S fails to distinguish Medium from High at all conversational T <= 25, not because the limbic system fails to differentiate them, but because scalar Euclidean projection collapses orthogonal states.",
+      "M_V_vector_information_requirement": "Strongly supported as an empirical finding under frozen G1: direction and individual PAD components retain strong affective separation (Cohen's d > 3.0) that is completely discarded by scalar S."
+    },
+    "protocol_v15_readiness": "NO (Protocol v1.5 is NOT AUTHORIZED; requires formal Architecture Gate approval first)"
+  },
+  "governance_status": {
+    "h1_status": "INCONCLUSIVE \u2014 GATE 2 UNRESOLVED",
+    "protocol_v15": "NOT AUTHORIZED",
+    "architecture_gate": "STRICTLY LOCKED",
+    "production": "0 MUTATIONS",
+    "genesis": "BIT-EXACT UNTOUCHED",
+    "historical_h1_data": "IMMUTABLE"
+  }
+}
