@@ -162,8 +162,8 @@ def test_08_rq4_r2_incremental_value(results_data: dict):
     assert t2a["pairs_with_large_angle"] == 0
     assert t2a["d_pol_c1_in_same_sign"] == 0.0
     assert t2a["p_value"] == 1.0
-    assert "ZERO incremental behavioral divergence" in t2a["empirical_verdict"]
-    assert "does NOT prove that R2 is universally unnecessary" in rq4["scope_limitation"]
+    assert "no incremental behavioral divergence was observed" in t2a["empirical_verdict"]
+    assert "avoids a generalized conclusion that R2 has no incremental value" in rq4["scope_limitation"]
 
 
 def test_09_rq6_gate2_reconciliation(results_data: dict):
@@ -173,6 +173,10 @@ def test_09_rq6_gate2_reconciliation(results_data: dict):
     assert rq6["does_failure_invalidate_directional_info"] is False
     assert rq6["can_directional_info_be_retained_without_claiming_gate_2_passed"] is True
     assert "dedicated, newly ratified research protocol" in rq6["protocol_requirement"]
+    assert "benchmark_values" in rq6
+    assert rq6["benchmark_values"]["S_M"] == 0.5792
+    assert rq6["benchmark_values"]["S_H"] == 0.6477
+    assert rq6["benchmark_values"]["Delta_HM"] == 0.0685
 
 
 def test_10_decision_state_evaluation_consistency(results_data: dict, manifest_data: dict):

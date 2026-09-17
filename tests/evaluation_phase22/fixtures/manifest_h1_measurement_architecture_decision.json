@@ -34,8 +34,8 @@
   "files": {
     "measurement_architecture_decision_results.json": {
       "path": "tests/evaluation_phase22/results/h1_measurement_architecture_decision/measurement_architecture_decision_results.json",
-      "sha256": "a0f0cd33235959fa99a4cb0c1714255896705ae7d79607e45ec2954cade0c3b2",
-      "size_bytes": 27278
+      "sha256": "a4021b9161cd8543b844ad7aa3ca421126f93880b1f1ce79d74854d5b7ff13be",
+      "size_bytes": 28301
     }
   }
 }

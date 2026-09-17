@@ -161,7 +161,7 @@ def synthesize_evidence_consolidation(
             "information_retained": "Scalar surprise magnitude S + continuous unit direction on S^2 (exact orientation).",
             "information_discarded": "Independent component scale beyond unit norm (preserved jointly with S).",
             "collapse_resolution": "SUPPORTED ACROSS ALL T: 0 collapses across all evaluated exposure ticks T in [1, 25].",
-            "behavioral_utilization": "Differentiates 286/358 (79.89%) collapse pairs at T=12. Provides ZERO incremental behavioral divergence over M1 in matched same-sign regime (D_pol = 0.0000).",
+            "behavioral_utilization": "Differentiates 286/358 (79.89%) collapse pairs at T=12. Under the predefined same-sign matched-pair subset, no eligible pair exhibited >= 30 deg angular divergence; therefore no incremental behavioral divergence was observed in this test (D_pol = 0.0000).",
             "computational_cost": "4 continuous floats (1 scalar + 3-component unit vector; requires normalization check).",
             "semantic_compatibility": "Preserves canonical scalar surprise S bit-exact while appending a continuous trigonometric orientation side-channel.",
             "evidence_classification": "SUPPORTED_GEOMETRICALLY__UNPROVEN_BEHAVIORAL_INCREMENT",
@@ -252,7 +252,7 @@ def synthesize_r2_incremental_value() -> Dict[str, Any]:
             "d_pol_c1_in_same_sign": 0.0,
             "mean_d_js_in_same_sign": 0.0,
             "p_value": 1.0,
-            "empirical_verdict": "In the tested same-sign regime, continuous unit direction R2 provided ZERO incremental behavioral divergence over discrete signs R3.",
+            "empirical_verdict": "Under the predefined same-sign matched-pair subset, no eligible pair exhibited >= 30 deg angular divergence; therefore no incremental behavioral divergence was observed in this test.",
         },
         "test_2b_sign_transition_findings": {
             "criteria": "Matched scalar magnitude (|S_i - S_j| <= 0.02) across differing ternary sign vectors.",
@@ -263,7 +263,7 @@ def synthesize_r2_incremental_value() -> Dict[str, Any]:
             "mean_d_js_c1": 0.001034,
             "empirical_verdict": "Discrete sign transitions account for 100% of the observed action differentiation across matched pairs.",
         },
-        "scope_limitation": "R2 incremental value was ZERO within the evaluated Candidate G1 regime and action space. This does NOT prove that R2 is universally unnecessary in all possible interaction contexts.",
+        "scope_limitation": "Under the predefined same-sign matched-pair subset, no eligible pair exhibited >= 30 deg angular divergence; therefore no incremental behavioral divergence was observed in this test. With N=0 eligible pairs, p=1.0 reflects the absence of eligible test cases rather than inferential proof that R2 lacks value generally. This avoids a generalized conclusion that R2 has no incremental value in unconstrained, continuous expressive spaces.",
     }
 
 
@@ -285,7 +285,16 @@ def synthesize_gate2_reconciliation() -> Dict[str, Any]:
     """RQ6: Gate 2 Interpretation and Reconciliation."""
     return {
         "gate_2_status": "BLOCKED",
-        "what_gate_2_establishes": "Canonical scalar surprise S = ||r_T||_2 under Protocol v1.4 cannot satisfy preregistered dual separation thresholds (Delta_ML >= 0.10, Delta_HM >= 0.15) at conversational exposure (T=12) due to basal semantic density floor and Coupled MT-LNN ODE saturation.",
+        "benchmark_values": {
+            "S_L": 0.2647,
+            "S_M": 0.5792,
+            "S_H": 0.6477,
+            "Delta_ML": 0.3145,
+            "Delta_HM": 0.0685,
+            "threshold_Delta_ML": 0.10,
+            "threshold_Delta_HM": 0.15,
+        },
+        "what_gate_2_establishes": "Canonical scalar surprise S = ||r_T||_2 under Protocol v1.4 cannot satisfy preregistered dual separation thresholds (Delta_ML >= 0.10, Delta_HM >= 0.15) at conversational exposure (T=12) due to basal semantic density floor and Coupled MT-LNN ODE saturation: S_M = 0.5792, S_H = 0.6477, yielding Delta_HM = +0.0685 < 0.15.",
         "what_gate_2_does_not_establish": "Gate 2 failure does NOT prove that semantic prediction error is impossible, nor does it invalidate directional information. Directional and component differences persist strongly under magnitude matching.",
         "does_failure_invalidate_directional_info": False,
         "can_directional_info_be_retained_without_claiming_gate_2_passed": True,
@@ -432,7 +441,9 @@ def evaluate_decision_rules(
             "ternary sign side-channel R3 is supported for future architectural consideration because it "
             "resolves collapse at conversational exposures (T >= 12) and reproduces all behavioral distinctions "
             "observed under continuous direction R2 on the evaluated collapse pairs, without incurring the "
-            "unutilized continuous overhead of R2 or the breaking pipeline changes of full vector R5."
+            "unutilized continuous overhead of R2 or the breaking pipeline changes of full vector R5. "
+            "D2 is not supported as necessary under the predefined Phase 22 behavioral criteria and evaluated research regime, "
+            "and D3 is not supported as required/minimal under the evaluated criteria (Dominance dispensable under frozen G1)."
         )
     else:
         assigned_state = "D4"
@@ -482,7 +493,7 @@ def build_decision_table() -> List[Dict[str, str]]:
             "dimension": "Behavioral Utilization (Adapter)",
             "M0_Scalar": "0 / 358 differentiated (0.00%)",
             "M1_R3_Signs": "286 / 358 differentiated (79.89%)",
-            "M2_R2_Continuous": "286 / 358 differentiated (79.89%; 0 incremental in same-sign)",
+            "M2_R2_Continuous": "286 / 358 differentiated (79.89%; no incremental divergence observed in tested same-sign subset)",
             "M3_Full_Vector": "Sufficient, but Dominance ablatable with 0 loss (A3)",
         },
         {
@@ -515,10 +526,10 @@ def build_decision_table() -> List[Dict[str, str]]:
         },
         {
             "dimension": "Evidence Status",
-            "M0_Scalar": "REJECTED as complete measurement (Retained for intensity)",
-            "M1_R3_Signs": "SUPPORTED for future architectural consideration (State D1)",
-            "M2_R2_Continuous": "GEOMETRICALLY SUFFICIENT; UNPROVEN behavioral increment",
-            "M3_Full_Vector": "SUFFICIENT BUT NOT MINIMAL (Dominance dispensable)",
+            "M0_Scalar": "Not supported as complete measurement (Retained for intensity)",
+            "M1_R3_Signs": "Supported for future architectural consideration (State D1)",
+            "M2_R2_Continuous": "Geometrically sufficient; incremental necessity not supported under evaluated criteria",
+            "M3_Full_Vector": "Sufficient but not minimal/required under evaluated criteria (Dominance dispensable)",
         },
     ]
 

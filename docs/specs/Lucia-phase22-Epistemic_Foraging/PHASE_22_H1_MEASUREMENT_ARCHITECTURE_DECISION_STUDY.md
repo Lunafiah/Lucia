@@ -27,7 +27,7 @@ This study establishes the **Phase 22 H1 Measurement Architecture Decision Synth
 3. **Scalar + Continuous Unit Direction ($M_2 = [S, \hat{\mathbf{v}}_r]$)**:
    - Stores 4 continuous floats representing 3 independent mathematical degrees of freedom (1 magnitude $+ 2$ directional angles on $S^2$).
    - Geometrically resolves collapse across all exposures $T \in [1, 25]$ (0 collapses).
-   - However, in matched same-sign regimes ($|S_i - S_j| \le 0.02, \text{sign}(\mathbf{r}_i) = \text{sign}(\mathbf{r}_j)$), continuous direction provided **zero incremental behavioral divergence** over discrete signs ($D_{\text{pol}}(\text{R2} \mid \text{same sign}) = 0.0000$, $p = 1.0$).
+   - However, under the predefined same-sign matched-pair subset ($|S_i - S_j| \le 0.02, \text{sign}(\mathbf{r}_i) = \text{sign}(\mathbf{r}_j)$), no eligible pair exhibited $\ge 30^\circ$ angular divergence; therefore no incremental behavioral divergence was observed in this test ($D_{\text{pol}}(\text{R2} \mid \text{same sign}) = 0.0000$). With $N=0$ eligible pairs in Test 2A, $p=1.0$ reflects the absence of eligible test cases in this specific partition rather than inferential proof of universal lack of value.
 4. **Full Vector Residual ($M_3 = \mathbf{r} = [r_P, r_A, r_D]^\top$)**:
    - Geometrically resolves collapse, but Dominance was ablated with zero loss of collapse resolution (Ablation A3), demonstrating that full 3D Cartesian coordinates are **sufficient but not minimal**.
 5. **Precision-Weighted Candidates ($M_5 = \sqrt{\mathbf{r}^\top \boldsymbol{\Pi} \mathbf{r}}$)**:
@@ -50,7 +50,7 @@ Evaluated deterministically against predefined decision rules, the study assigns
 | Governance Metric | Current State | Verification Mechanism |
 |---|---|---|
 | **Phase 22 H1 Status** | **INCONCLUSIVE** | Asserted in results JSON and test suite |
-| **Quality Gate 2 Status** | **BLOCKED** | Verified against Protocol v1.4 criteria ($\Delta_{\text{HM}} < 0.15$) |
+| **Quality Gate 2 Status** | **BLOCKED** | Verified against Protocol v1.4 criteria ($S_M = 0.5792, S_H = 0.6477 \implies \Delta_{\text{HM}} = +0.0685 < 0.15$) |
 | **Protocol Authorization** | **NOT AUTHORIZED** (v1.5 does not exist) | Hard manifest invariant assertion |
 | **Production Architecture Gate** | **STRICTLY LOCKED** | Confirmed by architectural governance |
 | **Production Code Mutation** | **0 modifications** to `src/core/**` | Verified via `git diff --stat src/core` |
@@ -65,7 +65,7 @@ Evaluated deterministically against predefined decision rules, the study assigns
 During the execution of Phase 22 H1 Protocol Amendment v1.4, the canonical cognitive pipeline encountered an unexpected empirical barrier:
 1. **Gate 2 Compression**: Quality Gate 2 required dual surprise separation:
    $$\Delta_{\text{ML}} = \text{Med} - \text{Low} \ge 0.10, \quad \Delta_{\text{HM}} = \text{High} - \text{Med} \ge 0.15$$
-   While $\Delta_{\text{ML}}$ passed cleanly ($+0.2574 \ge 0.10$), $\Delta_{\text{HM}}$ failed decisively ($\Delta_{\text{HM}} = +0.0003 \ll 0.15$, representing a 99.8% compression deficit).
+   While $\Delta_{\text{ML}}$ passed cleanly ($+0.3145 \ge 0.10$, with $S_{\text{Low}} = 0.2647, S_{\text{Med}} = 0.5792$), $\Delta_{\text{HM}}$ failed the preregistered threshold ($S_{\text{Med}} = 0.5792, S_{\text{High}} = 0.6477 \implies \Delta_{\text{HM}} = +0.0685 < 0.15$).
 2. **Isotropic Metric Blindness**: The Gate 2 Compression Diagnostic and Dynamical Headroom studies revealed that the root cause was mathematical rather than semantic: canonical scalar surprise $S = \|\mathbf{r}_T\|_2$ calculates the isotropic Euclidean norm in PAD space. Because the Coupled MT-LNN ODE exhibits saturation dynamics along certain trajectories, High-surprise stimuli (high Arousal, negative Pleasure) and Medium-surprise stimuli (moderate Arousal, positive Pleasure) produce displacement vectors of nearly identical length ($|S_{\text{High}} - S_{\text{Med}}| \le 0.02$) despite pointing in nearly orthogonal directions ($86.0^\circ$ separation).
 3. **Sequential Research Progression**:
    - *Gate 2 Resolution Research*: Proved that component-specific effect sizes (especially Arousal $d > 9.5$) persist strongly.
@@ -84,7 +84,7 @@ The synthesis directly consumes data and manifests from eight immutable prior st
 
 | Study Name | Directory / Results Artifact | Sample / Scope | Primary Established Evidence |
 |---|---|---|---|
-| **1. Protocol v1.4 Execution** | `results/h1_v14/` | $N=270$, $T \in \{1, 4, 12\}$ | Gate 2 BLOCKED ($\Delta_{\text{HM}} = +0.0003$). Discovered surprise compression. |
+| **1. Protocol v1.4 Execution** | `results/h1_v14/` | $N=270$, $T \in \{1, 4, 12\}$ | Gate 2 BLOCKED ($S_M = 0.5792, S_H = 0.6477 \implies \Delta_{\text{HM}} = +0.0685 < 0.15$). Discovered surprise compression. |
 | **2. Stimulus Calibration** | `results/h1_stimulus_calibration/` | $120,000$ MC samples | Established Candidate G1 stimulus set ($N=270$, Seed 9999) as balanced baseline. |
 | **3. Dynamical Headroom** | `results/h1_dynamical_headroom/` | $N=270$, $T \in [1, 100]$ | Squeeze ratio $H(12) = 0.2574$; proved metric blindness under isotropic Euclidean norm. |
 | **4. Gate 2 Resolution** | `results/h1_gate2_resolution/` | $N=270$, 6 diagnostics | Arousal exhibits massive separation ($d > 9.5$); confirmed conversational viability $T \le 25$. |
@@ -164,7 +164,7 @@ Table 6.1 consolidates findings across all candidate representations without com
 |---|---|---|---|---|---|---|---|
 | **M0: Scalar** | Scalar magnitude $S$, intensity, tension ($r \ge 0.806$), load ($r \ge 0.888$), depth ($r = 0.865$) | Angular orientation, PAD octants, component attribution | **FAILS**: 358 collapse pairs ($86.0^\circ$ separation, opposing Pleasure sign) | **0 / 358 differentiated (0.00%)** | 1 float (minimal) | Native Active Inference scalar surprise | `SUPPORTED_FOR_INTENSITY__INSUFFICIENT_FOR_DIRECTION` |
 | **M1: Scalar + Ternary Sign (R3)** | Scalar $S$ bit-exact $+$ 3 ternary signs in $\{-1, 0, +1\}^3$ (27 states) | Continuous angular nuance within octants, component scale | **COMPLETE AT $T \ge 12$**: 0 collapses at $T \in \{12, 16, 25\}$. Non-zero at $T < 12$. | **286 / 358 differentiated (79.89%)**; reproduces 100% of R2 action distinctions | 1 float + 3 ternary symbols (5 bits optimal) | Preserves scalar $S$ bit-exact; decoupled side-channel | `SUPPORTED_FOR_FUTURE_ARCHITECTURAL_CONSIDERATION` |
-| **M2: Scalar + Unit Direction (R2)** | Scalar $S$ bit-exact $+$ unit vector $\hat{\mathbf{v}} \in S^2$ (3 DOF) | Independent component scale beyond unit norm | **COMPLETE ACROSS ALL $T$**: 0 collapses for all $T \in [1, 25]$ | **286 / 358 differentiated (79.89%)**; 0 incremental in same-sign ($p=1.0$) | 4 floats (requires normalization check) | Preserves scalar $S$ bit-exact; continuous side-channel | `SUPPORTED_GEOMETRICALLY__UNPROVEN_BEHAVIORAL_INCREMENT` |
+| **M2: Scalar + Unit Direction (R2)** | Scalar $S$ bit-exact $+$ unit vector $\hat{\mathbf{v}} \in S^2$ (3 DOF) | Independent component scale beyond unit norm | **COMPLETE ACROSS ALL $T$**: 0 collapses for all $T \in [1, 25]$ | **286 / 358 differentiated (79.89%)**; no incremental divergence observed in tested same-sign subset (no pairs with $\Delta \theta \ge 30^\circ$) | 4 floats (requires normalization check) | Preserves scalar $S$ bit-exact; continuous side-channel | `SUPPORTED_GEOMETRICALLY__UNPROVEN_BEHAVIORAL_INCREMENT` |
 | **M3: Full Vector** | 3D Cartesian coordinates ($r_P, r_A, r_D$), joint magnitude & direction | None within 3D linear residual space | **COMPLETE ACROSS ALL $T$**: 0 collapses for all $T \in [1, 25]$ | Sufficient, but Dominance ablatable with 0 loss of collapse resolution (A3) | 3 floats | Departs from 1D scalar surprise pipeline | `SUFFICIENT_BUT_NOT_MINIMAL` |
 | **M4: Prediction Residual** | Expectation error relative to generative predictions | Raw bodily excursion from attractor | Diverges from bodily displacement $\Delta \mathbf{p}$ by $179.5^\circ$ at $T=12$ | Authentic Active Inference expectation violation | 3 floats + online expectation state | Gold-standard generative prediction error | `SEMANTICALLY_AUTHENTIC_PREDICTION_ERROR` |
 | **M5: Precision Candidates** | Anisotropic quadratic form scalar | Sign, orthogonal subspace components | **REJECTED**: Fixed structures ($\boldsymbol{\Pi}_1, \boldsymbol{\Pi}_2$) failed Gate 2 thresholds | **NOT TESTED** in behavioral adapter | 1 float (matrix multiplication) | Grounded in precision theory, but evaluated weights unvalidated | `EXPLORATORY_CANDIDATE_UNVALIDATED` |
@@ -223,14 +223,13 @@ To test whether continuous unit direction ($M_2$) provides empirical behavioral 
 
 ### Test 2A Findings (Within-Quadrant Continuous Differentiation):
 - Matched magnitude pairs ($|S_i - S_j| \le 0.02$) sharing identical ternary sign vectors ($\text{sign}(\mathbf{r}_i) = \text{sign}(\mathbf{r}_j)$) were evaluated for angular separation $\Delta \theta \ge 30^\circ$.
-- **Finding**: Across all exposure ticks $T \in [1, 25]$, there were **$N=0$ pairs** that exhibited large angular separation while sharing identical signs under Candidate G1.
-- Consequently, continuous direction provided **zero incremental argmax policy divergence** over discrete signs:
+- **Finding**: Under the predefined same-sign matched-pair subset across all exposure ticks $T \in [1, 25]$, no eligible pair exhibited $\ge 30^\circ$ angular divergence ($N=0$ pairs under Candidate G1). Therefore, no incremental behavioral divergence was observed in this test:
   $$D_{\text{pol}}(\text{R2} \mid \text{same sign}) = 0.0000, \quad p = 1.0$$
 
 ### Test 2B Findings (Cross-Quadrant Sign Transitions):
 - On matched pairs with differing ternary signs ($N=886$ pairs at $T=12$), discrete signs alone induced $D_{\text{pol}} = 0.3228$ ($p = 1.01 \times 10^{-63}$), matching continuous direction bit-exact.
 
-> **Scope Lock on R2**: R2 provided zero incremental behavioral value within the tested Candidate G1 regime and discrete action space. This finding demonstrates lack of empirical support for continuous direction under the evaluated criteria, but does NOT prove that R2 is universally unnecessary in unconstrained, continuous expressive spaces (e.g. continuous Live2D blendshapes or acoustic prosody).
+> **Scope Lock on R2**: Under the predefined same-sign matched-pair subset, no eligible pair exhibited $\ge 30^\circ$ angular divergence; therefore no incremental behavioral divergence was observed in this test. Because $N=0$ pairs satisfied the eligibility criteria, $p=1.0$ reflects the absence of eligible test cases in this specific partition rather than inferential proof of universal lack of value. This demonstrates that continuous direction is not supported as necessary under the predefined Phase 22 behavioral criteria and evaluated research regime, but does NOT constitute a generalized conclusion that R2 has no incremental value in unconstrained, continuous expressive spaces (e.g. continuous Live2D blendshapes or acoustic prosody).
 
 ---
 
@@ -272,7 +271,7 @@ $$\text{Generative Prediction } (\hat{\mathbf{p}}_T) \longrightarrow \text{Predi
 Reconciling the measurement architecture findings with the blocked Quality Gate 2:
 
 1. **What Gate 2 Establishes**:
-   - Quality Gate 2 establishes that under Protocol v1.4, canonical scalar surprise $S = \|\mathbf{r}_T\|_2$ cannot achieve preregistered separation ($\Delta_{\text{HM}} \ge 0.15$) at conversational exposures ($T=12$) under coupled ODE dynamics.
+   - Quality Gate 2 establishes that under Protocol v1.4, canonical scalar surprise $S = \|\mathbf{r}_T\|_2$ cannot achieve preregistered separation ($\Delta_{\text{HM}} \ge 0.15$) at conversational exposures ($T=12$) under coupled ODE dynamics ($S_{\text{Med}} = 0.5792, S_{\text{High}} = 0.6477 \implies \Delta_{\text{HM}} = +0.0685 < 0.15$).
 2. **What Gate 2 Does NOT Establish**:
    - Gate 2 failure does NOT prove that semantic prediction error is impossible, nor does it invalidate directional information. Component-wise effect sizes (Arousal $d > 9.5$) persist strongly.
 3. **Does Gate 2 Failure Invalidate Directional Information?**
@@ -339,7 +338,7 @@ In accordance with strict evidence hierarchy rules:
 | **M1 (Scalar + Ternary Sign)** | Behavioral Utilization (Adapter) | `[RESEARCH VALIDATED]` | Differentiates 79.89% of collapse pairs; reproduces 100% of R2 distinctions. |
 | **M1 (Scalar + Ternary Sign)** | Production Promotion | `[FUTURE GATE]` | Blocked pending Gate 2 resolution and formal ADR approval. |
 | **M2 (Scalar + Unit Direction)** | Geometric Collapse Resolution | `[RESEARCH VALIDATED]` | 0 collapses across all $T \in [1, 25]$. |
-| **M2 (Scalar + Unit Direction)** | Behavioral Incremental Value | `[EVIDENCE INSUFFICIENT]` | 0 incremental divergence demonstrated in tested same-sign regime. |
+| **M2 (Scalar + Unit Direction)** | Behavioral Incremental Value | `[EVIDENCE INSUFFICIENT]` | No incremental divergence observed in tested same-sign subset (no eligible pairs with $\Delta \theta \ge 30^\circ$). |
 | **M3 (Full Vector Residual)** | Global Minimality | `[REJECTED UNDER SPECIFIC REGIME]` | Dominance component demonstrably dispensable (Ablation A3). |
 | **M4 (Prediction Residual)** | Active Inference Authenticity | `[RESEARCH]` | Gold-standard generative expectation error semantics ($179.5^\circ$ divergence from $\Delta \mathbf{p}$). |
 | **M5 (Precision Candidates)** | Gate 2 Resolution | `[REJECTED UNDER SPECIFIC REGIME]` | Fixed precision candidates $\boldsymbol{\Pi}_1, \boldsymbol{\Pi}_2$ failed Gate 2 thresholds. |
@@ -357,23 +356,23 @@ Table 15.1 provides the explicit, non-composite comparison across candidates M0,
 | **Scalar Intensity** | **FULL** (Canonical primary driver, $r \ge 0.806$) | **FULL** (Preserves scalar $S$ bit-exact) | **FULL** (Preserves scalar $S$ bit-exact) | **DERIVED** (Requires calculating $\|\mathbf{r}\|_2$) |
 | **Directional Information** | **ZERO** (Omitted entirely) | **COARSE** (3 ternary signs, 27 octant states) | **CONTINUOUS** (Unit vector on $S^2$, 3 DOF) | **FULL** (3D Cartesian coordinates, 3 DOF) |
 | **Collapse Resolution ($T=12$)** | **FAILS** (358 Medium–High collapse pairs) | **COMPLETE** (0 collapses at $T \in \{12, 16, 25\}$) | **COMPLETE** (0 collapses across all $T \in [1, 25]$) | **COMPLETE** (0 collapses across all $T \in [1, 25]$) |
-| **Behavioral Utilization (Adapter)** | 0 / 358 differentiated ($0.00\%$) | 286 / 358 differentiated ($79.89\%$) | 286 / 358 differentiated ($79.89\%$; 0 incremental in same-sign) | Sufficient, but Dominance ablatable with 0 loss (A3) |
+| **Behavioral Utilization (Adapter)** | 0 / 358 differentiated ($0.00\%$) | 286 / 358 differentiated ($79.89\%$) | 286 / 358 differentiated ($79.89\%$; no incremental divergence observed in tested same-sign subset) | Sufficient, but Dominance ablatable with 0 loss (A3) |
 | **Short-Timescale Evidence ($T < 12$)** | **FAILS** (204 to 4,371 collapses) | **PARTIAL** (Collapses persist: 968 at $T=1$, 682 at $T=2$) | **COMPLETE** (0 collapses at all $T \in [1, 25]$) | **COMPLETE** (0 collapses at all $T \in [1, 25]$) |
 | **Prediction-Error Semantics** | Canonical 1D surprise norm | Canonical surprise $S$ $+$ decoupled directional side-channel | Canonical surprise $S$ $+$ continuous directional side-channel | 3D prediction residual vector; departs from 1D pipeline |
 | **Complexity & Overhead** | Minimal (1 float, 1 DOF) | Low (1 float $+$ 3 ternary symbols, 27 states, 5 bits optimal) | Moderate (4 floats, 3 DOF, normalization guards) | High (3 floats, 3 DOF, breaks cognitive pipeline schema) |
 | **End-to-End SLM Evidence** | `NOT TESTED` | `NOT TESTED` in Phase 22 (Adapter evidence only) | `NOT TESTED` in Phase 22 (Adapter evidence only) | `NOT TESTED` |
-| **Evidence Status** | `REJECTED` as complete measurement (Retained for intensity) | `SUPPORTED` for future architectural consideration (State D1) | `GEOMETRICALLY SUFFICIENT`; unproven behavioral increment | `SUFFICIENT BUT NOT MINIMAL` (Dominance dispensable) |
+| **Evidence Status** | Not supported as complete measurement (Retained for intensity) | Supported for future architectural consideration (State D1) | Geometrically sufficient; incremental necessity not supported under evaluated criteria | Sufficient but not minimal/required under evaluated criteria (Dominance dispensable) |
 
 ---
 
 ## 16. Research Decision State
 
 ### Predefined Decision Logic:
-- **D0 (Scalar retained as sufficient)**: **REJECTED**. Scalar $S$ demonstrably collapses 358 Medium–High pairs at $T=12$ and achieves $0.0\%$ action differentiation.
-- **D2 (R2 supported as necessary)**: **REJECTED**. Continuous direction demonstrated zero incremental behavioral divergence over discrete signs in the tested same-sign regime ($D_{\text{pol}} = 0.0000, p = 1.0$).
-- **D3 (Full vector required)**: **REJECTED**. Full 3D Cartesian representation is not minimal; Dominance was ablated with zero loss of collapse resolution (Ablation A3).
-- **D4 (Evidence insufficient)**: **REJECTED**. The accumulated evidence decisively distinguishes between candidates under the evaluated conditions.
-- **D1 (Scalar + R3 supported for future architectural consideration)**: **SUPPORTED**.
+- **D0 (Scalar retained as sufficient)**: **Not supported as sufficient**. Canonical scalar surprise $S$ demonstrably collapses 358 Medium–High pairs at $T=12$ and achieves $0.0\%$ action differentiation across collapse pairs in the research adapter.
+- **D2 (R2 supported as necessary)**: **D2 is not supported as necessary under the predefined Phase 22 behavioral criteria and evaluated research regime**. Under the predefined same-sign matched-pair subset, no eligible pair exhibited $\ge 30^\circ$ angular divergence; therefore no incremental behavioral divergence was observed in this test. While continuous direction geometrically resolves collapse at all $T \in [1, 25]$, its incremental necessity over discrete signs remains unproven, particularly as continuous expressive spaces and end-to-end SLM conditioning remain untested.
+- **D3 (Full vector required)**: **D3 is not supported as required/minimal under the evaluated criteria**. Full 3D Cartesian representation is sufficient but not minimal under the evaluated criteria, as Dominance was ablated with zero loss of collapse resolution (Ablation A3 under frozen G1).
+- **D4 (Evidence insufficient / architecture undecided)**: **Not selected**. The accumulated evidence is sufficient to differentiate candidate profiles and support State D1 for future architectural consideration under the evaluated research regime.
+- **D1 (Scalar + R3 supported for future architectural consideration)**: **SUPPORTED FOR FUTURE ARCHITECTURAL CONSIDERATION**.
   - Retains canonical scalar $S$ as an intensity and urgency gating driver ($r \ge 0.806$).
   - Appends discrete ternary signs as a decoupled side-channel.
   - Resolves collapse at conversational exposures ($T \ge 12$).
@@ -395,7 +394,7 @@ To prevent misinterpretation, this study explicitly records what the evidence do
 
 1. **NOT a Production Architecture**: This study does NOT prove that R3 is the production architecture, nor does it authorize production implementation.
 2. **NOT Globally Minimal**: R3 is NOT proven to be globally minimal across all mathematical representations.
-3. **R2 is NOT Useless**: R2 continuous unit direction is NOT proven to be universally unnecessary; it simply demonstrated zero incremental value under the specific tested discrete action space.
+3. **R2 Incremental Value is NOT Universally Disproven**: Under the predefined same-sign matched-pair subset, no eligible pair exhibited $\ge 30^\circ$ angular divergence; therefore no incremental divergence was observed in this test. Because $N=0$ pairs were eligible in Test 2A, $p=1.0$ is not inferential proof that R2 lacks value generally, but reflects lack of demonstrated necessity under the evaluated discrete criteria.
 4. **Gate 2 is NOT Solved**: Quality Gate 2 is NOT resolved, bypassed, or relaxed. It remains **BLOCKED**.
 5. **Phase 22 H1 has NOT Passed**: Phase 22 H1 remains formally **INCONCLUSIVE**.
 6. **Scalar $S$ is NOT Invalid**: Scalar surprise $S$ is NOT invalid or obsolete; it remains the verified, primary driver of intensity gating.
@@ -434,10 +433,10 @@ Before any future Architecture Gate review could consider promoting representati
 
 | Artifact File Path | SHA-256 Checksum | Size | Description |
 |---|---|---|---|
-| `tests/evaluation_phase22/scripts/analyze_measurement_architecture_decision.py` | `953c8a1795ef84ed57114700a0c227c71eb0ddcb900adb0109b679b7083367ca` | 21,392 B | Synthesis analysis engine & deterministic decision rules. |
-| `tests/evaluation_phase22/results/h1_measurement_architecture_decision/measurement_architecture_decision_results.json` | `a0f0cd33235959fa99a4cb0c1714255896705ae7d79607e45ec2954cade0c3b2` | 20,498 B | Synthesized evidence matrix, boundaries, decision table, and state. |
-| `tests/evaluation_phase22/fixtures/manifest_h1_measurement_architecture_decision.json` | `b09682ea8ceaeca59fc9444e5ec783ede93375be8a67af493a99671aac6b6959` | 1,939 B | Cryptographic manifest and governance registry. |
-| `tests/evaluation_phase22/test_h1_measurement_architecture_decision.py` | `0ccd2413ff2099222472a63e2ff4638138c22be6ca8a106bdb7d4bb59c88a0f1` | 8,024 B | Automated test suite (10/10 passing). |
+| `tests/evaluation_phase22/scripts/analyze_measurement_architecture_decision.py` | `994d3df279f83ae6893a8920c231b0a4df624ab7a8ba1bc0fa848e9f9c231970` | 40,334 B | Synthesis analysis engine & deterministic decision rules. |
+| `tests/evaluation_phase22/results/h1_measurement_architecture_decision/measurement_architecture_decision_results.json` | `a4021b9161cd8543b844ad7aa3ca421126f93880b1f1ce79d74854d5b7ff13be` | 28,301 B | Synthesized evidence matrix, boundaries, decision table, and state. |
+| `tests/evaluation_phase22/fixtures/manifest_h1_measurement_architecture_decision.json` | `197c5f6e14778f6177f9204f1347be0d490d7c8768d50c9a27aa28f67eee4584` | 1,988 B | Cryptographic manifest and governance registry. |
+| `tests/evaluation_phase22/test_h1_measurement_architecture_decision.py` | `3b3e61847d73d68bcbf2d7ad1bdbc44d3898f6f132880334e8da925649f70e0a` | 9,883 B | Automated test suite (10/10 passing). |
 
 ---
 
@@ -448,7 +447,7 @@ The Phase 22 H1 Measurement Architecture Decision Study concludes the empirical 
 The accumulated evidence across eight studies establishes:
 1. **Canonical scalar surprise $S$** is an irreplaceable intensity driver, but demonstrably collapses orthogonal emotional trajectories.
 2. **Discrete ternary signs (R3)** provide the minimal sufficient information to resolve this collapse under conversational exposures ($T \ge 12$) and reproduce 100% of the discrete behavioral distinctions observed under continuous direction in the research adapter.
-3. **Continuous unit direction (R2)** provided zero incremental behavioral divergence in tested same-sign regimes.
+3. **Continuous unit direction (R2)**: Under the predefined same-sign matched-pair subset, no eligible pair exhibited $\ge 30^\circ$ angular divergence; therefore no incremental behavioral divergence was observed in this test, leaving its incremental behavioral necessity unproven under the evaluated criteria.
 4. **Full vector representations (M3)** are sufficient but not minimal, as Dominance is ablatable with zero loss of collapse resolution.
 5. **Decision State D1** is empirically supported strictly for **future architectural consideration**.
 
