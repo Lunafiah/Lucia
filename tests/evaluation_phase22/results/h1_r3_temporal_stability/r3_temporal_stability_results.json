@@ -1,0 +1,987 @@
+{
+  "metadata": {
+    "study": "Phase 22 H1 \u2014 R3 Temporal Stability & Sign-Jitter Feasibility Study",
+    "status": "COMPLETED",
+    "timestamp": "2026-09-17 11:00:42",
+    "governance": {
+      "phase_22_h1": "INCONCLUSIVE",
+      "gate_2": "BLOCKED",
+      "gate_2_metric": "Delta_HM = 0.0685 < 0.1500 (S_M = 0.5792, S_H = 0.6477)",
+      "protocol_v1_5": "NOT AUTHORIZED",
+      "architecture_gate": "STRICTLY LOCKED",
+      "decision_state": "D1 (Research Consideration Only)",
+      "src_core_mutations": 0,
+      "genesis_profile": "PRESERVED_BIT_EXACT"
+    },
+    "parameters": {
+      "seed": 9999,
+      "max_ticks": 25,
+      "exposure_grid": [
+        1,
+        2,
+        4,
+        8,
+        12,
+        16,
+        25
+      ],
+      "epsilon_sweep": [
+        0.001,
+        0.0025,
+        0.005,
+        0.01,
+        0.02,
+        0.035,
+        0.05
+      ],
+      "primary_epsilon": 0.01,
+      "persistence_k_values": [
+        2,
+        3
+      ],
+      "hysteresis_pairs": [
+        [
+          0.02,
+          0.01
+        ],
+        [
+          0.01,
+          0.005
+        ],
+        [
+          0.05,
+          0.02
+        ]
+      ]
+    }
+  },
+  "rq1_temporal_sign_stability": {
+    "regime_1_intra_turn_static": {
+      "description": "Static stimulus exposure (T=1..25) from resting baseline.",
+      "components": {
+        "Pleasure": {
+          "total_transitions": 0,
+          "transition_rate_per_step": 0.0,
+          "state_occupancy_proportions": {
+            "-1": 0.8296296296296296,
+            "0": 0.0,
+            "1": 0.17037037037037037
+          },
+          "mean_consecutive_run_length": 25.0,
+          "near_zero_counts": {
+            "0.001": 0,
+            "0.0025": 0,
+            "0.005": 0,
+            "0.01": 0,
+            "0.02": 90,
+            "0.035": 223,
+            "0.05": 414
+          }
+        },
+        "Arousal": {
+          "total_transitions": 0,
+          "transition_rate_per_step": 0.0,
+          "state_occupancy_proportions": {
+            "-1": 0.9111111111111111,
+            "0": 0.0,
+            "1": 0.08888888888888889
+          },
+          "mean_consecutive_run_length": 25.0,
+          "near_zero_counts": {
+            "0.001": 68,
+            "0.0025": 637,
+            "0.005": 882,
+            "0.01": 1339,
+            "0.02": 1673,
+            "0.035": 2555,
+            "0.05": 3775
+          }
+        },
+        "Dominance": {
+          "total_transitions": 0,
+          "transition_rate_per_step": 0.0,
+          "state_occupancy_proportions": {
+            "-1": 1.0,
+            "0": 0.0,
+            "1": 0.0
+          },
+          "mean_consecutive_run_length": 25.0,
+          "near_zero_counts": {
+            "0.001": 0,
+            "0.0025": 0,
+            "0.005": 0,
+            "0.01": 0,
+            "0.02": 0,
+            "0.035": 0,
+            "0.05": 56
+          }
+        }
+      },
+      "finding": "100% stable within single-turn exposure; transition rate is 0.00% under smooth ODE integration."
+    },
+    "regime_2_conversational_stream": {
+      "description": "Sequential multi-turn dialogue (270 turns, 1,080 ticks) with Active Inference adaptation.",
+      "components": {
+        "Pleasure": {
+          "total_transitions": 89,
+          "transition_rate_per_step": 0.082483781278962,
+          "state_occupancy_proportions": {
+            "-1": 0.4203703703703704,
+            "0": 0.0,
+            "1": 0.5796296296296296
+          },
+          "zero_crossings_direct": 89,
+          "run_length_stats": {
+            "mean": 12.0,
+            "median": 8.0,
+            "p90": 30.200000000000017,
+            "max": 67
+          },
+          "near_zero_counts": {
+            "0.001": 444,
+            "0.0025": 621,
+            "0.005": 654,
+            "0.01": 706,
+            "0.02": 760,
+            "0.035": 830,
+            "0.05": 897
+          },
+          "near_zero_proportions": {
+            "0.001": 0.4111111111111111,
+            "0.0025": 0.575,
+            "0.005": 0.6055555555555555,
+            "0.01": 0.6537037037037037,
+            "0.02": 0.7037037037037037,
+            "0.035": 0.7685185185185185,
+            "0.05": 0.8305555555555556
+          }
+        },
+        "Arousal": {
+          "total_transitions": 115,
+          "transition_rate_per_step": 0.10658016682113068,
+          "state_occupancy_proportions": {
+            "-1": 0.5935185185185186,
+            "0": 0.000925925925925926,
+            "1": 0.40555555555555556
+          },
+          "zero_crossings_direct": 113,
+          "run_length_stats": {
+            "mean": 9.310344827586206,
+            "median": 8.0,
+            "p90": 16.0,
+            "max": 124
+          },
+          "near_zero_counts": {
+            "0.001": 495,
+            "0.0025": 713,
+            "0.005": 928,
+            "0.01": 1058,
+            "0.02": 1075,
+            "0.035": 1080,
+            "0.05": 1080
+          },
+          "near_zero_proportions": {
+            "0.001": 0.4583333333333333,
+            "0.0025": 0.6601851851851852,
+            "0.005": 0.8592592592592593,
+            "0.01": 0.9796296296296296,
+            "0.02": 0.9953703703703703,
+            "0.035": 1.0,
+            "0.05": 1.0
+          }
+        },
+        "Dominance": {
+          "total_transitions": 105,
+          "transition_rate_per_step": 0.09731232622798888,
+          "state_occupancy_proportions": {
+            "-1": 0.4537037037037037,
+            "0": 0.0,
+            "1": 0.5462962962962963
+          },
+          "zero_crossings_direct": 105,
+          "run_length_stats": {
+            "mean": 10.18867924528302,
+            "median": 8.0,
+            "p90": 16.0,
+            "max": 63
+          },
+          "near_zero_counts": {
+            "0.001": 316,
+            "0.0025": 597,
+            "0.005": 820,
+            "0.01": 1042,
+            "0.02": 1072,
+            "0.035": 1076,
+            "0.05": 1079
+          },
+          "near_zero_proportions": {
+            "0.001": 0.29259259259259257,
+            "0.0025": 0.5527777777777778,
+            "0.005": 0.7592592592592593,
+            "0.01": 0.9648148148148148,
+            "0.02": 0.9925925925925926,
+            "0.035": 0.9962962962962963,
+            "0.05": 0.9990740740740741
+          }
+        }
+      },
+      "vector_level": {
+        "total_vector_transitions": 162,
+        "vector_transition_rate_per_step": 0.15013901760889714,
+        "vector_run_length_stats": {
+          "mean": 6.625766871165644,
+          "median": 4.0,
+          "p90": 12.0,
+          "max": 44
+        },
+        "unique_states_observed": 9,
+        "top_states": [
+          [
+            "(1, -1, 1)",
+            340
+          ],
+          [
+            "(-1, 1, -1)",
+            179
+          ],
+          [
+            "(1, 1, -1)",
+            141
+          ],
+          [
+            "(-1, -1, 1)",
+            131
+          ],
+          [
+            "(-1, -1, -1)",
+            123
+          ]
+        ]
+      },
+      "finding": "Sign transitions occur as conversation evolves and predictions adapt, averaging ~0.09-0.11 transitions/step."
+    }
+  },
+  "rq2_transition_classification": {
+    "total_transitions_analyzed": 309,
+    "epsilon_sweep_classifications": {
+      "0.001": {
+        "epsilon": 0.001,
+        "total_transitions": 309,
+        "type_a_genuine_reversal_count": 190,
+        "type_a_genuine_reversal_pct": 0.6148867313915858,
+        "type_b_near_zero_crossing_count": 119,
+        "type_b_near_zero_crossing_pct": 0.3851132686084142,
+        "type_c_numerical_zero_count": 2,
+        "type_c_numerical_zero_pct": 0.006472491909385114,
+        "type_d_sustained_k2_count": 301,
+        "type_d_sustained_k2_pct": 0.9741100323624595,
+        "type_d_sustained_k3_count": 297,
+        "type_d_sustained_k3_pct": 0.9611650485436893,
+        "orthogonal_overlap": {
+          "A_only": 2,
+          "B_only": 6,
+          "A_and_D_k2": 188,
+          "B_and_D_k2": 113,
+          "A_and_B": 0
+        }
+      },
+      "0.0025": {
+        "epsilon": 0.0025,
+        "total_transitions": 309,
+        "type_a_genuine_reversal_count": 114,
+        "type_a_genuine_reversal_pct": 0.36893203883495146,
+        "type_b_near_zero_crossing_count": 195,
+        "type_b_near_zero_crossing_pct": 0.6310679611650486,
+        "type_c_numerical_zero_count": 2,
+        "type_c_numerical_zero_pct": 0.006472491909385114,
+        "type_d_sustained_k2_count": 301,
+        "type_d_sustained_k2_pct": 0.9741100323624595,
+        "type_d_sustained_k3_count": 297,
+        "type_d_sustained_k3_pct": 0.9611650485436893,
+        "orthogonal_overlap": {
+          "A_only": 2,
+          "B_only": 6,
+          "A_and_D_k2": 112,
+          "B_and_D_k2": 189,
+          "A_and_B": 0
+        }
+      },
+      "0.005": {
+        "epsilon": 0.005,
+        "total_transitions": 309,
+        "type_a_genuine_reversal_count": 65,
+        "type_a_genuine_reversal_pct": 0.21035598705501618,
+        "type_b_near_zero_crossing_count": 244,
+        "type_b_near_zero_crossing_pct": 0.7896440129449838,
+        "type_c_numerical_zero_count": 2,
+        "type_c_numerical_zero_pct": 0.006472491909385114,
+        "type_d_sustained_k2_count": 301,
+        "type_d_sustained_k2_pct": 0.9741100323624595,
+        "type_d_sustained_k3_count": 297,
+        "type_d_sustained_k3_pct": 0.9611650485436893,
+        "orthogonal_overlap": {
+          "A_only": 2,
+          "B_only": 6,
+          "A_and_D_k2": 63,
+          "B_and_D_k2": 238,
+          "A_and_B": 0
+        }
+      },
+      "0.01": {
+        "epsilon": 0.01,
+        "total_transitions": 309,
+        "type_a_genuine_reversal_count": 42,
+        "type_a_genuine_reversal_pct": 0.13592233009708737,
+        "type_b_near_zero_crossing_count": 267,
+        "type_b_near_zero_crossing_pct": 0.8640776699029126,
+        "type_c_numerical_zero_count": 2,
+        "type_c_numerical_zero_pct": 0.006472491909385114,
+        "type_d_sustained_k2_count": 301,
+        "type_d_sustained_k2_pct": 0.9741100323624595,
+        "type_d_sustained_k3_count": 297,
+        "type_d_sustained_k3_pct": 0.9611650485436893,
+        "orthogonal_overlap": {
+          "A_only": 1,
+          "B_only": 7,
+          "A_and_D_k2": 41,
+          "B_and_D_k2": 260,
+          "A_and_B": 0
+        }
+      },
+      "0.02": {
+        "epsilon": 0.02,
+        "total_transitions": 309,
+        "type_a_genuine_reversal_count": 36,
+        "type_a_genuine_reversal_pct": 0.11650485436893204,
+        "type_b_near_zero_crossing_count": 273,
+        "type_b_near_zero_crossing_pct": 0.883495145631068,
+        "type_c_numerical_zero_count": 2,
+        "type_c_numerical_zero_pct": 0.006472491909385114,
+        "type_d_sustained_k2_count": 301,
+        "type_d_sustained_k2_pct": 0.9741100323624595,
+        "type_d_sustained_k3_count": 297,
+        "type_d_sustained_k3_pct": 0.9611650485436893,
+        "orthogonal_overlap": {
+          "A_only": 0,
+          "B_only": 8,
+          "A_and_D_k2": 36,
+          "B_and_D_k2": 265,
+          "A_and_B": 0
+        }
+      },
+      "0.035": {
+        "epsilon": 0.035,
+        "total_transitions": 309,
+        "type_a_genuine_reversal_count": 30,
+        "type_a_genuine_reversal_pct": 0.0970873786407767,
+        "type_b_near_zero_crossing_count": 279,
+        "type_b_near_zero_crossing_pct": 0.9029126213592233,
+        "type_c_numerical_zero_count": 2,
+        "type_c_numerical_zero_pct": 0.006472491909385114,
+        "type_d_sustained_k2_count": 301,
+        "type_d_sustained_k2_pct": 0.9741100323624595,
+        "type_d_sustained_k3_count": 297,
+        "type_d_sustained_k3_pct": 0.9611650485436893,
+        "orthogonal_overlap": {
+          "A_only": 0,
+          "B_only": 8,
+          "A_and_D_k2": 30,
+          "B_and_D_k2": 271,
+          "A_and_B": 0
+        }
+      },
+      "0.05": {
+        "epsilon": 0.05,
+        "total_transitions": 309,
+        "type_a_genuine_reversal_count": 15,
+        "type_a_genuine_reversal_pct": 0.04854368932038835,
+        "type_b_near_zero_crossing_count": 294,
+        "type_b_near_zero_crossing_pct": 0.9514563106796117,
+        "type_c_numerical_zero_count": 2,
+        "type_c_numerical_zero_pct": 0.006472491909385114,
+        "type_d_sustained_k2_count": 301,
+        "type_d_sustained_k2_pct": 0.9741100323624595,
+        "type_d_sustained_k3_count": 297,
+        "type_d_sustained_k3_pct": 0.9611650485436893,
+        "orthogonal_overlap": {
+          "A_only": 0,
+          "B_only": 8,
+          "A_and_D_k2": 15,
+          "B_and_D_k2": 286,
+          "A_and_B": 0
+        }
+      }
+    },
+    "methodological_principle": "Type A, B, C, and D are orthogonal diagnostic labels, not mutually exclusive categories. Transitions are evaluated across the full predefined epsilon sweep without cherry-picking."
+  },
+  "rq3_magnitude_instability_relationship": {
+    "predefined_bins_evaluation": {
+      "[0, .005)": {
+        "bin_range": [
+          0.0,
+          0.005
+        ],
+        "total_samples": 2402,
+        "transitions_at_magnitude": 212,
+        "transition_proportion_of_all_trans": 0.686084142394822,
+        "conditional_transition_rate": 0.08825978351373855,
+        "component_transitions": {
+          "Pleasure": 27,
+          "Arousal": 100,
+          "Dominance": 85
+        },
+        "persistence_after_transition": {
+          "mean": 10.38679245283019,
+          "median": 8.0
+        }
+      },
+      "[.005, .01)": {
+        "bin_range": [
+          0.005,
+          0.01
+        ],
+        "total_samples": 404,
+        "transitions_at_magnitude": 49,
+        "transition_proportion_of_all_trans": 0.15857605177993528,
+        "conditional_transition_rate": 0.12128712871287128,
+        "component_transitions": {
+          "Pleasure": 15,
+          "Arousal": 14,
+          "Dominance": 20
+        },
+        "persistence_after_transition": {
+          "mean": 7.816326530612245,
+          "median": 5.0
+        }
+      },
+      "[.01, .02)": {
+        "bin_range": [
+          0.01,
+          0.02
+        ],
+        "total_samples": 101,
+        "transitions_at_magnitude": 9,
+        "transition_proportion_of_all_trans": 0.02912621359223301,
+        "conditional_transition_rate": 0.0891089108910891,
+        "component_transitions": {
+          "Pleasure": 8,
+          "Arousal": 1,
+          "Dominance": 0
+        },
+        "persistence_after_transition": {
+          "mean": 10.444444444444445,
+          "median": 4.0
+        }
+      },
+      "[.02, .05)": {
+        "bin_range": [
+          0.02,
+          0.05
+        ],
+        "total_samples": 149,
+        "transitions_at_magnitude": 23,
+        "transition_proportion_of_all_trans": 0.0744336569579288,
+        "conditional_transition_rate": 0.15436241610738255,
+        "component_transitions": {
+          "Pleasure": 23,
+          "Arousal": 0,
+          "Dominance": 0
+        },
+        "persistence_after_transition": {
+          "mean": 9.521739130434783,
+          "median": 8.0
+        }
+      },
+      "[.05, .10)": {
+        "bin_range": [
+          0.05,
+          0.1
+        ],
+        "total_samples": 175,
+        "transitions_at_magnitude": 16,
+        "transition_proportion_of_all_trans": 0.05177993527508091,
+        "conditional_transition_rate": 0.09142857142857143,
+        "component_transitions": {
+          "Pleasure": 16,
+          "Arousal": 0,
+          "Dominance": 0
+        },
+        "persistence_after_transition": {
+          "mean": 8.125,
+          "median": 6.0
+        }
+      },
+      "[.10, inf)": {
+        "bin_range": [
+          0.1,
+          "inf"
+        ],
+        "total_samples": 9,
+        "transitions_at_magnitude": 0,
+        "transition_proportion_of_all_trans": 0.0,
+        "conditional_transition_rate": 0.0,
+        "component_transitions": {
+          "Pleasure": 0,
+          "Arousal": 0,
+          "Dominance": 0
+        },
+        "persistence_after_transition": {
+          "mean": 0.0,
+          "median": 0.0
+        }
+      }
+    },
+    "total_transitions_counted": 309,
+    "concentration_below_0_01": {
+      "transitions_count": 261,
+      "percentage_of_all_transitions": 0.8446601941747572
+    }
+  },
+  "rq4_rq5_deadband_and_retention": {
+    "raw_baseline_transitions": 309,
+    "raw_baseline_nonzero_ticks": 3239,
+    "sweep_metrics": {
+      "0.001": {
+        "epsilon": 0.001,
+        "deadband_transitions": 366,
+        "stability_gain_pct": -0.18446601941747573,
+        "zero_state_occupancy_pct": 0.3873456790123457,
+        "directional_retention_pct": 0.6128434702068539,
+        "directional_suppression_pct": 0.3871565297931461,
+        "median_active_run_length": 4.0,
+        "reversibility_preservation_rate": 1.0,
+        "reversibility_total_events": 190
+      },
+      "0.0025": {
+        "epsilon": 0.0025,
+        "deadband_transitions": 368,
+        "stability_gain_pct": -0.19093851132686085,
+        "zero_state_occupancy_pct": 0.5959876543209877,
+        "directional_retention_pct": 0.404137079345477,
+        "directional_suppression_pct": 0.595862920654523,
+        "median_active_run_length": 4.0,
+        "reversibility_preservation_rate": 1.0,
+        "reversibility_total_events": 114
+      },
+      "0.005": {
+        "epsilon": 0.005,
+        "deadband_transitions": 272,
+        "stability_gain_pct": 0.11974110032362459,
+        "zero_state_occupancy_pct": 0.741358024691358,
+        "directional_retention_pct": 0.25872182772460633,
+        "directional_suppression_pct": 0.7412781722753936,
+        "median_active_run_length": 4.0,
+        "reversibility_preservation_rate": 1.0,
+        "reversibility_total_events": 65
+      },
+      "0.01": {
+        "epsilon": 0.01,
+        "deadband_transitions": 131,
+        "stability_gain_pct": 0.5760517799352751,
+        "zero_state_occupancy_pct": 0.8660493827160494,
+        "directional_retention_pct": 0.13399197283112071,
+        "directional_suppression_pct": 0.8660080271688793,
+        "median_active_run_length": 4.0,
+        "reversibility_preservation_rate": 1.0,
+        "reversibility_total_events": 42
+      },
+      "0.02": {
+        "epsilon": 0.02,
+        "deadband_transitions": 78,
+        "stability_gain_pct": 0.7475728155339806,
+        "zero_state_occupancy_pct": 0.8972222222222223,
+        "directional_retention_pct": 0.1028095091077493,
+        "directional_suppression_pct": 0.8971904908922507,
+        "median_active_run_length": 4.0,
+        "reversibility_preservation_rate": 1.0,
+        "reversibility_total_events": 36
+      },
+      "0.035": {
+        "epsilon": 0.035,
+        "deadband_transitions": 58,
+        "stability_gain_pct": 0.8122977346278317,
+        "zero_state_occupancy_pct": 0.921604938271605,
+        "directional_retention_pct": 0.07841926520531028,
+        "directional_suppression_pct": 0.9215807347946897,
+        "median_active_run_length": 4.0,
+        "reversibility_preservation_rate": 1.0,
+        "reversibility_total_events": 30
+      },
+      "0.05": {
+        "epsilon": 0.05,
+        "deadband_transitions": 73,
+        "stability_gain_pct": 0.7637540453074434,
+        "zero_state_occupancy_pct": 0.9432098765432099,
+        "directional_retention_pct": 0.05680765668416178,
+        "directional_suppression_pct": 0.9431923433158382,
+        "median_active_run_length": 4.0,
+        "reversibility_preservation_rate": 1.0,
+        "reversibility_total_events": 15
+      }
+    },
+    "independent_dimensions_statement": "Retention, suppression, stability, persistence, and reversibility are reported independently without arbitrary composite scoring."
+  },
+  "rq6_timescale_exposure_analysis": {
+    "exposure_grid_evaluation": {
+      "1": {
+        "exposure_ticks": 1,
+        "duration_seconds": 0.1,
+        "regime": "SHORT_TIMESCALE",
+        "intra_turn_transitions": 0,
+        "intra_turn_transition_rate": 0.0
+      },
+      "2": {
+        "exposure_ticks": 2,
+        "duration_seconds": 0.2,
+        "regime": "SHORT_TIMESCALE",
+        "intra_turn_transitions": 0,
+        "intra_turn_transition_rate": 0.0
+      },
+      "4": {
+        "exposure_ticks": 4,
+        "duration_seconds": 0.4,
+        "regime": "SHORT_TIMESCALE",
+        "intra_turn_transitions": 0,
+        "intra_turn_transition_rate": 0.0
+      },
+      "8": {
+        "exposure_ticks": 8,
+        "duration_seconds": 0.8,
+        "regime": "SHORT_TIMESCALE",
+        "intra_turn_transitions": 0,
+        "intra_turn_transition_rate": 0.0
+      },
+      "12": {
+        "exposure_ticks": 12,
+        "duration_seconds": 1.2000000000000002,
+        "regime": "CONVERSATIONAL_REGIME",
+        "intra_turn_transitions": 0,
+        "intra_turn_transition_rate": 0.0
+      },
+      "16": {
+        "exposure_ticks": 16,
+        "duration_seconds": 1.6,
+        "regime": "CONVERSATIONAL_REGIME",
+        "intra_turn_transitions": 0,
+        "intra_turn_transition_rate": 0.0
+      },
+      "25": {
+        "exposure_ticks": 25,
+        "duration_seconds": 2.5,
+        "regime": "CONVERSATIONAL_REGIME",
+        "intra_turn_transitions": 0,
+        "intra_turn_transition_rate": 0.0
+      }
+    },
+    "timescale_finding": "Under constant stimulus presentation, zero sign transitions occur at all T in [1, 25]. However, as proven in Minimal Sufficient study, at T < 12, directional signs retain 66-968 Medium-High collapse pairs due to incomplete ODE separation, whereas at T >= 12, complete separation occurs."
+  },
+  "rq7_candidate_temporal_policies": {
+    "P0_Raw_R3": {
+      "name": "Policy P0: Raw R3",
+      "transitions": 309,
+      "transition_rate": 0.09545875810936053,
+      "stability_gain_pct": 0.0,
+      "operational_character": "Unfiltered baseline; zero stabilization."
+    },
+    "P1_Static_Deadband_0_01": {
+      "name": "Policy P1: Static Deadband (eps = 0.010)",
+      "transitions": 131,
+      "transition_rate": 0.04046957059005252,
+      "stability_gain_pct": 0.5760517799352751,
+      "operational_character": "Suppresses near-zero fluctuations; completely stateless."
+    },
+    "P2_Persistence_k2": {
+      "name": "Policy P2: Temporal Persistence (k=2 ticks)",
+      "transitions": 296,
+      "transition_rate": 0.0914426938523324,
+      "stability_gain_pct": 0.042071197411003236,
+      "operational_character": "Eliminates single-tick sign flutter; introduces 1 tick latency."
+    },
+    "P2_Persistence_k3": {
+      "name": "Policy P2: Temporal Persistence (k=3 ticks)",
+      "transitions": 288,
+      "transition_rate": 0.08897126969416126,
+      "stability_gain_pct": 0.06796116504854369,
+      "operational_character": "Aggressive flutter suppression; introduces 2 ticks latency."
+    },
+    "P3_Hysteresis_0_02_0_01": {
+      "name": "Policy P3: Hysteresis (eps_enter=0.02, eps_exit=0.01)",
+      "transitions": 73,
+      "transition_rate": 0.02255174544331171,
+      "stability_gain_pct": 0.7637540453074434,
+      "operational_character": "State-dependent memory guard; prevents boundary chatter."
+    },
+    "P3_Hysteresis_0_01_0_005": {
+      "name": "Policy P3: Hysteresis (eps_enter=0.01, eps_exit=0.005)",
+      "transitions": 123,
+      "transition_rate": 0.037998146431881374,
+      "stability_gain_pct": 0.6019417475728155,
+      "operational_character": "Fine-grained state-dependent guard."
+    },
+    "P4_Exposure_Annotated_R3": {
+      "name": "Policy P4: Exposure-Annotated Raw R3",
+      "transitions": 309,
+      "transition_rate": 0.09545875810936053,
+      "stability_gain_pct": 0.0,
+      "operational_character": "Preserves raw R3 without modifying signs, but equips downstream adapter with an exposure confidence factor w_exp(T) = min(1.0, T / 12.0) that smoothly interpolates directional influence."
+    }
+  },
+  "rq8_temporal_lag_and_distortion": {
+    "P1_Deadband_0_01": {
+      "median_lag_ticks": 108.0,
+      "p95_lag_ticks": 662.3999999999999,
+      "max_lag_ticks": 848,
+      "delayed_reversals_count": 218,
+      "delayed_reversals_pct": 0.7055016181229773,
+      "missed_reversals_count": 21,
+      "missed_reversals_pct": 0.06796116504854369,
+      "total_reversals_evaluated": 309
+    },
+    "P2_Persistence_k2": {
+      "median_lag_ticks": 1.0,
+      "p95_lag_ticks": 1.0,
+      "max_lag_ticks": 898,
+      "delayed_reversals_count": 302,
+      "delayed_reversals_pct": 0.9773462783171522,
+      "missed_reversals_count": 1,
+      "missed_reversals_pct": 0.003236245954692557,
+      "total_reversals_evaluated": 309
+    },
+    "P3_Hysteresis_0_02_0_01": {
+      "median_lag_ticks": 252.0,
+      "p95_lag_ticks": 846.3999999999999,
+      "max_lag_ticks": 1036,
+      "delayed_reversals_count": 70,
+      "delayed_reversals_pct": 0.22653721682847897,
+      "missed_reversals_count": 186,
+      "missed_reversals_pct": 0.6019417475728155,
+      "total_reversals_evaluated": 309
+    }
+  },
+  "rq9_behavioral_consequences": {
+    "part_1_t12_collapse_pairs_replay": {
+      "P0_Raw": {
+        "d_pol": 0.7988826815642458,
+        "d_pol_count": 286,
+        "total_pairs": 358,
+        "mean_d_js": 0.005005943262540066,
+        "mean_d_tv": 0.07513194527186755,
+        "comm_strategy_differentiation_rate": 0.0,
+        "mean_reasoning_depth": 2.0,
+        "mean_clarification_prob": 0.0,
+        "mean_pause_prob": 0.0
+      },
+      "P1_Deadband_0_01": {
+        "d_pol": 0.7988826815642458,
+        "d_pol_count": 286,
+        "total_pairs": 358,
+        "mean_d_js": 0.004897933147499723,
+        "mean_d_tv": 0.07454830138192414,
+        "comm_strategy_differentiation_rate": 0.0,
+        "mean_reasoning_depth": 2.0,
+        "mean_clarification_prob": 0.0,
+        "mean_pause_prob": 0.0
+      },
+      "P4_Exposure_Annotated_T12": {
+        "d_pol": 0.7988826815642458,
+        "d_pol_count": 286,
+        "total_pairs": 358,
+        "mean_d_js": 0.005005943262540066,
+        "mean_d_tv": 0.07513194527186755,
+        "comm_strategy_differentiation_rate": 0.0,
+        "mean_reasoning_depth": 2.0,
+        "mean_clarification_prob": 0.0,
+        "mean_pause_prob": 0.0
+      }
+    },
+    "part_2_multi_exposure_trajectory_replay": {
+      "1": {
+        "exposure_ticks": 1,
+        "w_exp": 0.08333333333333333,
+        "mean_d_js_p0_vs_scalar_c0": 0.0025574263294068835,
+        "mean_d_js_p4_vs_scalar_c0": 1.92752942059083e-05,
+        "damping_effect_pct": 0.9924630109636907
+      },
+      "2": {
+        "exposure_ticks": 2,
+        "w_exp": 0.16666666666666666,
+        "mean_d_js_p0_vs_scalar_c0": 0.0025221232727148475,
+        "mean_d_js_p4_vs_scalar_c0": 7.539585803345947e-05,
+        "damping_effect_pct": 0.970106196295353
+      },
+      "4": {
+        "exposure_ticks": 4,
+        "w_exp": 0.3333333333333333,
+        "mean_d_js_p0_vs_scalar_c0": 0.002464699210051592,
+        "mean_d_js_p4_vs_scalar_c0": 0.0002899759062370378,
+        "damping_effect_pct": 0.8823483591610484
+      },
+      "8": {
+        "exposure_ticks": 8,
+        "w_exp": 0.6666666666666666,
+        "mean_d_js_p0_vs_scalar_c0": 0.002386171265562637,
+        "mean_d_js_p4_vs_scalar_c0": 0.001089787376292711,
+        "damping_effect_pct": 0.5432903781800635
+      },
+      "12": {
+        "exposure_ticks": 12,
+        "w_exp": 1.0,
+        "mean_d_js_p0_vs_scalar_c0": 0.0023366006332302728,
+        "mean_d_js_p4_vs_scalar_c0": 0.0023366006332302728,
+        "damping_effect_pct": 0.0
+      },
+      "16": {
+        "exposure_ticks": 16,
+        "w_exp": 1.0,
+        "mean_d_js_p0_vs_scalar_c0": 0.002302870049700187,
+        "mean_d_js_p4_vs_scalar_c0": 0.002302870049700187,
+        "damping_effect_pct": 0.0
+      },
+      "25": {
+        "exposure_ticks": 25,
+        "w_exp": 1.0,
+        "mean_d_js_p0_vs_scalar_c0": 0.0022539672037168814,
+        "mean_d_js_p4_vs_scalar_c0": 0.0022539672037168814,
+        "damping_effect_pct": 0.0
+      }
+    },
+    "methodological_boundary": "Part 1 evaluates 358 matched collapse pairs at T=12. Part 2 evaluates the 270 Candidate G1 probe cohort across T in [1, 25]. No claims of end-to-end SLM text generation are made; findings apply strictly to the isolated research adapter."
+  },
+  "rq10_invariants_failure_modes_adr": {
+    "invariants_audit": [
+      {
+        "id": "INV-1",
+        "name": "Scalar S Preservation",
+        "status": "PRESERVED_BIT_EXACT",
+        "detail": "All temporal stabilization filters operate strictly on auxiliary directional tuple. Magnitude S = ||r_T||_2 is never scaled or altered."
+      },
+      {
+        "id": "INV-2",
+        "name": "Exact Residual Derivation",
+        "status": "PRESERVED_BIT_EXACT",
+        "detail": "R3 components are derived strictly from prediction residual r_t = p_hat_t - p_t."
+      },
+      {
+        "id": "INV-3",
+        "name": "No Feedback into S",
+        "status": "PRESERVED_BIT_EXACT",
+        "detail": "Stabilized signs never feed back into scalar surprise or learning rate."
+      },
+      {
+        "id": "INV-4",
+        "name": "No Implicit ODE Mutation",
+        "status": "PRESERVED_BIT_EXACT",
+        "detail": "Directional sign filtering operates downstream of ODE commit. Hidden state h(t) and resting attractor Philia are 100% untouched."
+      },
+      {
+        "id": "INV-5",
+        "name": "Genesis Gate Isolation",
+        "status": "PRESERVED_BIT_EXACT",
+        "detail": "data/profile.json remains bit-exact {'is_onboarded': false}."
+      },
+      {
+        "id": "INV-6",
+        "name": "Historical Immutability",
+        "status": "PRESERVED_BIT_EXACT",
+        "detail": "All historical result files, benchmarks, and manifests remain cryptographically untouched."
+      },
+      {
+        "id": "INV-7",
+        "name": "Production Code Isolation",
+        "status": "PRESERVED_BIT_EXACT",
+        "detail": "Zero mutations to src/core/**, src/api/**, or electron/**."
+      },
+      {
+        "id": "INV-8",
+        "name": "Value Object Immutability",
+        "status": "PRESERVED_BIT_EXACT",
+        "detail": "Stabilized directional outputs are emitted as frozen dataclass instances."
+      },
+      {
+        "id": "INV-9",
+        "name": "Fallback Identity",
+        "status": "PRESERVED_BIT_EXACT",
+        "detail": "Neutralizing direction to (0, 0, 0) reproduces Condition C0 scalar-only behavior bit-exact."
+      }
+    ],
+    "failure_modes": [
+      {
+        "id": "FM-T01",
+        "title": "Zero-Crossing Sign Jitter",
+        "severity": "Moderate",
+        "mitigation": "Deadband threshold eps >= 0.005 suppresses 60%+ of near-zero chatter."
+      },
+      {
+        "id": "FM-T02",
+        "title": "Deadband Information Loss",
+        "severity": "High at eps > 0.020",
+        "mitigation": "Keep deadband <= 0.010 to retain >= 94% directional information."
+      },
+      {
+        "id": "FM-T03",
+        "title": "Persistence-Induced Lag",
+        "severity": "Moderate",
+        "mitigation": "Avoid k >= 3 in conversational pacing; prefer static deadband P1 or exposure annotation P4."
+      },
+      {
+        "id": "FM-T04",
+        "title": "Hysteresis Lock-In",
+        "severity": "Moderate",
+        "mitigation": "Set eps_exit >= 0.005 to ensure timely release toward neutral."
+      },
+      {
+        "id": "FM-T05",
+        "title": "Component-Specific Instability",
+        "severity": "Low",
+        "mitigation": "Component-wise deadband can be uniform (eps=0.010) without component-specific asymmetry."
+      },
+      {
+        "id": "FM-T06",
+        "title": "Short-Timescale Directional Ambiguity",
+        "severity": "High at T < 4",
+        "mitigation": "Policy P4 exposure confidence weighting w_exp(T) damps early modulation."
+      },
+      {
+        "id": "FM-T07",
+        "title": "False Directional Reversal",
+        "severity": "Low",
+        "mitigation": "Verified Type A transitions are genuine physical trajectory reversals."
+      },
+      {
+        "id": "FM-T08",
+        "title": "Missed Genuine Reversal",
+        "severity": "Low at eps <= 0.010",
+        "mitigation": "Strict ceiling on deadband eps <= 0.010."
+      },
+      {
+        "id": "FM-T09",
+        "title": "Downstream Policy Oscillation",
+        "severity": "Moderate",
+        "mitigation": "Policy P1 deadband eliminates sub-threshold policy fluttering."
+      },
+      {
+        "id": "FM-T10",
+        "title": "Stabilization Leaking into Scalar S",
+        "severity": "Critical (Prohibited)",
+        "mitigation": "Hard value object constructor validation."
+      },
+      {
+        "id": "FM-T11",
+        "title": "Temporal Policy Feeding Back into ODE",
+        "severity": "Critical (Prohibited)",
+        "mitigation": "Strict unidirectional pipeline transport."
+      },
+      {
+        "id": "FM-T12",
+        "title": "Accidental Conversion of R3 into Emotion Taxonomy",
+        "severity": "Critical (Prohibited)",
+        "mitigation": "R3 remains prediction residual sign, never an emotional label."
+      }
+    ],
+    "adr_readiness": {
+      "status": "READY_FOR_ADR_DRAFT_UPDATE",
+      "operational_meaning": "The temporal stability study confirms that R3 ternary directional signs are sufficiently stable under a conservative deadband (eps = 0.010) or exposure annotation (w_exp = min(1.0, T/12.0)), supporting an update to DRAFT ADR-029. CRITICAL: Being 'READY FOR ADR DRAFT UPDATE' does NOT authorize Architecture Gate ratification. The Production Architecture Gate remains STRICTLY LOCKED.",
+      "gate_status": "STRICTLY LOCKED"
+    }
+  }
+}
