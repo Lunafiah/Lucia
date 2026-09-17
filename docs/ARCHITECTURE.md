@@ -490,21 +490,85 @@ $$\text{Development / Simulation Environment} \neq \text{Lucia Activation}$$
   4. *Atomic Parameter Swap*: Parameter updates swap under `_train_lock` held $\le 0.1\text{ms}$ with **0.0 MB GPU VRAM contention**.
   5. *ADR-022 Ordering & Fallback*: Stage 9 reads snapshot $\mathbf{R}_{t-1}$; Stage 16.3 computes $\mathbf{R}_t$ and updates `EmotionCore`; feature flag `enable_relational_consolidation` restores Phase 20 baseline when disabled.
 
-### DRAFT ADR-029: Decoupled Directional Prediction Error Side-Channel [DRAFT / NOT RATIFIED]
-* **Status**: **`ADR DRAFT UPDATED`** (Archival Research Draft Only — NOT RATIFIED / UNAPPROVED / NOT IMPLEMENTED)
-* **Governing Gate**: Production Architecture Gate is **STRICTLY LOCKED**. Production mutations = 0.
-* **Context**: Phase 22 H1 empirical evaluations demonstrated that canonical scalar surprise $S = \|\mathbf{r}_T\|_2$ exhibits metric collapse across 358 Medium-High stimulus pairs ($|\Delta S| < 0.05$) due to Euclidean angular loss in 3-dimensional PAD space. Directional ternary signs $R3 = \operatorname{sign}_\epsilon(\mathbf{r}_T) \in \{-1, 0, +1\}^3$ resolved 79.89% (286/358) of collapse pairs in an isolated research adapter with 0.00% intra-turn sign jitter. Deadband $\epsilon = 0.010$ suppresses 57.61% of multi-turn chatter transitions. However, Quality Gate 2 remains **BLOCKED** ($\Delta_{\text{HM}} = +0.0685 < 0.1500$), Phase 22 H1 remains **INCONCLUSIVE**, and live Small Language Model prompt conditioning remains completely untested.
+### DRAFT ADR-029: Decoupled Directional Prediction Error Side-Channel [DRAFT / RESEARCH RECORD ONLY / NOT RATIFIED]
+* **Status**: **`DRAFT / RESEARCH RECORD ONLY / NOT RATIFIED`** (Archival Research Record Only — NOT RATIFIED / UNAPPROVED / NOT ADMITTED TO PRODUCTION)
+* **Production Admission**: **`NOT ADMITTED`** (Production Architecture Gate is **STRICTLY LOCKED**; Production mutations = 0)
+* **Quality Gate 2 Status**: **`STRICTLY BLOCKED`** ($\bar{S}_M = 0.5792, \bar{S}_H = 0.6477 \implies \Delta_{\text{HM}} = +0.0685 < 0.1500$)
+* **Phase 22 H1 Status**: **`INCONCLUSIVE`** (Formal Path C / v1.4 benchmark did not establish required pooled surprise separation)
+* **Authoritative Decision Statement**:
+  > *R3 is supported for continued architectural consideration and evidence consolidation, but remains a research candidate and is not ratified for production use.*  
+  *(Quality Gate 2 remains strictly blocked independently of this decision.)*
+
+* **Context & Problem Formulation**:
+  Under canonical Phase 22 active inference, scalar prediction error $S = \|\mathbf{r}_T\|_2 = \|\hat{\mathbf{p}}_T - \mathbf{p}_T\|_2$ exhibits severe metric collapse across 358 Medium-High stimulus pairs ($|\Delta S| < 0.05$) due to Euclidean angular loss in 3-dimensional PAD space. To evaluate whether directional prediction error resolves this collapse, research investigations formulated candidate dual-aspect measurement representation $R3 = \operatorname{sign}_\epsilon(\mathbf{r}_T) \in \{-1, 0, +1\}^3$. Across 6 isolated research studies, R3 demonstrated mathematical, temporal, semantic, architectural, and behavioral viability in research harnesses. However, evidence is strictly bounded to research harnesses; no production admission or Quality Gate 2 reopening is authorized.
+
+* **Explicit Separation of Evidence Layers**:
+  1. **Layer A — Measurement Evidence (Mathematical Representation)**:
+     - Candidate dual-aspect measurement representation consisting of scalar magnitude $S = \|\mathbf{r}_T\|_2 \ge 0$ and ternary directional components $\mathbf{d} = \operatorname{sign}_\epsilon(\mathbf{r}_T) \in \{-1, 0, +1\}^3$.
+     - Dual aspects: 1 scalar magnitude + 3 ternary directional coordinates = 27 discrete directional states.
+     - Information capacity: $\log_2(27) \approx 4.755$ bits of directional state capacity.
+     - Candidate deadband parameter: $\epsilon = 0.010$.
+     - *Epistemological Boundary*: R3 is currently a **research candidate**, NOT a production contract.
+  2. **Layer B — Temporal Evidence (Dynamical Stability)**:
+     - Static single-turn evaluations ($T \in [1, 25]$ across all $N=270$ probes): exactly zero directional transitions ($0.00\%$ intra-turn sign jitter).
+     - Multi-turn conversational stream (1,080 ticks): 309 transitions, of which $84.47\%$ concentrate at near-zero residuals ($\|r\| < 0.010$) and $0.00\%$ at $\|r\| \ge 0.100$.
+     - Deadband $\epsilon = 0.010$ suppresses $57.61\%$ of multi-turn chatter transitions while retaining $100\%$ of tested Type-A reversals.
+     - T12 collapse resolution: 286 / 358 matched-magnitude pairs.
+     - *Epistemological Boundary*: Preserve the distinction between observed stability under the evaluated regime and universal temporal stability; do NOT generalize beyond the tested regime.
+  3. **Layer C — Consumer Behavioral Evidence (Research-Harness Adapter)**:
+     - Evaluated 6 conditions: C0 (scalar $S$), C1 ($S + R2$), C2 ($S + R3$), C3 ($S + rA$), C4 (shuffled $R3$), C5 ($R3$ with fixed $S_0 = 0.50$).
+     - Frozen corpus lineage: Canonical Candidate G1 Stimulus Corpus Master Seed = 9999 ($N=270$, 90/tier, frozen/immutable); Consumer robustness seeds = 42, 43, 44, 45, 46.
+     - Primary findings:
+       - C0 total scalar collapse: $D_{\text{action}} = 0.0000 \pm 0.0000$ across $N=6,734$ matched-magnitude pairs ($|S_i - S_j| \le 0.02$).
+       - C2 action divergence: $D_{\text{action}} = 0.0425 \pm 0.0000$.
+       - C4 action divergence: $D_{\text{action}} = 0.2912 \pm 0.0142$.
+       - C5 fixed-$S$ result: $D_{\text{action}} = 0.0425 \pm 0.0000$ (exactly reproduced C2 action divergence).
+       - Collapse pair differentiation: 286 / 358 previously collapsed discordant matched pairs were differentiated by C2.
+       - **Mandatory Calibrated Formulation**: *C2 differentiates 79.89% of the previously collapsed discordant matched pairs under the evaluated research-harness consumer.* (Do NOT state "R3 recovers ground truth", "recovers the lost distinction", "Gate 2 is recovered", "proves physiological direction", or "production validated").
+       - Same-direction pair parity: $100\%$ exact ($\Delta_{\text{parity}} = 0.0000$).
+       - **Calibrated C4 Interpretation**: *Shuffled-direction control produces substantially different, less correspondence-preserving behavior.* (Do NOT characterize as "degraded utility" without qualification).
+       - **Calibrated C5 Interpretation**: *C5 with fixed $S_0 = 0.50$ exactly reproduces the C2 action-divergence result. Within the evaluated research adapter and matched-pair regime, directional information accounts for the observed discrete action divergence. Variation in scalar magnitude within the matched-pair tolerance did not produce additional argmax action divergence in this adapter.* (Do NOT claim that scalar intensity is irrelevant globally, magnitude has no information value, R3 replaces S, or continuous intensity modulation is validated).
+       - **Cross-Seed Invariant Explanation ($\text{std} = 0.0000$)**: Consumer robustness seeds govern tie-breaking micro-jitter $\mathcal{N}(0, 10^{-6})$ and C4 permutation ordering. The observed argmax action valuation margin $|G(a^*) - G(a')| \ge 0.010$ is $10^4\times$ larger than the micro-jitter scale, preventing argmax reversal under unpermuted conditions. C4 remains seed-sensitive ($\text{std} = 0.0142$) because the permutation sequence itself varies with seed. Does NOT imply the broader architecture is deterministic.
+       - **F1–F10 Evaluation Taxonomy**:
+         - Hard & Bounded Invariants (`PASS`): F1 (Bit-Exact $S$ Recovery), F5 (Zero Coupling to Fast ODE State), F6 (Strict Bounded Latency $\le 2\text{ms}$), F7 (Zero GPU VRAM Allocation), F8 (Non-Blocking Telemetry Preservation), F9 (Genesis Profile Bit-Exact Preservation), F10 (Zero Production Code Diff).
+         - Empirical Outcome Criteria (`OBSERVED_CONSISTENT`): F2 (C2 Non-Zero Action Divergence on Matched Pairs), F3 (C4 Shuffled Policy Incoherence & Divergence), F4 (C2 Directional Semantic Octant Correspondence). Do not label empirical hypothesis-supporting observations as "falsification tests passed".
+  4. **Layer D — Production Architecture (Lucia Canonical Runtime)**:
+     - Production runtime mutations = 0 in `src/core/**`, `src/api/**`, `electron/**`.
+     - Live Small Language Model prompt conditioning remains completely untested.
+     - Production EFE policy evaluation remains unintegrated.
+     - Multimodal Live2D/VRM blendshapes and mascot embodiment remain decoupled.
+     - *Core Epistemological Principle*: The accumulated evidence supports Layers A–C to varying degrees; it does NOT constitute Layer D.
+
+* **7-Tier Evidence Classification Matrix**:
+
+| Classification Tier | Audited Claims & Observations | Operational Scope & Justification |
+|---|---|---|
+| **`SUPPORTED`** | • Canonical Scalar $S$ Preservation (`INV-1`)<br/>• Prediction Residual Provenance at Stage S4<br/>• R3 Deterministic Ternary Encoding (27 states, ~4.755 bits)<br/>• Static Intra-Turn Temporal Stability (0.00% jitter)<br/>• Surprise vs. Uncertainty Separation (`AGENTS.md` §1)<br/>• Zero Production Code Mutations (`production diff = 0`) | Mathematically proven and verified by deterministic automated tests; bit-exact legacy compatibility guaranteed. |
+| **`OBSERVED`** | • Near-Zero Transition Concentration (84.47% at $\|r\| < 0.010$)<br/>• Deadband Chatter Reduction (57.61% suppressed at $\epsilon=0.010$) | Empirically measured in multi-turn simulation stream; holds under tested regime. |
+| **`RESEARCH_HARNESS_ONLY`** | • Downstream Action Differentiation ($D_{\text{action}} = 0.0425$)<br/>• Discordant Matched Pair Differentiation (79.89%, 286/358 pairs)<br/>• Clarification / Retrieval Octant Correspondence<br/>• C2 vs. C4 Shuffled Comparison ($D_{\text{action}} = 0.2912$) | Confined strictly to isolated research adapter; unverified in live production cognitive pipeline. |
+| **`EVIDENCE_CONSISTENT`** | • Magnitude / Direction Functional Division<br/>• Producer Ownership Boundary at Stage S4<br/>• Passive Transport Semantics across Stages S5–S12 | Synthesized architectural design principles consistent with canonical 16-stage pipeline. |
+| **`HYPOTHESIS`** | • Downstream Consumer Contract Declarations (`MAGNITUDE_ONLY`, etc.)<br/>• Kanerva SDM Flashbulb Directional Associative Addressing | Proposed candidate architectural interfaces and theoretical memory addressing mechanisms. |
+| **`UNTESTED`** | • Local 7B SLM Prompt Conditioning & Generation Quality<br/>• Multimodal Live2D/VRM Avatar Blendshape Modulation<br/>• Mascot Kinematic Embodiment Coupling<br/>• Production Active Inference EFE Policy Valuation | Zero live production experiments conducted in Phase 22. |
+| **`NOT_JUSTIFIED`** | • Relational Synaptic Modulation in `ConsolidationEngine` (ADR-028)<br/>• Claim that R3 is production-correct or architecture-approved<br/>• Claim that R3 recovers biological ground truth or conscious affect<br/>• Claim that R3 opens or resolves Quality Gate 2 | Forbidden by architectural invariants, slow-loop homeostatic isolation, or ungrounded claims. |
+
 * **Candidate Architectural Proposal (Proposed Candidate Contract — Zero Production Commitment)**:
-  1. *Producer Contract*: Stage S4 (`ActiveInferenceEngine.step()`) emits `PhysiologicalSurprise`.
-  2. *Value Object Candidate*: Define immutable frozen dataclass `PhysiologicalSurprise(magnitude, direction, timestamp_tick, exposure_ticks, provenance="ActiveInferenceEngine:S4")`. Implements `__float__()` returning magnitude $S$ for legacy scalar backward compatibility. Policy parameters (`deadband_eps = 0.010`, `exposure_weight` $w_{\text{exp}}(T)$) remain optional research-policy metadata.
-  3. *Transport Contract*: `CognitiveOrchestrator` passively forwards value object across S5–S12; orchestrator MUST NOT semantically interpret directional signs.
-  4. *Consumer Contracts*: Consumers declare `MAGNITUDE_ONLY`, `DIRECTION_ONLY`, or `MAGNITUDE_AND_DIRECTION`. S10 `CommunicationPolicy` is an adapter candidate; S11 `PromptAssembler` is an untested research hypothesis.
-  5. *Strict Prohibitions*: Prohibited from modulating `EmotionCore` ODE hidden states $\mathbf{h}(t)$, leaking into `ConsolidationEngine` Tier 3 synaptic weights (ADR-028), bypassing `BoundaryLayer` regex (S13), modulating Somatic Load (S5), or coupling to continuous Live2D/VRM blendshapes.
-* **Mandatory Evidence Boundaries**:
-  - *MAY CLAIM*: Bit-exact $S$ preservation (`INV-1`); 27 ternary states; 0.00% static jitter; 84.47% near-zero transition concentration; 57.61% chatter suppression via deadband $\epsilon=0.010$; 79.89% adapter collapse resolution; S4 producer ownership; candidate value object.
-  - *OPEN QUESTIONS*: Local 7B SLM prompt responsiveness; SDM flashbulb associative addressing; avatar blendshape visual snapping; deadband generalization outside G1; production EFE behavior.
-  - *MUST NOT CLAIM*: Production validation; architectural approval; optimal measurement; SLM generation improvement; empathy improvement; reasoning control; clarification control; relational synaptic improvement; Gate 2 passed or resolved.
-* **Future Admission Requirements**: 9 mandatory requirements (`FAR-01` through `FAR-09`) established in [PHASE_22_H1_ADR029_DRAFT_UPDATE_EVIDENCE_LEDGER.md](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase22-Epistemic_Foraging/PHASE_22_H1_ADR029_DRAFT_UPDATE_EVIDENCE_LEDGER.md) must be empirically satisfied before this record can be considered for ratification or production implementation.
+  1. *Producer Contract*: Stage S4 (`ActiveInferenceEngine.step()`) shall be the sole authorized producer, emitting candidate `PhysiologicalSurprise`.
+  2. *Value Object Candidate*: Define immutable frozen dataclass `PhysiologicalSurprise(magnitude: float, direction: Tuple[int, int, int], timestamp_tick: int, exposure_ticks: int, provenance: str = "ActiveInferenceEngine:S4")`. Implements `__float__()` returning magnitude $S$ for bit-exact backward compatibility. Policy parameters (`deadband_eps = 0.010`, `exposure_weight` $w_{\text{exp}}(T)$) remain optional research-policy metadata. Directional coordinates must NOT encode subjective psychological labels (e.g. "happy", "sad", "angry").
+  3. *Transport Contract*: `CognitiveOrchestrator` passively forwards value object across S5–S12; orchestrator MUST NOT semantically interpret directional signs or branch pipeline routing on signs.
+  4. *Consumer Contracts*: Downstream consumers must explicitly declare capability contracts: `MAGNITUDE_ONLY`, `DIRECTION_ONLY`, or `MAGNITUDE_AND_DIRECTION`.
+  5. *Strict Prohibitions*: Prohibited from modulating `EmotionCore` ODE hidden states $\mathbf{h}(t)$, leaking into `ConsolidationEngine` Tier 3 synaptic weights (ADR-028), bypassing `BoundaryLayer` regex (S13), modulating Somatic Load (S5), or coupling directly to continuous Live2D/VRM blendshapes.
+
+* **Mandatory Future Admission Requirements (FAR-01 through FAR-09)**:
+  This record SHALL NOT be ratified or promoted to production until all 9 mandatory requirements are empirically satisfied:
+  - `FAR-01`: Cross-corpus stimulus generalization outside Candidate G1.
+  - `FAR-02`: Hardware floating-point noise floor calibration across diverse CPUs.
+  - `FAR-03`: Long-horizon dynamic multi-turn stress testing (>1,000 conversational turns).
+  - `FAR-04`: Transport overhead micro-benchmark confirming critical path impact $\le 0.05\text{ms}$.
+  - `FAR-05`: Deterministic C0 baseline zero-regression verification.
+  - `FAR-06`: Downstream consumer contract static and runtime enforcement.
+  - `FAR-07`: Synaptic boundary isolation audit verifying zero leakage into ConsolidationEngine.
+  - `FAR-08`: WebGL Live2D/VRM blendshape visual continuity evaluation.
+  - `FAR-09`: Independent resolution of Quality Gate 2 stimulus compression.
 
 ---
 

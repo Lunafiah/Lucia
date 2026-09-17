@@ -47,6 +47,7 @@ ARCH_INTEGRATION_FILE = RESULTS_BASE / "h1_r3_architecture_integration" / "r3_ar
 TEMPORAL_STABILITY_FILE = RESULTS_BASE / "h1_r3_temporal_stability" / "r3_temporal_stability_results.json"
 ARCH_SEMANTICS_FILE = RESULTS_BASE / "h1_r3_architectural_semantics" / "r3_architectural_semantics_results.json"
 PRODUCTION_ADMISSION_FILE = RESULTS_BASE / "h1_r3_production_admission" / "r3_production_admission_results.json"
+BEHAVIORAL_UTILITY_FILE = RESULTS_BASE / "h1_r3_behavioral_utility" / "r3_behavioral_utility_results.json"
 
 # Existing ADR-029 Draft Document
 EXISTING_ADR_FILE = REPO_ROOT / "docs" / "specs" / "Lucia-phase22-Epistemic_Foraging" / "PHASE_22_H1_R3_ARCHITECTURE_INTEGRATION_FEASIBILITY_STUDY.md"
@@ -71,6 +72,7 @@ class ADR029EvidenceLedgerEngine:
             "temporal_stability": TEMPORAL_STABILITY_FILE,
             "architectural_semantics": ARCH_SEMANTICS_FILE,
             "production_admission": PRODUCTION_ADMISSION_FILE,
+            "behavioral_utility": BEHAVIORAL_UTILITY_FILE,
         }
         for key, filepath in file_map.items():
             if filepath.exists():
@@ -93,9 +95,9 @@ class ADR029EvidenceLedgerEngine:
             },
             {
                 "adr_section": "Context",
-                "current_claim": "R3 restores 79.89% behavioral differentiation in research adapters.",
+                "current_claim": "C2 differentiates 79.89% of previously collapsed discordant matched pairs in research adapters.",
                 "evidence_status": "RESEARCH-HARNESS ONLY",
-                "required_action": "Retain 79.89% figure but scope explicitly as isolated adapter simulation; add deadband (eps=0.010) and exposure ramp w_exp(T).",
+                "required_action": "Retain 79.89% figure scoped explicitly as isolated adapter simulation; add deadband (eps=0.010) and exposure ramp w_exp(T).",
             },
             {
                 "adr_section": "Consumers",
@@ -217,10 +219,10 @@ class ADR029EvidenceLedgerEngine:
                 "id": "CLM-07",
                 "claim": "Collapse Pair Resolution (79.89%)",
                 "classification": "RESEARCH-HARNESS ONLY",
-                "evidence_source": "tests/evaluation_phase22/results/h1_minimal_sufficient_measurement/minimal_sufficient_results.json",
+                "evidence_source": "tests/evaluation_phase22/results/h1_minimal_sufficient_measurement/minimal_sufficient_results.json; tests/evaluation_phase22/results/h1_r3_behavioral_utility/r3_behavioral_utility_results.json",
                 "evidence_type": "research-harness behavioral",
-                "scope": "Resolves 286/358 matched-magnitude collapse pairs in research adapter",
-                "limitations": "Demonstrated strictly inside isolated research adapter; production EFE integration unverified",
+                "scope": "C2 differentiates 286/358 (79.89%) of previously collapsed discordant matched pairs in research adapter",
+                "limitations": "Demonstrated strictly inside isolated research adapter; does not constitute ground-truth recovery or production validation",
                 "status": "FULLY_PROVENANCED",
                 "result_json_sha256": get_sha("minimal_sufficient"),
             },
@@ -386,7 +388,7 @@ class ADR029EvidenceLedgerEngine:
                 "Static-turn sign jitter is exactly 0.00% across all 270 probes in evaluation harness",
                 "84.47% of multi-turn sign transitions concentrate at near-zero residuals (|r| < 0.010)",
                 "Deadband eps=0.010 reduces transition chatter by 57.61% in evaluated research harness",
-                "R3 resolves 79.89% (286/358) matched-magnitude collapse pairs in research adapter",
+                "C2 differentiates 79.89% (286/358) of previously collapsed discordant matched pairs in evaluated research adapter",
                 "Stage S4 (ActiveInferenceEngine) is the sole legitimate producer candidate",
                 "PhysiologicalSurprise is an evaluated value object candidate for research transport",
             ],
@@ -416,7 +418,7 @@ class ADR029EvidenceLedgerEngine:
     def evaluate_rq4_lineage_graph(self) -> Dict[str, Any]:
         print("[5/11] Evaluating RQ4 — Evidence Lineage & Deduplication Graph...")
         nodes = [
-            {"id": "SRC_G1", "name": "Frozen Candidate G1 Corpus (N=270, seed 42)", "nature": "independent_root_data"},
+            {"id": "SRC_G1", "name": "Frozen Candidate G1 Corpus (N=270, master seed 9999; consumer seeds 42-46)", "nature": "independent_root_data"},
             {"id": "BENCH_H1_V14", "name": "H1 v1.4 Benchmark (Gate 2 Blocked)", "nature": "derived_benchmark"},
             {"id": "DIAG_GATE2", "name": "Gate 2 Compression Diagnostic", "nature": "re_analysis"},
             {"id": "STUDY_M1_M5", "name": "Measurement Studies M1-M5 (Scalar vs Directional)", "nature": "re_analysis"},
@@ -424,6 +426,7 @@ class ADR029EvidenceLedgerEngine:
             {"id": "STUDY_R3_STABILITY", "name": "R3 Temporal Stability & Sign Jitter Feasibility", "nature": "re_analysis"},
             {"id": "STUDY_R3_SEMANTICS", "name": "R3 Architectural Semantics & Downstream Integration", "nature": "production_path_inspection"},
             {"id": "STUDY_PROD_ADMISSION", "name": "R3 Production Admission Criteria & Evidence Boundary", "nature": "governance_synthesis"},
+            {"id": "STUDY_BEHAVIORAL_UTILITY", "name": "R3 End-to-End Behavioral Utility Study", "nature": "consumer_behavioral_evaluation"},
             {"id": "STUDY_ADR029_UPDATE", "name": "ADR-029 Draft Update & Evidence Ledger Synchronization", "nature": "governance_synthesis"},
         ]
 
@@ -435,13 +438,14 @@ class ADR029EvidenceLedgerEngine:
             {"source": "STUDY_R3_FEASIBILITY", "target": "STUDY_R3_STABILITY", "type": "temporal_re_analysis"},
             {"source": "STUDY_R3_STABILITY", "target": "STUDY_R3_SEMANTICS", "type": "architectural_synthesis"},
             {"source": "STUDY_R3_SEMANTICS", "target": "STUDY_PROD_ADMISSION", "type": "admission_synthesis"},
-            {"source": "STUDY_PROD_ADMISSION", "target": "STUDY_ADR029_UPDATE", "type": "governance_synchronization"},
+            {"source": "STUDY_PROD_ADMISSION", "target": "STUDY_BEHAVIORAL_UTILITY", "type": "behavioral_utility_evaluation"},
+            {"source": "STUDY_BEHAVIORAL_UTILITY", "target": "STUDY_ADR029_UPDATE", "type": "governance_synchronization"},
         ]
 
         rules = {
             "rule_a_no_dataset_multiplication": (
                 "Replaying or re-analyzing the frozen 270-stimulus corpus across multiple evaluation scripts "
-                "does NOT constitute independent empirical replication. All 5 prior studies share the same primary data lineage."
+                "does NOT constitute independent empirical replication. All prior studies share the same primary data lineage (master seed 9999)."
             ),
             "rule_b_no_evidence_inflation": (
                 "Observed phenomena (358 collapse pairs, Regime 2 temporal stream, research adapter policy distributions) "
@@ -450,7 +454,7 @@ class ADR029EvidenceLedgerEngine:
         }
 
         return {
-            "root_dataset": "Frozen Candidate G1 Corpus (N=270, seed 42)",
+            "root_dataset": "Frozen Candidate G1 Corpus (N=270, master seed 9999; consumer seeds 42-46)",
             "nodes": nodes,
             "edges": edges,
             "deduplication_rules": rules,
@@ -557,7 +561,7 @@ class ADR029EvidenceLedgerEngine:
             {
                 "name": "Candidate G1 Stimulus Corpus",
                 "classification": "EMPIRICALLY REGIME-BOUND",
-                "value": "N=270, seed 42",
+                "value": "N=270, master seed 9999 (consumer seeds 42-46)",
                 "rationale": "Empirical results (358 collapse pairs, 84.47% concentration) are bound to G1 lexical prompts.",
             },
             {

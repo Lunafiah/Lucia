@@ -443,11 +443,11 @@ Title: ADR-029: Decoupled Directional Prediction Error Side-Channel (Physiologic
 Status: ADR DRAFT UPDATED (Subject to Future Architectural Decision Gate Opening)
 Context: Phase 22 H1 demonstrated that canonical scalar surprise S = ||r_T||_2 fails
 to differentiate 358 Medium-High stimulus pairs due to metric collapse. Directional
-ternary signs R3 = sign_eps(r_T) in {-1, 0, +1}^3 resolved 79.89% (286/358) of collapse
-pairs in an isolated research adapter with 0.00% intra-turn sign jitter. Deadband eps=0.010
-suppresses 57.61% of multi-turn chatter transitions. However, Quality Gate 2 remains
-BLOCKED (Delta_HM = +0.0685 < 0.1500), Phase 22 H1 remains INCONCLUSIVE, and live SLM
-prompt conditioning remains completely untested.
+ternary signs R3 = sign_eps(r_T) in {-1, 0, +1}^3 differentiated 79.89% (286/358) of previously
+collapsed discordant matched pairs in an isolated research adapter with 0.00% intra-turn sign
+jitter. Deadband eps=0.010 suppresses 57.61% of multi-turn chatter transitions. However, Quality
+Gate 2 remains STRICTLY BLOCKED (Delta_HM = +0.0685 < 0.1500), Phase 22 H1 remains INCONCLUSIVE,
+and live SLM prompt conditioning remains completely untested.
 Candidate Decision (PROPOSED CANDIDATE CONTRACT ONLY — NOT PRODUCTION COMMITMENT):
 1. Producer Contract: Stage S4 (ActiveInferenceEngine.step()) emits PhysiologicalSurprise.
 2. Value Object: Define frozen dataclass PhysiologicalSurprise(magnitude, direction,

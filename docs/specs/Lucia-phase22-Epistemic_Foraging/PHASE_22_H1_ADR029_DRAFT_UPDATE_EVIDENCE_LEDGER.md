@@ -18,7 +18,7 @@ This study conducts a **documentation and governance-only synchronization** adva
 
 $$\mathbf{ADR\ DRAFT\ UPDATED}$$
 
-Following the completion of the Phase 22 H1 empirical research chain—comprising the Minimal Sufficient Measurement Study, Directional Side-Channel Behavioral Utilization Study, R3 Architecture Integration Feasibility Study, R3 Temporal Stability & Sign-Jitter Feasibility Study, R3 Architectural Semantics Study, and R3 Production Admission Criteria Study—this document formalizes the canonical **Evidence Ledger** across all 19 researched claims with immutable provenance, enforces non-collapsible epistemological boundaries, deduplicates shared-corpus evidence under Rules A and B, establishes a proposed candidate contract that decouples core value-object fields from optional research-policy metadata, and audits the working draft text against 14 forbidden terminology phrases.
+Following the completion of the Phase 22 H1 empirical research chain—comprising the Minimal Sufficient Measurement Study, Directional Side-Channel Behavioral Utilization Study, R3 Architecture Integration Feasibility Study, R3 Temporal Stability & Sign-Jitter Feasibility Study, R3 Architectural Semantics Study, R3 Production Admission Criteria Study, and the R3 End-to-End Behavioral Utility & Gate 2 Recovery Study—this document formalizes the canonical **Evidence Ledger** across all 19 researched claims with immutable provenance, enforces non-collapsible epistemological boundaries, deduplicates shared-corpus evidence under Rules A and B, establishes a proposed candidate contract that decouples core value-object fields from optional research-policy metadata, and audits the working draft text against 14 forbidden terminology phrases.
 
 ### Mission Invariants
 
@@ -26,7 +26,7 @@ Following the completion of the Phase 22 H1 empirical research chain—comprisin
 2. **Draft is Not Ratification**: Synchronizing ADR-029 does not approve, ratify, or accept the proposed architecture. The Production Architecture Gate remains **STRICTLY LOCKED**.
 3. **No Production Implementation**: The proposed decoupled representation ($R3$) is not implemented in production runtime code (`src/core/**`, `src/api/**`, `electron/**`).
 4. **Historical Evidence Immutability**: Prior benchmark results, manifests, and diagnostic reports remain immutable and bit-exact.
-5. **No Evidence Inflation**: Re-analyses of the frozen Candidate G1 stimulus corpus ($N=270$, seed 42) are traced to a single shared root lineage.
+5. **No Evidence Inflation**: Re-analyses of the frozen Candidate G1 stimulus corpus ($N=270$, master seed 9999; consumer robustness seeds 42, 43, 44, 45, 46) are traced to a single shared root lineage.
 
 ---
 
@@ -80,7 +80,7 @@ The complete evidence body accumulated across Phase 22 H1 is cataloged into the 
 | **CLM-04** | Static Intra-Turn Temporal Stability | `SUPPORTED` | `r3_temporal_stability_results.json`; `test_r3_temporal_stability.py` | Empirical Benchmark; Deterministic Test | Static turns ($T=1..25$) across all 270 probes; 0.00% sign transitions | Holds for monotonic ODE relaxation within single turns; multi-turn dynamic conversation exhibits sign transitions | `FULLY_PROVENANCED` | `194aafa2...` |
 | **CLM-05** | Near-Zero Transition Concentration | `OBSERVED` | `r3_temporal_stability_results.json` | Empirical Benchmark | Regime 2 conversational replay stream (1,080 ticks); 84.47% at $\|r\| < 0.010$, 0.00% at $\|r\| \ge 0.100$ | Evaluated on English G1 stimulus corpus; distribution on out-of-distribution stimuli unverified | `FULLY_PROVENANCED` | `194aafa2...` |
 | **CLM-06** | Deadband Chatter Reduction | `OBSERVED` | `r3_temporal_stability_results.json` | Empirical Benchmark | Deadband $\epsilon=0.010$ suppresses 57.61% of transitions; retains 100% tested Type-A reversals | Observed in research simulation harness; hardware floating-point noise floor in production uncalibrated | `FULLY_PROVENANCED` | `194aafa2...` |
-| **CLM-07** | Collapse Pair Resolution (79.89%) | `RESEARCH-HARNESS ONLY` | `minimal_sufficient_results.json` | Research-Harness Behavioral | Resolves 286/358 matched-magnitude collapse pairs in research adapter | Demonstrated strictly inside isolated research adapter; production EFE integration unverified | `FULLY_PROVENANCED` | `4615bbfd...` |
+| **CLM-07** | Matched Pair Differentiation (79.89%) | `RESEARCH-HARNESS ONLY` | `minimal_sufficient_results.json`; `r3_behavioral_utility_results.json` | Research-Harness Behavioral | C2 differentiates 286/358 (79.89%) of previously collapsed discordant matched pairs in research adapter | Demonstrated strictly inside isolated research adapter; does not constitute ground-truth recovery or production validation | `FULLY_PROVENANCED` | `4615bbfd...` |
 | **CLM-08** | Behavioral Adapter Differentiation | `RESEARCH-HARNESS ONLY` | `directional_behavior_results.json` | Research-Harness Behavioral | Drives significant action prior differentiation ($D_{\text{pol}} = 1.0, p = 3.09 \times 10^{-60}$) | Simulation adapter only; does not predict live SLM or human perceptual outcomes | `FULLY_PROVENANCED` | `d763a8d1...` |
 | **CLM-09** | Magnitude / Direction Complementarity | `EVIDENCE-CONSISTENT` | `r3_architectural_semantics_results.json`; `PHASE_22_H1_R3_ARCHITECTURAL_SEMANTICS_STUDY.md` | Research-Harness Behavioral; Architecture Verification | Complementary functional roles (magnitude = arousal/effort gating, direction = action selection bias) | Functional division is a synthesized architectural interpretation, not a proven causal law | `FULLY_PROVENANCED` | `15e47854...` |
 | **CLM-10** | Producer Ownership Boundary | `EVIDENCE-CONSISTENT` | `docs/ARCHITECTURE.md` §4.3; `src/core/inference/active_inference.py`; `r3_architectural_semantics_results.json` | Implementation Inspection; Architecture Verification | ActiveInferenceEngine (S4) is sole legitimate producer candidate for R3 | Architectural design synthesis; production code not yet modified to emit value object | `FULLY_PROVENANCED` | `15e47854...` |
@@ -116,7 +116,7 @@ The Evidence Ledger strictly enforces the three-tier boundary defined in the Pro
 3. Static-turn sign jitter is exactly $0.00\%$ across all 270 probes in the evaluated simulation harness.
 4. $84.47\%$ of multi-turn sign transitions concentrate at near-zero residuals ($\|r\| < 0.010$).
 5. Deadband threshold $\epsilon = 0.010$ reduces transition chatter by $57.61\%$ in the evaluated research harness.
-6. $R3$ resolves $79.89\%$ ($286/358$) of matched-magnitude collapse pairs within the isolated research adapter.
+6. C2 differentiates $79.89\%$ ($286/358$) of previously collapsed discordant matched pairs within the evaluated research adapter.
 7. Stage S4 (`ActiveInferenceEngine`) is the sole legitimate producer candidate for physiological surprise.
 8. `PhysiologicalSurprise` is an evaluated candidate value object for decoupled research transport.
 
@@ -145,9 +145,9 @@ The Evidence Ledger strictly enforces the three-tier boundary defined in the Pro
 To prevent synthetic evidence inflation and ensure transparent provenance, the vertical dependency lineage across all Phase 22 studies is formally mapped:
 
 ```text
-┌─────────────────────────────────────────────────────────────┐
-│ Frozen Candidate G1 Corpus (N=270, seed 42) [INDEPENDENT]   │
-└──────────────────────────────┬──────────────────────────────┘
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│ Frozen Candidate G1 Corpus (N=270, master seed 9999; consumer seeds 42-46) [INDEPENDENT]│
+└───────────────────────────────────────────┬────────────────────────────────────────────┘
                                │ independent generation
                                ▼
 ┌─────────────────────────────────────────────────────────────┐
@@ -182,6 +182,11 @@ To prevent synthetic evidence inflation and ensure transparent provenance, the v
                                ▼
 ┌─────────────────────────────────────────────────────────────┐
 │ R3 Production Admission Criteria & Evidence Boundary        │
+└──────────────────────────────┬──────────────────────────────┘
+                               │ behavioral utility evaluation
+                               ▼
+┌─────────────────────────────────────────────────────────────┐
+│ R3 End-to-End Behavioral Utility Study [CONSUMER UTILITY]   │
 └──────────────────────────────┬──────────────────────────────┘
                                │ governance synchronization
                                ▼
@@ -379,13 +384,16 @@ Governing Baseline: ADR-028 (Tier 3 Synaptic Consolidation & Homeostasis)
 Phase 22 H1 empirical investigations demonstrated that canonical scalar surprise:
     S = ||r_T||_2 = ||p_hat_T - p_T||_2
 exhibits metric collapse across 358 Medium-High stimulus pairs (|Delta S| < 0.05) due to Euclidean
-angular loss in 3-dimensional PAD space. In an isolated research adapter, directional ternary
-signs R3 = sign_eps(r_T) in {-1, 0, +1}^3 resolved 79.89% (286/358) of collapse pairs and drove
-statistically significant action prior differentiation (D_pol = 1.0, p = 3.09e-60). Temporal
-stability evaluations demonstrated 0.00% intra-turn sign jitter, with 84.47% of multi-turn sign
-transitions concentrating at near-zero residuals (|r| < 0.010) suppressible by a deadband filter.
-However, Quality Gate 2 remains BLOCKED (Delta_HM = +0.0685 < 0.1500), Phase 22 H1 remains
-INCONCLUSIVE, and zero live Small Language Model token-generation experiments have been conducted.
+angular loss in 3-dimensional PAD space. Across 6 empirical research studies, candidate dual-aspect
+measurement representation R3 = sign_eps(r_T) in {-1, 0, +1}^3 demonstrated mathematical and
+behavioral differentiation under research adapters. In the end-to-end behavioral utility study, C2
+differentiated 79.89% (286/358) of previously collapsed discordant matched pairs under the evaluated
+research consumer with exact same-direction pair parity (Delta_parity = 0.0000). Temporal stability
+evaluations demonstrated 0.00% intra-turn sign jitter, with 84.47% of multi-turn sign transitions
+concentrating at near-zero residuals (|r| < 0.010) suppressible by deadband eps=0.010.
+However, Quality Gate 2 remains STRICTLY BLOCKED (Delta_HM = +0.0685 < 0.1500), Phase 22 H1 remains
+INCONCLUSIVE, Production Architecture Gate remains STRICTLY LOCKED, and zero live Small Language Model
+token-generation experiments have been conducted.
 
 2. Decision Statement (Proposed Candidate Architecture Only — NOT RATIFIED)
 If future empirical admission requirements are satisfied and the Architecture Gate is opened:
@@ -420,7 +428,7 @@ If future empirical admission requirements are satisfied and the Architecture Ga
 Positive (Evaluated in Research Harness):
 - Preserves canonical scalar surprise S bit-exact (INV-1).
 - Provides 3 discrete ternary coordinates (27 states, ~4.755 bits capacity).
-- Resolves 79.89% of matched-magnitude collapse pairs in research adapter.
+- C2 differentiates 79.89% (286/358) of previously collapsed discordant matched pairs in research adapter.
 - Zero intra-turn static sign jitter (0.00%).
 - Requires 0.0 MB GPU VRAM and incurs zero CPU ODE overhead.
 Negative / Risks (Unresolved in Production):
@@ -432,8 +440,9 @@ Negative / Risks (Unresolved in Production):
 
 4. Mandatory Evidence Boundaries
 - MAY CLAIM: Bit-exact S preservation; 27 ternary states; 0.00% static jitter; 84.47% near-zero
-  transition concentration; 57.61% chatter suppression via deadband eps=0.010; 79.89% adapter
-  collapse resolution; S4 producer ownership; PhysiologicalSurprise candidate value object.
+  transition concentration; 57.61% chatter suppression via deadband eps=0.010; C2 differentiates
+  79.89% of discordant matched pairs in research adapter; S4 producer ownership; PhysiologicalSurprise
+  candidate value object.
 - OPEN QUESTIONS: Local 7B SLM prompt responsiveness; SDM flashbulb associative addressing;
   avatar blendshape visual snapping; deadband generalization outside G1; production EFE behavior.
 - MUST NOT CLAIM: Production validation; architectural approval; optimal measurement; SLM
