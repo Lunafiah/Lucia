@@ -20,15 +20,15 @@ In this study, we formulated an independent, deterministic multi-turn research m
 ### Key Empirical Findings:
 
 1. **H1-T Supported — Strong Temporal Persistence (State T-B)**:
-   Across all 358 matched discordant pairs ($|S_{1, i} - S_{1, j}| \le 0.020$), the R3 directional incremental EIG signal remains measurably different from the scalar baseline on **100.00%** of pairs across all 5 turns ($R_t = 1.000$ for $t \in \{1, 2, 3, 4, 5\}$). In T1 (Immediate Recovery), the Mean Persistence Ratio at Turn 2 is $PR_2 = 0.8619 \pm 0.0034$ (86.19% retained), well above the pre-registered threshold ($PR_2 \ge 0.20$).
+   Threshold-qualified directional retention ($|\Delta EIG_{\text{dir}, t}| > \tau_{EIG}$) is **100.00%** across Turns 1–5 for all 358 matched discordant pairs ($|S_{1, i} - S_{1, j}| \le 0.020$). Under T1 (Immediate Recovery), mean signal magnitude decays to a Mean Persistence Ratio of $PR_2 = 0.8619 \pm 0.0034$ (86.19% retained at Turn 2, well above the pre-registered threshold $PR_2 \ge 0.20$) and $PR_5 = 0.6665 \pm 0.0052$ at Turn 5.
 2. **H2-T Recovery Sensitivity — Strict Monotonic Decay**:
-   Under T1 neutral recovery, the mean incremental directional EIG signal strictly decreases monotonically across all turns ($t=1: 0.019276 \to t=2: 0.016763 \to t=3: 0.015070 \to t=4: 0.013945 \to t=5: 0.013204$). However, because the homeostatic decay rate is $\alpha = 0.65$, at Turn 5 the effect still retains $66.65\%$ of its Turn 1 value; hence, the 50% recovery half-life was **`NOT_REACHED`** within the fixed horizon $T=5$.
+   The affective state follows the preregistered exponential decay dynamics ($\alpha = 0.65$), while the measured directional EIG signal decreases strictly monotonically across all turns ($t=1: 0.019276 \to t=2: 0.016763 \to t=3: 0.015070 \to t=4: 0.013945 \to t=5: 0.013204$). At Turn 5, the effect still retains $66.65\%$ of its Turn 1 value; hence, the 50% recovery half-life is **`NOT_REACHED`** within the fixed 5-turn horizon.
 3. **T2 Repeated Displacement Injection — Dynamic Saturation**:
    Re-injecting the same displacement stimulus $r_1$ at each turn causes the directional EIG signal to accumulate toward a saturation attractor ($PR_1 = 1.00 \to PR_2 = 1.2403 \to PR_5 = 1.7119$), matching the theoretical saturation attractor $r_\infty = \frac{\beta}{1-\alpha} r_1 \approx 2.857 r_1$.
 4. **T3 Direction Reversal — Alternating Tracking with Minor Inertial Lag**:
-   Reversing the input direction every turn produces strict directional retention ($R_t = 1.000$ for all turns) and synchronous sign alternation on turns 1, 3, and 5 (100% agreement), with an overall mean sign agreement of $75.98\%$ due to subtle transitional inertia at Turn 2.
+   Reversing the input direction every turn produces strict threshold-qualified retention ($R_t = 1.000$ for all turns) and synchronous sign alternation on turns 1, 3, and 5 (100% agreement), with an overall mean sign agreement of $75.98\%$ due to subtle transitional inertia at Turn 2.
 5. **T4 Temporal History-Dependence Diagnostic ($THD$)**:
-   Comparing Trajectory A (perturbed history) vs Trajectory B (unperturbed history) at the reactivation turn $t=4$ reveals that prior trajectory history alters the instantaneous directional EIG magnitude by **$0.004678\,\text{nats}$** (over 46x the pre-registered $\tau_{EIG} = 10^{-4}$), demonstrating measurable **somatic history dependence** while categorical belief divergence remains minimal ($THD_{JS} \le 10^{-16}$).
+   Comparing Trajectory A (perturbed history) vs Trajectory B (unperturbed history) at the reactivation turn $t=4$ reveals that prior trajectory history alters the instantaneous directional EIG magnitude by **$0.004678\,\text{nats}$** (over 46x the pre-registered $\tau_{EIG} = 10^{-4}$) across 100% of probes in both Mode A (coupled) and Mode B (epistemic-state-controlled diagnostic), demonstrating measurable **temporal history-dependent modulation** while categorical belief divergence remains minimal ($THD_{JS} \le 10^{-16}$).
 6. **Consumer Transferability & Negative Controls**:
    Directional retention is $100.00\%$ across all four consumers (C, A, B, D) and across all robustness seeds (42..46). Both NC5 (Zero-Direction Null) and NC6 (Temporal Transition Null) produce exact zero effects ($\Delta EIG_{\text{dir}} \equiv 0.00 \le 10^{-8}$ and $0.0\%$ retention).
 
@@ -238,7 +238,7 @@ To measure whether prior conversational trajectory changes the subsequent respon
 | **Proportion Exceeding $\tau_{EIG}$** | **100.00%** | **100.00%** | — |
 
 ### Interpretation of $THD$:
-1. **Somatic Epistemic History Dependence**: At Turn 4, Trajectory A retains a decaying displacement residual from Turn 1 ($r_4 = 1.2746 r_1$), whereas Trajectory B has $r_4 = 1.0000 r_1$. This somatic history difference shifts the expected information gain by **$0.004678\,\text{nats}$** (over 46 times $\tau_{EIG}$), confirming that **prior conversational trajectory measurably alters subsequent epistemic sensitivity to the same perturbation**.
+1. **Measurable Temporal History-Dependent Modulation**: At Turn 4, Trajectory A retains an affective displacement residual from Turn 1 ($r_4 = 1.2746 r_1$), whereas Trajectory B has $r_4 = 1.0000 r_1$. Under both Mode A (full coupled trajectory) and Mode B (epistemic-state-controlled diagnostic with prior belief pinned to $q_0$), this displacement history difference shifts the expected information gain by exactly **$0.004678\,\text{nats}$** (over 46 times $\tau_{EIG} = 10^{-4}$) on 100.00% of probes. This confirms that **prior conversational trajectory measurably modulates subsequent epistemic sensitivity to the same perturbation**, even when prior belief is strictly controlled.
 2. **Minimal Belief Divergence**: Because the observation model yields categorical posteriors and both trajectories select the identical optimal epistemic action (`clarify`), the expected belief divergence across the discrete 4-hypothesis space remains near floating-point precision ($THD_{JS} \sim 10^{-17}$).
 
 ---
@@ -246,17 +246,17 @@ To measure whether prior conversational trajectory changes the subsequent respon
 ## 14. Primary Hypothesis Evaluations
 
 ### H1-T — Temporal Persistence: `SUPPORTED (State T-B)`
-- Directional retention rate $R_t = 1.0000$ (100%) across all turns $t \in \{1..5\}$.
+- Threshold-qualified directional retention is $100.00\%$ across all turns $t \in \{1..5\}$.
 - Mean persistence ratio at Turn 2 is $PR_2 = 0.8619 \ge 0.20$.
 - Under T2 repeated injection, signal persists and accumulates ($PR_5 = 1.7119$).
 
 ### H2-T — Recovery Sensitivity: `QUALIFIED SUPPORT`
-- Strict monotonic decay is verified across all turns ($0.01928 \to 0.01676 \to 0.01507 \to 0.01395 \to 0.01320$).
-- However, the 50% recovery half-life threshold was `NOT_REACHED` within $T=5$ turns ($PR_5 = 0.6665 > 0.50$).
+- The affective state follows the preregistered exponential decay dynamics ($\alpha = 0.65$), while the measured directional EIG signal decreases strictly monotonically across all turns ($0.01928 \to 0.01676 \to 0.01507 \to 0.01395 \to 0.01320$).
+- Because $PR_5 = 0.6665 > 0.50$, the 50% recovery half-life threshold is `NOT_REACHED` within $T=5$ turns.
 
 ### H3-T — Current-State vs History Dependence: `DUAL MODALITY OBSERVED`
 - T3 direction reversal shows strong sign-tracking (100% on odd turns, mean agreement 75.98%).
-- T4 demonstrates measurable somatic history-dependence ($|\Delta EIG_{\text{diff}}| = 0.00468 > \tau_{EIG}$ on 100% of probes).
+- T4 demonstrates measurable temporal history-dependent modulation: in both Mode A (coupled) and Mode B (controlled), re-perturbation at Turn 4 produces a $|\Delta EIG| = 0.004678\,\text{nats} > \tau_{EIG}$ modulation between perturbed and unperturbed histories across 100% of probes.
 
 ### H4-T — Temporal Action Consequence: `ACTION-COUPLED (Consumer C) / DECOUPLED (A, B, D)`
 - In Consumer C, action policy divergence persists at $D_{\text{pol}, t} = 79.89\%$ across all 5 turns.
@@ -282,15 +282,15 @@ To measure whether prior conversational trajectory changes the subsequent respon
 ## 16. Answers to the 10 Preregistered Questions
 
 1. **Does the R3-derived EIG difference persist beyond the perturbation turn?**  
-   *Yes.* Retention rate is **100.00%** on Turn 2 ($PR_2 = 0.8619$) and remains 100.00% through Turn 5 ($PR_5 = 0.6665$).
+   *Yes.* Threshold-qualified directional retention ($|\Delta EIG_{\text{dir}, t}| > \tau_{EIG}$) is **100.00%** across Turns 1–5 for all 358 matched discordant pairs; under T1 neutral recovery, mean signal magnitude decays to $PR_2 = 0.8619$ at Turn 2 and $PR_5 = 0.6665$ at Turn 5.
 2. **How rapidly does it decay under neutral recovery?**  
-   It decays strictly monotonically at an exponential rate governed by $\alpha = 0.65$, retaining $66.65\%$ of initial signal strength by Turn 5.
+   The affective state follows the preregistered exponential decay dynamics ($\alpha = 0.65$), while the measured directional EIG signal decreases strictly monotonically over the 5-turn recovery horizon ($0.019276 \to 0.016763 \to 0.015070 \to 0.013945 \to 0.013204$), retaining $66.65\%$ of its initial magnitude by Turn 5.
 3. **Does repeated same-direction exposure accumulate, saturate, or habituate?**  
    *Accumulates and saturates.* EIG displacement increases from $0.019276$ ($PR=1.00$) to $0.033172$ ($PR=1.7119$), asymptotically approaching the theoretical attractor displacement.
 4. **Does direction reversal follow current direction or prior history?**  
    It follows current direction with synchronous sign alternation on odd turns (100% agreement), while exhibiting transitional attenuation during reversal turns due to somatic residual displacement.
 5. **Does recovery/reactivation reveal measurable history dependence?**  
-   *Yes.* Re-perturbation at Turn 4 produces a **$0.004678\,\text{nat}$** difference in EIG between perturbed and unperturbed histories across 100% of probes.
+   *Yes.* Re-perturbation at Turn 4 produces a **$0.004678\,\text{nat}$** difference in EIG between perturbed and unperturbed histories across 100% of probes in both Mode A (coupled) and Mode B (epistemic-state-controlled diagnostic where prior belief is fixed at $q_0$).
 6. **Are temporal effects consistent across consumers?**  
    *Yes for continuous EIG.* Directional retention is 100.00% across Consumers C, A, B, and D. Discrete action divergence is present in C ($79.89\%$) and absent in A, B, D ($0.00\%$).
 7. **Do shuffled/null controls eliminate the effect?**  
