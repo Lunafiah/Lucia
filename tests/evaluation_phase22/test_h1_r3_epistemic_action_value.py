@@ -12,8 +12,8 @@ Verifies:
   - Test 06: NC1 Canonical scalar baseline reproduction from frozen transferability artifact (C0 DiffRate = 0.0000).
   - Test 07: NC2 Hard tuple identity parity invariant (Delta_V = 0, D_JS < 1e-12).
   - Test 08: NC3 Multiset preservation (C3 preserves S probe + dir multiset; C4 preserves dir probe + S multiset; C5 preserves empirical dir multiset; S unchanged).
-  - Test 09: Continuous action-value differentiation (DiffRate_cont = 1.0 > 0.75, ||Delta_V|| > tau_val).
-  - Test 10: Common-mode vs action-specific L2 variance decomposition (Exact orthogonal partition, action-specific > 50%).
+  - Test 09: Incremental Directional Effect & Continuous Valuation (ΔV_dir = ΔV_C2 - ΔV_C0 > tau_val on >75% pairs).
+  - Test 10: Common-mode vs action-specific L2 variance decomposition (Zero-delta exclusion rule, action-specific > 50%).
   - Test 11: Epistemic-Action Relevance Diagnostic & Epistemic Disclaimer (Harness proxy passes, Active Inference epistemic relevance explicitly False).
   - Test 12: Production isolation (src/core/** diff = 0) and Genesis profile bit-exact check.
 """
@@ -198,29 +198,45 @@ def test_08_nc3_multiset_preservation(results_data):
 
 
 # -----------------------------------------------------------------------------
-# Test 9: Continuous Action-Value Differentiation
+# Test 9: Incremental Directional Effect & Continuous Valuation
 # -----------------------------------------------------------------------------
 def test_09_continuous_action_value_differentiation(results_data):
-    """Verify continuous action-value differentiation occurs on 100% of discordant pairs under Consumer C."""
-    c_c = results_data["consumer_results"]["C_qual_1.50"]["condition_aggregates"]
-    c2_cont = c_c["C2"]["diffrate_continuous_val_mean"]
+    """Verify continuous action-value differentiation and incremental directional effect (ΔV_dir = ΔV_C2 - ΔV_C0)."""
+    c_c = results_data["consumer_results"]["C_qual_1.50"]
+    c2_cont = c_c["condition_aggregates"]["C2"]["diffrate_continuous_val_mean"]
     assert c2_cont == 1.0, f"Expected 1.0 continuous differentiation, got {c2_cont}"
-    assert c_c["C2"]["mean_delta_v_norm_mean"] > c_c["C0"]["mean_delta_v_norm_mean"]
+
+    # Incremental directional effect checks
+    dir_effect = c_c["incremental_directional_effect"]
+    assert dir_effect["diffrate_dir_val_mean"] > 0.75
+    assert dir_effect["mean_delta_v_dir_norm_mean"] > 1e-4
+    assert dir_effect["mean_delta_v_c2"] > dir_effect["mean_delta_v_c0"]
+    assert dir_effect["mean_delta_v_dir_norm_mean"] > dir_effect["mean_delta_v_c0"]
+
+    # Verify reported separately
+    assert "mean_delta_v_c2" in dir_effect
+    assert "mean_delta_v_c0" in dir_effect
+    assert "mean_delta_v_dir_norm_mean" in dir_effect
 
 
 # -----------------------------------------------------------------------------
 # Test 10: Common-Mode vs Action-Specific Decomposition
 # -----------------------------------------------------------------------------
 def test_10_common_mode_vs_action_specific_decomposition(results_data):
-    """Verify orthogonal variance decomposition: CM + Spec == 1.0 and Action-Specific > 50%."""
+    """Verify orthogonal variance decomposition and handle zero delta edge case without artificial epsilon."""
     for c_id, c_data in results_data["consumer_results"].items():
         for cond in ["C2", "C3", "C4", "C5"]:
             ag = c_data["condition_aggregates"][cond]
-            cm = ag["common_mode_fraction_mean"]
-            spec = ag["action_specific_fraction_mean"]
-            assert abs((cm + spec) - 1.0) < 1e-6, f"{c_id} {cond}: cm={cm} + spec={spec} != 1.0"
-            if cond == "C2" and c_id in ["C_qual_1.50", "A_REFERENCE", "B_DIRECTIONAL_SEPARABLE"]:
-                assert spec > 0.50, f"{c_id} {cond}: action-specific fraction {spec} not > 0.50"
+            if ag["valid_decomposition_pairs_count"] > 0:
+                cm = ag["common_mode_fraction_mean"]
+                spec = ag["action_specific_fraction_mean"]
+                assert abs((cm + spec) - 1.0) < 1e-6, f"{c_id} {cond}: cm={cm} + spec={spec} != 1.0"
+                if cond == "C2" and c_id in ["C_qual_1.50", "A_REFERENCE", "B_DIRECTIONAL_SEPARABLE"]:
+                    assert spec > 0.50, f"{c_id} {cond}: action-specific fraction {spec} not > 0.50"
+            else:
+                assert ag["decomposition_status"] == "UNDEFINED_ZERO_DELTA"
+                assert ag["common_mode_fraction_mean"] == 0.0
+                assert ag["action_specific_fraction_mean"] == 0.0
 
 
 # -----------------------------------------------------------------------------

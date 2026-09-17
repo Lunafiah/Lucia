@@ -1,7 +1,7 @@
 {
   "manifest_version": "1.0",
   "study_id": "PHASE_22_H1_R3_EPISTEMIC_ACTION_VALUE_STUDY",
-  "timestamp_utc": "2026-09-17T16:41:28Z",
+  "timestamp_utc": "2026-09-17T16:55:30Z",
   "primary_seed": 9999,
   "consumer_seeds": [
     42,
@@ -38,18 +38,18 @@
   "artifacts": {
     "results_json": {
       "path": "tests/evaluation_phase22/results/h1_r3_epistemic_action_value/r3_epistemic_action_value_results.json",
-      "sha256": "03a6d9ff0973f77962d0b787afa8ec4e3d6643b533a84e1b0351d26008dc887d",
-      "bytes": 182082
+      "sha256": "622ce930eb5404d9467d3ff32ca856ae9aac1ec151d97adfd92bd6301d1e653c",
+      "bytes": 198277
     },
     "summary_csv": {
       "path": "tests/evaluation_phase22/results/h1_r3_epistemic_action_value/r3_epistemic_action_value_summary.csv",
-      "sha256": "cf34595982296e1e35ea0acd0768e665dacb4a64e1b5a751ace921b48054b89b",
-      "bytes": 2501
+      "sha256": "f527ec79445e166c5451d7243157f85b704a005d07a93cef31efa6c2decf3966",
+      "bytes": 2409
     },
     "action_csv": {
       "path": "tests/evaluation_phase22/results/h1_r3_epistemic_action_value/r3_action_specific_valuations.csv",
-      "sha256": "2e956e3cdb9209bcde03338125f8109c4f28e6ac03857aa9647b420435a0dc85",
-      "bytes": 1344
+      "sha256": "9bfcfd5d9feb22b92daf8b0664a235e966591aabc15a50b31bdb9a42a9abbf0b",
+      "bytes": 1843
     }
   },
   "negative_controls": {

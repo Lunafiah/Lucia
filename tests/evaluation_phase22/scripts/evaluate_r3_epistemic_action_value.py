@@ -5,11 +5,12 @@ Evaluation Script: evaluate_r3_epistemic_action_value.py
 
 Evaluates:
   - Canonical signed action valuation V (higher = better; V=U for C, V=-G for A/B/D).
+  - Incremental Directional Effect: ΔV_dir = ΔV_C2 - ΔV_C0 across matched discordant pairs.
   - Continuous action-value differentiation ||V_i - V_j||_2 vs decision-boundary crossing (argmax flips).
   - Common-mode vs action-specific L2 variance decomposition:
       SS_tot = ||ΔV||_2^2 = 6 * Δ_bar^2 (common-mode) + ||ΔV - Δ_bar*1||_2^2 (action-specific).
+      Excludes undefined pairs where ||ΔV||_2^2 <= tau_val^2 without artificial epsilon denominators.
   - Action-specific valuation divergence across all 6 canonical cognitive actions.
-  - Magnitude-vs-direction variance decomposition.
   - 5 representation conditions: C0 (scalar), C2 (canonical R3), C3 (shuffled dir),
     C4 (shuffled mag), C5 (independent dir).
   - 4 consumers: Primary Consumer C @ γ_C=1.50, Reference A, Separable B, Qualifying Corner D.
@@ -241,7 +242,6 @@ class ActionConsumerC(BaseActionConsumer):
         if tie_break_noise is not None:
             u_eval += tie_break_noise
 
-        # Probabilities: softmax over U (higher = better)
         scaled_u = self.gamma * (u_eval - np.max(u_eval))
         exp_u = np.exp(scaled_u)
         probs = exp_u / np.sum(exp_u)
@@ -295,11 +295,9 @@ class ActionConsumerA(BaseActionConsumer):
         if tie_break_noise is not None:
             g_eval += tie_break_noise
 
-        # Canonical signed value: V = -G (higher is better)
         v_vals = -g_vals
         v_eval = -g_eval
 
-        # Probabilities: softmax over V
         scaled_v = self.gamma * (v_eval - np.max(v_eval))
         exp_v = np.exp(scaled_v)
         probs = exp_v / np.sum(exp_v)
@@ -535,7 +533,6 @@ class R3EpistemicActionValueEngine:
                 if diff <= tolerance:
                     candidate_pairs.append((diff, i, j))
 
-        # Deterministic sort: diff asc, then i asc, then j asc
         candidate_pairs.sort(key=lambda x: (round(x[0], 8), x[1], x[2]))
         self.exhaustive_matched_pairs = [(item[1], item[2]) for item in candidate_pairs]
 
@@ -549,7 +546,6 @@ class R3EpistemicActionValueEngine:
             else:
                 self.same_direction_matched_pairs.append((i, j))
 
-        # Greedy 1-to-1 disjoint matching on discordant pairs
         used_probes = set()
         self.greedy_discordant_pairs = []
         for i, j in self.discordant_matched_pairs:
@@ -628,7 +624,7 @@ class R3EpistemicActionValueEngine:
         """
         Evaluate consumer across all 5 conditions for all probes and matched discordant pairs.
         Extracts continuous action valuations, common-mode vs action-specific decompositions,
-        action-level divergence, and probability metrics.
+        incremental directional effect (ΔV_dir = ΔV_C2 - ΔV_C0), and probability metrics.
         """
         n_probes = len(self.all_probes)
         reps = self.build_representation_vectors(consumer_seed)
@@ -652,6 +648,7 @@ class R3EpistemicActionValueEngine:
         # Pair-Level Continuous & Action-Level Analysis across 358 Discordant Pairs
         # =====================================================================
         condition_pair_metrics: Dict[str, Any] = {}
+        threshold_sq = TOLERANCE_VAL ** 2  # 1e-8 for undefined zero delta check
 
         for cond in CONDITIONS:
             action_diffs_count = 0
@@ -666,9 +663,7 @@ class R3EpistemicActionValueEngine:
 
             cm_fractions = []
             spec_fractions = []
-            scalar_contr_list = []
-            dir_contr_list = []
-            int_contr_list = []
+            undefined_zero_delta_count = 0
 
             for i, j in self.discordant_matched_pairs:
                 prof_i = profiles[cond][i]
@@ -706,6 +701,7 @@ class R3EpistemicActionValueEngine:
                 delta_entropy_list.append(float(abs(prof_i.entropy - prof_j.entropy)))
 
                 # 3. Common-mode vs Action-specific L2 variance decomposition
+                # Edge case rule: when norm_delta_v^2 <= threshold_sq, mark undefined and exclude from aggregate stats
                 ss_tot = norm_delta_v ** 2
                 delta_bar = float(np.mean(delta_v_vec))
                 delta_cm_vec = np.full(len(ACTIONS), delta_bar, dtype=np.float64)
@@ -713,55 +709,28 @@ class R3EpistemicActionValueEngine:
                 ss_cm = float(len(ACTIONS) * (delta_bar ** 2))
                 ss_spec = float(np.sum(delta_spec_vec ** 2))
 
-                if ss_tot > 1e-12:
+                if ss_tot > threshold_sq:
                     cm_frac = ss_cm / ss_tot
                     spec_frac = ss_spec / ss_tot
+                    cm_fractions.append(cm_frac)
+                    spec_fractions.append(spec_frac)
                 else:
-                    cm_frac = 0.0
-                    spec_frac = 0.0
-                cm_fractions.append(cm_frac)
-                spec_fractions.append(spec_frac)
-
-                # 4. Magnitude vs Direction Decomposition
-                s_i, dir_i = reps[cond][i]
-                s_j, dir_j = reps[cond][j]
-                delta_s = s_i - s_j
-                delta_dir = dir_i - dir_j
-
-                if consumer.consumer_id == "C_qual_1.50":
-                    d_scalar = np.linalg.norm(-C_COST_S * delta_s)
-                    d_dir = np.linalg.norm(C_U_BASE * (1.50 * np.dot(C_M_BASE, delta_dir)))
-                    d_int = 0.0
-                elif consumer.consumer_id == "A_REFERENCE":
-                    bk_i = 1.0 + 0.50 * math.tanh(2.0 * s_i)
-                    bk_j = 1.0 + 0.50 * math.tanh(2.0 * s_j)
-                    bm_i = 1.0 + 0.30 * math.tanh(2.0 * s_i)
-                    bm_j = 1.0 + 0.30 * math.tanh(2.0 * s_j)
-                    d_scalar = np.linalg.norm((bk_i - bk_j) * A_BASE_DK + (bm_i - bm_j) * A_BASE_DM)
-                    d_dir = np.linalg.norm(np.dot(A_ACTION_WEIGHTS, delta_dir))
-                    d_int = 0.0
-                elif consumer.consumer_id == "B_DIRECTIONAL_SEPARABLE":
-                    d_scalar = np.linalg.norm(-B_ALPHA_S * delta_s - B_BETA_S2 * (s_i**2 - s_j**2))
-                    d_dir = np.linalg.norm(np.dot(B_W_DIR, delta_dir))
-                    d_int = 0.0
-                elif consumer.consumer_id == "D_qual_corner":
-                    d_scalar = np.linalg.norm(-(0.50 * D_KAPPA_S_BASE) * delta_s)
-                    d_dir = np.linalg.norm(1.00 * np.dot(D_W_DIR, delta_dir))
-                    d_int = 0.0
-                else:
-                    d_scalar = 0.0
-                    d_dir = 0.0
-                    d_int = 0.0
-
-                scalar_contr_list.append(float(d_scalar))
-                dir_contr_list.append(float(d_dir))
-                int_contr_list.append(float(d_int))
+                    undefined_zero_delta_count += 1
 
             n_pairs = len(self.discordant_matched_pairs)
             diffrate_action = action_diffs_count / n_pairs
             diffrate_continuous = continuous_val_diffs_count / n_pairs
 
             action_specific_means = {a: float(np.mean(delta_v_actions[a])) for a in ACTIONS}
+
+            if len(cm_fractions) > 0:
+                mean_cm_frac = float(np.mean(cm_fractions))
+                mean_spec_frac = float(np.mean(spec_fractions))
+                decomp_status = "VALID"
+            else:
+                mean_cm_frac = 0.0
+                mean_spec_frac = 0.0
+                decomp_status = "UNDEFINED_ZERO_DELTA"
 
             condition_pair_metrics[cond] = {
                 "diffrate_action": diffrate_action,
@@ -776,13 +745,51 @@ class R3EpistemicActionValueEngine:
                 "mean_d_tv": float(np.mean(d_tv_list)),
                 "mean_delta_margin": float(np.mean(delta_margin_list)),
                 "mean_delta_entropy": float(np.mean(delta_entropy_list)),
-                "common_mode_fraction": float(np.mean(cm_fractions)),
-                "action_specific_fraction": float(np.mean(spec_fractions)),
-                "mean_scalar_contribution": float(np.mean(scalar_contr_list)),
-                "mean_dir_contribution": float(np.mean(dir_contr_list)),
-                "mean_interaction_contribution": float(np.mean(int_contr_list)),
+                "common_mode_fraction": mean_cm_frac,
+                "action_specific_fraction": mean_spec_frac,
+                "valid_decomposition_pairs_count": len(cm_fractions),
+                "undefined_zero_delta_count": undefined_zero_delta_count,
+                "decomposition_status": decomp_status,
                 "action_specific_means": action_specific_means,
             }
+
+        # =====================================================================
+        # Incremental Directional Effect: ΔV_dir = ΔV_C2 - ΔV_C0
+        # =====================================================================
+        delta_v_dir_norms = []
+        delta_v_dir_actions = {a: [] for a in ACTIONS}
+        dir_val_diffs_count = 0
+
+        for i, j in self.discordant_matched_pairs:
+            v_c2_i = np.array(profiles["C2"][i].canonical_v, dtype=np.float64)
+            v_c2_j = np.array(profiles["C2"][j].canonical_v, dtype=np.float64)
+            delta_v_c2 = v_c2_i - v_c2_j
+
+            v_c0_i = np.array(profiles["C0"][i].canonical_v, dtype=np.float64)
+            v_c0_j = np.array(profiles["C0"][j].canonical_v, dtype=np.float64)
+            delta_v_c0 = v_c0_i - v_c0_j
+
+            delta_v_dir = delta_v_c2 - delta_v_c0
+            norm_dir = float(np.linalg.norm(delta_v_dir))
+            delta_v_dir_norms.append(norm_dir)
+
+            if norm_dir > TOLERANCE_VAL:
+                dir_val_diffs_count += 1
+
+            for idx, a in enumerate(ACTIONS):
+                delta_v_dir_actions[a].append(float(abs(delta_v_dir[idx])))
+
+        incremental_directional_effect = {
+            "diffrate_dir_val": float(dir_val_diffs_count / n_pairs),
+            "dir_val_diffs_count": dir_val_diffs_count,
+            "mean_delta_v_dir_norm": float(np.mean(delta_v_dir_norms)),
+            "median_delta_v_dir_norm": float(np.median(delta_v_dir_norms)),
+            "p95_delta_v_dir_norm": float(np.percentile(delta_v_dir_norms, 95)),
+            "std_delta_v_dir_norm": float(np.std(delta_v_dir_norms)),
+            "mean_delta_v_c2": condition_pair_metrics["C2"]["mean_delta_v_norm"],
+            "mean_delta_v_c0": condition_pair_metrics["C0"]["mean_delta_v_norm"],
+            "action_specific_means": {a: float(np.mean(delta_v_dir_actions[a])) for a in ACTIONS},
+        }
 
         # Epistemic-Action Relevance Diagnostic Check (Research-Harness Proxy)
         c0_res = condition_pair_metrics["C0"]
@@ -790,7 +797,11 @@ class R3EpistemicActionValueEngine:
         c3_res = condition_pair_metrics["C3"]
 
         criterion_1 = c2_res["diffrate_continuous_val"] > 0.75
-        criterion_2 = c2_res["mean_delta_v_norm"] > c0_res["mean_delta_v_norm"]
+        criterion_2 = (
+            incremental_directional_effect["mean_delta_v_dir_norm"] > TOLERANCE_VAL and
+            incremental_directional_effect["diffrate_dir_val"] > 0.75 and
+            c2_res["mean_delta_v_norm"] > c0_res["mean_delta_v_norm"]
+        )
         criterion_3 = c2_res["mean_delta_v_norm"] > c3_res["mean_delta_v_norm"]
         criterion_4 = c2_res["action_specific_fraction"] > 0.50
         criterion_5 = c2_res["mean_d_js"] > TOLERANCE_JS
@@ -827,9 +838,10 @@ class R3EpistemicActionValueEngine:
             "consumer_id": consumer.consumer_id,
             "consumer_seed": consumer_seed,
             "conditions": condition_pair_metrics,
+            "incremental_directional_effect": incremental_directional_effect,
             "epistemic_action_relevance_diagnostic": {
                 "criterion_1_continuous_val_change": bool(criterion_1),
-                "criterion_2_survives_matched_pairs": bool(criterion_2),
+                "criterion_2_incremental_directional_effect": bool(criterion_2),
                 "criterion_3_structured_over_shuffles": bool(criterion_3),
                 "criterion_4_action_specific_dominance": bool(criterion_4),
                 "criterion_5_probability_restructuring": bool(criterion_5),
@@ -897,15 +909,16 @@ class R3EpistemicActionValueEngine:
                 d_tv = [sr["conditions"][cond]["mean_d_tv"] for sr in seed_results]
                 cm_frac = [sr["conditions"][cond]["common_mode_fraction"] for sr in seed_results]
                 spec_frac = [sr["conditions"][cond]["action_specific_fraction"] for sr in seed_results]
-                s_contr = [sr["conditions"][cond]["mean_scalar_contribution"] for sr in seed_results]
-                d_contr = [sr["conditions"][cond]["mean_dir_contribution"] for sr in seed_results]
-                int_contr = [sr["conditions"][cond]["mean_interaction_contribution"] for sr in seed_results]
+                valid_cnt = [sr["conditions"][cond]["valid_decomposition_pairs_count"] for sr in seed_results]
+                zero_cnt = [sr["conditions"][cond]["undefined_zero_delta_count"] for sr in seed_results]
 
                 # Action-specific means across seeds
                 action_means = {}
                 for a in ACTIONS:
                     a_vals = [sr["conditions"][cond]["action_specific_means"][a] for sr in seed_results]
                     action_means[a] = float(np.mean(a_vals))
+
+                decomp_status = "VALID" if all(sr["conditions"][cond]["decomposition_status"] == "VALID" for sr in seed_results) else "CONTAINS_UNDEFINED_DELTA"
 
                 cond_aggregates[cond] = {
                     "diffrate_action_mean": float(np.mean(diff_act)),
@@ -920,9 +933,9 @@ class R3EpistemicActionValueEngine:
                     "mean_d_tv_mean": float(np.mean(d_tv)),
                     "common_mode_fraction_mean": float(np.mean(cm_frac)),
                     "action_specific_fraction_mean": float(np.mean(spec_frac)),
-                    "mean_scalar_contribution_mean": float(np.mean(s_contr)),
-                    "mean_dir_contribution_mean": float(np.mean(d_contr)),
-                    "mean_interaction_contribution_mean": float(np.mean(int_contr)),
+                    "valid_decomposition_pairs_count": int(np.mean(valid_cnt)),
+                    "undefined_zero_delta_count": int(np.mean(zero_cnt)),
+                    "decomposition_status": decomp_status,
                     "action_specific_means": action_means,
                 }
 
@@ -940,12 +953,36 @@ class R3EpistemicActionValueEngine:
                 "C2_minus_C5_empirical_structure": c2_norm - c5_norm,
             }
 
+            # Incremental directional effect aggregates across seeds
+            diff_dir_vals = [sr["incremental_directional_effect"]["diffrate_dir_val"] for sr in seed_results]
+            mean_dir_norms = [sr["incremental_directional_effect"]["mean_delta_v_dir_norm"] for sr in seed_results]
+            med_dir_norms = [sr["incremental_directional_effect"]["median_delta_v_dir_norm"] for sr in seed_results]
+            p95_dir_norms = [sr["incremental_directional_effect"]["p95_delta_v_dir_norm"] for sr in seed_results]
+            std_dir_norms = [sr["incremental_directional_effect"]["std_delta_v_dir_norm"] for sr in seed_results]
+
+            dir_action_means = {}
+            for a in ACTIONS:
+                dir_action_means[a] = float(np.mean([sr["incremental_directional_effect"]["action_specific_means"][a] for sr in seed_results]))
+
+            inc_dir_aggregate = {
+                "diffrate_dir_val_mean": float(np.mean(diff_dir_vals)),
+                "diffrate_dir_val_std": float(np.std(diff_dir_vals)),
+                "mean_delta_v_dir_norm_mean": float(np.mean(mean_dir_norms)),
+                "mean_delta_v_dir_norm_std": float(np.std(mean_dir_norms)),
+                "median_delta_v_dir_norm_mean": float(np.mean(med_dir_norms)),
+                "p95_delta_v_dir_norm_mean": float(np.mean(p95_dir_norms)),
+                "mean_delta_v_c2": c2_norm,
+                "mean_delta_v_c0": c0_norm,
+                "action_specific_means": dir_action_means,
+            }
+
             diag_passed = all(sr["epistemic_action_relevance_diagnostic"]["all_criteria_passed"] for sr in seed_results)
             nc2_passed = all(sr["tuple_identity_nc2"]["passed"] for sr in seed_results)
 
             study_results[c_id] = {
                 "consumer_id": c_id,
                 "condition_aggregates": cond_aggregates,
+                "incremental_directional_effect": inc_dir_aggregate,
                 "directional_correspondence_contrasts": contrasts,
                 "epistemic_action_relevance_diagnostic": {
                     "all_seeds_passed": diag_passed,
@@ -959,7 +996,8 @@ class R3EpistemicActionValueEngine:
 
             print(f"   [DONE] {c_id}: C2 Action Diff={cond_aggregates['C2']['diffrate_action_mean']:.4f}, "
                   f"Cont Diff={cond_aggregates['C2']['diffrate_continuous_val_mean']:.4f}, "
-                  f"Mean ||Delta_V||={cond_aggregates['C2']['mean_delta_v_norm_mean']:.4f}, "
+                  f"Mean ||Delta_V_C2||={c2_norm:.4f}, Mean ||Delta_V_C0||={c0_norm:.4f}, "
+                  f"Mean ||Delta_V_dir||={inc_dir_aggregate['mean_delta_v_dir_norm_mean']:.4f}, "
                   f"Action-Spec Frac={cond_aggregates['C2']['action_specific_fraction_mean']:.4f}")
 
         # Historical canonical C0 baseline verification (NC1)
@@ -1059,23 +1097,24 @@ class R3EpistemicActionValueEngine:
         # 2. Summary CSV
         csv_lines = [
             "consumer_id,condition,diffrate_action_mean,diffrate_action_std,diffrate_cont_mean,"
-            "mean_delta_v,median_delta_v,p95_delta_v,mean_d_js,mean_d_tv,"
-            "common_mode_fraction,action_specific_fraction,"
-            "scalar_contribution,dir_contribution,interaction_contribution"
+            "mean_delta_v,median_delta_v,p95_delta_v,mean_delta_v_dir,mean_d_js,mean_d_tv,"
+            "common_mode_fraction,action_specific_fraction,valid_decomp_pairs,decomp_status"
         ]
         for c_id, c_data in study_results.items():
+            dir_effect = c_data["incremental_directional_effect"]["mean_delta_v_dir_norm_mean"]
             for cond in CONDITIONS:
                 ag = c_data["condition_aggregates"][cond]
+                val_dir_str = f"{dir_effect:.4f}" if cond == "C2" else "0.0000"
                 line = (
                     f"{c_id},{cond},"
                     f"{ag['diffrate_action_mean']:.4f},{ag['diffrate_action_std']:.4f},"
                     f"{ag['diffrate_continuous_val_mean']:.4f},"
                     f"{ag['mean_delta_v_norm_mean']:.4f},{ag['median_delta_v_norm_mean']:.4f},"
                     f"{ag['p95_delta_v_norm_mean']:.4f},"
+                    f"{val_dir_str},"
                     f"{ag['mean_d_js_mean']:.6f},{ag['mean_d_tv_mean']:.4f},"
                     f"{ag['common_mode_fraction_mean']:.4f},{ag['action_specific_fraction_mean']:.4f},"
-                    f"{ag['mean_scalar_contribution_mean']:.4f},{ag['mean_dir_contribution_mean']:.4f},"
-                    f"{ag['mean_interaction_contribution_mean']:.4f}"
+                    f"{ag['valid_decomposition_pairs_count']},{ag['decomposition_status']}"
                 )
                 csv_lines.append(line)
 
@@ -1084,12 +1123,16 @@ class R3EpistemicActionValueEngine:
         summary_sha = hashlib.sha256(summary_csv_path.read_bytes()).hexdigest()
 
         # 3. Action-Specific CSV
-        act_lines = ["consumer_id,condition," + ",".join([f"delta_v_{a}" for a in ACTIONS])]
+        act_lines = ["consumer_id,condition,quantity," + ",".join([f"delta_v_{a}" for a in ACTIONS])]
         for c_id, c_data in study_results.items():
             for cond in CONDITIONS:
                 ag = c_data["condition_aggregates"][cond]
-                row = [c_id, cond] + [f"{ag['action_specific_means'][a]:.4f}" for a in ACTIONS]
+                row = [c_id, cond, "DELTA_V"] + [f"{ag['action_specific_means'][a]:.4f}" for a in ACTIONS]
                 act_lines.append(",".join(row))
+            # Append incremental directional effect row
+            dir_act = c_data["incremental_directional_effect"]["action_specific_means"]
+            row_dir = [c_id, "C2_MINUS_C0", "DELTA_V_DIR"] + [f"{dir_act[a]:.4f}" for a in ACTIONS]
+            act_lines.append(",".join(row_dir))
 
         with open(action_csv_path, "w", encoding="utf-8") as f:
             f.write("\n".join(act_lines) + "\n")
