@@ -1,0 +1,19 @@
+{
+  "manifest_version": "1.0",
+  "study_name": "Phase 22 H1 R3 Production Admission Criteria & ADR-029 Evidence Boundary Study",
+  "timestamp": "2026-09-17 12:09:03",
+  "governance_invariants": {
+    "phase_22_h1": "INCONCLUSIVE",
+    "gate_2": "BLOCKED",
+    "protocol_v1_5": "NOT AUTHORIZED",
+    "architecture_gate": "STRICTLY LOCKED",
+    "src_core_mutations": 0,
+    "genesis_profile": "PRESERVED_BIT_EXACT"
+  },
+  "files": {
+    "r3_production_admission_results.json": {
+      "sha256": "5c4df6fd2325708beb0e607b49a78d1533ffc23cbc07f4642976dc484b7732c7",
+      "size_bytes": 41985
+    }
+  }
+}
