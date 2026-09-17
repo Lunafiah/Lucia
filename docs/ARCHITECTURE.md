@@ -490,6 +490,22 @@ $$\text{Development / Simulation Environment} \neq \text{Lucia Activation}$$
   4. *Atomic Parameter Swap*: Parameter updates swap under `_train_lock` held $\le 0.1\text{ms}$ with **0.0 MB GPU VRAM contention**.
   5. *ADR-022 Ordering & Fallback*: Stage 9 reads snapshot $\mathbf{R}_{t-1}$; Stage 16.3 computes $\mathbf{R}_t$ and updates `EmotionCore`; feature flag `enable_relational_consolidation` restores Phase 20 baseline when disabled.
 
+### DRAFT ADR-029: Decoupled Directional Prediction Error Side-Channel [DRAFT / NOT RATIFIED]
+* **Status**: **`ADR DRAFT UPDATED`** (Archival Research Draft Only — NOT RATIFIED / UNAPPROVED / NOT IMPLEMENTED)
+* **Governing Gate**: Production Architecture Gate is **STRICTLY LOCKED**. Production mutations = 0.
+* **Context**: Phase 22 H1 empirical evaluations demonstrated that canonical scalar surprise $S = \|\mathbf{r}_T\|_2$ exhibits metric collapse across 358 Medium-High stimulus pairs ($|\Delta S| < 0.05$) due to Euclidean angular loss in 3-dimensional PAD space. Directional ternary signs $R3 = \operatorname{sign}_\epsilon(\mathbf{r}_T) \in \{-1, 0, +1\}^3$ resolved 79.89% (286/358) of collapse pairs in an isolated research adapter with 0.00% intra-turn sign jitter. Deadband $\epsilon = 0.010$ suppresses 57.61% of multi-turn chatter transitions. However, Quality Gate 2 remains **BLOCKED** ($\Delta_{\text{HM}} = +0.0685 < 0.1500$), Phase 22 H1 remains **INCONCLUSIVE**, and live Small Language Model prompt conditioning remains completely untested.
+* **Candidate Architectural Proposal (Proposed Candidate Contract — Zero Production Commitment)**:
+  1. *Producer Contract*: Stage S4 (`ActiveInferenceEngine.step()`) emits `PhysiologicalSurprise`.
+  2. *Value Object Candidate*: Define immutable frozen dataclass `PhysiologicalSurprise(magnitude, direction, timestamp_tick, exposure_ticks, provenance="ActiveInferenceEngine:S4")`. Implements `__float__()` returning magnitude $S$ for legacy scalar backward compatibility. Policy parameters (`deadband_eps = 0.010`, `exposure_weight` $w_{\text{exp}}(T)$) remain optional research-policy metadata.
+  3. *Transport Contract*: `CognitiveOrchestrator` passively forwards value object across S5–S12; orchestrator MUST NOT semantically interpret directional signs.
+  4. *Consumer Contracts*: Consumers declare `MAGNITUDE_ONLY`, `DIRECTION_ONLY`, or `MAGNITUDE_AND_DIRECTION`. S10 `CommunicationPolicy` is an adapter candidate; S11 `PromptAssembler` is an untested research hypothesis.
+  5. *Strict Prohibitions*: Prohibited from modulating `EmotionCore` ODE hidden states $\mathbf{h}(t)$, leaking into `ConsolidationEngine` Tier 3 synaptic weights (ADR-028), bypassing `BoundaryLayer` regex (S13), modulating Somatic Load (S5), or coupling to continuous Live2D/VRM blendshapes.
+* **Mandatory Evidence Boundaries**:
+  - *MAY CLAIM*: Bit-exact $S$ preservation (`INV-1`); 27 ternary states; 0.00% static jitter; 84.47% near-zero transition concentration; 57.61% chatter suppression via deadband $\epsilon=0.010$; 79.89% adapter collapse resolution; S4 producer ownership; candidate value object.
+  - *OPEN QUESTIONS*: Local 7B SLM prompt responsiveness; SDM flashbulb associative addressing; avatar blendshape visual snapping; deadband generalization outside G1; production EFE behavior.
+  - *MUST NOT CLAIM*: Production validation; architectural approval; optimal measurement; SLM generation improvement; empathy improvement; reasoning control; clarification control; relational synaptic improvement; Gate 2 passed or resolved.
+* **Future Admission Requirements**: 9 mandatory requirements (`FAR-01` through `FAR-09`) established in [PHASE_22_H1_ADR029_DRAFT_UPDATE_EVIDENCE_LEDGER.md](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase22-Epistemic_Foraging/PHASE_22_H1_ADR029_DRAFT_UPDATE_EVIDENCE_LEDGER.md) must be empirically satisfied before this record can be considered for ratification or production implementation.
+
 ---
 
 ### 8.1 Reconciliation of Outdated Specs & Conflicting Decisions

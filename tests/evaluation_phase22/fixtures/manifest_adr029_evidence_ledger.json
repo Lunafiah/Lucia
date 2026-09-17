@@ -1,0 +1,20 @@
+{
+  "manifest_version": "1.0",
+  "study_name": "Phase 22 H1 ADR-029 Draft Update & Evidence Ledger Synchronization",
+  "timestamp": "2026-09-17 12:40:00",
+  "governance_invariants": {
+    "phase_22_h1": "INCONCLUSIVE",
+    "gate_2": "BLOCKED",
+    "protocol_v1_5": "NOT AUTHORIZED",
+    "architecture_gate": "STRICTLY LOCKED",
+    "src_core_mutations": 0,
+    "genesis_profile": "PRESERVED_BIT_EXACT",
+    "adr_029_status": "ADR DRAFT UPDATED"
+  },
+  "files": {
+    "adr029_evidence_ledger.json": {
+      "sha256": "84705b4399fd260d7a0a84ab5b942a8dbf77f7547dffa13cf6c1ae11295f53bc",
+      "size_bytes": 38049
+    }
+  }
+}

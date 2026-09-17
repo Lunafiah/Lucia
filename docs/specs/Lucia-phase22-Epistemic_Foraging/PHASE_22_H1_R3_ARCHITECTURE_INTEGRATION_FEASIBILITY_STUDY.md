@@ -429,29 +429,49 @@ To prevent overclaiming, terminology is strictly locked:
 
 ## 20. Draft ADR Proposal (DRAFT ADR-029: Not Ratified / Not Implemented)
 
+> **Synchronization Notice**: The working draft of ADR-029 below has been updated to **`ADR DRAFT UPDATED`** and synchronized with the complete Phase 22 H1 Evidence Ledger. For full provenance, 19-claim evidence inventory, lineage graph, candidate contract specifications, and parameter classifications, see [PHASE_22_H1_ADR029_DRAFT_UPDATE_EVIDENCE_LEDGER.md](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase22-Epistemic_Foraging/PHASE_22_H1_ADR029_DRAFT_UPDATE_EVIDENCE_LEDGER.md).
+
 ```text
 ================================================================================
-DRAFT ARCHITECTURAL DECISION RECORD (ADR-029) — FOR RECORD ONLY
-STATUS: RESEARCH DRAFT / NOT RATIFIED / NOT IMPLEMENTED
-GOVERNANCE GATE: STRICTLY LOCKED — 0 PRODUCTION MUTATIONS
+DRAFT ARCHITECTURAL DECISION RECORD (ADR-029) — ARCHIVAL RECORD ONLY
+STATUS: ADR DRAFT UPDATED (NOT RATIFIED / UNAPPROVED / NOT IMPLEMENTED)
+GOVERNANCE GATE: STRICTLY LOCKED — 0 PRODUCTION CODE MUTATIONS
+EVIDENCE BOUNDARY: SYNCHRONIZED WITH PHASE 22 H1 EVIDENCE LEDGER
 ================================================================================
 
 Title: ADR-029: Decoupled Directional Prediction Error Side-Channel (PhysiologicalSurprise Value Object)
-Status: RESEARCH DRAFT (Subject to future Architecture Gate opening)
+Status: ADR DRAFT UPDATED (Subject to Future Architectural Decision Gate Opening)
 Context: Phase 22 H1 demonstrated that canonical scalar surprise S = ||r_T||_2 fails
 to differentiate 358 Medium-High stimulus pairs due to metric collapse. Directional
-sign R3 = sign(r_T) restores 79.89% behavioral differentiation in research adapters.
-Decision:
-1. Define immutable domain value object PhysiologicalSurprise encapsulating magnitude S
-   and ternary direction signs R3.
-2. Producer: ActiveInferenceEngine.step() at Stage S4.
-3. Consumers: CommunicationPolicy (S10) and PromptAssembler (S11).
-4. Prohibited: EmotionCore ODE hidden state h(t), BoundaryLayer (S13), Somatic Load (S5).
-5. Coercion: Implement __float__() returning magnitude S for legacy compatibility.
-Consequences:
-- Preserves canonical scalar S bit-exact (INV-1).
-- Provides clean evolutionary migration path to continuous R2 (Option E).
-- Requires zero mutations to production ODE integration or limbic dynamics.
+ternary signs R3 = sign_eps(r_T) in {-1, 0, +1}^3 resolved 79.89% (286/358) of collapse
+pairs in an isolated research adapter with 0.00% intra-turn sign jitter. Deadband eps=0.010
+suppresses 57.61% of multi-turn chatter transitions. However, Quality Gate 2 remains
+BLOCKED (Delta_HM = +0.0685 < 0.1500), Phase 22 H1 remains INCONCLUSIVE, and live SLM
+prompt conditioning remains completely untested.
+Candidate Decision (PROPOSED CANDIDATE CONTRACT ONLY — NOT PRODUCTION COMMITMENT):
+1. Producer Contract: Stage S4 (ActiveInferenceEngine.step()) emits PhysiologicalSurprise.
+2. Value Object: Define frozen dataclass PhysiologicalSurprise(magnitude, direction,
+   timestamp_tick, exposure_ticks, provenance="ActiveInferenceEngine:S4").
+   Implement __float__() returning magnitude S for legacy scalar backward compatibility.
+   Policy parameters (deadband_eps = 0.010, exposure_weight w_exp(T)) remain research metadata.
+3. Transport Contract: CognitiveOrchestrator passively forwards value object across S5-S12;
+   orchestrator MUST NOT semantically interpret directional signs.
+4. Consumer Contracts: Consumers declare MAGNITUDE_ONLY, DIRECTION_ONLY, or
+   MAGNITUDE_AND_DIRECTION. S10 CommunicationPolicy is an adapter candidate; S11 PromptAssembler
+   is an untested research hypothesis.
+5. Prohibited: EmotionCore ODE hidden state h(t), ConsolidationEngine Tier 3 weights (ADR-028),
+   BoundaryLayer regex (S13), Somatic Load (S5), and continuous Live2D/VRM blendshapes.
+Consequences & Evidence Boundaries:
+- MAY CLAIM: Bit-exact S preservation (INV-1); 27 ternary states; 0.00% static jitter;
+  84.47% near-zero transition concentration; 57.61% chatter suppression via deadband eps=0.010;
+  79.89% adapter collapse resolution; S4 producer ownership; candidate value object.
+- OPEN QUESTIONS: Local 7B SLM prompt responsiveness; SDM flashbulb associative addressing;
+  avatar blendshape visual snapping; deadband generalization outside G1; production EFE behavior.
+- MUST NOT CLAIM: Production validation; architectural approval; optimal measurement; SLM
+  generation improvement; empathy improvement; reasoning control; clarification control;
+  relational synaptic improvement; Gate 2 passed or resolved.
+- FUTURE ADMISSION CRITERIA: 9 mandatory requirements (FAR-01 to FAR-09) must be empirically
+  verified before opening the Production Architecture Gate or ratifying this record.
 ================================================================================
 ```
 
