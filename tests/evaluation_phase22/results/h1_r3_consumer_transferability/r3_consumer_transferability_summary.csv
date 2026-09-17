@@ -1,0 +1,5 @@
+consumer_id,c2_diffrate_disc_mean,c0_d_pair_action_mean,directional_gain_mean,c2_c4_condition_shift_mean,c2_mean_delta_v,c0_mean_delta_v,transfer_criteria_satisfied
+A_REFERENCE,0.7989,0.0000,0.7989,0.2859,0.5315,0.0074,True
+B_DIRECTIONAL_SEPARABLE,0.7989,0.0000,0.7989,0.2622,0.6901,0.0207,True
+C_CONTINUOUS_UTILITY,0.0000,0.0000,0.0000,0.0104,0.7123,0.0132,False
+D_MAGNITUDE_DOMINANT,0.0000,0.0000,0.0000,0.0000,0.1934,0.1376,False

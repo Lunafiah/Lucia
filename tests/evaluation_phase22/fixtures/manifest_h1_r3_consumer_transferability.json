@@ -1,0 +1,33 @@
+{
+  "manifest_version": "1.0",
+  "study_name": "Phase 22 H1 R3 Consumer Transferability & Adapter Dependence Study",
+  "generated_at": "2026-09-17T12:56:39Z",
+  "governance_invariants": {
+    "phase_22_h1": "INCONCLUSIVE",
+    "gate_2": "STRICTLY BLOCKED",
+    "architecture_gate": "STRICTLY LOCKED",
+    "production_mutations": 0,
+    "genesis_profile": "PRESERVED_BIT_EXACT"
+  },
+  "files": {
+    "r3_consumer_transferability_results.json": {
+      "sha256": "da7c48964872caec410d5821e0071489c688d475199d70395a76af4c52446728",
+      "size_bytes": 57674
+    },
+    "r3_consumer_transferability_summary.csv": {
+      "sha256": "3ae581072109eeb1eb8a5e47f9b1467e67517df3e070a5eb5504314be7545597",
+      "size_bytes": 438
+    }
+  },
+  "transferability_summary": {
+    "independent_consumers_evaluated": [
+      "B_DIRECTIONAL_SEPARABLE",
+      "C_CONTINUOUS_UTILITY",
+      "D_MAGNITUDE_DOMINANT"
+    ],
+    "satisfied_count": 1,
+    "total_independent_consumers": 3,
+    "r_transfer": 0.3333333333333333,
+    "transfer_conclusion": "PARTIAL_TRANSFERABILITY_PARTIAL_ADAPTER_DEPENDENCE"
+  }
+}
