@@ -29,29 +29,29 @@ To answer this question without confounding, this study deploys an **8-condition
 C2 (Canonical R3):   DiffRate = 79.89%                              C1 (Continuous R2): DiffRate = 79.89%
 C3 (Shuffled Dir):   DiffRate = 29.16% (Δ = -50.73%)                C2 (Ternary R3):    DiffRate = 79.89%
 C5 (Indep Random):   DiffRate = 24.53% (Δ = -55.36%)                C6 (Binary Sign):   DiffRate = 79.89%
-Attribution: 63.5% Driven by Stimulus Alignment                     Attribution: Sign Orientation Sufficient
+Attribution: Sensitive to Stimulus Alignment (~63.5% Attenuation under C3)    Attribution: Sign Functional Equivalence Under Evaluated Diagnostic
 ```
 
 ### Key Empirical Findings:
 
-1. **Directional Correspondence is the Primary Causal Driver**:
-   - In Primary Consumer C ($\gamma_C = 1.50$), shuffling direction vectors across stimuli while strictly preserving their magnitude (Condition C3) collapses discordant pair differentiation from **$79.89\%$ down to $29.16\%$** (mean drop: **$-50.73$ percentage points**, $p < 10^{-6}$).
-   - Supplying independent random directions that preserve empirical marginal frequencies (Condition C5) further collapses differentiation to **$24.53\%$** (mean drop: **$-55.36$ percentage points**).
-   - This proves that **over $63.5\%$** of the observed differentiation in Consumer C is causally attributable to the stimulus-specific orientation of the residual vector, refuting the hypothesis that differentiation is merely a generic noise injection or unaligned perturbation effect.
+1. **Evidence Consistent with Directional Contribution Under Evaluated Protocol**:
+   - In Primary Consumer C ($\gamma_C = 1.50$), shuffling direction vectors across stimuli while strictly preserving their magnitude (Condition C3) reduces discordant pair differentiation from **$79.89\%$ down to $29.16\%$** (mean drop: **$-50.73$ percentage points**, $p < 10^{-6}$).
+   - Supplying independent random directions that preserve empirical marginal frequencies (Condition C5) further reduces differentiation to **$24.53\%$** (mean drop: **$-55.36$ percentage points**).
+   - Within the evaluated consumer, representation, and permutation protocol, this evidence is consistent with directional correspondence: shuffling direction vectors attenuates differentiation by ~63.5%, indicating that behavioral differentiation under this diagnostic is sensitive to the alignment of the direction vector with the stimulus rather than behaving purely as an unaligned perturbation.
 
-2. **Magnitude Decoupling Has Zero Effect in Multiplicative Consumer C**:
+2. **Magnitude Decoupling in Consumer C Under Evaluated Diagnostic**:
    - Shuffling scalar surprise magnitude while strictly preserving the directional vector (Condition C4) yields **$79.89\%$** differentiation in Consumer C ($\Delta_{\text{C2-C4}} = 0.0000$).
-   - In Consumer C, directional valuation is multiplicative with respect to base utility ($U = U_{\text{base}} \odot (1 + \gamma_C \mathbf{M} \mathbf{v})$); scalar surprise enters solely through an independent additive cost. Consequently, directional differentiation operates orthogonally to scalar magnitude perturbations.
-   - In contrast, in Consumer B ($\Delta_{\text{C2-C4}} = +0.0983$) and Consumer D ($\Delta_{\text{C2-C4}} = +0.0911$), magnitude scrambling induces modest disruption due to non-linear interaction terms.
+   - In Consumer C at $\gamma_C = 1.50$ and under this matched-pair diagnostic, directional valuation is multiplicative with respect to base utility ($U = U_{\text{base}} \odot (1 + \gamma_C \mathbf{M} \mathbf{v})$) while scalar surprise enters via an additive cost ($c_S \cdot S$); hence shuffling $S$ does not alter $\text{DiffRate}_{\text{disc}}$.
+   - In contrast, in Consumer B ($\Delta_{\text{C2-C4}} = +0.0983$) and Consumer D ($\Delta_{\text{C2-C4}} = +0.0911$), magnitude scrambling induces modest disruption reflecting weak interaction in their non-linear/quadratic formulations.
 
-3. **Sign Orientation is Sufficient; Ternary Quantization Adds Zero Value**:
+3. **Binary Sign Representation Achieves Functional Equivalence Under Evaluated Diagnostics**:
    - Continuous normalized R2 residual ($\mathbf{u} = \mathbf{r}/\|\mathbf{r}\|_2$, Condition C1), canonical ternary R3 (Condition C2), and sign-only binary ablation ($d_j \in \{-1, +1\}$, Condition C6) all achieve identical discordant pair differentiation rates of **$79.89\%$** ($286 / 358$) across Consumers A, B, and C.
-   - The $\epsilon = 0.010$ deadband introduces ternary zeros into $33.3\%$ of residual coordinates, yet ternary quantization provides **zero incremental differentiation gain** over a naive binary sign ($C2 - C6 = 0.0000$).
+   - Because C6 preserves the exact same sign correspondence as C2 on non-zero coordinates, this provides evidence of functional equivalence under this diagnostic harness; it does not demonstrate that ternary deadband is universally redundant across unobserved architectures or task contexts ($C2 - C6 = 0.0000$).
    - Directional count / sparsity alone (Condition C7) yields **$0.0000$** differentiation in Consumers A, B, and C. The number of active non-zero dimensions does not differentiate pairs unless vector orientation is present.
 
-4. **Consumer D Qualifying Corner is an Artifact of Scalar Slope Collapse**:
-   - At the isolated qualifying corner of Consumer D ($\mu_d = 1.00, \gamma_\kappa = 0.50$), Condition C7 (isotropic direction count) produces **$100.00\%$** differentiation.
-   - This demonstrates that Consumer D qualifies not through selective directional alignment, but because halving the scalar slope collapses action separation, allowing any uniform positive vector offset to push action margins across decision boundaries.
+4. **Consumer D Differentiation is Consistent with Scalar-Slope Collapse Hypothesis**:
+   - At the isolated qualifying corner of Consumer D ($\mu_d = 1.00, \gamma_\kappa = 0.50$), Condition C7 (isotropic direction count without spatial orientation) produces **$100.00\%$** differentiation.
+   - This empirical finding is consistent with the hypothesis that halving the scalar slope ($\gamma_\kappa = 0.50$) compresses scalar action utility margins, allowing generic positive vector offsets to alter action selection, rather than differentiation being driven uniquely by stimulus-specific directional sensitivity.
 
 ---
 
@@ -202,6 +202,10 @@ The table below reports mean values across all 5 robustness seeds (Seeds 42–46
 | **B (Separable)** | 0.0000 | 0.7989 | 0.7989 | 0.2916 | 0.7006 | 0.2453 | 0.7989 | 0.0000 |
 | **D (Qual Corner)** | 0.0000 | 0.7989 | 0.7989 | 0.2916 | 0.7078 | 0.2453 | 0.7989 | 1.0000 |
 
+> [!NOTE]
+> **Shared Corpus- and Representation-Level Baseline for Shuffled Controls (C3 & C5):**  
+> The identical mean values for C3 ($0.2916$) and C5 ($0.2453$) across Consumers A, B, C, and D reflect a shared corpus-level and representation-level property rather than independent numerical coincidences. Because all four consumer formulations share coordinate-aligned action weight matrices across the six canonical actions ($\mathbf{W}, \mathbf{M}$), each of the 27 discrete sign vectors $\{-1, 0, +1\}^3$ induces an identical argmax action ranking under directional dominance. When direction vectors $\mathbf{d}_{\pi(i)}$ are permuted across probes using fixed seeds, whether a discordant pair $(i, j)$ receives different actions depends on whether the permutation assigns two sign vectors from differing action partitions. Because this mapping is identical across the consumers, C3 and C5 establish a shared combinatorial null baseline of action discordance ($104.4 / 358 = 29.16\%$ for C3; $87.8 / 358 = 24.53\%$ for C5) inherent to the frozen G1 stimulus corpus multiset.
+
 ---
 
 ## 10. Mechanistic Attribution Matrix
@@ -219,18 +223,18 @@ The table below reports mean values across all 5 robustness seeds (Seeds 42–46
 
 ## 11. Detailed Attribution Analysis for Primary Consumer C
 
-1. **Directional Alignment Explains $63.5\%$ of Differentiation**:
-   - $C2 = 0.7989$ vs $C3 = 0.2916$: Decoupling direction from stimuli destroys $50.73$ percentage points of differentiation.
-   - The residual $29.16\%$ in C3 represents generic noise-induced differentiation: random vector assignments occasionally push actions across ties.
-   - True stimulus-aligned directional correspondence accounts for $\frac{0.5073}{0.7989} = 63.50\%$ of observed differentiation.
+1. **Evidence Consistent with Directional Contribution**:
+   - $C2 = 0.7989$ vs $C3 = 0.2916$: Decoupling direction from stimuli reduces differentiation by $50.73$ percentage points.
+   - The remaining $29.16\%$ in C3 represents the shared combinatorial baseline of unaligned direction pairs.
+   - Within the evaluated protocol, this evidence is consistent with directional correspondence accounting for ~63.50% attenuation of the differentiation effect under directional shuffling.
 
-2. **Magnitude Independence ($C2 - C4 = 0.0000$)**:
-   - Permuting scalar surprise magnitudes across the 270 probes does not alter discordant pair differentiation in Consumer C.
-   - Because Consumer C modulates base utility multiplicatively by direction ($\mathbf{M} \mathbf{v}_{\text{dir}}$) while subtracting scalar surprise additively ($c_S \cdot S$), the directional ranking between actions is entirely invariant to $S$.
+2. **Magnitude Decoupling in Consumer C Under Evaluated Diagnostic ($C2 - C4 = 0.0000$)**:
+   - Permuting scalar surprise magnitudes across the 270 probes does not alter discordant pair differentiation in Consumer C under this matched-pair diagnostic.
+   - Because Consumer C modulates base utility multiplicatively by direction ($\mathbf{M} \mathbf{v}_{\text{dir}}$) while subtracting scalar surprise additively ($c_S \cdot S$), the directional ranking between actions under this diagnostic is invariant to $S$. This indicates magnitude decoupling under this specific formulation and diagnostic rather than general independence across all regimes or tasks.
 
-3. **Directional Count is Ineffective ($C7 = 0.0000$)**:
+3. **Directional Count is Ineffective Without Orientation ($C7 = 0.0000$)**:
    - The isotropic vector $\mathbf{v} = \frac{k}{3\sqrt{3}}[1, 1, 1]^T$ produces zero differentiation.
-   - This proves that directional differentiation requires asymmetric coordinate signs rather than an increase in non-zero limbic activity.
+   - This indicates that directional differentiation requires asymmetric coordinate signs rather than an increase in non-zero limbic activity.
 
 ---
 
@@ -244,9 +248,9 @@ The table below reports mean values across all 5 robustness seeds (Seeds 42–46
    - $C2 - C4 = +0.0983$: Unlike Consumer C and A, scrambling magnitude in Consumer B reduces differentiation from $0.7989$ to $0.7006$.
    - Quadratic scalar terms ($\beta_S \cdot S^2$) interact weakly with directional offsets, demonstrating that non-linear scalar terms create minor magnitude dependence.
 
-3. **Consumer D (Magnitude-Dominant Qualifying Corner)**:
-   - $C7 = 1.0000$ ($C2 - C7 = -0.2011$): In Consumer D, isotropic direction-count produces $100\%$ differentiation.
-   - At the qualifying corner ($\mu_d = 1.00, \gamma_\kappa = 0.50$), halving the scalar slope collapses action utility differences, allowing any positive vector shift to dominate action selection. This confirms that Consumer D's qualification is driven by scalar suppression rather than selective directional sensitivity.
+3. **Consumer D Qualifying Corner is Consistent with Scalar-Slope Collapse Hypothesis**:
+   - $C7 = 1.0000$ ($C2 - C7 = -0.2011$): In Consumer D at its qualifying corner ($\mu_d = 1.00, \gamma_\kappa = 0.50$), isotropic direction-count produces $100\%$ differentiation.
+   - This empirical finding is consistent with the hypothesis that halving the scalar slope compresses action utility differences, allowing any positive vector shift to dominate action selection, rather than differentiation being driven uniquely by stimulus-specific directional sensitivity.
 
 ---
 
@@ -260,23 +264,22 @@ The table below reports mean values across all 5 robustness seeds (Seeds 42–46
 | **Mean Probability $D_{\text{JS}}$** | 0.0384 | 0.0269 | 0.0120 |
 | **Mean Probability $D_{\text{TV}}$** | 0.2416 | 0.2038 | 0.1315 |
 
-- **Conclusion**: Coarse binary sign quantization captures $100\%$ of R3's behavioral differentiation while inducing less probability distribution distortion ($D_{\text{JS}} = 0.0120$ vs $0.0269$).
-- Ternary deadband quantization adds zero incremental behavioral differentiation in the evaluated consumers.
+- **Conclusion**: Binary sign representation without deadband ($C6$) achieves the identical $\text{DiffRate}_{\text{disc}} = 0.7989$ as canonical ternary R3 ($C2$) across the evaluated consumers ($C2 - C6 = 0.0000$), while inducing less probability distribution distortion ($D_{\text{JS}} = 0.0120$ vs $0.0269$).
+- Because C6 preserves the exact same sign correspondence as C2 on non-zero coordinates, this provides evidence of functional equivalence under this diagnostic harness; it does not demonstrate that ternary deadband is universally redundant across unobserved architectures or task contexts.
 
 ---
 
 ## 14. Scientific Conclusions & Answers to Research Questions
 
-1. **Is R3 differentiation genuine directional information?**
-   - **YES**. Across all consumers, $63.5\%$ of differentiation collapses when directional vectors are shuffled away from stimuli ($p < 10^{-6}$). The effect cannot be explained by scalar noise or unaligned perturbations.
+1. **Does R3 differentiation reflect directional contribution?**
+   - **Evidence is consistent with directional contribution within the evaluated harness.** Across all evaluated consumers, shuffling directional vectors away from stimuli attenuates differentiation by 50.73 percentage points ($p < 10^{-6}$), indicating that differentiation in this setup is sensitive to stimulus-aligned orientation rather than behaving purely as an unaligned perturbation.
 2. **Is R3 differentiation dependent on magnitude-direction interaction?**
-   - **NO in Consumer C and A** ($C2 - C4 = 0.0000$).
-   - **WEAK in Consumer B and D** ($C2 - C4 \approx 0.09$). Directional differentiation operates largely independently of scalar surprise magnitude.
-3. **Does ternary quantization provide functional benefits over binary signs?**
-   - **NO**. Binary sign representation ($C6$) achieves identical differentiation ($79.89\%$) with lower probability displacement. The $\epsilon=0.010$ deadband is functionally inert with respect to action selection in evaluated consumers.
-4. **Is differentiation reproducible by low-dimensional sparsity controls?**
-   - **NO in Consumers A, B, C** ($C7 = 0.0000$). Spatial orientation is required.
-   - **YES in Consumer D** ($C7 = 1.0000$), exposing Consumer D's qualifying corner as an artifact of scalar slope collapse.
+   - **Within Consumer C at $\gamma_C = 1.50$ and under this diagnostic, shuffling $S$ does not alter $\text{DiffRate}_{\text{disc}}$ ($C2 - C4 = 0.0000$).** In Consumer B and D, magnitude scrambling induces modest disruption ($C2 - C4 \approx 0.09$), reflecting weak interaction in their non-linear/quadratic formulations.
+3. **Does ternary quantization provide functional benefits over binary signs under evaluated diagnostics?**
+   - **Not observed under evaluated diagnostics.** Binary sign representation ($C6$) achieves identical differentiation ($79.89\%$) with lower probability displacement ($D_{\text{JS}} = 0.0120$ vs $0.0269$). Under these consumers and diagnostics, ternary deadband provides no incremental differentiation gain over binary signs.
+4. **Can differentiation be reproduced by low-dimensional sparsity controls?**
+   - **NO in Consumers A, B, C** ($C7 = 0.0000$), where coordinate orientation is required.
+   - **YES in Consumer D** ($C7 = 1.0000$), which is consistent with the hypothesis that Consumer D's qualifying corner is facilitated by scalar slope collapse rather than selective directional sensitivity alone.
 
 ---
 
