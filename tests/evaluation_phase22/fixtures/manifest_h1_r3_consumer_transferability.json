@@ -1,7 +1,7 @@
 {
   "manifest_version": "1.0",
   "study_name": "Phase 22 H1 R3 Consumer Transferability & Adapter Dependence Study",
-  "generated_at": "2026-09-17T12:56:39Z",
+  "generated_at": "2026-09-17T13:24:48Z",
   "governance_invariants": {
     "phase_22_h1": "INCONCLUSIVE",
     "gate_2": "STRICTLY BLOCKED",
@@ -11,8 +11,8 @@
   },
   "files": {
     "r3_consumer_transferability_results.json": {
-      "sha256": "da7c48964872caec410d5821e0071489c688d475199d70395a76af4c52446728",
-      "size_bytes": 57674
+      "sha256": "b47ce6802082ba3dde1ad95d6167e841ed91544c8f21ce05a198eab1e3a05154",
+      "size_bytes": 57656
     },
     "r3_consumer_transferability_summary.csv": {
       "sha256": "3ae581072109eeb1eb8a5e47f9b1467e67517df3e070a5eb5504314be7545597",

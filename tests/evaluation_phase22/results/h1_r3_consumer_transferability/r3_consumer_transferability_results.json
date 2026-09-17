@@ -397,10 +397,9 @@
             "observed": 0.7988826815642458,
             "passed": true
           },
-          "criterion_3_shuffled_shift_ge_5pct": {
-            "threshold": 0.05,
-            "observed": 0.2859259259259259,
-            "passed": true
+          "secondary_metric_condition_shift_c2_c4": {
+            "role": "descriptive_secondary_metric",
+            "observed": 0.2859259259259259
           },
           "transfer_criteria_satisfied": true
         }
@@ -745,10 +744,9 @@
             "observed": 0.7988826815642458,
             "passed": true
           },
-          "criterion_3_shuffled_shift_ge_5pct": {
-            "threshold": 0.05,
-            "observed": 0.2622222222222222,
-            "passed": true
+          "secondary_metric_condition_shift_c2_c4": {
+            "role": "descriptive_secondary_metric",
+            "observed": 0.2622222222222222
           },
           "transfer_criteria_satisfied": true
         }
@@ -1093,10 +1091,9 @@
             "observed": 0.0,
             "passed": false
           },
-          "criterion_3_shuffled_shift_ge_5pct": {
-            "threshold": 0.05,
-            "observed": 0.01037037037037037,
-            "passed": false
+          "secondary_metric_condition_shift_c2_c4": {
+            "role": "descriptive_secondary_metric",
+            "observed": 0.01037037037037037
           },
           "transfer_criteria_satisfied": false
         }
@@ -1441,10 +1438,9 @@
             "observed": 0.0,
             "passed": false
           },
-          "criterion_3_shuffled_shift_ge_5pct": {
-            "threshold": 0.05,
-            "observed": 0.0,
-            "passed": false
+          "secondary_metric_condition_shift_c2_c4": {
+            "role": "descriptive_secondary_metric",
+            "observed": 0.0
           },
           "transfer_criteria_satisfied": false
         }

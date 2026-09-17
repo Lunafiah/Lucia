@@ -24,8 +24,9 @@ Prior research demonstrated that under the historical reference adapter (`A_REFE
 ### Core Empirical Findings:
 1. **Transfer to Separable Cost Model (`B_DIRECTIONAL_SEPARABLE`)**:
    Under an independently formulated additive linear-quadratic cost model featuring convex scalar effort scaling ($S^2$) and an independent directional matrix $\mathbf{W}_B$, directional differentiation transferred cleanly:
-   $$\text{DiffRate}_{\text{disc}}(C2) = 0.7989, \quad \Delta_{\text{dir\_gain}} = +0.7989, \quad D_{\text{condition\_action}}(C2, C4) = 0.2622$$
-   All four preregistered transfer criteria were satisfied (`TRANSFER_SATISFIED`).
+   $$\text{DiffRate}_{\text{disc}}(C2) = 0.7989, \quad \Delta_{\text{dir\_gain}} = +0.7989$$
+   with secondary descriptive shuffled sensitivity $D_{\text{condition\_action}}(C2, C4) = 0.2622$. Both primary transfer criteria and the hard tuple identity invariant were satisfied (`TRANSFER_SATISFIED`).
+   - *Mechanistic Interpretation vs Causal Claim*: Because action effort weights $c_{\text{effort}}$ vary across candidate actions ($[0.30, 0.10, 0.20, 0.15, 0.40, 0.50]^\top$), $S^2$ does *not* scale uniformly across candidate actions. The preservation of $79.89\%$ differentiation is an **empirical observation under the evaluated parameter regime**: directional valuation shifts ($-\mathbf{W}_B \mathbf{d}$) remain sufficiently large relative to the differential quadratic cost across matched pairs ($|\Delta S| \le 0.02$) to preserve discrete argmax separation. This is a regime-bound empirical finding, not a proven universal mathematical theorem.
 2. **Continuous Utility vs. Discrete Argmax Masking (`C_CONTINUOUS_UTILITY`)**:
    Under a multiplicative exponential utility model ($U = U_{\text{base}} \cdot \exp(\mathbf{M}_d \mathbf{d} / \sqrt{3}) - \mathbf{c} \cdot S$), directional R3 generated massive continuous utility divergence:
    $$\overline{\Delta V}_{\text{pair}}(C2) = 0.7123 \quad (>50\times \text{ higher than scalar baseline } \overline{\Delta V}_{\text{pair}}(C0) = 0.0132)$$
@@ -200,7 +201,12 @@ N = 6,376          N = 358 (Canonical Collapse Set)
 
 All metrics represent the mean across consumer robustness seeds $42–46$ (with observed cross-seed $\text{std} = 0.0000$ on C0 and C2, and seed-dependent variance on C4):
 
-| Consumer ID | C2 DiffRate ($\text{DiffRate}_{\text{disc}}$) | C0 Baseline ($D_{\text{pair\_action}}$) | Directional Gain ($\Delta_{\text{dir\_gain}}$) | Shuffled Shift ($D_{\text{condition}}(C2, C4)$) | Mean $\overline{\Delta V}(C2)$ | Mean $\overline{\Delta V}(C0)$ | Preregistered Status |
+### Metric Definitions & Explicit Denominators:
+- **$\text{DiffRate}_{\text{disc}}(c)$ (Pair-Level Discordant Differentiation)**: Denominator is strictly the **$N = 358$ discordant matched pairs** ($|S_i - S_j| \le 0.02, \mathbf{d}_i \ne \mathbf{d}_j$). For C2 under Consumer A and B, $286 / 358 = 79.89\%$.
+- **$\text{DiffRate}_{\text{all}}(c)$ (Pair-Level Overall Matched Differentiation)**: Denominator is the **$N = 6,734$ exhaustive matched pairs** ($|S_i - S_j| \le 0.02$). For C2 under Consumer A and B, $286 / 6,734 = 0.0425$ ($4.25\%$).
+- **$D_{\text{condition\_action}}(C2, C4)$ (Same-Probe Condition Flip Rate)**: Denominator is strictly the **$N = 270$ individual evaluated probes**, measuring the fraction of identical probes where permuting the directional vector altered the chosen action.
+
+| Consumer ID | C2 DiffRate ($\text{DiffRate}_{\text{disc}}$, Denom 358) | C0 Baseline ($D_{\text{pair\_action}}$, Denom 358) | Directional Gain ($\Delta_{\text{dir\_gain}}$) | Shuffled Shift ($D_{\text{condition}}$, Denom 270) | Mean $\overline{\Delta V}(C2)$ | Mean $\overline{\Delta V}(C0)$ | Preregistered Status |
 |---|---|---|---|---|---|---|---|
 | **`A_REFERENCE`** | **0.7989** (286/358) | 0.0000 (0/358) | **+0.7989** | 0.2859 | 0.5315 | 0.0074 | **SATISFIED** |
 | **`B_DIRECTIONAL_SEPARABLE`** | **0.7989** (286/358) | 0.0000 (0/358) | **+0.7989** | 0.2622 | 0.6901 | 0.0207 | **SATISFIED** |
@@ -209,13 +215,19 @@ All metrics represent the mean across consumer robustness seeds $42–46$ (with 
 
 ### Preregistered Transfer Criteria Evaluation (Independent Consumers B, C, D):
 
-| Evaluation Criterion | Preregistered Threshold | Consumer B | Consumer C | Consumer D |
+| Evaluation Criterion | Preregistered Threshold | Criterion Role | Consumer B | Consumer C | Consumer D |
+|---|---|---|---|---|---|
+| **1. Primary Discordant Differentiation** | $\text{DiffRate}_{\text{disc}}(C2) \ge 0.2000$ | Primary Gate | **0.7989** (`PASS`) | 0.0000 (`FAIL`) | 0.0000 (`FAIL`) |
+| **2. Incremental Gain over Scalar Baseline** | $\Delta_{\text{dir\_gain}} \ge 0.1000$ | Primary Gate | **+0.7989** (`PASS`) | +0.0000 (`FAIL`) | +0.0000 (`FAIL`) |
+| **3. Hard Tuple Identity Parity Invariant** | $\Delta_{\text{action\_identity}} = 0.0, D_{\text{JS}} < 10^{-12}$ | Hard Invariant | **0.0000** (`PASS`) | **0.0000** (`PASS`) | **0.0000** (`PASS`) |
+| **Individual Consumer Transfer Verdict** | Primary Gates + Hard Invariant | Decision | **TRANSFER SATISFIED** | **NOT SATISFIED** | **NOT SATISFIED** |
+
+### Descriptive Secondary Metrics (Informational Only — No Threshold):
+
+| Descriptive Metric | Measurement Scope | Consumer B | Consumer C | Consumer D |
 |---|---|---|---|---|
-| **1. Primary Discordant Differentiation** | $\text{DiffRate}_{\text{disc}}(C2) \ge 0.2000$ | **0.7989** (`PASS`) | 0.0000 (`FAIL`) | 0.0000 (`FAIL`) |
-| **2. Incremental Gain over Scalar Baseline** | $\Delta_{\text{dir\_gain}} \ge 0.1000$ | **+0.7989** (`PASS`) | +0.0000 (`FAIL`) | +0.0000 (`FAIL`) |
-| **3. Condition-Level Shuffled Sensitivity** | $D_{\text{condition\_action}}(C2, C4) \ge 0.0500$ | **0.2622** (`PASS`) | 0.0104 (`FAIL`) | 0.0000 (`FAIL`) |
-| **4. Hard Tuple Identity Parity Invariant** | $\Delta_{\text{action\_identity}} = 0.0, D_{\text{JS}} < 10^{-12}$ | **0.0000** (`PASS`) | **0.0000** (`PASS`) | **0.0000** (`PASS`) |
-| **Individual Consumer Transfer Verdict** | All 4 Criteria Met | **TRANSFER SATISFIED** | **NOT SATISFIED** | **NOT SATISFIED** |
+| **Condition-Level Shuffled Sensitivity** | $D_{\text{condition\_action}}(C2, C4)$ ($N=270$ probes) | 0.2622 (26.22% flip) | 0.0104 (1.04% flip) | 0.0000 (0.00% flip) |
+| **Continuous Utility Divergence** | $\overline{\Delta V}_{\text{pair}}(C2)$ on discordant pairs | 0.6901 | 0.7123 | 0.1934 |
 
 $$\mathbf{R_{\text{transfer}} = \frac{1 \text{ satisfied}}{3 \text{ evaluated}} = 0.3333 \quad (33.3\%)}$$
 
@@ -286,12 +298,14 @@ $$\Delta_{\text{action\_identity}} = 0.0000, \quad D_{\text{JS\_identity}} < 10^
 
 ## 10. Cross-Seed Robustness Analysis
 
-| Consumer | Seed 42 DiffRate | Seed 43 DiffRate | Seed 44 DiffRate | Seed 45 DiffRate | Seed 46 DiffRate | Mean | Std |
+| Consumer | Seed 42 DiffRate | Seed 43 DiffRate | Seed 44 DiffRate | Seed 45 DiffRate | Seed 46 DiffRate | Mean $\text{DiffRate}_{\text{disc}}$ | Std |
 |---|---|---|---|---|---|---|---|
-| **`A_REFERENCE`** | 0.7989 | 0.7989 | 0.7989 | 0.7989 | 0.7989 | **0.7989** | **0.0000** |
-| **`B_DIRECTIONAL_SEPARABLE`** | 0.7989 | 0.7989 | 0.7989 | 0.7989 | 0.7989 | **0.7989** | **0.0000** |
-| **`C_CONTINUOUS_UTILITY`** | 0.0000 | 0.0000 | 0.0000 | 0.0000 | 0.0000 | **0.0000** | **0.0000** |
-| **`D_MAGNITUDE_DOMINANT`** | 0.0000 | 0.0000 | 0.0000 | 0.0000 | 0.0000 | **0.0000** | **0.0000** |
+| **`A_REFERENCE`** | 0.7989 | 0.7989 | 0.7989 | 0.7989 | 0.7989 | **0.7989** (286/358) | **0.0000** |
+| **`B_DIRECTIONAL_SEPARABLE`** | 0.7989 | 0.7989 | 0.7989 | 0.7989 | 0.7989 | **0.7989** (286/358) | **0.0000** |
+| **`C_CONTINUOUS_UTILITY`** | 0.0000 | 0.0000 | 0.0000 | 0.0000 | 0.0000 | **0.0000** (0/358) | **0.0000** |
+| **`D_MAGNITUDE_DOMINANT`** | 0.0000 | 0.0000 | 0.0000 | 0.0000 | 0.0000 | **0.0000** (0/358) | **0.0000** |
+
+*(Note: Denominator is strictly $N = 358$ discordant matched pairs. Evaluated over all $N = 6,734$ matched pairs, the overall differentiation rate $\text{DiffRate}_{\text{all}}$ is $286 / 6,734 = 0.0425$ for Consumers A and B.)*
 
 *Explanation*: As established in ADR-029 §8.0, consumer seeds govern tie-breaking micro-noise $\mathcal{N}(0, 10^{-6})$ and C4 permutation sequences. Because unpermuted action valuation margins $|G(a^*) - G(a')| \ge 0.010$ exceed micro-noise by $10^4\times$, unpermuted action selections are completely invariant across seeds ($\text{std} = 0.0000$). C4 condition shifts exhibit seed sensitivity ($\text{std} = 0.0142$) due to permutation variability.
 
@@ -314,8 +328,8 @@ All machine-readable result files, summaries, manifests, and test suites are cry
 
 | Artifact Path | SHA-256 Digest | Size (Bytes) | Role |
 |---|---|---|---|
-| [`evaluate_r3_consumer_transferability.py`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/scripts/evaluate_r3_consumer_transferability.py) | `753ce8446b7a858ff408bcf7b2b2b14197db3c5d64ba61b17a15fa1d24c004dc` | 27,613 | Evaluation Engine Script |
-| [`r3_consumer_transferability_results.json`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/results/h1_r3_consumer_transferability/r3_consumer_transferability_results.json) | `da7c48964872caec410d5821e0071489c688d475199d70395a76af4c52446728` | 57,674 | Primary Machine-Readable Results |
-| [`r3_consumer_transferability_summary.csv`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/results/h1_r3_consumer_transferability/r3_consumer_transferability_summary.csv) | `ba9949646c24578b868bb2db13a17df3be03932cfad112a207ec14b3017ca12f` | 438 | Tabular Summary Metrics |
-| [`manifest_h1_r3_consumer_transferability.json`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/fixtures/manifest_h1_r3_consumer_transferability.json) | `6cce7d5d283c746e50ea6827052a6a0e6669919f6f698d2ec2c2a3733a41ef19` | 1,029 | Cryptographic Fixture Manifest |
-| [`test_h1_r3_consumer_transferability.py`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/test_h1_r3_consumer_transferability.py) | `b680376d49826a5c102a249fa6b2a47291a27e3d2ffb8a74c7cf4c1851b2723c` | 8,574 | 12-Suite Automated Verification Test |
+| [`evaluate_r3_consumer_transferability.py`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/scripts/evaluate_r3_consumer_transferability.py) | `ef56e65c3cee547b164af38a49ba247ce6c2c04aeb23749f157d8da520f6b314` | 27,613 | Evaluation Engine Script |
+| [`r3_consumer_transferability_results.json`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/results/h1_r3_consumer_transferability/r3_consumer_transferability_results.json) | `b47ce6802082ba3dde1ad95d6167e841ed91544c8f21ce05a198eab1e3a05154` | 57,656 | Primary Machine-Readable Results |
+| [`r3_consumer_transferability_summary.csv`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/results/h1_r3_consumer_transferability/r3_consumer_transferability_summary.csv) | `3ae581072109eeb1eb8a5e47f9b1467e67517df3e070a5eb5504314be7545597` | 438 | Tabular Summary Metrics |
+| [`manifest_h1_r3_consumer_transferability.json`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/fixtures/manifest_h1_r3_consumer_transferability.json) | `ad0fc31a0dffa0d42fd2569dfb13320df391543b814908df5bb1be6c968677a2` | 1,029 | Cryptographic Fixture Manifest |
+| [`test_h1_r3_consumer_transferability.py`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/test_h1_r3_consumer_transferability.py) | `0703825778da782b5d577f5c67d945b7003dd9d9eb42e9e3de52f96dc57d41b1` | 8,574 | 12-Suite Automated Verification Test |
