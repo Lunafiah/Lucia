@@ -1,0 +1,44 @@
+{
+  "study_id": "PHASE_22_H1_R3_INFORMATION_GAIN_BELIEF_UPDATE_STUDY",
+  "timestamp": "2026-09-18 00:23:54",
+  "corpus_sha": "d0061e8cfdd160f4ebccb7100e4fe3eeef9ff18a1a4c9c1b3f912a76f2ae82c0",
+  "master_seed": 9999,
+  "robustness_seeds": [
+    42,
+    43,
+    44,
+    45,
+    46
+  ],
+  "n_probes": 270,
+  "discordant_pairs_count": 358,
+  "locked_parameter_hashes": {
+    "CLARIFY_BASE_LOGITS": "f971491521773b69b1c9c02223d2c0896dac3f5627b889ff4e50c18008cd358a",
+    "RETRIEVE_BASE_LOGITS": "02e0b76d9a512245f127fbbba3dbf56ed45516827ae636b2d0261403abe61f8b",
+    "CLARIFY_W_DIR": "481e27b00ea8434d2a4d9cdd49dd2f5ddced8010e9dcfbd92b0a2e9b199f8d57",
+    "RETRIEVE_W_DIR": "adc5f3a3c772850f1f69084531ef4a2171a86b3272ad3c7b6534572d06d0b767",
+    "CLARIFY_B_S": "644b4c183b5f735545a8477d4a9a5a4735eb47849674971a58c5206da33517b5",
+    "RETRIEVE_B_S": "039084510144facc9b02a635fbf78c289c2b568c7e5b1e394d14e9b59a127137"
+  },
+  "tolerances": {
+    "tau_eig": 0.0001,
+    "tau_h": 0.0001,
+    "tau_tv": 0.0001,
+    "tau_js": 1e-05
+  },
+  "governance_locks": {
+    "production_diff": 0,
+    "gate_2_status": "STRICLY_BLOCKED (\u0394_HM = 0.0685 < 0.1500)",
+    "adr_029_status": "DRAFT / RESEARCH RECORD ONLY / NOT RATIFIED",
+    "phase_22_h1_status": "INCONCLUSIVE",
+    "genesis_profile": "is_onboarded: false",
+    "hardware_discipline": "100% CPU / 0.0 MB GPU VRAM",
+    "classification": "RESEARCH_HARNESS_ONLY"
+  },
+  "all_audits_passed": true,
+  "artifact_hashes": {
+    "results_json": "0064aed7a264b452efbca2b5e8e06817ff036b247f0aaf54ad4e14429b94f15a",
+    "summary_csv": "ff1e61dde755127ce6f86566ee0e6432ad7bff47740fbafffed925277a2ed6f2",
+    "action_csv": "3370eb99e668cf3817438c2426078270ea103a8fd2b5ca1c6b616ed18e5c79dc"
+  }
+}
