@@ -1,0 +1,71 @@
+{
+  "manifest_version": "1.0",
+  "study_id": "PHASE_22_H1_R3_EPISTEMIC_ACTION_VALUE_STUDY",
+  "timestamp_utc": "2026-09-17T16:41:28Z",
+  "primary_seed": 9999,
+  "consumer_seeds": [
+    42,
+    43,
+    44,
+    45,
+    46
+  ],
+  "corpus_sha256": "d0061e8cfdd160f4ebccb7100e4fe3eeef9ff18a1a4c9c1b3f912a76f2ae82c0",
+  "corpus_n": 270,
+  "discordant_pairs_count": 358,
+  "greedy_discordant_pairs_count": 16,
+  "conditions": [
+    "C0",
+    "C2",
+    "C3",
+    "C4",
+    "C5"
+  ],
+  "consumers": [
+    "C_qual_1.50",
+    "A_REFERENCE",
+    "B_DIRECTIONAL_SEPARABLE",
+    "D_qual_corner"
+  ],
+  "locked_base_parameter_hashes": {
+    "C_U_BASE": "68ae10dcd46f2b0d2484466102ab012c056271e92be9a237ae23c7c705f922ec",
+    "C_COST_S": "3a08599cb76d748fece9a2c34f35e961f96e4ce6529cc718a422ce6914934543",
+    "C_M_BASE": "08cc42e3b61c467ee7e9a9bed9eab06b471ad338833fdb145d267da89ab8118c",
+    "D_G_BASE": "b6eca7ed83efe37dd754fc8a20763b698d11b5533d30a367146d3e677b0dfa0e",
+    "D_KAPPA_S_BASE": "c2b412f75adb709602a7861fbdd9ddeb3742fe3983cbe39f2b1865f9ea0f1cff",
+    "D_W_DIR": "9cb3b0965d54630fc55c1b754e667e5131b76714949bbe49f798ddbcf0438323"
+  },
+  "artifacts": {
+    "results_json": {
+      "path": "tests/evaluation_phase22/results/h1_r3_epistemic_action_value/r3_epistemic_action_value_results.json",
+      "sha256": "03a6d9ff0973f77962d0b787afa8ec4e3d6643b533a84e1b0351d26008dc887d",
+      "bytes": 182082
+    },
+    "summary_csv": {
+      "path": "tests/evaluation_phase22/results/h1_r3_epistemic_action_value/r3_epistemic_action_value_summary.csv",
+      "sha256": "cf34595982296e1e35ea0acd0768e665dacb4a64e1b5a751ace921b48054b89b",
+      "bytes": 2501
+    },
+    "action_csv": {
+      "path": "tests/evaluation_phase22/results/h1_r3_epistemic_action_value/r3_action_specific_valuations.csv",
+      "sha256": "2e956e3cdb9209bcde03338125f8109c4f28e6ac03857aa9647b420435a0dc85",
+      "bytes": 1344
+    }
+  },
+  "negative_controls": {
+    "nc1_scalar_baseline_historical_verified": true,
+    "nc2_tuple_identity_parity": true,
+    "nc3_multiset_preservation": true,
+    "nc4_determinism_across_runs": true,
+    "nc5_production_isolation_verified": true,
+    "nc6_genesis_profile_bit_exact": true
+  },
+  "governance_invariants": {
+    "architecture_gate": "STRICTLY_LOCKED",
+    "adr029_status": "DRAFT / RESEARCH RECORD ONLY / NOT RATIFIED",
+    "quality_gate_2": "STRICTLY_BLOCKED",
+    "phase22_h1_status": "INCONCLUSIVE",
+    "genesis_profile_bit_exact": true,
+    "hardware_budget": "100% CPU / 0.0 MB GPU VRAM"
+  }
+}
