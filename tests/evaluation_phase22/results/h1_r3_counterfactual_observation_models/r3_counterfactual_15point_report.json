@@ -1,0 +1,416 @@
+{
+  "P1_study_identity": {
+    "study_id": "PHASE_22_H1_R3_COUNTERFACTUAL_OBSERVATION_MODEL_STUDY",
+    "corpus_sha": "d0061e8cfdd160f4ebccb7100e4fe3eeef9ff18a1a4c9c1b3f912a76f2ae82c0",
+    "master_seed": 9999,
+    "n_probes": 270,
+    "n_discordant_pairs": 358,
+    "m1_canonical_mean_eig_dir": 0.016626117137775426
+  },
+  "P2_model_registry": [
+    {
+      "model_id": "M0",
+      "description": "Null baseline \u00e2\u20ac\u201d W_dir = 0 (no directional channel)"
+    },
+    {
+      "model_id": "M1",
+      "description": "Canonical reference (frozen production-calibrated parameters)"
+    },
+    {
+      "model_id": "M2",
+      "description": "Inverted direction weights \u00e2\u20ac\u201d W_dir \u00e2\u2020\u2019 -W_dir (sign-flip robustness)"
+    },
+    {
+      "model_id": "M3",
+      "description": "Scaled-up direction weights \u00e2\u20ac\u201d W_dir \u00c3\u2014 2 (magnitude robustness upper)"
+    },
+    {
+      "model_id": "M4",
+      "description": "Scaled-down direction weights \u00e2\u20ac\u201d W_dir \u00c3\u2014 0.25 (small-signal robustness)"
+    },
+    {
+      "model_id": "M5",
+      "description": "Permuted hypothesis columns [h2,h4,h1,h3] \u00e2\u20ac\u201d label-ordering independence"
+    },
+    {
+      "model_id": "M6",
+      "description": "Alternative logit basis (independently drawn base_logits, seed 4242)"
+    },
+    {
+      "model_id": "M7",
+      "description": "Scalar-only amplified \u00e2\u20ac\u201d W_dir = 0, B_s \u00c3\u2014 3 (strong scalar, no direction)"
+    },
+    {
+      "model_id": "M8",
+      "description": "Randomised direction matrix \u00e2\u20ac\u201d W_dir from held-out seed 7777"
+    }
+  ],
+  "P3_M0": {
+    "model_id": "M0",
+    "mean_abs_delta_eig_dir": 0.0,
+    "median_abs_delta_eig_dir": 0.0,
+    "std_abs_delta_eig_dir": 0.0,
+    "retention_rate": 0.0,
+    "action_divergence_rate": 0.0,
+    "mean_pair_belief_tv": 1.8413265946122534e-17,
+    "mean_pair_belief_js": 7.985542705055246e-18,
+    "signal_robustness_ratio": 0.0,
+    "classification": "ABSENT"
+  },
+  "P4_M1": {
+    "model_id": "M1",
+    "mean_abs_delta_eig_dir": 0.016626117137775426,
+    "median_abs_delta_eig_dir": 0.01974930425363275,
+    "std_abs_delta_eig_dir": 0.006225222134534786,
+    "retention_rate": 1.0,
+    "action_divergence_rate": 0.0,
+    "mean_pair_belief_tv": 2.4266746278468854e-17,
+    "mean_pair_belief_js": 1.3102492399556665e-17,
+    "signal_robustness_ratio": 1.0,
+    "classification": "PRESENT"
+  },
+  "P5_M2": {
+    "model_id": "M2",
+    "mean_abs_delta_eig_dir": 0.01942859109045472,
+    "median_abs_delta_eig_dir": 0.019294656578435543,
+    "std_abs_delta_eig_dir": 0.00026855829597647967,
+    "retention_rate": 1.0,
+    "action_divergence_rate": 0.7988826815642458,
+    "mean_pair_belief_tv": 1.0970430026847741e-17,
+    "mean_pair_belief_js": 2.6747691584893784e-18,
+    "signal_robustness_ratio": 1.1685585353126091,
+    "classification": "PRESENT"
+  },
+  "P6_M3": {
+    "model_id": "M3",
+    "mean_abs_delta_eig_dir": 0.032550735308136604,
+    "median_abs_delta_eig_dir": 0.038517761977101106,
+    "std_abs_delta_eig_dir": 0.011892728236914554,
+    "retention_rate": 1.0,
+    "action_divergence_rate": 0.0,
+    "mean_pair_belief_tv": 4.178842250509493e-17,
+    "mean_pair_belief_js": 2.984887321792495e-17,
+    "signal_robustness_ratio": 1.9578074085728407,
+    "classification": "PRESENT"
+  },
+  "P7_M4": {
+    "model_id": "M4",
+    "mean_abs_delta_eig_dir": 0.004161792963120847,
+    "median_abs_delta_eig_dir": 0.004970680386342519,
+    "std_abs_delta_eig_dir": 0.0016123894058748451,
+    "retention_rate": 1.0,
+    "action_divergence_rate": 0.0,
+    "mean_pair_belief_tv": 2.387909857433996e-17,
+    "mean_pair_belief_js": 1.8335736405296754e-17,
+    "signal_robustness_ratio": 0.2503165909775188,
+    "classification": "PRESENT"
+  },
+  "P8_M5": {
+    "model_id": "M5",
+    "mean_abs_delta_eig_dir": 0.016626117137775513,
+    "median_abs_delta_eig_dir": 0.01974930425363275,
+    "std_abs_delta_eig_dir": 0.006225222134534524,
+    "retention_rate": 1.0,
+    "action_divergence_rate": 0.0,
+    "mean_pair_belief_tv": 2.3142567936495057e-17,
+    "mean_pair_belief_js": 1.0854135715609072e-17,
+    "signal_robustness_ratio": 1.000000000000005,
+    "classification": "PRESENT"
+  },
+  "P9_M6": {
+    "model_id": "M6",
+    "mean_abs_delta_eig_dir": 0.016078587490664948,
+    "median_abs_delta_eig_dir": 0.01906136906740974,
+    "std_abs_delta_eig_dir": 0.005948052791646347,
+    "retention_rate": 1.0,
+    "action_divergence_rate": 0.0,
+    "mean_pair_belief_tv": 1.023389938900284e-17,
+    "mean_pair_belief_js": 5.11694969450142e-18,
+    "signal_robustness_ratio": 0.9670680987885945,
+    "classification": "PRESENT"
+  },
+  "P10_M7": {
+    "model_id": "M7",
+    "mean_abs_delta_eig_dir": 0.0,
+    "median_abs_delta_eig_dir": 0.0,
+    "std_abs_delta_eig_dir": 0.0,
+    "retention_rate": 0.0,
+    "action_divergence_rate": 0.0,
+    "mean_pair_belief_tv": 1.6009850180523382e-17,
+    "mean_pair_belief_js": -7.636659771339239e-18,
+    "signal_robustness_ratio": 0.0,
+    "classification": "ABSENT"
+  },
+  "P11_M8": {
+    "model_id": "M8",
+    "mean_abs_delta_eig_dir": 0.025136729786774788,
+    "median_abs_delta_eig_dir": 0.02504197448926959,
+    "std_abs_delta_eig_dir": 0.00020334597391096128,
+    "retention_rate": 1.0,
+    "action_divergence_rate": 0.0,
+    "mean_pair_belief_tv": 2.116556464543769e-17,
+    "mean_pair_belief_js": 1.51957900018527e-17,
+    "signal_robustness_ratio": 1.5118821537509077,
+    "classification": "PRESENT"
+  },
+  "P12_strength_sweep_summary": {
+    "0.25": {
+      "M0": {
+        "retention_rate": 0.0,
+        "mean_abs_delta_eig_dir": 0.0,
+        "classification": "ABSENT"
+      },
+      "M1": {
+        "retention_rate": 1.0,
+        "mean_abs_delta_eig_dir": 0.004161792963120847,
+        "classification": "PRESENT"
+      },
+      "M2": {
+        "retention_rate": 1.0,
+        "mean_abs_delta_eig_dir": 0.004132099410809985,
+        "classification": "INVERTED"
+      },
+      "M3": {
+        "retention_rate": 1.0,
+        "mean_abs_delta_eig_dir": 0.008332831323659206,
+        "classification": "PRESENT"
+      },
+      "M4": {
+        "retention_rate": 1.0,
+        "mean_abs_delta_eig_dir": 0.0010384795553551997,
+        "classification": "PRESENT"
+      },
+      "M5": {
+        "retention_rate": 1.0,
+        "mean_abs_delta_eig_dir": 0.004161792963120891,
+        "classification": "PRESENT"
+      },
+      "M6": {
+        "retention_rate": 1.0,
+        "mean_abs_delta_eig_dir": 0.003915366780418176,
+        "classification": "PRESENT"
+      },
+      "M7": {
+        "retention_rate": 0.0,
+        "mean_abs_delta_eig_dir": 0.0,
+        "classification": "ABSENT"
+      },
+      "M8": {
+        "retention_rate": 1.0,
+        "mean_abs_delta_eig_dir": 0.006208698627809256,
+        "classification": "PRESENT"
+      }
+    },
+    "1.0": {
+      "M0": {
+        "retention_rate": 0.0,
+        "mean_abs_delta_eig_dir": 0.0,
+        "classification": "ABSENT"
+      },
+      "M1": {
+        "retention_rate": 1.0,
+        "mean_abs_delta_eig_dir": 0.016626117137775426,
+        "classification": "PRESENT"
+      },
+      "M2": {
+        "retention_rate": 1.0,
+        "mean_abs_delta_eig_dir": 0.01942859109045472,
+        "classification": "PRESENT"
+      },
+      "M3": {
+        "retention_rate": 1.0,
+        "mean_abs_delta_eig_dir": 0.032550735308136604,
+        "classification": "PRESENT"
+      },
+      "M4": {
+        "retention_rate": 1.0,
+        "mean_abs_delta_eig_dir": 0.004161792963120847,
+        "classification": "PRESENT"
+      },
+      "M5": {
+        "retention_rate": 1.0,
+        "mean_abs_delta_eig_dir": 0.016626117137775513,
+        "classification": "PRESENT"
+      },
+      "M6": {
+        "retention_rate": 1.0,
+        "mean_abs_delta_eig_dir": 0.016078587490664948,
+        "classification": "PRESENT"
+      },
+      "M7": {
+        "retention_rate": 0.0,
+        "mean_abs_delta_eig_dir": 0.0,
+        "classification": "ABSENT"
+      },
+      "M8": {
+        "retention_rate": 1.0,
+        "mean_abs_delta_eig_dir": 0.025136729786774788,
+        "classification": "PRESENT"
+      }
+    },
+    "2.0": {
+      "M0": {
+        "retention_rate": 0.0,
+        "mean_abs_delta_eig_dir": 0.0,
+        "classification": "ABSENT"
+      },
+      "M1": {
+        "retention_rate": 1.0,
+        "mean_abs_delta_eig_dir": 0.032550735308136604,
+        "classification": "PRESENT"
+      },
+      "M2": {
+        "retention_rate": 1.0,
+        "mean_abs_delta_eig_dir": 0.05320433515055672,
+        "classification": "PRESENT"
+      },
+      "M3": {
+        "retention_rate": 1.0,
+        "mean_abs_delta_eig_dir": 0.05146835755165705,
+        "classification": "PRESENT"
+      },
+      "M4": {
+        "retention_rate": 1.0,
+        "mean_abs_delta_eig_dir": 0.008332831323659206,
+        "classification": "PRESENT"
+      },
+      "M5": {
+        "retention_rate": 1.0,
+        "mean_abs_delta_eig_dir": 0.03255073530813652,
+        "classification": "PRESENT"
+      },
+      "M6": {
+        "retention_rate": 1.0,
+        "mean_abs_delta_eig_dir": 0.03246319018808217,
+        "classification": "PRESENT"
+      },
+      "M7": {
+        "retention_rate": 0.0,
+        "mean_abs_delta_eig_dir": 0.0,
+        "classification": "ABSENT"
+      },
+      "M8": {
+        "retention_rate": 1.0,
+        "mean_abs_delta_eig_dir": 0.04939972212023937,
+        "classification": "PRESENT"
+      }
+    }
+  },
+  "P13_signal_robustness_ratio_table": {
+    "M0": 0.0,
+    "M1": 1.0,
+    "M2": 1.1685585353126091,
+    "M3": 1.9578074085728407,
+    "M4": 0.2503165909775188,
+    "M5": 1.000000000000005,
+    "M6": 0.9670680987885945,
+    "M7": 0.0,
+    "M8": 1.5118821537509077
+  },
+  "P14_information_sufficiency": {
+    "total_model_families": 9,
+    "present_count": 7,
+    "absent_count": 2,
+    "attenuated_count": 0,
+    "present_models": [
+      "M1",
+      "M2",
+      "M3",
+      "M4",
+      "M5",
+      "M6",
+      "M8"
+    ],
+    "absent_models": [
+      "M0",
+      "M7"
+    ],
+    "attenuated_models": [],
+    "non_null_models_evaluated": [
+      "M1",
+      "M2",
+      "M3",
+      "M4",
+      "M5",
+      "M6",
+      "M8"
+    ],
+    "present_in_non_null_models": [
+      "M1",
+      "M2",
+      "M3",
+      "M4",
+      "M5",
+      "M6",
+      "M8"
+    ],
+    "sufficiency_criterion": "PRESENT in \u00e2\u2030\u00a55 of 7 non-null observation models",
+    "sufficiency_met": true,
+    "interpretation": "Evidence consistent with observation-model-independent R3 directional signal"
+  },
+  "P15_negative_controls": {
+    "all_passed": false,
+    "controls": {
+      "NC-M0": {
+        "nc_id": "NC-M0",
+        "description": "M0 null baseline must yield R\u00e2\u2030\u00a10.000 and mean|\u00ce\u201dEIG_dir|\u00e2\u2030\u00a4\u00cf\u201e_EIG",
+        "passed": true,
+        "retention_rate": 0.0,
+        "mean_abs_delta_eig_dir": 0.0
+      },
+      "NC-M7": {
+        "nc_id": "NC-M7",
+        "description": "M7 scalar-only model must yield R\u00e2\u2030\u00a10.000 for directional channel",
+        "passed": true,
+        "retention_rate": 0.0,
+        "mean_abs_delta_eig_dir": 0.0
+      },
+      "NC-Repr": {
+        "nc_id": "NC-Repr",
+        "description": "M1 canonical must match historical mean|\u00ce\u201dEIG_dir|=0.019276\u00c2\u00b10.002",
+        "passed": false,
+        "m1_computed_mean": 0.016626117137775426,
+        "historical_expected_mean": 0.019276,
+        "absolute_deviation": 0.0026498828622245757,
+        "tolerance_band": 0.002
+      },
+      "NC-Inv": {
+        "nc_id": "NC-Inv",
+        "description": "M2 inverted weights must yield non-zero R (signal survives sign flip)",
+        "passed": true,
+        "retention_rate": 1.0,
+        "mean_abs_delta_eig_dir": 0.01942859109045472
+      },
+      "NC-Perm": {
+        "nc_id": "NC-Perm",
+        "description": "M5 permuted-hypothesis must preserve |\u00ce\u201dEIG_dir| relative to M1 (label-ordering invariance)",
+        "passed": true,
+        "m5_mean": 0.016626117137775513,
+        "m1_mean": 0.016626117137775426,
+        "absolute_difference": 8.673617379884035e-17,
+        "tolerance": 0.005
+      },
+      "NC-Det": {
+        "nc_id": "NC-Det",
+        "description": "Identical M1 runs must yield bit-exact results",
+        "passed": true,
+        "run1_mean": 0.016626117137775426,
+        "run2_mean": 0.016626117137775426
+      },
+      "NC-Prod": {
+        "nc_id": "NC-Prod",
+        "description": "src/core/**, src/api/**, electron/**, data/profile.json must have 0 changes",
+        "passed": true,
+        "changed_files": 0,
+        "git_diff_output": "(empty)"
+      },
+      "NC-Genesis": {
+        "nc_id": "NC-Genesis",
+        "description": "data/profile.json must be bit-exact {\"is_onboarded\": false}",
+        "passed": true
+      }
+    },
+    "total": 8,
+    "passed_count": 7
+  }
+}

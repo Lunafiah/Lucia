@@ -1,0 +1,65 @@
+{
+  "all_passed": false,
+  "controls": {
+    "NC-M0": {
+      "nc_id": "NC-M0",
+      "description": "M0 null baseline must yield R\u00e2\u2030\u00a10.000 and mean|\u00ce\u201dEIG_dir|\u00e2\u2030\u00a4\u00cf\u201e_EIG",
+      "passed": true,
+      "retention_rate": 0.0,
+      "mean_abs_delta_eig_dir": 0.0
+    },
+    "NC-M7": {
+      "nc_id": "NC-M7",
+      "description": "M7 scalar-only model must yield R\u00e2\u2030\u00a10.000 for directional channel",
+      "passed": true,
+      "retention_rate": 0.0,
+      "mean_abs_delta_eig_dir": 0.0
+    },
+    "NC-Repr": {
+      "nc_id": "NC-Repr",
+      "description": "M1 canonical must match historical mean|\u00ce\u201dEIG_dir|=0.019276\u00c2\u00b10.002",
+      "passed": false,
+      "m1_computed_mean": 0.016626117137775426,
+      "historical_expected_mean": 0.019276,
+      "absolute_deviation": 0.0026498828622245757,
+      "tolerance_band": 0.002
+    },
+    "NC-Inv": {
+      "nc_id": "NC-Inv",
+      "description": "M2 inverted weights must yield non-zero R (signal survives sign flip)",
+      "passed": true,
+      "retention_rate": 1.0,
+      "mean_abs_delta_eig_dir": 0.01942859109045472
+    },
+    "NC-Perm": {
+      "nc_id": "NC-Perm",
+      "description": "M5 permuted-hypothesis must preserve |\u00ce\u201dEIG_dir| relative to M1 (label-ordering invariance)",
+      "passed": true,
+      "m5_mean": 0.016626117137775513,
+      "m1_mean": 0.016626117137775426,
+      "absolute_difference": 8.673617379884035e-17,
+      "tolerance": 0.005
+    },
+    "NC-Det": {
+      "nc_id": "NC-Det",
+      "description": "Identical M1 runs must yield bit-exact results",
+      "passed": true,
+      "run1_mean": 0.016626117137775426,
+      "run2_mean": 0.016626117137775426
+    },
+    "NC-Prod": {
+      "nc_id": "NC-Prod",
+      "description": "src/core/**, src/api/**, electron/**, data/profile.json must have 0 changes",
+      "passed": true,
+      "changed_files": 0,
+      "git_diff_output": "(empty)"
+    },
+    "NC-Genesis": {
+      "nc_id": "NC-Genesis",
+      "description": "data/profile.json must be bit-exact {\"is_onboarded\": false}",
+      "passed": true
+    }
+  },
+  "total": 8,
+  "passed_count": 7
+}
