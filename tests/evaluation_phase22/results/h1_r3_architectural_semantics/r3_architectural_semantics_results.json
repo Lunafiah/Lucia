@@ -1,0 +1,503 @@
+{
+  "metadata": {
+    "study": "Phase 22 H1 \u2014 R3 Architectural Semantics & Downstream Integration Study",
+    "status": "COMPLETED",
+    "timestamp": "2026-09-17 11:30:45",
+    "governance": {
+      "phase_22_h1": "INCONCLUSIVE",
+      "gate_2": "BLOCKED",
+      "gate_2_metric": "Delta_HM = 0.0685 < 0.1500 (S_M = 0.5792, S_H = 0.6477)",
+      "protocol_v1_5": "NOT AUTHORIZED",
+      "architecture_gate": "STRICTLY LOCKED",
+      "decision_state": "D1 (Research Consideration Only)",
+      "src_core_mutations": 0,
+      "genesis_profile": "PRESERVED_BIT_EXACT"
+    },
+    "evidence_corpus_sources": [
+      "h1_minimal_sufficient_measurement/minimal_sufficient_results.json",
+      "h1_directional_sidechannel_behavior/directional_behavior_results.json",
+      "h1_r3_architecture_integration/r3_architecture_integration_results.json",
+      "h1_r3_temporal_stability/r3_temporal_stability_results.json"
+    ]
+  },
+  "rq1_semantic_identity": {
+    "evaluation_principle": "Open-ended comparative evaluation across candidate semantic descriptors without forcing an a priori single label.",
+    "candidates": [
+      {
+        "id": "DESC-1",
+        "descriptor": "Physiological Surprise",
+        "scope": "SCALAR_MAGNITUDE_ONLY",
+        "evaluation": "Strictly denotes scalar magnitude S = ||r||_2. Captures total unpredicted limbic energy. Incomplete if applied to R3 because direction is not an intensity.",
+        "category_error_risk": "High if used for R3 without qualifier; conflates scalar intensity with directional polarity.",
+        "status": "REJECTED_AS_SOLE_DESCRIPTOR"
+      },
+      {
+        "id": "DESC-2",
+        "descriptor": "Physiological Surprise Direction",
+        "scope": "DIRECTIONAL_VECTOR_ONLY",
+        "evaluation": "Accurately describes the orientation of prediction error in PAD space. However, R3 also encapsulates scalar magnitude S, so calling the entire tuple only 'direction' is incomplete.",
+        "category_error_risk": "Moderate; omits the primary scalar surprise magnitude.",
+        "status": "VALID_COMPONENT_DESCRIPTOR"
+      },
+      {
+        "id": "DESC-3",
+        "descriptor": "Residual Orientation",
+        "scope": "GEOMETRIC_COORDINATE_ONLY",
+        "evaluation": "Mathematically precise geometric description (identifies the octant in R^3 error space). Neutral and accurate, but lacks cognitive/affective context regarding expectation violation.",
+        "category_error_risk": "Low; mathematically rigorous but domain-agnostic.",
+        "status": "VALID_GEOMETRIC_DESCRIPTOR"
+      },
+      {
+        "id": "DESC-4",
+        "descriptor": "Directional Annotation of Surprise",
+        "scope": "DUAL_ASPECT_AUXILIARY",
+        "evaluation": "Candidate interpretation: S remains primary canonical surprise, while ternary signs act as an auxiliary qualifying annotation indicating which affective axes were violated in which polarity.",
+        "category_error_risk": "Minimal; preserves primary scalar identity while properly typing directional components as auxiliary qualifying metadata.",
+        "status": "CANDIDATE_INTERPRETATION_EVALUATED"
+      },
+      {
+        "id": "DESC-5",
+        "descriptor": "Policy-Facing Affective Signal",
+        "scope": "DOWNSTREAM_ACTION_INPUT",
+        "evaluation": "Describes R3 strictly by its downstream functional role (arbitrating actions/tone in adapter). However, this conflates measurement representation with policy reaction.",
+        "category_error_risk": "High; violates representation vs. policy separation.",
+        "status": "FUNCTIONAL_INTERPRETATION_ONLY"
+      }
+    ],
+    "synthesized_candidate_interpretation": {
+      "concept": "Dual-Aspect Measurement Value Object",
+      "primary_aspect": "Canonical Scalar Physiological Surprise (S = ||r_T||_2 in R_>=0)",
+      "auxiliary_aspect": "Ternary Directional Annotation (sign_eps(r_T) in {-1, 0, +1}^3 with 3 independent directional DOF)",
+      "governance_status": "CANDIDATE_EVALUATION__NOT_PRODUCTION_RATIFIED"
+    }
+  },
+  "rq2_ownership_boundary": {
+    "ownership_graph": {
+      "ActiveInferenceEngine": {
+        "role": "SOLE_PRODUCER_CANDIDATE",
+        "stage": "Stage S4 (ActiveInferenceEngine.step())",
+        "justification": "Stage S4 is the unique location where internal generative expectation p_hat and sensory-limbic feedback p meet to form prediction residual r = p_hat - p. No prior stage possesses both components.",
+        "invariants_maintained": "Does not alter limbic hidden state h(t) or resting attractor Philia."
+      },
+      "PhysiologicalSurprise": {
+        "role": "IMMUTABLE_VALUE_OBJECT_CANDIDATE",
+        "stage": "Transport Artifact across S5-S12",
+        "justification": "Encapsulates S, ternary direction, and exposure metadata in an immutable dataclass. Prevents domain coupling between ActiveInference and downstream consumers.",
+        "invariants_maintained": "Frozen fields; zero mutable references; bit-exact scalar preservation."
+      },
+      "CognitiveOrchestrator": {
+        "role": "COORDINATOR_TRANSPORT_ONLY",
+        "stage": "Stages S5 through S12 coordination",
+        "justification": "Orchestrator transports PhysiologicalSurprise without interpreting, modulating, or modifying its components. Ensures SRP and testability.",
+        "invariants_maintained": "Zero policy logic inside orchestrator transport loop."
+      },
+      "DownstreamConsumers": {
+        "role": "EXPLICIT_CONTRACT_CONSUMERS",
+        "stage": "Stages S10, S11, and downstream policy handlers",
+        "justification": "Consumers must explicitly declare their contract: MAGNITUDE_ONLY (canonical baseline), DIRECTION_ONLY, or MAGNITUDE_AND_DIRECTION. Prevents accidental directional leakage.",
+        "invariants_maintained": "Consumers lacking directional declaration receive scalar S bit-exact."
+      }
+    },
+    "boundary_rule": "Strict unidirectional flow: Producer (S4) -> Frozen Value Object -> Passive Transport -> Explicit Contract Consumers."
+  },
+  "rq3_consumer_semantics": {
+    "subsystems_evaluated": 10,
+    "classifications": {
+      "EFE_Action_Valuation": {
+        "subsystem": "Expected Free Energy / Action Valuation",
+        "classification": "EVIDENCE-CONSISTENT (RESEARCH ADAPTER ONLY)",
+        "evidence_source": "Phase 22 Directional Utilization Study (RQ3: 286/358 collapse pairs resolved in adapter).",
+        "rationale": "In the isolated research adapter, ternary signs modulate action utility priors. However, production EFE action valuation incorporates epistemic uncertainty and social cost, which remains untested end-to-end."
+      },
+      "Communication_Strategy": {
+        "subsystem": "Communication Strategy Selection (Directness vs Supportiveness)",
+        "classification": "EVIDENCE-CONSISTENT (RESEARCH ADAPTER ONLY)",
+        "evidence_source": "Phase 22 Directional Utilization Study (RQ4: r=0.9837 for vP, r=0.9772 for vD).",
+        "rationale": "Statistical associations inside research adapter demonstrate strong alignment between directional axes and conversational style. Semantic legitimacy in live production dialogue remains unproven."
+      },
+      "Clarification_Policy": {
+        "subsystem": "Clarification Trigger / Epistemic Query Policy",
+        "classification": "NOT JUSTIFIED",
+        "evidence_source": "Phase 22 Directional Utilization Study (0.000 clarification shift on T12 collapse pairs).",
+        "rationale": "Clarification is fundamentally an epistemic information-seeking behavior governed by proposition entropy U_sem, not a physiological surprise direction. Directional signs indicate affective polarity, not an information deficit."
+      },
+      "Reasoning_Depth": {
+        "subsystem": "Reasoning-Depth Selection (k in {1, 2})",
+        "classification": "NOT JUSTIFIED",
+        "evidence_source": "Phase 22 Directional Utilization Study (RQ4: vA explains < 3% of depth variance).",
+        "rationale": "Reasoning depth represents a costly metabolic investment driven by scalar surprise magnitude S (r=0.865). Modulating cognitive depth from directional polarity is not justified by current evidence."
+      },
+      "Prompt_Conditioning": {
+        "subsystem": "Prompt Conditioning / Pre-Reflective Tone Injection",
+        "classification": "HYPOTHESIS / UNTESTED",
+        "evidence_source": "Conceptual specification in ADR-029 Draft; zero live prompt experiments.",
+        "rationale": "Qualitative tone guidance without self-reported affect is conceptually supported by BoundaryLayer rules, but zero empirical end-to-end SLM prompt conditioning trials were performed in Phase 22."
+      },
+      "SLM_Generation": {
+        "subsystem": "Layer 6 Small Language Model Token Generation",
+        "classification": "UNTESTED",
+        "evidence_source": "No SLM generation harness in Phase 22.",
+        "rationale": "Phase 22 evaluated discrete argmax and continuous softmax distributions, not token generation quality."
+      },
+      "Affective_Expression": {
+        "subsystem": "15-Dimensional Multimodal Affective Expression (Prosody & Blendshapes)",
+        "classification": "UNTESTED",
+        "evidence_source": "No avatar multimodal integration harness in Phase 22.",
+        "rationale": "Avatar 15D expression mapping from R3 ternary signs has not been experimentally evaluated."
+      },
+      "Avatar_Embodiment": {
+        "subsystem": "Physical Mascot Embodiment (Movement, Gaze, Physics)",
+        "classification": "UNTESTED",
+        "evidence_source": "No embodiment harness in Phase 22.",
+        "rationale": "Physical mascot behaviors remain driven by Phase 14-16 continuous state kinematics."
+      },
+      "Memory_Formation": {
+        "subsystem": "Episodic SDM Memory Formation (Flashbulb Write Gating)",
+        "classification": "HYPOTHESIS / UNTESTED",
+        "evidence_source": "Prior SDMCore documentation; no R3 write experiments.",
+        "rationale": "Existing evidence validates scalar gating (S > theta_flashbulb). Using directional signs as an associative coordinate address is a plausible hypothesis, but remains untested in Phase 22."
+      },
+      "Relationship_Update": {
+        "subsystem": "ConsolidationEngine Synaptic / Relationship Update",
+        "classification": "NOT JUSTIFIED",
+        "evidence_source": "Phase 21 Relational Consolidation Architecture (ADR-028).",
+        "rationale": "Violates homeostatic slow-loop isolation. Relational consolidation must remain driven by integrated affective state and resting Philia attractor, not transient turn-level prediction residual signs."
+      }
+    },
+    "summary_counts": {
+      "SUPPORTED": 0,
+      "EVIDENCE_CONSISTENT__RESEARCH_ADAPTER_ONLY": 2,
+      "HYPOTHESIS__UNTESTED": 2,
+      "UNTESTED": 3,
+      "NOT_JUSTIFIED": 3
+    }
+  },
+  "rq4_magnitude_direction_complementarity": {
+    "evidence_basis": {
+      "collapse_pairs_evaluated": 358,
+      "scalar_differentiation_rate": 0.0,
+      "directional_differentiation_rate": 0.7989,
+      "near_zero_transition_concentration": 0.8446601941747572,
+      "high_magnitude_transitions_count": 0
+    },
+    "calibrated_conclusion": "Evidence is consistent with magnitude and direction carrying complementary information under the evaluated conditions: scalar magnitude S governs energetic intensity, resource demand, and gating thresholds, while directional signs differentiate behavioral action orientations among stimuli of indistinguishable scalar intensity.",
+    "interpretation_guardrail": "The functional division (magnitude -> resource allocation, direction -> qualitative alignment) is an interpretation derived from adapter correlations and theoretical framing, NOT an established global architectural semantic fact."
+  },
+  "rq5_direction_encoding_semantics": {
+    "distinction_note": "CRITICAL DISTINCTION: Coordinate dimensionality (3 discrete ternary coordinates) represents geometric coordinates, whereas information capacity (log2(27) approx 4.755 bits) represents state-space volume. R3 is a hybrid representation with 3 independent directional degrees of freedom, NOT a 4D continuous vector.",
+    "encodings": [
+      {
+        "encoding": "Raw Residual Vector r",
+        "space": "R^3",
+        "coordinate_dimensions": 3,
+        "coordinate_type": "Continuous float32",
+        "degrees_of_freedom": "3 independent continuous DOF",
+        "state_space_size": "Unbounded (infinity^3)",
+        "information_capacity": "96 bits (3 x 32-bit floats)",
+        "preserved_info": "Exact residual magnitude, exact continuous orientation, exact relative axes ratios, full covariance.",
+        "discarded_info": "None (lossless origin representation)."
+      },
+      {
+        "encoding": "Normalized Direction v_hat",
+        "space": "S^2 (Unit 2-Sphere in R^3)",
+        "coordinate_dimensions": 3,
+        "coordinate_type": "Constrained continuous float32 (||v|| = 1)",
+        "degrees_of_freedom": "2 independent continuous DOF",
+        "state_space_size": "Continuous 2D manifold",
+        "information_capacity": "64-96 bits depending on spherical coordinate parametrization",
+        "preserved_info": "Exact continuous angular orientation, exact inter-component ratios.",
+        "discarded_info": "Surprise magnitude S completely discarded."
+      },
+      {
+        "encoding": "Ternary Sign Vector sign(r)",
+        "space": "{-1, 0, +1}^3",
+        "coordinate_dimensions": 3,
+        "coordinate_type": "Discrete ternary coordinate symbols",
+        "degrees_of_freedom": "3 independent discrete ternary DOF",
+        "state_space_size": "27 discrete states",
+        "information_capacity": "log2(27) = 4.755 bits (packable into 5 bits or 3 bytes)",
+        "preserved_info": "Octant geometric quadrant, polarity of expectation violation on each axis.",
+        "discarded_info": "Exact intra-octant angles, continuous magnitude, relative axis dominance."
+      },
+      {
+        "encoding": "Scalar + Ternary Sign R3 = [S, sign(r)]",
+        "space": "R_>=0 x {-1, 0, +1}^3",
+        "coordinate_dimensions": "1 scalar + 3 discrete ternary coordinates",
+        "coordinate_type": "Hybrid: 1 float32 + 3 int8 symbols",
+        "degrees_of_freedom": "1 continuous DOF (S) + 3 discrete directional DOF",
+        "state_space_size": "Continuous magnitude cross 27 discrete directional states",
+        "information_capacity": "32 bits (float) + 4.755 bits (direction) = 36.755 bits",
+        "preserved_info": "Canonical scalar surprise S (exact), discrete octant violation polarity.",
+        "discarded_info": "Exact intra-octant continuous heading (Delta theta within octant), component covariance."
+      },
+      {
+        "encoding": "Exposure-Annotated R3 = [S, sign(r), T]",
+        "space": "R_>=0 x {-1, 0, +1}^3 x N_>=1",
+        "coordinate_dimensions": "1 scalar + 3 discrete coordinates + 1 integer exposure tick",
+        "coordinate_type": "Hybrid with temporal provenance",
+        "degrees_of_freedom": "1 continuous DOF + 3 discrete directional DOF + 1 integer step count",
+        "state_space_size": "Multi-timescale annotated measurement space",
+        "information_capacity": "32 bits + 4.755 bits + 8-16 bits exposure = ~45-53 bits",
+        "preserved_info": "Exact scalar S, discrete octant polarity, exposure duration / maturity indicator.",
+        "discarded_info": "Continuous intra-octant heading."
+      },
+      {
+        "encoding": "Confidence-Weighted R3 = [S, sign_eps(r), w_exp(T)]",
+        "space": "R_>=0 x {-1, 0, +1}^3 x [0, 1]",
+        "coordinate_dimensions": "1 scalar + 3 deadbanded signs + 1 continuous weight",
+        "coordinate_type": "Hybrid research adapter representation",
+        "degrees_of_freedom": "2 continuous DOF + 3 discrete directional DOF",
+        "state_space_size": "Deadbanded partitioned space with continuous confidence modulation",
+        "information_capacity": "32 bits + 4.755 bits + 32 bits weight = ~68.755 bits",
+        "preserved_info": "Exact scalar S, noise-filtered directional signs, exposure maturity confidence.",
+        "discarded_info": "Sub-threshold directional noise (|r| <= eps), intra-octant angles."
+      }
+    ]
+  },
+  "rq6_temporal_semantics": {
+    "candidate_semantics_evaluations": [
+      {
+        "item": "timestamp_tick",
+        "candidate_semantics": "Provenance & Sequencing",
+        "evaluation": "Tracks execution order and synchronization. Zero direct policy meaning.",
+        "classification": "PROVENANCE_METADATA"
+      },
+      {
+        "item": "exposure_ticks (T)",
+        "candidate_semantics": "Dynamical Separation & Maturity Indicator",
+        "evaluation": "Under frozen Candidate G1 dynamics, T < 12 represents incomplete ODE trajectory separation (retaining 66-968 collapses), while T >= 12 represents complete geometric separation. It indicates measurement maturity under current dynamics.",
+        "classification": "DYNAMICAL_MATURITY_METADATA"
+      },
+      {
+        "item": "exposure_confidence (w_exp = min(T/12, 1))",
+        "candidate_semantics": "Research-Harness Policy Weighting Factor",
+        "evaluation": "Acts as a research-harness damping factor to prevent premature policy modulation on unresolved short-timescale signals. It is a policy metadata rule under the evaluated regime, NOT an intrinsic physical measurement confidence.",
+        "classification": "RESEARCH_HARNESS_POLICY_METADATA"
+      },
+      {
+        "item": "deadband_state (eps = 0.010)",
+        "candidate_semantics": "Stateless Noise Filter",
+        "evaluation": "Suppresses 57.61% of near-zero sign transitions while retaining 100% of predefined Type-A transitions in Regime 2.",
+        "classification": "MEASUREMENT_CLEANING_METADATA"
+      }
+    ],
+    "calibrated_finding": "Exposure ticks T is best characterized as a dynamical maturity indicator under current MT-LNN dynamics, while w_exp(T) is a research-harness policy weighting rule rather than an intrinsic measurement property."
+  },
+  "rq7_policy_boundary": {
+    "models_evaluated": [
+      {
+        "model": "Model A: Direct Cognitive Mutation",
+        "flow": "R3 -> Direct State Mutation (Delta p or Delta h)",
+        "risk_profile": "HIGH_RISK / NOT JUSTIFIED",
+        "evaluation": "Architecturally risks circular feedback and may compromise ODE hidden state isolation. Injecting directional surprise back into limbic integration would mutate the resting Philia attractor."
+      },
+      {
+        "model": "Model B: Policy Interpretation -> Cognitive Action",
+        "flow": "R3 -> Downstream Policy Layer -> Discrete Cognitive Action",
+        "risk_profile": "CONSISTENT / LOW_RISK",
+        "evaluation": "Decouples measurement from action. Policy layers evaluate R3 as an external cue without altering core physiological state. Highly testable and modular."
+      },
+      {
+        "model": "Model C: Policy Annotation -> Downstream Consumer",
+        "flow": "R3 -> Annotated Value Object -> Qualified Consumer Dispatch",
+        "risk_profile": "CONSISTENT / MINIMAL_RISK",
+        "evaluation": "R3 travels alongside scalar S as auxiliary metadata. Downstream consumers explicitly declare whether they utilize directional annotations or ignore them, guaranteeing non-breaking fallback."
+      },
+      {
+        "model": "Model D: Transport Only",
+        "flow": "R3 -> Passive Pipeline Transport",
+        "risk_profile": "CONSISTENT / ZERO_RISK",
+        "evaluation": "Passively passes R3 through CognitiveOrchestrator without semantic interpretation."
+      }
+    ],
+    "architectural_risks": [
+      {
+        "risk": "Circular Feedback",
+        "severity": "CRITICAL",
+        "mitigation": "Strict unidirectional pipeline: R3 never feeds back into S or ODE."
+      },
+      {
+        "risk": "Semantic Bleed",
+        "severity": "HIGH",
+        "mitigation": "Value object isolation: S and direction are segregated fields."
+      },
+      {
+        "risk": "Accidental Self-Reported Affect",
+        "severity": "CRITICAL",
+        "mitigation": "BoundaryLayer regex filters strictly maintained."
+      },
+      {
+        "risk": "Premature SLM Conditioning",
+        "severity": "HIGH",
+        "mitigation": "No SLM claims without end-to-end token generation evidence."
+      },
+      {
+        "risk": "Loss of Fallback Identity",
+        "severity": "HIGH",
+        "mitigation": "Direction (0,0,0) reproduces canonical C0 behavior bit-exact."
+      }
+    ],
+    "recommended_target_architecture": "Hybrid Model C + Model D (Passive Transport of Annotated Value Object to Explicit Contract Consumers)."
+  },
+  "rq8_invariant_ledger": {
+    "proven_invariants": [
+      {
+        "id": "INV-P1",
+        "name": "Genesis Gate State Bit-Exactness",
+        "statement": "data/profile.json is preserved bit-exact with {'is_onboarded': false}.",
+        "audit_type": "DETERMINISTIC_FILE_VERIFICATION",
+        "status": "PROVEN_INVARIANT"
+      },
+      {
+        "id": "INV-P2",
+        "name": "Zero Production Code Mutations",
+        "statement": "Exactly 0 lines of code added, modified, or removed in src/core/**, src/api/**, or electron/**.",
+        "audit_type": "GIT_DIFF_VERIFICATION",
+        "status": "PROVEN_INVARIANT"
+      },
+      {
+        "id": "INV-P3",
+        "name": "Historical Evidence Immutability",
+        "statement": "All prior Phase 22 benchmarks, result files, and manifests remain cryptographically verified and unmodified.",
+        "audit_type": "SHA256_MANIFEST_AUDIT",
+        "status": "PROVEN_INVARIANT"
+      },
+      {
+        "id": "INV-P4",
+        "name": "Canonical Scalar S Mathematical Identity",
+        "statement": "S_canonical = ||r||_2 is mathematically identical to the magnitude field of PhysiologicalSurprise.",
+        "audit_type": "MATHEMATICAL_IDENTITY_TEST",
+        "status": "PROVEN_INVARIANT"
+      }
+    ],
+    "research_harness_invariants": [
+      {
+        "id": "INV-RH1",
+        "name": "Value Object Immutability in Research Harness",
+        "statement": "PhysiologicalSurprise is instantiated as a frozen dataclass with immutable fields.",
+        "audit_type": "PYTHON_DATACLASS_FROZEN_ASSERTION",
+        "status": "RESEARCH_HARNESS_INVARIANT"
+      },
+      {
+        "id": "INV-RH2",
+        "name": "Directional Determinism",
+        "statement": "Ternary signs are derived strictly from deterministic projection of the prediction residual r.",
+        "audit_type": "DETERMINISTIC_REPRODUCIBILITY_TEST",
+        "status": "RESEARCH_HARNESS_INVARIANT"
+      },
+      {
+        "id": "INV-RH3",
+        "name": "Deadband Determinism",
+        "statement": "Deadband eps = 0.010 is applied uniformly and deterministically across components.",
+        "audit_type": "PARAMETRIC_TEST",
+        "status": "RESEARCH_HARNESS_INVARIANT"
+      },
+      {
+        "id": "INV-RH4",
+        "name": "No Feedback into Scalar S in Harness",
+        "statement": "Directional side-channel calculations in the harness never alter or scale scalar surprise magnitude S.",
+        "audit_type": "REGRESSION_ASSERTION",
+        "status": "RESEARCH_HARNESS_INVARIANT"
+      },
+      {
+        "id": "INV-RH5",
+        "name": "Separation of Physiological Surprise from Epistemic Uncertainty",
+        "statement": "Physiological surprise S/R3 is never substituted for semantic uncertainty U_sem or memory entropy H_Ecphory.",
+        "audit_type": "SEMANTIC_ASSERTION",
+        "status": "RESEARCH_HARNESS_INVARIANT"
+      }
+    ],
+    "proposed_future_invariants": [
+      {
+        "id": "INV-F1",
+        "name": "Explicit Consumer Declaration Contract",
+        "statement": "Future production consumers must explicitly declare whether they consume magnitude, direction, or both.",
+        "audit_type": "DESIGN_CONTRACT_SPECIFICATION",
+        "status": "PROPOSED_FUTURE_INTEGRATION_INVARIANT"
+      },
+      {
+        "id": "INV-F2",
+        "name": "Slow-Loop Homeostatic Isolation",
+        "statement": "R3 directional signs are strictly prohibited from modulating ConsolidationEngine synaptic weights.",
+        "audit_type": "ARCHITECTURAL_RULE",
+        "status": "PROPOSED_FUTURE_INTEGRATION_INVARIANT"
+      },
+      {
+        "id": "INV-F3",
+        "name": "No SLM Generation Claims without E2E Empirical Evidence",
+        "statement": "No production promotion of R3 to LLM prompt conditioning without end-to-end token generation benchmarks.",
+        "audit_type": "EVIDENCE_GATE_RULE",
+        "status": "PROPOSED_FUTURE_INTEGRATION_INVARIANT"
+      },
+      {
+        "id": "INV-F4",
+        "name": "Fallback Bit-Exact Identity",
+        "statement": "Neutralizing direction to (0, 0, 0) reproduces Condition C0 scalar-only behavior bit-exact in all consumers.",
+        "audit_type": "INTEGRATION_TEST_SPECIFICATION",
+        "status": "PROPOSED_FUTURE_INTEGRATION_INVARIANT"
+      }
+    ],
+    "total_invariants_audited": 13
+  },
+  "rq9_information_loss_boundary": {
+    "information_loss_matrix": [
+      {
+        "information_dimension": "Overall Surprise Magnitude ||r||_2",
+        "scalar_only_path": "PRESERVED_EXACT (S = ||r||_2)",
+        "r3_sidechannel_path": "PRESERVED_EXACT (S stored in R3)",
+        "loss_characterization": "No loss of magnitude in either path."
+      },
+      {
+        "information_dimension": "Component Polarity (sign of r_i)",
+        "scalar_only_path": "COMPLETELY_LOST (squaring r_i^2 destroys all sign information)",
+        "r3_sidechannel_path": "PRESERVED_DISCRETE (sign_eps(r_i) in {-1, 0, +1})",
+        "loss_characterization": "R3 retains component polarity; scalar path loses it completely."
+      },
+      {
+        "information_dimension": "Relative Component Dominance (r_i / r_j ratios)",
+        "scalar_only_path": "COMPLETELY_LOST",
+        "r3_sidechannel_path": "COARSELY_DISCRETIZED (only ternary signs preserved; continuous ratio lost)",
+        "loss_characterization": "Both paths lose continuous ratio; R3 retains coarse relative octant."
+      },
+      {
+        "information_dimension": "Intra-Octant Angular Heading (Delta theta within octant)",
+        "scalar_only_path": "COMPLETELY_LOST",
+        "r3_sidechannel_path": "COMPLETELY_LOST (all vectors in same octant map to identical sign tuple)",
+        "loss_characterization": "R3 discretizes continuous direction into 27 states; intra-octant variation is lost."
+      },
+      {
+        "information_dimension": "Component Covariance Structure",
+        "scalar_only_path": "COMPLETELY_LOST",
+        "r3_sidechannel_path": "COMPLETELY_LOST",
+        "loss_characterization": "Cross-component covariances are not tracked in R3."
+      },
+      {
+        "information_dimension": "Precision Weighting (Pi)",
+        "scalar_only_path": "COMPLETELY_LOST (isotropic assumption)",
+        "r3_sidechannel_path": "COMPLETELY_LOST (isotropic residual)",
+        "loss_characterization": "Dimension-specific precision requires future M5 structure."
+      }
+    ],
+    "formal_boundary_statement": "R3 addresses the exact information loss of the scalar path (component polarity and octant heading) while deliberately and irreversibly discarding intra-octant continuous angles and cross-component covariance in exchange for minimal representation overhead (27 discrete states, log2(27) approx 4.755 bits)."
+  },
+  "rq10_adr_readiness": {
+    "readiness_checklist": {
+      "evidence_corpus_complete": true,
+      "semantic_identity_clarified": true,
+      "ownership_boundary_formalized": true,
+      "downstream_consumers_classified": true,
+      "magnitude_direction_complementarity_evaluated": true,
+      "encoding_semantics_and_capacity_mapped": true,
+      "temporal_metadata_semantics_audited": true,
+      "policy_boundary_models_and_risks_cataloged": true,
+      "invariants_ledger_audited_into_three_tiers": true,
+      "information_loss_boundary_mapped": true,
+      "production_architecture_gate_locked": true,
+      "genesis_onboarding_bit_exact": true
+    },
+    "assigned_status": "READY_FOR_DRAFT_UPDATE",
+    "operational_meaning": "The research synthesis establishes comprehensive architectural semantics, consumer boundaries, and invariant ledgers. The evidence is sufficient to formulate an update to DRAFT ADR-029 for archival record. CRITICAL: Being 'READY FOR DRAFT UPDATE' does NOT imply architecture ratification or production authorization. The Production Architecture Gate remains STRICTLY LOCKED.",
+    "production_architecture_gate": "STRICTLY LOCKED",
+    "adr_ratification_status": "NOT RATIFIED / DRAFT RECORD ONLY"
+  }
+}

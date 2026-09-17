@@ -1,0 +1,22 @@
+{
+  "manifest_version": "1.0",
+  "study_name": "Phase 22 H1 R3 Architectural Semantics & Downstream Integration Study",
+  "created_at": "2026-09-17 11:30:45",
+  "governance_invariants": {
+    "phase_22_h1": "INCONCLUSIVE",
+    "gate_2": "BLOCKED",
+    "protocol_v1_5": "NOT AUTHORIZED",
+    "architecture_gate": "STRICTLY LOCKED",
+    "genesis_profile": "PRESERVED_BIT_EXACT",
+    "src_core_mutations": 0
+  },
+  "adr_readiness_state": "READY_FOR_DRAFT_UPDATE",
+  "operational_meaning": "The research synthesis establishes comprehensive architectural semantics, consumer boundaries, and invariant ledgers. The evidence is sufficient to formulate an update to DRAFT ADR-029 for archival record. CRITICAL: Being 'READY FOR DRAFT UPDATE' does NOT imply architecture ratification or production authorization. The Production Architecture Gate remains STRICTLY LOCKED.",
+  "files": {
+    "r3_architectural_semantics_results.json": {
+      "path": "tests/evaluation_phase22/results/h1_r3_architectural_semantics/r3_architectural_semantics_results.json",
+      "sha256": "0fffd65b4fbb68057e6006f9e7e3a8731d309c8d14d6da664950d735213a6db5",
+      "size_bytes": 29017
+    }
+  }
+}
