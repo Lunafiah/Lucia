@@ -18,8 +18,8 @@ In previous evaluations, R3 demonstrated robust continuous action-value differen
 In this investigation, we formulated a small, deterministic, CPU-only research generative model with an independent latent hypothesis space $\mathcal{H} = \{h_1, h_2, h_3, h_4\}$ ($K=4$), a uniform base prior $P(\mathcal{H}) = 0.25$, and state-conditioned sensory observation channels across all six canonical actions. Crucially, the directional coupling parameters $\mathbf{W}_{\text{dir}}$ were formulated prior to corpus exposure and audited for anti-circularity.
 
 ### Key Empirical Findings:
-1. **Omnipresent Continuous Information-Gain Differentiation**: Across all 358 matched discordant pairs ($|S_i - S_j| \le 0.020$), canonical R3 produces continuous Expected Information Gain (EIG) shifts exceeding the pre-registered tolerance $\tau_{EIG} = 10^{-4}$ on **100.00%** of pairs under Primary Consumer C, with a mean incremental directional effect $\|\Delta \mathbf{EIG}_{\text{dir}}\|_2 = 0.058848 \pm 0.000000$ (over 66x larger than the scalar baseline $\|\Delta \mathbf{EIG}_{C0}\|_2 = 0.000882$).
-2. **Directional Correspondence Sensitivity**: Shuffling direction vectors (C3) collapses mean EIG displacement by **65.29%** ($0.058745 \to 0.020390$), proving that information-gain restructuring is specifically sensitive to stimulus orientation.
+1. **Incremental EIG Signal Beyond Scalar Baseline**: Across all 358 matched discordant pairs ($|S_i - S_j| \le 0.020$), canonical R3 provides measurable incremental EIG signal exceeding the pre-registered tolerance $\tau_{EIG} = 10^{-4}$ on **100.00%** of pairs under Primary Consumer C, with a mean incremental directional signal $\|\Delta \mathbf{EIG}_{\text{dir}}\|_2 = 0.058848 \pm 0.000000$ (over 66x larger than the scalar baseline $\|\Delta \mathbf{EIG}_{C0}\|_2 = 0.000882$). This establishes directional signal relevance under the evaluated protocol, but is strictly framed as an incremental attribution signal rather than an isolated causal proof.
+2. **Directional Attribution Evidence (C3 vs C4 Contrast)**: Shuffling direction vectors (C3) collapses mean EIG displacement by **65.29%** ($0.058745 \to 0.020390$), supporting directional attribution. However, because shuffled direction simultaneously alters the mapping between stimulus state and observation likelihood, and because C4 (shuffled magnitude) yields $0.061089$ (slightly higher than C2), direction is not the sole source of EIG differentiation, and this constitutes directional attribution evidence rather than an isolated causal intervention.
 3. **Epistemic Action Ranking Differentiation**: In Consumer C, R3 flips the top-EIG action between `clarify` (query) and `retrieve` (knowledge lookup) on **79.89%** ($286/358$) of discordant pairs, while C0 yields exactly **0.00%** action differentiation.
 4. **Action Selectivity**: Pragmatic actions without external observation channels (`answer`, `derive`, `reason`, `wait`) evaluate naturally to $EIG \equiv 0.000000$, confirming that R3 does not trivially plant information gain into arbitrary actions.
 5. **Measurable Uncertainty-Profile Differentiation**: E4 is satisfied with $\|\Delta \mathbf{H}_{\text{post}}\|_2 = 0.058745 > \tau_H$ and $\|\Delta \mathbb{E}[\mathbf{TV}]\|_2 = 0.033715 > \tau_{TV}$ on 100% of pairs.
@@ -291,10 +291,10 @@ Evidence Tier: [RESEARCH VALIDATED / HARNESS ONLY / NOT FOR PRODUCTION PROMOTION
 
 ## 20. Scientific Conclusions (Answering Key Questions)
 
-1. **Does R3 direction produce incremental information-gain differences beyond scalar S?**
-   **YES**. On 100% of matched discordant pairs, $\|\Delta \mathbf{EIG}_{\text{dir}}\|_2 = 0.058848 > \tau_{EIG} = 10^{-4}$ (over 66x higher than scalar residual variation $0.000882$).
-2. **Does the effect survive shuffled-direction controls?**
-   **YES**. Breaking directional correspondence (C3, C5) reduces EIG displacement by **$65.29\%$** ($0.058745 \to 0.020390$).
+1. **Does R3 direction provide incremental information-gain signal beyond scalar S?**
+   **YES**. Under the evaluated protocol, R3 direction provides a measurable incremental EIG signal beyond scalar $S$ ($\|\Delta \mathbf{EIG}_{\text{dir}}\|_2 = 0.058848 > \tau_{EIG} = 10^{-4}$ on 100% of pairs, over 66x higher than scalar residual variation $0.000882$). This establishes directional signal relevance in the harness, but is strictly interpreted as an incremental attribution signal rather than an isolated causal claim that direction alone generates information gain.
+2. **Does directional attribution hold against shuffled controls?**
+   **YES, as attribution evidence**. Breaking directional correspondence (C3, C5) reduces EIG displacement by **$65.29\%$** ($0.058745 \to 0.020390$), supporting directional attribution. However, because shuffled direction simultaneously alters the mapping between stimulus state and likelihood, and because C4 (shuffled magnitude) yields $0.061089$ (slightly higher than C2), direction is not the sole source of EIG, and this constitutes directional attribution evidence rather than an isolated causal intervention.
 3. **Does it produce measurable uncertainty reduction?**
    **YES**. Expected posterior entropy shifts by $0.058745$ nats across discordant pairs.
 4. **Does it correspond to measurable posterior belief updates?**
@@ -307,6 +307,8 @@ Evidence Tier: [RESEARCH VALIDATED / HARNESS ONLY / NOT FOR PRODUCTION PROMOTION
    **YES**. The latent model uses independent domain hypotheses and verified observation channels.
 8. **Does the anti-circularity audit pass?**
    **YES**. All 6 audit checks passed.
+9. **Research Validated $\ne$ Architecture Validated**:
+   While this study provides substantially stronger, valid research evidence for H1, **H1 remains strictly `INCONCLUSIVE` at the Architecture Gate level**. Demonstrating measurable epistemic relevance within a research harness does not authorize ratifying ADR-029 or promoting R3 into S4 production.
 
 ---
 
