@@ -31,8 +31,8 @@ To systematically map the boundary between functional form constraints and param
 [Consumer C: Multiplicative Utility]               [Consumer D: Magnitude-Dominant]
 1D Sweep: \gamma_C \in [0.10, 2.00] (8 levels)     2D Sweep: \mu_d \times \gamma_\kappa (30 cells)
 Transition Interval: [1.0, 1.5]                    Qualifying Count: 1 / 30 (3.33%)
-Envelope: \gamma_C \ge 1.50                        Envelope: Strictly {(\mu_d=1.00, \gamma_\kappa=0.50)}
-Regime-Dependent Activation                        Extreme Functional Resistance
+Qualifying Region: \gamma_C \in \{1.50, 2.00\}     Qualifying Cell: Strictly {(\mu_d=1.00, \gamma_\kappa=0.50)}
+Regime-Dependent Activation                        Grid-Bound Directional Suppression
 ```
 
 ### Core Empirical Findings:
@@ -50,7 +50,7 @@ Regime-Dependent Activation                        Extreme Functional Resistance
    - In all other regimes—even at $\mu_d = 1.00$ with baseline scalar slope ($\gamma_\kappa = 1.00$)—the steep non-linear scalar baseline overwhelms directional separation.
 3. **Attribution Analysis (Functional Form vs. Parameter Regime)**:
    - For **Consumer C**, the failure of transfer in the previous study was **parameter-regime dependent**: the functional form accommodates directional differentiation once directional scaling exceeds $\gamma_C \approx 1.25$.
-   - For **Consumer D**, the failure of transfer is **primarily functional-form dependent**: the non-linear hyperbolic magnitude-dominant architecture inherently suppresses directional modulations. It can be forced to differentiate only under an artificial, hyper-skewed parameter distortion.
+   - For **Consumer D**, evidence within the evaluated parameter grid indicates that the magnitude-dominant formulation strongly suppresses directional differentiation across 96.7% of surveyed parameter cells, qualifying only under an extreme joint parameter setting ($\mu_d = 1.00, \gamma_\kappa = 0.50$).
 4. **Epistemological Guard Against Invalid Architecture Inference**:
    - **Crucial Principle**: *Observing a parameter region where R3 produces downstream behavioral differentiation does NOT prove that a real Lucia production consumer should operate in that region.*
    - Artificially amplifying directional gain or dampening scalar urgency to force downstream differentiation would invert cognitive architecture governance. Production action valuation must serve genuine homeostatic and communicative utility, not act as an amplifier fixture to validate an upstream research representation.
@@ -152,7 +152,7 @@ The study utilizes the single immutable frozen Candidate G1 stimulus corpus ($N=
 
 ### 5.2 Deterministic Null Controls & Parity Invariants
 1. **Directional Null Consistency (NC1)**:
-   Under Condition C0 (zeroed directional vector $\mathbf{d} = \mathbf{0}$), matched probes with identical scalar magnitude ($|S_i - S_j| = 0$) must yield identical valuations and actions ($D_{\text{pair\_action}}(C0) = 0.0000$).
+   NC1 is an empirical scalar-control baseline evaluated on the pre-registered matched-pair partition ($|S_i - S_j| \le 0.02$ under Condition C0); identical-$S$ cases are additionally reported as a descriptive null check ($D_{\text{pair\_action}}(C0) = 0.0000$). Hard invariant remains strictly identical $(S, \mathbf{d})$ tuple parity (NC2).
 2. **Hard Tuple Identity Parity (NC2)**:
    For any synthetic identical tuple $(S, \mathbf{d})$, deterministic evaluation must produce bit-exact action identity:
    $$\Delta_{\text{action\_identity}} = 0.0000, \quad D_{\text{JS\_identity}} < 10^{-12}$$
@@ -264,13 +264,13 @@ The empirical results define explicit parameter boundaries for R3 directional di
 [Parameter Robustness Envelopes]
 
 Consumer C (Continuous Utility):
-  Unfulfilled: \gamma_C \in [0.10, 1.00] (0.00% differentiation)
-  Transition:  \gamma_C \in [1.00, 1.50]
-  Envelope:    \gamma_C \ge 1.50        (79.89% - 100.00% differentiation)
+  Unfulfilled Grid Cells: \gamma_C \in \{0.10, 0.20, 0.35, 0.50, 0.75, 1.00\} (0.00% differentiation)
+  Transition Interval:    \gamma_C \in [1.00, 1.50]
+  Qualifying Grid Region: \gamma_C \in \{1.50, 2.00\} (79.89% - 100.00% differentiation)
 
 Consumer D (Magnitude-Dominant Non-Linear):
-  Unfulfilled: 29 / 30 cells            (0.00% differentiation)
-  Envelope:    Strictly {(\mu_d = 1.00, \gamma_\kappa = 0.50)} (Single isolated corner)
+  Unfulfilled Grid Cells: 29 / 30 cells (0.00% differentiation)
+  Qualifying Grid Cell:   Strictly {(\mu_d = 1.00, \gamma_\kappa = 0.50)} (Single isolated corner)
 ```
 
 ### Contrast Between Robustness Envelope and Universal Robustness
@@ -287,8 +287,8 @@ By systematically testing sweeps across both consumers, the study resolves the a
 
 | Consumer | Primary Dependence Type | Attribution Evidence |
 |---|---|---|
-| **Consumer C** | **Parameter-Regime Dependent** | The functional form (multiplicative exponential utility) is inherently receptive to directional modulation. Differentiation failed in the previous study solely because the frozen parameter $\gamma_C = 1.00$ fell just below the discrete argmax transition threshold ($[1.0, 1.5]$). Once $\gamma_C \ge 1.50$, differentiation is robust across the upper envelope. |
-| **Consumer D** | **Functional-Form Dependent** | The functional form (steep non-linear scalar saturation) is structurally hostile to directional modulation. Across 96.7% of its parameter space, directional differentiation is entirely absent. Differentiation can be induced only by simultaneously forcing an extreme directional amplification ($5\times$) and cutting scalar sensitivity in half, demonstrating that the lack of transfer is an intrinsic architectural feature of magnitude-dominant non-linear forms. |
+| **Consumer C** | **Parameter-Regime Dependent** | The functional form (multiplicative exponential utility) is receptive to directional modulation within the evaluated grid. Differentiation failed in the previous study solely because the frozen parameter $\gamma_C = 1.00$ fell below the discrete argmax transition interval ($[1.0, 1.5]$). Within the evaluated grid, differentiation qualifies at $\gamma_C = 1.50$ and $2.00$, defining an observed upper-grid qualifying region. |
+| **Consumer D** | **Grid-Bound / Regime-Bound Evidence** | The non-linear hyperbolic magnitude-dominant formulation strongly suppresses directional modulation across 96.7% of the evaluated grid (29/30 cells). Differentiation emerges only under an extreme joint parameter setting ($\mu_d = 1.00, \gamma_\kappa = 0.50$), providing evidence, within the evaluated parameter grid, that the magnitude-dominant formulation strongly suppresses directional differentiation. |
 
 ---
 
@@ -318,8 +318,8 @@ This deduction is **epistemologically fallacious and architecturally forbidden**
 
 **Authoritative Scientific Answer**:
 The empirical evidence indicates that adapter dependence is **bifurcated across functional archetypes**:
-1. In **smooth continuous utility formulations (Consumer C)**, adapter dependence is **parameter-regime dependent**: directional differentiation is robust once directional scaling exceeds the inter-action margin threshold ($\gamma_C \ge 1.50$).
-2. In **steep non-linear magnitude-dominant formulations (Consumer D)**, adapter dependence is **predominantly functional-form dependent**: the functional architecture intrinsically suppresses directional signals across 96.7% of its parameter volume, qualifying only in an extreme, isolated corner regime.
+1. In **smooth continuous utility formulations (Consumer C)**, adapter dependence is **parameter-regime dependent**: within the evaluated grid, directional differentiation qualifies at $\gamma_C = 1.50$ and $2.00$, defining an observed upper-grid qualifying region once directional scaling crosses the transition interval ($[1.0, 1.5]$).
+2. In **steep non-linear magnitude-dominant formulations (Consumer D)**, adapter dependence is supported by **grid-bound evidence of strong directional suppression**: the formulation suppresses directional differentiation across 96.7% of the evaluated grid (29 of 30 cells), qualifying only under an extreme joint parameter setting ($\mu_d = 1.00, \gamma_\kappa = 0.50$).
 
 ### Final Governance Ledger:
 - **Phase 22 H1**: Remains **`INCONCLUSIVE`** as governed by Protocol v1.4.
