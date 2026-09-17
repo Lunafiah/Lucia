@@ -1,0 +1,63 @@
+{
+  "study_id": "PHASE_22_H1_R3_TEMPORAL_BELIEF_DYNAMICS_STUDY",
+  "corpus_sha256": "d0061e8cfdd160f4ebccb7100e4fe3eeef9ff18a1a4c9c1b3f912a76f2ae82c0",
+  "master_seed": 9999,
+  "consumer_seeds": [
+    42,
+    43,
+    44,
+    45,
+    46
+  ],
+  "horizon_turns": 5,
+  "sequences": [
+    "T1",
+    "T2",
+    "T3",
+    "T4"
+  ],
+  "modes": [
+    "mode_a",
+    "mode_b"
+  ],
+  "consumers": [
+    "C_qual_1.50",
+    "A_REFERENCE",
+    "B_DIRECTIONAL_SEPARABLE",
+    "D_CORNER"
+  ],
+  "conditions": [
+    "C0",
+    "C2",
+    "C3",
+    "C4",
+    "C5"
+  ],
+  "n_probes": 270,
+  "n_discordant_pairs": 358,
+  "parameter_hashes": {
+    "ALPHA_DECAY": "4942870d7312d707982f792e63180e31f72925b998dec46f7ce23db6f16e2d3b",
+    "BETA_STIM": "d0ff5974b6aa52cf562bea5921840c032a860a91a3512f7fe8f768f6bbe005f6",
+    "LAMBDA_LEAK": "7932a07a8cbc0885919d30c43799f0247ef96badbc79ba5427e6306232508c78",
+    "RESTING_PAD": "62bc8d3c953a7c009cc9710fb16683475b2a6b660bca5a76358e640c596259e8",
+    "CLARIFY_BASE_LOGITS": "f971491521773b69b1c9c02223d2c0896dac3f5627b889ff4e50c18008cd358a",
+    "RETRIEVE_BASE_LOGITS": "02e0b76d9a512245f127fbbba3dbf56ed45516827ae636b2d0261403abe61f8b",
+    "CLARIFY_W_DIR": "481e27b00ea8434d2a4d9cdd49dd2f5ddced8010e9dcfbd92b0a2e9b199f8d57",
+    "RETRIEVE_W_DIR": "adc5f3a3c772850f1f69084531ef4a2171a86b3272ad3c7b6534572d06d0b767",
+    "CLARIFY_B_S": "644b4c183b5f735545a8477d4a9a5a4735eb47849674971a58c5206da33517b5",
+    "RETRIEVE_B_S": "039084510144facc9b02a635fbf78c289c2b568c7e5b1e394d14e9b59a127137"
+  },
+  "tolerances": {
+    "tau_EIG": 0.0001,
+    "tau_H": 0.0001,
+    "tau_TV": 0.0001,
+    "tau_JS": 1e-05
+  },
+  "artifact_hashes": {
+    "results_json": "dedd2e95ce10e76bcdcd851457a7dbd53df5c265881b0daf53ca99f9538b9c4f",
+    "summary_csv": "a7dbe74aef700bab7d76afe57b47213797dee5f6a54eca4577a2d27d19c487f3",
+    "trajectories_csv": "4ac201061373523a81b69ce112475036ecedfa20ade5bb8a5f8c7952e39821d4"
+  },
+  "genesis_profile_sha256": "1bf496e742b503a324ecd27156e4e30b30ed35cab496897c3a831380fbf0f97c",
+  "created_at": "2026-09-17 17:59:16 UTC"
+}
