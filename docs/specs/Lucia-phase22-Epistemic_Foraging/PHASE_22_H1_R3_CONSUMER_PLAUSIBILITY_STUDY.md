@@ -14,9 +14,11 @@
 
 ## 1. Executive Summary
 
-This study establishes the **Phase 22 H1 R3 Consumer Plausibility & Utility-Compatibility Investigation**. Having previously mapped the parameter sensitivity envelope of candidate directional representation $R3 = \operatorname{sign}_\epsilon(\mathbf{r}_T) \in \{-1, 0, +1\}^3$ across Consumers C and D, this investigation addresses the central economic and functional question:
+This study establishes the **Phase 22 H1 R3 Consumer Plausibility & Utility-Compatibility Investigation**. Having previously mapped the parameter sensitivity envelope of candidate directional representation $R3 = \operatorname{sign}_\epsilon(\mathbf{r}_T) \in \{-1, 0, +1\}^3$ across Consumers C and D, this investigation addresses the central functional and objective-compatibility question:
 
 > **Are the parameter regimes in which R3 becomes behaviorally visible compatible with the intended utility and homeostatic role of a Lucia downstream consumer, or does achieving R3 differentiation require economically implausible distortion of the consumer's primary objectives?**
+
+*Methodological Scope Note*: This study does not evaluate an economic model or empirical cost function; the term "plausibility" is investigated strictly as behavioral and functional compatibility within the stylized mathematical consumer model under predefined diagnostics.
 
 The purpose of this study is **NOT** to search for, optimize, or tune new parameter values to make R3 work. Instead, it treats the previously observed qualifying regimes as fixed historical observations and measures whether their non-directional (scalar, homeostatic, urgency) properties are preserved, attenuated, or destabilized.
 
@@ -28,29 +30,29 @@ The purpose of this study is **NOT** to search for, optimize, or tune new parame
 [Consumer C: Multiplicative Utility]                   [Consumer D: Magnitude-Dominant]
 Regimes: C_base (1.00), C_1.50, C_2.00                 Regimes: D_base (0.20, 1.00), D_corner (1.00, 0.50)
 C_1.50: D_disc=79.89%, DirFlips=17.04%, Urg=100%       D_corner: D_disc=79.89%, DirFlips=82.96%, TV=82.96%
-C_2.00: D_disc=100%, DirFlips=33.33%, Urg=51.11%      Attribution: Severe Macro-Distribution Shift
-Status: Differentiated Homeostatic Preservation        Status: High Disruption / Parameter Skew Required
+C_2.00: D_disc=100%, DirFlips=33.33%, Urg=51.11%      Attribution: Large Behavioral Displacement from Baseline
+Status: Behaviorally Compatible under Diagnostics      Status: Large Displacement / Joint Distortion Required
 ```
 
 ### Core Empirical Findings:
-1. **Consumer C $\gamma_C = 1.50$: Coherent Differentiation with Homeostatic Preservation**:
+1. **Consumer C $\gamma_C = 1.50$: Behaviorally Compatible within Evaluated Diagnostics**:
    - At $\gamma_C = 1.50$, R3 produces $\text{DiffRate}_{\text{disc}}(C2) = 0.7989$ ($79.89\%$) and directional gain $\Delta_{\text{dir\_gain}} = +0.7989$, while flipping only $17.04\%$ ($46 / 270$) of total corpus actions away from the scalar baseline.
-   - **Primary Objective Preservation**: Scalar $C0$ action stability is $1.0000$ ($100\%$). High-tier urgency action dominance (`answer`, `clarify`, `wait`) remains **$100.00\%$** (urgency frequency shift: $0.00\%$). Action distribution Total Variation (TV) shift is modest ($0.1704$).
-   - *Epistemic Finding*: Within the evaluated grid, $\gamma_C = 1.50$ represents a regime where directional modulation becomes behaviorally visible without sacrificing the consumer's primary scalar urgency response.
-2. **Consumer C $\gamma_C = 2.00$: Directional Saturation with Urgency Degradation**:
+   - **Primary Objective Preservation**: Scalar $C0$ action stability is $1.0000$ ($100\%$). High-tier urgency action dominance (`answer`, `clarify`, `wait`) remains **$100.00\%$** (urgency frequency shift: $0.00\%$, $\rho_s = 0.9429$). Action distribution Total Variation (TV) shift is modest ($0.1704$).
+   - *Diagnostic Finding*: Within the evaluated grid, $\gamma_C = 1.50$ represents a regime where directional modulation becomes behaviorally visible without sacrificing the consumer's primary scalar urgency response.
+2. **Consumer C $\gamma_C = 2.00$: Directional Saturation with Substantial Urgency Degradation**:
    - At $\gamma_C = 2.00$, differentiation saturates to $\text{DiffRate}_{\text{disc}}(C2) = 1.0000$ ($100\%$) and flips $33.33\%$ ($90 / 270$) of corpus actions.
    - **Primary Objective Disruption**: High-tier urgency action selection **collapses from $100.00\%$ down to $51.11\%$** (an urgency loss of $-48.89\%$). The high-tier action ranking correlation turns strongly negative ($\rho_s = -0.8286$).
-   - *Epistemic Finding*: Excessive directional gain begins to distort the consumer's primary homeostatic objective, sacrificing defensive action selection under high cognitive arousal.
-3. **Consumer D Qualifying Corner $(\mu_d = 1.00, \gamma_\kappa = 0.50)$: Macro-Distribution Disruption**:
+   - *Diagnostic Finding*: Excessive directional gain shows substantial degradation of the evaluated high-surprise urgency-ordering diagnostic, selecting non-defensive actions under acute cognitive arousal.
+3. **Consumer D Qualifying Corner $(\mu_d = 1.00, \gamma_\kappa = 0.50)$: Large Behavioral Displacement**:
    - At the isolated qualifying corner, R3 achieves $\text{DiffRate}_{\text{disc}}(C2) = 0.7989$.
-   - **Severe Distributional Shift**: Directional perturbations flip **$82.96\%$** ($224 / 270$) of all actions away from the scalar baseline. Corpus-level action distribution shifts by $\text{TV} = 0.8296$ ($\text{JS} = 0.4503$).
+   - **Distributional Shift**: Directional perturbations flip **$82.96\%$** ($224 / 270$) of all actions away from the scalar baseline. Corpus-level action distribution shifts by $\text{TV} = 0.8296$ ($\text{JS} = 0.4503$), while high-tier urgency action dominance remains $100.00\%$.
    - **Decomposition of the Two-Step Parameter Shift (RQ2)**:
      - Halving scalar slope alone ($\gamma_\kappa: 1.0 \to 0.5, \mu_d = 0.20$) produces $\text{DiffRate} = 0.0000$, $\text{DirFlips} = 0.00\%$, and $\text{TV} = 0.0000$.
      - Multiplying directional coupling by $5\times$ alone ($\mu_d: 0.20 \to 1.00, \gamma_\kappa = 1.00$) produces $\text{DiffRate} = 0.0000$, $\text{DirFlips} = 3.70\%$, and $\text{TV} = 0.0370$.
-     - *Empirical Consequence*: Neither parameter shift alone enables R3 differentiation. Only their joint, extreme combination allows R3 to emerge, but at the cost of fundamentally altering $83\%$ of the consumer's action profile.
+     - *Empirical Consequence*: The observed differentiation in the evaluated D corner arises only under the tested joint parameter change; neither isolated change reproduced it. This joint shift produces an $82.96\%$ action displacement across the evaluated corpus.
 4. **Mandatory Guard Against Architecture Overclaim**:
-   - *This study does NOT establish biological plausibility, conversational validity, production compatibility, or R3 architectural readiness.*
-   - Measuring that $\gamma_C = 1.50$ preserves high-tier urgency while differentiating discordant pairs is an **empirical observation within a synthetic research harness**, not proof that a production cognitive architecture should adopt this consumer.
+   - *This study does NOT establish biological plausibility, economic optimality, conversational validity, production compatibility, or R3 architectural readiness.*
+   - Measuring that $\gamma_C = 1.50$ preserves high-tier urgency while differentiating discordant pairs is an **empirical observation within a synthetic research harness under predefined diagnostics**, not proof that a production cognitive architecture should adopt this consumer.
 
 ---
 
@@ -201,12 +203,15 @@ Pairwise comparison against `C_baseline`:
 | Low $S$ Rank Correlation $\rho_s$ | $1.0000$ | $1.0000$ |
 | Med $S$ Rank Correlation $\rho_s$ | $1.0000$ | $1.0000$ |
 | High $S$ Rank Correlation $\rho_s$ | $+0.0286$ | **$-0.8286$** |
+| Mean Tier Rank Correlation $\rho_s$ | $0.6762$ | $0.3905$ |
 | High $S$ Urgency Dominance Frequency | **$100.00\%$** | **$51.11\%$** |
 | High $S$ Urgency Frequency Shift | **$0.00\%$** | **$-48.89\%$** |
+| Directional Flip Rate from Scalar Base | **$17.04\%$** | **$33.33\%$** |
+| Direction-Conditioned Flip Rate ($\text{DCF}$) | $0.6562$ | $0.7164$ |
 
 ### 9.3 Detailed Interpretation:
-- **$\gamma_C = 1.50$ is Homeostatically Preserving**: Under High $S$ arousal, the consumer selects urgency actions (`answer`, `clarify`, `wait`) $100\%$ of the time, matching the baseline. Directional nuances operate within the available action subset without eroding defensive homeostatic behavior.
-- **$\gamma_C = 2.00$ Disables High-Tier Urgency**: When $\gamma_C$ is pushed to $2.00$, directional perturbations overpower scalar costs in High $S$, causing non-defensive actions (`retrieve`, `derive`, `reason`) to be selected $48.89\%$ of the time under high limbic tension. This creates a severe negative rank correlation ($\rho_s = -0.8286$) with the intended urgency response.
+- **$\gamma_C = 1.50$ is Behaviorally Compatible under Evaluated Diagnostics**: Under High $S$ arousal, the consumer selects urgency actions (`answer`, `clarify`, `wait`) $100\%$ of the time, matching baseline. Directional nuances operate within the available action subset without eroding the high-tier defensive urgency response.
+- **$\gamma_C = 2.00$ Shows Substantial Urgency Degradation**: When $\gamma_C$ is pushed to $2.00$, directional perturbations overpower scalar costs in High $S$, causing non-defensive actions (`retrieve`, `derive`, `reason`) to be selected $48.89\%$ of the time under high limbic tension. This creates a severe negative rank correlation ($\rho_s = -0.8286$) on the evaluated urgency diagnostic.
 
 ---
 
@@ -227,10 +232,28 @@ To isolate what causes this shift, the two intermediate counterfactuals were eva
 | `D_dir_5x` | $1.00$ | $1.00$ | $0.0000$ | $3.70\%$ | $0.0370$ | $0.8095$ |
 | `D_qual_corner` | $1.00$ | $0.50$ | **$0.7989$** | **$82.96\%$** | **$0.8296$** | **$0.2381$** |
 
-### 10.3 Definitive Conclusion on Consumer D:
-- **Halving scalar slope alone** produces zero directional differentiation ($\text{DiffRate} = 0.0000$) and zero action distribution shift.
-- **Multiplying directional coupling by $5\times$ alone** produces zero directional differentiation on discordant pairs ($\text{DiffRate} = 0.0000$) and only a minor $3.7\%$ action flip rate.
-- Directional differentiation emerges **only from the non-linear interaction of both shifts**, but this joint distortion causes a massive macro-level action distribution shift ($\text{TV} = 0.8296$).
+### 10.3 Axis B Primary Objective Preservation for Consumer D
+Pairwise comparison against `D_baseline`:
+
+| Metric | `D_baseline vs D_qual_corner` | `D_baseline vs D_scalar_half` | `D_baseline vs D_dir_5x` |
+|---|---|---|---|
+| Action Distribution TV Shift | **$0.8296$** | $0.0000$ | $0.0370$ |
+| Action Distribution JS Divergence | **$0.4503$** | $0.0000$ | $0.0130$ |
+| Scalar C0 Action Stability | **$1.0000$ ($100\%$)** | **$1.0000$ ($100\%$)** | **$1.0000$ ($100\%$)** |
+| Entropy Shift $\Delta \bar{H}$ | $+0.1946$ nats | $+0.1797$ nats | $+0.0413$ nats |
+| Low $S$ Rank Correlation $\rho_s$ | $0.1429$ | $1.0000$ | $0.4286$ |
+| Med $S$ Rank Correlation $\rho_s$ | $0.1429$ | $1.0000$ | $1.0000$ |
+| High $S$ Rank Correlation $\rho_s$ | $0.4286$ | $1.0000$ | $1.0000$ |
+| Mean Tier Rank Correlation $\rho_s$ | **$0.2381$** | $1.0000$ | $0.8095$ |
+| High $S$ Urgency Dominance Frequency | **$100.00\%$** | **$100.00\%$** | **$100.00\%$** |
+| High $S$ Urgency Frequency Shift | **$0.00\%$** | **$0.00\%$** | **$0.00\%$** |
+| Directional Flip Rate from Scalar Base | **$82.96\%$** | $0.00\%$ | $3.70\%$ |
+| Direction-Conditioned Flip Rate ($\text{DCF}$) | $0.1589$ | $0.0368$ | $0.0868$ |
+
+### 10.4 Definitive Conclusion on Consumer D:
+- **Halving scalar slope alone** produces zero directional differentiation ($\text{DiffRate} = 0.0000$) and zero action distribution shift ($\text{TV} = 0.0000$).
+- **Multiplying directional coupling by $5\times$ alone** produces zero directional differentiation on discordant pairs ($\text{DiffRate} = 0.0000$) and only a minor $3.70\%$ action flip rate ($\text{TV} = 0.0370$).
+- **The observed differentiation in the evaluated D corner arises only under the tested joint parameter change; neither isolated change reproduced it.** This joint shift produces an $82.96\%$ action displacement across the evaluated corpus ($\text{TV} = 0.8296$), demonstrating that differentiation in this magnitude-dominant form requires substantial departure from the baseline valuation landscape.
 
 ---
 
@@ -245,16 +268,16 @@ The study tracked the distribution of action choices across scalar tiers (Low $S
 - `C_qual_1.50`: High tier selects urgency actions **$100.00\%$** of the time ($0.00\%$ degradation).
 - `C_qual_2.00`: High tier selects urgency actions **$51.11\%$** of the time (**$-48.89\%$ degradation**).
 - `D_baseline`: High tier selects urgency actions $100.00\%$ of the time.
-- `D_qual_corner`: High tier selects urgency actions $100.00\%$ of the time, but the internal ranking among defensive actions is distorted ($\rho_s = 0.4286$).
+- `D_qual_corner`: High tier selects urgency actions $100.00\%$ of the time, but the internal ranking among defensive actions is altered ($\rho_s = 0.4286$).
 
 ---
 
 ## 12. Negative Controls & Parity Invariants
 
 All pre-registered negative controls passed 100% across all 9 evaluated regimes:
-1. **Directional Null Consistency (NC1)**: Evaluated on the 358 matched discordant pairs under Condition C0 $\rightarrow$ $D_{\text{pair\_action}}(C0) = 0.0000$ across all 9 regimes.
-2. **Hard Tuple Identity Parity (NC2)**: Evaluated on synthetic identical $(S, \mathbf{d})$ tuples $\rightarrow$ $\Delta_{\text{action\_identity}} = 0.0000, D_{\text{JS\_identity}} < 10^{-12}$ across all 9 regimes (**100% PASS**).
-3. **Same-Direction Pairs (NC3)**: Evaluated descriptively on the 6,376 same-direction matched pairs.
+1. **Directional Null Consistency (NC1)**: Evaluated on the 358 matched discordant pairs under Condition C0 ($|\Delta S| \le 0.02, \mathbf{d} = \mathbf{0}$) $\rightarrow$ $D_{\text{pair\_action}}(C0) = 0.0000$ across all 9 regimes.
+2. **Hard Tuple Identity Parity (NC2)**: Evaluated on synthetic identical $(S, \mathbf{d})$ tuples $\rightarrow$ $\Delta_{\text{action\_identity}} = 0.0000, D_{\text{JS\_identity}} < 10^{-12}$ across all 9 regimes (**100% PASS** in automated test suite).
+3. **Same-Direction Pairs (NC3)**: Evaluated descriptively on the 6,376 same-direction matched pairs sharing direction $\mathbf{d}$ but differing in scalar magnitude $S$. Consistent with protocol, pairs sharing direction but differing in $S$ are reported descriptively (no hard parity invariant is imposed on differing $S$). Hard tuple identity parity for identical $(S, \mathbf{d})$ tuples is audited strictly under NC2.
 4. **Shuffled Direction Sensitivity (NC4)**: In qualifying regimes, shuffling direction (C4) diverges significantly from C2 ($D_{\text{condition\_action}} = 0.2830$ in C_1.50, $0.3141$ in D_corner).
 5. **Historical Reproduction (NC5)**: Reference controls A and B reproduced prior transferability metrics bit-exact ($0.7989$).
 
@@ -279,7 +302,7 @@ All findings adhere strictly to pre-registered epistemic categories:
 - **`SUPPORTED`**: Mathematical decomposition formulas ($V(\text{BASE+scalar})$, $V(\text{BASE+dir})$) and deterministic identity properties directly implied by frozen code.
 - **`OBSERVED`**: Empirical metrics obtained on Candidate G1 corpus ($\text{DiffRate} = 79.89\%$ at C_1.50, High-tier urgency $= 51.11\%$ at C_2.00, $\text{TV} = 82.96\%$ at D_corner).
 - **`RESEARCH_HARNESS_ONLY`**: The observation that $\gamma_C = 1.50$ preserves urgency while $\gamma_C = 2.00$ degrades it applies strictly within the stylized research harness.
-- **`UNTESTED`**: Biological realism, natural language dialogue impact, user perceptual satisfaction, or production conversational validity.
+- **`UNTESTED`**: Biological realism, economic cost models, natural language dialogue impact, user perceptual satisfaction, or production conversational validity.
 - **`NOT_JUSTIFIED`**: Any claim that R3 is production-ready, that $\gamma_C = 1.50$ should be used in production, or that ADR-029 should be ratified.
 
 ---
@@ -290,6 +313,7 @@ All findings adhere strictly to pre-registered epistemic categories:
 2. **Stylized 6-Action Space**: Action choices reflect discrete cognitive categories (`answer`, `clarify`, `retrieve`, `derive`, `reason`, `wait`), not complex production multi-stage generation.
 3. **Static Valuation**: Evaluations represent single-turn snapshot choices rather than multi-turn conversational dynamics.
 4. **Diagnostic Counterfactual Assumption**: Setting $S = 0$ while holding $\mathbf{d} \ne \mathbf{0}$ is a diagnostic decomposition tool, not an accessible physical trajectory.
+5. **Absence of Real Economic Cost Model**: Utility is measured via mathematical potential/value functions; no real-world computational or resource pricing was modeled.
 
 ---
 
@@ -297,7 +321,7 @@ All findings adhere strictly to pre-registered epistemic categories:
 
 > [!CAUTION]
 > **MANDATORY SCIENTIFIC SAFEGUARD**:  
-> This study evaluates whether previously observed qualifying parameter regimes preserve measurable properties of the evaluated research consumers. **It does not establish biological plausibility, conversational validity, production compatibility, or R3 architectural readiness.**
+> This study evaluates whether previously observed qualifying parameter regimes preserve measurable properties of the evaluated research consumers. **It does not establish biological plausibility, economic optimality, conversational validity, production compatibility, or R3 architectural readiness.**
 
 The findings of this study **MUST NOT** be interpreted as:
 1. Proof that R3 should or must be promoted to production.
@@ -314,8 +338,10 @@ The findings of this study **MUST NOT** be interpreted as:
 > **Question**: *Are the parameter regimes in which R3 becomes behaviorally visible compatible with the intended utility and homeostatic role of a Lucia downstream consumer, or does achieving R3 differentiation require economically implausible distortion of the consumer's primary objectives?*
 
 **Authoritative Scientific Answer**:
-1. **In Consumer C ($\gamma_C = 1.50$)**: R3 directional differentiation is **behaviorally compatible** with primary homeostatic objectives. Directional nuances flip $17.04\%$ of actions across matched pairs without diminishing the $100\%$ defensive urgency response required under high cognitive stress. However, pushing scaling to $\gamma_C = 2.00$ causes severe homeostatic degradation (cutting urgency selection by $-48.89\%$).
-2. **In Consumer D ($(\mu_d = 1.00, \gamma_\kappa = 0.50)$)**: R3 directional differentiation requires an **extreme macro-distributional distortion** ($\text{TV} = 82.96\%$). Differentiation cannot be induced by halving scalar slope alone or multiplying directional gain alone; it manifests only when both distortions are applied jointly, overwriting the consumer's baseline action selection profile.
+1. **In Consumer C ($\gamma_C = 1.50$)**: R3 directional differentiation is **behaviorally compatible within the evaluated diagnostics**. Directional nuances flip $17.04\%$ of actions across matched pairs without diminishing the $100\%$ defensive urgency dominance under high cognitive arousal ($\rho_s = 0.9429$). However, pushing scaling to $\gamma_C = 2.00$ causes substantial degradation on the evaluated urgency diagnostics (cutting urgency selection from $100\%$ down to $51.11\%$, with $\rho_s = -0.8286$).
+2. **In Consumer D ($(\mu_d = 1.00, \gamma_\kappa = 0.50)$)**: The observed differentiation arises only under the tested joint parameter change (neither isolated change reproduced it), resulting in a large behavioral displacement from baseline ($82.96\%$ of actions flipped from baseline, $\text{TV} = 0.8296$). While high-urgency dominance remains $100\%$ under scalar stress, low- and mid-tier responses undergo substantial restructuring.
+
+*Epistemic Clarification on Classification*: Any designation of a parameter regime as "behaviorally compatible" or "degraded" is strictly a research-harness diagnostic characterization based on pre-registered descriptive metrics. It does not constitute an economic proof, a biological validation, or an architectural endorsement for production adoption.
 
 ### Final Governance Ledger:
 - **Phase 22 H1**: Remains **`INCONCLUSIVE`** as governed by Protocol v1.4.
