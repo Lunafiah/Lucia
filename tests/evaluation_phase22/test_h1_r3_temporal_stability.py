@@ -229,7 +229,7 @@ def test_07_rq4_rq5_deadband_sweep_and_retention(results_data: dict):
     # At primary epsilon = 0.010
     assert p1_metrics["deadband_transitions"] == 131
     assert abs(p1_metrics["stability_gain_pct"] - 0.57605) < 1e-4
-    assert p1_metrics["reversibility_preservation_rate"] == 1.0  # 100% preservation of genuine reversals
+    assert p1_metrics["reversibility_preservation_rate"] == 1.0  # 100% retention of predefined Type-A transition set in Regime 2
     assert p1_metrics["reversibility_total_events"] == 42
 
     # Verify independent dimensions statement

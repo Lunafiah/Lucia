@@ -34,7 +34,7 @@
 
 > [!CAUTION]
 > **MANDATORY GOVERNANCE DIRECTIVE**:  
-> Being classified as **`READY FOR ADR DRAFT UPDATE`** does **NOT** authorize modifying production code, does **NOT** approve an Architectural Decision Record, and does **NOT** open the Production Architecture Gate. Gate 2 remains formally **BLOCKED** ($\bar{S}_M = 0.5792, \bar{S}_H = 0.6477 \implies \Delta_{\text{HM}} = 0.0685 < 0.1500$). This feasibility study serves exclusively as an empirical research and architectural evidence synthesis to govern future updates to `DRAFT ADR-029`.
+> Being classified as **`READY FOR ADR DRAFT UPDATE`** confirms that mathematical and temporal stability conditions are satisfied to support updating `DRAFT ADR-029`, but does **NOT** authorize modifying production code, does **NOT** approve an Architectural Decision Record, and does **NOT** open the Production Architecture Gate. Gate 2 remains formally **BLOCKED** ($\bar{S}_M = 0.5792, \bar{S}_H = 0.6477 \implies \Delta_{\text{HM}} = 0.0685 < 0.1500$). This feasibility study serves exclusively as an empirical research and architectural evidence synthesis to govern future updates to `DRAFT ADR-029`.
 
 ---
 
@@ -64,23 +64,24 @@ exhibit unacceptable sign jitter, zero-crossing chatter, or temporal instability
    - Mean consecutive run lengths across components span 9.31 to 12.00 ticks (0.93 to 1.20 seconds of physical time), proving that directional signs do not oscillate randomly at the Nyquist rate.
 4. **Deadband Sweep & Reversibility Preservation (RQ4 & RQ5)**:
    - A static deadband $\epsilon = 0.010$ (Policy P1) suppresses **57.61% of transitions** (reducing 309 raw transitions to 131 stabilized transitions).
-   - Crucially, Policy P1 preserves **100.0% of genuine trajectory reversals** (42/42 genuine reversals preserved).
-   - Higher deadbands ($\epsilon \ge 0.020$) induce excessive zero-state occupancy ($\ge 89.72\%$) and directional suppression ($\ge 89.72\%$), causing unacceptable loss of directional resolution.
+   - Crucially, Policy P1 achieves **100.0% retention of the predefined Type-A transition set in Regime 2** (42/42 transitions retained). This reflects retention strictly on the evaluated transition set; it is not general inferential proof that P1 will preserve every genuine reversal in production.
+   - Higher deadbands ($\epsilon \ge 0.020$) induce excessive zero-state occupancy ($\ge 89.72\%$) and directional suppression ($\ge 89.72\%$), causing unacceptable loss of directional resolution within the research harness.
 5. **Short-Timescale Exposure Mechanics (RQ6)**:
    - Within an isolated static turn, zero intra-turn sign flips occur at all $T \in \{1, 2, 4, 8, 12, 16, 25\}$.
    - However, as proven in the Minimal Sufficient Measurement Study, at $T < 12$ ticks ($< 1.2\text{ s}$), directional signs retain between 66 and 968 Medium-High collapse pairs because the Coupled MT-LNN ODE has not yet achieved geometric trajectory separation.
    - Therefore, short-timescale instability is **not** sign chatter; it is **directional ambiguity due to incomplete dynamical separation**.
 6. **Candidate Policy Evaluation (RQ7 & RQ8)**:
-   - **Policy P0 (Raw $R3$)**: Unfiltered; 309 transitions, 0.0% stabilization gain, 0 ticks lag.
-   - **Policy P1 (Static Deadband $\epsilon = 0.010$)**: Recommended stateless policy; 131 transitions, 57.61% stabilization gain, 100% genuine reversal preservation.
+   - **Policy P0 (Raw $R3$)**: Unfiltered baseline; 309 transitions, 0.0% stabilization gain, 0 ticks lag.
+   - **Policy P1 (Static Deadband $\epsilon = 0.010$)**: Best-performing stateless candidate policy within the predefined research-harness criteria; 131 transitions, 57.61% stabilization gain, 100% retention of the predefined Type-A transition set in Regime 2.
    - **Policy P2 (Persistence $k=2, 3$)**: 296/288 transitions, only 4.21%/6.80% gain, introduces 1–2 ticks artificial lag.
    - **Policy P3 (Hysteresis $\epsilon_{\text{enter}}=0.02, \epsilon_{\text{exit}}=0.01$)**: 73 transitions, 76.38% gain, but misses 60.19% of reversals due to threshold lock-in.
-   - **Policy P4 (Exposure-Annotated Raw $R3$)**: Recommended multi-timescale policy; transmits raw $R3$ alongside an exposure confidence weight $w_{\text{exp}}(T) = \min(1.0, T / 12.0)$, dampening downstream directional modulation at sub-second exposures without distorting the underlying signal.
+   - **Policy P4 (Exposure-Annotated Raw $R3$)**: Candidate policy showing the intended multi-timescale behavior under the predefined replay; transmits raw $R3$ alongside an exposure confidence weight $w_{\text{exp}}(T) = \min(1.0, T / 12.0)$, dampening downstream directional modulation at sub-second exposures without distorting the underlying signal.
+   - *Governance Boundary*: Neither P1 nor P4 constitutes an architectural recommendation or production authorization.
 7. **Behavioral Consequences in Research Adapter (RQ9)**:
    - **Part 1 ($T=12$ Matched Collapse Replay, 358 pairs)**: Under Policy P1, policy differentiation rate is perfectly maintained at **$d_{\text{pol}} = 0.7989$ (286/358 pairs resolved)**, identical to raw $R3$ ($d_{\text{pol}} = 0.7989$). Mean distribution divergence remains stable ($\bar{D}_{\text{JS}} = 0.004898$ vs $0.005006$).
    - **Part 2 (Multi-Exposure Trajectory Replay across $T \in [1, 25]$)**: Policy P4 successfully damps early modulation ($T=1$: 99.25% damping; $T=2$: 97.01%; $T=4$: 88.23%; $T=8$: 54.33%), reaching full directional modulation at $T=12$ (0.0% damping, bit-exact match with P0).
 8. **ADR Readiness Verdict**:
-   - The study establishes that $R3$ sign-jitter is fully manageable via either stateless deadband ($\epsilon = 0.010$) or exposure annotation ($w_{\text{exp}}(T)$).
+   - The study establishes that $R3$ sign-jitter is manageable under the evaluated research criteria via either stateless deadband ($\epsilon = 0.010$) or exposure annotation ($w_{\text{exp}}(T)$).
    - Status: **`READY FOR ADR DRAFT UPDATE`**.
    - Production Architecture Gate: **STRICTLY LOCKED**.
 
@@ -111,7 +112,7 @@ This feasibility study was commissioned to mathematically formalize and empirica
 | **TH1: Intra-Turn Monotonicity** | Within a single turn's static exposure ($T=1..25$), smooth ODE integration guarantees sign stability ($N_{\text{trans}} \approx 0$). | **CONFIRMED** (0 transitions across all 270 probes; run length = 25.0 ticks). |
 | **TH2: Multi-Turn Dynamic Shift** | In continuous multi-turn dialogue, sign transitions reflect genuine contextual trajectory shifts rather than random flutter. | **CONFIRMED** (97.41% of transitions persist $\ge 2$ ticks; mean run length 9.3–12.0 ticks). |
 | **TH3: Near-Zero Concentration** | Sign transitions are overwhelmingly concentrated at near-zero residual magnitudes ($|r| < 0.010$). | **CONFIRMED** (84.47% of transitions occur at $|r| < 0.010$; 0.0% at $|r| \ge 0.100$). |
-| **TH4: Deadband Efficacy** | A deadband $\epsilon = 0.010$ eliminates the majority of near-zero transitions while preserving genuine trajectory reversals. | **CONFIRMED** (57.61% transition reduction; 100.0% genuine reversal preservation). |
+| **TH4: Deadband Efficacy** | A deadband $\epsilon = 0.010$ eliminates the majority of near-zero transitions while preserving genuine trajectory reversals. | **CONFIRMED** (57.61% transition reduction; 100.0% retention of predefined Type-A transition set in Regime 2). |
 | **TH5: Short-Timescale Ambiguity** | Instability at $T < 12$ ticks is caused by incomplete ODE trajectory separation, not high-frequency numerical jitter. | **CONFIRMED** (0 intra-turn flips, but 66–968 unresolved collapse pairs at $T < 12$). |
 | **TH6: Behavioral Preservation** | Deadband stabilization does not degrade downstream policy differentiation on $T=12$ collapse pairs. | **CONFIRMED** ($d_{\text{pol}} = 0.7989$ under both P0 raw and P1 deadband). |
 | **TH7: Exposure Weighting Viability** | Continuous exposure confidence weighting $w_{\text{exp}}(T)$ smoothly damps early directional ambiguity without step artifacts. | **CONFIRMED** (99.25% damping at $T=1$; monotonic interpolation to 100% modulation at $T \ge 12$). |
@@ -292,8 +293,8 @@ To evaluate stabilization trade-offs without arbitrary composite scores, retenti
 ### Analysis of Trade-offs
 
 1. **Very Small Deadbands ($\epsilon \le 0.0025$)**: Increase total transitions because entering and leaving the narrow deadband creates two transition events ($+1 \to 0 \to -1$).
-2. **Optimal Deadband ($\epsilon = 0.010$)**: Achieves a **+57.61% stability gain**, reducing transitions from 309 to 131, while preserving **100.0% of genuine trajectory reversals** (42/42).
-3. **Aggressive Deadbands ($\epsilon \ge 0.020$)**: Suppress more than 89.7% of directional signals into neutral $0$, severely muting downstream behavioral responsiveness.
+2. **Balanced Candidate Deadband ($\epsilon = 0.010$)**: Achieves a **+57.61% stability gain**, reducing transitions from 309 to 131, while retaining **100.0% of the predefined Type-A transition set in Regime 2** (42/42). This reflects retention strictly under the evaluated transition set; it does not claim that P1 preserves all reversals in unbounded production interactions.
+3. **Aggressive Deadbands ($\epsilon \ge 0.020$)**: Suppress more than 89.7% of directional signals into neutral $0$, severely muting downstream behavioral responsiveness within the research harness.
 
 ---
 
@@ -342,12 +343,12 @@ Five candidate temporal stabilization policies were formally formalized, impleme
 | Policy ID | Policy Name | Stabilized Transitions | Stability Gain % | Transition Rate (/step) | Operational Character & Complexity |
 |---|---|---|---|---|---|
 | **P0** | **Raw $R3$ Baseline** | 309 | 0.00% | 0.0955 | Unfiltered baseline. Zero computational cost, zero lag, but retains near-zero chatter. |
-| **P1** | **Static Deadband ($\epsilon = 0.010$)** | **131** | **+57.61%** | **0.0405** | **Recommended stateless policy**. Suppresses 86.4% of near-zero noise, 100% reversibility preservation, 0 ms state overhead. |
+| **P1** | **Static Deadband ($\epsilon = 0.010$)** | **131** | **+57.61%** | **0.0405** | **Best-performing stateless candidate policy within predefined criteria**. Suppresses 86.4% of near-zero noise, 100% retention of predefined Type-A transition set, 0 ms state overhead. |
 | **P2a** | Temporal Persistence ($k=2$ ticks) | 296 | +4.21% | 0.0914 | Eliminates isolated single-tick spikes. Introduces 1 tick (100 ms) delay on all transitions. |
 | **P2b** | Temporal Persistence ($k=3$ ticks) | 288 | +6.80% | 0.0890 | Modest gain. Introduces 2 ticks (200 ms) delay; too sluggish for conversational pacing. |
 | **P3a** | Hysteresis ($\epsilon=0.02 / 0.01$) | 73 | +76.38% | 0.0226 | Aggressive memory guard. High stability, but causes state lock-in (misses 60.19% of reversals). |
 | **P3b** | Hysteresis ($\epsilon=0.01 / 0.005$) | 123 | +60.19% | 0.0380 | Moderated hysteresis. Requires stateful history tracking per component. |
-| **P4** | **Exposure-Annotated Raw $R3$** | **309** | **0.00%** | **0.0955** | **Recommended multi-timescale policy**. Preserves raw signal, but passes confidence weight $w_{\text{exp}}(T) = \min(1.0, T / 12.0)$ to downstream consumers. |
+| **P4** | **Exposure-Annotated Raw $R3$** | **309** | **0.00%** | **0.0955** | **Candidate policy showing intended multi-timescale behavior under replay**. Preserves raw signal, but passes confidence weight $w_{\text{exp}}(T) = \min(1.0, T / 12.0)$ to downstream consumers. |
 
 ---
 
@@ -432,7 +433,7 @@ $$w_{\text{exp}}(T) = \min\left(1.0, \frac{T}{12.0}\right)$$
 | **FM-T05** | Component-Specific Asymmetry | Low | Adopt uniform deadband ($\epsilon = 0.010$) across P, A, and D to prevent coordinate distortion. |
 | **FM-T06** | Short-Timescale Ambiguity | High at $T < 4$ | Apply Policy P4 exposure confidence factor $w_{\text{exp}}(T) = \min(1.0, T / 12.0)$. |
 | **FM-T07** | False Directional Reversal | Low | Empirical verification confirmed that Type A transitions reflect true trajectory crossings. |
-| **FM-T08** | Missed Genuine Reversal | Low at $\epsilon \le 0.010$ | Verified 100.0% preservation of genuine reversals under Policy P1. |
+| **FM-T08** | Missed Genuine Reversal | Low at $\epsilon \le 0.010$ | Verified 100.0% retention of predefined Type-A transition set in Regime 2 under Policy P1. |
 | **FM-T09** | Downstream Policy Oscillation | Moderate | Policy P1 deadband neutralizes sub-threshold directional policy fluttering. |
 | **FM-T10** | Stabilization Leaking into $S$ | Critical (Prohibited) | Hard value object constructor validation ensures $\|\mathbf{r}\|_2$ is unmodified. |
 | **FM-T11** | Policy Feeding Back into ODE | Critical (Prohibited) | Strict unidirectional pipeline transport; no backward coupling into limbic integration. |
@@ -440,28 +441,30 @@ $$w_{\text{exp}}(T) = \min\left(1.0, \frac{T}{12.0}\right)$$
 
 ---
 
-## 15. Recommended Operational Policy
+## 15. Candidate Operational Policy Evaluation (Research Harness Scope)
 
-Based on the empirical evidence gathered across both regimes:
+Based on the empirical evidence gathered across both regimes within the isolated research harness:
 
 1. **For Stateless Intra-Turn & Multi-Turn Pipelines: Policy P1 (Static Deadband $\epsilon = 0.010$)**
+   - **Evaluation**: Best-performing stateless candidate policy within the predefined research-harness criteria.
    - Completely stateless; zero memory overhead.
    - Eliminates 57.61% of transitions (concentrated in near-zero noise).
-   - Preserves 100.0% of genuine trajectory reversals.
+   - Retains 100.0% of the predefined Type-A transition set in Regime 2 (42/42).
    - Preserves 100.0% of collapse pair differentiation at $T = 12$ ($d_{\text{pol}} = 0.7989$).
 2. **For Multi-Timescale Downstream Adapters: Policy P4 (Exposure-Annotated Raw $R3$)**
+   - **Evaluation**: Candidate policy showing intended multi-timescale behavior under replay.
    - Transmits raw $R3$ without altering underlying signs.
    - Equips downstream consumer with continuous confidence weight:
      $$w_{\text{exp}}(T) = \min\left(1.0, \frac{T}{12.0}\right)$$
    - Smoothly damps directional modulation during early exposure ($T < 12$), preventing false policy switching without introducing discrete threshold cliffs.
-3. **Combined Hybrid Recommendation**:
-   - Apply deadband $\epsilon = 0.010$ at production (Stage S4) to yield clean ternary signs $\in \{-1, 0, +1\}$, and annotate the resulting Value Object with exposure confidence $w_{\text{exp}}(T)$ for downstream consumers.
+3. **Research Scope & Non-Recommendation Invariant**:
+   - These assessments characterize candidate mechanisms under controlled evaluation conditions. They do **NOT** constitute an architectural recommendation or authorization for production implementation. Phase 22 H1 remains **INCONCLUSIVE**, Gate 2 remains **BLOCKED**, and the Production Architecture Gate remains **STRICTLY LOCKED**.
 
 ---
 
-## 16. ADR-029 Draft Update Recommendations
+## 16. ADR-029 Draft Update Archival Recommendations
 
-This study recommends updating the pending `DRAFT ADR-029` with the following explicit technical amendments:
+This section records candidate technical amendments for potential future updates to `DRAFT ADR-029` (archival record only; not an architectural ratification):
 
 ### Amendment 1: Deadband Specification in `PhysiologicalSurprise`
 Update the Value Object constructor definition to formally specify the deadband threshold:
@@ -492,7 +495,7 @@ class PhysiologicalSurprise:
 Explicitly document the architectural rejection of asymmetric hysteresis (Policy P3) due to its 60.19% missed reversal rate and state-tracking overhead.
 
 ### Amendment 3: Explicit Distinction Between Ready States
-Clarify in ADR-029 that achieving **`READY FOR ADR DRAFT UPDATE`** confirms mathematical and temporal viability but does **NOT** authorize production implementation or Architecture Gate ratification.
+Clarify in ADR-029 that achieving **`READY FOR ADR DRAFT UPDATE`** confirms mathematical and temporal viability under the research harness but does **NOT** authorize production implementation or Architecture Gate ratification.
 
 ---
 
@@ -550,14 +553,14 @@ The study artifacts are cryptographically registered:
 
 1. **Raw $R3$ Intra-Turn Stability**: Static conversational turn exposures ($T=1..25$ ticks) are **100% stable**; the Coupled MT-LNN ODE produces **zero sign transitions**.
 2. **Multi-Turn Dynamics**: Conversational transitions reflect genuine contextual trajectory shifts (97.41% sustained for $k \ge 2$ ticks; mean run length 9.3–12.0 ticks).
-3. **Deadband Efficacy**: A conservative deadband $\epsilon = 0.010$ (Policy P1) suppresses 57.61% of transitions (near-zero noise) while preserving 100.0% of genuine reversals and 100.0% of collapse pair differentiation.
-4. **Exposure Weighting Viability**: Policy P4's continuous exposure confidence weight $w_{\text{exp}}(T) = \min(1.0, T / 12.0)$ smoothly mitigates short-timescale directional ambiguity without step artifacts.
+3. **Deadband Efficacy**: A conservative deadband $\epsilon = 0.010$ (Policy P1) suppresses 57.61% of transitions (near-zero noise) while retaining 100.0% of the predefined Type-A transition set in Regime 2 and 100.0% of collapse pair differentiation.
+4. **Exposure Weighting Viability**: Policy P4's continuous exposure confidence weight $w_{\text{exp}}(T) = \min(1.0, T / 12.0)$ shows the intended multi-timescale behavior under replay, smoothly mitigating short-timescale directional ambiguity without step artifacts.
 5. **Governance State**: The temporal stability feasibility study concludes with verdict:
    $$\mathbf{READY\ FOR\ ADR\ DRAFT\ UPDATE}$$
    The Production Architecture Gate remains **STRICTLY LOCKED**.
 
-### Recommended Next Steps
+### Next Steps (Research Governance)
 
-1. Update `DRAFT ADR-029` in `docs/ARCHITECTURE.md` to incorporate the deadband $\epsilon = 0.010$ specification and Policy P4 exposure confidence weighting $w_{\text{exp}}(T)$.
+1. Update `DRAFT ADR-029` in `docs/ARCHITECTURE.md` with candidate archival text for deadband $\epsilon = 0.010$ and Policy P4 exposure confidence weighting $w_{\text{exp}}(T)$.
 2. Preserve `docs/specs/Lucia-phase22-Epistemic_Foraging/` historical records.
 3. Keep the Production Architecture Gate strictly locked pending future project governance milestones.
