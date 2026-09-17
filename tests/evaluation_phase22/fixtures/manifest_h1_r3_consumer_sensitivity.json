@@ -1,0 +1,71 @@
+{
+  "manifest_version": "1.0",
+  "study_id": "PHASE_22_H1_R3_CONSUMER_SENSITIVITY_STUDY",
+  "timestamp_utc": "2026-09-17T14:36:43Z",
+  "locked_base_parameter_hashes": {
+    "C_U_BASE": "68ae10dcd46f2b0d2484466102ab012c056271e92be9a237ae23c7c705f922ec",
+    "C_COST_S": "3a08599cb76d748fece9a2c34f35e961f96e4ce6529cc718a422ce6914934543",
+    "C_M_BASE": "08cc42e3b61c467ee7e9a9bed9eab06b471ad338833fdb145d267da89ab8118c",
+    "D_G_BASE": "b6eca7ed83efe37dd754fc8a20763b698d11b5533d30a367146d3e677b0dfa0e",
+    "D_KAPPA_S_BASE": "c2b412f75adb709602a7861fbdd9ddeb3742fe3983cbe39f2b1865f9ea0f1cff",
+    "D_W_DIR": "3ca626f22561efd324b3e353650a5ae3ab9fe514b24ae0f2fc6c4f8f83bc0615"
+  },
+  "parameter_grids": {
+    "gamma_c_grid": [
+      0.1,
+      0.2,
+      0.35,
+      0.5,
+      0.75,
+      1.0,
+      1.5,
+      2.0
+    ],
+    "mu_d_grid": [
+      0.2,
+      0.3,
+      0.4,
+      0.5,
+      0.7,
+      1.0
+    ],
+    "gamma_kappa_grid": [
+      0.5,
+      0.75,
+      1.0,
+      1.25,
+      1.5
+    ],
+    "total_sweep_regimes": 38,
+    "total_control_regimes": 2
+  },
+  "artifacts": {
+    "results_json": {
+      "path": "tests/evaluation_phase22/results/h1_r3_consumer_sensitivity/r3_consumer_sensitivity_results.json",
+      "sha256": "54aeb8bd12b021e8c81ef52946cb903d9eb19567bfec46fd26c77203851aa1d7",
+      "bytes": 68172
+    },
+    "summary_csv": {
+      "path": "tests/evaluation_phase22/results/h1_r3_consumer_sensitivity/r3_consumer_sensitivity_summary.csv",
+      "sha256": "842a535c4638e4cb0c9889f6b6a2703de52b2d6360563c8d8bf21b3dd7c4c511",
+      "bytes": 3799
+    }
+  },
+  "summary": {
+    "consumer_c_transition_status": "TRANSITION_INTERVAL_OBSERVED",
+    "consumer_c_transition_interval": [
+      1.0,
+      1.5
+    ],
+    "consumer_d_transition_status": "DISCRETE_QUALIFYING_REGIME_OBSERVED",
+    "consumer_d_qualifying_cells_count": 1
+  },
+  "governance_invariants": {
+    "architecture_gate": "STRICTLY_LOCKED",
+    "adr029_status": "DRAFT / RESEARCH RECORD ONLY / NOT RATIFIED",
+    "quality_gate_2": "STRICTLY_BLOCKED",
+    "phase22_h1_status": "INCONCLUSIVE",
+    "genesis_profile_bit_exact": true,
+    "hardware_budget": "100% CPU / 0.0 MB GPU VRAM"
+  }
+}

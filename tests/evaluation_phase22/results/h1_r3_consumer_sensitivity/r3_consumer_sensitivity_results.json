@@ -1,0 +1,1903 @@
+{
+  "study_metadata": {
+    "study_id": "PHASE_22_H1_R3_CONSUMER_SENSITIVITY_STUDY",
+    "primary_seed": 9999,
+    "consumer_seeds": [
+      42,
+      43,
+      44,
+      45,
+      46
+    ],
+    "exposure_t": 12,
+    "deadband_epsilon": 0.01,
+    "scalar_match_threshold": 0.02,
+    "locked_base_parameter_hashes": {
+      "C_U_BASE": "68ae10dcd46f2b0d2484466102ab012c056271e92be9a237ae23c7c705f922ec",
+      "C_COST_S": "3a08599cb76d748fece9a2c34f35e961f96e4ce6529cc718a422ce6914934543",
+      "C_M_BASE": "08cc42e3b61c467ee7e9a9bed9eab06b471ad338833fdb145d267da89ab8118c",
+      "D_G_BASE": "b6eca7ed83efe37dd754fc8a20763b698d11b5533d30a367146d3e677b0dfa0e",
+      "D_KAPPA_S_BASE": "c2b412f75adb709602a7861fbdd9ddeb3742fe3983cbe39f2b1865f9ea0f1cff",
+      "D_W_DIR": "3ca626f22561efd324b3e353650a5ae3ab9fe514b24ae0f2fc6c4f8f83bc0615"
+    }
+  },
+  "control_baselines": {
+    "A_REFERENCE": {
+      "consumer_id": "A_REFERENCE",
+      "aggregate": {
+        "c2_diffrate_disc_mean": 0.7988826815642458,
+        "c2_diffrate_disc_std": 0.0,
+        "c2_diffrate_all_mean": 0.04247104247104247,
+        "c0_d_pair_action_mean": 0.0,
+        "c0_d_pair_action_std": 0.0,
+        "c4_d_pair_action_mean": 0.3128491620111732,
+        "c4_d_pair_action_std": 0.038299746370955554,
+        "directional_gain_mean": 0.7988826815642458,
+        "directional_gain_std": 0.0,
+        "condition_shift_c2_c4_mean": 0.2859259259259259,
+        "condition_shift_c2_c4_std": 0.007554102983100408,
+        "same_dir_c2_action_diff_mean": 0.0,
+        "c2_delta_v_mean": 0.5314546779776732,
+        "c0_delta_v_mean": 0.0073565189371915685
+      },
+      "preregistered_criteria": {
+        "criterion_1_diffrate_ge_20pct": {
+          "threshold": 0.2,
+          "observed": 0.7988826815642458,
+          "passed": true
+        },
+        "criterion_2_directional_gain_ge_10pct": {
+          "threshold": 0.1,
+          "observed": 0.7988826815642458,
+          "passed": true
+        },
+        "hard_tuple_identity_parity": {
+          "delta_action_identity": 0.0,
+          "d_js_identity": 0.0,
+          "invariant_passed": true
+        },
+        "secondary_metric_condition_shift_c2_c4": {
+          "role": "descriptive_secondary_metric",
+          "observed": 0.2859259259259259
+        },
+        "transfer_criteria_satisfied": true
+      }
+    },
+    "B_DIRECTIONAL_SEPARABLE": {
+      "consumer_id": "B_DIRECTIONAL_SEPARABLE",
+      "aggregate": {
+        "c2_diffrate_disc_mean": 0.7988826815642458,
+        "c2_diffrate_disc_std": 0.0,
+        "c2_diffrate_all_mean": 0.04247104247104247,
+        "c0_d_pair_action_mean": 0.0,
+        "c0_d_pair_action_std": 0.0,
+        "c4_d_pair_action_mean": 0.3128491620111732,
+        "c4_d_pair_action_std": 0.038299746370955554,
+        "directional_gain_mean": 0.7988826815642458,
+        "directional_gain_std": 0.0,
+        "condition_shift_c2_c4_mean": 0.2622222222222222,
+        "condition_shift_c2_c4_std": 0.013333333333333345,
+        "same_dir_c2_action_diff_mean": 0.0,
+        "c2_delta_v_mean": 0.690060354579846,
+        "c0_delta_v_mean": 0.020693196228659
+      },
+      "preregistered_criteria": {
+        "criterion_1_diffrate_ge_20pct": {
+          "threshold": 0.2,
+          "observed": 0.7988826815642458,
+          "passed": true
+        },
+        "criterion_2_directional_gain_ge_10pct": {
+          "threshold": 0.1,
+          "observed": 0.7988826815642458,
+          "passed": true
+        },
+        "hard_tuple_identity_parity": {
+          "delta_action_identity": 0.0,
+          "d_js_identity": 0.0,
+          "invariant_passed": true
+        },
+        "secondary_metric_condition_shift_c2_c4": {
+          "role": "descriptive_secondary_metric",
+          "observed": 0.2622222222222222
+        },
+        "transfer_criteria_satisfied": true
+      }
+    }
+  },
+  "consumer_c_sensitivity": {
+    "grid_levels": [
+      0.1,
+      0.2,
+      0.35,
+      0.5,
+      0.75,
+      1.0,
+      1.5,
+      2.0
+    ],
+    "sweep_results": {
+      "gamma_0.10": {
+        "gamma_C": 0.1,
+        "is_historical_reference": false,
+        "metrics": {
+          "consumer_id": "C_gamma_0.10",
+          "aggregate": {
+            "c2_diffrate_disc_mean": 0.0,
+            "c2_diffrate_disc_std": 0.0,
+            "c2_diffrate_all_mean": 0.0,
+            "c0_d_pair_action_mean": 0.0,
+            "c0_d_pair_action_std": 0.0,
+            "c4_d_pair_action_mean": 0.0,
+            "c4_d_pair_action_std": 0.0,
+            "directional_gain_mean": 0.0,
+            "directional_gain_std": 0.0,
+            "condition_shift_c2_c4_mean": 0.0,
+            "condition_shift_c2_c4_std": 0.0,
+            "same_dir_c2_action_diff_mean": 0.0,
+            "c2_delta_v_mean": 0.06736878041211589,
+            "c0_delta_v_mean": 0.013228215961148876
+          },
+          "preregistered_criteria": {
+            "criterion_1_diffrate_ge_20pct": {
+              "threshold": 0.2,
+              "observed": 0.0,
+              "passed": false
+            },
+            "criterion_2_directional_gain_ge_10pct": {
+              "threshold": 0.1,
+              "observed": 0.0,
+              "passed": false
+            },
+            "hard_tuple_identity_parity": {
+              "delta_action_identity": 0.0,
+              "d_js_identity": 0.0,
+              "invariant_passed": true
+            },
+            "secondary_metric_condition_shift_c2_c4": {
+              "role": "descriptive_secondary_metric",
+              "observed": 0.0
+            },
+            "transfer_criteria_satisfied": false
+          }
+        }
+      },
+      "gamma_0.20": {
+        "gamma_C": 0.2,
+        "is_historical_reference": false,
+        "metrics": {
+          "consumer_id": "C_gamma_0.20",
+          "aggregate": {
+            "c2_diffrate_disc_mean": 0.0,
+            "c2_diffrate_disc_std": 0.0,
+            "c2_diffrate_all_mean": 0.0,
+            "c0_d_pair_action_mean": 0.0,
+            "c0_d_pair_action_std": 0.0,
+            "c4_d_pair_action_mean": 0.0,
+            "c4_d_pair_action_std": 0.0,
+            "directional_gain_mean": 0.0,
+            "directional_gain_std": 0.0,
+            "condition_shift_c2_c4_mean": 0.0,
+            "condition_shift_c2_c4_std": 0.0,
+            "same_dir_c2_action_diff_mean": 0.0,
+            "c2_delta_v_mean": 0.1370258579948714,
+            "c0_delta_v_mean": 0.013228215961148876
+          },
+          "preregistered_criteria": {
+            "criterion_1_diffrate_ge_20pct": {
+              "threshold": 0.2,
+              "observed": 0.0,
+              "passed": false
+            },
+            "criterion_2_directional_gain_ge_10pct": {
+              "threshold": 0.1,
+              "observed": 0.0,
+              "passed": false
+            },
+            "hard_tuple_identity_parity": {
+              "delta_action_identity": 0.0,
+              "d_js_identity": 0.0,
+              "invariant_passed": true
+            },
+            "secondary_metric_condition_shift_c2_c4": {
+              "role": "descriptive_secondary_metric",
+              "observed": 0.0
+            },
+            "transfer_criteria_satisfied": false
+          }
+        }
+      },
+      "gamma_0.35": {
+        "gamma_C": 0.35,
+        "is_historical_reference": false,
+        "metrics": {
+          "consumer_id": "C_gamma_0.35",
+          "aggregate": {
+            "c2_diffrate_disc_mean": 0.0,
+            "c2_diffrate_disc_std": 0.0,
+            "c2_diffrate_all_mean": 0.0,
+            "c0_d_pair_action_mean": 0.0,
+            "c0_d_pair_action_std": 0.0,
+            "c4_d_pair_action_mean": 0.0,
+            "c4_d_pair_action_std": 0.0,
+            "directional_gain_mean": 0.0,
+            "directional_gain_std": 0.0,
+            "condition_shift_c2_c4_mean": 0.0,
+            "condition_shift_c2_c4_std": 0.0,
+            "same_dir_c2_action_diff_mean": 0.0,
+            "c2_delta_v_mean": 0.2425396513349038,
+            "c0_delta_v_mean": 0.013228215961148876
+          },
+          "preregistered_criteria": {
+            "criterion_1_diffrate_ge_20pct": {
+              "threshold": 0.2,
+              "observed": 0.0,
+              "passed": false
+            },
+            "criterion_2_directional_gain_ge_10pct": {
+              "threshold": 0.1,
+              "observed": 0.0,
+              "passed": false
+            },
+            "hard_tuple_identity_parity": {
+              "delta_action_identity": 0.0,
+              "d_js_identity": 0.0,
+              "invariant_passed": true
+            },
+            "secondary_metric_condition_shift_c2_c4": {
+              "role": "descriptive_secondary_metric",
+              "observed": 0.0
+            },
+            "transfer_criteria_satisfied": false
+          }
+        }
+      },
+      "gamma_0.50": {
+        "gamma_C": 0.5,
+        "is_historical_reference": false,
+        "metrics": {
+          "consumer_id": "C_gamma_0.50",
+          "aggregate": {
+            "c2_diffrate_disc_mean": 0.0,
+            "c2_diffrate_disc_std": 0.0,
+            "c2_diffrate_all_mean": 0.0,
+            "c0_d_pair_action_mean": 0.0,
+            "c0_d_pair_action_std": 0.0,
+            "c4_d_pair_action_mean": 0.0,
+            "c4_d_pair_action_std": 0.0,
+            "directional_gain_mean": 0.0,
+            "directional_gain_std": 0.0,
+            "condition_shift_c2_c4_mean": 0.0,
+            "condition_shift_c2_c4_std": 0.0,
+            "same_dir_c2_action_diff_mean": 0.0,
+            "c2_delta_v_mean": 0.3489370571209857,
+            "c0_delta_v_mean": 0.013228215961148876
+          },
+          "preregistered_criteria": {
+            "criterion_1_diffrate_ge_20pct": {
+              "threshold": 0.2,
+              "observed": 0.0,
+              "passed": false
+            },
+            "criterion_2_directional_gain_ge_10pct": {
+              "threshold": 0.1,
+              "observed": 0.0,
+              "passed": false
+            },
+            "hard_tuple_identity_parity": {
+              "delta_action_identity": 0.0,
+              "d_js_identity": 0.0,
+              "invariant_passed": true
+            },
+            "secondary_metric_condition_shift_c2_c4": {
+              "role": "descriptive_secondary_metric",
+              "observed": 0.0
+            },
+            "transfer_criteria_satisfied": false
+          }
+        }
+      },
+      "gamma_0.75": {
+        "gamma_C": 0.75,
+        "is_historical_reference": false,
+        "metrics": {
+          "consumer_id": "C_gamma_0.75",
+          "aggregate": {
+            "c2_diffrate_disc_mean": 0.0,
+            "c2_diffrate_disc_std": 0.0,
+            "c2_diffrate_all_mean": 0.0,
+            "c0_d_pair_action_mean": 0.0,
+            "c0_d_pair_action_std": 0.0,
+            "c4_d_pair_action_mean": 0.0,
+            "c4_d_pair_action_std": 0.0,
+            "directional_gain_mean": 0.0,
+            "directional_gain_std": 0.0,
+            "condition_shift_c2_c4_mean": 0.0,
+            "condition_shift_c2_c4_std": 0.0,
+            "same_dir_c2_action_diff_mean": 0.0,
+            "c2_delta_v_mean": 0.5286596811739016,
+            "c0_delta_v_mean": 0.013228215961148876
+          },
+          "preregistered_criteria": {
+            "criterion_1_diffrate_ge_20pct": {
+              "threshold": 0.2,
+              "observed": 0.0,
+              "passed": false
+            },
+            "criterion_2_directional_gain_ge_10pct": {
+              "threshold": 0.1,
+              "observed": 0.0,
+              "passed": false
+            },
+            "hard_tuple_identity_parity": {
+              "delta_action_identity": 0.0,
+              "d_js_identity": 0.0,
+              "invariant_passed": true
+            },
+            "secondary_metric_condition_shift_c2_c4": {
+              "role": "descriptive_secondary_metric",
+              "observed": 0.0
+            },
+            "transfer_criteria_satisfied": false
+          }
+        }
+      },
+      "gamma_1.00": {
+        "gamma_C": 1.0,
+        "is_historical_reference": true,
+        "metrics": {
+          "consumer_id": "C_gamma_1.00",
+          "aggregate": {
+            "c2_diffrate_disc_mean": 0.0,
+            "c2_diffrate_disc_std": 0.0,
+            "c2_diffrate_all_mean": 0.0,
+            "c0_d_pair_action_mean": 0.0,
+            "c0_d_pair_action_std": 0.0,
+            "c4_d_pair_action_mean": 0.0,
+            "c4_d_pair_action_std": 0.0,
+            "directional_gain_mean": 0.0,
+            "directional_gain_std": 0.0,
+            "condition_shift_c2_c4_mean": 0.01037037037037037,
+            "condition_shift_c2_c4_std": 0.005443310539518174,
+            "same_dir_c2_action_diff_mean": 0.0,
+            "c2_delta_v_mean": 0.7122621059512577,
+            "c0_delta_v_mean": 0.013228215961148876
+          },
+          "preregistered_criteria": {
+            "criterion_1_diffrate_ge_20pct": {
+              "threshold": 0.2,
+              "observed": 0.0,
+              "passed": false
+            },
+            "criterion_2_directional_gain_ge_10pct": {
+              "threshold": 0.1,
+              "observed": 0.0,
+              "passed": false
+            },
+            "hard_tuple_identity_parity": {
+              "delta_action_identity": 0.0,
+              "d_js_identity": 0.0,
+              "invariant_passed": true
+            },
+            "secondary_metric_condition_shift_c2_c4": {
+              "role": "descriptive_secondary_metric",
+              "observed": 0.01037037037037037
+            },
+            "transfer_criteria_satisfied": false
+          }
+        }
+      },
+      "gamma_1.50": {
+        "gamma_C": 1.5,
+        "is_historical_reference": false,
+        "metrics": {
+          "consumer_id": "C_gamma_1.50",
+          "aggregate": {
+            "c2_diffrate_disc_mean": 0.7988826815642458,
+            "c2_diffrate_disc_std": 0.0,
+            "c2_diffrate_all_mean": 0.04247104247104247,
+            "c0_d_pair_action_mean": 0.0,
+            "c0_d_pair_action_std": 0.0,
+            "c4_d_pair_action_mean": 0.3128491620111732,
+            "c4_d_pair_action_std": 0.038299746370955554,
+            "directional_gain_mean": 0.7988826815642458,
+            "directional_gain_std": 0.0,
+            "condition_shift_c2_c4_mean": 0.2859259259259259,
+            "condition_shift_c2_c4_std": 0.007554102983100408,
+            "same_dir_c2_action_diff_mean": 0.0,
+            "c2_delta_v_mean": 1.0953819380354088,
+            "c0_delta_v_mean": 0.013228215961148876
+          },
+          "preregistered_criteria": {
+            "criterion_1_diffrate_ge_20pct": {
+              "threshold": 0.2,
+              "observed": 0.7988826815642458,
+              "passed": true
+            },
+            "criterion_2_directional_gain_ge_10pct": {
+              "threshold": 0.1,
+              "observed": 0.7988826815642458,
+              "passed": true
+            },
+            "hard_tuple_identity_parity": {
+              "delta_action_identity": 0.0,
+              "d_js_identity": 0.0,
+              "invariant_passed": true
+            },
+            "secondary_metric_condition_shift_c2_c4": {
+              "role": "descriptive_secondary_metric",
+              "observed": 0.2859259259259259
+            },
+            "transfer_criteria_satisfied": true
+          }
+        }
+      },
+      "gamma_2.00": {
+        "gamma_C": 2.0,
+        "is_historical_reference": false,
+        "metrics": {
+          "consumer_id": "C_gamma_2.00",
+          "aggregate": {
+            "c2_diffrate_disc_mean": 1.0,
+            "c2_diffrate_disc_std": 0.0,
+            "c2_diffrate_all_mean": 0.05316305316305316,
+            "c0_d_pair_action_mean": 0.0,
+            "c0_d_pair_action_std": 0.0,
+            "c4_d_pair_action_mean": 0.4994413407821229,
+            "c4_d_pair_action_std": 0.025807395446818093,
+            "directional_gain_mean": 1.0,
+            "directional_gain_std": 0.0,
+            "condition_shift_c2_c4_mean": 0.4207407407407408,
+            "condition_shift_c2_c4_std": 0.006457628064504711,
+            "same_dir_c2_action_diff_mean": 0.0,
+            "c2_delta_v_mean": 1.5069263899709653,
+            "c0_delta_v_mean": 0.013228215961148876
+          },
+          "preregistered_criteria": {
+            "criterion_1_diffrate_ge_20pct": {
+              "threshold": 0.2,
+              "observed": 1.0,
+              "passed": true
+            },
+            "criterion_2_directional_gain_ge_10pct": {
+              "threshold": 0.1,
+              "observed": 1.0,
+              "passed": true
+            },
+            "hard_tuple_identity_parity": {
+              "delta_action_identity": 0.0,
+              "d_js_identity": 0.0,
+              "invariant_passed": true
+            },
+            "secondary_metric_condition_shift_c2_c4": {
+              "role": "descriptive_secondary_metric",
+              "observed": 0.4207407407407408
+            },
+            "transfer_criteria_satisfied": true
+          }
+        }
+      }
+    },
+    "qualifying_gammas": [
+      1.5,
+      2.0
+    ],
+    "transition_status": "TRANSITION_INTERVAL_OBSERVED",
+    "transition_interval": [
+      1.0,
+      1.5
+    ]
+  },
+  "consumer_d_sensitivity": {
+    "mu_d_grid": [
+      0.2,
+      0.3,
+      0.4,
+      0.5,
+      0.7,
+      1.0
+    ],
+    "gamma_kappa_grid": [
+      0.5,
+      0.75,
+      1.0,
+      1.25,
+      1.5
+    ],
+    "sweep_results": {
+      "mu_0.20_gk_0.50": {
+        "mu_d": 0.2,
+        "gamma_kappa": 0.5,
+        "is_historical_reference": false,
+        "metrics": {
+          "consumer_id": "D_mu_0.20_gk_0.50",
+          "aggregate": {
+            "c2_diffrate_disc_mean": 0.0,
+            "c2_diffrate_disc_std": 0.0,
+            "c2_diffrate_all_mean": 0.0,
+            "c0_d_pair_action_mean": 0.0,
+            "c0_d_pair_action_std": 0.0,
+            "c4_d_pair_action_mean": 0.0,
+            "c4_d_pair_action_std": 0.0,
+            "directional_gain_mean": 0.0,
+            "directional_gain_std": 0.0,
+            "condition_shift_c2_c4_mean": 0.0,
+            "condition_shift_c2_c4_std": 0.0,
+            "same_dir_c2_action_diff_mean": 0.0,
+            "c2_delta_v_mean": 0.13732755556779655,
+            "c0_delta_v_mean": 0.06880531865488773
+          },
+          "preregistered_criteria": {
+            "criterion_1_diffrate_ge_20pct": {
+              "threshold": 0.2,
+              "observed": 0.0,
+              "passed": false
+            },
+            "criterion_2_directional_gain_ge_10pct": {
+              "threshold": 0.1,
+              "observed": 0.0,
+              "passed": false
+            },
+            "hard_tuple_identity_parity": {
+              "delta_action_identity": 0.0,
+              "d_js_identity": 0.0,
+              "invariant_passed": true
+            },
+            "secondary_metric_condition_shift_c2_c4": {
+              "role": "descriptive_secondary_metric",
+              "observed": 0.0
+            },
+            "transfer_criteria_satisfied": false
+          }
+        }
+      },
+      "mu_0.20_gk_0.75": {
+        "mu_d": 0.2,
+        "gamma_kappa": 0.75,
+        "is_historical_reference": false,
+        "metrics": {
+          "consumer_id": "D_mu_0.20_gk_0.75",
+          "aggregate": {
+            "c2_diffrate_disc_mean": 0.0,
+            "c2_diffrate_disc_std": 0.0,
+            "c2_diffrate_all_mean": 0.0,
+            "c0_d_pair_action_mean": 0.0,
+            "c0_d_pair_action_std": 0.0,
+            "c4_d_pair_action_mean": 0.0,
+            "c4_d_pair_action_std": 0.0,
+            "directional_gain_mean": 0.0,
+            "directional_gain_std": 0.0,
+            "condition_shift_c2_c4_mean": 0.0,
+            "condition_shift_c2_c4_std": 0.0,
+            "same_dir_c2_action_diff_mean": 0.0,
+            "c2_delta_v_mean": 0.164032893414103,
+            "c0_delta_v_mean": 0.10320797798233165
+          },
+          "preregistered_criteria": {
+            "criterion_1_diffrate_ge_20pct": {
+              "threshold": 0.2,
+              "observed": 0.0,
+              "passed": false
+            },
+            "criterion_2_directional_gain_ge_10pct": {
+              "threshold": 0.1,
+              "observed": 0.0,
+              "passed": false
+            },
+            "hard_tuple_identity_parity": {
+              "delta_action_identity": 0.0,
+              "d_js_identity": 0.0,
+              "invariant_passed": true
+            },
+            "secondary_metric_condition_shift_c2_c4": {
+              "role": "descriptive_secondary_metric",
+              "observed": 0.0
+            },
+            "transfer_criteria_satisfied": false
+          }
+        }
+      },
+      "mu_0.20_gk_1.00": {
+        "mu_d": 0.2,
+        "gamma_kappa": 1.0,
+        "is_historical_reference": true,
+        "metrics": {
+          "consumer_id": "D_mu_0.20_gk_1.00",
+          "aggregate": {
+            "c2_diffrate_disc_mean": 0.0,
+            "c2_diffrate_disc_std": 0.0,
+            "c2_diffrate_all_mean": 0.0,
+            "c0_d_pair_action_mean": 0.0,
+            "c0_d_pair_action_std": 0.0,
+            "c4_d_pair_action_mean": 0.0,
+            "c4_d_pair_action_std": 0.0,
+            "directional_gain_mean": 0.0,
+            "directional_gain_std": 0.0,
+            "condition_shift_c2_c4_mean": 0.0,
+            "condition_shift_c2_c4_std": 0.0,
+            "same_dir_c2_action_diff_mean": 0.0,
+            "c2_delta_v_mean": 0.19340734766876103,
+            "c0_delta_v_mean": 0.1376106373097757
+          },
+          "preregistered_criteria": {
+            "criterion_1_diffrate_ge_20pct": {
+              "threshold": 0.2,
+              "observed": 0.0,
+              "passed": false
+            },
+            "criterion_2_directional_gain_ge_10pct": {
+              "threshold": 0.1,
+              "observed": 0.0,
+              "passed": false
+            },
+            "hard_tuple_identity_parity": {
+              "delta_action_identity": 0.0,
+              "d_js_identity": 0.0,
+              "invariant_passed": true
+            },
+            "secondary_metric_condition_shift_c2_c4": {
+              "role": "descriptive_secondary_metric",
+              "observed": 0.0
+            },
+            "transfer_criteria_satisfied": false
+          }
+        }
+      },
+      "mu_0.20_gk_1.25": {
+        "mu_d": 0.2,
+        "gamma_kappa": 1.25,
+        "is_historical_reference": false,
+        "metrics": {
+          "consumer_id": "D_mu_0.20_gk_1.25",
+          "aggregate": {
+            "c2_diffrate_disc_mean": 0.0,
+            "c2_diffrate_disc_std": 0.0,
+            "c2_diffrate_all_mean": 0.0,
+            "c0_d_pair_action_mean": 0.0,
+            "c0_d_pair_action_std": 0.0,
+            "c4_d_pair_action_mean": 0.0,
+            "c4_d_pair_action_std": 0.0,
+            "directional_gain_mean": 0.0,
+            "directional_gain_std": 0.0,
+            "condition_shift_c2_c4_mean": 0.0,
+            "condition_shift_c2_c4_std": 0.0,
+            "same_dir_c2_action_diff_mean": 0.0,
+            "c2_delta_v_mean": 0.22428847140924574,
+            "c0_delta_v_mean": 0.1720132966372197
+          },
+          "preregistered_criteria": {
+            "criterion_1_diffrate_ge_20pct": {
+              "threshold": 0.2,
+              "observed": 0.0,
+              "passed": false
+            },
+            "criterion_2_directional_gain_ge_10pct": {
+              "threshold": 0.1,
+              "observed": 0.0,
+              "passed": false
+            },
+            "hard_tuple_identity_parity": {
+              "delta_action_identity": 0.0,
+              "d_js_identity": 0.0,
+              "invariant_passed": true
+            },
+            "secondary_metric_condition_shift_c2_c4": {
+              "role": "descriptive_secondary_metric",
+              "observed": 0.0
+            },
+            "transfer_criteria_satisfied": false
+          }
+        }
+      },
+      "mu_0.20_gk_1.50": {
+        "mu_d": 0.2,
+        "gamma_kappa": 1.5,
+        "is_historical_reference": false,
+        "metrics": {
+          "consumer_id": "D_mu_0.20_gk_1.50",
+          "aggregate": {
+            "c2_diffrate_disc_mean": 0.0,
+            "c2_diffrate_disc_std": 0.0,
+            "c2_diffrate_all_mean": 0.0,
+            "c0_d_pair_action_mean": 0.0,
+            "c0_d_pair_action_std": 0.0,
+            "c4_d_pair_action_mean": 0.0,
+            "c4_d_pair_action_std": 0.0,
+            "directional_gain_mean": 0.0,
+            "directional_gain_std": 0.0,
+            "condition_shift_c2_c4_mean": 0.0,
+            "condition_shift_c2_c4_std": 0.0,
+            "same_dir_c2_action_diff_mean": 0.0,
+            "c2_delta_v_mean": 0.2560914803857605,
+            "c0_delta_v_mean": 0.2064159559646633
+          },
+          "preregistered_criteria": {
+            "criterion_1_diffrate_ge_20pct": {
+              "threshold": 0.2,
+              "observed": 0.0,
+              "passed": false
+            },
+            "criterion_2_directional_gain_ge_10pct": {
+              "threshold": 0.1,
+              "observed": 0.0,
+              "passed": false
+            },
+            "hard_tuple_identity_parity": {
+              "delta_action_identity": 0.0,
+              "d_js_identity": 0.0,
+              "invariant_passed": true
+            },
+            "secondary_metric_condition_shift_c2_c4": {
+              "role": "descriptive_secondary_metric",
+              "observed": 0.0
+            },
+            "transfer_criteria_satisfied": false
+          }
+        }
+      },
+      "mu_0.30_gk_0.50": {
+        "mu_d": 0.3,
+        "gamma_kappa": 0.5,
+        "is_historical_reference": false,
+        "metrics": {
+          "consumer_id": "D_mu_0.30_gk_0.50",
+          "aggregate": {
+            "c2_diffrate_disc_mean": 0.0,
+            "c2_diffrate_disc_std": 0.0,
+            "c2_diffrate_all_mean": 0.0,
+            "c0_d_pair_action_mean": 0.0,
+            "c0_d_pair_action_std": 0.0,
+            "c4_d_pair_action_mean": 0.0,
+            "c4_d_pair_action_std": 0.0,
+            "directional_gain_mean": 0.0,
+            "directional_gain_std": 0.0,
+            "condition_shift_c2_c4_mean": 0.0,
+            "condition_shift_c2_c4_std": 0.0,
+            "same_dir_c2_action_diff_mean": 0.0,
+            "c2_delta_v_mean": 0.18307147136281116,
+            "c0_delta_v_mean": 0.06880531865488773
+          },
+          "preregistered_criteria": {
+            "criterion_1_diffrate_ge_20pct": {
+              "threshold": 0.2,
+              "observed": 0.0,
+              "passed": false
+            },
+            "criterion_2_directional_gain_ge_10pct": {
+              "threshold": 0.1,
+              "observed": 0.0,
+              "passed": false
+            },
+            "hard_tuple_identity_parity": {
+              "delta_action_identity": 0.0,
+              "d_js_identity": 0.0,
+              "invariant_passed": true
+            },
+            "secondary_metric_condition_shift_c2_c4": {
+              "role": "descriptive_secondary_metric",
+              "observed": 0.0
+            },
+            "transfer_criteria_satisfied": false
+          }
+        }
+      },
+      "mu_0.30_gk_0.75": {
+        "mu_d": 0.3,
+        "gamma_kappa": 0.75,
+        "is_historical_reference": false,
+        "metrics": {
+          "consumer_id": "D_mu_0.30_gk_0.75",
+          "aggregate": {
+            "c2_diffrate_disc_mean": 0.0,
+            "c2_diffrate_disc_std": 0.0,
+            "c2_diffrate_all_mean": 0.0,
+            "c0_d_pair_action_mean": 0.0,
+            "c0_d_pair_action_std": 0.0,
+            "c4_d_pair_action_mean": 0.0,
+            "c4_d_pair_action_std": 0.0,
+            "directional_gain_mean": 0.0,
+            "directional_gain_std": 0.0,
+            "condition_shift_c2_c4_mean": 0.0,
+            "condition_shift_c2_c4_std": 0.0,
+            "same_dir_c2_action_diff_mean": 0.0,
+            "c2_delta_v_mean": 0.205991333351695,
+            "c0_delta_v_mean": 0.10320797798233165
+          },
+          "preregistered_criteria": {
+            "criterion_1_diffrate_ge_20pct": {
+              "threshold": 0.2,
+              "observed": 0.0,
+              "passed": false
+            },
+            "criterion_2_directional_gain_ge_10pct": {
+              "threshold": 0.1,
+              "observed": 0.0,
+              "passed": false
+            },
+            "hard_tuple_identity_parity": {
+              "delta_action_identity": 0.0,
+              "d_js_identity": 0.0,
+              "invariant_passed": true
+            },
+            "secondary_metric_condition_shift_c2_c4": {
+              "role": "descriptive_secondary_metric",
+              "observed": 0.0
+            },
+            "transfer_criteria_satisfied": false
+          }
+        }
+      },
+      "mu_0.30_gk_1.00": {
+        "mu_d": 0.3,
+        "gamma_kappa": 1.0,
+        "is_historical_reference": false,
+        "metrics": {
+          "consumer_id": "D_mu_0.30_gk_1.00",
+          "aggregate": {
+            "c2_diffrate_disc_mean": 0.0,
+            "c2_diffrate_disc_std": 0.0,
+            "c2_diffrate_all_mean": 0.0,
+            "c0_d_pair_action_mean": 0.0,
+            "c0_d_pair_action_std": 0.0,
+            "c4_d_pair_action_mean": 0.0,
+            "c4_d_pair_action_std": 0.0,
+            "directional_gain_mean": 0.0,
+            "directional_gain_std": 0.0,
+            "condition_shift_c2_c4_mean": 0.0,
+            "condition_shift_c2_c4_std": 0.0,
+            "same_dir_c2_action_diff_mean": 0.0,
+            "c2_delta_v_mean": 0.23212618799285795,
+            "c0_delta_v_mean": 0.1376106373097757
+          },
+          "preregistered_criteria": {
+            "criterion_1_diffrate_ge_20pct": {
+              "threshold": 0.2,
+              "observed": 0.0,
+              "passed": false
+            },
+            "criterion_2_directional_gain_ge_10pct": {
+              "threshold": 0.1,
+              "observed": 0.0,
+              "passed": false
+            },
+            "hard_tuple_identity_parity": {
+              "delta_action_identity": 0.0,
+              "d_js_identity": 0.0,
+              "invariant_passed": true
+            },
+            "secondary_metric_condition_shift_c2_c4": {
+              "role": "descriptive_secondary_metric",
+              "observed": 0.0
+            },
+            "transfer_criteria_satisfied": false
+          }
+        }
+      },
+      "mu_0.30_gk_1.25": {
+        "mu_d": 0.3,
+        "gamma_kappa": 1.25,
+        "is_historical_reference": false,
+        "metrics": {
+          "consumer_id": "D_mu_0.30_gk_1.25",
+          "aggregate": {
+            "c2_diffrate_disc_mean": 0.0,
+            "c2_diffrate_disc_std": 0.0,
+            "c2_diffrate_all_mean": 0.0,
+            "c0_d_pair_action_mean": 0.0,
+            "c0_d_pair_action_std": 0.0,
+            "c4_d_pair_action_mean": 0.0,
+            "c4_d_pair_action_std": 0.0,
+            "directional_gain_mean": 0.0,
+            "directional_gain_std": 0.0,
+            "condition_shift_c2_c4_mean": 0.0,
+            "condition_shift_c2_c4_std": 0.0,
+            "same_dir_c2_action_diff_mean": 0.0,
+            "c2_delta_v_mean": 0.2604034595513668,
+            "c0_delta_v_mean": 0.1720132966372197
+          },
+          "preregistered_criteria": {
+            "criterion_1_diffrate_ge_20pct": {
+              "threshold": 0.2,
+              "observed": 0.0,
+              "passed": false
+            },
+            "criterion_2_directional_gain_ge_10pct": {
+              "threshold": 0.1,
+              "observed": 0.0,
+              "passed": false
+            },
+            "hard_tuple_identity_parity": {
+              "delta_action_identity": 0.0,
+              "d_js_identity": 0.0,
+              "invariant_passed": true
+            },
+            "secondary_metric_condition_shift_c2_c4": {
+              "role": "descriptive_secondary_metric",
+              "observed": 0.0
+            },
+            "transfer_criteria_satisfied": false
+          }
+        }
+      },
+      "mu_0.30_gk_1.50": {
+        "mu_d": 0.3,
+        "gamma_kappa": 1.5,
+        "is_historical_reference": false,
+        "metrics": {
+          "consumer_id": "D_mu_0.30_gk_1.50",
+          "aggregate": {
+            "c2_diffrate_disc_mean": 0.0,
+            "c2_diffrate_disc_std": 0.0,
+            "c2_diffrate_all_mean": 0.0,
+            "c0_d_pair_action_mean": 0.0,
+            "c0_d_pair_action_std": 0.0,
+            "c4_d_pair_action_mean": 0.0,
+            "c4_d_pair_action_std": 0.0,
+            "directional_gain_mean": 0.0,
+            "directional_gain_std": 0.0,
+            "condition_shift_c2_c4_mean": 0.0,
+            "condition_shift_c2_c4_std": 0.0,
+            "same_dir_c2_action_diff_mean": 0.0,
+            "c2_delta_v_mean": 0.2901110215031414,
+            "c0_delta_v_mean": 0.2064159559646633
+          },
+          "preregistered_criteria": {
+            "criterion_1_diffrate_ge_20pct": {
+              "threshold": 0.2,
+              "observed": 0.0,
+              "passed": false
+            },
+            "criterion_2_directional_gain_ge_10pct": {
+              "threshold": 0.1,
+              "observed": 0.0,
+              "passed": false
+            },
+            "hard_tuple_identity_parity": {
+              "delta_action_identity": 0.0,
+              "d_js_identity": 0.0,
+              "invariant_passed": true
+            },
+            "secondary_metric_condition_shift_c2_c4": {
+              "role": "descriptive_secondary_metric",
+              "observed": 0.0
+            },
+            "transfer_criteria_satisfied": false
+          }
+        }
+      },
+      "mu_0.40_gk_0.50": {
+        "mu_d": 0.4,
+        "gamma_kappa": 0.5,
+        "is_historical_reference": false,
+        "metrics": {
+          "consumer_id": "D_mu_0.40_gk_0.50",
+          "aggregate": {
+            "c2_diffrate_disc_mean": 0.0,
+            "c2_diffrate_disc_std": 0.0,
+            "c2_diffrate_all_mean": 0.0,
+            "c0_d_pair_action_mean": 0.0,
+            "c0_d_pair_action_std": 0.0,
+            "c4_d_pair_action_mean": 0.0,
+            "c4_d_pair_action_std": 0.0,
+            "directional_gain_mean": 0.0,
+            "directional_gain_std": 0.0,
+            "condition_shift_c2_c4_mean": 0.0,
+            "condition_shift_c2_c4_std": 0.0,
+            "same_dir_c2_action_diff_mean": 0.0,
+            "c2_delta_v_mean": 0.23095898874598766,
+            "c0_delta_v_mean": 0.06880531865488773
+          },
+          "preregistered_criteria": {
+            "criterion_1_diffrate_ge_20pct": {
+              "threshold": 0.2,
+              "observed": 0.0,
+              "passed": false
+            },
+            "criterion_2_directional_gain_ge_10pct": {
+              "threshold": 0.1,
+              "observed": 0.0,
+              "passed": false
+            },
+            "hard_tuple_identity_parity": {
+              "delta_action_identity": 0.0,
+              "d_js_identity": 0.0,
+              "invariant_passed": true
+            },
+            "secondary_metric_condition_shift_c2_c4": {
+              "role": "descriptive_secondary_metric",
+              "observed": 0.0
+            },
+            "transfer_criteria_satisfied": false
+          }
+        }
+      },
+      "mu_0.40_gk_0.75": {
+        "mu_d": 0.4,
+        "gamma_kappa": 0.75,
+        "is_historical_reference": false,
+        "metrics": {
+          "consumer_id": "D_mu_0.40_gk_0.75",
+          "aggregate": {
+            "c2_diffrate_disc_mean": 0.0,
+            "c2_diffrate_disc_std": 0.0,
+            "c2_diffrate_all_mean": 0.0,
+            "c0_d_pair_action_mean": 0.0,
+            "c0_d_pair_action_std": 0.0,
+            "c4_d_pair_action_mean": 0.0,
+            "c4_d_pair_action_std": 0.0,
+            "directional_gain_mean": 0.0,
+            "directional_gain_std": 0.0,
+            "condition_shift_c2_c4_mean": 0.0,
+            "condition_shift_c2_c4_std": 0.0,
+            "same_dir_c2_action_diff_mean": 0.0,
+            "c2_delta_v_mean": 0.2512397458005417,
+            "c0_delta_v_mean": 0.10320797798233165
+          },
+          "preregistered_criteria": {
+            "criterion_1_diffrate_ge_20pct": {
+              "threshold": 0.2,
+              "observed": 0.0,
+              "passed": false
+            },
+            "criterion_2_directional_gain_ge_10pct": {
+              "threshold": 0.1,
+              "observed": 0.0,
+              "passed": false
+            },
+            "hard_tuple_identity_parity": {
+              "delta_action_identity": 0.0,
+              "d_js_identity": 0.0,
+              "invariant_passed": true
+            },
+            "secondary_metric_condition_shift_c2_c4": {
+              "role": "descriptive_secondary_metric",
+              "observed": 0.0
+            },
+            "transfer_criteria_satisfied": false
+          }
+        }
+      },
+      "mu_0.40_gk_1.00": {
+        "mu_d": 0.4,
+        "gamma_kappa": 1.0,
+        "is_historical_reference": false,
+        "metrics": {
+          "consumer_id": "D_mu_0.40_gk_1.00",
+          "aggregate": {
+            "c2_diffrate_disc_mean": 0.0,
+            "c2_diffrate_disc_std": 0.0,
+            "c2_diffrate_all_mean": 0.0,
+            "c0_d_pair_action_mean": 0.0,
+            "c0_d_pair_action_std": 0.0,
+            "c4_d_pair_action_mean": 0.0,
+            "c4_d_pair_action_std": 0.0,
+            "directional_gain_mean": 0.0,
+            "directional_gain_std": 0.0,
+            "condition_shift_c2_c4_mean": 0.0,
+            "condition_shift_c2_c4_std": 0.0,
+            "same_dir_c2_action_diff_mean": 0.0,
+            "c2_delta_v_mean": 0.2746551111355933,
+            "c0_delta_v_mean": 0.1376106373097757
+          },
+          "preregistered_criteria": {
+            "criterion_1_diffrate_ge_20pct": {
+              "threshold": 0.2,
+              "observed": 0.0,
+              "passed": false
+            },
+            "criterion_2_directional_gain_ge_10pct": {
+              "threshold": 0.1,
+              "observed": 0.0,
+              "passed": false
+            },
+            "hard_tuple_identity_parity": {
+              "delta_action_identity": 0.0,
+              "d_js_identity": 0.0,
+              "invariant_passed": true
+            },
+            "secondary_metric_condition_shift_c2_c4": {
+              "role": "descriptive_secondary_metric",
+              "observed": 0.0
+            },
+            "transfer_criteria_satisfied": false
+          }
+        }
+      },
+      "mu_0.40_gk_1.25": {
+        "mu_d": 0.4,
+        "gamma_kappa": 1.25,
+        "is_historical_reference": false,
+        "metrics": {
+          "consumer_id": "D_mu_0.40_gk_1.25",
+          "aggregate": {
+            "c2_diffrate_disc_mean": 0.0,
+            "c2_diffrate_disc_std": 0.0,
+            "c2_diffrate_all_mean": 0.0,
+            "c0_d_pair_action_mean": 0.0,
+            "c0_d_pair_action_std": 0.0,
+            "c4_d_pair_action_mean": 0.0,
+            "c4_d_pair_action_std": 0.0,
+            "directional_gain_mean": 0.0,
+            "directional_gain_std": 0.0,
+            "condition_shift_c2_c4_mean": 0.0,
+            "condition_shift_c2_c4_std": 0.0,
+            "same_dir_c2_action_diff_mean": 0.0,
+            "c2_delta_v_mean": 0.3004747793405489,
+            "c0_delta_v_mean": 0.1720132966372197
+          },
+          "preregistered_criteria": {
+            "criterion_1_diffrate_ge_20pct": {
+              "threshold": 0.2,
+              "observed": 0.0,
+              "passed": false
+            },
+            "criterion_2_directional_gain_ge_10pct": {
+              "threshold": 0.1,
+              "observed": 0.0,
+              "passed": false
+            },
+            "hard_tuple_identity_parity": {
+              "delta_action_identity": 0.0,
+              "d_js_identity": 0.0,
+              "invariant_passed": true
+            },
+            "secondary_metric_condition_shift_c2_c4": {
+              "role": "descriptive_secondary_metric",
+              "observed": 0.0
+            },
+            "transfer_criteria_satisfied": false
+          }
+        }
+      },
+      "mu_0.40_gk_1.50": {
+        "mu_d": 0.4,
+        "gamma_kappa": 1.5,
+        "is_historical_reference": false,
+        "metrics": {
+          "consumer_id": "D_mu_0.40_gk_1.50",
+          "aggregate": {
+            "c2_diffrate_disc_mean": 0.0,
+            "c2_diffrate_disc_std": 0.0,
+            "c2_diffrate_all_mean": 0.0,
+            "c0_d_pair_action_mean": 0.0,
+            "c0_d_pair_action_std": 0.0,
+            "c4_d_pair_action_mean": 0.0,
+            "c4_d_pair_action_std": 0.0,
+            "directional_gain_mean": 0.0,
+            "directional_gain_std": 0.0,
+            "condition_shift_c2_c4_mean": 0.0,
+            "condition_shift_c2_c4_std": 0.0,
+            "same_dir_c2_action_diff_mean": 0.0,
+            "c2_delta_v_mean": 0.3280657868282062,
+            "c0_delta_v_mean": 0.2064159559646633
+          },
+          "preregistered_criteria": {
+            "criterion_1_diffrate_ge_20pct": {
+              "threshold": 0.2,
+              "observed": 0.0,
+              "passed": false
+            },
+            "criterion_2_directional_gain_ge_10pct": {
+              "threshold": 0.1,
+              "observed": 0.0,
+              "passed": false
+            },
+            "hard_tuple_identity_parity": {
+              "delta_action_identity": 0.0,
+              "d_js_identity": 0.0,
+              "invariant_passed": true
+            },
+            "secondary_metric_condition_shift_c2_c4": {
+              "role": "descriptive_secondary_metric",
+              "observed": 0.0
+            },
+            "transfer_criteria_satisfied": false
+          }
+        }
+      },
+      "mu_0.50_gk_0.50": {
+        "mu_d": 0.5,
+        "gamma_kappa": 0.5,
+        "is_historical_reference": false,
+        "metrics": {
+          "consumer_id": "D_mu_0.50_gk_0.50",
+          "aggregate": {
+            "c2_diffrate_disc_mean": 0.0,
+            "c2_diffrate_disc_std": 0.0,
+            "c2_diffrate_all_mean": 0.0,
+            "c0_d_pair_action_mean": 0.0,
+            "c0_d_pair_action_std": 0.0,
+            "c4_d_pair_action_mean": 0.0,
+            "c4_d_pair_action_std": 0.0,
+            "directional_gain_mean": 0.0,
+            "directional_gain_std": 0.0,
+            "condition_shift_c2_c4_mean": 0.0,
+            "condition_shift_c2_c4_std": 0.0,
+            "same_dir_c2_action_diff_mean": 0.0,
+            "c2_delta_v_mean": 0.2798493719981341,
+            "c0_delta_v_mean": 0.06880531865488773
+          },
+          "preregistered_criteria": {
+            "criterion_1_diffrate_ge_20pct": {
+              "threshold": 0.2,
+              "observed": 0.0,
+              "passed": false
+            },
+            "criterion_2_directional_gain_ge_10pct": {
+              "threshold": 0.1,
+              "observed": 0.0,
+              "passed": false
+            },
+            "hard_tuple_identity_parity": {
+              "delta_action_identity": 0.0,
+              "d_js_identity": 0.0,
+              "invariant_passed": true
+            },
+            "secondary_metric_condition_shift_c2_c4": {
+              "role": "descriptive_secondary_metric",
+              "observed": 0.0
+            },
+            "transfer_criteria_satisfied": false
+          }
+        }
+      },
+      "mu_0.50_gk_0.75": {
+        "mu_d": 0.5,
+        "gamma_kappa": 0.75,
+        "is_historical_reference": false,
+        "metrics": {
+          "consumer_id": "D_mu_0.50_gk_0.75",
+          "aggregate": {
+            "c2_diffrate_disc_mean": 0.0,
+            "c2_diffrate_disc_std": 0.0,
+            "c2_diffrate_all_mean": 0.0,
+            "c0_d_pair_action_mean": 0.0,
+            "c0_d_pair_action_std": 0.0,
+            "c4_d_pair_action_mean": 0.0,
+            "c4_d_pair_action_std": 0.0,
+            "directional_gain_mean": 0.0,
+            "directional_gain_std": 0.0,
+            "condition_shift_c2_c4_mean": 0.0,
+            "condition_shift_c2_c4_std": 0.0,
+            "same_dir_c2_action_diff_mean": 0.0,
+            "c2_delta_v_mean": 0.29831133152030603,
+            "c0_delta_v_mean": 0.10320797798233165
+          },
+          "preregistered_criteria": {
+            "criterion_1_diffrate_ge_20pct": {
+              "threshold": 0.2,
+              "observed": 0.0,
+              "passed": false
+            },
+            "criterion_2_directional_gain_ge_10pct": {
+              "threshold": 0.1,
+              "observed": 0.0,
+              "passed": false
+            },
+            "hard_tuple_identity_parity": {
+              "delta_action_identity": 0.0,
+              "d_js_identity": 0.0,
+              "invariant_passed": true
+            },
+            "secondary_metric_condition_shift_c2_c4": {
+              "role": "descriptive_secondary_metric",
+              "observed": 0.0
+            },
+            "transfer_criteria_satisfied": false
+          }
+        }
+      },
+      "mu_0.50_gk_1.00": {
+        "mu_d": 0.5,
+        "gamma_kappa": 1.0,
+        "is_historical_reference": false,
+        "metrics": {
+          "consumer_id": "D_mu_0.50_gk_1.00",
+          "aggregate": {
+            "c2_diffrate_disc_mean": 0.0,
+            "c2_diffrate_disc_std": 0.0,
+            "c2_diffrate_all_mean": 0.0,
+            "c0_d_pair_action_mean": 0.0,
+            "c0_d_pair_action_std": 0.0,
+            "c4_d_pair_action_mean": 0.0,
+            "c4_d_pair_action_std": 0.0,
+            "directional_gain_mean": 0.0,
+            "directional_gain_std": 0.0,
+            "condition_shift_c2_c4_mean": 0.0,
+            "condition_shift_c2_c4_std": 0.0,
+            "same_dir_c2_action_diff_mean": 0.0,
+            "c2_delta_v_mean": 0.31961956564071503,
+            "c0_delta_v_mean": 0.1376106373097757
+          },
+          "preregistered_criteria": {
+            "criterion_1_diffrate_ge_20pct": {
+              "threshold": 0.2,
+              "observed": 0.0,
+              "passed": false
+            },
+            "criterion_2_directional_gain_ge_10pct": {
+              "threshold": 0.1,
+              "observed": 0.0,
+              "passed": false
+            },
+            "hard_tuple_identity_parity": {
+              "delta_action_identity": 0.0,
+              "d_js_identity": 0.0,
+              "invariant_passed": true
+            },
+            "secondary_metric_condition_shift_c2_c4": {
+              "role": "descriptive_secondary_metric",
+              "observed": 0.0
+            },
+            "transfer_criteria_satisfied": false
+          }
+        }
+      },
+      "mu_0.50_gk_1.25": {
+        "mu_d": 0.5,
+        "gamma_kappa": 1.25,
+        "is_historical_reference": false,
+        "metrics": {
+          "consumer_id": "D_mu_0.50_gk_1.25",
+          "aggregate": {
+            "c2_diffrate_disc_mean": 0.0,
+            "c2_diffrate_disc_std": 0.0,
+            "c2_diffrate_all_mean": 0.0,
+            "c0_d_pair_action_mean": 0.0,
+            "c0_d_pair_action_std": 0.0,
+            "c4_d_pair_action_mean": 0.0,
+            "c4_d_pair_action_std": 0.0,
+            "directional_gain_mean": 0.0,
+            "directional_gain_std": 0.0,
+            "condition_shift_c2_c4_mean": 0.0,
+            "condition_shift_c2_c4_std": 0.0,
+            "same_dir_c2_action_diff_mean": 0.0,
+            "c2_delta_v_mean": 0.3433188889194918,
+            "c0_delta_v_mean": 0.1720132966372197
+          },
+          "preregistered_criteria": {
+            "criterion_1_diffrate_ge_20pct": {
+              "threshold": 0.2,
+              "observed": 0.0,
+              "passed": false
+            },
+            "criterion_2_directional_gain_ge_10pct": {
+              "threshold": 0.1,
+              "observed": 0.0,
+              "passed": false
+            },
+            "hard_tuple_identity_parity": {
+              "delta_action_identity": 0.0,
+              "d_js_identity": 0.0,
+              "invariant_passed": true
+            },
+            "secondary_metric_condition_shift_c2_c4": {
+              "role": "descriptive_secondary_metric",
+              "observed": 0.0
+            },
+            "transfer_criteria_satisfied": false
+          }
+        }
+      },
+      "mu_0.50_gk_1.50": {
+        "mu_d": 0.5,
+        "gamma_kappa": 1.5,
+        "is_historical_reference": false,
+        "metrics": {
+          "consumer_id": "D_mu_0.50_gk_1.50",
+          "aggregate": {
+            "c2_diffrate_disc_mean": 0.0,
+            "c2_diffrate_disc_std": 0.0,
+            "c2_diffrate_all_mean": 0.0,
+            "c0_d_pair_action_mean": 0.0,
+            "c0_d_pair_action_std": 0.0,
+            "c4_d_pair_action_mean": 0.0,
+            "c4_d_pair_action_std": 0.0,
+            "directional_gain_mean": 0.0,
+            "directional_gain_std": 0.0,
+            "condition_shift_c2_c4_mean": 0.0,
+            "condition_shift_c2_c4_std": 0.0,
+            "same_dir_c2_action_diff_mean": 0.0,
+            "c2_delta_v_mean": 0.36893894440800273,
+            "c0_delta_v_mean": 0.2064159559646633
+          },
+          "preregistered_criteria": {
+            "criterion_1_diffrate_ge_20pct": {
+              "threshold": 0.2,
+              "observed": 0.0,
+              "passed": false
+            },
+            "criterion_2_directional_gain_ge_10pct": {
+              "threshold": 0.1,
+              "observed": 0.0,
+              "passed": false
+            },
+            "hard_tuple_identity_parity": {
+              "delta_action_identity": 0.0,
+              "d_js_identity": 0.0,
+              "invariant_passed": true
+            },
+            "secondary_metric_condition_shift_c2_c4": {
+              "role": "descriptive_secondary_metric",
+              "observed": 0.0
+            },
+            "transfer_criteria_satisfied": false
+          }
+        }
+      },
+      "mu_0.70_gk_0.50": {
+        "mu_d": 0.7,
+        "gamma_kappa": 0.5,
+        "is_historical_reference": false,
+        "metrics": {
+          "consumer_id": "D_mu_0.70_gk_0.50",
+          "aggregate": {
+            "c2_diffrate_disc_mean": 0.0,
+            "c2_diffrate_disc_std": 0.0,
+            "c2_diffrate_all_mean": 0.0,
+            "c0_d_pair_action_mean": 0.0,
+            "c0_d_pair_action_std": 0.0,
+            "c4_d_pair_action_mean": 0.0,
+            "c4_d_pair_action_std": 0.0,
+            "directional_gain_mean": 0.0,
+            "directional_gain_std": 0.0,
+            "condition_shift_c2_c4_mean": 0.11851851851851851,
+            "condition_shift_c2_c4_std": 0.01345622379598885,
+            "same_dir_c2_action_diff_mean": 0.0,
+            "c2_delta_v_mean": 0.37901881918019775,
+            "c0_delta_v_mean": 0.06880531865488773
+          },
+          "preregistered_criteria": {
+            "criterion_1_diffrate_ge_20pct": {
+              "threshold": 0.2,
+              "observed": 0.0,
+              "passed": false
+            },
+            "criterion_2_directional_gain_ge_10pct": {
+              "threshold": 0.1,
+              "observed": 0.0,
+              "passed": false
+            },
+            "hard_tuple_identity_parity": {
+              "delta_action_identity": 0.0,
+              "d_js_identity": 0.0,
+              "invariant_passed": true
+            },
+            "secondary_metric_condition_shift_c2_c4": {
+              "role": "descriptive_secondary_metric",
+              "observed": 0.11851851851851851
+            },
+            "transfer_criteria_satisfied": false
+          }
+        }
+      },
+      "mu_0.70_gk_0.75": {
+        "mu_d": 0.7,
+        "gamma_kappa": 0.75,
+        "is_historical_reference": false,
+        "metrics": {
+          "consumer_id": "D_mu_0.70_gk_0.75",
+          "aggregate": {
+            "c2_diffrate_disc_mean": 0.0,
+            "c2_diffrate_disc_std": 0.0,
+            "c2_diffrate_all_mean": 0.0,
+            "c0_d_pair_action_mean": 0.0,
+            "c0_d_pair_action_std": 0.0,
+            "c4_d_pair_action_mean": 0.0,
+            "c4_d_pair_action_std": 0.0,
+            "directional_gain_mean": 0.0,
+            "directional_gain_std": 0.0,
+            "condition_shift_c2_c4_mean": 0.0,
+            "condition_shift_c2_c4_std": 0.0,
+            "same_dir_c2_action_diff_mean": 0.0,
+            "c2_delta_v_mean": 0.39521603933151533,
+            "c0_delta_v_mean": 0.10320797798233165
+          },
+          "preregistered_criteria": {
+            "criterion_1_diffrate_ge_20pct": {
+              "threshold": 0.2,
+              "observed": 0.0,
+              "passed": false
+            },
+            "criterion_2_directional_gain_ge_10pct": {
+              "threshold": 0.1,
+              "observed": 0.0,
+              "passed": false
+            },
+            "hard_tuple_identity_parity": {
+              "delta_action_identity": 0.0,
+              "d_js_identity": 0.0,
+              "invariant_passed": true
+            },
+            "secondary_metric_condition_shift_c2_c4": {
+              "role": "descriptive_secondary_metric",
+              "observed": 0.0
+            },
+            "transfer_criteria_satisfied": false
+          }
+        }
+      },
+      "mu_0.70_gk_1.00": {
+        "mu_d": 0.7,
+        "gamma_kappa": 1.0,
+        "is_historical_reference": false,
+        "metrics": {
+          "consumer_id": "D_mu_0.70_gk_1.00",
+          "aggregate": {
+            "c2_diffrate_disc_mean": 0.0,
+            "c2_diffrate_disc_std": 0.0,
+            "c2_diffrate_all_mean": 0.0,
+            "c0_d_pair_action_mean": 0.0,
+            "c0_d_pair_action_std": 0.0,
+            "c4_d_pair_action_mean": 0.0,
+            "c4_d_pair_action_std": 0.0,
+            "directional_gain_mean": 0.0,
+            "directional_gain_std": 0.0,
+            "condition_shift_c2_c4_mean": 0.0,
+            "condition_shift_c2_c4_std": 0.0,
+            "same_dir_c2_action_diff_mean": 0.0,
+            "c2_delta_v_mean": 0.4136857517851992,
+            "c0_delta_v_mean": 0.1376106373097757
+          },
+          "preregistered_criteria": {
+            "criterion_1_diffrate_ge_20pct": {
+              "threshold": 0.2,
+              "observed": 0.0,
+              "passed": false
+            },
+            "criterion_2_directional_gain_ge_10pct": {
+              "threshold": 0.1,
+              "observed": 0.0,
+              "passed": false
+            },
+            "hard_tuple_identity_parity": {
+              "delta_action_identity": 0.0,
+              "d_js_identity": 0.0,
+              "invariant_passed": true
+            },
+            "secondary_metric_condition_shift_c2_c4": {
+              "role": "descriptive_secondary_metric",
+              "observed": 0.0
+            },
+            "transfer_criteria_satisfied": false
+          }
+        }
+      },
+      "mu_0.70_gk_1.25": {
+        "mu_d": 0.7,
+        "gamma_kappa": 1.25,
+        "is_historical_reference": false,
+        "metrics": {
+          "consumer_id": "D_mu_0.70_gk_1.25",
+          "aggregate": {
+            "c2_diffrate_disc_mean": 0.0,
+            "c2_diffrate_disc_std": 0.0,
+            "c2_diffrate_all_mean": 0.0,
+            "c0_d_pair_action_mean": 0.0,
+            "c0_d_pair_action_std": 0.0,
+            "c4_d_pair_action_mean": 0.0,
+            "c4_d_pair_action_std": 0.0,
+            "directional_gain_mean": 0.0,
+            "directional_gain_std": 0.0,
+            "condition_shift_c2_c4_mean": 0.0,
+            "condition_shift_c2_c4_std": 0.0,
+            "same_dir_c2_action_diff_mean": 0.0,
+            "c2_delta_v_mean": 0.43423365657140767,
+            "c0_delta_v_mean": 0.1720132966372197
+          },
+          "preregistered_criteria": {
+            "criterion_1_diffrate_ge_20pct": {
+              "threshold": 0.2,
+              "observed": 0.0,
+              "passed": false
+            },
+            "criterion_2_directional_gain_ge_10pct": {
+              "threshold": 0.1,
+              "observed": 0.0,
+              "passed": false
+            },
+            "hard_tuple_identity_parity": {
+              "delta_action_identity": 0.0,
+              "d_js_identity": 0.0,
+              "invariant_passed": true
+            },
+            "secondary_metric_condition_shift_c2_c4": {
+              "role": "descriptive_secondary_metric",
+              "observed": 0.0
+            },
+            "transfer_criteria_satisfied": false
+          }
+        }
+      },
+      "mu_0.70_gk_1.50": {
+        "mu_d": 0.7,
+        "gamma_kappa": 1.5,
+        "is_historical_reference": false,
+        "metrics": {
+          "consumer_id": "D_mu_0.70_gk_1.50",
+          "aggregate": {
+            "c2_diffrate_disc_mean": 0.0,
+            "c2_diffrate_disc_std": 0.0,
+            "c2_diffrate_all_mean": 0.0,
+            "c0_d_pair_action_mean": 0.0,
+            "c0_d_pair_action_std": 0.0,
+            "c4_d_pair_action_mean": 0.0,
+            "c4_d_pair_action_std": 0.0,
+            "directional_gain_mean": 0.0,
+            "directional_gain_std": 0.0,
+            "condition_shift_c2_c4_mean": 0.0,
+            "condition_shift_c2_c4_std": 0.0,
+            "same_dir_c2_action_diff_mean": 0.0,
+            "c2_delta_v_mean": 0.4566349088087674,
+            "c0_delta_v_mean": 0.2064159559646633
+          },
+          "preregistered_criteria": {
+            "criterion_1_diffrate_ge_20pct": {
+              "threshold": 0.2,
+              "observed": 0.0,
+              "passed": false
+            },
+            "criterion_2_directional_gain_ge_10pct": {
+              "threshold": 0.1,
+              "observed": 0.0,
+              "passed": false
+            },
+            "hard_tuple_identity_parity": {
+              "delta_action_identity": 0.0,
+              "d_js_identity": 0.0,
+              "invariant_passed": true
+            },
+            "secondary_metric_condition_shift_c2_c4": {
+              "role": "descriptive_secondary_metric",
+              "observed": 0.0
+            },
+            "transfer_criteria_satisfied": false
+          }
+        }
+      },
+      "mu_1.00_gk_0.50": {
+        "mu_d": 1.0,
+        "gamma_kappa": 0.5,
+        "is_historical_reference": false,
+        "metrics": {
+          "consumer_id": "D_mu_1.00_gk_0.50",
+          "aggregate": {
+            "c2_diffrate_disc_mean": 0.7988826815642458,
+            "c2_diffrate_disc_std": 0.0,
+            "c2_diffrate_all_mean": 0.04247104247104247,
+            "c0_d_pair_action_mean": 0.0,
+            "c0_d_pair_action_std": 0.0,
+            "c4_d_pair_action_mean": 0.3128491620111732,
+            "c4_d_pair_action_std": 0.038299746370955554,
+            "directional_gain_mean": 0.7988826815642458,
+            "directional_gain_std": 0.0,
+            "condition_shift_c2_c4_mean": 0.30666666666666664,
+            "condition_shift_c2_c4_std": 0.00919235084888213,
+            "same_dir_c2_action_diff_mean": 0.0,
+            "c2_delta_v_mean": 0.5292312766395108,
+            "c0_delta_v_mean": 0.06880531865488773
+          },
+          "preregistered_criteria": {
+            "criterion_1_diffrate_ge_20pct": {
+              "threshold": 0.2,
+              "observed": 0.7988826815642458,
+              "passed": true
+            },
+            "criterion_2_directional_gain_ge_10pct": {
+              "threshold": 0.1,
+              "observed": 0.7988826815642458,
+              "passed": true
+            },
+            "hard_tuple_identity_parity": {
+              "delta_action_identity": 0.0,
+              "d_js_identity": 0.0,
+              "invariant_passed": true
+            },
+            "secondary_metric_condition_shift_c2_c4": {
+              "role": "descriptive_secondary_metric",
+              "observed": 0.30666666666666664
+            },
+            "transfer_criteria_satisfied": true
+          }
+        }
+      },
+      "mu_1.00_gk_0.75": {
+        "mu_d": 1.0,
+        "gamma_kappa": 0.75,
+        "is_historical_reference": false,
+        "metrics": {
+          "consumer_id": "D_mu_1.00_gk_0.75",
+          "aggregate": {
+            "c2_diffrate_disc_mean": 0.0,
+            "c2_diffrate_disc_std": 0.0,
+            "c2_diffrate_all_mean": 0.0,
+            "c0_d_pair_action_mean": 0.0,
+            "c0_d_pair_action_std": 0.0,
+            "c4_d_pair_action_mean": 0.0,
+            "c4_d_pair_action_std": 0.0,
+            "directional_gain_mean": 0.0,
+            "directional_gain_std": 0.0,
+            "condition_shift_c2_c4_mean": 0.08518518518518518,
+            "condition_shift_c2_c4_std": 0.013857990321384968,
+            "same_dir_c2_action_diff_mean": 0.0,
+            "c2_delta_v_mean": 0.5436162080567809,
+            "c0_delta_v_mean": 0.10320797798233165
+          },
+          "preregistered_criteria": {
+            "criterion_1_diffrate_ge_20pct": {
+              "threshold": 0.2,
+              "observed": 0.0,
+              "passed": false
+            },
+            "criterion_2_directional_gain_ge_10pct": {
+              "threshold": 0.1,
+              "observed": 0.0,
+              "passed": false
+            },
+            "hard_tuple_identity_parity": {
+              "delta_action_identity": 0.0,
+              "d_js_identity": 0.0,
+              "invariant_passed": true
+            },
+            "secondary_metric_condition_shift_c2_c4": {
+              "role": "descriptive_secondary_metric",
+              "observed": 0.08518518518518518
+            },
+            "transfer_criteria_satisfied": false
+          }
+        }
+      },
+      "mu_1.00_gk_1.00": {
+        "mu_d": 1.0,
+        "gamma_kappa": 1.0,
+        "is_historical_reference": false,
+        "metrics": {
+          "consumer_id": "D_mu_1.00_gk_1.00",
+          "aggregate": {
+            "c2_diffrate_disc_mean": 0.0,
+            "c2_diffrate_disc_std": 0.0,
+            "c2_diffrate_all_mean": 0.0,
+            "c0_d_pair_action_mean": 0.0,
+            "c0_d_pair_action_std": 0.0,
+            "c4_d_pair_action_mean": 0.0,
+            "c4_d_pair_action_std": 0.0,
+            "directional_gain_mean": 0.0,
+            "directional_gain_std": 0.0,
+            "condition_shift_c2_c4_mean": 0.014814814814814814,
+            "condition_shift_c2_c4_std": 0.006625386599999376,
+            "same_dir_c2_action_diff_mean": 0.0,
+            "c2_delta_v_mean": 0.5596987439962685,
+            "c0_delta_v_mean": 0.1376106373097757
+          },
+          "preregistered_criteria": {
+            "criterion_1_diffrate_ge_20pct": {
+              "threshold": 0.2,
+              "observed": 0.0,
+              "passed": false
+            },
+            "criterion_2_directional_gain_ge_10pct": {
+              "threshold": 0.1,
+              "observed": 0.0,
+              "passed": false
+            },
+            "hard_tuple_identity_parity": {
+              "delta_action_identity": 0.0,
+              "d_js_identity": 0.0,
+              "invariant_passed": true
+            },
+            "secondary_metric_condition_shift_c2_c4": {
+              "role": "descriptive_secondary_metric",
+              "observed": 0.014814814814814814
+            },
+            "transfer_criteria_satisfied": false
+          }
+        }
+      },
+      "mu_1.00_gk_1.25": {
+        "mu_d": 1.0,
+        "gamma_kappa": 1.25,
+        "is_historical_reference": false,
+        "metrics": {
+          "consumer_id": "D_mu_1.00_gk_1.25",
+          "aggregate": {
+            "c2_diffrate_disc_mean": 0.0,
+            "c2_diffrate_disc_std": 0.0,
+            "c2_diffrate_all_mean": 0.0,
+            "c0_d_pair_action_mean": 0.0,
+            "c0_d_pair_action_std": 0.0,
+            "c4_d_pair_action_mean": 0.0,
+            "c4_d_pair_action_std": 0.0,
+            "directional_gain_mean": 0.0,
+            "directional_gain_std": 0.0,
+            "condition_shift_c2_c4_mean": 0.0,
+            "condition_shift_c2_c4_std": 0.0,
+            "same_dir_c2_action_diff_mean": 0.0,
+            "c2_delta_v_mean": 0.5773974718649697,
+            "c0_delta_v_mean": 0.1720132966372197
+          },
+          "preregistered_criteria": {
+            "criterion_1_diffrate_ge_20pct": {
+              "threshold": 0.2,
+              "observed": 0.0,
+              "passed": false
+            },
+            "criterion_2_directional_gain_ge_10pct": {
+              "threshold": 0.1,
+              "observed": 0.0,
+              "passed": false
+            },
+            "hard_tuple_identity_parity": {
+              "delta_action_identity": 0.0,
+              "d_js_identity": 0.0,
+              "invariant_passed": true
+            },
+            "secondary_metric_condition_shift_c2_c4": {
+              "role": "descriptive_secondary_metric",
+              "observed": 0.0
+            },
+            "transfer_criteria_satisfied": false
+          }
+        }
+      },
+      "mu_1.00_gk_1.50": {
+        "mu_d": 1.0,
+        "gamma_kappa": 1.5,
+        "is_historical_reference": false,
+        "metrics": {
+          "consumer_id": "D_mu_1.00_gk_1.50",
+          "aggregate": {
+            "c2_diffrate_disc_mean": 0.0,
+            "c2_diffrate_disc_std": 0.0,
+            "c2_diffrate_all_mean": 0.0,
+            "c0_d_pair_action_mean": 0.0,
+            "c0_d_pair_action_std": 0.0,
+            "c4_d_pair_action_mean": 0.0,
+            "c4_d_pair_action_std": 0.0,
+            "directional_gain_mean": 0.0,
+            "directional_gain_std": 0.0,
+            "condition_shift_c2_c4_mean": 0.0,
+            "condition_shift_c2_c4_std": 0.0,
+            "same_dir_c2_action_diff_mean": 0.0,
+            "c2_delta_v_mean": 0.5966226630406121,
+            "c0_delta_v_mean": 0.2064159559646633
+          },
+          "preregistered_criteria": {
+            "criterion_1_diffrate_ge_20pct": {
+              "threshold": 0.2,
+              "observed": 0.0,
+              "passed": false
+            },
+            "criterion_2_directional_gain_ge_10pct": {
+              "threshold": 0.1,
+              "observed": 0.0,
+              "passed": false
+            },
+            "hard_tuple_identity_parity": {
+              "delta_action_identity": 0.0,
+              "d_js_identity": 0.0,
+              "invariant_passed": true
+            },
+            "secondary_metric_condition_shift_c2_c4": {
+              "role": "descriptive_secondary_metric",
+              "observed": 0.0
+            },
+            "transfer_criteria_satisfied": false
+          }
+        }
+      }
+    },
+    "qualifying_cells_count": 1,
+    "qualifying_cells": [
+      {
+        "mu_d": 1.0,
+        "gamma_kappa": 0.5
+      }
+    ],
+    "transition_status": "DISCRETE_QUALIFYING_REGIME_OBSERVED"
+  },
+  "invariants_audit": {
+    "controls_tuple_identity_passed": true,
+    "all_38_sweep_regimes_tuple_identity_passed": true,
+    "genesis_profile_path": "data/profile.json"
+  }
+}
