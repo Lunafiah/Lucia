@@ -1,0 +1,57 @@
+{
+  "manifest_version": "1.0",
+  "study_name": "Phase 22 H1 R3 Architecture Integration Feasibility Study",
+  "created_at": "2026-09-17 10:20:00",
+  "governance_invariants": {
+    "phase_22_h1": "INCONCLUSIVE",
+    "gate_2": "BLOCKED",
+    "protocol_v1_5": "NOT AUTHORIZED",
+    "architecture_gate": "STRICTLY LOCKED",
+    "genesis_profile": "PRESERVED_BIT_EXACT",
+    "src_core_mutations": 0
+  },
+  "adr_readiness_state": "READY_FOR_ADR_DRAFT",
+  "operational_meaning": "The accumulated Phase 22 H1 research evidence is sufficient to author a formal RESEARCH DRAFT Architectural Decision Record (DRAFT ADR-029). CRITICAL: Being 'READY FOR ADR DRAFT' does NOT imply Architecture Gate approval. The Production Architecture Gate remains STRICTLY LOCKED. Any prepared ADR remains DRAFT / NOT RATIFIED / NOT IMPLEMENTED until formal Gate 2 resolution and explicit governance sign-off.",
+  "recommended_architecture_option": "Option E (Abstract Measurement Interface Supporting S + Pluggable Direction)",
+  "source_files": {
+    "measurement_architecture_decision_results.json": {
+      "path": "tests/evaluation_phase22/results/h1_measurement_architecture_decision/measurement_architecture_decision_results.json",
+      "sha256": "a4021b9161cd8543b844ad7aa3ca421126f93880b1f1ce79d74854d5b7ff13be"
+    },
+    "directional_behavior_results.json": {
+      "path": "tests/evaluation_phase22/results/h1_directional_sidechannel_behavior/directional_behavior_results.json",
+      "sha256": "32a269d51dbc34b99e997e410afed5b899feb6ba12fc37bee338b8181f59d4e4"
+    },
+    "minimal_sufficient_results.json": {
+      "path": "tests/evaluation_phase22/results/h1_minimal_sufficient_measurement/minimal_sufficient_results.json",
+      "sha256": "4615bb2b5303633491d1ae18eacf2efde84f3216fc8e29dbcbbc3a917ef30776"
+    },
+    "precision_directional_results.json": {
+      "path": "tests/evaluation_phase22/results/h1_precision_directional_measurement/precision_directional_results.json",
+      "sha256": "fa3fac958537b03fadaad8047d061b7df36bbe4515d1dd0bfe44f908bf963b87"
+    },
+    "measurement_architecture_results.json": {
+      "path": "tests/evaluation_phase22/results/h1_measurement_architecture/measurement_architecture_results.json",
+      "sha256": "54a8c77d7de597a4902d2ac54f58c244bc948f58fda06d3014abf2558d605081"
+    },
+    "gate2_resolution_results.json": {
+      "path": "tests/evaluation_phase22/results/h1_gate2_resolution/gate2_resolution_results.json",
+      "sha256": "8c36351a700ee9554825a16ff9e0ff65d24b6c9ecb61b30933a6d6855ef97008"
+    },
+    "dynamical_headroom_results.json": {
+      "path": "tests/evaluation_phase22/results/h1_dynamical_headroom/dynamical_headroom_results.json",
+      "sha256": "d2fb505167a393298ea90a132d2672dea51ff3a7f62ca931553a5fabec60467b"
+    },
+    "phase22_h1_v14_summary.json": {
+      "path": "tests/evaluation_phase22/results/h1_v14/phase22_h1_v14_summary.json",
+      "sha256": "25fcc050bbe1726fd8b19955440592d01a59a115863a132538d4d5ee3aff88a9"
+    }
+  },
+  "files": {
+    "r3_architecture_integration_results.json": {
+      "path": "tests/evaluation_phase22/results/h1_r3_architecture_integration/r3_architecture_integration_results.json",
+      "sha256": "abd44845df5c4ba977ff06f15789511b46fd70ec19de41d36374ab75f16dcf0a",
+      "size_bytes": 39718
+    }
+  }
+}
