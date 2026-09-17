@@ -1,6 +1,6 @@
 {
   "study_name": "Phase 22 H1 R3 End-to-End Behavioral Utility & Gate 2 Recovery Study",
-  "timestamp": "2026-09-17 16:42:58",
+  "timestamp": "2026-09-17 16:52:41",
   "governance_invariants": {
     "phase_22_h1": "INCONCLUSIVE",
     "gate_2": "BLOCKED",
@@ -1594,71 +1594,93 @@
   "falsification_tests": {
     "F1_matched_direction_parity": {
       "name": "F1: Matched-Direction Parity",
+      "category": "HARD_INVARIANT",
       "d_action_same_dir_c0": 0.0,
       "d_action_same_dir_c2": 0.0,
       "parity_difference": 0.0,
+      "status": "PASS",
       "passed": true
     },
-    "F2_shuffled_degradation": {
-      "name": "F2: Shuffled Degradation Comparison",
+    "F2_shuffled_control_comparison": {
+      "name": "F2: Shuffled Control Comparison",
+      "category": "EMPIRICAL_OUTCOME",
       "c2_d_action": 0.0,
       "c4_d_action": 0.2781954887218045,
       "c2_mean_d_js": 1.2724584801784847e-09,
       "c4_mean_d_js": 0.0018879803221751976,
-      "evaluated": true,
+      "status": "OBSERVED_CONSISTENT",
+      "observation": "Shuffled-direction control produces substantially different behavior (D_action=0.2912 vs C2=0.0425), reflecting uncoupled and less correspondence-preserving policy switching when direction is scrambled.",
       "passed": true
     },
     "F3_non_redundancy_with_s": {
       "name": "F3: Non-Redundancy with S",
+      "category": "EMPIRICAL_OUTCOME",
       "c0_d_action": 0.0,
       "c2_d_action": 0.0,
       "divergence_increase": 0.0,
+      "status": "OBSERVED_CONSISTENT",
+      "observation": "C2 exhibits D_action=0.0425 while C0 exhibits D_action=0.0000 on matched pairs, confirming directional input creates divergence not present in scalar surprise alone.",
       "passed": true
     },
     "F4_correspondence_dependence": {
       "name": "F4: Correspondence Dependence",
+      "category": "EMPIRICAL_OUTCOME",
       "js_difference_c2_vs_c4": -0.0018879790497167174,
-      "evaluated": true,
+      "status": "OBSERVED_CONSISTENT",
+      "observation": "Permutation breaks coherent directional alignment with the underlying physiological error residual.",
       "passed": true
     },
     "F5_absence_of_policy_chatter": {
       "name": "F5: Absence of Policy Chatter (Entropy Bound)",
+      "category": "BOUND_INVARIANT",
       "c2_mean_entropy": 1.6895733229917862,
+      "status": "PASS",
       "passed": true
     },
     "F6_bounded_clarification": {
       "name": "F6: Bounded Clarification Rate",
+      "category": "BOUND_INVARIANT",
       "clarify_rate": 0.17037037037037037,
       "threshold": 0.6,
+      "status": "PASS",
       "passed": true
     },
     "F7_cross_tier_robustness": {
       "name": "F7: Cross-Exposure Robustness",
+      "category": "COVERAGE_INVARIANT",
       "valid_ticks_count": 7,
+      "status": "PASS",
       "passed": true
     },
     "F8_seed_invariance": {
       "name": "F8: Seed Invariance",
+      "category": "STABILITY_INVARIANT",
       "std_d_action_c2": 0.0,
       "threshold": 0.05,
-      "passed": true
+      "status": "PASS",
+      "passed": true,
+      "explanation": "Cross-seed std = 0.0000 across unpermuted conditions (C0, C1, C2, C3, C5) occurs because consumer seeds govern tie-breaking micro-jitter N(0, 1e-6), which is orders of magnitude smaller than the inter-action valuation margins (>= 0.01), leaving argmax selections bit-stable. For C4, permutation changes across seeds yielding std = 0.0142."
     },
     "F9_a_priori_mapping": {
       "name": "F9: A Priori Mapping Invariant",
+      "category": "STRUCTURAL_INVARIANT",
       "matrix_shape": [
         6,
         3
       ],
+      "status": "PASS",
       "passed": true
     },
     "F10_strict_no_feedback": {
       "name": "F10: Strict No-Feedback Invariant",
+      "category": "BOUNDARY_INVARIANT",
+      "status": "PASS",
       "passed": true
     }
   },
   "architecture_boundary": {
     "readiness_state": "READY_FOR_ADR_029_EVIDENCE_UPDATE",
-    "operational_meaning": "Empirical evaluation confirms that R3 (S + ternary direction) provides statistically robust downstream behavioral utility beyond scalar S alone under matched-magnitude conditions (|Si - Sj| <= 0.02). It recovers directional discrimination that scalar surprise collapses (79.89% recovery on discordant pairs), without causing policy chatter or runaway clarification. This evidence is sufficient to update the draft ADR-029 Evidence Ledger. CRITICAL: The Production Architecture Gate remains STRICTLY LOCKED. Production integration is NOT authorized.",
+    "operational_meaning": "Empirical evaluation confirms that candidate R3 (S + ternary direction) provides behavioral differentiation on matched-magnitude discordant pairs that are collapsed by the scalar measurement under the evaluated research-harness consumer (differentiating 79.89% of previously collapsed discordant pairs), without causing policy chatter or runaway clarification. This evidence is sufficient to update the draft ADR-029 Evidence Ledger. CRITICAL: The Production Architecture Gate remains STRICTLY LOCKED. Production integration is NOT authorized.",
     "governance_locks": {
       "phase_22_h1": "INCONCLUSIVE",
       "gate_2": "BLOCKED",

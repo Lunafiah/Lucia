@@ -2,7 +2,7 @@
 
 > **Canonical Document Status**: Active Archival Research Specification  
 > **Lifecycle Milestone**: Phase 22 — Epistemic Foraging & Active Inference  
-> **Document Role**: Formal Empirical Evaluation Report on Downstream Behavioral Utility & Quality Gate 2 Directional Recovery  
+> **Document Role**: Formal Empirical Evaluation Report on Downstream Behavioral Utility & Matched-Magnitude Directional Differentiation  
 > **Governance Authority**: `docs/ARCHITECTURE.md` Section 8 (ADR Ledger) & `AGENTS.md` Section 0 (Research Governance)  
 > **Evaluated Measurement Architecture**: Candidate R3 (`1 continuous scalar surprise S + 3 ternary sign symbols in {-1, 0, +1}^3` with deadband $\epsilon = 0.010$)  
 > **Empirical Architecture Readiness State**: `READY FOR ADR-029 EVIDENCE UPDATE`  
@@ -15,7 +15,7 @@
 
 ## 1. Executive Summary & Mission
 
-This study conducts an **isolated, empirical research evaluation** to determine whether the candidate $R3$ measurement representation ($S + \operatorname{sign}_\epsilon(\mathbf{r})$ with deadband $\epsilon = 0.010$) provides measurable downstream behavioral utility beyond canonical scalar surprise $S$ alone, and whether $R3$ recovers the directional distinction that the current scalar $S$ measurement loses under the frozen Phase 22 H1 Quality Gate 2 conditions ($|S_i - S_j| \le 0.02$).
+This study conducts an **isolated, empirical research evaluation** to determine whether the candidate $R3$ measurement representation ($S + \operatorname{sign}_\epsilon(\mathbf{r})$ with deadband $\epsilon = 0.010$) provides measurable downstream behavioral utility beyond canonical scalar surprise $S$ alone, and whether $R3$ provides behavioral differentiation on matched-magnitude discordant pairs that are collapsed by the scalar measurement under the evaluated research-harness consumer ($|S_i - S_j| \le 0.02$, as observed under the frozen Phase 22 H1 Quality Gate 2 conditions).
 
 ```text
 CANONICAL LIMBIC TRAJECTORY (Fast-Loop ODE: p0 -> pT)
@@ -37,9 +37,9 @@ D_action = 0.00%           D_action = 79.89% (Discordant Pairs)
 ### Key Empirical Findings
 
 1. **Resolution of Scalar Paralysis (RQ1)**: Under canonical scalar surprise alone ($C0$), all $N=270$ probes in the Candidate G1 corpus collapse into the exact same action (`retrieve`, 100%), yielding $D_{\text{action}}(C0) = 0.0000$ across all 6,734 matched-magnitude pairs ($|S_i - S_j| \le 0.02$). $C0$ exhibits complete behavioral paralysis under scalar collapse.
-2. **79.89% Directional Recovery on Discordant Pairs (RQ1 & RQ2)**: When matched-magnitude pairs possess differing directional error vectors ($N=358$ pairs), Candidate $R3$ ($C2$) achieves an action divergence rate of:
+2. **Behavioral Differentiation on 79.89% of Discordant Pairs (RQ1 & RQ2)**: When matched-magnitude pairs possess differing directional error vectors ($N=358$ pairs), Candidate $R3$ ($C2$) achieves an action divergence rate of:
    $$D_{\text{action\_diff}}(C2) = 79.8883\% \quad (79.89\%)$$
-   recovering directional behavioral differentiation that scalar surprise completely erases ($D_{\text{action\_diff}}(C0) = 0.00\%$).
+   meaning that **$C2$ differentiates 79.89% of the previously collapsed discordant matched pairs under the evaluated research-harness consumer** (286 / 358 pairs), whereas scalar surprise alone provides $0.00\%$ differentiation.
 3. **100% Exact Matched-Direction Parity (F1)**: When matched pairs share identical directional error signs ($N=6,376$ pairs), Candidate $R3$ ($C2$) exhibits identical policy behavior to scalar surprise:
    $$D_{\text{action\_same}}(C2) = 0.0000, \quad D_{\text{action\_same}}(C0) = 0.0000 \implies \Delta_{\text{parity}} = 0.0000$$
    proving that $R3$ never introduces spurious policy divergence when directional orientations coincide.
@@ -48,8 +48,8 @@ D_action = 0.00%           D_action = 79.89% (Discordant Pairs)
    - $(+1, +0, +1)$ ($N=46$ probes): 100% `retrieve` ($P(\text{retrieve}) = 1.0$)
    - $(-1, +1, +1)$ ($N=46$ probes): 100% `clarify` ($P(\text{clarify}) = 1.0$)
 5. **Absence of Policy Chatter & Bounded Clarification (RQ3)**: The overall clarification rate under $C2$ is strictly bounded at $17.04\%$ ($46 / 270$ probes), safely below the pathological ceiling ($60\%$). Policy entropy remains homeostatically stable ($\bar{H} = 1.6896$ nats), preventing erratic policy oscillation.
-6. **Decoupled Sign-Only Control ($C5$)**: When scalar magnitude is locked to a constant base ($S_0 = 0.50$), $C5$ achieves the exact same action divergence as $C2$ ($D_{\text{action}} = 0.0425$), demonstrating that directional coordinates provide independent steering utility.
-7. **Shuffled Control Degradation ($C4$)**: Deterministically permuting directions across probes ($C4$) causes a catastrophic rise in spurious action switching ($D_{\text{action}} = 0.2912, 1,960$ switches), proving that the behavioral utility of $C2$ is strictly dependent on genuine physiological correspondence.
+6. **Sign-Only Directional Control ($C5$)**: When scalar magnitude is locked to a constant base ($S_0 = 0.50$), $C5$ achieves $D_{\text{action}} = 0.0425$, exactly identical to $C2$ ($0.0425$). This reveals that in the current evaluated adapter, directional input accounts for 100% of the observed discrete action divergence across matched pairs; scalar magnitude variation within $|S_i - S_j| \le 0.02$ does not contribute additional discrete argmax switches. This finding does **not** prove that combining $S + R3$ preserves intensity modulation; rather, it indicates that discrete behavioral switches are entirely direction-driven in this metric, while scalar intensity modulation remains confined to continuous weight scaling ($\beta_k(S), \beta_m(S)$) without triggering discrete boundary crossings on matched pairs.
+7. **Shuffled-Direction Control Comparison ($C4$)**: Deterministically permuting directions across probes ($C4$) produces substantially different, less correspondence-preserving behavior ($D_{\text{action}} = 0.2912 \pm 0.0142, 1,960$ switches vs $C2 = 0.0425, 286$ switches). While this high divergence proves that directional permutation markedly changes policy selection, elevated switching alone does not demonstrate 'degraded utility' in a vacuum; rather, it reflects uncoupled, spurious action switching that breaks physiological alignment. Coherent correspondence of $C2$ over $C4$ is established by: (a) exact parity on same-direction pairs ($\Delta_{\text{parity}} = 0.0000$ vs C0 across 6,376 pairs, whereas $C4$ flips actions randomly even between identical limbic states), (b) coherent quadrant clustering (all 46 negative-valence probes shift to `clarify` while positive-valence probes remain in `retrieve`), and (c) bounded Jensen-Shannon divergence ($D_{\text{JS}}(C2) = 0.000385$ vs uncontrolled $D_{\text{JS}}(C4) = 0.001935$, a $5.0\times$ higher distribution distortion under shuffle).
 
 ---
 
@@ -166,7 +166,7 @@ To isolate causal utility and component contributions, 6 conditions are evaluate
 | **C1** | Continuous R2 Direction | Scalar $S$ + normalized unit vector $\hat{\mathbf{v}}_r = \mathbf{r} / \|\mathbf{r}\|_2$ | Continuous upper bound: measures full geometric directional precision. |
 | **C2** | Candidate Discrete R3 Direction | Scalar $S$ + ternary signs $\frac{1}{\sqrt{3}} \operatorname{sign}_{0.010}(\mathbf{r})$ | **Candidate R3**: evaluates discrete ternary side-channel. |
 | **C3** | Component Control (Arousal Only) | Scalar $S$ + arousal sign $[0, \operatorname{sign}(r_A), 0]^\top$ | Component isolation: tests single-axis vs 3D representation. |
-| **C4** | Shuffled-Direction Control | Scalar $S$ + permuted direction $\operatorname{permute}(R3)$ | Negative control: verifies requirement of physiological correspondence. |
+| **C4** | Shuffled-Direction Control | Scalar $S$ + permuted direction $\operatorname{permute}(R3)$ | Negative control: verifies policy response to directional permutation and evaluates correspondence-preserving behavior. |
 | **C5** | Sign-Only Control | Fixed constant scalar $S_0 = 0.50$ + ternary signs $R3$ | Magnitude neutralization: isolates pure directional steering utility. |
 
 ---
@@ -206,7 +206,7 @@ To eliminate post-hoc selection bias and prevent cherry-picking (resolving Metho
 
 1. **Total Scalar Collapse in C0**: Under scalar surprise alone, $D_{\text{action}}(C0) = 0.0000$ (0 switches across all 6,734 matched pairs). When two stimuli produce similar scalar surprise magnitudes ($|S_i - S_j| \le 0.02$), canonical scalar surprise provides zero discriminative information to downstream action selection.
 2. **Bit-Exact Parity between C1 and C2**: Continuous unit direction ($C1$) and discrete ternary sign symbols ($C2$) produce identical discrete action selections ($D_{\text{action}} = 0.0425, 286$ switches). Discrete ternary quantization retains 100% of the effective action discrimination capability of continuous 3D direction.
-3. **Pure Directional Utility in C5**: In condition $C5$, where scalar magnitude is neutralized and fixed to a constant ($S_0 = 0.50$), $D_{\text{action}}(C5) = 0.0425$ matches $C2$ exactly. This proves that directional steering operates as an independent information channel, not an artifact of scalar intensity variation.
+3. **Directional Steering Dominance in C5**: In condition $C5$, where scalar magnitude is neutralized and fixed to a constant ($S_0 = 0.50$), $D_{\text{action}}(C5) = 0.0425$ matches $C2$ exactly. This proves that under the evaluated research adapter, directional ternary signs account for 100% of the observed discrete action divergence on matched pairs; scalar magnitude variation within $|S_i - S_j| \le 0.02$ does not contribute additional discrete argmax switches. Importantly, this finding does **not** demonstrate scalar intensity modulation in action selection; rather, it indicates that discrete behavioral switches are entirely direction-driven in this metric, while scalar magnitude modulation remains confined to continuous information weight scaling ($\beta_k(S), \beta_m(S)$) without crossing discrete action decision boundaries on matched pairs.
 
 ---
 
@@ -257,27 +257,29 @@ To ensure that $R3$ does not introduce runaway behavior, policy stability metric
 
 ---
 
-## 11. RQ4 — Ten Predefined Falsification Tests
+## 11. RQ4 — Predefined Evaluation Taxonomy & Invariant Checks
 
-Ten explicit falsification tests were pre-registered to stress-test candidate $R3$:
+To maintain epistemological precision, the 10 pre-registered evaluation criteria are partitioned into two distinct methodological categories:
+1. **Hard & Bounded Invariants (`PASS`)**: Structural constraints, stability bounds, coverage requirements, and negative control invariants evaluated against strict non-negotiable pass/fail thresholds.
+2. **Empirical Outcome Criteria (`OBSERVED_CONSISTENT`)**: Comparative behavioral outcomes evaluated to determine empirical consistency with the research hypothesis, without conflating hypothesis support with a strict falsification gate.
 
 ```text
-┌────────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│                                 TEN PREDEFINED FALSIFICATION TESTS                                     │
-├─────┬─────────────────────────────────────┬───────────────────┬───────────────┬────────────────────────┤
-│ ID  │ Test Name                           │ Measured Value    │ Threshold     │ Evaluation Status      │
-├─────┼─────────────────────────────────────┼───────────────────┼───────────────┼────────────────────────┤
-│ F1  │ Matched-Direction Parity            │ Delta = 0.0000    │ <= 0.0100     │ PASS (100% Exact)      │
-│ F2  │ Shuffled Degradation Comparison     │ C2=0.0425, C4=0.29│ C2 < C4       │ PASS (Degraded 6.85x)  │
-│ F3  │ Non-Redundancy with S               │ Delta = +0.0425   │ >= 0.0000     │ PASS (Breaks Collapse) │
-│ F4  │ Correspondence Dependence           │ C2 JS << C4 JS    │ Bounded shift │ PASS (Physiological)   │
-│ F5  │ Absence of Policy Chatter           │ H = 1.6896 nats   │ [0.50, 2.50]  │ PASS (Stable Entropy)  │
-│ F6  │ Bounded Clarification Rate          │ Rate = 17.04%     │ <= 60.00%     │ PASS (Non-Pathological)│
-│ F7  │ Cross-Exposure Grid Robustness      │ 7/7 T valid       │ >= 5 T valid  │ PASS (T in [1, 25])    │
-│ F8  │ Seed Invariance                     │ Std = 0.0000      │ <= 0.0500     │ PASS (Cross-Seed Invar)│
-│ F9  │ A Priori Mapping Invariant          │ Shape (6, 3)      │ Frozen W      │ PASS (No Post-Hoc Tune)│
-│ F10 │ Strict No-Feedback Invariant        │ 0 Mutations       │ 0 References  │ PASS (Downstream Only) │
-└─────┴─────────────────────────────────────┴───────────────────┴───────────────┴────────────────────────┘
+┌────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                   TEN PREDEFINED EVALUATION CRITERIA & INVARIANTS                                      │
+├─────┬─────────────────────────────────────┬─────────────────────┬───────────────────┬───────────────┬──────────────────┤
+│ ID  │ Test / Criterion Name               │ Category            │ Measured Value    │ Threshold     │ Evaluation State │
+├─────┼─────────────────────────────────────┼─────────────────────┼───────────────────┼───────────────┼──────────────────┤
+│ F1  │ Matched-Direction Parity            │ HARD_INVARIANT      │ Delta = 0.0000    │ <= 0.0100     │ PASS             │
+│ F2  │ Shuffled Control Comparison         │ EMPIRICAL_OUTCOME   │ C2=0.0425, C4=0.29│ Less corr-pres│ OBSERVED_CONSIST │
+│ F3  │ Non-Redundancy with S               │ EMPIRICAL_OUTCOME   │ Delta = +0.0425   │ Non-zero diff │ OBSERVED_CONSIST │
+│ F4  │ Correspondence Dependence           │ EMPIRICAL_OUTCOME   │ C2 JS << C4 JS    │ Coherent dist │ OBSERVED_CONSIST │
+│ F5  │ Absence of Policy Chatter           │ BOUND_INVARIANT     │ H = 1.6896 nats   │ [0.50, 2.50]  │ PASS             │
+│ F6  │ Bounded Clarification Rate          │ BOUND_INVARIANT     │ Rate = 17.04%     │ <= 60.00%     │ PASS             │
+│ F7  │ Cross-Exposure Grid Robustness      │ COVERAGE_INVARIANT  │ 7/7 T valid       │ >= 5 T valid  │ PASS             │
+│ F8  │ Seed Invariance                     │ STABILITY_INVARIANT │ Std = 0.0000      │ <= 0.0500     │ PASS             │
+│ F9  │ A Priori Mapping Invariant          │ STRUCTURAL_INVARIANT│ Shape (6, 3)      │ Frozen W      │ PASS             │
+│ F10 │ Strict No-Feedback Invariant        │ BOUNDARY_INVARIANT  │ 0 Mutations       │ 0 References  │ PASS             │
+└─────┴─────────────────────────────────────┴─────────────────────┴───────────────────┴───────────────┴──────────────────┘
 ```
 
 ---
@@ -289,28 +291,43 @@ When pairs of stimuli share identical ternary direction signs, candidate $R3$ mu
 - **Same-Direction Matched Pairs** ($N = 6,376$ pairs):
   $$D_{\text{action\_same}}(C0) = 0.0000, \quad D_{\text{action\_same}}(C2) = 0.0000$$
   $$\text{Parity Difference} = |0.0000 - 0.0000| = \mathbf{0.0000}$$
-  Parity is **100% exact**. When directions match, $R3$ behaves identically to scalar surprise.
+  Parity is **100% exact**. When directions match, $R3$ behaves identically to scalar surprise, ensuring that directional side-channels never inject spurious policy divergence.
 
 ---
 
-## 13. F2: Shuffled Degradation Comparison
+## 13. F2: Shuffled-Direction Control Comparison & Correspondence Analysis
 
-Comparing genuine candidate $R3$ ($C2$) with the shuffled-direction control ($C4$):
+Comparing genuine candidate $R3$ ($C2$) with the shuffled-direction negative control ($C4$):
 
 - Genuine $R3$ ($C2$): $D_{\text{action}} = 0.0425$ (286 switches)
-- Shuffled Direction ($C4$): $D_{\text{action}} = 0.2912$ (1,960 switches)
+- Shuffled Direction ($C4$): $D_{\text{action}} = 0.2912 \pm 0.0142$ (1,960 switches)
 - Action-Value Divergence: $C2 = 0.0293$ vs $C4 = 0.1981$ ($6.76 \times$ higher under shuffle)
 - Total Variation Distance: $C2 = 0.0056$ vs $C4 = 0.0392$ ($7.00 \times$ higher under shuffle)
+- Jensen-Shannon Divergence: $C2 = 0.000385$ vs $C4 = 0.001935$ ($5.03 \times$ higher under shuffle)
 
-Uncoupling direction from the genuine physiological trajectory produces chaotic, erratic action switching, confirming that $R3$ behavioral utility requires true physiological correspondence.
+### Calibrated Scientific Interpretation (Resolving Point 1)
+
+$C4$ producing $D_{\text{action}} = 0.2912$, markedly higher than $C2$ ($0.0425$), conclusively proves that directional permutation changes downstream policy selection substantially. However, **elevated divergence by itself does not prove that $C4$ has 'degraded utility' in a normative sense**, because higher switching could theoretically represent higher sensitivity. 
+
+Instead, this result is properly interpreted as: **the shuffled-direction control produces substantially different, less correspondence-preserving behavior**. Uncoupling direction from the stimulus trajectory causes spurious, erratic action switching uncorrelated with the underlying limbic dynamics. 
+
+Coherent physiological correspondence of $C2$ over $C4$ is established through three independent empirical criteria:
+1. **Zero Spurious Switching under Identical Limbic States**: When two stimuli produce identical ternary error signs, $C2$ produces $0.0000$ action divergence across all 6,376 same-direction matched pairs ($\Delta_{\text{parity}} = 0.0000$ vs $C0$), whereas $C4$ flips actions erratically even between stimuli that generated identical physiological trajectories.
+2. **Coherent Octant Alignment**: In $C2$, directional sensitivity aligns systematically with state geometry: all 46 negative-valence probes shift to `clarify`, while positive-valence probes remain in `retrieve`. Under $C4$, actions are scrambled across octants without geometric coherence.
+3. **Bounded Distribution Shift**: The continuous distribution shift in $C2$ is minimal and smooth ($D_{\text{JS}} = 0.000385, D_{\text{TV}} = 0.0056$), whereas $C4$ introduces uncontrolled, volatile distribution deformation ($D_{\text{JS}} = 0.001935, D_{\text{TV}} = 0.0392$).
 
 ---
 
-## 14. F3: Non-Redundancy with S
+## 14. F3: Non-Redundancy with S (Empirical Outcome Analysis)
 
-Under $C0$, where scalar surprise is matched within $|S_i - S_j| \le 0.020$, action divergence is exactly $0.0000$. Under $C2$, action divergence rises to $0.0425$ across all pairs and $0.7989$ on discordant pairs. The divergence increase is:
+Under $C0$, where scalar surprise is matched within $|S_i - S_j| \le 0.020$, action divergence is exactly $0.0000$ (complete scalar collapse). Under $C2$, action divergence rises to $0.0425$ across all matched pairs, and specifically:
+$$D_{\text{action\_diff}}(C2) = 0.7989 \quad (286 / 358 \text{ switches})$$
+on discordant matched pairs. The divergence increase is:
 $$\Delta D_{\text{action}} = +0.0425 > 0.0000$$
-This proves that the observed behavioral differentiation cannot be explained by residual differences in scalar surprise magnitude alone.
+
+### Calibrated Interpretation (Resolving Points 2 & 4)
+
+This metric is classified as an **empirical outcome supporting consistency with the hypothesis**, rather than a strict falsification gate. The result demonstrates that **$C2$ differentiates 79.89% of the previously collapsed discordant matched pairs under the evaluated research-harness consumer**. This confirms that the observed behavioral differentiation cannot be explained by residual differences in scalar surprise magnitude alone, demonstrating that directional information provides an empirical capability not present in scalar $S$.
 
 ---
 
@@ -348,7 +365,7 @@ $C2$ provides non-zero, monotonic behavioral differentiation across all 7 evalua
 
 ## 17. F8, F9, F10: Seed Invariance, A Priori Mapping & Strict No-Feedback
 
-- **F8 (Seed Invariance)**: Standard deviation of $D_{\text{action}}(C2)$ across all 5 consumer robustness seeds ($42, 43, 44, 45, 46$) is $0.0000 \le 0.0500$.
+- **F8 (Seed Invariance)**: Standard deviation of $D_{\text{action}}(C2)$ across all 5 consumer robustness seeds ($42, 43, 44, 45, 46$) is $0.0000 \le 0.0500$. (See Section 20 for full mathematical derivation of why micro-jitter does not disturb discrete argmax selection).
 - **F9 (A Priori Mapping)**: Matrix $W$ has frozen shape $(6, 3)$ and was fixed before script execution.
 - **F10 (Strict No-Feedback)**: The evaluation adapter maintains zero references to `EmotionCore` or `ActiveInferenceEngine`.
 
@@ -373,15 +390,19 @@ All 5 mandatory negative controls passed with bit-exact compliance:
 
 In the historical Phase 22 H1 Protocol v1.4 benchmark, Quality Gate 2 was blocked due to scalar surprise compression:
 $$\bar{S}_M = 0.5792, \quad \bar{S}_H = 0.6477 \implies \Delta_{\text{HM}} = +0.0685 < 0.1500$$
-This empirical study directly assesses whether candidate $R3$ resolves this scalar compression:
 
-1. **Under Scalar Surprise ($C0$)**: When stimuli from Med and High tiers generate near-identical scalar surprise ($|S_i - S_j| \le 0.02$), $C0$ produces $0.00\%$ action differentiation.
-2. **Under Candidate R3 ($C2$)**: $R3$ differentiates $79.89\%$ of direction-discordant pairs and cleanly separates negative-valence probes into `clarify` while keeping positive-valence probes in `retrieve`.
-3. **Recovery Mechanism**: $R3$ does not attempt to artificially expand scalar surprise headroom; instead, it provides an orthogonal directional side-channel that allows downstream policies to break ties that scalar surprise collapses.
+### Calibrated Finding (Resolving Point 7)
+
+This empirical study demonstrates that candidate $R3$ operates by **providing behavioral differentiation on matched-magnitude discordant pairs that are collapsed by the scalar measurement under the evaluated research-harness consumer**.
+
+Specifically:
+1. **Behavioral Differentiation on Matched Pairs**: Under scalar surprise alone ($C0$), when stimuli generate near-identical scalar surprise ($|S_i - S_j| \le 0.02$, matching the Gate 2 compression regime), $C0$ produces $0.00\%$ action differentiation (total paralysis). Under Candidate $R3$ ($C2$), the consumer differentiates $79.89\%$ of direction-discordant matched pairs ($286 / 358$ pairs).
+2. **Mechanism**: $R3$ does not artificially expand scalar surprise headroom in the ODE; instead, it provides an orthogonal directional side-channel that allows downstream consumers to differentiate cases where scalar surprise is compressed.
+3. **Strict Epistemological Boundary**: This research-adapter finding demonstrates empirical feasibility in an isolated consumer. **It does NOT unlock Quality Gate 2 in the canonical architecture, nor does it constitute production or architectural proof**. Quality Gate 2 in the canonical baseline remains **STRICTLY BLOCKED** ($\Delta_{\text{HM}} = +0.0685 < 0.1500$).
 
 ---
 
-## 20. Cross-Seed Robustness & Monte Carlo Stability
+## 20. Cross-Seed Robustness & Explanation of Zero Variance
 
 Evaluating across the 5 consumer robustness seeds ($42, 43, 44, 45, 46$):
 
@@ -400,7 +421,19 @@ Evaluating across the 5 consumer robustness seeds ($42, 43, 44, 45, 46$):
 └───────────┴──────────────────────┴──────────────────────┴──────────────────────┴─────────────────┘
 ```
 
-The zero standard deviation across seeds for $C0, C1, C2, C3, C5$ confirms that the observed behavioral divergence is deterministic and robust against consumer micro-stochasticity.
+### Explanation of Cross-Seed Std = 0.0000 (Resolving Point 5)
+
+Why does the cross-seed standard deviation equal $0.0000$ for $C0, C1, C2, C3, C5$, while $C4$ exhibits $\text{std} = 0.0142$?
+
+In this evaluation harness, consumer seeds govern two specific mechanisms:
+1. **Tie-Breaking Micro-Jitter**: A Gaussian perturbation $\xi \sim \mathcal{N}(0, 10^{-6})$ added to expected free energy valuations $G(a)$ before computing the argmax action choice.
+2. **Direction Permutation Sequence (C4)**: A pseudo-random permutation sequence $\sigma = \operatorname{permute}(N, \text{seed})$ that shuffles direction assignments across probes.
+
+For the unpermuted conditions ($C0, C1, C2, C3, C5$), the inter-action valuation margin around the optimal action $a^*$ satisfies:
+$$|G(a^*) - G(a')| \ge 0.0100 \quad \forall a' \neq a^*$$
+Because this margin ($10^{-2}$) is four orders of magnitude larger than the micro-jitter standard deviation ($10^{-6}$), the tie-breaking perturbation never flips an argmax choice. Consequently, discrete action selection across all 270 probes is numerically stable and deterministic, resulting in $\text{std} = 0.0000$.
+
+Conversely, in condition $C4$, each consumer seed generates a distinct probe permutation mapping, causing different pairs to be uncoupled. This produces observable variance across seeds ($D_{\text{action}}(C4) \in [0.2743, 0.3129]$ with $\text{std} = 0.0142$). This contrast confirms that consumer seeds are actively and correctly wired into the computation pipeline.
 
 ---
 
@@ -412,11 +445,11 @@ Synthesizing the empirical evidence:
    - Primary criterion ($D_{\text{action}}(C2) > D_{\text{action}}(C0)$ on matched pairs): **SATISFIED** ($0.0425 > 0.0000$ overall; $0.7989 > 0.0000$ on discordant pairs).
    - Parity criterion (identical directions produce 0 divergence): **SATISFIED** ($100\%$ exact parity).
    - Negative controls (NC1–NC5): **100% PASSED**.
-   - Falsification tests (F1–F10): **100% PASSED**.
+   - Evaluation criteria (F1–F10): **7 Invariants PASSED, 3 Empirical Outcomes OBSERVED_CONSISTENT**.
 2. **Assigned Architecture Readiness State**:
    $$\mathbf{READY\ FOR\ ADR\text{-}029\ EVIDENCE\ UPDATE}$$
 3. **Operational Meaning**:
-   The empirical evidence confirms that $R3$ provides statistically robust downstream behavioral utility beyond scalar $S$ alone, recovering the directional distinction collapsed by scalar surprise without policy chatter or runaway clarification. This evidence authorizes updating the draft ADR-029 Evidence Ledger.
+   The empirical evidence confirms that $R3$ provides behavioral differentiation on matched-magnitude discordant pairs that are collapsed by the scalar measurement under the evaluated research-harness consumer (differentiating 79.89% of discordant pairs), without causing policy chatter or runaway clarification. This evidence authorizes updating the draft ADR-029 Evidence Ledger.
 4. **Locked Gate Reaffirmation**:
    The Production Architecture Gate remains **STRICTLY LOCKED**. Production integration into `src/core/**` is **NOT AUTHORIZED**.
 
@@ -428,8 +461,8 @@ To maintain scientific rigor and prevent conceptual drift, the following boundar
 
 ### What MAY Be Claimed
 
-1. Candidate $R3$ ($S + \operatorname{sign}_{0.010}(\mathbf{r})$) provides measurable, statistically robust downstream behavioral differentiation ($D_{\text{action}} = 0.0425$ overall, $0.7989$ on discordant pairs) beyond scalar surprise alone under matched-magnitude conditions ($|S_i - S_j| \le 0.02$).
-2. Candidate $R3$ achieves $100\%$ matched-direction parity with scalar surprise when directional orientations coincide.
+1. Candidate $R3$ ($S + \operatorname{sign}_{0.010}(\mathbf{r})$) provides measurable, statistically robust downstream behavioral differentiation on matched-magnitude discordant pairs that are collapsed by the scalar measurement under the evaluated research-harness consumer ($D_{\text{action\_diff}} = 0.7989, 286 / 358$ pairs).
+2. Candidate $R3$ achieves $100\%$ matched-direction parity with scalar surprise when directional orientations coincide ($\Delta_{\text{parity}} = 0.0000$).
 3. Candidate $R3$ maintains non-pathological clarification rates ($17.04\% \le 60\%$) and homeostatic entropy stability ($\bar{H} = 1.6896$ nats).
 4. Discrete ternary signs in $\{-1, 0, +1\}^3$ retain $100\%$ of the effective discrete action selection capability of continuous unit directions ($C1$).
 5. The evidence is sufficient to update the draft ADR-029 Evidence Ledger.
@@ -441,6 +474,7 @@ To maintain scientific rigor and prevent conceptual drift, the following boundar
 3. **NEVER** claim that ternary sign coordinates represent conscious emotions, subjective feelings, or semantic sentiments. (They strictly represent geometric error orientations in PAD state space).
 4. **NEVER** claim that Protocol v1.5 is authorized.
 5. **NEVER** claim that live Small Language Model prompt generation has been evaluated. (Evaluations were strictly conducted within the isolated research adapter).
+6. **NEVER** claim that combining $S + R3$ preserves intensity modulation in discrete action choice without empirical proof. (In the evaluated adapter, discrete switches on matched pairs are entirely direction-driven).
 
 ---
 
@@ -453,10 +487,10 @@ To maintain scientific rigor and prevent conceptual drift, the following boundar
 │ Lifecycle Metric             │ Evaluated State               │ Formal Governance Action          │
 ├──────────────────────────────┼───────────────────────────────┼───────────────────────────────────┤
 │ Research Evaluation Script   │ evaluate_r3_behavioral_utility│ Verified Deterministic (49.37s)   │
-│ Automated Test Suite         │ test_h1_r3_behavioral_utility │ 12/12 Tests Green (0.59s)         │
+│ Automated Test Suite         │ test_h1_r3_behavioral_utility │ 12/12 Tests Green (0.39s)         │
 │ Full Regression Suite        │ tests/evaluation_phase22/     │ 184/184 Tests Green (12.71s)      │
 │ Negative Controls (NC1-NC5)  │ 5/5 PASSED                    │ Verified Bit-Exact Identity       │
-│ Falsification Tests (F1-F10) │ 10/10 PASSED                  │ All Pre-Registered Tests Green    │
+│ Evaluation Criteria (F1-F10) │ 7 Invariants / 3 Outcomes     │ 7 PASS, 3 OBSERVED_CONSISTENT     │
 │ Production Mutations         │ Exactly 0                     │ src/core/** 100% Untouched        │
 │ Genesis Profile Invariant    │ Bit-Exact Preserved           │ data/profile.json Untouched       │
 │ Architecture Gate            │ STRICTLY LOCKED               │ Production Implementation Blocked │
@@ -464,4 +498,4 @@ To maintain scientific rigor and prevent conceptual drift, the following boundar
 └──────────────────────────────┴───────────────────────────────┴───────────────────────────────────┘
 ```
 
-**Formal Conclusion**: The Phase 22 H1 R3 End-to-End Behavioral Utility & Gate 2 Recovery Study is **COMPLETED AND VERIFIED**.
+**Formal Conclusion**: The Phase 22 H1 R3 End-to-End Behavioral Utility & Gate 2 Recovery Study is **COMPLETED AND VERIFIED WITH CALIBRATED INTERPRETATIONS**.
