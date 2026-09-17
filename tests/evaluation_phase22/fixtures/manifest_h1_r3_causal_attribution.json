@@ -1,0 +1,61 @@
+{
+  "manifest_version": "1.0",
+  "study_id": "PHASE_22_H1_R3_CAUSAL_ATTRIBUTION_STUDY",
+  "timestamp_utc": "2026-09-17T16:06:09Z",
+  "primary_seed": 9999,
+  "consumer_seeds": [
+    42,
+    43,
+    44,
+    45,
+    46
+  ],
+  "corpus_sha256": "d0061e8cfdd160f4ebccb7100e4fe3eeef9ff18a1a4c9c1b3f912a76f2ae82c0",
+  "corpus_n": 270,
+  "discordant_pairs_count": 358,
+  "greedy_discordant_pairs_count": 16,
+  "conditions": [
+    "C0",
+    "C1",
+    "C2",
+    "C3",
+    "C4",
+    "C5",
+    "C6",
+    "C7"
+  ],
+  "consumers": [
+    "C_qual_1.50",
+    "A_REFERENCE",
+    "B_DIRECTIONAL_SEPARABLE",
+    "D_qual_corner"
+  ],
+  "locked_base_parameter_hashes": {
+    "C_U_BASE": "68ae10dcd46f2b0d2484466102ab012c056271e92be9a237ae23c7c705f922ec",
+    "C_COST_S": "3a08599cb76d748fece9a2c34f35e961f96e4ce6529cc718a422ce6914934543",
+    "C_M_BASE": "08cc42e3b61c467ee7e9a9bed9eab06b471ad338833fdb145d267da89ab8118c",
+    "D_G_BASE": "b6eca7ed83efe37dd754fc8a20763b698d11b5533d30a367146d3e677b0dfa0e",
+    "D_KAPPA_S_BASE": "c2b412f75adb709602a7861fbdd9ddeb3742fe3983cbe39f2b1865f9ea0f1cff",
+    "D_W_DIR": "9cb3b0965d54630fc55c1b754e667e5131b76714949bbe49f798ddbcf0438323"
+  },
+  "artifacts": {
+    "results_json": {
+      "path": "tests/evaluation_phase22/results/h1_r3_causal_attribution/r3_causal_attribution_results.json",
+      "sha256": "0395983d74a7ba36bfa5bb98e93802b6c0d8c817d5a235e7beb58c25036e61c4",
+      "bytes": 1455797
+    },
+    "summary_csv": {
+      "path": "tests/evaluation_phase22/results/h1_r3_causal_attribution/r3_causal_attribution_summary.csv",
+      "sha256": "965365c04925d4e589f6a39acb38efa164a73c35995fe9bf989efcdbe4e7d93d",
+      "bytes": 3827
+    }
+  },
+  "governance_invariants": {
+    "architecture_gate": "STRICTLY_LOCKED",
+    "adr029_status": "DRAFT / RESEARCH RECORD ONLY / NOT RATIFIED",
+    "quality_gate_2": "STRICTLY_BLOCKED",
+    "phase22_h1_status": "INCONCLUSIVE",
+    "genesis_profile_bit_exact": true,
+    "hardware_budget": "100% CPU / 0.0 MB GPU VRAM"
+  }
+}
