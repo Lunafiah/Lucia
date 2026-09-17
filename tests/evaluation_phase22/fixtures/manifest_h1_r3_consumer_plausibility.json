@@ -1,0 +1,53 @@
+{
+  "manifest_version": "1.0",
+  "study_id": "PHASE_22_H1_R3_CONSUMER_PLAUSIBILITY_STUDY",
+  "timestamp_utc": "2026-09-17T15:23:50Z",
+  "corpus_seed": 9999,
+  "corpus_n": 270,
+  "consumer_seeds": [
+    42,
+    43,
+    44,
+    45,
+    46
+  ],
+  "locked_base_parameter_hashes": {
+    "C_U_BASE": "68ae10dcd46f2b0d2484466102ab012c056271e92be9a237ae23c7c705f922ec",
+    "C_COST_S": "3a08599cb76d748fece9a2c34f35e961f96e4ce6529cc718a422ce6914934543",
+    "C_M_BASE": "08cc42e3b61c467ee7e9a9bed9eab06b471ad338833fdb145d267da89ab8118c",
+    "D_G_BASE": "b6eca7ed83efe37dd754fc8a20763b698d11b5533d30a367146d3e677b0dfa0e",
+    "D_KAPPA_S_BASE": "c2b412f75adb709602a7861fbdd9ddeb3742fe3983cbe39f2b1865f9ea0f1cff",
+    "D_W_DIR": "3ca626f22561efd324b3e353650a5ae3ab9fe514b24ae0f2fc6c4f8f83bc0615"
+  },
+  "evaluated_regimes": [
+    "A_REFERENCE",
+    "B_DIRECTIONAL_SEPARABLE",
+    "C_baseline",
+    "C_qual_1.50",
+    "C_qual_2.00",
+    "D_baseline",
+    "D_qual_corner",
+    "D_scalar_half",
+    "D_dir_5x"
+  ],
+  "artifacts": {
+    "results_json": {
+      "path": "tests/evaluation_phase22/results/h1_r3_consumer_plausibility/r3_consumer_plausibility_results.json",
+      "sha256": "b4fdd11a8e240d835f813afba3a1171273ce734a4ed68c4ca973f0fcd1ed5881",
+      "bytes": 628424
+    },
+    "summary_csv": {
+      "path": "tests/evaluation_phase22/results/h1_r3_consumer_plausibility/r3_consumer_plausibility_summary.csv",
+      "sha256": "d6d84ed9fca4366fe42e8d34819998728abfdffccd2a8d2cc0e168f800f9f4ef",
+      "bytes": 930
+    }
+  },
+  "governance_invariants": {
+    "architecture_gate": "STRICTLY_LOCKED",
+    "adr029_status": "DRAFT / RESEARCH RECORD ONLY / NOT RATIFIED",
+    "quality_gate_2": "STRICTLY_BLOCKED",
+    "phase22_h1_status": "INCONCLUSIVE",
+    "genesis_profile_bit_exact": true,
+    "hardware_budget": "100% CPU / 0.0 MB GPU VRAM"
+  }
+}
