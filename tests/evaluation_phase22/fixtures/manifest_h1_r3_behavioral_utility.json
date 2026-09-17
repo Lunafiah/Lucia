@@ -1,0 +1,27 @@
+{
+  "manifest_version": "1.0",
+  "study_name": "Phase 22 H1 R3 End-to-End Behavioral Utility & Gate 2 Recovery Study",
+  "created_at": "2026-09-17 16:42:58",
+  "governance_invariants": {
+    "phase_22_h1": "INCONCLUSIVE",
+    "gate_2": "BLOCKED",
+    "protocol_v1_5": "NOT AUTHORIZED",
+    "architecture_gate": "STRICTLY LOCKED",
+    "genesis_profile": "PRESERVED_BIT_EXACT",
+    "src_core_mutations": 0
+  },
+  "adr_readiness_state": "READY_FOR_ADR_029_EVIDENCE_UPDATE",
+  "operational_meaning": "Empirical evaluation confirms that R3 (S + ternary direction) provides statistically robust downstream behavioral utility beyond scalar S alone under matched-magnitude conditions (|Si - Sj| <= 0.02). It recovers directional discrimination that scalar surprise collapses (79.89% recovery on discordant pairs), without causing policy chatter or runaway clarification. This evidence is sufficient to update the draft ADR-029 Evidence Ledger. CRITICAL: The Production Architecture Gate remains STRICTLY LOCKED. Production integration is NOT authorized.",
+  "files": {
+    "r3_behavioral_utility_results.json": {
+      "path": "tests/evaluation_phase22/results/h1_r3_behavioral_utility/r3_behavioral_utility_results.json",
+      "sha256": "dc016aad424cd5b9505af79c9287db447f5b925c03c82c12c888787aa2ca793b",
+      "size_bytes": 53100
+    },
+    "r3_behavioral_utility_summary.csv": {
+      "path": "tests/evaluation_phase22/results/h1_r3_behavioral_utility/r3_behavioral_utility_summary.csv",
+      "sha256": "6c9a0e1b868eea668f05d1271bd0dedd9ee221171af7a69464e9d7bc93f3f792",
+      "size_bytes": 717
+    }
+  }
+}
