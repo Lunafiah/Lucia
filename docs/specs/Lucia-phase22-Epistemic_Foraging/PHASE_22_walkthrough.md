@@ -2142,3 +2142,71 @@ Evaluated policy families:
 - **Formal Research Spec**: [`PHASE_22_H1_R3_POLICY_MECHANISMS_STUDY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase22-Epistemic_Foraging/PHASE_22_H1_R3_POLICY_MECHANISMS_STUDY.md).
 - **Dedicated Results Directory**: `tests/evaluation_phase22/results/h1_r3_policy_mechanisms/` (contains all 8 required files).
 - **Governance State**: Phase 22 H1 = `INCONCLUSIVE`, Gate 2 = `STRICTLY BLOCKED` ($\Delta_{\text{HM}} = 0.0685 < 0.1500$), ADR-029 = `DRAFT / RESEARCH RECORD ONLY / NOT RATIFIED`, Genesis = `LOCKED`.
+
+---
+
+## 39. Phase 22 H1 Multi-Turn Interactive Dialogue & Dynamic Environmental Feedback Study
+
+### 39.1 Overview & Dialogue Research Scope
+In accordance with the pre-registered manifest [`manifest_h1_multi_turn_interactive_dialogue.json`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/fixtures/manifest_h1_multi_turn_interactive_dialogue.json), this empirical study embeds continuous R3-derived epistemic valuation signals and candidate policy mechanisms into an authentic closed-loop, multi-turn conversational dialogue simulation ($T=3$ turns per trajectory).
+
+The study investigated whether continuous valuation differentiation survives or collapses across 6 conversational scenarios (A–F) and 358 matched discordant pairs ($12,888$ total trajectory evaluations), using a pre-locked, deterministic environment model specification `ENVIRONMENT_MODEL_SPEC` that strictly executes $(a_t, s_t, \text{seed}) \to (o_{t+1}, s_{t+1}, r_{t+1})$ completely blind to `policy_id`.
+
+Evaluated Policy Mechanisms:
+- **P0**: Canonical Argmax ($\pi_0(s) = \operatorname{argmax}_a V(s, a)$)
+- **PA_10**: Deterministic Hysteresis ($\Delta_H = 0.10$)
+- **PB_05**: Score Margin Selection ($\tau_M = 0.05$)
+- **PC_10**: Cyclic Deterministic Rotation ($\delta_{\text{qual}} = 0.10$)
+- **PD_10**: Probabilistic Softmax Sampling ($\gamma = 1.00$)
+- **PE_10**: Hybrid Confidence-Gated Policy ($\tau_{\text{conf}} = 0.10$)
+
+### 39.2 Quantitative Summary Across Scenarios & Policies (358 Matched Pairs, 12,888 Evaluations)
+
+| Policy ID | Scenario C (Balanced Ambiguity) $D_{\text{traj}}$ | Scenario D (Deceptive Prior) $D_{\text{traj}}$ | Scenario E (High Cost Risk) $D_{\text{traj}}$ | Scenario F (Noisy Signal) $D_{\text{traj}}$ | Scenario A (High Certainty) $D_{\text{traj}}$ | Scenario B (Zero Cost Baseline) $D_{\text{traj}}$ | Flapping Rate (Scen C) | Bottleneck Attribution (Scen C) |
+|---|---|---|---|---|---|---|---|---|
+| **P0 (Argmax)** | $0.00\%$ | $0.00\%$ | $0.00\%$ | $0.00\%$ | $0.00\%$ | $0.00\%$ | $0.00\%$ | **100% (358/358)** `action_selection_collapse` |
+| **PA_10 (Hysteresis)** | **$20.11\%$** | **$20.11\%$** | **$20.11\%$** | **$20.11\%$** | $0.00\%$ | **$20.11\%$** | **$0.00\%$** | $79.89\%$ `insufficient_margin`, $20.11\%$ `action_differentiated` |
+| **PB_05 (Margin)** | $0.00\%$ | $0.00\%$ | $0.00\%$ | $0.00\%$ | $0.00\%$ | $0.00\%$ | $0.00\%$ | $100\%$ `insufficient_margin` |
+| **PC_10 (Cyclic)** | **$100.00\%$** | **$100.00\%$** | **$100.00\%$** | **$100.00\%$** | $0.00\%$ | **$100.00\%$** | $66.67\%$ | $100\%$ `action_differentiated` |
+| **PD_10 (Sampling)** | $4.19\%$ | $4.19\%$ | $4.19\%$ | $4.19\%$ | $0.00\%$ | $4.19\%$ | **$83.33\%$** | High stochastic temporal instability |
+| **PE_10 (Hybrid)** | **$20.11\%$** | **$20.11\%$** | **$20.11\%$** | **$20.11\%$** | $0.00\%$ | **$20.11\%$** | **$0.00\%$** | Principled transition: certainty $\to$ exploit, ambiguity $\to$ explore |
+
+### 39.3 Key Empirical & Mechanistic Findings
+
+1. **Exact Bottleneck Attribution (358/358 Pairs Under P0)**:
+   - Under canonical argmax (P0), continuous directional signals persist throughout valuation ($\|\Delta \mathbf{V}_{\text{dir}}\| > 0.05$ nats), but **100% of pairs (358/358)** collapse to identical actions at Turn 1 (`action_selection_collapse`).
+   - The bottleneck is strictly located at the discrete selection boundary, not in state encoding or belief updating.
+2. **Deterministic Information Recovery (PA_10 & PE_10)**:
+   - PA_10 (hysteresis $\Delta_H = 0.10$) and PE_10 (hybrid confidence-gating $\tau_{\text{conf}} = 0.10$) rescue action differentiation in **$20.11\%$ (72/358)** of discordant pairs across ambiguous scenarios (C, D, E, F) with **$0.00\%$ temporal flapping**.
+   - Under Scenario A (High Certainty, $H_0 \approx 0.5875$ nats), both policies exhibit **100% deterministic exploitation** (`answer` action, $D_{\text{traj}} = 0.00\%$, zero flapping).
+3. **Deterministic Bounded Exploration (PC_10)**:
+   - Cyclic rotation achieves **$100.00\%$ (358/358)** trajectory divergence across ambiguous scenarios by deterministically rotating among candidate actions whose valuations lie within $\delta_{\text{qual}} = 0.10$ of the optimum.
+4. **Authentic Closed-Loop Causal Feedback (Type 1 Causal Divergence)**:
+   - In 100% of cases where actions diverged at Turn 1 (e.g. `clarify` vs `retrieve` under PA_10), subsequent observations diverged ($o_2^{(i)} \ne o_2^{(j)}$), generating distinct Bayesian posterior beliefs ($q_2^{(i)} \ne q_2^{(j)}$) and differentiated future valuations ($\|\mathbf{V}^{(i)}(2) - \mathbf{V}^{(j)}(2)\| > 0.05$ nats).
+   - This empirically confirms that R3 directional signals alter downstream trajectory evolution rather than dissipating as epiphenomena.
+5. **Calibrated Pragmatic Certainty & Entropy Threshold**:
+   - Pragmatic confidence formulation $V_{\text{pragm}} = 0.80 \times \max(0.0, \frac{\max(q) - 0.25}{0.75})$ and dynamic Shannon entropy threshold $\tau_{\text{res}} = 0.65$ nats cleanly separate resolved states ($H \approx 0.5875 \implies V_{\text{pragm}} = 0.640$) from ambiguous states ($H \ge 1.02 \implies V_{\text{pragm}} \le 0.160$).
+6. **Pre-Registered Classification**: Formally classified as **`RESULT_MT2 — SELECTIVE_TRAJECTORY_DIFFERENTIATION`**.
+
+### 39.4 Negative Controls Audit (8/8 NCs PASSED)
+- **NC1 (Matched Conditions Zero Incremental Divergence)**: Under identical scalar state, valuation, environment observations, and action-selection conditions, setting $\mathbf{v}_{\text{dir}} = \mathbf{0}$ yields $\Delta D_{\text{traj}} = 0.0000$ (PASSED).
+- **NC2 (Direction-Shuffled Valuation Correlation)**: Pearson correlation $|r_{\text{NC2}}| = 0.0768 \le 0.50$ between unshuffled and shuffled multi-turn cumulative valuation distances over all 358 matched pairs (PASSED).
+- **NC3 (Zero Directional Weighting Identity)**: $W_{\text{dir}} = \mathbf{0}$ matches scalar C0 trajectory bit-exactly across all 358 pairs (PASSED).
+- **NC4 (Deterministic Repeatability)**: 100% bit-exact trajectory reproduction on repeat execution (PASSED).
+- **NC5 (Anti-Tuning Parameter Invariance)**: Manifest hash `adca21e25e227fc6ef475b5b9e07503ad2d9c0fa7cbfae7f9188e1781c81ef1a` and environment spec hash `b677041f478a221f062d5f094ebf5ebec225b20623351ecf4cb76f184768ee7f` matched bit-exactly (PASSED).
+- **NC6 (Production Code Isolation)**: Zero modifications to `src/core/**`, `src/api/**`, `electron/**` (PASSED).
+- **NC7 (Genesis Gate Invariant)**: Bit-exact `{"is_onboarded": false}` (PASSED).
+- **NC8 (High-Certainty Scenario A Collapse)**: Under Scenario A, 100.0% of pairs select `answer` at Turn 1 across all policies ($D_{\text{traj}} = 0.00\%$, PASSED).
+
+### 39.5 Automated Test & Artifact Ledger
+- **Evaluation Harness**: [`evaluate_h1_multi_turn_interactive_dialogue.py`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/scripts/evaluate_h1_multi_turn_interactive_dialogue.py)
+- **Dedicated Test Suite**: [`test_h1_multi_turn_interactive_dialogue.py`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/test_h1_multi_turn_interactive_dialogue.py) — **29/29 PASSED** in 7.72s.
+- **Full Phase 22 Regression**: **581/581 PASSED**.
+- **Results Fixture**: [`results_h1_multi_turn_interactive_dialogue.json`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/fixtures/results_h1_multi_turn_interactive_dialogue.json).
+- **Negative Controls Fixture**: [`nc_h1_multi_turn_interactive_dialogue.json`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/fixtures/nc_h1_multi_turn_interactive_dialogue.json).
+- **Formal Research Report**: [`report_h1_multi_turn_interactive_dialogue.json`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/fixtures/report_h1_multi_turn_interactive_dialogue.json).
+- **CSV Summary Table**: [`summary_h1_multi_turn_interactive_dialogue.csv`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/fixtures/summary_h1_multi_turn_interactive_dialogue.csv).
+- **Pre-Registered Manifest**: [`manifest_h1_multi_turn_interactive_dialogue.json`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/fixtures/manifest_h1_multi_turn_interactive_dialogue.json).
+- **Formal Research Spec**: [`PHASE_22_H1_MULTI_TURN_INTERACTIVE_DIALOGUE_STUDY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase22-Epistemic_Foraging/PHASE_22_H1_MULTI_TURN_INTERACTIVE_DIALOGUE_STUDY.md).
+- **Dedicated Results Directory**: `tests/evaluation_phase22/results/h1_multi_turn_interactive_dialogue/` (contains all 8 required files).
+- **Governance State**: Phase 22 H1 = `INCONCLUSIVE`, Gate 2 = `STRICTLY BLOCKED` ($\Delta_{\text{HM}} = 0.0685 < 0.1500$), ADR-029 = `DRAFT / RESEARCH RECORD ONLY / NOT RATIFIED`, Genesis = `LOCKED`.

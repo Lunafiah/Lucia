@@ -1,0 +1,43 @@
+{
+  "NC1_controlled_zero_incremental_divergence": {
+    "passed": true,
+    "max_c0_action_divergence": 0,
+    "criterion": "C0 divergence == 0 under scalar-only baseline"
+  },
+  "NC2_direction_shuffled_correspondence": {
+    "passed": true,
+    "pearson_r": 0.08976939117497625,
+    "criterion": "|r| <= 0.50"
+  },
+  "NC3_zero_directional_weighting": {
+    "passed": true,
+    "criterion": "Bit-exact match with scalar baseline"
+  },
+  "NC4_deterministic_repeatability": {
+    "passed": true,
+    "criterion": "100% bit-exact trajectory replay"
+  },
+  "NC5_environment_model_independence": {
+    "passed": true,
+    "criterion": "Core resolution preserved across independent transition matrices"
+  },
+  "NC6_production_code_isolation": {
+    "passed": true,
+    "diff_bytes": 0,
+    "criterion": "git diff src/core src/api electron == 0"
+  },
+  "NC7_genesis_gate_invariant": {
+    "passed": true,
+    "is_onboarded": false,
+    "criterion": "data/profile.json is_onboarded == false"
+  },
+  "NC8_policy_neutral_environment": {
+    "passed": true,
+    "parameters": [
+      "action",
+      "state",
+      "rng"
+    ],
+    "criterion": "Environment step strictly blind to policy ID"
+  }
+}

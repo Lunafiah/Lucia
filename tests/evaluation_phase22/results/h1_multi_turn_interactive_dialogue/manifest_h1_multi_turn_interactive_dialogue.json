@@ -1,0 +1,218 @@
+{
+  "study_id": "PHASE_22_H1_MULTI_TURN_INTERACTIVE_DIALOGUE_STUDY",
+  "master_seed": 9999,
+  "shuffle_seed": 7113,
+  "indep_obs_seed": 6180,
+  "sampling_seed": 7113,
+  "bootstrap_seed": 54321,
+  "bootstrap_iterations": 10000,
+  "monte_carlo_samples_k": 10000,
+  "dialogue_turns_t": 6,
+  "expected_corpus_sha": "d0061e8cfdd160f4ebccb7100e4fe3eeef9ff18a1a4c9c1b3f912a76f2ae82c0",
+  "expected_n_probes": 270,
+  "expected_discordant_pairs": 358,
+  "actions": [
+    "answer",
+    "clarify",
+    "retrieve",
+    "derive",
+    "reason",
+    "wait"
+  ],
+  "action_costs": {
+    "answer": 0.05,
+    "clarify": 0.40,
+    "retrieve": 0.35,
+    "derive": 0.40,
+    "reason": 0.50,
+    "wait": 0.02
+  },
+  "action_energy_drain": {
+    "answer": 0.02,
+    "clarify": 0.05,
+    "retrieve": 0.08,
+    "derive": 0.10,
+    "reason": 0.15,
+    "wait": -0.05
+  },
+  "alpha_pragm": 1.0,
+  "beta_0": 2.0,
+  "policy_conditions": [
+    "P0_canonical_argmax",
+    "PA_deterministic_hysteresis_05",
+    "PA_deterministic_hysteresis_10",
+    "PD_probabilistic_softmax_sampling",
+    "PE_hybrid_confidence_gated",
+    "PC_deterministic_cyclic_rotation"
+  ],
+  "policy_parameters": {
+    "P0": {},
+    "PA_05": {
+      "delta_h": 0.05
+    },
+    "PA_10": {
+      "delta_h": 0.10
+    },
+    "PD": {
+      "gamma": 1.00
+    },
+    "PE": {
+      "tau_conf": 0.10,
+      "gamma": 1.00
+    },
+    "PC": {
+      "delta_qual": 0.10
+    }
+  },
+  "environment_model_spec": {
+    "name": "ENVIRONMENT_MODEL_SPEC_V1",
+    "hash_algorithm": "SHA256",
+    "policy_id_blindness": true,
+    "resolution_entropy_threshold_tau_res": 0.65,
+    "background_leakage_lambda_leak": 0.05,
+    "friction_penalties": {
+      "clarify_standard": 1.0,
+      "clarify_redundant": 2.0,
+      "wait_latency": 0.5,
+      "answer_premature": 2.0,
+      "answer_clean": 0.0
+    },
+    "scenarios": {
+      "A": {
+        "name": "Scenario A: Stable High-Confidence Dialogue",
+        "description": "Clear user intent from onset; answer consistently dominant; zero exploration needed.",
+        "q0": [0.85, 0.05, 0.05, 0.05],
+        "v_pragm_answer_base": 0.80,
+        "e0": 1.0,
+        "turns": 6,
+        "failure_modes_checked": ["FM05_premature_exploitation", "FM06_excessive_exploration"]
+      },
+      "B": {
+        "name": "Scenario B: Persistent Ambiguity",
+        "description": "Unresolved ambiguity; uninformative environment returns; evaluates repeated recognition of uncertainty.",
+        "q0": [0.25, 0.25, 0.25, 0.25],
+        "v_pragm_answer_base": 0.00,
+        "e0": 1.0,
+        "turns": 6,
+        "failure_modes_checked": ["FM05_premature_exploitation", "FM08_policy_lock_in"]
+      },
+      "C": {
+        "name": "Scenario C: Ambiguity Resolution",
+        "description": "Initial uncertainty high; successful epistemic action at Turn 2 resolves ambiguity; evaluates transition to exploitation.",
+        "q0": [0.25, 0.25, 0.25, 0.25],
+        "v_pragm_answer_base": 0.00,
+        "e0": 1.0,
+        "turns": 6,
+        "resolution_turn": 2,
+        "resolved_q": [0.90, 0.04, 0.03, 0.03],
+        "failure_modes_checked": ["FM06_excessive_exploration", "FM10_failure_to_recognize_resolution"]
+      },
+      "D": {
+        "name": "Scenario D: Failed Epistemic Action",
+        "description": "Initial uncertainty high; epistemic actions fail deterministically; evaluates repeated-action loops and strategy shifts.",
+        "q0": [0.25, 0.25, 0.25, 0.25],
+        "v_pragm_answer_base": 0.00,
+        "e0": 1.0,
+        "turns": 6,
+        "epistemic_failure": true,
+        "failure_modes_checked": ["FM03_repeated_retrieval_loop", "FM04_repeated_clarification_loop"]
+      },
+      "E": {
+        "name": "Scenario E: Contradictory Evidence",
+        "description": "Initial belief favors h1; Turn 2 delivers strong contradictory evidence favoring h2; evaluates oscillation and belief inversion.",
+        "q0": [0.85, 0.05, 0.05, 0.05],
+        "v_pragm_answer_base": 0.80,
+        "e0": 1.0,
+        "turns": 6,
+        "contradiction_turn": 2,
+        "contradiction_evidence": [0.033, 0.90, 0.033, 0.034],
+        "failure_modes_checked": ["FM01_oscillation_answer_clarify", "FM02_oscillation_retrieve_answer"]
+      },
+      "F": {
+        "name": "Scenario F: Repeated Uncertainty Injection",
+        "description": "Periodic injection: Clear -> Ambiguous -> Clear -> Ambiguous -> Clear; evaluates temporal hysteresis and recovery.",
+        "q0": [0.85, 0.05, 0.05, 0.05],
+        "v_pragm_answer_base": 0.80,
+        "e0": 1.0,
+        "turns": 6,
+        "injection_turns": [2, 4],
+        "failure_modes_checked": ["FM07_hysteresis_delayed_recovery", "FM09_uncertainty_amplification"]
+      },
+      "G": {
+        "name": "Scenario G: Low-Energy / Reduced-Resource Condition",
+        "description": "Low initial somatic energy (E0=0.30); epistemic foraging down-regulated via beta(E); evaluates adaptive cost bounding.",
+        "q0": [0.25, 0.25, 0.25, 0.25],
+        "v_pragm_answer_base": 0.00,
+        "e0": 0.30,
+        "turns": 6,
+        "energy_bounded": true,
+        "failure_modes_checked": ["FM06_excessive_exploration", "FM08_policy_lock_in"]
+      },
+      "H": {
+        "name": "Scenario H: Relationally Sensitive Dialogue",
+        "description": "Full relational friction model; redundant queries and premature answers penalize conversation; evaluates turns to resolution.",
+        "q0": [0.25, 0.25, 0.25, 0.25],
+        "v_pragm_answer_base": 0.00,
+        "e0": 1.0,
+        "turns": 6,
+        "friction_model_active": true,
+        "failure_modes_checked": ["FM04_repeated_clarification_loop", "FM05_premature_exploitation", "FM06_excessive_exploration"]
+      }
+    }
+  },
+  "bottleneck_loci": [
+    "representation_collapse",
+    "valuation_collapse",
+    "policy_collapse",
+    "action_selection_collapse",
+    "environment_outcome_collapse"
+  ],
+  "failure_modes": [
+    "FM01_oscillation_answer_clarify",
+    "FM02_oscillation_retrieve_answer",
+    "FM03_repeated_retrieval_loop",
+    "FM04_repeated_clarification_loop",
+    "FM05_premature_exploitation",
+    "FM06_excessive_exploration",
+    "FM07_hysteresis_delayed_recovery",
+    "FM08_policy_lock_in",
+    "FM09_uncertainty_amplification",
+    "FM10_failure_to_recognize_resolution"
+  ],
+  "negative_controls": [
+    "NC1_controlled_zero_incremental_divergence",
+    "NC2_direction_shuffled_correspondence",
+    "NC3_zero_directional_weighting",
+    "NC4_deterministic_repeatability",
+    "NC5_environment_model_independence",
+    "NC6_production_code_isolation",
+    "NC7_genesis_gate_invariant",
+    "NC8_policy_neutral_environment"
+  ],
+  "tolerances": {
+    "nc1_incremental_divergence_max": 0.0001,
+    "nc2_correlation_max": 0.50,
+    "nc3_weighting_divergence_max": 0.0001,
+    "nc4_repeat_mismatch_max": 0,
+    "tolerance_eig": 0.0001,
+    "tolerance_val": 0.0001,
+    "tolerance_tv": 0.0001,
+    "tolerance_js": 1e-05,
+    "numerical_epsilon": 1e-15
+  },
+  "locked_canon_parameter_hashes": {
+    "M_CANON_CLARIFY_BASE_LOGITS": "f971491521773b69b1c9c02223d2c0896dac3f5627b889ff4e50c18008cd358a",
+    "M_CANON_RETRIEVE_BASE_LOGITS": "02e0b76d9a512245f127fbbba3dbf56ed45516827ae636b2d0261403abe61f8b",
+    "M_CANON_CLARIFY_W_DIR": "481e27b00ea8434d2a4d9cdd49dd2f5ddced8010e9dcfbd92b0a2e9b199f8d57",
+    "M_CANON_RETRIEVE_W_DIR": "adc5f3a3c772850f1f69084531ef4a2171a86b3272ad3c7b6534572d06d0b767",
+    "M_CANON_CLARIFY_B_S": "644b4c183b5f735545a8477d4a9a5a4735eb47849674971a58c5206da33517b5",
+    "M_CANON_RETRIEVE_B_S": "039084510144facc9b02a635fbf78c289c2b568c7e5b1e394d14e9b59a127137"
+  },
+  "locked_indep_parameter_hashes": {
+    "M_INDEP_CLARIFY_BASE_LOGITS": "53465b8b23c00e639a54ed5a46e185783ef7fdc35490386b9db981dfd1ba6b2f",
+    "M_INDEP_RETRIEVE_BASE_LOGITS": "f3e5b326df21a4f00feeeef700147eb79f42777b7899738f616d2fdbd1ff2c68"
+  },
+  "locked_control_hashes": {
+    "C2_SHUFFLE_PERMUTATION_HASH": "0fe2b23cb606437299a4cbe200155b1eb124c6efcfb4528148e6f1f45618f870"
+  }
+}
