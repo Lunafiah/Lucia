@@ -1,0 +1,72 @@
+{
+  "study_id": "PHASE_22_H1_R3_POLICY_MECHANISMS_STUDY",
+  "master_seed": 9999,
+  "shuffle_seed": 7113,
+  "indep_obs_seed": 6180,
+  "sampling_seed": 7113,
+  "bootstrap_seed": 54321,
+  "bootstrap_iterations": 10000,
+  "monte_carlo_samples_k": 10000,
+  "expected_corpus_sha": "d0061e8cfdd160f4ebccb7100e4fe3eeef9ff18a1a4c9c1b3f912a76f2ae82c0",
+  "expected_n_probes": 270,
+  "expected_discordant_pairs": 358,
+  "primary_context": "CTX_5",
+  "control_context": "CTX_0",
+  "action_costs": {
+    "answer": 0.05,
+    "clarify": 0.40,
+    "retrieve": 0.35,
+    "derive": 0.40,
+    "reason": 0.50,
+    "wait": 0.02
+  },
+  "alpha_pragm": 1.0,
+  "beta_0": 2.0,
+  "policy_families": [
+    "P0_canonical_argmax",
+    "PA_deterministic_hysteresis",
+    "PB_deterministic_score_margin",
+    "PC_deterministic_cyclic_rotation",
+    "PD_probabilistic_softmax_sampling",
+    "PE_hybrid_confidence_gated"
+  ],
+  "parameters": {
+    "hysteresis_delta_h_grid": [0.02, 0.05, 0.10, 0.15],
+    "hysteresis_canonical_delta_h": 0.05,
+    "margin_threshold_tau_m_grid": [0.02, 0.05, 0.10],
+    "margin_canonical_tau_m": 0.05,
+    "cyclic_qualifying_delta": 0.05,
+    "sampling_gamma": 1.00,
+    "hybrid_confidence_threshold_tau_conf": 0.10,
+    "hybrid_ambiguity_gamma": 1.00
+  },
+  "tolerances": {
+    "tolerance_eig": 0.0001,
+    "tolerance_val": 0.0001,
+    "tolerance_tv": 0.0001,
+    "tolerance_js": 1e-05,
+    "tolerance_corr_max": 0.50,
+    "numerical_epsilon": 1e-15
+  },
+  "interpretation_matrix": {
+    "RESULT_M0": "INCONCLUSIVE",
+    "RESULT_M1": "DETERMINISTIC_COLLAPSE_UNIVERSAL",
+    "RESULT_M2": "DETERMINISTIC_MARGIN_RECOVERY",
+    "RESULT_M3": "HYBRID_CONFIDENCE_GATED_DIFFERENTIATION"
+  },
+  "locked_canon_parameter_hashes": {
+    "M_CANON_CLARIFY_BASE_LOGITS": "f971491521773b69b1c9c02223d2c0896dac3f5627b889ff4e50c18008cd358a",
+    "M_CANON_RETRIEVE_BASE_LOGITS": "02e0b76d9a512245f127fbbba3dbf56ed45516827ae636b2d0261403abe61f8b",
+    "M_CANON_CLARIFY_W_DIR": "481e27b00ea8434d2a4d9cdd49dd2f5ddced8010e9dcfbd92b0a2e9b199f8d57",
+    "M_CANON_RETRIEVE_W_DIR": "adc5f3a3c772850f1f69084531ef4a2171a86b3272ad3c7b6534572d06d0b767",
+    "M_CANON_CLARIFY_B_S": "644b4c183b5f735545a8477d4a9a5a4735eb47849674971a58c5206da33517b5",
+    "M_CANON_RETRIEVE_B_S": "039084510144facc9b02a635fbf78c289c2b568c7e5b1e394d14e9b59a127137"
+  },
+  "locked_indep_parameter_hashes": {
+    "M_INDEP_CLARIFY_BASE_LOGITS": "53465b8b23c00e639a54ed5a46e185783ef7fdc35490386b9db981dfd1ba6b2f",
+    "M_INDEP_RETRIEVE_BASE_LOGITS": "f3e5b326df21a4f00feeeef700147eb79f42777b7899738f616d2fdbd1ff2c68"
+  },
+  "locked_control_hashes": {
+    "C2_SHUFFLE_PERMUTATION_HASH": "0fe2b23cb606437299a4cbe200155b1eb124c6efcfb4528148e6f1f45618f870"
+  }
+}

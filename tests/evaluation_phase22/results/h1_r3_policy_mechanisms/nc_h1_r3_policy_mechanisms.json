@@ -1,0 +1,49 @@
+{
+  "NC1_scalar_null": {
+    "passed": true,
+    "mean_directional_displacement": 0.0,
+    "c0_p0_d_pol": 0.0,
+    "description": "Under C0, directional displacement is zero (||Delta V_dir||=0.000000 <= 0.0001) and P0 D_pol=0.0000"
+  },
+  "NC2_shuffled_correspondence": {
+    "passed": true,
+    "pearson_r": 0.07904269738472994,
+    "max_allowed_r": 0.5,
+    "description": "C2 shuffle destroys directional correspondence (r = 0.0790 <= 0.5)"
+  },
+  "NC3_zero_weight_identity": {
+    "passed": true,
+    "max_diff": 0.0,
+    "description": "Zero directional weighting matches scalar baseline bit-exactly"
+  },
+  "NC4_deterministic_repeatability": {
+    "passed": true,
+    "action_run0": "wait",
+    "action_run1": "wait",
+    "description": "Deterministic policies produce 100% bit-exact repeatable outputs"
+  },
+  "NC5_anti_tuning_invariance": {
+    "passed": true,
+    "h_clar_base_matches": true,
+    "h_ret_base_matches": true,
+    "h_clar_w_matches": true,
+    "h_ret_w_matches": true,
+    "description": "Observation parameters match locked manifest SHA-256 hashes bit-exactly"
+  },
+  "NC6_production_code_isolation": {
+    "passed": true,
+    "modified_files": [],
+    "description": "Zero modifications to src/core, src/api, or electron"
+  },
+  "NC7_genesis_gate_invariant": {
+    "passed": true,
+    "is_onboarded": false,
+    "description": "Genesis profile remains bit-exact {'is_onboarded': false}"
+  },
+  "NC8_high_confidence_collapse": {
+    "passed": true,
+    "p0_answer_dominance": 1.0,
+    "pe_answer_dominance": 1.0,
+    "description": "Under CTX_0, policies collapse to >= 99% deterministic answer dominance"
+  }
+}

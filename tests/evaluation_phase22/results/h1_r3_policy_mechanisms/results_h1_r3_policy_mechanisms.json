@@ -1,0 +1,490 @@
+{
+  "study_id": "PHASE_22_H1_R3_POLICY_MECHANISMS_STUDY",
+  "master_seed": 9999,
+  "classification": "RESULT_M3",
+  "classification_description": "HYBRID_CONFIDENCE_GATED_DIFFERENTIATION: Hybrid policy provides principled transition between deterministic exploitation (CTX_0 100% answer) and uncertainty-sensitive exploration (CTX_5 D_pol = 19.83%)",
+  "corpus_probe_count": 270,
+  "discordant_pair_count": 358,
+  "differentiation": {
+    "P0_canonical_argmax": {
+      "d_pol": 0.0,
+      "divergent_pairs": 0,
+      "total_pairs": 358,
+      "collapse_rate": 1.0,
+      "ci_95": [
+        0.0,
+        0.0
+      ],
+      "mean_tv": 0.0,
+      "mean_js": 0.0,
+      "modes_i_dist": {
+        "deterministic": 358
+      },
+      "selections_dist": {
+        "retrieve": 716
+      }
+    },
+    "PA_hysteresis_dh0.02": {
+      "d_pol": 0.0,
+      "divergent_pairs": 0,
+      "total_pairs": 358,
+      "collapse_rate": 1.0,
+      "ci_95": [
+        0.0,
+        0.0
+      ],
+      "mean_tv": 0.0,
+      "mean_js": 0.0,
+      "modes_i_dist": {
+        "deterministic": 358
+      },
+      "selections_dist": {
+        "retrieve": 716
+      }
+    },
+    "PA_hysteresis_dh0.05": {
+      "d_pol": 0.0,
+      "divergent_pairs": 0,
+      "total_pairs": 358,
+      "collapse_rate": 1.0,
+      "ci_95": [
+        0.0,
+        0.0
+      ],
+      "mean_tv": 0.0,
+      "mean_js": 0.0,
+      "modes_i_dist": {
+        "deterministic": 358
+      },
+      "selections_dist": {
+        "retrieve": 716
+      }
+    },
+    "PA_hysteresis_dh0.10": {
+      "d_pol": 0.7988826815642458,
+      "divergent_pairs": 286,
+      "total_pairs": 358,
+      "collapse_rate": 0.2011173184357542,
+      "ci_95": [
+        0.7569832402234636,
+        0.840782122905028
+      ],
+      "mean_tv": 0.0,
+      "mean_js": 0.0,
+      "modes_i_dist": {
+        "deterministic": 358
+      },
+      "selections_dist": {
+        "answer": 286,
+        "retrieve": 430
+      }
+    },
+    "PA_hysteresis_dh0.15": {
+      "d_pol": 0.0,
+      "divergent_pairs": 0,
+      "total_pairs": 358,
+      "collapse_rate": 1.0,
+      "ci_95": [
+        0.0,
+        0.0
+      ],
+      "mean_tv": 0.0,
+      "mean_js": 0.0,
+      "modes_i_dist": {
+        "deterministic": 358
+      },
+      "selections_dist": {
+        "answer": 716
+      }
+    },
+    "PB_margin_tm0.02": {
+      "d_pol": 0.0,
+      "divergent_pairs": 0,
+      "total_pairs": 358,
+      "collapse_rate": 1.0,
+      "ci_95": [
+        0.0,
+        0.0
+      ],
+      "mean_tv": 0.0,
+      "mean_js": 0.0,
+      "modes_i_dist": {
+        "deterministic": 358
+      },
+      "selections_dist": {
+        "retrieve": 716
+      }
+    },
+    "PB_margin_tm0.05": {
+      "d_pol": 0.0,
+      "divergent_pairs": 0,
+      "total_pairs": 358,
+      "collapse_rate": 1.0,
+      "ci_95": [
+        0.0,
+        0.0
+      ],
+      "mean_tv": 0.0,
+      "mean_js": 0.0,
+      "modes_i_dist": {
+        "deterministic": 358
+      },
+      "selections_dist": {
+        "retrieve": 716
+      }
+    },
+    "PB_margin_tm0.10": {
+      "d_pol": 0.0,
+      "divergent_pairs": 0,
+      "total_pairs": 358,
+      "collapse_rate": 1.0,
+      "ci_95": [
+        0.0,
+        0.0
+      ],
+      "mean_tv": 0.0,
+      "mean_js": 0.0,
+      "modes_i_dist": {
+        "deterministic": 358
+      },
+      "selections_dist": {
+        "retrieve": 716
+      }
+    },
+    "PC_cyclic_dq0.05": {
+      "d_pol": 0.0,
+      "divergent_pairs": 0,
+      "total_pairs": 358,
+      "collapse_rate": 1.0,
+      "ci_95": [
+        0.0,
+        0.0
+      ],
+      "mean_tv": 0.0,
+      "mean_js": 0.0,
+      "modes_i_dist": {
+        "deterministic": 358
+      },
+      "selections_dist": {
+        "retrieve": 716
+      }
+    },
+    "PC_cyclic_dq0.08": {
+      "d_pol": 0.0,
+      "divergent_pairs": 0,
+      "total_pairs": 358,
+      "collapse_rate": 1.0,
+      "ci_95": [
+        0.0,
+        0.0
+      ],
+      "mean_tv": 0.0,
+      "mean_js": 0.0,
+      "modes_i_dist": {
+        "deterministic": 358
+      },
+      "selections_dist": {
+        "retrieve": 716
+      }
+    },
+    "PC_cyclic_dq0.10": {
+      "d_pol": 1.0,
+      "divergent_pairs": 358,
+      "total_pairs": 358,
+      "collapse_rate": 0.0,
+      "ci_95": [
+        1.0,
+        1.0
+      ],
+      "mean_tv": 0.0,
+      "mean_js": 0.0,
+      "modes_i_dist": {
+        "deterministic": 358
+      },
+      "selections_dist": {
+        "clarify": 286,
+        "retrieve": 72,
+        "wait": 358
+      }
+    },
+    "PD_sampling_gamma1.0": {
+      "d_pol": 0.03910614525139665,
+      "divergent_pairs": 14,
+      "total_pairs": 358,
+      "collapse_rate": 0.9608938547486033,
+      "ci_95": [
+        0.019553072625698324,
+        0.061452513966480445
+      ],
+      "mean_tv": 0.013767398881854107,
+      "mean_js": 0.0002022740251230767,
+      "modes_i_dist": {
+        "probabilistic": 358
+      },
+      "selections_dist": {
+        "answer": 119,
+        "clarify": 128,
+        "derive": 114,
+        "reason": 71,
+        "retrieve": 162,
+        "wait": 122
+      }
+    },
+    "PE_hybrid_tc0.05": {
+      "d_pol": 0.0,
+      "divergent_pairs": 0,
+      "total_pairs": 358,
+      "collapse_rate": 1.0,
+      "ci_95": [
+        0.0,
+        0.0
+      ],
+      "mean_tv": 0.013767398881854107,
+      "mean_js": 0.0002022740251230767,
+      "modes_i_dist": {
+        "deterministic": 358
+      },
+      "selections_dist": {
+        "retrieve": 716
+      }
+    },
+    "PE_hybrid_tc0.08": {
+      "d_pol": 0.6256983240223464,
+      "divergent_pairs": 224,
+      "total_pairs": 358,
+      "collapse_rate": 0.3743016759776536,
+      "ci_95": [
+        0.5754189944134078,
+        0.6759776536312849
+      ],
+      "mean_tv": 0.013767398881854107,
+      "mean_js": 0.0002022740251230767,
+      "modes_i_dist": {
+        "deterministic": 358
+      },
+      "selections_dist": {
+        "answer": 46,
+        "clarify": 55,
+        "derive": 44,
+        "reason": 30,
+        "retrieve": 492,
+        "wait": 49
+      }
+    },
+    "PE_hybrid_tc0.10": {
+      "d_pol": 0.19832402234636873,
+      "divergent_pairs": 71,
+      "total_pairs": 358,
+      "collapse_rate": 0.8016759776536313,
+      "ci_95": [
+        0.1591480446927375,
+        0.24022346368715083
+      ],
+      "mean_tv": 0.013767398881854107,
+      "mean_js": 0.0002022740251230767,
+      "modes_i_dist": {
+        "exploratory": 358
+      },
+      "selections_dist": {
+        "answer": 106,
+        "clarify": 113,
+        "derive": 101,
+        "reason": 66,
+        "retrieve": 220,
+        "wait": 110
+      }
+    }
+  },
+  "temporal_stability": {
+    "P0_canonical_argmax": {
+      "mean_flapping_rate": 0.0,
+      "max_flapping_rate": 0.0,
+      "mean_switches_per_trajectory": 0.0,
+      "zero_switch_fraction": 1.0,
+      "ci_95_flapping": [
+        0.0,
+        0.0
+      ]
+    },
+    "PA_hysteresis_dh0.05": {
+      "mean_flapping_rate": 0.015488215488215487,
+      "max_flapping_rate": 0.09090909090909091,
+      "mean_switches_per_trajectory": 0.17037037037037037,
+      "zero_switch_fraction": 0.8296296296296296,
+      "ci_95_flapping": [
+        0.011447811447811448,
+        0.01952861952861953
+      ]
+    },
+    "PA_hysteresis_dh0.10": {
+      "mean_flapping_rate": 0.0754208754208754,
+      "max_flapping_rate": 0.09090909090909091,
+      "mean_switches_per_trajectory": 0.8296296296296296,
+      "zero_switch_fraction": 0.17037037037037037,
+      "ci_95_flapping": [
+        0.07138047138047138,
+        0.07946127946127945
+      ]
+    },
+    "PB_margin_tm0.05": {
+      "mean_flapping_rate": 0.0,
+      "max_flapping_rate": 0.0,
+      "mean_switches_per_trajectory": 0.0,
+      "zero_switch_fraction": 1.0,
+      "ci_95_flapping": [
+        0.0,
+        0.0
+      ]
+    },
+    "PC_cyclic_dq0.05": {
+      "mean_flapping_rate": 0.12626262626262624,
+      "max_flapping_rate": 0.8181818181818182,
+      "mean_switches_per_trajectory": 1.3888888888888888,
+      "zero_switch_fraction": 0.8296296296296296,
+      "ci_95_flapping": [
+        0.0936026936026936,
+        0.16060606060606059
+      ]
+    },
+    "PD_sampling_gamma1.0": {
+      "mean_flapping_rate": 0.834006734006734,
+      "max_flapping_rate": 1.0,
+      "mean_switches_per_trajectory": 9.174074074074074,
+      "zero_switch_fraction": 0.0,
+      "ci_95_flapping": [
+        0.8195286195286194,
+        0.8478114478114477
+      ]
+    },
+    "PE_hybrid_tc0.10": {
+      "mean_flapping_rate": 0.793939393939394,
+      "max_flapping_rate": 1.0,
+      "mean_switches_per_trajectory": 8.733333333333333,
+      "zero_switch_fraction": 0.0,
+      "ci_95_flapping": [
+        0.7754208754208755,
+        0.8117845117845118
+      ]
+    }
+  },
+  "perturbation_sensitivity": {
+    "P0_canonical_argmax": {
+      "noise_sigma": 0.01,
+      "retention_rate": 1.0,
+      "perturbation_switch_rate": 0.0
+    },
+    "PA_hysteresis_dh0.05": {
+      "noise_sigma": 0.01,
+      "retention_rate": 0.9992592592592593,
+      "perturbation_switch_rate": 0.0007407407407407085
+    },
+    "PB_margin_tm0.05": {
+      "noise_sigma": 0.01,
+      "retention_rate": 1.0,
+      "perturbation_switch_rate": 0.0
+    },
+    "PC_cyclic_dq0.05": {
+      "noise_sigma": 0.01,
+      "retention_rate": 0.9655555555555555,
+      "perturbation_switch_rate": 0.0344444444444445
+    },
+    "PE_hybrid_tc0.10": {
+      "noise_sigma": 0.01,
+      "retention_rate": 1.0,
+      "perturbation_switch_rate": 0.0
+    }
+  },
+  "computational_latency": {
+    "P0_canonical_argmax": {
+      "iterations": 10000,
+      "total_seconds": 0.0251330000028247,
+      "mean_latency_us": 2.51330000028247,
+      "algorithmic_complexity": "O(|A|)",
+      "gpu_vram_allocated_mb": 0.0
+    },
+    "PA_hysteresis": {
+      "iterations": 10000,
+      "total_seconds": 0.030834299999696668,
+      "mean_latency_us": 3.083429999969667,
+      "algorithmic_complexity": "O(|A|)",
+      "gpu_vram_allocated_mb": 0.0
+    },
+    "PB_score_margin": {
+      "iterations": 10000,
+      "total_seconds": 0.05082380000385456,
+      "mean_latency_us": 5.082380000385456,
+      "algorithmic_complexity": "O(|A|)",
+      "gpu_vram_allocated_mb": 0.0
+    },
+    "PC_cyclic_rotation": {
+      "iterations": 10000,
+      "total_seconds": 0.06711590000486467,
+      "mean_latency_us": 6.711590000486467,
+      "algorithmic_complexity": "O(|A|)",
+      "gpu_vram_allocated_mb": 0.0
+    },
+    "PD_softmax_sampling": {
+      "iterations": 10000,
+      "total_seconds": 0.2792866000017966,
+      "mean_latency_us": 27.92866000017966,
+      "algorithmic_complexity": "O(|A|)",
+      "gpu_vram_allocated_mb": 0.0
+    },
+    "PE_hybrid": {
+      "iterations": 10000,
+      "total_seconds": 0.31886820000363514,
+      "mean_latency_us": 31.886820000363514,
+      "algorithmic_complexity": "O(|A|)",
+      "gpu_vram_allocated_mb": 0.0
+    }
+  },
+  "negative_controls": {
+    "NC1_scalar_null": {
+      "passed": true,
+      "mean_directional_displacement": 0.0,
+      "c0_p0_d_pol": 0.0,
+      "description": "Under C0, directional displacement is zero (||Delta V_dir||=0.000000 <= 0.0001) and P0 D_pol=0.0000"
+    },
+    "NC2_shuffled_correspondence": {
+      "passed": true,
+      "pearson_r": 0.07904269738472994,
+      "max_allowed_r": 0.5,
+      "description": "C2 shuffle destroys directional correspondence (r = 0.0790 <= 0.5)"
+    },
+    "NC3_zero_weight_identity": {
+      "passed": true,
+      "max_diff": 0.0,
+      "description": "Zero directional weighting matches scalar baseline bit-exactly"
+    },
+    "NC4_deterministic_repeatability": {
+      "passed": true,
+      "action_run0": "wait",
+      "action_run1": "wait",
+      "description": "Deterministic policies produce 100% bit-exact repeatable outputs"
+    },
+    "NC5_anti_tuning_invariance": {
+      "passed": true,
+      "h_clar_base_matches": true,
+      "h_ret_base_matches": true,
+      "h_clar_w_matches": true,
+      "h_ret_w_matches": true,
+      "description": "Observation parameters match locked manifest SHA-256 hashes bit-exactly"
+    },
+    "NC6_production_code_isolation": {
+      "passed": true,
+      "modified_files": [],
+      "description": "Zero modifications to src/core, src/api, or electron"
+    },
+    "NC7_genesis_gate_invariant": {
+      "passed": true,
+      "is_onboarded": false,
+      "description": "Genesis profile remains bit-exact {'is_onboarded': false}"
+    },
+    "NC8_high_confidence_collapse": {
+      "passed": true,
+      "p0_answer_dominance": 1.0,
+      "pe_answer_dominance": 1.0,
+      "description": "Under CTX_0, policies collapse to >= 99% deterministic answer dominance"
+    }
+  }
+}

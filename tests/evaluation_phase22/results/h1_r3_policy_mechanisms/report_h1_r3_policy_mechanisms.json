@@ -1,0 +1,27 @@
+{
+  "study_id": "PHASE_22_H1_R3_POLICY_MECHANISMS_STUDY",
+  "timestamp_epoch": 1789705435,
+  "classification": "RESULT_M3",
+  "classification_description": "HYBRID_CONFIDENCE_GATED_DIFFERENTIATION: Hybrid policy provides principled transition between deterministic exploitation (CTX_0 100% answer) and uncertainty-sensitive exploration (CTX_5 D_pol = 19.83%)",
+  "key_findings": {
+    "p0_d_pol": 0.0,
+    "pa_hysteresis_dh010_d_pol": 0.7988826815642458,
+    "pc_cyclic_dq010_d_pol": 1.0,
+    "pd_sampling_d_pol": 0.03910614525139665,
+    "pe_hybrid_d_pol": 0.19832402234636873,
+    "pe_hybrid_ctx0_answer_rate": 1.0,
+    "pa_hysteresis_flapping_rate": 0.015488215488215487,
+    "p0_flapping_rate": 0.0,
+    "pd_flapping_rate": 0.834006734006734,
+    "mean_cpu_latency_us": 31.886820000363514,
+    "gpu_vram_mb": 0.0
+  },
+  "negative_controls_all_passed": true,
+  "governance_invariants": {
+    "gate_2_status": "STRICTLY BLOCKED",
+    "phase_22_h1_status": "INCONCLUSIVE",
+    "adr_029_status": "DRAFT / NOT RATIFIED",
+    "genesis_gate": "bit-exact {'is_onboarded': false}",
+    "production_mutations": 0
+  }
+}
