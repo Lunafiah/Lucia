@@ -1905,3 +1905,81 @@ to determine why continuous directional information fails to produce discrete po
 - Manifest: [`manifest_h1_r3_epistemic_to_policy_translation.json`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/fixtures/manifest_h1_r3_epistemic_to_policy_translation.json)
 - Formal Spec: [`PHASE_22_H1_R3_EPISTEMIC_TO_POLICY_TRANSLATION_STUDY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase22-Epistemic_Foraging/PHASE_22_H1_R3_EPISTEMIC_TO_POLICY_TRANSLATION_STUDY.md)
 - Governance state: Phase 22 H1 = `INCONCLUSIVE`, Gate 2 = `STRICTLY BLOCKED`, ADR-029 = `DRAFT / RESEARCH RECORD ONLY`, Genesis = `LOCKED`.
+
+---
+
+## 36. Contextual Decision Boundary & Action Selection Study
+
+**Study ID**: `PHASE_22_H1_CONTEXTUAL_DECISION_BOUNDARY_ACTION_SELECTION_STUDY`  
+**Master Seed**: `9999` | **Shuffle Seed (C2)**: `7113` | **Independent Model Seed (C3)**: `6180`  
+**Bootstrap Seed**: `54321` ($B = 10,000$ iterations)  
+**Corpus SHA-256**: `d0061e8cfdd160f4ebccb7100e4fe3eeef9ff18a1a4c9c1b3f912a76f2ae82c0`  
+**Corpus**: $N=270$ Candidate G1 probes, 358 matched discordant pairs ($|S_i - S_j| \le 0.020$, discordant R3 ternary direction signs)  
+**Status**: `[RESEARCH VALIDATED / HARNESS ONLY / NOT FOR PRODUCTION PROMOTION]`
+
+### 36.1 Motivation & Preregistered Hypothesis
+
+While the preceding translation study confirmed that continuous directional displacement ($\|\Delta\mathbf{V}_{\text{dir}}\| \sim 0.094$ nats) propagates into action values with high fidelity, discrete argmax divergence remained strictly $D_{\text{pol}} = 0.0000$ due to the static pragmatic advantage of default action `answer` ($\Delta Q \approx 1.35$ nats).
+This study tested the preregistered **Contextual Decision Boundary Hypothesis**:
+> If pragmatic certainty is contextually reduced ($V_{\text{pragm}}(\text{"answer"}) \in \{1.00, 0.80, 0.60, 0.40, 0.20, 0.00\}$), does the continuous directional displacement cross the analytical decision boundary ($B = V_{\text{best\_nonanswer}} - V_{\text{answer}}$) to produce discrete action divergence ($D_{\text{pol}} > 0$), or does the deterministic argmax operator enforce lockstep discretization even when pragmatic dominance is eliminated?
+
+### 36.2 Quantitative Summary Across 6 Contexts and 4 Conditions (358 Matched Pairs)
+
+| Context | $V_{\text{pragm}}(\text{ans})$ | Cond | Mean Boundary $B$ (nats) | Bootstrap 95% CI ($B$) | Mean $\|\Delta\mathbf{V}_{\text{dir}}\|$ | Bootstrap 95% CI ($\|\Delta V\|$) | Mean $\Delta B_{\text{dir}}$ | $D_{\text{pol}}$ | Ranking Change Rate | Mean $D_{\text{TV}}$ | Mean $D_{\text{JS}}$ |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| **CTX_0** | $1.00$ | C0 | $-0.949869$ | $[-0.949946, -0.949790]$ | $0.000000$ | $[0.000000, 0.000000]$ | $0.000000$ | $0.0000$ | $0.0000$ | $0.000253$ | $0.000000$ |
+| | | **C1** | **$-0.887944$** | **$[-0.889024, -0.886861]$** | **$0.093653$** | **$[0.090910, 0.096395]$** | **$0.029858$** | **$0.0000$** | **$0.0000$** | **$0.010833$** | **$0.000156$** |
+| | | C2 | $-0.875506$ | $[-0.876745, -0.874305]$ | $0.039067$ | $[0.035305, 0.042810]$ | $0.003250$ | $0.0000$ | $0.0000$ | $0.004486$ | $0.000047$ |
+| | | C3 | $-0.842205$ | $[-0.843087, -0.841323]$ | $0.090408$ | $[0.086393, 0.094423]$ | $0.040513$ | $0.0000$ | $0.0000$ | $0.012150$ | $0.000121$ |
+| **CTX_1** | $0.80$ | C0 | $-0.749869$ | $[-0.749946, -0.749790]$ | $0.000000$ | $[0.000000, 0.000000]$ | $0.000000$ | $0.0000$ | $0.0000$ | $0.000264$ | $0.000000$ |
+| | | **C1** | **$-0.687944$** | **$[-0.689024, -0.686861]$** | **$0.093653$** | **$[0.090910, 0.096395]$** | **$0.029858$** | **$0.0000$** | **$0.0000$** | **$0.011541$** | **$0.000167$** |
+| | | C2 | $-0.675506$ | $[-0.676745, -0.674305]$ | $0.039067$ | $[0.035305, 0.042810]$ | $0.003250$ | $0.0000$ | $0.0000$ | $0.004749$ | $0.000050$ |
+| | | C3 | $-0.642205$ | $[-0.643087, -0.641323]$ | $0.090408$ | $[0.086393, 0.094423]$ | $0.040513$ | $0.0000$ | $0.0000$ | $0.012637$ | $0.000126$ |
+| **CTX_2** | $0.60$ | C0 | $-0.549869$ | $[-0.549946, -0.549790]$ | $0.000000$ | $[0.000000, 0.000000]$ | $0.000000$ | $0.0000$ | $0.0000$ | $0.000273$ | $0.000000$ |
+| | | **C1** | **$-0.487944$** | **$[-0.489024, -0.486861]$** | **$0.093653$** | **$[0.090910, 0.096395]$** | **$0.029858$** | **$0.0000$** | **$0.0000$** | **$0.012192$** | **$0.000177$** |
+| | | C2 | $-0.475506$ | $[-0.476745, -0.474305]$ | $0.039067$ | $[0.035305, 0.042810]$ | $0.003250$ | $0.0000$ | $0.0000$ | $0.004990$ | $0.000053$ |
+| | | C3 | $-0.442205$ | $[-0.443087, -0.441323]$ | $0.090408$ | $[0.086393, 0.094423]$ | $0.040513$ | $0.0000$ | $0.0000$ | $0.013042$ | $0.000131$ |
+| **CTX_3** | $0.40$ | C0 | $-0.349869$ | $[-0.349946, -0.349790]$ | $0.000000$ | $[0.000000, 0.000000]$ | $0.000000$ | $0.0000$ | $0.0000$ | $0.000281$ | $0.000000$ |
+| | | **C1** | **$-0.287944$** | **$[-0.289024, -0.286861]$** | **$0.093653$** | **$[0.090910, 0.096395]$** | **$0.029858$** | **$0.0000$** | **$0.0000$** | **$0.012780$** | **$0.000186$** |
+| | | C2 | $-0.275506$ | $[-0.276745, -0.274305]$ | $0.039067$ | $[0.035305, 0.042810]$ | $0.003250$ | $0.0000$ | $0.0000$ | $0.005211$ | $0.000056$ |
+| | | C3 | $-0.242205$ | $[-0.243087, -0.241323]$ | $0.090408$ | $[0.086393, 0.094423]$ | $0.040513$ | $0.0000$ | $0.0000$ | $0.013373$ | $0.000135$ |
+| **CTX_4** | $0.20$ | C0 | $-0.149869$ | $[-0.149946, -0.149790]$ | $0.000000$ | $[0.000000, 0.000000]$ | $0.000000$ | $0.0000$ | $0.0000$ | $0.000287$ | $0.000000$ |
+| | | **C1** | **$-0.087944$** | **$[-0.089024, -0.086861]$** | **$0.093653$** | **$[0.090910, 0.096395]$** | **$0.029858$** | **$0.0000$** | **$0.0000$** | **$0.013305$** | **$0.000195$** |
+| | | C2 | $-0.075506$ | $[-0.076745, -0.074305]$ | $0.039067$ | $[0.035305, 0.042810]$ | $0.003250$ | $0.0000$ | $0.0000$ | $0.005407$ | $0.000058$ |
+| | | C3 | $-0.042205$ | $[-0.043087, -0.041323]$ | $0.090408$ | $[0.086393, 0.094423]$ | $0.040513$ | $0.0000$ | $0.0000$ | $0.013637$ | $0.000138$ |
+| **CTX_5** | $0.00$ | C0 | $+0.050131$ | $[+0.050054, +0.050210]$ | $0.000000$ | $[0.000000, 0.000000]$ | $0.000000$ | $0.0000$ | $0.0000$ | $0.000292$ | $0.000000$ |
+| | | **C1** | **$+0.112056$** | **$[+0.110976, +0.113139]$** | **$0.093653$** | **$[0.090910, 0.096395]$** | **$0.029858$** | **$0.0000$** | **$0.7989$** | **$0.013767$** | **$0.000202$** |
+| | | C2 | $+0.124494$ | $[+0.123255, +0.125695]$ | $0.039067$ | $[0.035305, 0.042810]$ | $0.003250$ | $0.0000$ | $0.0000$ | $0.005579$ | $0.000060$ |
+| | | C3 | $+0.157795$ | $[+0.156913, +0.158677]$ | $0.090408$ | $[0.086393, 0.094423]$ | $0.040513$ | $0.0000$ | $0.7989$ | $0.013845$ | $0.000140$ |
+
+### 36.3 Key Empirical & Mechanistic Takeaways
+
+1. **Boundary Sign Flip at CTX_5**: Across CTX_0..CTX_4, boundary distance $B < 0$, meaning `answer` dominates. At CTX_5 ($V_{\text{pragm}}=0.00$), $B$ flips positive to $+0.112056$ nats ($95\%$ CI $[+0.110976, +0.113139]$), confirming that the analytical boundary is cleanly crossed.
+2. **Lockstep Action Transition**: In CTX_0..CTX_4, $100\%$ (716/716) of probes choose `answer`. In CTX_5, $100\%$ (716/716) of probes choose `retrieve`. Because `retrieve` dominates all other actions for both probes in every matched discordant pair, the transition occurs in lockstep across the entire ensemble, yielding $D_{\text{pol}} = 0.0000$ across all 6 contexts.
+3. **Sub-Action Ranking Reorganizations (79.89%)**: In CTX_5, while top action is locked to `retrieve`, sub-actions (`clarify`, `wait`, `derive`) permute their relative order in **$79.89\%$ (286/358)** of pairs between discordant probes.
+4. **Diagnostic Probabilistic Divergence**: The diagnostic softmax policy distribution shifts continuously across all contexts ($D_{\text{TV}}$ rises from $0.0108$ in CTX_0 to $0.0138$ in CTX_5, $\gg \tau_{\text{TV}} = 1.0 \times 10^{-4}$; $D_{\text{JS}}$ rises to $0.000202 \gg \tau_{\text{JS}} = 1.0 \times 10^{-5}$).
+5. **Pre-Registered Classification**: Formally classified as **`RESULT_B — PERSISTENT_DETERMINISTIC_DISCRETIZATION`**.
+
+### 36.4 Negative Controls Audit (8/8 NCs + 1/1 RC PASSED)
+- **NC1 (Scalar Null)**: Under C0, displacement $= 0.000000 \le \tau_{\text{val}}$, $D_{\text{pol}} = 0.0$ across all 6 contexts (PASSED).
+- **NC2 (Direction-Shuffled Correspondence)**: Pearson $r = +0.071916 \le 0.50$ (PASSED).
+- **NC3 (Zero Directional Weighting Identity)**: $W_{\text{dir}} = 0$ bit-exact scalar baseline (PASSED).
+- **NC4 (Deterministic Repeatability)**: Bit-exact match across repeat evaluations (PASSED).
+- **NC5 (Anti-Tuning Parameter Invariance)**: Parameter and permutation hashes match manifest (PASSED).
+- **NC6 (Production Code Isolation)**: Zero modifications to `src/core/**` (PASSED).
+- **NC7 (Genesis Gate Invariant)**: Bit-exact `{"is_onboarded": false}` (PASSED).
+- **NC8 (Context Monotonicity Control)**: Monotonic increase in $B$ verified (step $= +0.2000$ nats) (PASSED).
+- **RC1 (Cross-Model Replication Control)**: Replicated under $M_{\text{indep}}$ with $\|\Delta\mathbf{V}_{\text{dir}}\| = 0.090408 > \tau_{\text{val}}$ across all contexts (PASSED).
+
+### 36.5 Automated Test & Artifact Ledger
+- **Evaluation Harness**: [`evaluate_h1_r3_contextual_decision_boundary.py`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/scripts/evaluate_h1_r3_contextual_decision_boundary.py)
+- **Dedicated Test Suite**: [`test_h1_r3_contextual_decision_boundary.py`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/test_h1_r3_contextual_decision_boundary.py) — **29/29 PASSED** in 11.55s.
+- **Full Phase 22 Regression**: **430/430 PASSED** in 90.53s.
+- **Results Fixture**: [`results_h1_r3_contextual_decision_boundary.json`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/fixtures/results_h1_r3_contextual_decision_boundary.json).
+- **Negative Controls Fixture**: [`nc_h1_r3_contextual_decision_boundary.json`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/fixtures/nc_h1_r3_contextual_decision_boundary.json).
+- **15-Point Formal Report**: [`report_h1_r3_contextual_decision_boundary.json`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/fixtures/report_h1_r3_contextual_decision_boundary.json).
+- **CSV Summary Table**: [`summary_h1_r3_contextual_decision_boundary.csv`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/fixtures/summary_h1_r3_contextual_decision_boundary.csv).
+- **Manifest**: [`manifest_h1_r3_contextual_decision_boundary.json`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/fixtures/manifest_h1_r3_contextual_decision_boundary.json).
+- **Formal Spec**: [`PHASE_22_H1_R3_CONTEXTUAL_DECISION_BOUNDARY_STUDY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase22-Epistemic_Foraging/PHASE_22_H1_R3_CONTEXTUAL_DECISION_BOUNDARY_STUDY.md).
+- **Governance State**: Phase 22 H1 = `INCONCLUSIVE`, Gate 2 = `STRICTLY BLOCKED` ($\Delta_{\text{HM}} = 0.0685 < 0.1500$), ADR-029 = `DRAFT / RESEARCH RECORD ONLY / NOT RATIFIED`, Genesis = `LOCKED`.
+

@@ -1,0 +1,111 @@
+{
+  "NC1_scalar_null": {
+    "passed": true,
+    "details": {
+      "CTX_0": {
+        "mean_l2": 0.0,
+        "d_pol": 0.0,
+        "passed": true
+      },
+      "CTX_1": {
+        "mean_l2": 0.0,
+        "d_pol": 0.0,
+        "passed": true
+      },
+      "CTX_2": {
+        "mean_l2": 0.0,
+        "d_pol": 0.0,
+        "passed": true
+      },
+      "CTX_3": {
+        "mean_l2": 0.0,
+        "d_pol": 0.0,
+        "passed": true
+      },
+      "CTX_4": {
+        "mean_l2": 0.0,
+        "d_pol": 0.0,
+        "passed": true
+      },
+      "CTX_5": {
+        "mean_l2": 0.0,
+        "d_pol": 0.0,
+        "passed": true
+      }
+    }
+  },
+  "NC2_direction_shuffled": {
+    "passed": true,
+    "details": {
+      "pearson_r_c2_c1": 0.07191574283404462,
+      "threshold": 0.5,
+      "passed": true
+    }
+  },
+  "NC3_zero_directional_weighting": {
+    "passed": true,
+    "details": {
+      "allclose_c0": true,
+      "passed": true
+    }
+  },
+  "NC4_deterministic_repeatability": {
+    "passed": true,
+    "details": {
+      "repeat_match": true,
+      "passed": true
+    }
+  },
+  "NC5_anti_tuning_invariance": {
+    "passed": true,
+    "details": {
+      "manifest_hash_match": true,
+      "passed": true
+    }
+  },
+  "NC6_production_isolation": {
+    "passed": true,
+    "details": {
+      "production_diff_zero": true,
+      "passed": true
+    }
+  },
+  "NC7_genesis_gate": {
+    "passed": true,
+    "details": {
+      "is_onboarded": false,
+      "passed": true
+    }
+  },
+  "NC8_context_monotonicity": {
+    "passed": true,
+    "details": {
+      "b_means_c1": [
+        -0.8879436452922465,
+        -0.6879436452922467,
+        -0.4879436452922466,
+        -0.2879436452922467,
+        -0.0879436452922467,
+        0.1120563547077533
+      ],
+      "strictly_monotonic_increase": true,
+      "passed": true
+    }
+  },
+  "RC1_replication_control": {
+    "passed": true,
+    "details": {
+      "mean_l2_by_context": [
+        0.0904080954237981,
+        0.0904080954237981,
+        0.0904080954237981,
+        0.0904080954237981,
+        0.0904080954237981,
+        0.0904080954237981
+      ],
+      "all_above_tau_val": true,
+      "passed": true
+    }
+  },
+  "all_passed": true
+}
