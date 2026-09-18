@@ -1,0 +1,39 @@
+{
+  "NC1_scalar_null": {
+    "passed": true,
+    "description": "Scalar baseline C0 yields zero displacement and zero policy divergence",
+    "mean_l2": 0.0,
+    "d_pol": 0.0
+  },
+  "NC2_direction_shuffled_reduced": {
+    "passed": true,
+    "description": "C2 shuffled correspondence reduced below tau_corr_max (0.5)",
+    "r_c2_c1": 0.07191574283404462
+  },
+  "NC3_zero_directional_weighting": {
+    "passed": true,
+    "description": "W_dir = 0 reproduces C0 scalar baseline identically"
+  },
+  "NC4_deterministic_repeatability": {
+    "passed": true,
+    "description": "Re-running pair produces bit-exact identical action values and margins"
+  },
+  "NC5_anti_tuning_manifest_invariance": {
+    "passed": true,
+    "description": "Formulas, tolerances, and beta_P4 match pre-frozen manifest"
+  },
+  "NC6_production_code_isolation": {
+    "passed": true,
+    "description": "src/core/** remains completely untouched (diff = 0)"
+  },
+  "NC7_genesis_gate_invariant": {
+    "passed": true,
+    "description": "data/profile.json remains bit-exact {is_onboarded: false}"
+  },
+  "RC1_cross_model_replication": {
+    "passed": true,
+    "description": "C3 independent model exhibits non-zero displacement and positive correlation with C1",
+    "mean_l2": 0.0904080954237981,
+    "r_c3_c1": 0.9999999975634796
+  }
+}

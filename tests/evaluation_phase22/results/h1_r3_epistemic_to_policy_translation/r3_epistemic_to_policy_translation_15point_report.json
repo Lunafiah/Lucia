@@ -1,0 +1,26 @@
+{
+  "study_id": "PHASE_22_H1_R3_EPISTEMIC_TO_POLICY_TRANSLATION_STUDY",
+  "master_seed": 9999,
+  "corpus_sha": "d0061e8cfdd160f4ebccb7100e4fe3eeef9ff18a1a4c9c1b3f912a76f2ae82c0",
+  "elapsed_seconds": 25.470057249069214,
+  "p0_canonical_c1_mean_l2_v_dir": 0.09365278380248122,
+  "p0_canonical_c1_bootstrap_95ci": [
+    0.09091014223676797,
+    0.0963951700393428
+  ],
+  "p0_canonical_c1_mean_abs_delta_margin": 0.03325223427555085,
+  "p0_canonical_c1_d_pol": 0.0,
+  "p0_canonical_c1_r_eig_v": 0.9999999909541256,
+  "p0_canonical_c1_action_specific_variance_frac": 0.9114366047398096,
+  "p0_canonical_c2_shuffled_r": 0.07191574283404462,
+  "p0_canonical_c3_indep_r": 0.9999999975634796,
+  "p1_precision_weighted_c1_d_pol": 0.0,
+  "p2_nonlinear_c1_d_pol": 0.0,
+  "p4_rescaled_c1_d_pol": 0.0,
+  "primary_bottleneck_classification": "DECISION_DISCRETIZATION",
+  "classification_rationale": "Continuous action values shift (||Delta_V_dir|| = 0.093653), correlate with EIG (r = 1.0000), and shift policy margins (|Delta_margin| = 0.033252), while discrete argmax remains completely unchanged (D_pol = 0.0000).",
+  "negative_controls_passed": true,
+  "rc1_replication_passed": true,
+  "gate_2_status": "STRICTLY_BLOCKED",
+  "phase_22_h1_status": "INCONCLUSIVE"
+}

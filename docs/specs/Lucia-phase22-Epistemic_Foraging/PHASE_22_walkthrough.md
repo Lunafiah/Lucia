@@ -1842,3 +1842,66 @@ Five counterfactual conditions (C0–C4) and a full $2 	imes 4$ cross-factorial 
 - **Manifest**: [`manifest_h1_r3_information_sufficiency.json`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/fixtures/manifest_h1_r3_information_sufficiency.json)
 - **Formal Spec**: [`PHASE_22_H1_R3_INFORMATION_SUFFICIENCY_STUDY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase22-Epistemic_Foraging/PHASE_22_H1_R3_INFORMATION_SUFFICIENCY_STUDY.md)
 - **Governance State**: Phase 22 H1 = `INCONCLUSIVE`, Gate 2 = `STRICTLY BLOCKED`, ADR-029 = `DRAFT / RESEARCH RECORD ONLY`, Genesis = `LOCKED`.
+
+
+---
+
+## 35. R3 Epistemic-to-Policy Translation & Gate 2 Sensitivity Study
+
+**Study ID**: `PHASE_22_H1_R3_EPISTEMIC_TO_POLICY_TRANSLATION_STUDY`  
+**Master Seed**: `9999` | **Shuffle Seed (C2)**: `7113` | **Independent Model Seed (C3)**: `6180`  
+**Bootstrap Seed**: `54321` ($B = 10,000$ iterations)  
+**Corpus SHA-256**: `d0061e8cfdd160f4ebccb7100e4fe3eeef9ff18a1a4c9c1b3f912a76f2ae82c0`  
+**Corpus**: $N=270$ Candidate G1 probes, 358 matched discordant pairs ($|S_i - S_j| \le 0.020$, discordant R3 ternary direction signs)  
+**Status**: `[RESEARCH VALIDATED / HARNESS ONLY / NOT FOR PRODUCTION PROMOTION]`
+
+### 35.1 Motivation & Diagnostic Research Question
+
+While prior studies established that canonical R3 direction induces robust incremental EIG across independent observation models, discrete argmax policy divergence remained strictly $D_{\text{pol}} = 0.0000$ under canonical additive EFE.
+This study tracked the complete causal chain:
+$$v_{\text{dir}} \longrightarrow \Delta\text{EIG} \longrightarrow \Delta q \longrightarrow \mathbf{V}(a) \longrightarrow \Delta\text{margin} \longrightarrow a^*$$
+to determine why continuous directional information fails to produce discrete policy flips and whether pre-registered sensitivity translations (P1–P4) can bridge the gap.
+
+### 35.2 Core Empirical Findings across 358 Matched Pairs
+
+| Policy Formulation | Condition | Mean $\|\Delta\mathbf{V}_{\text{dir}}\|$ | Bootstrap 95% CI | Mean $|\Delta\text{margin}|$ | $D_{\text{pol}}$ | Ranking Change Rate | Mean $D_{\text{TV}}$ | $r(\text{EIG}, V)$ | Status |
+|---|---|---|---|---|---|---|---|---|---|
+| **P0 (Canonical EFE)** | C0 (Scalar) | $0.000000$ | $[0.000000, 0.000000]$ | $0.000000$ | $0.0000$ | $0.0000$ | $0.000253$ | N/A | **ABSENT (Expected Null)** |
+| | **C1 (Canonical R3)** | **$0.093653$** | **$[0.090910, 0.096395]$** | **$0.033252$** | **$0.0000$** | **$0.0000$** | **$0.010833$** | **$+1.0000$** | **CONTINUOUS PROPAGATION** |
+| | C2 (Shuffled) | $0.039067$ | $[0.035305, 0.042810]$ | $0.015259$ | $0.0000$ | $0.0000$ | $0.004486$ | $+0.8917$ | **ATTENUATED** |
+| | C3 (Indep Model) | $0.090408$ | $[0.086393, 0.094423]$ | $0.040513$ | $0.0000$ | $0.0000$ | $0.012150$ | $+1.0000$ | **REPLICATED (RC1)** |
+| **P1 (Precision-Weighted)** | **C1 (Canonical R3)** | **$0.120707$** | **$[0.117102, 0.124313]$** | **$0.045815$** | **$0.0000$** | **$0.7989$** | **$0.014268$** | **$+1.0000$** | **79.89% RANKING SHIFTS** |
+| | C2 (Shuffled) | $0.050458$ | $[0.045566, 0.055352]$ | $0.021134$ | $0.0000$ | $0.2765$ | $0.005966$ | $+0.9051$ | **SHUFFLE DEGRADED** |
+| **P2 (Nonlinear Log)** | C1 (Canonical R3) | $0.000058$ | $[0.000056, 0.000059]$ | $0.000000$ | $0.0000$ | $0.0000$ | $0.000005$ | $+1.0000$ | **SCALE-COMPRESSED** |
+| **P3 (Continuous Readout)** | **C1 (Canonical R3)** | **$0.093653$** | **$[0.090910, 0.096395]$** | **$0.033252$** | **$0.0000$** | **$0.0000$** | **$0.010833$** | **$+1.0000$** | **FULL DISTRIBUTION** |
+| **P4 (Sensitivity Rescaled)** | **C1 (Canonical R3)** | **$0.951830$** | **$[0.921992, 0.981668]$** | **$1.083990$** | **$0.0000$** | **$1.0000$** | **$0.187073$** | **$+1.0000$** | **100% RANKING SHIFTS** |
+| | C2 (Shuffled) | $0.399878$ | $[0.360030, 0.439419]$ | $0.389078$ | $0.0000$ | $0.4665$ | $0.073687$ | $+0.9335$ | **SHUFFLE DEGRADED** |
+
+### 35.3 Key Mechanistic Findings & Classification
+
+1. **Continuous Action-Value Propagation**: Mean $\|\Delta\mathbf{V}_{\text{dir}}\| = 0.093653$ nats ($95\%$ CI $[0.090910, 0.096395]$) with $100\%$ exceeding $\tau_{\text{val}} = 10^{-4}$ ($930 \times$ larger) and near-perfect correlation with EIG ($r = +1.0000$). R3 information is faithfully preserved in the continuous action-value layer.
+2. **Action-Specific Variance Dominance**: $91.14\%$ of variance in $\Delta\mathbf{V}_{\text{dir}}$ is action-specific ($\eta_{\text{action}}^2 = 0.9114$), differentiating epistemic alternatives (`clarify` vs `retrieve`) rather than applying a common-mode shift.
+3. **Substantial Ranking & Distributional Modulations**: Precision weighting (P1) induces relative action ranking changes in **$79.89\%$** of pairs; margin-rescaling (P4) shifts rankings in **$100.00\%$** of pairs with mean $D_{\text{TV}} = 0.187073$ (18.7% probability mass shift).
+4. **Argmax Discretization Bottleneck**: Argmax divergence remains $D_{\text{pol}} = 0.0000$ because the static pragmatic-cost default margin ($\Delta Q \approx 1.35$ nats between answer and epistemic actions) dominates the dynamic directional displacement. The winner-take-all argmax operator masks the continuous differentiation.
+5. **Deterministic Decision Classification**: Classified as **`DECISION_DISCRETIZATION`** strictly following the pre-registered precedence rubric.
+
+### 35.4 Controls Summary (7/7 Negative Controls + 1/1 Replication Control PASSED)
+- **NC1 (Scalar Null)**: $\|\Delta\mathbf{V}\| = 0.000000$, $\Delta\text{margin} = 0.000000$, $D_{\text{pol}} = 0.0$ (PASSED)
+- **NC2 (Shuffled R3)**: Correspondence degraded to $r = +0.071916 \le 0.50$ (PASSED)
+- **NC3 (Zero Directional Weighting)**: Bit-exact match to C0 scalar baseline (PASSED)
+- **NC4 (Deterministic Repeatability)**: Bit-exact match across repeat evaluations (PASSED)
+- **NC5 (Anti-Tuning Manifest Invariance)**: Exact parameters ($\beta_{\text{P4}} = 0.973819141071271$, $\overline{\text{EIG}} = 0.016626$) verified (PASSED)
+- **NC6 (Production Code Isolation)**: Zero modifications to `src/core/**` (PASSED)
+- **NC7 (Genesis Gate Invariant)**: Bit-exact `{"is_onboarded": false}` (PASSED)
+- **RC1 (Cross-Model Replication)**: Replicated under $M_{\text{indep}}$ with $\|\Delta\mathbf{V}\| = 0.090408$ and $r = +1.0000$ (PASSED)
+
+### 35.5 Automated Test & Artifact Ledger
+- Dedicated suite: `tests/evaluation_phase22/test_h1_r3_epistemic_to_policy_translation.py` — **30/30 PASSED** in 7.79s
+- Full Phase 22 Regression: **401/401 PASSED** in 81.11s
+- Results JSON: [`r3_epistemic_to_policy_translation_results.json`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/results/h1_r3_epistemic_to_policy_translation/r3_epistemic_to_policy_translation_results.json)
+- Negative Controls: [`r3_epistemic_to_policy_translation_negative_controls.json`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/results/h1_r3_epistemic_to_policy_translation/r3_epistemic_to_policy_translation_negative_controls.json)
+- 15-Point Report: [`r3_epistemic_to_policy_translation_15point_report.json`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/results/h1_r3_epistemic_to_policy_translation/r3_epistemic_to_policy_translation_15point_report.json)
+- Summary CSV: [`r3_epistemic_to_policy_translation_summary.csv`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/results/h1_r3_epistemic_to_policy_translation/r3_epistemic_to_policy_translation_summary.csv)
+- Manifest: [`manifest_h1_r3_epistemic_to_policy_translation.json`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/fixtures/manifest_h1_r3_epistemic_to_policy_translation.json)
+- Formal Spec: [`PHASE_22_H1_R3_EPISTEMIC_TO_POLICY_TRANSLATION_STUDY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase22-Epistemic_Foraging/PHASE_22_H1_R3_EPISTEMIC_TO_POLICY_TRANSLATION_STUDY.md)
+- Governance state: Phase 22 H1 = `INCONCLUSIVE`, Gate 2 = `STRICTLY BLOCKED`, ADR-029 = `DRAFT / RESEARCH RECORD ONLY`, Genesis = `LOCKED`.
