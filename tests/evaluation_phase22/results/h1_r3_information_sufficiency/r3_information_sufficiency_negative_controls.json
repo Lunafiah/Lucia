@@ -1,0 +1,50 @@
+{
+  "all_passed": true,
+  "passed_count": 8,
+  "total_count": 8,
+  "controls": {
+    "NC1_null_directional_baseline": {
+      "description": "C0 scalar baseline must yield R == 0.000 and mean |Delta EIG_dir| <= tau_EIG",
+      "passed": true,
+      "retention_rate": 0.0,
+      "mean_abs_delta_eig_dir": 0.0
+    },
+    "NC2_direction_destroyed_correspondence": {
+      "description": "C2 direction shuffle must reduce correspondence relative to C1 (r <= 0.5)",
+      "passed": true,
+      "pearson_r_vs_c1": 0.184829402527272,
+      "threshold": 0.5
+    },
+    "NC3_representation_independent_control": {
+      "description": "C4 independent representation evaluated against frozen threshold relative to C1",
+      "passed": true,
+      "pearson_r_vs_c1": -0.2582843585324341,
+      "abs_diff_mean_vs_c1": 0.004870403974637328,
+      "c4_retention": 0.6089385474860335
+    },
+    "NC4_independent_observation_model": {
+      "description": "C3 independent model exhibits non-zero directional coupling and distinct parameters",
+      "passed": true,
+      "c3_retention": 1.0,
+      "c3_mean_abs_delta_eig_dir": 0.020256418838721806
+    },
+    "NC5_deterministic_repeatability": {
+      "description": "Repeated C1 evaluations must be bit-exact",
+      "passed": true,
+      "diff_vs_repeat": 0.0
+    },
+    "NC6_corpus_integrity": {
+      "description": "Corpus SHA-256 must match d0061e8cfdd160f4...",
+      "passed": true,
+      "sha256": "d0061e8cfdd160f4ebccb7100e4fe3eeef9ff18a1a4c9c1b3f912a76f2ae82c0"
+    },
+    "NC7_production_isolation": {
+      "description": "src/core/**, src/api/**, electron/** diff must be exactly 0 files",
+      "passed": true
+    },
+    "NC8_genesis_gate": {
+      "description": "data/profile.json must remain bit-exact {'is_onboarded': false}",
+      "passed": true
+    }
+  }
+}

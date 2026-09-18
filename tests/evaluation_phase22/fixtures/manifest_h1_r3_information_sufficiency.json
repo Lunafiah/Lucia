@@ -1,0 +1,60 @@
+{
+  "study_id": "PHASE_22_H1_R3_INFORMATION_SUFFICIENCY_STUDY",
+  "master_seed": 9999,
+  "shuffle_seed": 7113,
+  "indep_obs_seed": 6180,
+  "repr_control_seed": 8421,
+  "bootstrap_seed": 54321,
+  "bootstrap_iterations": 10000,
+  "expected_corpus_sha": "d0061e8cfdd160f4ebccb7100e4fe3eeef9ff18a1a4c9c1b3f912a76f2ae82c0",
+  "expected_n_probes": 270,
+  "expected_discordant_pairs": 358,
+  "tolerance_eig": 0.0001,
+  "tolerance_tv": 0.0001,
+  "tolerance_js": 1e-05,
+  "tolerance_corr_max": 0.5,
+  "tolerance_equiv_c4": 0.005,
+  "historical_canonical_mean_eig_additive": 0.016626,
+  "conditions": [
+    "C0_scalar",
+    "C1_canonical",
+    "C2_shuffled",
+    "C3_indep_obs",
+    "C4_repr_ctrl"
+  ],
+  "observation_models": [
+    "M_canon",
+    "M_indep"
+  ],
+  "locked_canon_parameter_hashes": {
+    "M_CANON_CLARIFY_BASE_LOGITS": "f971491521773b69b1c9c02223d2c0896dac3f5627b889ff4e50c18008cd358a",
+    "M_CANON_RETRIEVE_BASE_LOGITS": "02e0b76d9a512245f127fbbba3dbf56ed45516827ae636b2d0261403abe61f8b",
+    "M_CANON_CLARIFY_W_DIR": "481e27b00ea8434d2a4d9cdd49dd2f5ddced8010e9dcfbd92b0a2e9b199f8d57",
+    "M_CANON_RETRIEVE_W_DIR": "adc5f3a3c772850f1f69084531ef4a2171a86b3272ad3c7b6534572d06d0b767",
+    "M_CANON_CLARIFY_B_S": "644b4c183b5f735545a8477d4a9a5a4735eb47849674971a58c5206da33517b5",
+    "M_CANON_RETRIEVE_B_S": "039084510144facc9b02a635fbf78c289c2b568c7e5b1e394d14e9b59a127137"
+  },
+  "locked_indep_parameter_hashes": {
+    "M_INDEP_CLARIFY_BASE_LOGITS": "53465b8b23c00e639a54ed5a46e185783ef7fdc35490386b9db981dfd1ba6b2f",
+    "M_INDEP_RETRIEVE_BASE_LOGITS": "bfeecbad7c83f7a20a7c3b2603aadc578519787ef7dee2627aeb3c637e7bb7af",
+    "M_INDEP_CLARIFY_W_DIR": "5c6ed1feea0d79ce865f0ac6f0e315518893e7765d113706bea39624ce40ea02",
+    "M_INDEP_RETRIEVE_W_DIR": "eb8dd6941478d61abc413fca84a60066b140690170a33e7dc5ab9537e8e8a666",
+    "M_INDEP_CLARIFY_B_S": "fbe4e712ccc73a39ce0610ccb94c227bdcbb818c78809f29d824bf04381adb82",
+    "M_INDEP_RETRIEVE_B_S": "5ba971297b2f50b2079dfa37dd5460bb74e741bd50f2b9cf19ddc8a8bd26b975",
+    "INDEP_OBS_SEED_HASH": "c4b2398ae8a65e63a92bb4fb6348050851f8886674de0e30d522c323a97044a9"
+  },
+  "locked_control_hashes": {
+    "C2_SHUFFLE_PERMUTATION_HASH": "48892a59644375484c0c7ece8f3934d80201f66bacdb7782e4ae71923743dcac",
+    "C2_SHUFFLE_SEED_HASH": "e02be5962e51741e00991efc7883e7c79f57fc42d718d8d6442c4cf0f1b8f69b",
+    "C4_REPR_SIGNS_HASH": "42038ccf2a70879964b6f740f35e5a727e671b3621123431f1027cc83dc35904",
+    "C4_REPR_SEED_HASH": "fcd4e25bb2a919b986574a4432b396deccf6f119f1919efb4ce6e86e1227e9ac"
+  },
+  "governance": {
+    "phase_22_h1_status": "INCONCLUSIVE",
+    "gate_2_status": "STRICTLY_BLOCKED",
+    "adr_029_status": "DRAFT_RESEARCH_RECORD_ONLY",
+    "genesis_gate": "LOCKED",
+    "production_diff_required": "0_files_changed",
+    "hardware": "100_percent_cpu_0_gpu_vram"
+  }
+}

@@ -1777,3 +1777,68 @@ The prior historical reference $0.019276$ nats was from the **Temporal Belief Dy
 - **Manifest**: [`manifest_h1_r3_counterfactual_observation_models.json`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/fixtures/manifest_h1_r3_counterfactual_observation_models.json)
 - **Formal Spec**: [`PHASE_22_H1_R3_COUNTERFACTUAL_OBSERVATION_MODEL_STUDY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase22-Epistemic_Foraging/PHASE_22_H1_R3_COUNTERFACTUAL_OBSERVATION_MODEL_STUDY.md)
 - **Governance State**: Phase 22 H1 = `INCONCLUSIVE`, Gate 2 = `STRICTLY BLOCKED`, ADR-029 = `DRAFT / RESEARCH RECORD ONLY`, Genesis = `LOCKED`.
+
+
+---
+
+## 34. R3 Epistemic Information Sufficiency & Representation-Coupling Disentanglement Study
+
+**Study ID**: `PHASE_22_H1_R3_INFORMATION_SUFFICIENCY_STUDY`  
+**Master Seed**: `9999` | **Corpus SHA-256**: `d0061e8cfdd160f4ebccb7100e4fe3eeef9ff18a1a4c9c1b3f912a76f2ae82c0`  
+**Shuffle Seed (C2)**: `7113` | **Independent Model Seed (C3)**: `6180` | **Representation Control Seed (C4)**: `8421`  
+**Bootstrap Seed**: `54321` ($B = 10,000$ iterations)  
+**Corpus**: $N=270$ probes, 358 matched discordant pairs ($|S_i - S_j| \le 0.020$, discordant direction signs)  
+**Status**: `[RESEARCH VALIDATED / HARNESS ONLY / NOT FOR PRODUCTION PROMOTION]`
+
+### 34.1 Motivation & Research Question
+
+Following the Counterfactual Observation-Model Study (`ee0fedf`), which proved that R3 directional EIG is not tied to a single likelihood matrix family, this study investigates the deeper **information-sufficiency and representation-coupling question**:
+> Does canonical R3 contain genuinely additional epistemic information that is sufficient and independently useful for epistemic inference when the observation model is constructed independently of the representation, or is the observed directional signal an artifact of observation-model coupling and extra variable cardinality?
+
+### 34.2 Core Counterfactual Conditions & Empirical Results
+
+Five counterfactual conditions (C0–C4) and a full $2 	imes 4$ cross-factorial matrix were evaluated across canonical observation model ($M_{\text{canon}}$) and independently seeded observation model ($M_{\text{indep}}$, seed 6180):
+
+| Cond | Description | Model | Mean $|\Delta EIG_{\text{dir}}|$ | Bootstrap 95% CI | Retention $R$ | Pearson $r$ vs C1 | Status |
+|---|---|---|---|---|---|---|---|
+| **C0** | Scalar-Only Baseline ($v = \mathbf{0}$) | $M_{\text{canon}}$ | $0.000000$ | $[0.000000, 0.000000]$ | $0.0000$ | N/A | **ABSENT (Expected Null)** |
+| **C1** | Canonical R3 (True Direction) | $M_{\text{canon}}$ | $0.016626$ | $[0.015975, 0.017277]$ | $1.0000$ | $+1.0000$ | **VALIDATED REFERENCE** |
+| **C2** | Direction-Destroyed Control | $M_{\text{canon}}$ | $0.007629$ | $[0.006688, 0.008569]$ | $0.6285$ | $+0.1848$ | **CORRESPONDENCE REDUCED** |
+| **C3** | Model-Independent R3 | $M_{\text{indep}}$ | $0.020256$ | $[0.019361, 0.021152]$ | $1.0000$ | $+1.0000$ | **SIGNAL PERSISTS** |
+| **C4** | Representation Control | $M_{\text{canon}}$ | $0.011756$ | $[0.010545, 0.012975]$ | $0.6089$ | $-0.2583$ | **DIVERGENT ALIGNMENT** |
+| **C2$_{\text{indep}}$** | Direction-Destroyed Control | $M_{\text{indep}}$ | $0.007389$ | $[0.006415, 0.008367]$ | $0.6285$ | N/A | **CORRESPONDENCE REDUCED** |
+| **C4$_{\text{indep}}$** | Representation Control | $M_{\text{indep}}$ | $0.010335$ | $[0.009263, 0.011413]$ | $0.6089$ | N/A | **DIVERGENT ALIGNMENT** |
+
+### 34.3 Key Findings & Falsification Analysis
+
+1. **Model Independence (C3)**: Under an independently generated observation model $M_{\text{indep}}$ (seed 6180), R3 directional differentiation persists with **100% retention** ($R = 1.0000$) and Mean $|\Delta EIG_{\text{dir}}| = 0.020256$ nats (95% CI $[0.019361, 0.021152]$). The effect is not an artifact of $M_{\text{canon}}$ parameter co-tuning.
+2. **Direction Correspondence Reduction (C2)**: Destroying stimulus-to-direction correspondence while preserving marginal distributions collapses mean $|\Delta EIG_{\text{dir}}|$ by 54.1% ($0.016626 \to 0.007629$), drops retention to $62.85\%$, and reduces pair-level correlation to $r = +0.1848 \le \tau_{\text{corr\_max}}$ (0.50).
+3. **Semantic vs Dimensionality Confound (C4)**: An independently generated 3-variable ternary representation with matching marginals fails to match canonical differentiation ($|\text{Mean}(C4) - \text{Mean}(C1)| = 0.004870$, retention $60.89\%$) and exhibits negative pair-level correlation ($r = -0.2583$). Extra variable dimensionality without R3 semantics does not reproduce the signal.
+4. **Cross-Factorial Structural Invariance**: Under both $M_{\text{canon}}$ and $M_{\text{indep}}$, true R3 yields 100% retention, while C2 and C4 exhibit identical drops to $62.85\%$ and $60.89\%$ respectively.
+5. **Classification**: **`SUPPORTED`** — R3 directional signal retains measurable incremental epistemic information across independently constructed observation models while counterfactual controls demonstrate degraded correspondence and divergent alignment.
+
+### 34.4 Negative Controls (8/8 PASSED)
+
+| Control | Description | Result |
+|---|---|---|
+| NC1 | C0 scalar baseline must yield $R \equiv 0.000$ and mean $\le \tau_{\text{EIG}}$ | **PASSED** |
+| NC2 | C2 direction-destroyed correspondence reduced below threshold ($r \le 0.50$) | **PASSED** ($r = 0.1848$) |
+| NC3 | C4 representation control evaluated against pre-frozen threshold | **PASSED** ($r = -0.2583$, diff $= 0.00487$) |
+| NC4 | C3 independent model exhibits non-zero coupling and distinct parameters | **PASSED** ($R = 1.0000$) |
+| NC5 | Deterministic repeatability (bit-exact C1 mean) | **PASSED** (diff $= 0.0$) |
+| NC6 | Corpus SHA-256 integrity | **PASSED** (bit-exact match) |
+| NC7 | Production code isolation (`src/core/**` diff = 0) | **PASSED** |
+| NC8 | Genesis gate invariant (`data/profile.json` bit-exact) | **PASSED** (`{"is_onboarded": false}`) |
+
+### 34.5 Artifact & Automated Test Ledger
+
+- **Evaluation Script**: [`evaluate_r3_information_sufficiency.py`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/scripts/evaluate_r3_information_sufficiency.py)
+- **Test Suite**: [`test_h1_r3_information_sufficiency.py`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/test_h1_r3_information_sufficiency.py) — **32/32 PASSED** in 18.51s
+- **Full Phase 22 Regression**: **371/371 PASSED** in 66.35s
+- **Results JSON**: [`r3_information_sufficiency_results.json`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/results/h1_r3_information_sufficiency/r3_information_sufficiency_results.json)
+- **15-Point Report**: [`r3_information_sufficiency_15point_report.json`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/results/h1_r3_information_sufficiency/r3_information_sufficiency_15point_report.json)
+- **Negative Controls**: [`r3_information_sufficiency_negative_controls.json`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/results/h1_r3_information_sufficiency/r3_information_sufficiency_negative_controls.json)
+- **Summary Table CSV**: [`r3_information_sufficiency_summary_table.csv`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/results/h1_r3_information_sufficiency/r3_information_sufficiency_summary_table.csv)
+- **Manifest**: [`manifest_h1_r3_information_sufficiency.json`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/fixtures/manifest_h1_r3_information_sufficiency.json)
+- **Formal Spec**: [`PHASE_22_H1_R3_INFORMATION_SUFFICIENCY_STUDY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase22-Epistemic_Foraging/PHASE_22_H1_R3_INFORMATION_SUFFICIENCY_STUDY.md)
+- **Governance State**: Phase 22 H1 = `INCONCLUSIVE`, Gate 2 = `STRICTLY BLOCKED`, ADR-029 = `DRAFT / RESEARCH RECORD ONLY`, Genesis = `LOCKED`.

@@ -1,0 +1,213 @@
+{
+  "study_id": "PHASE_22_H1_R3_INFORMATION_SUFFICIENCY_STUDY",
+  "master_seed": 9999,
+  "shuffle_seed": 7113,
+  "indep_obs_seed": 6180,
+  "repr_control_seed": 8421,
+  "bootstrap_seed": 54321,
+  "bootstrap_iterations": 10000,
+  "corpus_sha": "d0061e8cfdd160f4ebccb7100e4fe3eeef9ff18a1a4c9c1b3f912a76f2ae82c0",
+  "n_probes": 270,
+  "n_discordant_pairs": 358,
+  "historical_canonical_mean_eig_additive": 0.016626,
+  "conditions": {
+    "C0": {
+      "condition_id": "C0",
+      "description": "Scalar-only baseline (v = 0) under canonical observation model M_canon",
+      "model_id": "M_canon_C0",
+      "n_pairs": 358,
+      "mean_abs_delta_eig_dir": 0.0,
+      "median_abs_delta_eig_dir": 0.0,
+      "std_abs_delta_eig_dir": 0.0,
+      "retention_rate": 0.0,
+      "action_divergence_rate": 0.0,
+      "mean_pair_belief_tv": 1.8413265946122534e-17,
+      "mean_pair_belief_js": 7.985542705055246e-18,
+      "bootstrap_95ci_mean": [
+        0.0,
+        0.0
+      ],
+      "bootstrap_95ci_median": [
+        0.0,
+        0.0
+      ],
+      "bootstrap_95ci_retention": [
+        0.0,
+        0.0
+      ]
+    },
+    "C1": {
+      "condition_id": "C1",
+      "description": "Canonical R3 (true direction) under canonical observation model M_canon",
+      "model_id": "M_canon",
+      "n_pairs": 358,
+      "mean_abs_delta_eig_dir": 0.016626117137775426,
+      "median_abs_delta_eig_dir": 0.01974930425363275,
+      "std_abs_delta_eig_dir": 0.006225222134534786,
+      "retention_rate": 1.0,
+      "action_divergence_rate": 0.0,
+      "mean_pair_belief_tv": 2.4266746278468854e-17,
+      "mean_pair_belief_js": 1.3102492399556665e-17,
+      "bootstrap_95ci_mean": [
+        0.015975366685036088,
+        0.017276831351392907
+      ],
+      "bootstrap_95ci_median": [
+        0.01974930425363275,
+        0.01974975031425963
+      ],
+      "bootstrap_95ci_retention": [
+        1.0,
+        1.0
+      ]
+    },
+    "C2": {
+      "condition_id": "C2",
+      "description": "Direction-destroyed control (shuffled direction, seed 7113) under M_canon",
+      "model_id": "M_canon",
+      "n_pairs": 358,
+      "mean_abs_delta_eig_dir": 0.0076293097658461,
+      "median_abs_delta_eig_dir": 0.004201691218857162,
+      "std_abs_delta_eig_dir": 0.009259953253948749,
+      "retention_rate": 0.6284916201117319,
+      "action_divergence_rate": 0.0,
+      "mean_pair_belief_tv": 1.1164253878912189e-17,
+      "mean_pair_belief_js": 7.442835919274792e-18,
+      "bootstrap_95ci_mean": [
+        0.006687621670058746,
+        0.00856917348250177
+      ],
+      "bootstrap_95ci_median": [
+        0.004201689762974414,
+        0.004201912597510349
+      ],
+      "bootstrap_95ci_retention": [
+        0.5781424581005588,
+        0.6787709497206704
+      ],
+      "pearson_r_vs_c1": 0.184829402527272,
+      "spearman_rho_vs_c1": -0.260989396853398
+    },
+    "C3": {
+      "condition_id": "C3",
+      "description": "Model-independent R3 (true direction) under independent observation model M_indep (seed 6180)",
+      "model_id": "M_indep",
+      "n_pairs": 358,
+      "mean_abs_delta_eig_dir": 0.020256418838721806,
+      "median_abs_delta_eig_dir": 0.02455181737012091,
+      "std_abs_delta_eig_dir": 0.008567179816723319,
+      "retention_rate": 1.0,
+      "action_divergence_rate": 0.0,
+      "mean_pair_belief_tv": 3.41129979633428e-17,
+      "mean_pair_belief_js": 3.41129979633428e-17,
+      "bootstrap_95ci_mean": [
+        0.019360601299490257,
+        0.02115184231547005
+      ],
+      "bootstrap_95ci_median": [
+        0.02455181737012091,
+        0.02455663332489455
+      ],
+      "bootstrap_95ci_retention": [
+        1.0,
+        1.0
+      ],
+      "pearson_r_vs_c1": 0.9999999658004555,
+      "spearman_rho_vs_c1": 0.9046706458963777
+    },
+    "C4": {
+      "condition_id": "C4",
+      "description": "Representation-independent control (independent ternary variable, seed 8421) under M_canon",
+      "model_id": "M_canon",
+      "n_pairs": 358,
+      "mean_abs_delta_eig_dir": 0.011755713163138098,
+      "median_abs_delta_eig_dir": 0.0042192405366614505,
+      "std_abs_delta_eig_dir": 0.011601069791701526,
+      "retention_rate": 0.6089385474860335,
+      "action_divergence_rate": 0.0,
+      "mean_pair_belief_tv": 2.0932976022960355e-17,
+      "mean_pair_belief_js": 1.7211558063322956e-17,
+      "bootstrap_95ci_mean": [
+        0.010545162431260358,
+        0.012974591261526773
+      ],
+      "bootstrap_95ci_median": [
+        0.0042000948565743546,
+        0.019749229875960284
+      ],
+      "bootstrap_95ci_retention": [
+        0.5586592178770949,
+        0.659217877094972
+      ],
+      "pearson_r_vs_c1": -0.2582843585324341,
+      "spearman_rho_vs_c1": -0.2583950151044329
+    },
+    "C2_indep": {
+      "condition_id": "C2_indep",
+      "description": "Direction-destroyed control under independent observation model M_indep",
+      "model_id": "M_indep",
+      "n_pairs": 358,
+      "mean_abs_delta_eig_dir": 0.007388514475037096,
+      "median_abs_delta_eig_dir": 0.0031747730133246943,
+      "std_abs_delta_eig_dir": 0.009576738094639265,
+      "retention_rate": 0.6284916201117319,
+      "action_divergence_rate": 0.0,
+      "mean_pair_belief_tv": 2.031273969635412e-17,
+      "mean_pair_belief_js": 1.9382385206444772e-17,
+      "bootstrap_95ci_mean": [
+        0.006414615211702639,
+        0.008366661973394194
+      ],
+      "bootstrap_95ci_median": [
+        0.003174772939290582,
+        0.0031748431825646684
+      ],
+      "bootstrap_95ci_retention": [
+        0.5781424581005588,
+        0.6787709497206704
+      ]
+    },
+    "C4_indep": {
+      "condition_id": "C4_indep",
+      "description": "Representation-independent control under independent observation model M_indep",
+      "model_id": "M_indep",
+      "n_pairs": 358,
+      "mean_abs_delta_eig_dir": 0.010334565558471885,
+      "median_abs_delta_eig_dir": 0.003179006293339892,
+      "std_abs_delta_eig_dir": 0.01034762151664154,
+      "retention_rate": 0.6089385474860335,
+      "action_divergence_rate": 0.0,
+      "mean_pair_belief_tv": 3.438435135623302e-17,
+      "mean_pair_belief_js": 1.957620905850922e-17,
+      "bootstrap_95ci_mean": [
+        0.00926293304391065,
+        0.011413434552217067
+      ],
+      "bootstrap_95ci_median": [
+        0.003174267201254688,
+        0.01918339458215934
+      ],
+      "bootstrap_95ci_retention": [
+        0.5586592178770949,
+        0.659217877094972
+      ]
+    }
+  },
+  "correlations_vs_c1": {
+    "C2": {
+      "pearson_r": 0.184829402527272,
+      "spearman_rho": -0.260989396853398
+    },
+    "C3": {
+      "pearson_r": 0.9999999658004555,
+      "spearman_rho": 0.9046706458963777
+    },
+    "C4": {
+      "pearson_r": -0.2582843585324341,
+      "spearman_rho": -0.2583950151044329
+    }
+  },
+  "classification": "SUPPORTED",
+  "classification_rationale": "R3 directional signal persists under independent observation model M_indep (Retention = 1.0000, Mean |Delta EIG_dir| = 0.020256 nats, 95% CI [0.019360601299490257, 0.02115184231547005]), while direction-destroyed shuffle C2 reduces correspondence (r = 0.1848 <= 0.5) and independent representation control C4 exhibits divergent correlation (r = -0.2583 <= 0.5) and attenuated retention (0.6089).",
+  "elapsed_seconds": 8.036855459213257
+}

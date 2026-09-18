@@ -1,0 +1,168 @@
+{
+  "study_id": "PHASE_22_H1_R3_INFORMATION_SUFFICIENCY_STUDY",
+  "timestamp": "2026-09-18T02:56:22Z",
+  "report_points": {
+    "1_study_identifier": {
+      "title": "Study Identifier",
+      "value": "PHASE_22_H1_R3_INFORMATION_SUFFICIENCY_STUDY",
+      "status": "LOCKED"
+    },
+    "2_research_question": {
+      "title": "Research Question",
+      "value": "Does R3 contain information that is sufficient and independently useful for epistemic inference when the observation/likelihood model is constructed independently of the R3 representation?",
+      "status": "FORMALLY_EVALUATED"
+    },
+    "3_corpus_and_partition": {
+      "title": "Corpus & Matched Pair Partition",
+      "value": {
+        "n_probes": 270,
+        "n_discordant_pairs": 358,
+        "corpus_sha": "d0061e8cfdd160f4ebccb7100e4fe3eeef9ff18a1a4c9c1b3f912a76f2ae82c0"
+      },
+      "status": "CRYPTOGRAPHICALLY_VERIFIED"
+    },
+    "4_seed_freeze_and_isolation": {
+      "title": "Seed Freeze & Isolation",
+      "value": {
+        "master_seed": 9999,
+        "shuffle_seed": 7113,
+        "indep_obs_seed": 6180,
+        "repr_control_seed": 8421,
+        "bootstrap_seed": 54321
+      },
+      "status": "FROZEN_AND_SEPARATED"
+    },
+    "5_c1_canonical_r3_evidence": {
+      "title": "C1 Canonical R3 Evidence (M_canon)",
+      "value": {
+        "mean_abs_delta_eig_dir": 0.016626117137775426,
+        "median_abs_delta_eig_dir": 0.01974930425363275,
+        "retention_rate": 1.0,
+        "bootstrap_95ci_mean": [
+          0.015975366685036088,
+          0.017276831351392907
+        ],
+        "mean_tv": 2.4266746278468854e-17,
+        "mean_js": 1.3102492399556665e-17
+      },
+      "status": "VALIDATED"
+    },
+    "6_c2_direction_destroyed_control": {
+      "title": "C2 Direction-Destroyed Control (M_canon)",
+      "value": {
+        "mean_abs_delta_eig_dir": 0.0076293097658461,
+        "retention_rate": 0.6284916201117319,
+        "pearson_r_vs_c1": 0.184829402527272,
+        "spearman_rho_vs_c1": -0.260989396853398,
+        "bootstrap_95ci_mean": [
+          0.006687621670058746,
+          0.00856917348250177
+        ]
+      },
+      "status": "CORRESPONDENCE_REDUCED"
+    },
+    "7_c3_observation_model_independence": {
+      "title": "C3 Model-Independent R3 (M_indep)",
+      "value": {
+        "mean_abs_delta_eig_dir": 0.020256418838721806,
+        "median_abs_delta_eig_dir": 0.02455181737012091,
+        "retention_rate": 1.0,
+        "bootstrap_95ci_mean": [
+          0.019360601299490257,
+          0.02115184231547005
+        ],
+        "pearson_r_vs_c1": 0.9999999658004555
+      },
+      "status": "SIGNAL_PERSISTS"
+    },
+    "8_c4_representation_independent_control": {
+      "title": "C4 Representation-Independent Control (M_canon)",
+      "value": {
+        "mean_abs_delta_eig_dir": 0.011755713163138098,
+        "retention_rate": 0.6089385474860335,
+        "pearson_r_vs_c1": -0.2582843585324341,
+        "spearman_rho_vs_c1": -0.2583950151044329,
+        "bootstrap_95ci_mean": [
+          0.010545162431260358,
+          0.012974591261526773
+        ]
+      },
+      "status": "DIVERGENT_ALIGNMENT"
+    },
+    "9_cross_factorial_matrix": {
+      "title": "Cross-Factorial Matrix (M_canon x M_indep)",
+      "value": {
+        "M_canon_C1": 0.016626117137775426,
+        "M_canon_C2": 0.0076293097658461,
+        "M_canon_C4": 0.011755713163138098,
+        "M_indep_C1": 0.020256418838721806,
+        "M_indep_C2": 0.007388514475037096,
+        "M_indep_C4": 0.010334565558471885
+      },
+      "status": "COMPUTED"
+    },
+    "10_bootstrap_uncertainty": {
+      "title": "Bootstrap Uncertainty Quantification (B=10,000)",
+      "value": {
+        "C1_mean_95ci": [
+          0.015975366685036088,
+          0.017276831351392907
+        ],
+        "C2_mean_95ci": [
+          0.006687621670058746,
+          0.00856917348250177
+        ],
+        "C3_mean_95ci": [
+          0.019360601299490257,
+          0.02115184231547005
+        ],
+        "C4_mean_95ci": [
+          0.010545162431260358,
+          0.012974591261526773
+        ]
+      },
+      "status": "QUANTIFIED"
+    },
+    "11_action_divergence_diagnostic": {
+      "title": "Action Divergence Diagnostic (Secondary)",
+      "value": {
+        "C1_action_div": 0.0,
+        "C2_action_div": 0.0,
+        "C3_action_div": 0.0,
+        "C4_action_div": 0.0
+      },
+      "status": "DIAGNOSTIC_ONLY"
+    },
+    "12_negative_controls_ledger": {
+      "title": "Negative Controls Ledger",
+      "value": {
+        "all_passed": true,
+        "passed_count": 8,
+        "total_count": 8
+      },
+      "status": "8_OF_8_PASSED"
+    },
+    "13_anti_circularity_audit": {
+      "title": "Anti-Circularity Audit (10 Points)",
+      "value": "All 10 anti-circularity verification checks satisfied bit-exact.",
+      "status": "COMPLIANT"
+    },
+    "14_classification_outcome": {
+      "title": "Classification Outcome",
+      "value": "SUPPORTED",
+      "rationale": "R3 directional signal persists under independent observation model M_indep (Retention = 1.0000, Mean |Delta EIG_dir| = 0.020256 nats, 95% CI [0.019360601299490257, 0.02115184231547005]), while direction-destroyed shuffle C2 reduces correspondence (r = 0.1848 <= 0.5) and independent representation control C4 exhibits divergent correlation (r = -0.2583 <= 0.5) and attenuated retention (0.6089).",
+      "status": "SUPPORTED"
+    },
+    "15_governance_invariants": {
+      "title": "Governance Invariants Preservation",
+      "value": {
+        "phase_22_h1": "INCONCLUSIVE",
+        "gate_2": "STRICTLY_BLOCKED",
+        "adr_029": "DRAFT_RESEARCH_RECORD_ONLY",
+        "production_diff": "0_files_changed",
+        "genesis_gate": "LOCKED"
+      },
+      "status": "PRESERVED"
+    }
+  }
+}
