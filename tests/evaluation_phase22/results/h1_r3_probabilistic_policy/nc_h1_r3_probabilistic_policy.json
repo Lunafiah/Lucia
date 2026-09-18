@@ -1,0 +1,112 @@
+{
+  "NC1_scalar_null": {
+    "passed": true,
+    "details": {
+      "gamma_0.25": {
+        "mean_l2": 0.0,
+        "mean_tv_dir": 0.0,
+        "mean_tv_raw": 7.022475263635017e-05,
+        "mean_js": 2.8318255534172138e-09,
+        "d_pol": 0.0,
+        "passed": true
+      },
+      "gamma_0.50": {
+        "mean_l2": 0.0,
+        "mean_tv_dir": 0.0,
+        "mean_tv_raw": 0.00014251709701600294,
+        "mean_js": 1.1505512039014695e-08,
+        "d_pol": 0.0,
+        "passed": true
+      },
+      "gamma_1.00": {
+        "mean_l2": 0.0,
+        "mean_tv_dir": 0.0,
+        "mean_tv_raw": 0.0002920784382401581,
+        "mean_js": 4.725265971327535e-08,
+        "d_pol": 0.0,
+        "passed": true
+      },
+      "gamma_2.00": {
+        "mean_l2": 0.0,
+        "mean_tv_dir": 0.0,
+        "mean_tv_raw": 0.0006041714694575083,
+        "mean_js": 1.962413521314393e-07,
+        "d_pol": 0.0,
+        "passed": true
+      },
+      "gamma_4.00": {
+        "mean_l2": 0.0,
+        "mean_tv_dir": 0.0,
+        "mean_tv_raw": 0.0012480763282634731,
+        "mean_js": 8.166276205107952e-07,
+        "d_pol": 0.0,
+        "passed": true
+      }
+    }
+  },
+  "NC2_direction_shuffled": {
+    "passed": true,
+    "details": {
+      "pearson_r_c2_c1": 0.07904269738472994,
+      "threshold": 0.5,
+      "passed": true
+    }
+  },
+  "NC3_zero_directional_weighting": {
+    "passed": true,
+    "details": {
+      "allclose_c0": true,
+      "passed": true
+    }
+  },
+  "NC4_deterministic_repeatability": {
+    "passed": true,
+    "details": {
+      "repeat_match": true,
+      "passed": true
+    }
+  },
+  "NC5_anti_tuning_invariance": {
+    "passed": true,
+    "details": {
+      "manifest_hash_match": true,
+      "passed": true
+    }
+  },
+  "NC6_production_isolation": {
+    "passed": true,
+    "details": {
+      "production_diff_zero": true,
+      "passed": true
+    }
+  },
+  "NC7_genesis_gate": {
+    "passed": true,
+    "details": {
+      "is_onboarded": false,
+      "passed": true
+    }
+  },
+  "NC8_softmax_argmax_equivalence": {
+    "passed": true,
+    "details": {
+      "gamma_0.25": {
+        "all_conditions_rate_1_0": true
+      },
+      "gamma_0.50": {
+        "all_conditions_rate_1_0": true
+      },
+      "gamma_1.00": {
+        "all_conditions_rate_1_0": true
+      },
+      "gamma_2.00": {
+        "all_conditions_rate_1_0": true
+      },
+      "gamma_4.00": {
+        "all_conditions_rate_1_0": true
+      },
+      "passed": true
+    }
+  },
+  "all_passed": true
+}

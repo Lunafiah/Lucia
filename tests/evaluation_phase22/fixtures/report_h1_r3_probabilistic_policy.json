@@ -1,0 +1,808 @@
+{
+  "1_study_id": "PHASE_22_H1_R3_PROBABILISTIC_POLICY_STUDY",
+  "2_parent_commit": "9dcc611",
+  "3_research_objective": "Determine whether probabilistic policy selection recovers the continuous R3 directional signal that deterministic argmax discards, and characterize its sensitivity across decision temperatures gamma in {0.25, 0.50, 1.00, 2.00, 4.00}.",
+  "4_context_definition": {
+    "context_id": "CTX_5",
+    "v_pragm_answer": 0.0,
+    "v_base_answer": -0.05,
+    "winner_action": "retrieve"
+  },
+  "5_temperature_grid": [
+    0.25,
+    0.5,
+    1.0,
+    2.0,
+    4.0
+  ],
+  "6_continuous_value_displacement": {
+    "gamma_0.25": {
+      "C0": {
+        "mean_l2": 0.0,
+        "ci_l2": [
+          0.0,
+          0.0
+        ]
+      },
+      "C1": {
+        "mean_l2": 0.09365278380248122,
+        "ci_l2": [
+          0.09091014223676797,
+          0.0963951700393428
+        ]
+      },
+      "C2": {
+        "mean_l2": 0.039066832265681854,
+        "ci_l2": [
+          0.03530456661576845,
+          0.04281012039487978
+        ]
+      },
+      "C3": {
+        "mean_l2": 0.0904080954237981,
+        "ci_l2": [
+          0.08639289849026059,
+          0.0944227656286801
+        ]
+      }
+    },
+    "gamma_0.50": {
+      "C0": {
+        "mean_l2": 0.0,
+        "ci_l2": [
+          0.0,
+          0.0
+        ]
+      },
+      "C1": {
+        "mean_l2": 0.09365278380248122,
+        "ci_l2": [
+          0.09091014223676797,
+          0.0963951700393428
+        ]
+      },
+      "C2": {
+        "mean_l2": 0.039066832265681854,
+        "ci_l2": [
+          0.03530456661576845,
+          0.04281012039487978
+        ]
+      },
+      "C3": {
+        "mean_l2": 0.0904080954237981,
+        "ci_l2": [
+          0.08639289849026059,
+          0.0944227656286801
+        ]
+      }
+    },
+    "gamma_1.00": {
+      "C0": {
+        "mean_l2": 0.0,
+        "ci_l2": [
+          0.0,
+          0.0
+        ]
+      },
+      "C1": {
+        "mean_l2": 0.09365278380248122,
+        "ci_l2": [
+          0.09091014223676797,
+          0.0963951700393428
+        ]
+      },
+      "C2": {
+        "mean_l2": 0.039066832265681854,
+        "ci_l2": [
+          0.03530456661576845,
+          0.04281012039487978
+        ]
+      },
+      "C3": {
+        "mean_l2": 0.0904080954237981,
+        "ci_l2": [
+          0.08639289849026059,
+          0.0944227656286801
+        ]
+      }
+    },
+    "gamma_2.00": {
+      "C0": {
+        "mean_l2": 0.0,
+        "ci_l2": [
+          0.0,
+          0.0
+        ]
+      },
+      "C1": {
+        "mean_l2": 0.09365278380248122,
+        "ci_l2": [
+          0.09091014223676797,
+          0.0963951700393428
+        ]
+      },
+      "C2": {
+        "mean_l2": 0.039066832265681854,
+        "ci_l2": [
+          0.03530456661576845,
+          0.04281012039487978
+        ]
+      },
+      "C3": {
+        "mean_l2": 0.0904080954237981,
+        "ci_l2": [
+          0.08639289849026059,
+          0.0944227656286801
+        ]
+      }
+    },
+    "gamma_4.00": {
+      "C0": {
+        "mean_l2": 0.0,
+        "ci_l2": [
+          0.0,
+          0.0
+        ]
+      },
+      "C1": {
+        "mean_l2": 0.09365278380248122,
+        "ci_l2": [
+          0.09091014223676797,
+          0.0963951700393428
+        ]
+      },
+      "C2": {
+        "mean_l2": 0.039066832265681854,
+        "ci_l2": [
+          0.03530456661576845,
+          0.04281012039487978
+        ]
+      },
+      "C3": {
+        "mean_l2": 0.0904080954237981,
+        "ci_l2": [
+          0.08639289849026059,
+          0.0944227656286801
+        ]
+      }
+    }
+  },
+  "7_probability_divergence_metrics": {
+    "gamma_0.25": {
+      "C0": {
+        "mean_d_tv": 7.022475263635017e-05,
+        "ci_tv": [
+          6.899515863313129e-05,
+          7.142425960213926e-05
+        ],
+        "mean_d_js": 2.8318255534172138e-09,
+        "ci_js": [
+          2.7446358320838317e-09,
+          2.9180791763517646e-09
+        ],
+        "mean_kl_ij": 1.132747919024784e-08,
+        "mean_kl_ji": 1.1327125230227428e-08
+      },
+      "C1": {
+        "mean_d_tv": 0.0032909990837830688,
+        "ci_tv": [
+          0.0031923361956031474,
+          0.0033895603053274
+        ],
+        "mean_d_js": 1.1836658978118462e-05,
+        "ci_js": [
+          1.1309489859745896e-05,
+          1.236359613892225e-05
+        ],
+        "mean_kl_ij": 4.724717420835874e-05,
+        "mean_kl_ji": 4.744761170660236e-05
+      },
+      "C2": {
+        "mean_d_tv": 0.0013419503264968772,
+        "ci_tv": [
+          0.0012156929877299748,
+          0.001467357495168534
+        ],
+        "mean_d_js": 3.5209183409960066e-06,
+        "ci_js": [
+          3.0341486428642103e-06,
+          4.013037896277379e-06
+        ],
+        "mean_kl_ij": 1.4086735234771457e-05,
+        "mean_kl_ji": 1.4080918094407499e-05
+      },
+      "C3": {
+        "mean_d_tv": 0.003378474101684529,
+        "ci_tv": [
+          0.0032306002637627275,
+          0.0035261944582289937
+        ],
+        "mean_d_js": 8.62814223069856e-06,
+        "ci_js": [
+          8.18578465252988e-06,
+          9.069518290424398e-06
+        ],
+        "mean_kl_ij": 3.456899404768636e-05,
+        "mean_kl_ji": 3.4456758217852006e-05
+      }
+    },
+    "gamma_0.50": {
+      "C0": {
+        "mean_d_tv": 0.00014251709701600294,
+        "ci_tv": [
+          0.0001400222666821135,
+          0.00014495092098020638
+        ],
+        "mean_d_js": 1.1505512039014695e-08,
+        "ci_js": [
+          1.1151299200371882e-08,
+          1.1855929372425657e-08
+        ],
+        "mean_kl_ij": 4.602339634531919e-08,
+        "mean_kl_ji": 4.60207005741461e-08
+      },
+      "C1": {
+        "mean_d_tv": 0.0066945024917486355,
+        "ci_tv": [
+          0.0064913789234925185,
+          0.006897422145881761
+        ],
+        "mean_d_js": 4.8500932676521355e-05,
+        "ci_js": [
+          4.6333299041653295e-05,
+          5.066769339324553e-05
+        ],
+        "mean_kl_ij": 0.0001932029088243556,
+        "mean_kl_ji": 0.0001948293540874892
+      },
+      "C2": {
+        "mean_d_tv": 0.002724010637765107,
+        "ci_tv": [
+          0.002466304164071995,
+          0.0029801905065289245
+        ],
+        "mean_d_js": 1.4434725584545452e-05,
+        "ci_js": [
+          1.2430007967962153e-05,
+          1.6458470521357232e-05
+        ],
+        "mean_kl_ij": 5.7764732730718234e-05,
+        "mean_kl_ji": 5.7718102324477794e-05
+      },
+      "C3": {
+        "mean_d_tv": 0.006827142368981444,
+        "ci_tv": [
+          0.00652846103816087,
+          0.00712551850187398
+        ],
+        "mean_d_js": 3.4786075435973015e-05,
+        "ci_js": [
+          3.300279295151154e-05,
+          3.65654223228722e-05
+        ],
+        "mean_kl_ij": 0.0001395813811582104,
+        "mean_kl_ji": 0.00013871683589243181
+      }
+    },
+    "gamma_1.00": {
+      "C0": {
+        "mean_d_tv": 0.0002920784382401581,
+        "ci_tv": [
+          0.0002869672895488562,
+          0.0002970647332281226
+        ],
+        "mean_d_js": 4.725265971327535e-08,
+        "ci_js": [
+          4.579813937880007e-08,
+          4.8691643377683215e-08
+        ],
+        "mean_kl_ij": 1.8902034603337635e-07,
+        "mean_kl_ji": 1.890009405036945e-07
+      },
+      "C1": {
+        "mean_d_tv": 0.013767398881854107,
+        "ci_tv": [
+          0.01333989243697167,
+          0.014194498029461128
+        ],
+        "mean_d_js": 0.0002022740251230767,
+        "ci_js": [
+          0.0001931730778184331,
+          0.0002113719633083376
+        ],
+        "mean_kl_ij": 0.0008026194202924592,
+        "mean_kl_ji": 0.0008159871379856832
+      },
+      "C2": {
+        "mean_d_tv": 0.005578859892837951,
+        "ci_tv": [
+          0.0050458136409832375,
+          0.0061059395874316375
+        ],
+        "mean_d_js": 6.0267314713849976e-05,
+        "ci_js": [
+          5.1836370225230054e-05,
+          6.874934594116992e-05
+        ],
+        "mean_kl_ij": 0.00024129740480871613,
+        "mean_kl_ji": 0.00024092538582956747
+      },
+      "C3": {
+        "mean_d_tv": 0.013845111823960022,
+        "ci_tv": [
+          0.013239809949630943,
+          0.014449814149554176
+        ],
+        "mean_d_js": 0.0001403899667876611,
+        "ci_js": [
+          0.00013319417659095646,
+          0.0001475700429610859
+        ],
+        "mean_kl_ij": 0.0005648149628102587,
+        "mean_kl_ji": 0.0005584515585948348
+      }
+    },
+    "gamma_2.00": {
+      "C0": {
+        "mean_d_tv": 0.0006041714694575083,
+        "ci_tv": [
+          0.0005936032894749598,
+          0.0006144818022643917
+        ],
+        "mean_d_js": 1.962413521314393e-07,
+        "ci_js": [
+          1.902017651954399e-07,
+          2.0221666674673403e-07
+        ],
+        "mean_kl_ij": 7.850267592884755e-07,
+        "mean_kl_ji": 7.849041925545991e-07
+      },
+      "C1": {
+        "mean_d_tv": 0.028510654244357357,
+        "ci_tv": [
+          0.027590624531891813,
+          0.029429890956471843
+        ],
+        "mean_d_js": 0.0008593001186952917,
+        "ci_js": [
+          0.0008201603628853269,
+          0.0008984321474090749
+        ],
+        "mean_kl_ij": 0.00338453150422088,
+        "mean_kl_ji": 0.003496997549416274
+      },
+      "C2": {
+        "mean_d_tv": 0.011594447317102591,
+        "ci_tv": [
+          0.010465849672088846,
+          0.012717604099049826
+        ],
+        "mean_d_js": 0.0002566726768421029,
+        "ci_js": [
+          0.0002203985858899592,
+          0.00029304264686292193
+        ],
+        "mean_kl_ij": 0.001028861441904948,
+        "mean_kl_ji": 0.0010259752006456374
+      },
+      "C3": {
+        "mean_d_tv": 0.02783870861411311,
+        "ci_tv": [
+          0.026622170413637278,
+          0.029054114533055165
+        ],
+        "mean_d_js": 0.0005586142513001539,
+        "ci_js": [
+          0.0005299892050675052,
+          0.0005871780895497848
+        ],
+        "mean_kl_ij": 0.0022565770936979488,
+        "mean_kl_ji": 0.0022144674134336037
+      }
+    },
+    "gamma_4.00": {
+      "C0": {
+        "mean_d_tv": 0.0012480763282634731,
+        "ci_tv": [
+          0.0012262471724974336,
+          0.0012693730363303273
+        ],
+        "mean_d_js": 8.166276205107952e-07,
+        "ci_js": [
+          7.914963970017877e-07,
+          8.414917376297197e-07
+        ],
+        "mean_kl_ij": 3.2668059875996134e-06,
+        "mean_kl_ji": 3.266217084659218e-06
+      },
+      "C1": {
+        "mean_d_tv": 0.05726727112317217,
+        "ci_tv": [
+          0.05530879074116386,
+          0.059224321910431525
+        ],
+        "mean_d_js": 0.00360191786353535,
+        "ci_js": [
+          0.0034344761193250716,
+          0.003769355523516286
+        ],
+        "mean_kl_ij": 0.013979176369299089,
+        "mean_kl_ji": 0.014961829810250623
+      },
+      "C2": {
+        "mean_d_tv": 0.024005293387871874,
+        "ci_tv": [
+          0.021545931930360102,
+          0.026447814541596126
+        ],
+        "mean_d_js": 0.0010832576815197577,
+        "ci_js": [
+          0.0009278217922481809,
+          0.00124048096199746
+        ],
+        "mean_kl_ij": 0.004355812974498542,
+        "mean_kl_ji": 0.004335995468244327
+      },
+      "C3": {
+        "mean_d_tv": 0.05312075303144631,
+        "ci_tv": [
+          0.050795328931296777,
+          0.05544427114046348
+        ],
+        "mean_d_js": 0.00207692390211459,
+        "ci_js": [
+          0.0019705245369149946,
+          0.0021831062174908792
+        ],
+        "mean_kl_ij": 0.008430868913480527,
+        "mean_kl_ji": 0.008212540711161403
+      }
+    }
+  },
+  "8_temperature_curve_monotonicity": {
+    "c1_d_tv_curve": [
+      0.0032909990837830688,
+      0.0066945024917486355,
+      0.013767398881854107,
+      0.028510654244357357,
+      0.05726727112317217
+    ],
+    "d_tv_strictly_monotonic_increasing": true,
+    "c1_d_js_curve": [
+      1.1836658978118462e-05,
+      4.8500932676521355e-05,
+      0.0002022740251230767,
+      0.0008593001186952917,
+      0.00360191786353535
+    ],
+    "d_js_strictly_monotonic_increasing": true
+  },
+  "9_deterministic_argmax_invariance": {
+    "gamma_0.25": {
+      "C0": {
+        "d_pol": 0.0,
+        "softmax_argmax_equiv_rate": 1.0
+      },
+      "C1": {
+        "d_pol": 0.0,
+        "softmax_argmax_equiv_rate": 1.0
+      },
+      "C2": {
+        "d_pol": 0.0,
+        "softmax_argmax_equiv_rate": 1.0
+      },
+      "C3": {
+        "d_pol": 0.0,
+        "softmax_argmax_equiv_rate": 1.0
+      }
+    },
+    "gamma_0.50": {
+      "C0": {
+        "d_pol": 0.0,
+        "softmax_argmax_equiv_rate": 1.0
+      },
+      "C1": {
+        "d_pol": 0.0,
+        "softmax_argmax_equiv_rate": 1.0
+      },
+      "C2": {
+        "d_pol": 0.0,
+        "softmax_argmax_equiv_rate": 1.0
+      },
+      "C3": {
+        "d_pol": 0.0,
+        "softmax_argmax_equiv_rate": 1.0
+      }
+    },
+    "gamma_1.00": {
+      "C0": {
+        "d_pol": 0.0,
+        "softmax_argmax_equiv_rate": 1.0
+      },
+      "C1": {
+        "d_pol": 0.0,
+        "softmax_argmax_equiv_rate": 1.0
+      },
+      "C2": {
+        "d_pol": 0.0,
+        "softmax_argmax_equiv_rate": 1.0
+      },
+      "C3": {
+        "d_pol": 0.0,
+        "softmax_argmax_equiv_rate": 1.0
+      }
+    },
+    "gamma_2.00": {
+      "C0": {
+        "d_pol": 0.0,
+        "softmax_argmax_equiv_rate": 1.0
+      },
+      "C1": {
+        "d_pol": 0.0,
+        "softmax_argmax_equiv_rate": 1.0
+      },
+      "C2": {
+        "d_pol": 0.0,
+        "softmax_argmax_equiv_rate": 1.0
+      },
+      "C3": {
+        "d_pol": 0.0,
+        "softmax_argmax_equiv_rate": 1.0
+      }
+    },
+    "gamma_4.00": {
+      "C0": {
+        "d_pol": 0.0,
+        "softmax_argmax_equiv_rate": 1.0
+      },
+      "C1": {
+        "d_pol": 0.0,
+        "softmax_argmax_equiv_rate": 1.0
+      },
+      "C2": {
+        "d_pol": 0.0,
+        "softmax_argmax_equiv_rate": 1.0
+      },
+      "C3": {
+        "d_pol": 0.0,
+        "softmax_argmax_equiv_rate": 1.0
+      }
+    }
+  },
+  "10_sampled_action_divergence": {
+    "gamma_0.25": {
+      "C0": {
+        "mean_d_samp_crn_empirical": 0.0001270949720670391,
+        "ci_samp": [
+          0.00011536312849162012,
+          0.00013910614525139666
+        ],
+        "mean_d_samp_crn_analytical": 0.00013584362391327293,
+        "mean_d_samp_indep_analytical": 0.8329415852968823,
+        "mean_sampler_discrepancy": 9.246086191267604e-05
+      },
+      "C1": {
+        "mean_d_samp_crn_empirical": 0.00558631284916201,
+        "ci_samp": [
+          0.0054466480446927375,
+          0.005720391061452512
+        ],
+        "mean_d_samp_crn_analytical": 0.00556379801904106,
+        "mean_d_samp_indep_analytical": 0.8329009833916851,
+        "mean_sampler_discrepancy": 0.0005879652883648963
+      },
+      "C2": {
+        "mean_d_samp_crn_empirical": 0.0024279329608938548,
+        "ci_samp": [
+          0.002213680167597765,
+          0.002632409217877095
+        ],
+        "mean_d_samp_crn_analytical": 0.0024149339233249943,
+        "mean_d_samp_indep_analytical": 0.8328889817758027,
+        "mean_sampler_discrepancy": 0.0003388497888192466
+      },
+      "C3": {
+        "mean_d_samp_crn_empirical": 0.0076550279329608934,
+        "ci_samp": [
+          0.007299706703910615,
+          0.007995817039106146
+        ],
+        "mean_d_samp_crn_analytical": 0.007574383024729909,
+        "mean_d_samp_indep_analytical": 0.8328558047622124,
+        "mean_sampler_discrepancy": 0.0006205490206843879
+      }
+    },
+    "gamma_0.50": {
+      "C0": {
+        "mean_d_samp_crn_empirical": 0.00028910614525139665,
+        "ci_samp": [
+          0.0002709497206703911,
+          0.0003072625698324023
+        ],
+        "mean_d_samp_crn_analytical": 0.00027485786984241895,
+        "mean_d_samp_indep_analytical": 0.8318261789996708,
+        "mean_sampler_discrepancy": 0.00012983084176555043
+      },
+      "C1": {
+        "mean_d_samp_crn_empirical": 0.011118156424581006,
+        "ci_samp": [
+          0.010871508379888269,
+          0.011355593575418996
+        ],
+        "mean_d_samp_crn_analytical": 0.011141198943313212,
+        "mean_d_samp_indep_analytical": 0.8316652480188327,
+        "mean_sampler_discrepancy": 0.0008087381525113579
+      },
+      "C2": {
+        "mean_d_samp_crn_empirical": 0.004823463687150838,
+        "ci_samp": [
+          0.004400831005586592,
+          0.005229343575418995
+        ],
+        "mean_d_samp_crn_analytical": 0.004838478241423116,
+        "mean_d_samp_indep_analytical": 0.8316144650894796,
+        "mean_sampler_discrepancy": 0.0004613408264783583
+      },
+      "C3": {
+        "mean_d_samp_crn_empirical": 0.015246927374301677,
+        "ci_samp": [
+          0.014553624301675979,
+          0.01591286312849162
+        ],
+        "mean_d_samp_crn_analytical": 0.015282432469368652,
+        "mean_d_samp_indep_analytical": 0.8314848727908214,
+        "mean_sampler_discrepancy": 0.0009614714421126533
+      }
+    },
+    "gamma_1.00": {
+      "C0": {
+        "mean_d_samp_crn_empirical": 0.0005740223463687151,
+        "ci_samp": [
+          0.000546927374301676,
+          0.0006016759776536312
+        ],
+        "mean_d_samp_crn_analytical": 0.0005604570709232179,
+        "mean_d_samp_indep_analytical": 0.827792005994898,
+        "mean_sampler_discrepancy": 0.0001946362508913612
+      },
+      "C1": {
+        "mean_d_samp_crn_empirical": 0.02208212290502793,
+        "ci_samp": [
+          0.021622067039106147,
+          0.02252849162011173
+        ],
+        "mean_d_samp_crn_analytical": 0.022201287338231027,
+        "mean_d_samp_indep_analytical": 0.8271641282522374,
+        "mean_sampler_discrepancy": 0.0012245238165122729
+      },
+      "C2": {
+        "mean_d_samp_crn_empirical": 0.00962541899441341,
+        "ci_samp": [
+          0.008782681564245809,
+          0.01042877094972067
+        ],
+        "mean_d_samp_crn_analytical": 0.009654107239395186,
+        "mean_d_samp_indep_analytical": 0.8269398172765094,
+        "mean_sampler_discrepancy": 0.0007053018794346051
+      },
+      "C3": {
+        "mean_d_samp_crn_empirical": 0.030946368715083803,
+        "ci_samp": [
+          0.02956338687150838,
+          0.03229078910614525
+        ],
+        "mean_d_samp_crn_analytical": 0.03091932769543845,
+        "mean_d_samp_indep_analytical": 0.8264472468664762,
+        "mean_sampler_discrepancy": 0.001414386629037283
+      }
+    },
+    "gamma_2.00": {
+      "C0": {
+        "mean_d_samp_crn_empirical": 0.0011435754189944134,
+        "ci_samp": [
+          0.0011019553072625697,
+          0.001185195530726257
+        ],
+        "mean_d_samp_crn_analytical": 0.0011518389998215813,
+        "mean_d_samp_indep_analytical": 0.8149810334663539,
+        "mean_sampler_discrepancy": 0.00028170776856982515
+      },
+      "C1": {
+        "mean_d_samp_crn_empirical": 0.04299162011173184,
+        "ci_samp": [
+          0.04214747905027933,
+          0.043809797486033523
+        ],
+        "mean_d_samp_crn_analytical": 0.04313788701061412,
+        "mean_d_samp_indep_analytical": 0.8126223698224889,
+        "mean_sampler_discrepancy": 0.0016753190303112396
+      },
+      "C2": {
+        "mean_d_samp_crn_empirical": 0.01924608938547486,
+        "ci_samp": [
+          0.017611438547486032,
+          0.020817611731843575
+        ],
+        "mean_d_samp_crn_analytical": 0.019316411606292116,
+        "mean_d_samp_indep_analytical": 0.8115762238775354,
+        "mean_sampler_discrepancy": 0.0009951257505916265
+      },
+      "C3": {
+        "mean_d_samp_crn_empirical": 0.06192011173184358,
+        "ci_samp": [
+          0.05916449022346369,
+          0.06458268854748604
+        ],
+        "mean_d_samp_crn_analytical": 0.06203176405994538,
+        "mean_d_samp_indep_analytical": 0.809787580450945,
+        "mean_sampler_discrepancy": 0.0017306302087115612
+      }
+    },
+    "gamma_4.00": {
+      "C0": {
+        "mean_d_samp_crn_empirical": 0.0025036312849162014,
+        "ci_samp": [
+          0.002436033519553072,
+          0.002574022346368715
+        ],
+        "mean_d_samp_crn_analytical": 0.0025000208976416723,
+        "mean_d_samp_indep_analytical": 0.7849445641664031,
+        "mean_sampler_discrepancy": 0.0004078063216575403
+      },
+      "C1": {
+        "mean_d_samp_crn_empirical": 0.07579776536312849,
+        "ci_samp": [
+          0.07442344972067039,
+          0.07711455307262569
+        ],
+        "mean_d_samp_crn_analytical": 0.07594993173125858,
+        "mean_d_samp_indep_analytical": 0.7764005851642279,
+        "mean_sampler_discrepancy": 0.0020519384095864335
+      },
+      "C2": {
+        "mean_d_samp_crn_empirical": 0.038655307262569834,
+        "ci_samp": [
+          0.03554490921787709,
+          0.0416528282122905
+        ],
+        "mean_d_samp_crn_analytical": 0.038570643204148665,
+        "mean_d_samp_indep_analytical": 0.7713829713200812,
+        "mean_sampler_discrepancy": 0.0013381165710873192
+      },
+      "C3": {
+        "mean_d_samp_crn_empirical": 0.11804720670391063,
+        "ci_samp": [
+          0.11282399441340782,
+          0.1231188407821229
+        ],
+        "mean_d_samp_crn_analytical": 0.11841085313824883,
+        "mean_d_samp_indep_analytical": 0.7647718634522236,
+        "mean_sampler_discrepancy": 0.0023678439805886052
+      }
+    }
+  },
+  "11_negative_controls_evaluation": {
+    "NC1_scalar_null": true,
+    "NC2_direction_shuffled": true,
+    "NC3_zero_weighting": true,
+    "NC4_repeatability": true,
+    "NC5_anti_tuning": true,
+    "NC6_production_isolation": true,
+    "NC7_genesis_gate": true,
+    "NC8_softmax_argmax_equivalence": true,
+    "all_passed": true
+  },
+  "12_interpretation_decision": {
+    "code": "RESULT_P3",
+    "label": "SAMPLING_LEVEL_ACTION_DIFFERENTIATION",
+    "rationale": "Probabilistic policy representation preserves continuous R3 directional signal (mean D_TV = 0.013767 at gamma=1.00 > 0.0001), probability divergence strictly increases monotonically with temperature gamma (0.003291 -> 0.057267), and reproducible sampled-action divergence is observed under common random numbers (max D_samp = 0.075798 > 0.0001) while deterministic argmax remains D_pol = 0.0000."
+  },
+  "13_gate_2_status": "STRICTLY BLOCKED (Delta_HM = 0.0685 < 0.1500; D_pol remaining 0 under deterministic selection)",
+  "14_adr029_status": "DRAFT / RESEARCH RECORD ONLY / NOT RATIFIED",
+  "15_production_integrity": {
+    "src_core_diff": 0,
+    "profile_is_onboarded": false,
+    "gpu_vram_mb": 0.0,
+    "policy_distinction_preserved": "Deterministic policy (pi_det = argmax V), probabilistic policy (pi_prob = softmax gamma V), and sampled policy (a ~ pi_prob) strictly distinguished. Non-zero probabilistic/sampled divergence does NOT justify stochastic production policy."
+  }
+}

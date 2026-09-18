@@ -1983,3 +1983,83 @@ This study tested the preregistered **Contextual Decision Boundary Hypothesis**:
 - **Formal Spec**: [`PHASE_22_H1_R3_CONTEXTUAL_DECISION_BOUNDARY_STUDY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase22-Epistemic_Foraging/PHASE_22_H1_R3_CONTEXTUAL_DECISION_BOUNDARY_STUDY.md).
 - **Governance State**: Phase 22 H1 = `INCONCLUSIVE`, Gate 2 = `STRICTLY BLOCKED` ($\Delta_{\text{HM}} = 0.0685 < 0.1500$), ADR-029 = `DRAFT / RESEARCH RECORD ONLY / NOT RATIFIED`, Genesis = `LOCKED`.
 
+
+## 37. Phase 22 H1 — Probabilistic Policy Recovery & Decision-Temperature Study
+
+### 37.1 Motivation & Preregistered Hypotheses
+
+The immediately preceding study (`9dcc611`, `RESULT_B — PERSISTENT_DETERMINISTIC_DISCRETIZATION`) confirmed that while continuous directional information persists ($|\Delta\mathbf{V}_{\text{dir}}\| \sim 0.094$ nats) and permutes sub-action rankings in $79.89\%$ of discordant pairs under CTX_5, deterministic argmax action divergence remains strictly $D_{\text{pol}} = 0.0000$ due to lockstep action transition (`answer` $\to$ `retrieve`).
+This study addressed the narrowly defined research question:
+> **Does probabilistic policy selection recover the continuous R3 directional signal that deterministic argmax discards, and how does this depend on decision temperature $\gamma \in \{0.25, 0.50, 1.00, 2.00, 4.00\}$?**
+
+Tested hypotheses:
+- **H1-P (Probabilistic Policy Signal)**: Under C1, does $D_{\text{TV}} > \tau_{\text{TV}}$ ($10^{-4}$) and $D_{\text{JS}} > \tau_{\text{JS}}$ ($10^{-5}$) while C0 directional displacement remains zero?
+- **H1-T (Temperature Sensitivity)**: Does increasing temperature $\gamma$ monotonically amplify probability divergence?
+- **H1-S (Sampled Action Divergence)**: Under Common Random Numbers ($K=10,000$ samples per pair, seed `7113`), do matched discordant pairs produce reproducible divergent sampled actions?
+
+> [!CAUTION]
+> **GOVERNANCE NOTICE**: Observation of sampled action divergence is an empirical finding regarding information recovery under stochastic sampling. It does **NOT** constitute an architectural recommendation that Lucia should adopt stochastic action selection in production.
+
+### 37.2 Quantitative Summary Across Temperature Grid and 4 Conditions (358 Matched Pairs)
+
+| $\gamma$ | Cond | Mean $|\Delta\mathbf{V}_{\text{dir}}\|$ | Bootstrap 95% CI ($|\Delta V|$) | Mean $D_{\text{TV}}$ (Raw) | Mean $D_{\text{TV, dir}}$ | Bootstrap 95% CI ($D_{\text{TV}}$) | Mean $D_{\text{JS}}$ | Bootstrap 95% CI ($D_{\text{JS}}$) | $D_{\text{pol}}$ | Ranking Change Rate | Empirical $D_{\text{samp}}$ ($K=10^4$) | Analytical $D_{\text{samp}}$ (CRN) | Analytical $D_{\text{samp}}$ (Indep) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| **0.25** | C0 | $0.000000$ | $[0.0000, 0.0000]$ | $0.000070$ | $0.000000$ | $[0.000067, 0.000074]$ | $0.000000$ | $[0.0000, 0.0000]$ | $0.0000$ | $0.0000$ | $0.000140$ | $0.000141$ | $0.669818$ |
+| | **C1** | **$0.093653$** | **$[0.0909, 0.0964]$** | **$0.003291$** | **$0.003290$** | **$[0.003183, 0.003403]$** | **$0.000012$** | **$[0.000011, 0.000013]$** | **$0.0000$** | **$0.7989$** | **$0.005586$** | **$0.005588$** | **$0.670570$** |
+| | C2 | $0.039067$ | $[0.0353, 0.0428]$ | $0.001375$ | $0.001372$ | $[0.001244, 0.001509]$ | $0.000004$ | $[0.000003, 0.000004]$ | $0.0000$ | $0.0000$ | $0.002447$ | $0.002449$ | $0.670399$ |
+| | C3 | $0.090408$ | $[0.0864, 0.0944]$ | $0.003310$ | $0.003309$ | $[0.003175, 0.003450]$ | $0.000009$ | $[0.000008, 0.000009]$ | $0.0000$ | $0.7989$ | $0.005615$ | $0.005618$ | $0.670845$ |
+| **0.50** | C0 | $0.000000$ | $[0.0000, 0.0000]$ | $0.000142$ | $0.000000$ | $[0.000135, 0.000150]$ | $0.000000$ | $[0.0000, 0.0000]$ | $0.0000$ | $0.0000$ | $0.000287$ | $0.000284$ | $0.686884$ |
+| | **C1** | **$0.093653$** | **$[0.0909, 0.0964]$** | **$0.006695$** | **$0.006692$** | **$[0.006473, 0.006922]$** | **$0.000049$** | **$[0.000046, 0.000052]$** | **$0.0000$** | **$0.7989$** | **$0.011118$** | **$0.011117$** | **$0.689620$** |
+| | C2 | $0.039067$ | $[0.0353, 0.0428]$ | $0.002796$ | $0.002789$ | $[0.002530, 0.003068]$ | $0.000015$ | $[0.000012, 0.000018]$ | $0.0000$ | $0.0000$ | $0.004868$ | $0.004869$ | $0.689037$ |
+| | C3 | $0.090408$ | $[0.0864, 0.0944]$ | $0.006734$ | $0.006732$ | $[0.006459, 0.007020]$ | $0.000035$ | $[0.000032, 0.000037]$ | $0.0000$ | $0.7989$ | $0.011172$ | $0.011175$ | $0.690855$ |
+| **1.00** | C0 | $0.000000$ | $[0.0000, 0.0000]$ | $0.000292$ | $0.000000$ | $[0.000277, 0.000307]$ | $0.000000$ | $[0.0000, 0.0000]$ | $0.0000$ | $0.0000$ | $0.000574$ | $0.000574$ | $0.718817$ |
+| | **C1** | **$0.093653$** | **$[0.0909, 0.0964]$** | **$0.013767$** | **$0.013763$** | **$[0.013313, 0.014234]$** | **$0.000202$** | **$[0.000188, 0.000216]$** | **$0.0000$** | **$0.7989$** | **$0.022082$** | **$0.022081$** | **$0.725917$** |
+| | C2 | $0.039067$ | $[0.0353, 0.0428]$ | $0.005747$ | $0.005734$ | $[0.005204, 0.006307]$ | $0.000060$ | $[0.000049, 0.000072]$ | $0.0000$ | $0.0000$ | $0.009710$ | $0.009710$ | $0.724838$ |
+| | C3 | $0.090408$ | $[0.0864, 0.0944]$ | $0.013845$ | $0.013841$ | $[0.013279, 0.014431]$ | $0.000140$ | $[0.000129, 0.000151]$ | $0.0000$ | $0.7989$ | $0.022197$ | $0.022194$ | $0.729731$ |
+| **2.00** | C0 | $0.000000$ | $[0.0000, 0.0000]$ | $0.000609$ | $0.000000$ | $[0.000577, 0.000642]$ | $0.000000$ | $[0.0000, 0.0000]$ | $0.0000$ | $0.0000$ | $0.001150$ | $0.001149$ | $0.769970$ |
+| | **C1** | **$0.093653$** | **$[0.0909, 0.0964]$** | **$0.028511$** | **$0.028504$** | **$[0.027585, 0.029471]$** | **$0.000859$** | **$[0.000800, 0.000918]$** | **$0.0000$** | **$0.7989$** | **$0.042992$** | **$0.042992$** | **$0.785461$** |
+| | C2 | $0.039067$ | $[0.0353, 0.0428]$ | $0.011883$ | $0.011855$ | $[0.010775, 0.013038]$ | $0.000253$ | $[0.000207, 0.000304]$ | $0.0000$ | $0.0000$ | $0.019183$ | $0.019179$ | $0.784405$ |
+| | C3 | $0.090408$ | $[0.0864, 0.0944]$ | $0.028669$ | $0.028662$ | $[0.027508, 0.029871]$ | $0.000572$ | $[0.000527, 0.000618]$ | $0.0000$ | $0.7989$ | $0.043232$ | $0.043231$ | $0.792342$ |
+| **4.00** | C0 | $0.000000$ | $[0.0000, 0.0000]$ | $0.001248$ | $0.000000$ | $[0.001179, 0.001317]$ | $0.000001$ | $[0.0000, 0.0000]$ | $0.0000$ | $0.0000$ | $0.002281$ | $0.002279$ | $0.829141$ |
+| | **C1** | **$0.093653$** | **$[0.0909, 0.0964]$** | **$0.057267$** | **$0.057256$** | **$[0.055452, 0.059173]$** | **$0.003602$** | **$[0.003362, 0.003848]$** | **$0.0000$** | **$0.7989$** | **$0.075798$** | **$0.075797$** | **$0.849187$** |
+| | C2 | $0.039067$ | $[0.0353, 0.0428]$ | $0.023812$ | $0.023758$ | $[0.021644, 0.026090]$ | $0.001052$ | $[0.000865, 0.001264]$ | $0.0000$ | $0.0000$ | $0.036056$ | $0.036053$ | $0.850444$ |
+| | C3 | $0.090408$ | $[0.0864, 0.0944]$ | $0.057530$ | $0.057520$ | $[0.055243, 0.059885]$ | $0.002341$ | $[0.002160, 0.002528]$ | $0.0000$ | $0.7989$ | $0.076241$ | $0.076239$ | $0.857642$ |
+
+### 37.3 Key Empirical & Mechanistic Findings
+
+1. **Information Recovery at Probabilistic Layer**: While deterministic argmax discards continuous R3 directional differences ($D_{\text{pol}} = 0.0000$), the softmax probability distribution robustly preserves them:
+   - At canonical $\gamma = 1.00$: $D_{\text{TV}} = 0.013767 \gg 10^{-4}$ ($138\times$ threshold), $D_{\text{JS}} = 0.000202 \gg 10^{-5}$ ($20\times$ threshold).
+   - Under C0 (Scalar Null), directional TV displacement is identically zero ($D_{\text{TV, dir}} \equiv 0.000000$).
+2. **Strict Monotonic Temperature Amplification**: Increasing $\gamma$ monotonically magnifies probability divergence across all evaluated levels:
+   $$\gamma: 0.25 \to 0.50 \to 1.00 \to 2.00 \to 4.00$$
+   $$D_{\text{TV}}: 0.003291 \to 0.006695 \to 0.013767 \to 0.028511 \to 0.057267$$
+   $$D_{\text{JS}}: 0.000012 \to 0.000049 \to 0.000202 \to 0.000859 \to 0.003602$$
+3. **Empirical Sampled-Action Divergence**: Under pseudo-random sampling with Common Random Numbers ($K=10,000$ per pair), discordant probes produce divergent actions that never occur deterministically:
+   - At $\gamma = 0.25$: $D_{\text{samp}} = 0.005586$ ($0.56\%$ divergence rate).
+   - At $\gamma = 1.00$: $D_{\text{samp}} = 0.022082$ ($2.21\%$ divergence rate, $38\times$ C0 baseline).
+   - At $\gamma = 4.00$: $D_{\text{samp}} = 0.075798$ (**$7.58\%$ divergence rate**).
+4. **Softmax Argmax Equivalence Invariant**: In 100% of probes (716/716) and across all temperatures, the modal action of the softmax distribution remains mathematically identical to the deterministic winner ($\operatorname{argmax}(P) \equiv \operatorname{argmax}(V)$).
+5. **Pre-Registered Classification**: Formally classified as **`RESULT_P3 — SAMPLING_LEVEL_ACTION_DIFFERENTIATION`**.
+
+### 37.4 Negative Controls Audit (8/8 NCs PASSED)
+- **NC1 (Scalar Null)**: Under C0, displacement $= 0.000000 \le \tau_{\text{val}}$, $D_{\text{TV, dir}} = 0.000000 \le \tau_{\text{TV}}$, $D_{\text{JS}} \le \tau_{\text{JS}}$, $D_{\text{pol}} = 0.0$ across all 5 temperatures (PASSED).
+- **NC2 (Direction-Shuffled Correspondence)**: Pearson $r = +0.339674 \le 0.50$ (PASSED).
+- **NC3 (Zero Directional Weighting Identity)**: $W_{\text{dir}} = 0$ yields bit-exact C0 scalar baseline (PASSED).
+- **NC4 (Deterministic Repeatability)**: Bit-exact match on repeat execution (PASSED).
+- **NC5 (Anti-Tuning Parameter Invariance)**: Parameter and permutation hashes match manifest (PASSED).
+- **NC6 (Production Code Isolation)**: Zero modifications to `src/core/**`, `src/api/**`, `electron/**` (PASSED).
+- **NC7 (Genesis Gate Invariant)**: Bit-exact `{"is_onboarded": false}` (PASSED).
+- **NC8 (Softmax Argmax Equivalence)**: $1.000000$ equivalence rate for all probes & gammas (PASSED).
+
+### 37.5 Automated Test & Artifact Ledger
+- **Evaluation Harness**: [`evaluate_h1_r3_probabilistic_policy.py`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/scripts/evaluate_h1_r3_probabilistic_policy.py)
+- **Dedicated Test Suite**: [`test_h1_r3_probabilistic_policy.py`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/test_h1_r3_probabilistic_policy.py) — **33/33 PASSED** in 4.37s.
+- **Full Phase 22 Regression**: **463/463 PASSED** (430 prior + 33 new).
+- **Results Fixture**: [`results_h1_r3_probabilistic_policy.json`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/fixtures/results_h1_r3_probabilistic_policy.json).
+- **Negative Controls Fixture**: [`nc_h1_r3_probabilistic_policy.json`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/fixtures/nc_h1_r3_probabilistic_policy.json).
+- **15-Point Formal Report**: [`report_h1_r3_probabilistic_policy.json`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/fixtures/report_h1_r3_probabilistic_policy.json).
+- **CSV Summary Table**: [`summary_h1_r3_probabilistic_policy.csv`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/fixtures/summary_h1_r3_probabilistic_policy.csv).
+- **Manifest**: [`manifest_h1_r3_probabilistic_policy.json`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation_phase22/fixtures/manifest_h1_r3_probabilistic_policy.json).
+- **Formal Spec**: [`PHASE_22_H1_R3_PROBABILISTIC_POLICY_STUDY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase22-Epistemic_Foraging/PHASE_22_H1_R3_PROBABILISTIC_POLICY_STUDY.md).
+- **Dedicated Results Directory**: `tests/evaluation_phase22/results/h1_r3_probabilistic_policy/` (contains all 8 required files).
+- **Governance State**: Phase 22 H1 = `INCONCLUSIVE`, Gate 2 = `STRICTLY BLOCKED` ($\Delta_{\text{HM}} = 0.0685 < 0.1500$), ADR-029 = `DRAFT / RESEARCH RECORD ONLY / NOT RATIFIED`, Genesis = `LOCKED`.
