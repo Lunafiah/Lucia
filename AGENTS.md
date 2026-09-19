@@ -15,7 +15,7 @@ Lucia has completed all documented production and research milestones through **
 1. **Research is not production.** A research hypothesis, mathematical proposal, benchmark result, ablation, prototype, or evaluation harness MUST NOT be treated as a production capability merely because tests pass.
 2. **Evidence before promotion.** New mechanisms must first be isolated, measurable, reproducible, and evaluated against explicit acceptance criteria before any production integration is proposed.
 3. **Do not invent the next phase.** Agents MUST NOT create or assume a new numbered phase, roadmap milestone, subsystem, or activation prerequisite unless it is explicitly established by authoritative project documentation or a user-approved research specification.
-4. **Preserve the canonical baseline.** Unless a task explicitly authorizes production integration, research work must remain isolated from the canonical runtime and persistent user state. Prefer `tests/evaluation_*`, research specifications, simulation fixtures, and disposable experimental modules for exploratory work.
+4. **Preserve the canonical baseline.** Unless a task explicitly authorizes production integration, research work must remain isolated from the canonical runtime and persistent user state. Prefer `tests/evaluation/phaseXX/`, research specifications, simulation fixtures, and disposable experimental modules for exploratory work.
 5. **No silent promotion.** A successful experiment does not authorize changes to `src/core/`, `data/`, lifecycle behavior, or the production cognitive pipeline. Promotion requires an explicit architectural decision and corresponding documentation update.
 6. **No activation during research.** `Development / Simulation != Lucia Activation` remains absolute. First Activation (Genesis Onboarding) remains a locked future gate until project governance explicitly changes that status.
 7. **Evidence hierarchy is authoritative:**
@@ -143,15 +143,14 @@ Agents must **NEVER** recreate these files, create compatibility wrappers, or in
 
 ### 3.3 Documentation Workflow
 
-Whenever work alters system behavior, mechanisms, phase status, or architecture:
-1. **Identify the canonical owner:** Project status belongs in `00_PROJECT_OVERVIEW.md`; technical mechanisms and ADRs belong in `ARCHITECTURE.md`.
-2. **Update the canonical source:** Edit the living document directly rather than creating a secondary file.
-3. **Phase-specific records:** Create a new document in `docs/specs/` only when the artifact represents a genuine research specification, evaluation report, or phase closure report.
-4. **Synchronize navigation:** Update `DOCUMENTATION_INDEX.md` whenever adding, moving, or removing documentation.
-5. **Update README sparingly:** Modify `README.md` only when the public-facing description, quickstart, or primary navigation links change.
-6. **Audit references:** Always search for and resolve stale or broken references to old file names.
+When behavior, mechanisms, architecture, or phase status changes:
+1. Update the canonical owner; do not create duplicate sources of truth.
+2. Put genuine research specs/evaluations/phase records in `docs/specs/`.
+3. Put **all phase evaluation artifacts** in `tests/evaluation/phaseXX/` under the shared `tests/evaluation/` parent.
+4. Update `DOCUMENTATION_INDEX.md` for added/moved/removed docs.
+5. Update `README.md` only for public-facing changes.
+6. Search for and fix stale references to renamed/deleted files.
 
----
 
 ## 4. Codebase Architecture & Ownership Map
 
@@ -244,7 +243,7 @@ Lucia uses a strict gated progression. New cognitive or physical mechanisms must
 Research Hypothesis (H1–Hn)
        │
        ▼
-Isolated Evaluation Harness (tests/evaluation_phaseXX/)
+Isolated Evaluation Harness (tests/evaluation/phaseXX/)
        │
        ▼
 Deterministic Empirical Verification (100% Pre-registered criteria satisfied)
@@ -266,12 +265,11 @@ Promotion, Acceptance & Phase Closure Sign-Off
 ```
 
 ### Research Isolation Rules
-- **No Direct-to-Production:** Do NOT skip from a research concept directly into production code.
-- **Keep Research Code Isolated:** Prefer dedicated evaluation directories (`tests/evaluation_*`), disposable simulation fixtures, and isolated test models.
-- **Experimental Success $\ne$ Production Promotion:** A successful experiment in an evaluation harness demonstrates empirical feasibility; it does NOT authorize changing `src/core/` without an explicit Architecture Gate.
-- **Preserve Falsifiability:** Negative results, failed candidate models, and ablations must be documented as evidence rather than erased.
+- **No direct-to-production:** research concepts stay out of `src/core/**` until the Architecture Gate is approved.
+- **Isolate experiments:** use `tests/evaluation/phaseXX/`, disposable fixtures, temporary data, and isolated models.
+- **Success ≠ promotion:** passing evaluation criteria proves only the tested claim under tested conditions.
+- **Preserve evidence:** retain failed hypotheses, rejected candidates, controls, ablations, and negative results.
 
----
 
 ## 7. Architecture Gate
 
@@ -350,37 +348,27 @@ $$\text{\_turn\_lock} \longrightarrow \text{\_step\_lock} \longrightarrow \text{
 
 ## 11. Testing & Quality Assurance Protocols
 
-Validation proceeds from narrow to broad. Agents must execute the relevant test suites before declaring work complete.
+Validation is **narrow → broad**; never claim a test passed unless it was actually run.
 
-### Narrow-to-Broad Testing Order:
-1. **Targeted Subsystem Tests:** Run unit tests for the specific module modified.
-2. **Phase Production Tests:** Run phase-specific production suites (`tests/unit/test_phaseXX_production.py`).
-3. **Regression Suites:** Run previous phase regression tests (e.g. `test_phase20_production.py`).
-4. **Property Invariant Tests:** Run Hypothesis invariant tests (`tests/property/`).
-5. **Full Unit Regression:** Run `pytest tests/unit -v`.
+1. Targeted subsystem tests
+2. Phase production tests (`tests/unit/test_phaseXX_production.py`)
+3. Relevant prior-phase regression tests
+4. Property/invariant tests (`tests/property/`)
+5. Full unit regression when scope warrants it
 
-### Common Test Commands:
+Research uses the separate hierarchy:
+- `tests/evaluation/phaseXX/` — **all phase-specific research/evaluation artifacts belong under this single parent directory**.
+- Keep research evaluation separate from production tests and runtime code.
+- Report software verification and empirical research validation separately.
+
+Common commands:
 ```powershell
-# Production unit tests
 .venv\Scripts\pytest tests/unit -v
-
-# Mathematical property invariants (Hypothesis)
 .venv\Scripts\pytest tests/property -v
-
-# Phase 21 production realization tests
 .venv\Scripts\pytest tests/unit/test_phase21_production.py -v
-
-# Isolated research evaluation suites
-.venv\Scripts\pytest tests/evaluation_phase21 -v
-
-# Electron desktop tests
+.venv\Scripts\pytest tests/evaluation/phase21 -v
 cd electron ; npm test
 ```
-
-* **Never report tests as passed unless actually executed.**
-* Distinguish software verification (unit/property test passes) from empirical research validation (hypothesis verification in evaluation harnesses).
-
----
 
 ## 12. Agent Scope Discipline & Ambiguity Resolution
 
@@ -404,39 +392,34 @@ cd electron ; npm test
 
 ## 13. Git & Version Control Procedure
 
-Git history is part of Lucia's engineering evidence. Keep it clean, traceable, and reversible.
+Git history is part of Lucia's engineering evidence. Keep changes scoped, traceable, and reversible.
 
-### 13.1 Before Editing
-- Run `git status` to verify the working tree and current branch.
-- Inspect recent commits with `git log -n 3 --oneline`.
-- Identify any pre-existing uncommitted modifications and preserve them.
+### Before Editing
+```powershell
+git status
+git log -n 3 --oneline
+```
+Preserve unrelated working-tree changes. Never assume a clean tree.
 
-### 13.2 Before Committing
-Always run:
+### Before Commit
 ```powershell
 git status
 git diff --check
 git diff --stat
 git diff
 ```
-Verify that:
-- Only intended files are staged.
-- Zero whitespace errors are reported by `git diff --check`.
-- `data/profile.json` remains `{"is_onboarded": false}`.
-- No temporary files, caches, or credentials are included.
-- Pre-existing unrelated modifications are preserved and unstaged.
+Verify only intended files are staged; no credentials, caches, temporary files, or unintended profile changes are included.
 
-### 13.3 Commit Rules
-- Use clear, conventional commit messages:
-  - `feat(core): ...` — production feature implementation
-  - `fix(core): ...` — bug fixes
-  - `research(...): ...` — research specs, evaluations, or test harnesses
-  - `docs: ...` — canonical documentation updates
-  - `test(...): ...` — unit or property tests
-- Never amend, squash, or rewrite shared commits unless explicitly requested.
-- Never force-push.
+### Commit Rules
+Use conventional scoped messages:
+- `feat(core): ...`
+- `fix(core): ...`
+- `research(...): ...`
+- `docs: ...`
+- `test(...): ...`
 
----
+Never amend/squash/rewrite shared commits or force-push unless explicitly requested.
+Do not push unless the task explicitly requires it.
 
 ## 14. Documentation + Code Consistency Check
 
@@ -451,43 +434,24 @@ Before finishing a task, verify that:
 
 ## 15. Reporting Contract
 
-Every task must conclude with a structured, factual report:
-
-### Scope
-State precisely which files were modified, created, or deleted.
-
-### Architecture / Design
-Cite the governing design document or ADR followed during the task.
-
-### Validation
-Report the exact commands executed, test counts, execution durations, and results. Mention any observed performance metrics (e.g. lock holding times, memory usage).
-
-### Documentation
-List canonical documents updated and verify reference integrity.
-
-### Git Status
-Report the commit hash, commit message, and working tree state.
-
-### Issues / Deviations
-Report any known limitations, unresolved trade-offs, or preserved unrelated changes. Never hide test failures or make unverified claims.
-
----
+Every task ends with a factual report:
+- **Scope:** modified/created/deleted files.
+- **Architecture:** governing doc/ADR and relevant decision.
+- **Validation:** exact commands, results, counts/durations when available; separate research from production evidence.
+- **Documentation:** updated canonical docs and reference integrity.
+- **Git:** commit hash/message and working-tree state.
+- **Issues:** failures, limitations, unresolved trade-offs, and preserved unrelated changes.
 
 ## 16. Final Pre-Commit Checklist
 
-Before declaring work complete, verify every item:
-
-- [ ] I read the relevant canonical documentation before making decisions.
-- [ ] I followed the established architecture and governing ADRs.
-- [ ] I did not bypass an Architecture Gate for new cognitive mechanisms.
-- [ ] Research code remains isolated from production runtime.
-- [ ] Genesis Gate invariant is verified (`data/profile.json == {"is_onboarded": false}`).
-- [ ] Lock hierarchy is preserved (`_turn_lock → _step_lock → _train_lock → _stimulus_lock → _state_lock`).
-- [ ] CPU vs. GPU discipline is preserved (0 MB GPU VRAM for limbic/memory/consolidation).
-- [ ] Pre-reflective emotional discipline is preserved (no self-reported feelings in prompts/outputs).
-- [ ] No unrelated production or test files were modified.
-- [ ] Pre-existing unrelated working-tree modifications were preserved.
-- [ ] All relevant tests were actually executed and passed.
-- [ ] `git diff --check` reported 0 whitespace errors.
-- [ ] Canonical documentation reflects the implemented reality.
-- [ ] Commit message accurately describes the task.
+- [ ] Canonical docs and relevant ADRs were read.
+- [ ] Work stayed within the authorized scope and Architecture Gate.
+- [ ] Research remains isolated under `tests/evaluation/phaseXX/` when applicable.
+- [ ] Genesis Gate remains intact: `data/profile.json == {"is_onboarded": false}`.
+- [ ] Lock hierarchy and CPU/GPU discipline are preserved.
+- [ ] No reflective emotional self-reporting was introduced.
+- [ ] No unrelated files or pre-existing user changes were altered.
+- [ ] Relevant tests/evaluations were actually executed and results reported accurately.
+- [ ] `git diff --check` passes.
+- [ ] Canonical documentation matches implementation reality; no stale deleted-file references remain.
+- [ ] Commit message accurately describes the change.
