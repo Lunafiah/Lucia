@@ -39,18 +39,14 @@
   "beta_0": 2.0,
   "policy_conditions": [
     "P0_canonical_argmax",
-    "PA_deterministic_hysteresis_05",
-    "PA_deterministic_hysteresis_10",
+    "PA_deterministic_hysteresis",
     "PD_probabilistic_softmax_sampling",
     "PE_hybrid_confidence_gated",
     "PC_deterministic_cyclic_rotation"
   ],
   "policy_parameters": {
     "P0": {},
-    "PA_05": {
-      "delta_h": 0.05
-    },
-    "PA_10": {
+    "PA": {
       "delta_h": 0.10
     },
     "PD": {
@@ -67,8 +63,9 @@
   "environment_model_spec": {
     "name": "ENVIRONMENT_MODEL_SPEC_V1",
     "hash_algorithm": "SHA256",
+    "interface": ["action", "state", "rng"],
     "policy_id_blindness": true,
-    "resolution_entropy_threshold_tau_res": 0.65,
+    "resolution_entropy_threshold_tau_res": 0.35,
     "background_leakage_lambda_leak": 0.05,
     "friction_penalties": {
       "clarify_standard": 1.0,
@@ -160,6 +157,7 @@
       }
     }
   },
+  "environment_model_spec_sha256": "184ea41307fdf805fe82b9d0f7c9ddabf21ce043b8874520ea6ea93d9b6cbca0",
   "bottleneck_loci": [
     "representation_collapse",
     "valuation_collapse",

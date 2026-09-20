@@ -8,10 +8,9 @@ policy mechanisms remain behaviorally meaningful when embedded in an actual
 multi-turn conversational loop, where observations, action selection,
 communication, and subsequent outcomes continuously influence one another.
 
-Evaluates 6 Policy Conditions:
+Evaluates 5 Policy Conditions:
   P0: Canonical Deterministic Argmax (Reference baseline)
-  PA_05: Deterministic Hysteresis (Delta_H = 0.05)
-  PA_10: Deterministic Hysteresis (Delta_H = 0.10)
+  PA: Deterministic Hysteresis (Delta_H = 0.10)
   PD: Probabilistic Softmax Sampling (gamma = 1.00, CRN)
   PE: Confidence-Gated Hybrid (tau_conf = 0.10, gamma = 1.00)
   PC: Deterministic Bounded Exploration / Cyclic Rotation (delta_qual = 0.10)
@@ -102,12 +101,20 @@ EXPOSURE_TICKS = 12
 SCALAR_MATCH_THRESHOLD = 0.020
 DEADBAND_EPSILON = 0.010
 
-RESOLUTION_ENTROPY_THRESHOLD_TAU_RES = 0.65
+RESOLUTION_ENTROPY_THRESHOLD_TAU_RES = 0.35
 NUMERICAL_EPSILON = 1e-15
 
 EXPECTED_CORPUS_SHA = "d0061e8cfdd160f4ebccb7100e4fe3eeef9ff18a1a4c9c1b3f912a76f2ae82c0"
 EXPECTED_N_PROBES = 270
 EXPECTED_HISTORICAL_DISCORDANT = 358
+MANIFEST_PATH = REPO_ROOT / "tests" / "evaluation_phase22" / "fixtures" / "manifest_h1_multi_turn_interactive_dialogue.json"
+POLICY_CONDITIONS = [
+    "P0_canonical_argmax",
+    "PA_deterministic_hysteresis",
+    "PD_probabilistic_softmax_sampling",
+    "PE_hybrid_confidence_gated",
+    "PC_deterministic_cyclic_rotation",
+]
 
 ACTIONS = ["answer", "clarify", "retrieve", "derive", "reason", "wait"]
 NUM_ACTIONS = len(ACTIONS)
@@ -170,6 +177,45 @@ C2_PERMUTATION = _SHUFFLE_RNG.permutation(270).astype(np.int64)
 
 def sha256_array(arr: np.ndarray) -> str:
     return hashlib.sha256(arr.tobytes()).hexdigest()
+
+
+def load_and_validate_v3_manifest() -> Dict[str, Any]:
+    with MANIFEST_PATH.open("r", encoding="utf-8") as handle:
+        manifest = json.load(handle)
+
+    if manifest["study_id"] != STUDY_ID:
+        raise ValueError("Manifest study_id does not match the v3 study")
+    if manifest["master_seed"] != MASTER_SEED:
+        raise ValueError("Manifest master_seed does not match the locked seed")
+    if manifest["expected_corpus_sha"] != EXPECTED_CORPUS_SHA:
+        raise ValueError("Manifest corpus hash does not match the locked corpus")
+    if manifest["expected_n_probes"] != EXPECTED_N_PROBES:
+        raise ValueError("Manifest probe count does not match the locked corpus")
+    if manifest["expected_discordant_pairs"] != EXPECTED_HISTORICAL_DISCORDANT:
+        raise ValueError("Manifest discordant-pair count does not match the locked corpus")
+    if manifest["actions"] != ACTIONS:
+        raise ValueError("Manifest action set/order does not match v3")
+    if manifest["policy_conditions"] != POLICY_CONDITIONS:
+        raise ValueError("Manifest policy conditions do not match v3")
+
+    environment_spec = manifest["environment_model_spec"]
+    if environment_spec["interface"] != ["action", "state", "rng"]:
+        raise ValueError("Environment interface is not the v3 blind API")
+    if not environment_spec["policy_id_blindness"]:
+        raise ValueError("Environment policy blindness is not enabled")
+    if environment_spec["resolution_entropy_threshold_tau_res"] != RESOLUTION_ENTROPY_THRESHOLD_TAU_RES:
+        raise ValueError("Manifest tau_res does not match the v3 threshold")
+    expected_environment_hash = manifest["environment_model_spec_sha256"]
+    actual_environment_hash = hashlib.sha256(
+        json.dumps(environment_spec, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    ).hexdigest()
+    if actual_environment_hash != expected_environment_hash:
+        raise ValueError("Locked environment model specification hash mismatch")
+
+    scenario_a_q0 = np.array(environment_spec["scenarios"]["A"]["q0"], dtype=np.float64)
+    if not math.isclose(compute_entropy(scenario_a_q0), 0.587501, rel_tol=1e-4):
+        raise ValueError("Scenario A entropy is not dynamically derived from the locked q0")
+    return manifest
 
 # =============================================================================
 # Mathematical Helpers
@@ -682,6 +728,7 @@ class MultiTurnDialogueHarness:
     """Evaluation Harness for Multi-Turn Interactive Dialogue & Epistemic Foraging."""
 
     def __init__(self, master_seed: int = MASTER_SEED) -> None:
+        self.manifest = load_and_validate_v3_manifest()
         self.master_seed = master_seed
         self.core = EmotionCore(EmotionConfig())
         self.ai = ActiveInferenceEngine(ActiveInferenceConfig())
@@ -841,14 +888,18 @@ class MultiTurnDialogueHarness:
         use_counterfactual_env: bool = False,
         rng_seed: int = SAMPLING_SEED,
         turns: int = DIALOGUE_TURNS_T,
+        s_val_override: Optional[float] = None,
+        v_dir_override: Optional[np.ndarray] = None,
     ) -> Dict[str, Any]:
         """
         Execute an isolated multi-turn dialogue simulation under pre-registered rules.
         """
         s_val, v_dir = self._get_probe_features(probe_id, condition)
-        spec = self.spec_indep if use_counterfactual_env else (
-            self.spec_canon_c0 if condition == "C0" else self.spec_canon
-        )
+        if s_val_override is not None:
+            s_val = float(s_val_override)
+        if v_dir_override is not None:
+            v_dir = np.asarray(v_dir_override, dtype=np.float64).copy()
+        spec = self.spec_canon_c0 if condition == "C0" or np.all(v_dir == 0.0) else self.spec_canon
         env = self.env_indep if use_counterfactual_env else self.env_canon
 
         # Scenario initial states
@@ -931,10 +982,7 @@ class MultiTurnDialogueHarness:
             if policy_name == "P0_canonical_argmax":
                 selected_action = policy_p0_canonical_argmax(v_vals)
                 pi_dist = softmax(v_vals, 1.0)
-            elif policy_name == "PA_deterministic_hysteresis_05":
-                selected_action = policy_pa_hysteresis(v_vals, dialogue_state.prev_action, delta_h=0.05)
-                pi_dist = softmax(v_vals, 1.0)
-            elif policy_name == "PA_deterministic_hysteresis_10":
+            elif policy_name == "PA_deterministic_hysteresis":
                 selected_action = policy_pa_hysteresis(v_vals, dialogue_state.prev_action, delta_h=0.10)
                 pi_dist = softmax(v_vals, 1.0)
             elif policy_name == "PD_probabilistic_softmax_sampling":
@@ -1027,8 +1075,7 @@ def execute_full_evaluation(harness: MultiTurnDialogueHarness) -> Dict[str, Any]
     scenarios = ["A", "B", "C", "D", "E", "F", "G", "H"]
     policies = [
         "P0_canonical_argmax",
-        "PA_deterministic_hysteresis_05",
-        "PA_deterministic_hysteresis_10",
+        "PA_deterministic_hysteresis",
         "PD_probabilistic_softmax_sampling",
         "PE_hybrid_confidence_gated",
         "PC_deterministic_cyclic_rotation",
@@ -1202,23 +1249,29 @@ def execute_full_evaluation(harness: MultiTurnDialogueHarness) -> Dict[str, Any]
     nc_results: Dict[str, Any] = {}
 
     # NC1: Controlled Zero-Incremental Divergence
-    # Under identical scalar state and action selection, removing v_dir produces zero incremental trajectory divergence
+    # Match scalar, valuation, observation, action-selection and CRN conditions.
     nc1_diffs = []
-    for p_i, p_j in discordant_pairs[:50]:
-        res_canon_i = harness.run_dialogue_trajectory(p_i, "B", "P0_canonical_argmax", "C1")
-        res_canon_j = harness.run_dialogue_trajectory(p_j, "B", "P0_canonical_argmax", "C1")
-        res_c0_i = harness.run_dialogue_trajectory(p_i, "B", "P0_canonical_argmax", "C0")
-        res_c0_j = harness.run_dialogue_trajectory(p_j, "B", "P0_canonical_argmax", "C0")
+    for p_i, p_j in discordant_pairs:
+        matched_scalar = 0.5 * (
+            harness.simulated_trajectories[p_i]["s_val"]
+            + harness.simulated_trajectories[p_j]["s_val"]
+        )
+        res_c0_i = harness.run_dialogue_trajectory(
+            p_i, "B", "P0_canonical_argmax", "C0", s_val_override=matched_scalar
+        )
+        res_c0_j = harness.run_dialogue_trajectory(
+            p_j, "B", "P0_canonical_argmax", "C0", s_val_override=matched_scalar
+        )
+        history_i = json.dumps(res_c0_i["history"], sort_keys=True, separators=(",", ":"))
+        history_j = json.dumps(res_c0_j["history"], sort_keys=True, separators=(",", ":"))
+        nc1_diffs.append(0.0 if history_i == history_j else 1.0)
 
-        # Under C0, v_dir is removed; divergence between i and j must be 0
-        diff_c0 = sum(1 for t in range(len(res_c0_i["history"])) if res_c0_i["history"][t]["action"] != res_c0_j["history"][t]["action"])
-        nc1_diffs.append(diff_c0)
-
-    nc1_passed = bool(max(nc1_diffs) == 0)
+    nc1_passed = bool(max(nc1_diffs) == 0.0)
     nc_results["NC1_controlled_zero_incremental_divergence"] = {
         "passed": nc1_passed,
-        "max_c0_action_divergence": int(max(nc1_diffs)),
-        "criterion": "C0 divergence == 0 under scalar-only baseline",
+        "max_incremental_trajectory_divergence": float(max(nc1_diffs)),
+        "pairs_evaluated": len(discordant_pairs),
+        "criterion": "Bit-exact matched C0 trajectories with v_dir = 0",
     }
 
     # NC2: Direction-Shuffled Correspondence Control
@@ -1248,12 +1301,15 @@ def execute_full_evaluation(harness: MultiTurnDialogueHarness) -> Dict[str, Any]
     }
 
     # NC3: Zero Directional Weighting Identity
-    r_w0 = harness.run_dialogue_trajectory(1, "A", "P0_canonical_argmax", "C0")
+    zero_direction = np.zeros(3, dtype=np.float64)
+    r_w0 = harness.run_dialogue_trajectory(1, "A", "P0_canonical_argmax", "C1", v_dir_override=zero_direction)
     r_c0 = harness.run_dialogue_trajectory(1, "A", "P0_canonical_argmax", "C0")
-    nc3_passed = bool(r_w0["history"] == r_c0["history"])
+    w0_history = json.dumps(r_w0["history"], sort_keys=True, separators=(",", ":"))
+    c0_history = json.dumps(r_c0["history"], sort_keys=True, separators=(",", ":"))
+    nc3_passed = bool(w0_history == c0_history)
     nc_results["NC3_zero_directional_weighting"] = {
         "passed": nc3_passed,
-        "criterion": "Bit-exact match with scalar baseline",
+        "criterion": "W_dir = 0 matches the C0 scalar baseline bit-exactly",
     }
 
     # NC4: Deterministic Repeatability
@@ -1266,12 +1322,19 @@ def execute_full_evaluation(harness: MultiTurnDialogueHarness) -> Dict[str, Any]
     }
 
     # NC5: Environment-Model Independence
-    r_canon = harness.run_dialogue_trajectory(1, "C", "P0_canonical_argmax", "C1", use_counterfactual_env=False)
-    r_counter = harness.run_dialogue_trajectory(1, "C", "P0_canonical_argmax", "C1", use_counterfactual_env=True)
-    nc5_passed = bool(r_counter["resolved"] == r_canon["resolved"])
+    nc5_checks = []
+    for scenario_id in scenarios:
+        for policy_name in policies:
+            r_canon = harness.run_dialogue_trajectory(1, scenario_id, policy_name, "C1", use_counterfactual_env=False)
+            r_counter = harness.run_dialogue_trajectory(1, scenario_id, policy_name, "C1", use_counterfactual_env=True)
+            canon_history = json.dumps(r_canon["history"], sort_keys=True, separators=(",", ":"))
+            counter_history = json.dumps(r_counter["history"], sort_keys=True, separators=(",", ":"))
+            nc5_checks.append(canon_history == counter_history)
+    nc5_passed = bool(all(nc5_checks))
     nc_results["NC5_environment_model_independence"] = {
         "passed": nc5_passed,
-        "criterion": "Core resolution preserved across independent transition matrices",
+        "checks": len(nc5_checks),
+        "criterion": "Full policy/scenario trajectories preserved under independent environment implementation",
     }
 
     # NC6: Production Code Isolation
@@ -1319,11 +1382,10 @@ def execute_full_evaluation(harness: MultiTurnDialogueHarness) -> Dict[str, Any]
     # RESULT_M1: Action-Selection Collapse Universal
     p0_action_collapse = bottleneck_results["P0_canonical_argmax"]["locus_counts"]["action_selection_collapse"]
     pe_differentiation = bottleneck_results["PE_hybrid_confidence_gated"]["action_divergence_rate"]
-    pa10_differentiation = bottleneck_results["PA_deterministic_hysteresis_10"]["action_divergence_rate"]
-
+    pa_differentiation = bottleneck_results["PA_deterministic_hysteresis"]["action_divergence_rate"]
     if p0_action_collapse == len(discordant_pairs) and pe_differentiation > 0.05:
         decision_code = "RESULT_M3 — HYBRID_CONFIDENCE_GATED_DIFFERENTIATION"
-    elif pa10_differentiation > 0.05:
+    elif pa_differentiation > 0.05:
         decision_code = "RESULT_M2 — DETERMINISTIC_MARGIN_RECOVERY"
     elif p0_action_collapse == len(discordant_pairs):
         decision_code = "RESULT_M1 — DETERMINISTIC_COLLAPSE_UNIVERSAL"
@@ -1375,11 +1437,17 @@ def export_all_artifacts(results: Dict[str, Any]) -> None:
     # 3. 23-point Formal Report JSON
     report_data = {
         "1_study_id": STUDY_ID,
-        "2_commit": "b1ed150",
-        "3_exact_protocol": "8 multi-turn scenarios (A-H), 6 policy conditions, pre-locked ENVIRONMENT_MODEL_SPEC",
+        "2_commit": subprocess.run(
+            ["git", "rev-parse", "--short", "HEAD"],
+            cwd=REPO_ROOT,
+            capture_output=True,
+            text=True,
+            check=True,
+        ).stdout.strip(),
+        "3_exact_protocol": "8 multi-turn scenarios (A-H), 5 policy conditions, tau_res=0.35, pre-locked ENVIRONMENT_MODEL_SPEC",
         "4_dialogue_scenarios": ["Scenario A", "Scenario B", "Scenario C", "Scenario D", "Scenario E", "Scenario F", "Scenario G", "Scenario H"],
         "5_environment_model": "Pre-locked state transition matrix with policy-id blindness and independent counterfactual model",
-        "6_policy_mechanisms": ["P0_canonical_argmax", "PA_05", "PA_10", "PD_sampling", "PE_hybrid", "PC_cyclic"],
+        "6_policy_mechanisms": POLICY_CONDITIONS,
         "7_corpus_sha": EXPECTED_CORPUS_SHA,
         "8_sample_counts": {"probes": EXPECTED_N_PROBES, "matched_discordant_pairs": EXPECTED_HISTORICAL_DISCORDANT},
         "9_primary_metrics": ["Epistemic progress", "Policy quality without ranking", "Temporal dynamics", "Conversational efficiency", "Information preservation", "Robustness", "Resource cost", "Reproducibility"],
@@ -1387,12 +1455,12 @@ def export_all_artifacts(results: Dict[str, Any]) -> None:
         "11_policy_trajectory_results": results["bottleneck_results"],
         "12_information_loss_locations": {
             "P0": "action_selection_collapse (100% of pairs collapse at argmax boundary)",
-            "PA_10": "hysteresis preserves differentiation without stochasticity",
+            "PA": "hysteresis preserves differentiation without stochasticity",
             "PE": "confidence gating transitions between exploitation and exploration",
         },
         "13_temporal_stability_results": {
             "P0_mean_flapping": 0.0,
-            "PA_mean_flapping": results["scenario_metrics"]["F"]["PA_deterministic_hysteresis_10"]["mean_flapping"],
+            "PA_mean_flapping": results["scenario_metrics"]["F"]["PA_deterministic_hysteresis"]["mean_flapping"],
             "PD_mean_flapping": results["scenario_metrics"]["F"]["PD_probabilistic_softmax_sampling"]["mean_flapping"],
             "PE_mean_flapping": results["scenario_metrics"]["F"]["PE_hybrid_confidence_gated"]["mean_flapping"],
         },

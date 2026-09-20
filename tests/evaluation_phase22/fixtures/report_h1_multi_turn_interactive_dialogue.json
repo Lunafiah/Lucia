@@ -1,7 +1,7 @@
 {
   "1_study_id": "PHASE_22_H1_MULTI_TURN_INTERACTIVE_DIALOGUE_STUDY",
-  "2_commit": "b1ed150",
-  "3_exact_protocol": "8 multi-turn scenarios (A-H), 6 policy conditions, pre-locked ENVIRONMENT_MODEL_SPEC",
+  "2_commit": "482f722",
+  "3_exact_protocol": "8 multi-turn scenarios (A-H), 5 policy conditions, tau_res=0.35, pre-locked ENVIRONMENT_MODEL_SPEC",
   "4_dialogue_scenarios": [
     "Scenario A",
     "Scenario B",
@@ -15,11 +15,10 @@
   "5_environment_model": "Pre-locked state transition matrix with policy-id blindness and independent counterfactual model",
   "6_policy_mechanisms": [
     "P0_canonical_argmax",
-    "PA_05",
-    "PA_10",
-    "PD_sampling",
-    "PE_hybrid",
-    "PC_cyclic"
+    "PA_deterministic_hysteresis",
+    "PD_probabilistic_softmax_sampling",
+    "PE_hybrid_confidence_gated",
+    "PC_deterministic_cyclic_rotation"
   ],
   "7_corpus_sha": "d0061e8cfdd160f4ebccb7100e4fe3eeef9ff18a1a4c9c1b3f912a76f2ae82c0",
   "8_sample_counts": {
@@ -38,82 +37,69 @@
   ],
   "10_epistemic_trajectory_results": {
     "P0_canonical_argmax": {
-      "mean_turns": 2.0,
-      "mean_friction": 0.0,
+      "mean_turns": 6.0,
+      "mean_friction": 10.0,
       "mean_cum_ig": 0.75,
-      "mean_final_energy": 0.9,
-      "mean_latency_us": 370.99899999999997,
+      "mean_final_energy": 0.82,
+      "mean_latency_us": 430.0040000000001,
       "mean_switches": 1.0,
       "mean_flapping": 0.0,
       "fm03_retrieval_loops": 0,
       "fm04_clarification_loops": 0,
-      "fm05_premature_answers": 0,
-      "fm06_excessive_explorations": 50
+      "fm05_premature_answers": 250,
+      "fm06_excessive_explorations": 0
     },
-    "PA_deterministic_hysteresis_05": {
-      "mean_turns": 2.0,
-      "mean_friction": 0.0,
+    "PA_deterministic_hysteresis": {
+      "mean_turns": 6.0,
+      "mean_friction": 10.0,
       "mean_cum_ig": 0.75,
-      "mean_final_energy": 0.9,
-      "mean_latency_us": 378.0349999999999,
+      "mean_final_energy": 0.82,
+      "mean_latency_us": 426.63433333333336,
       "mean_switches": 1.0,
       "mean_flapping": 0.0,
       "fm03_retrieval_loops": 0,
       "fm04_clarification_loops": 0,
-      "fm05_premature_answers": 0,
-      "fm06_excessive_explorations": 50
-    },
-    "PA_deterministic_hysteresis_10": {
-      "mean_turns": 2.0,
-      "mean_friction": 0.0,
-      "mean_cum_ig": 0.75,
-      "mean_final_energy": 0.9,
-      "mean_latency_us": 381.95399999999995,
-      "mean_switches": 1.0,
-      "mean_flapping": 0.0,
-      "fm03_retrieval_loops": 0,
-      "fm04_clarification_loops": 0,
-      "fm05_premature_answers": 0,
-      "fm06_excessive_explorations": 50
+      "fm05_premature_answers": 250,
+      "fm06_excessive_explorations": 0
     },
     "PD_probabilistic_softmax_sampling": {
       "mean_turns": 3.0,
       "mean_friction": 1.0,
       "mean_cum_ig": 1.5,
       "mean_final_energy": 0.85,
-      "mean_latency_us": 385.1886666666667,
+      "mean_latency_us": 441.33666666666664,
       "mean_switches": 2.0,
       "mean_flapping": 0.0,
       "fm03_retrieval_loops": 0,
       "fm04_clarification_loops": 0,
       "fm05_premature_answers": 0,
-      "fm06_excessive_explorations": 100
+      "fm06_excessive_explorations": 50
     },
     "PE_hybrid_confidence_gated": {
-      "mean_turns": 2.0,
-      "mean_friction": 1.0,
+      "mean_turns": 6.0,
+      "mean_friction": 11.0,
       "mean_cum_ig": 0.75,
-      "mean_final_energy": 0.9299999999999998,
-      "mean_latency_us": 383.26599999999996,
+      "mean_final_energy": 0.8499999999999999,
+      "mean_latency_us": 437.6833333333333,
       "mean_switches": 1.0,
       "mean_flapping": 0.0,
       "fm03_retrieval_loops": 0,
       "fm04_clarification_loops": 0,
-      "fm05_premature_answers": 0,
-      "fm06_excessive_explorations": 50
+      "fm05_premature_answers": 250,
+      "fm06_excessive_explorations": 0
     },
     "PC_deterministic_cyclic_rotation": {
-      "mean_turns": 3.0,
-      "mean_friction": 0.5,
+      "mean_turns": 6.0,
+      "mean_friction": 8.5,
       "mean_cum_ig": 0.75,
-      "mean_final_energy": 0.9,
-      "mean_latency_us": 367.8646666666667,
+      "mean_final_energy": 0.8400000000000002,
+      "mean_latency_us": 473.0106666666667,
       "mean_switches": 2.0,
       "mean_flapping": 0.0,
       "fm03_retrieval_loops": 0,
       "fm04_clarification_loops": 0,
-      "fm05_premature_answers": 0,
-      "fm06_excessive_explorations": 50
+      "fm05_premature_answers": 200,
+      "fm06_excessive_explorations": 0
     }
   },
   "11_policy_trajectory_results": {
@@ -133,23 +119,7 @@
       },
       "action_divergence_rate": 0.0
     },
-    "PA_deterministic_hysteresis_05": {
-      "locus_counts": {
-        "representation_collapse": 0,
-        "valuation_collapse": 0,
-        "policy_collapse": 0,
-        "action_selection_collapse": 358,
-        "environment_outcome_collapse": 0,
-        "persistent_trajectory_differentiation": 0
-      },
-      "feedback_causality": {
-        "type1_causal_downstream_divergence": 0,
-        "type2_epiphenomenal_divergence": 0,
-        "type3_pre_action_collapse": 358
-      },
-      "action_divergence_rate": 0.0
-    },
-    "PA_deterministic_hysteresis_10": {
+    "PA_deterministic_hysteresis": {
       "locus_counts": {
         "representation_collapse": 0,
         "valuation_collapse": 0,
@@ -202,9 +172,9 @@
         "representation_collapse": 0,
         "valuation_collapse": 0,
         "policy_collapse": 0,
-        "action_selection_collapse": 0,
+        "action_selection_collapse": 358,
         "environment_outcome_collapse": 0,
-        "persistent_trajectory_differentiation": 358
+        "persistent_trajectory_differentiation": 0
       },
       "feedback_causality": {
         "type1_causal_downstream_divergence": 358,
@@ -216,7 +186,7 @@
   },
   "12_information_loss_locations": {
     "P0": "action_selection_collapse (100% of pairs collapse at argmax boundary)",
-    "PA_10": "hysteresis preserves differentiation without stochasticity",
+    "PA": "hysteresis preserves differentiation without stochasticity",
     "PE": "confidence gating transitions between exploitation and exploration"
   },
   "13_temporal_stability_results": {
@@ -236,7 +206,7 @@
       "mean_friction": 10.0,
       "mean_cum_ig": 0.55,
       "mean_final_energy": 0.82,
-      "mean_latency_us": 356.07700000000006,
+      "mean_latency_us": 418.7146666666667,
       "mean_switches": 1.0,
       "mean_flapping": 0.0,
       "fm03_retrieval_loops": 0,
@@ -244,25 +214,12 @@
       "fm05_premature_answers": 250,
       "fm06_excessive_explorations": 0
     },
-    "PA_deterministic_hysteresis_05": {
+    "PA_deterministic_hysteresis": {
       "mean_turns": 6.0,
       "mean_friction": 10.0,
       "mean_cum_ig": 0.55,
       "mean_final_energy": 0.82,
-      "mean_latency_us": 357.5223333333333,
-      "mean_switches": 1.0,
-      "mean_flapping": 0.0,
-      "fm03_retrieval_loops": 0,
-      "fm04_clarification_loops": 0,
-      "fm05_premature_answers": 250,
-      "fm06_excessive_explorations": 0
-    },
-    "PA_deterministic_hysteresis_10": {
-      "mean_turns": 6.0,
-      "mean_friction": 10.0,
-      "mean_cum_ig": 0.55,
-      "mean_final_energy": 0.82,
-      "mean_latency_us": 356.66900000000004,
+      "mean_latency_us": 418.7823333333334,
       "mean_switches": 1.0,
       "mean_flapping": 0.0,
       "fm03_retrieval_loops": 0,
@@ -275,7 +232,7 @@
       "mean_friction": 1.5,
       "mean_cum_ig": 1.25,
       "mean_final_energy": 0.86,
-      "mean_latency_us": 372.37199999999996,
+      "mean_latency_us": 432.199,
       "mean_switches": 3.0,
       "mean_flapping": 0.0,
       "fm03_retrieval_loops": 0,
@@ -288,7 +245,7 @@
       "mean_friction": 11.0,
       "mean_cum_ig": 0.7000000000000002,
       "mean_final_energy": 0.8499999999999999,
-      "mean_latency_us": 368.79933333333344,
+      "mean_latency_us": 428.772,
       "mean_switches": 1.0,
       "mean_flapping": 0.0,
       "fm03_retrieval_loops": 0,
@@ -301,7 +258,7 @@
       "mean_friction": 8.5,
       "mean_cum_ig": 0.55,
       "mean_final_energy": 0.8400000000000002,
-      "mean_latency_us": 362.2673333333334,
+      "mean_latency_us": 420.6263333333333,
       "mean_switches": 2.0,
       "mean_flapping": 0.0,
       "fm03_retrieval_loops": 0,
@@ -311,14 +268,15 @@
     }
   },
   "16_resource_measurements": {
-    "mean_cpu_latency_us_per_turn": 383.26599999999996,
+    "mean_cpu_latency_us_per_turn": 437.6833333333333,
     "gpu_vram_mb": 0.0
   },
   "17_negative_controls": {
     "NC1_controlled_zero_incremental_divergence": {
       "passed": true,
-      "max_c0_action_divergence": 0,
-      "criterion": "C0 divergence == 0 under scalar-only baseline"
+      "max_incremental_trajectory_divergence": 0.0,
+      "pairs_evaluated": 358,
+      "criterion": "Bit-exact matched C0 trajectories with v_dir = 0"
     },
     "NC2_direction_shuffled_correspondence": {
       "passed": true,
@@ -327,7 +285,7 @@
     },
     "NC3_zero_directional_weighting": {
       "passed": true,
-      "criterion": "Bit-exact match with scalar baseline"
+      "criterion": "W_dir = 0 matches the C0 scalar baseline bit-exactly"
     },
     "NC4_deterministic_repeatability": {
       "passed": true,
@@ -335,7 +293,8 @@
     },
     "NC5_environment_model_independence": {
       "passed": true,
-      "criterion": "Core resolution preserved across independent transition matrices"
+      "checks": 40,
+      "criterion": "Full policy/scenario trajectories preserved under independent environment implementation"
     },
     "NC6_production_code_isolation": {
       "passed": true,

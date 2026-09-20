@@ -1,8 +1,9 @@
 {
   "NC1_controlled_zero_incremental_divergence": {
     "passed": true,
-    "max_c0_action_divergence": 0,
-    "criterion": "C0 divergence == 0 under scalar-only baseline"
+    "max_incremental_trajectory_divergence": 0.0,
+    "pairs_evaluated": 358,
+    "criterion": "Bit-exact matched C0 trajectories with v_dir = 0"
   },
   "NC2_direction_shuffled_correspondence": {
     "passed": true,
@@ -11,7 +12,7 @@
   },
   "NC3_zero_directional_weighting": {
     "passed": true,
-    "criterion": "Bit-exact match with scalar baseline"
+    "criterion": "W_dir = 0 matches the C0 scalar baseline bit-exactly"
   },
   "NC4_deterministic_repeatability": {
     "passed": true,
@@ -19,7 +20,8 @@
   },
   "NC5_environment_model_independence": {
     "passed": true,
-    "criterion": "Core resolution preserved across independent transition matrices"
+    "checks": 40,
+    "criterion": "Full policy/scenario trajectories preserved under independent environment implementation"
   },
   "NC6_production_code_isolation": {
     "passed": true,
