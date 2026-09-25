@@ -1,0 +1,297 @@
+{
+  "metadata": {
+    "corpus_name": "EXP-02_Cross_Lingual_Convergence_Corpus",
+    "version": "1.0.0",
+    "languages": ["EN", "JA", "VI"],
+    "total_scenarios": 10
+  },
+  "scenarios": [
+    {
+      "id": "SCEN_01",
+      "phenomenon": "simple_predicate_args",
+      "description": "Standard transitive action with overt agent and patient",
+      "text_en": "Lucia solved the problem.",
+      "text_ja": "ルシアが問題を解決した。",
+      "text_vi": "Lucia đã giải quyết vấn đề.",
+      "canonical_intent": {
+        "event_id": "e1",
+        "predicate": "SOLVE_01",
+        "agent": "ent_lucia",
+        "patient": "ent_problem",
+        "negated": false
+      },
+      "expected_answers": {
+        "Q1_entities": ["ent_lucia", "ent_problem"],
+        "Q2_predicate": "SOLVE_01",
+        "Q3_arg0": "ent_lucia",
+        "Q3_arg1": "ent_problem",
+        "Q4_temporal": "PAST",
+        "Q5_negation": false,
+        "Q6_conceiver": "CANONICAL_SPEAKER",
+        "Q7_omitted_resolution": "NONE_OVERT",
+        "Q8_social_relation": "NEUTRAL",
+        "Q9_sortal": "NONE",
+        "Q10_cross_sentence": "NONE"
+      }
+    },
+    {
+      "id": "SCEN_02",
+      "phenomenon": "zero_anaphora_omission",
+      "description": "Dropped subject in Japanese and Vietnamese without prior context -> must hold UNKNOWN/UNRESOLVED",
+      "text_en": "Someone solved the problem.",
+      "text_ja": "問題を解決した。",
+      "text_vi": "Đã giải quyết vấn đề.",
+      "canonical_intent": {
+        "event_id": "e1",
+        "predicate": "SOLVE_01",
+        "agent": "UNKNOWN_ENTITY",
+        "patient": "ent_problem",
+        "negated": false
+      },
+      "expected_answers": {
+        "Q1_entities": ["UNKNOWN_ENTITY", "ent_problem"],
+        "Q2_predicate": "SOLVE_01",
+        "Q3_arg0": "UNKNOWN_ENTITY",
+        "Q3_arg1": "ent_problem",
+        "Q4_temporal": "PAST",
+        "Q5_negation": false,
+        "Q6_conceiver": "CANONICAL_SPEAKER",
+        "Q7_omitted_resolution": "UNKNOWN_ENTITY",
+        "Q8_social_relation": "NEUTRAL",
+        "Q9_sortal": "NONE",
+        "Q10_cross_sentence": "NONE"
+      }
+    },
+    {
+      "id": "SCEN_03",
+      "phenomenon": "vietnamese_kinship_deixis",
+      "description": "Vietnamese social honorific 'anh' indicating elder brother / senior male interlocutor",
+      "text_en": "The senior male user assisted Lucia.",
+      "text_ja": "先輩のユーザーがルシアを支援した。",
+      "text_vi": "Anh đã hỗ trợ Lucia.",
+      "canonical_intent": {
+        "event_id": "e1",
+        "predicate": "ASSIST_01",
+        "agent": "ent_user",
+        "patient": "ent_lucia",
+        "social_deixis": "SENIOR_MALE_PEER",
+        "negated": false
+      },
+      "expected_answers": {
+        "Q1_entities": ["ent_user", "ent_lucia"],
+        "Q2_predicate": "ASSIST_01",
+        "Q3_arg0": "ent_user",
+        "Q3_arg1": "ent_lucia",
+        "Q4_temporal": "PAST",
+        "Q5_negation": false,
+        "Q6_conceiver": "CANONICAL_SPEAKER",
+        "Q7_omitted_resolution": "RESOLVED_DEIXIS",
+        "Q8_social_relation": "SENIOR_MALE_PEER",
+        "Q9_sortal": "NONE",
+        "Q10_cross_sentence": "NONE"
+      }
+    },
+    {
+      "id": "SCEN_04",
+      "phenomenon": "vietnamese_classifier",
+      "description": "Noun classifier 'con' (animate) or 'quyển' (book) acting as sortal restriction, not ordinary entity",
+      "text_en": "The user read a physical book.",
+      "text_ja": "ユーザーは一冊の本を読んだ。",
+      "text_vi": "Người dùng đã đọc một quyển sách.",
+      "canonical_intent": {
+        "event_id": "e1",
+        "predicate": "READ_01",
+        "agent": "ent_user",
+        "patient": "ent_book",
+        "sortal_classifier": "SORTAL_BOUND_VOLUME",
+        "negated": false
+      },
+      "expected_answers": {
+        "Q1_entities": ["ent_user", "ent_book"],
+        "Q2_predicate": "READ_01",
+        "Q3_arg0": "ent_user",
+        "Q3_arg1": "ent_book",
+        "Q4_temporal": "PAST",
+        "Q5_negation": false,
+        "Q6_conceiver": "CANONICAL_SPEAKER",
+        "Q7_omitted_resolution": "NONE_OVERT",
+        "Q8_social_relation": "NEUTRAL",
+        "Q9_sortal": "SORTAL_BOUND_VOLUME",
+        "Q10_cross_sentence": "NONE"
+      }
+    },
+    {
+      "id": "SCEN_05",
+      "phenomenon": "japanese_aspect",
+      "description": "Japanese aspectual marker '-te iru' indicating ongoing progressive state",
+      "text_en": "Lucia is currently analyzing the code.",
+      "text_ja": "ルシアはコードを分析している。",
+      "text_vi": "Lucia đang phân tích mã nguồn.",
+      "canonical_intent": {
+        "event_id": "e1",
+        "predicate": "ANALYZE_01",
+        "agent": "ent_lucia",
+        "patient": "ent_code",
+        "aspect": "PROGRESSIVE",
+        "negated": false
+      },
+      "expected_answers": {
+        "Q1_entities": ["ent_lucia", "ent_code"],
+        "Q2_predicate": "ANALYZE_01",
+        "Q3_arg0": "ent_lucia",
+        "Q3_arg1": "ent_code",
+        "Q4_temporal": "PRESENT_PROGRESSIVE",
+        "Q5_negation": false,
+        "Q6_conceiver": "CANONICAL_SPEAKER",
+        "Q7_omitted_resolution": "NONE_OVERT",
+        "Q8_social_relation": "NEUTRAL",
+        "Q9_sortal": "NONE",
+        "Q10_cross_sentence": "NONE"
+      }
+    },
+    {
+      "id": "SCEN_06",
+      "phenomenon": "temporal_ordering",
+      "description": "Event temporal dependency: event 1 happened before event 2",
+      "text_en": "Before the user arrived, Lucia verified the system.",
+      "text_ja": "ユーザーが到着する前に、ルシアはシステムを検証した。",
+      "text_vi": "Trước khi người dùng đến, Lucia đã kiểm tra hệ thống.",
+      "canonical_intent": {
+        "event_id": "e2",
+        "predicate": "VERIFY_01",
+        "agent": "ent_lucia",
+        "patient": "ent_system",
+        "temporal_relation": "PRECEDES",
+        "target_event": "e1_ARRIVE"
+      },
+      "expected_answers": {
+        "Q1_entities": ["ent_user", "ent_lucia", "ent_system"],
+        "Q2_predicate": "VERIFY_01",
+        "Q3_arg0": "ent_lucia",
+        "Q3_arg1": "ent_system",
+        "Q4_temporal": "PRECEDES",
+        "Q5_negation": false,
+        "Q6_conceiver": "CANONICAL_SPEAKER",
+        "Q7_omitted_resolution": "NONE_OVERT",
+        "Q8_social_relation": "NEUTRAL",
+        "Q9_sortal": "NONE",
+        "Q10_cross_sentence": "NONE"
+      }
+    },
+    {
+      "id": "SCEN_07",
+      "phenomenon": "negation_scoping",
+      "description": "Explicit negation of the predicate event",
+      "text_en": "The user did not delete the repository.",
+      "text_ja": "ユーザーはリポジトリを削除しなかった。",
+      "text_vi": "Người dùng đã không xóa kho lưu trữ.",
+      "canonical_intent": {
+        "event_id": "e1",
+        "predicate": "DELETE_01",
+        "agent": "ent_user",
+        "patient": "ent_repo",
+        "negated": true
+      },
+      "expected_answers": {
+        "Q1_entities": ["ent_user", "ent_repo"],
+        "Q2_predicate": "DELETE_01",
+        "Q3_arg0": "ent_user",
+        "Q3_arg1": "ent_repo",
+        "Q4_temporal": "PAST",
+        "Q5_negation": true,
+        "Q6_conceiver": "CANONICAL_SPEAKER",
+        "Q7_omitted_resolution": "NONE_OVERT",
+        "Q8_social_relation": "NEUTRAL",
+        "Q9_sortal": "NONE",
+        "Q10_cross_sentence": "NONE"
+      }
+    },
+    {
+      "id": "SCEN_08",
+      "phenomenon": "modal_attribution",
+      "description": "Epistemic belief attribution where conceiver is distinct from speaker",
+      "text_en": "The user believes that Lucia succeeded.",
+      "text_ja": "ユーザーはルシアが成功したと信じている。",
+      "text_vi": "Người dùng tin rằng Lucia đã thành công.",
+      "canonical_intent": {
+        "event_id": "e1",
+        "predicate": "BELIEVE_01",
+        "agent": "ent_user",
+        "conceiver": "ent_user",
+        "modal_type": "EPISTEMIC_BELIEF",
+        "sub_event": "e2_SUCCEED"
+      },
+      "expected_answers": {
+        "Q1_entities": ["ent_user", "ent_lucia"],
+        "Q2_predicate": "BELIEVE_01",
+        "Q3_arg0": "ent_user",
+        "Q3_arg1": "e2_SUCCEED",
+        "Q4_temporal": "PRESENT",
+        "Q5_negation": false,
+        "Q6_conceiver": "ent_user",
+        "Q7_omitted_resolution": "NONE_OVERT",
+        "Q8_social_relation": "NEUTRAL",
+        "Q9_sortal": "NONE",
+        "Q10_cross_sentence": "NONE"
+      }
+    },
+    {
+      "id": "SCEN_09",
+      "phenomenon": "nested_proposition",
+      "description": "Two-level proposition embedding with nested role bindings",
+      "text_en": "Lucia reported that the user noticed an anomaly.",
+      "text_ja": "ルシアはユーザーが異常に気づいたと報告した。",
+      "text_vi": "Lucia đã báo cáo rằng người dùng nhận thấy một bất thường.",
+      "canonical_intent": {
+        "event_id": "e1",
+        "predicate": "REPORT_01",
+        "agent": "ent_lucia",
+        "sub_event": "e2",
+        "nested_pred": "NOTICE_01",
+        "nested_agent": "ent_user",
+        "nested_patient": "ent_anomaly"
+      },
+      "expected_answers": {
+        "Q1_entities": ["ent_lucia", "ent_user", "ent_anomaly"],
+        "Q2_predicate": "REPORT_01",
+        "Q3_arg0": "ent_lucia",
+        "Q3_arg1": "e2",
+        "Q4_temporal": "PAST",
+        "Q5_negation": false,
+        "Q6_conceiver": "ent_lucia",
+        "Q7_omitted_resolution": "NONE_OVERT",
+        "Q8_social_relation": "NEUTRAL",
+        "Q9_sortal": "NONE",
+        "Q10_cross_sentence": "NONE"
+      }
+    },
+    {
+      "id": "SCEN_10",
+      "phenomenon": "cross_sentence_reference",
+      "description": "Entity continuity across two adjacent sentences",
+      "text_en": "The user prepared a document. Lucia reviewed it.",
+      "text_ja": "ユーザーは文書を作成した。ルシアはそれを査読した。",
+      "text_vi": "Người dùng đã chuẩn bị một tài liệu. Lucia đã xem lại nó.",
+      "canonical_intent": {
+        "event_1": "e1_PREPARE",
+        "event_2": "e2_REVIEW",
+        "shared_entity": "ent_doc",
+        "agent_1": "ent_user",
+        "agent_2": "ent_lucia"
+      },
+      "expected_answers": {
+        "Q1_entities": ["ent_user", "ent_doc", "ent_lucia"],
+        "Q2_predicate": "REVIEW_01",
+        "Q3_arg0": "ent_lucia",
+        "Q3_arg1": "ent_doc",
+        "Q4_temporal": "SEQUENTIAL",
+        "Q5_negation": false,
+        "Q6_conceiver": "CANONICAL_SPEAKER",
+        "Q7_omitted_resolution": "RESOLVED_COREFERENCE",
+        "Q8_social_relation": "NEUTRAL",
+        "Q9_sortal": "NONE",
+        "Q10_cross_sentence": "ent_doc"
+      }
+    }
+  ]
+}

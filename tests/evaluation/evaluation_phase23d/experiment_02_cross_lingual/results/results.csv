@@ -1,0 +1,7 @@
+Mode,Candidate,Verdict,SQI_Overall,SQI_EN_JA,SQI_EN_VI,SQI_JA_VI,FEP
+Oracle,UMR-TPG,PASS,1.0,1.0,1.0,1.0,1.0
+Oracle,V-UMR,PASS,1.0,1.0,1.0,1.0,1.0
+Oracle,DRS-Graph,PASS,1.0,1.0,1.0,1.0,1.0
+Rule-Based,UMR-TPG,FAIL,0.8867,0.86,0.89,0.91,0.86
+Rule-Based,V-UMR,FAIL,0.8867,0.86,0.89,0.91,0.86
+Rule-Based,DRS-Graph,PASS,0.95,0.94,0.95,0.96,0.94

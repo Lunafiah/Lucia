@@ -7,10 +7,10 @@ of UMR-TPG, V-UMR, and DRS-Graph across recursion depths D in {1, 2, 3, 4}.
 import os
 import json
 import pytest
-from evaluation.evaluation_phase23d.experiment_01_compositionality.dataset.generator import (
+from tests.evaluation.evaluation_phase23d.experiment_01_compositionality.dataset.generator import (
     generate_corpus,
 )
-from evaluation.evaluation_phase23d.experiment_01_compositionality.run_experiment import (
+from tests.evaluation.evaluation_phase23d.experiment_01_compositionality.run_experiment import (
     run_evaluation,
     UMRTPGGraph,
     VUMRGraph,

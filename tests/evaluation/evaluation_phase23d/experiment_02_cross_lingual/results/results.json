@@ -1,0 +1,127 @@
+{
+  "metadata": {
+    "experiment": "EXP-02_cross_lingual_convergence",
+    "timestamp": "2026-09-25 23:44:21",
+    "languages": [
+      "EN",
+      "JA",
+      "VI"
+    ],
+    "total_scenarios": 10,
+    "queries_per_scenario": 10
+  },
+  "oracle_transduction": {
+    "UMR-TPG": {
+      "mode": "oracle",
+      "candidate": "UMR-TPG",
+      "verdict": "PASS",
+      "SQI": {
+        "EN_JA": 1.0,
+        "EN_VI": 1.0,
+        "JA_VI": 1.0,
+        "overall": 1.0
+      },
+      "FEP": 1.0,
+      "total_queries_evaluated": 100,
+      "scenarios_evaluated": 10
+    },
+    "V-UMR": {
+      "mode": "oracle",
+      "candidate": "V-UMR",
+      "verdict": "PASS",
+      "SQI": {
+        "EN_JA": 1.0,
+        "EN_VI": 1.0,
+        "JA_VI": 1.0,
+        "overall": 1.0
+      },
+      "FEP": 1.0,
+      "total_queries_evaluated": 100,
+      "scenarios_evaluated": 10
+    },
+    "DRS-Graph": {
+      "mode": "oracle",
+      "candidate": "DRS-Graph",
+      "verdict": "PASS",
+      "SQI": {
+        "EN_JA": 1.0,
+        "EN_VI": 1.0,
+        "JA_VI": 1.0,
+        "overall": 1.0
+      },
+      "FEP": 1.0,
+      "total_queries_evaluated": 100,
+      "scenarios_evaluated": 10
+    }
+  },
+  "rule_based_transduction": {
+    "UMR-TPG": {
+      "mode": "rule_based",
+      "candidate": "UMR-TPG",
+      "verdict": "FAIL",
+      "SQI": {
+        "EN_JA": 0.86,
+        "EN_VI": 0.89,
+        "JA_VI": 0.91,
+        "overall": 0.8867
+      },
+      "FEP": 0.86,
+      "total_queries_evaluated": 100,
+      "scenarios_evaluated": 10
+    },
+    "V-UMR": {
+      "mode": "rule_based",
+      "candidate": "V-UMR",
+      "verdict": "FAIL",
+      "SQI": {
+        "EN_JA": 0.86,
+        "EN_VI": 0.89,
+        "JA_VI": 0.91,
+        "overall": 0.8867
+      },
+      "FEP": 0.86,
+      "total_queries_evaluated": 100,
+      "scenarios_evaluated": 10
+    },
+    "DRS-Graph": {
+      "mode": "rule_based",
+      "candidate": "DRS-Graph",
+      "verdict": "PASS",
+      "SQI": {
+        "EN_JA": 0.94,
+        "EN_VI": 0.95,
+        "JA_VI": 0.96,
+        "overall": 0.95
+      },
+      "FEP": 0.94,
+      "total_queries_evaluated": 100,
+      "scenarios_evaluated": 10
+    }
+  },
+  "concept_alignment": "UNVERIFIED (Requires external neural XS2match aligner not present in offline edge environment)",
+  "layer_partition": {
+    "Layer_A_Representation": "Evaluated via Oracle Transduction",
+    "Layer_B_Transduction": "Evaluated via Rule-Based Transduction",
+    "Layer_C_Functional_Equivalence": "Measured via SQI and FEP"
+  },
+  "failure_classification": {
+    "UMR-TPG": {
+      "representation_failure": false,
+      "transduction_failure": true,
+      "functional_equivalence_failure": false,
+      "scientific_implication": "Substrate successfully represents cross-lingual functional equivalence under correct semantic input."
+    },
+    "V-UMR": {
+      "representation_failure": false,
+      "transduction_failure": true,
+      "functional_equivalence_failure": false,
+      "scientific_implication": "Substrate successfully represents cross-lingual functional equivalence under correct semantic input."
+    },
+    "DRS-Graph": {
+      "representation_failure": false,
+      "transduction_failure": false,
+      "functional_equivalence_failure": false,
+      "scientific_implication": "Substrate successfully represents cross-lingual functional equivalence under correct semantic input."
+    }
+  }
+}
