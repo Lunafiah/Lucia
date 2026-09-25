@@ -1,0 +1,74 @@
+{
+  "metadata": {
+    "experiment": "EXP-01",
+    "seed": 42,
+    "timestamp": "2026-09-25 23:23:30",
+    "total_scenarios": 24
+  },
+  "candidates": {
+    "UMR-TPG": {
+      "verdict": "PASS",
+      "status_note": "Satisfies all compositional recursion and binding invariants",
+      "SPRR_overall": 1.0,
+      "SPRR_by_depth": {
+        "D=1": 1.0,
+        "D=2": 1.0,
+        "D=3": 1.0,
+        "D=4": 1.0
+      },
+      "BER": 0.0,
+      "SPR": 1.0,
+      "CTR": 0.0,
+      "RSA": 1.0,
+      "mean_latency_ms": 0.0154
+    },
+    "V-UMR": {
+      "verdict": "PASS",
+      "status_note": "Satisfies all compositional recursion and binding invariants",
+      "SPRR_overall": 1.0,
+      "SPRR_by_depth": {
+        "D=1": 1.0,
+        "D=2": 1.0,
+        "D=3": 1.0,
+        "D=4": 1.0
+      },
+      "BER": 0.0,
+      "SPR": 1.0,
+      "CTR": 0.0,
+      "RSA": 1.0,
+      "mean_latency_ms": 2.0892
+    },
+    "DRS-Graph": {
+      "verdict": "PASS",
+      "status_note": "Satisfies all compositional recursion and binding invariants",
+      "SPRR_overall": 1.0,
+      "SPRR_by_depth": {
+        "D=1": 1.0,
+        "D=2": 1.0,
+        "D=3": 1.0,
+        "D=4": 1.0
+      },
+      "BER": 0.0,
+      "SPR": 1.0,
+      "CTR": 0.0,
+      "RSA": 1.0,
+      "mean_latency_ms": 0.0137
+    },
+    "HDC-Pure": {
+      "verdict": "FAIL",
+      "status_note": "Superposition crosstalk collapses path reconstruction at D >= 3",
+      "SPRR_overall": 0.0,
+      "SPRR_by_depth": {
+        "D=1": 0.0,
+        "D=2": 0.0,
+        "D=3": 0.0,
+        "D=4": 0.0
+      },
+      "BER": 1.0,
+      "SPR": 0.8333,
+      "CTR": 0.0,
+      "RSA": 0.0,
+      "mean_latency_ms": 0.3387
+    }
+  }
+}

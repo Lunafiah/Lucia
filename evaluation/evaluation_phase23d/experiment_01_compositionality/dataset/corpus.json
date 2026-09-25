@@ -1,0 +1,1951 @@
+{
+  "metadata": {
+    "experiment": "EXP-01_compositionality",
+    "seed": 42,
+    "version": "1.0.0",
+    "depths": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "suites": [
+      "simple_role_binding",
+      "nested_proposition",
+      "nested_with_role_binding",
+      "negated_proposition",
+      "nested_negation_scope",
+      "adversarial_role_swap"
+    ]
+  },
+  "scenarios": [
+    {
+      "id": "SCEN_001",
+      "depth": 1,
+      "suite": "simple_role_binding",
+      "description": "Standard predicate-argument frame at depth 1",
+      "root_event": "e_root_d1",
+      "independent_assertion": {
+        "id": "e_indep_01",
+        "predicate": "LOCATED_IN",
+        "roles": {
+          ":ARG0": "ent_user",
+          ":ARG1": "ent_home"
+        },
+        "negated": false
+      },
+      "events": [
+        {
+          "id": "e_d1_base",
+          "predicate": "EXECUTE_01",
+          "roles": {
+            ":ARG0": "ent_user",
+            ":ARG1": "ent_task"
+          },
+          "sub_event": null,
+          "negated": false
+        }
+      ],
+      "expected_bindings": [
+        {
+          "event": "e_d1_base",
+          "role": ":ARG0",
+          "expected_filler": "ent_user"
+        },
+        {
+          "event": "e_d1_base",
+          "role": ":ARG1",
+          "expected_filler": "ent_task"
+        }
+      ],
+      "expected_paths": [
+        {
+          "start": "e_d1_base",
+          "path": [
+            ":ARG0"
+          ],
+          "expected_terminal": "ent_user"
+        },
+        {
+          "start": "e_d1_base",
+          "path": [
+            ":ARG1"
+          ],
+          "expected_terminal": "ent_task"
+        }
+      ],
+      "expected_scopes": [
+        {
+          "event": "e_d1_base",
+          "negated": false,
+          "modal_scope": null
+        }
+      ]
+    },
+    {
+      "id": "SCEN_002",
+      "depth": 1,
+      "suite": "nested_proposition",
+      "description": "Pure nested proposition chain at depth 1",
+      "root_event": "e_nest_d1_lvl1",
+      "independent_assertion": {
+        "id": "e_indep_02",
+        "predicate": "STATUS_CHECK",
+        "roles": {
+          ":ARG0": "ent_lucia",
+          ":ARG1": "ent_task"
+        },
+        "negated": false
+      },
+      "events": [
+        {
+          "id": "e_nest_d1_lvl1",
+          "predicate": "PRED_LVL_1",
+          "roles": {
+            ":ARG0": "ent_user"
+          },
+          "sub_event": null,
+          "negated": false
+        }
+      ],
+      "expected_bindings": [
+        {
+          "event": "e_nest_d1_lvl1",
+          "role": ":ARG0",
+          "expected_filler": "ent_user"
+        }
+      ],
+      "expected_paths": [
+        {
+          "start": "e_nest_d1_lvl1",
+          "path": [
+            ":ARG0"
+          ],
+          "expected_terminal": "ent_user"
+        }
+      ],
+      "expected_scopes": [
+        {
+          "event": "e_nest_d1_lvl1",
+          "negated": false,
+          "modal_scope": null
+        }
+      ]
+    },
+    {
+      "id": "SCEN_003",
+      "depth": 1,
+      "suite": "nested_with_role_binding",
+      "description": "Nested chain with rich multi-role fillers at depth 1",
+      "root_event": "e_multi_d1_lvl1",
+      "independent_assertion": {
+        "id": "e_indep_03",
+        "predicate": "PREFERS",
+        "roles": {
+          ":ARG0": "ent_user",
+          ":ARG1": "ent_book"
+        },
+        "negated": false
+      },
+      "events": [
+        {
+          "id": "e_multi_d1_lvl1",
+          "predicate": "ACTION_LVL_1",
+          "roles": {
+            ":ARG0": "ent_user",
+            ":ARG1": "ent_book"
+          },
+          "sub_event": null,
+          "negated": false
+        }
+      ],
+      "expected_bindings": [
+        {
+          "event": "e_multi_d1_lvl1",
+          "role": ":ARG0",
+          "expected_filler": "ent_user"
+        },
+        {
+          "event": "e_multi_d1_lvl1",
+          "role": ":ARG1",
+          "expected_filler": "ent_book"
+        }
+      ],
+      "expected_paths": [
+        {
+          "start": "e_multi_d1_lvl1",
+          "path": [
+            ":ARG1"
+          ],
+          "expected_terminal": "ent_book"
+        }
+      ],
+      "expected_scopes": [
+        {
+          "event": "e_multi_d1_lvl1",
+          "negated": false,
+          "modal_scope": null
+        }
+      ]
+    },
+    {
+      "id": "SCEN_004",
+      "depth": 1,
+      "suite": "negated_proposition",
+      "description": "Directly negated event frame at depth 1",
+      "root_event": "e_neg_d1_01",
+      "independent_assertion": {
+        "id": "e_indep_04",
+        "predicate": "ONLINE_STATUS",
+        "roles": {
+          ":ARG0": "ent_lucia",
+          ":ARG1": "ent_home"
+        },
+        "negated": false
+      },
+      "events": [
+        {
+          "id": "e_neg_d1_01",
+          "predicate": "COMPLETED_01",
+          "roles": {
+            ":ARG0": "ent_user",
+            ":ARG1": "ent_task"
+          },
+          "sub_event": null,
+          "negated": true
+        }
+      ],
+      "expected_bindings": [
+        {
+          "event": "e_neg_d1_01",
+          "role": ":ARG0",
+          "expected_filler": "ent_user"
+        },
+        {
+          "event": "e_neg_d1_01",
+          "role": ":ARG1",
+          "expected_filler": "ent_task"
+        }
+      ],
+      "expected_paths": [
+        {
+          "start": "e_neg_d1_01",
+          "path": [
+            ":ARG0"
+          ],
+          "expected_terminal": "ent_user"
+        }
+      ],
+      "expected_scopes": [
+        {
+          "event": "e_neg_d1_01",
+          "negated": true,
+          "modal_scope": null
+        }
+      ]
+    },
+    {
+      "id": "SCEN_005",
+      "depth": 1,
+      "suite": "nested_negation_scope",
+      "description": "Nested proposition where innermost clause is negated at depth 1",
+      "root_event": "e_scope_d1_lvl1",
+      "independent_assertion": {
+        "id": "e_indep_05",
+        "predicate": "TRUST_01",
+        "roles": {
+          ":ARG0": "ent_lucia",
+          ":ARG1": "ent_user"
+        },
+        "negated": false
+      },
+      "events": [
+        {
+          "id": "e_scope_d1_lvl1",
+          "predicate": "RESOLVE_01",
+          "roles": {
+            ":ARG0": "ent_lucia",
+            ":ARG1": "ent_task"
+          },
+          "sub_event": null,
+          "negated": true
+        }
+      ],
+      "expected_bindings": [
+        {
+          "event": "e_scope_d1_lvl1",
+          "role": ":ARG0",
+          "expected_filler": "ent_lucia"
+        }
+      ],
+      "expected_paths": [
+        {
+          "start": "e_scope_d1_lvl1",
+          "path": [
+            ":ARG0"
+          ],
+          "expected_terminal": "ent_lucia"
+        }
+      ],
+      "expected_scopes": [
+        {
+          "event": "e_scope_d1_lvl1",
+          "negated": true,
+          "modal_scope": null
+        }
+      ]
+    },
+    {
+      "id": "SCEN_006",
+      "depth": 1,
+      "suite": "adversarial_role_swap",
+      "description": "Adversarial repeated entity with role reversal across recursion at depth 1",
+      "root_event": "e_adv_d1_lvl1",
+      "independent_assertion": {
+        "id": "e_indep_06",
+        "predicate": "MAINTAINS_BOND",
+        "roles": {
+          ":ARG0": "ent_lucia",
+          ":ARG1": "ent_user"
+        },
+        "negated": false
+      },
+      "events": [
+        {
+          "id": "e_adv_d1_lvl1",
+          "predicate": "BELIEVE_01",
+          "roles": {
+            ":ARG0": "ent_user",
+            ":ARG1": "ent_task"
+          },
+          "sub_event": null,
+          "negated": false
+        }
+      ],
+      "expected_bindings": [
+        {
+          "event": "e_adv_d1_lvl1",
+          "role": ":ARG0",
+          "expected_filler": "ent_user"
+        },
+        {
+          "event": "e_adv_d1_lvl1",
+          "role": ":ARG1",
+          "expected_filler": "ent_task"
+        }
+      ],
+      "expected_paths": [
+        {
+          "start": "e_adv_d1_lvl1",
+          "path": [
+            ":ARG0"
+          ],
+          "expected_terminal": "ent_user"
+        }
+      ],
+      "expected_scopes": [
+        {
+          "event": "e_adv_d1_lvl1",
+          "negated": false,
+          "modal_scope": null
+        }
+      ]
+    },
+    {
+      "id": "SCEN_007",
+      "depth": 2,
+      "suite": "simple_role_binding",
+      "description": "Standard predicate-argument frame at depth 2",
+      "root_event": "e_root_d2",
+      "independent_assertion": {
+        "id": "e_indep_01",
+        "predicate": "LOCATED_IN",
+        "roles": {
+          ":ARG0": "ent_user",
+          ":ARG1": "ent_home"
+        },
+        "negated": false
+      },
+      "events": [
+        {
+          "id": "e_d2_base",
+          "predicate": "EXECUTE_01",
+          "roles": {
+            ":ARG0": "ent_user",
+            ":ARG1": "ent_task"
+          },
+          "sub_event": null,
+          "negated": false
+        }
+      ],
+      "expected_bindings": [
+        {
+          "event": "e_d2_base",
+          "role": ":ARG0",
+          "expected_filler": "ent_user"
+        },
+        {
+          "event": "e_d2_base",
+          "role": ":ARG1",
+          "expected_filler": "ent_task"
+        }
+      ],
+      "expected_paths": [
+        {
+          "start": "e_d2_base",
+          "path": [
+            ":ARG0"
+          ],
+          "expected_terminal": "ent_user"
+        },
+        {
+          "start": "e_d2_base",
+          "path": [
+            ":ARG1"
+          ],
+          "expected_terminal": "ent_task"
+        }
+      ],
+      "expected_scopes": [
+        {
+          "event": "e_d2_base",
+          "negated": false,
+          "modal_scope": null
+        }
+      ]
+    },
+    {
+      "id": "SCEN_008",
+      "depth": 2,
+      "suite": "nested_proposition",
+      "description": "Pure nested proposition chain at depth 2",
+      "root_event": "e_nest_d2_lvl1",
+      "independent_assertion": {
+        "id": "e_indep_02",
+        "predicate": "STATUS_CHECK",
+        "roles": {
+          ":ARG0": "ent_lucia",
+          ":ARG1": "ent_task"
+        },
+        "negated": false
+      },
+      "events": [
+        {
+          "id": "e_nest_d2_lvl1",
+          "predicate": "PRED_LVL_1",
+          "roles": {
+            ":ARG0": "ent_user"
+          },
+          "sub_event": "e_nest_d2_lvl2",
+          "negated": false
+        },
+        {
+          "id": "e_nest_d2_lvl2",
+          "predicate": "PRED_LVL_2",
+          "roles": {
+            ":ARG0": "ent_lucia"
+          },
+          "sub_event": null,
+          "negated": false
+        }
+      ],
+      "expected_bindings": [
+        {
+          "event": "e_nest_d2_lvl1",
+          "role": ":ARG0",
+          "expected_filler": "ent_user"
+        },
+        {
+          "event": "e_nest_d2_lvl2",
+          "role": ":ARG0",
+          "expected_filler": "ent_lucia"
+        }
+      ],
+      "expected_paths": [
+        {
+          "start": "e_nest_d2_lvl1",
+          "path": [
+            ":sub-event",
+            ":ARG0"
+          ],
+          "expected_terminal": "ent_lucia"
+        }
+      ],
+      "expected_scopes": [
+        {
+          "event": "e_nest_d2_lvl1",
+          "negated": false,
+          "modal_scope": null
+        },
+        {
+          "event": "e_nest_d2_lvl2",
+          "negated": false,
+          "modal_scope": null
+        }
+      ]
+    },
+    {
+      "id": "SCEN_009",
+      "depth": 2,
+      "suite": "nested_with_role_binding",
+      "description": "Nested chain with rich multi-role fillers at depth 2",
+      "root_event": "e_multi_d2_lvl1",
+      "independent_assertion": {
+        "id": "e_indep_03",
+        "predicate": "PREFERS",
+        "roles": {
+          ":ARG0": "ent_user",
+          ":ARG1": "ent_book"
+        },
+        "negated": false
+      },
+      "events": [
+        {
+          "id": "e_multi_d2_lvl1",
+          "predicate": "ACTION_LVL_1",
+          "roles": {
+            ":ARG0": "ent_user",
+            ":ARG1": "ent_office"
+          },
+          "sub_event": "e_multi_d2_lvl2",
+          "negated": false
+        },
+        {
+          "id": "e_multi_d2_lvl2",
+          "predicate": "ACTION_LVL_2",
+          "roles": {
+            ":ARG0": "ent_lucia",
+            ":ARG1": "ent_book"
+          },
+          "sub_event": null,
+          "negated": false
+        }
+      ],
+      "expected_bindings": [
+        {
+          "event": "e_multi_d2_lvl1",
+          "role": ":ARG0",
+          "expected_filler": "ent_user"
+        },
+        {
+          "event": "e_multi_d2_lvl1",
+          "role": ":ARG1",
+          "expected_filler": "ent_office"
+        },
+        {
+          "event": "e_multi_d2_lvl2",
+          "role": ":ARG0",
+          "expected_filler": "ent_lucia"
+        },
+        {
+          "event": "e_multi_d2_lvl2",
+          "role": ":ARG1",
+          "expected_filler": "ent_book"
+        }
+      ],
+      "expected_paths": [
+        {
+          "start": "e_multi_d2_lvl1",
+          "path": [
+            ":sub-event",
+            ":ARG1"
+          ],
+          "expected_terminal": "ent_book"
+        }
+      ],
+      "expected_scopes": [
+        {
+          "event": "e_multi_d2_lvl1",
+          "negated": false,
+          "modal_scope": null
+        },
+        {
+          "event": "e_multi_d2_lvl2",
+          "negated": false,
+          "modal_scope": null
+        }
+      ]
+    },
+    {
+      "id": "SCEN_010",
+      "depth": 2,
+      "suite": "negated_proposition",
+      "description": "Directly negated event frame at depth 2",
+      "root_event": "e_neg_d2_01",
+      "independent_assertion": {
+        "id": "e_indep_04",
+        "predicate": "ONLINE_STATUS",
+        "roles": {
+          ":ARG0": "ent_lucia",
+          ":ARG1": "ent_home"
+        },
+        "negated": false
+      },
+      "events": [
+        {
+          "id": "e_neg_d2_01",
+          "predicate": "COMPLETED_01",
+          "roles": {
+            ":ARG0": "ent_user",
+            ":ARG1": "ent_task"
+          },
+          "sub_event": null,
+          "negated": true
+        }
+      ],
+      "expected_bindings": [
+        {
+          "event": "e_neg_d2_01",
+          "role": ":ARG0",
+          "expected_filler": "ent_user"
+        },
+        {
+          "event": "e_neg_d2_01",
+          "role": ":ARG1",
+          "expected_filler": "ent_task"
+        }
+      ],
+      "expected_paths": [
+        {
+          "start": "e_neg_d2_01",
+          "path": [
+            ":ARG0"
+          ],
+          "expected_terminal": "ent_user"
+        }
+      ],
+      "expected_scopes": [
+        {
+          "event": "e_neg_d2_01",
+          "negated": true,
+          "modal_scope": null
+        }
+      ]
+    },
+    {
+      "id": "SCEN_011",
+      "depth": 2,
+      "suite": "nested_negation_scope",
+      "description": "Nested proposition where innermost clause is negated at depth 2",
+      "root_event": "e_scope_d2_lvl1",
+      "independent_assertion": {
+        "id": "e_indep_05",
+        "predicate": "TRUST_01",
+        "roles": {
+          ":ARG0": "ent_lucia",
+          ":ARG1": "ent_user"
+        },
+        "negated": false
+      },
+      "events": [
+        {
+          "id": "e_scope_d2_lvl1",
+          "predicate": "BELIEVE_01",
+          "roles": {
+            ":ARG0": "ent_lucia",
+            ":ARG1": "ent_task"
+          },
+          "sub_event": "e_scope_d2_lvl2",
+          "negated": false
+        },
+        {
+          "id": "e_scope_d2_lvl2",
+          "predicate": "RESOLVE_01",
+          "roles": {
+            ":ARG0": "ent_user",
+            ":ARG1": "ent_task"
+          },
+          "sub_event": null,
+          "negated": true
+        }
+      ],
+      "expected_bindings": [
+        {
+          "event": "e_scope_d2_lvl1",
+          "role": ":ARG0",
+          "expected_filler": "ent_lucia"
+        },
+        {
+          "event": "e_scope_d2_lvl2",
+          "role": ":ARG0",
+          "expected_filler": "ent_user"
+        }
+      ],
+      "expected_paths": [
+        {
+          "start": "e_scope_d2_lvl1",
+          "path": [
+            ":sub-event",
+            ":ARG0"
+          ],
+          "expected_terminal": "ent_user"
+        }
+      ],
+      "expected_scopes": [
+        {
+          "event": "e_scope_d2_lvl1",
+          "negated": false,
+          "modal_scope": "e_scope_d2_lvl2"
+        },
+        {
+          "event": "e_scope_d2_lvl2",
+          "negated": true,
+          "modal_scope": null
+        }
+      ]
+    },
+    {
+      "id": "SCEN_012",
+      "depth": 2,
+      "suite": "adversarial_role_swap",
+      "description": "Adversarial repeated entity with role reversal across recursion at depth 2",
+      "root_event": "e_adv_d2_lvl1",
+      "independent_assertion": {
+        "id": "e_indep_06",
+        "predicate": "MAINTAINS_BOND",
+        "roles": {
+          ":ARG0": "ent_lucia",
+          ":ARG1": "ent_user"
+        },
+        "negated": false
+      },
+      "events": [
+        {
+          "id": "e_adv_d2_lvl1",
+          "predicate": "BELIEVE_01",
+          "roles": {
+            ":ARG0": "ent_user",
+            ":ARG1": "ent_task"
+          },
+          "sub_event": "e_adv_d2_lvl2",
+          "negated": false
+        },
+        {
+          "id": "e_adv_d2_lvl2",
+          "predicate": "HELP_01",
+          "roles": {
+            ":ARG0": "ent_lucia",
+            ":ARG1": "ent_user"
+          },
+          "sub_event": null,
+          "negated": false
+        }
+      ],
+      "expected_bindings": [
+        {
+          "event": "e_adv_d2_lvl1",
+          "role": ":ARG0",
+          "expected_filler": "ent_user"
+        },
+        {
+          "event": "e_adv_d2_lvl1",
+          "role": ":ARG1",
+          "expected_filler": "ent_task"
+        },
+        {
+          "event": "e_adv_d2_lvl2",
+          "role": ":ARG0",
+          "expected_filler": "ent_lucia"
+        },
+        {
+          "event": "e_adv_d2_lvl2",
+          "role": ":ARG1",
+          "expected_filler": "ent_user"
+        }
+      ],
+      "expected_paths": [
+        {
+          "start": "e_adv_d2_lvl1",
+          "path": [
+            ":ARG0"
+          ],
+          "expected_terminal": "ent_user"
+        },
+        {
+          "start": "e_adv_d2_lvl1",
+          "path": [
+            ":sub-event",
+            ":ARG0"
+          ],
+          "expected_terminal": "ent_lucia"
+        },
+        {
+          "start": "e_adv_d2_lvl1",
+          "path": [
+            ":sub-event",
+            ":ARG1"
+          ],
+          "expected_terminal": "ent_user"
+        }
+      ],
+      "expected_scopes": [
+        {
+          "event": "e_adv_d2_lvl1",
+          "negated": false,
+          "modal_scope": "e_adv_d2_lvl2"
+        },
+        {
+          "event": "e_adv_d2_lvl2",
+          "negated": false,
+          "modal_scope": null
+        }
+      ]
+    },
+    {
+      "id": "SCEN_013",
+      "depth": 3,
+      "suite": "simple_role_binding",
+      "description": "Standard predicate-argument frame at depth 3",
+      "root_event": "e_root_d3",
+      "independent_assertion": {
+        "id": "e_indep_01",
+        "predicate": "LOCATED_IN",
+        "roles": {
+          ":ARG0": "ent_user",
+          ":ARG1": "ent_home"
+        },
+        "negated": false
+      },
+      "events": [
+        {
+          "id": "e_d3_base",
+          "predicate": "EXECUTE_01",
+          "roles": {
+            ":ARG0": "ent_user",
+            ":ARG1": "ent_task"
+          },
+          "sub_event": null,
+          "negated": false
+        }
+      ],
+      "expected_bindings": [
+        {
+          "event": "e_d3_base",
+          "role": ":ARG0",
+          "expected_filler": "ent_user"
+        },
+        {
+          "event": "e_d3_base",
+          "role": ":ARG1",
+          "expected_filler": "ent_task"
+        }
+      ],
+      "expected_paths": [
+        {
+          "start": "e_d3_base",
+          "path": [
+            ":ARG0"
+          ],
+          "expected_terminal": "ent_user"
+        },
+        {
+          "start": "e_d3_base",
+          "path": [
+            ":ARG1"
+          ],
+          "expected_terminal": "ent_task"
+        }
+      ],
+      "expected_scopes": [
+        {
+          "event": "e_d3_base",
+          "negated": false,
+          "modal_scope": null
+        }
+      ]
+    },
+    {
+      "id": "SCEN_014",
+      "depth": 3,
+      "suite": "nested_proposition",
+      "description": "Pure nested proposition chain at depth 3",
+      "root_event": "e_nest_d3_lvl1",
+      "independent_assertion": {
+        "id": "e_indep_02",
+        "predicate": "STATUS_CHECK",
+        "roles": {
+          ":ARG0": "ent_lucia",
+          ":ARG1": "ent_task"
+        },
+        "negated": false
+      },
+      "events": [
+        {
+          "id": "e_nest_d3_lvl1",
+          "predicate": "PRED_LVL_1",
+          "roles": {
+            ":ARG0": "ent_user"
+          },
+          "sub_event": "e_nest_d3_lvl2",
+          "negated": false
+        },
+        {
+          "id": "e_nest_d3_lvl2",
+          "predicate": "PRED_LVL_2",
+          "roles": {
+            ":ARG0": "ent_lucia"
+          },
+          "sub_event": "e_nest_d3_lvl3",
+          "negated": false
+        },
+        {
+          "id": "e_nest_d3_lvl3",
+          "predicate": "PRED_LVL_3",
+          "roles": {
+            ":ARG0": "ent_user"
+          },
+          "sub_event": null,
+          "negated": false
+        }
+      ],
+      "expected_bindings": [
+        {
+          "event": "e_nest_d3_lvl1",
+          "role": ":ARG0",
+          "expected_filler": "ent_user"
+        },
+        {
+          "event": "e_nest_d3_lvl2",
+          "role": ":ARG0",
+          "expected_filler": "ent_lucia"
+        },
+        {
+          "event": "e_nest_d3_lvl3",
+          "role": ":ARG0",
+          "expected_filler": "ent_user"
+        }
+      ],
+      "expected_paths": [
+        {
+          "start": "e_nest_d3_lvl1",
+          "path": [
+            ":sub-event",
+            ":sub-event",
+            ":ARG0"
+          ],
+          "expected_terminal": "ent_user"
+        }
+      ],
+      "expected_scopes": [
+        {
+          "event": "e_nest_d3_lvl1",
+          "negated": false,
+          "modal_scope": null
+        },
+        {
+          "event": "e_nest_d3_lvl2",
+          "negated": false,
+          "modal_scope": null
+        },
+        {
+          "event": "e_nest_d3_lvl3",
+          "negated": false,
+          "modal_scope": null
+        }
+      ]
+    },
+    {
+      "id": "SCEN_015",
+      "depth": 3,
+      "suite": "nested_with_role_binding",
+      "description": "Nested chain with rich multi-role fillers at depth 3",
+      "root_event": "e_multi_d3_lvl1",
+      "independent_assertion": {
+        "id": "e_indep_03",
+        "predicate": "PREFERS",
+        "roles": {
+          ":ARG0": "ent_user",
+          ":ARG1": "ent_book"
+        },
+        "negated": false
+      },
+      "events": [
+        {
+          "id": "e_multi_d3_lvl1",
+          "predicate": "ACTION_LVL_1",
+          "roles": {
+            ":ARG0": "ent_user",
+            ":ARG1": "ent_office"
+          },
+          "sub_event": "e_multi_d3_lvl2",
+          "negated": false
+        },
+        {
+          "id": "e_multi_d3_lvl2",
+          "predicate": "ACTION_LVL_2",
+          "roles": {
+            ":ARG0": "ent_lucia",
+            ":ARG1": "ent_task"
+          },
+          "sub_event": "e_multi_d3_lvl3",
+          "negated": false
+        },
+        {
+          "id": "e_multi_d3_lvl3",
+          "predicate": "ACTION_LVL_3",
+          "roles": {
+            ":ARG0": "ent_admin",
+            ":ARG1": "ent_book"
+          },
+          "sub_event": null,
+          "negated": false
+        }
+      ],
+      "expected_bindings": [
+        {
+          "event": "e_multi_d3_lvl1",
+          "role": ":ARG0",
+          "expected_filler": "ent_user"
+        },
+        {
+          "event": "e_multi_d3_lvl1",
+          "role": ":ARG1",
+          "expected_filler": "ent_office"
+        },
+        {
+          "event": "e_multi_d3_lvl2",
+          "role": ":ARG0",
+          "expected_filler": "ent_lucia"
+        },
+        {
+          "event": "e_multi_d3_lvl2",
+          "role": ":ARG1",
+          "expected_filler": "ent_task"
+        },
+        {
+          "event": "e_multi_d3_lvl3",
+          "role": ":ARG0",
+          "expected_filler": "ent_admin"
+        },
+        {
+          "event": "e_multi_d3_lvl3",
+          "role": ":ARG1",
+          "expected_filler": "ent_book"
+        }
+      ],
+      "expected_paths": [
+        {
+          "start": "e_multi_d3_lvl1",
+          "path": [
+            ":sub-event",
+            ":sub-event",
+            ":ARG1"
+          ],
+          "expected_terminal": "ent_book"
+        }
+      ],
+      "expected_scopes": [
+        {
+          "event": "e_multi_d3_lvl1",
+          "negated": false,
+          "modal_scope": null
+        },
+        {
+          "event": "e_multi_d3_lvl2",
+          "negated": false,
+          "modal_scope": null
+        },
+        {
+          "event": "e_multi_d3_lvl3",
+          "negated": false,
+          "modal_scope": null
+        }
+      ]
+    },
+    {
+      "id": "SCEN_016",
+      "depth": 3,
+      "suite": "negated_proposition",
+      "description": "Directly negated event frame at depth 3",
+      "root_event": "e_neg_d3_01",
+      "independent_assertion": {
+        "id": "e_indep_04",
+        "predicate": "ONLINE_STATUS",
+        "roles": {
+          ":ARG0": "ent_lucia",
+          ":ARG1": "ent_home"
+        },
+        "negated": false
+      },
+      "events": [
+        {
+          "id": "e_neg_d3_01",
+          "predicate": "COMPLETED_01",
+          "roles": {
+            ":ARG0": "ent_user",
+            ":ARG1": "ent_task"
+          },
+          "sub_event": null,
+          "negated": true
+        }
+      ],
+      "expected_bindings": [
+        {
+          "event": "e_neg_d3_01",
+          "role": ":ARG0",
+          "expected_filler": "ent_user"
+        },
+        {
+          "event": "e_neg_d3_01",
+          "role": ":ARG1",
+          "expected_filler": "ent_task"
+        }
+      ],
+      "expected_paths": [
+        {
+          "start": "e_neg_d3_01",
+          "path": [
+            ":ARG0"
+          ],
+          "expected_terminal": "ent_user"
+        }
+      ],
+      "expected_scopes": [
+        {
+          "event": "e_neg_d3_01",
+          "negated": true,
+          "modal_scope": null
+        }
+      ]
+    },
+    {
+      "id": "SCEN_017",
+      "depth": 3,
+      "suite": "nested_negation_scope",
+      "description": "Nested proposition where innermost clause is negated at depth 3",
+      "root_event": "e_scope_d3_lvl1",
+      "independent_assertion": {
+        "id": "e_indep_05",
+        "predicate": "TRUST_01",
+        "roles": {
+          ":ARG0": "ent_lucia",
+          ":ARG1": "ent_user"
+        },
+        "negated": false
+      },
+      "events": [
+        {
+          "id": "e_scope_d3_lvl1",
+          "predicate": "BELIEVE_01",
+          "roles": {
+            ":ARG0": "ent_lucia",
+            ":ARG1": "ent_task"
+          },
+          "sub_event": "e_scope_d3_lvl2",
+          "negated": false
+        },
+        {
+          "id": "e_scope_d3_lvl2",
+          "predicate": "BELIEVE_01",
+          "roles": {
+            ":ARG0": "ent_user",
+            ":ARG1": "ent_task"
+          },
+          "sub_event": "e_scope_d3_lvl3",
+          "negated": false
+        },
+        {
+          "id": "e_scope_d3_lvl3",
+          "predicate": "RESOLVE_01",
+          "roles": {
+            ":ARG0": "ent_user",
+            ":ARG1": "ent_task"
+          },
+          "sub_event": null,
+          "negated": true
+        }
+      ],
+      "expected_bindings": [
+        {
+          "event": "e_scope_d3_lvl1",
+          "role": ":ARG0",
+          "expected_filler": "ent_lucia"
+        },
+        {
+          "event": "e_scope_d3_lvl2",
+          "role": ":ARG0",
+          "expected_filler": "ent_user"
+        },
+        {
+          "event": "e_scope_d3_lvl3",
+          "role": ":ARG0",
+          "expected_filler": "ent_user"
+        }
+      ],
+      "expected_paths": [
+        {
+          "start": "e_scope_d3_lvl1",
+          "path": [
+            ":sub-event",
+            ":sub-event",
+            ":ARG0"
+          ],
+          "expected_terminal": "ent_user"
+        }
+      ],
+      "expected_scopes": [
+        {
+          "event": "e_scope_d3_lvl1",
+          "negated": false,
+          "modal_scope": "e_scope_d3_lvl2"
+        },
+        {
+          "event": "e_scope_d3_lvl2",
+          "negated": false,
+          "modal_scope": "e_scope_d3_lvl3"
+        },
+        {
+          "event": "e_scope_d3_lvl3",
+          "negated": true,
+          "modal_scope": null
+        }
+      ]
+    },
+    {
+      "id": "SCEN_018",
+      "depth": 3,
+      "suite": "adversarial_role_swap",
+      "description": "Adversarial repeated entity with role reversal across recursion at depth 3",
+      "root_event": "e_adv_d3_lvl1",
+      "independent_assertion": {
+        "id": "e_indep_06",
+        "predicate": "MAINTAINS_BOND",
+        "roles": {
+          ":ARG0": "ent_lucia",
+          ":ARG1": "ent_user"
+        },
+        "negated": false
+      },
+      "events": [
+        {
+          "id": "e_adv_d3_lvl1",
+          "predicate": "BELIEVE_01",
+          "roles": {
+            ":ARG0": "ent_user",
+            ":ARG1": "ent_task"
+          },
+          "sub_event": "e_adv_d3_lvl2",
+          "negated": false
+        },
+        {
+          "id": "e_adv_d3_lvl2",
+          "predicate": "HELP_01",
+          "roles": {
+            ":ARG0": "ent_lucia",
+            ":ARG1": "ent_user"
+          },
+          "sub_event": "e_adv_d3_lvl3",
+          "negated": false
+        },
+        {
+          "id": "e_adv_d3_lvl3",
+          "predicate": "OBSERVE_01",
+          "roles": {
+            ":ARG0": "ent_admin",
+            ":ARG1": "ent_lucia"
+          },
+          "sub_event": null,
+          "negated": false
+        }
+      ],
+      "expected_bindings": [
+        {
+          "event": "e_adv_d3_lvl1",
+          "role": ":ARG0",
+          "expected_filler": "ent_user"
+        },
+        {
+          "event": "e_adv_d3_lvl1",
+          "role": ":ARG1",
+          "expected_filler": "ent_task"
+        },
+        {
+          "event": "e_adv_d3_lvl2",
+          "role": ":ARG0",
+          "expected_filler": "ent_lucia"
+        },
+        {
+          "event": "e_adv_d3_lvl2",
+          "role": ":ARG1",
+          "expected_filler": "ent_user"
+        },
+        {
+          "event": "e_adv_d3_lvl3",
+          "role": ":ARG0",
+          "expected_filler": "ent_admin"
+        },
+        {
+          "event": "e_adv_d3_lvl3",
+          "role": ":ARG1",
+          "expected_filler": "ent_lucia"
+        }
+      ],
+      "expected_paths": [
+        {
+          "start": "e_adv_d3_lvl1",
+          "path": [
+            ":ARG0"
+          ],
+          "expected_terminal": "ent_user"
+        },
+        {
+          "start": "e_adv_d3_lvl1",
+          "path": [
+            ":sub-event",
+            ":ARG0"
+          ],
+          "expected_terminal": "ent_lucia"
+        },
+        {
+          "start": "e_adv_d3_lvl1",
+          "path": [
+            ":sub-event",
+            ":ARG1"
+          ],
+          "expected_terminal": "ent_user"
+        }
+      ],
+      "expected_scopes": [
+        {
+          "event": "e_adv_d3_lvl1",
+          "negated": false,
+          "modal_scope": "e_adv_d3_lvl2"
+        },
+        {
+          "event": "e_adv_d3_lvl2",
+          "negated": false,
+          "modal_scope": "e_adv_d3_lvl3"
+        },
+        {
+          "event": "e_adv_d3_lvl3",
+          "negated": false,
+          "modal_scope": null
+        }
+      ]
+    },
+    {
+      "id": "SCEN_019",
+      "depth": 4,
+      "suite": "simple_role_binding",
+      "description": "Standard predicate-argument frame at depth 4",
+      "root_event": "e_root_d4",
+      "independent_assertion": {
+        "id": "e_indep_01",
+        "predicate": "LOCATED_IN",
+        "roles": {
+          ":ARG0": "ent_user",
+          ":ARG1": "ent_home"
+        },
+        "negated": false
+      },
+      "events": [
+        {
+          "id": "e_d4_base",
+          "predicate": "EXECUTE_01",
+          "roles": {
+            ":ARG0": "ent_user",
+            ":ARG1": "ent_task"
+          },
+          "sub_event": null,
+          "negated": false
+        }
+      ],
+      "expected_bindings": [
+        {
+          "event": "e_d4_base",
+          "role": ":ARG0",
+          "expected_filler": "ent_user"
+        },
+        {
+          "event": "e_d4_base",
+          "role": ":ARG1",
+          "expected_filler": "ent_task"
+        }
+      ],
+      "expected_paths": [
+        {
+          "start": "e_d4_base",
+          "path": [
+            ":ARG0"
+          ],
+          "expected_terminal": "ent_user"
+        },
+        {
+          "start": "e_d4_base",
+          "path": [
+            ":ARG1"
+          ],
+          "expected_terminal": "ent_task"
+        }
+      ],
+      "expected_scopes": [
+        {
+          "event": "e_d4_base",
+          "negated": false,
+          "modal_scope": null
+        }
+      ]
+    },
+    {
+      "id": "SCEN_020",
+      "depth": 4,
+      "suite": "nested_proposition",
+      "description": "Pure nested proposition chain at depth 4",
+      "root_event": "e_nest_d4_lvl1",
+      "independent_assertion": {
+        "id": "e_indep_02",
+        "predicate": "STATUS_CHECK",
+        "roles": {
+          ":ARG0": "ent_lucia",
+          ":ARG1": "ent_task"
+        },
+        "negated": false
+      },
+      "events": [
+        {
+          "id": "e_nest_d4_lvl1",
+          "predicate": "PRED_LVL_1",
+          "roles": {
+            ":ARG0": "ent_user"
+          },
+          "sub_event": "e_nest_d4_lvl2",
+          "negated": false
+        },
+        {
+          "id": "e_nest_d4_lvl2",
+          "predicate": "PRED_LVL_2",
+          "roles": {
+            ":ARG0": "ent_lucia"
+          },
+          "sub_event": "e_nest_d4_lvl3",
+          "negated": false
+        },
+        {
+          "id": "e_nest_d4_lvl3",
+          "predicate": "PRED_LVL_3",
+          "roles": {
+            ":ARG0": "ent_user"
+          },
+          "sub_event": "e_nest_d4_lvl4",
+          "negated": false
+        },
+        {
+          "id": "e_nest_d4_lvl4",
+          "predicate": "PRED_LVL_4",
+          "roles": {
+            ":ARG0": "ent_lucia"
+          },
+          "sub_event": null,
+          "negated": false
+        }
+      ],
+      "expected_bindings": [
+        {
+          "event": "e_nest_d4_lvl1",
+          "role": ":ARG0",
+          "expected_filler": "ent_user"
+        },
+        {
+          "event": "e_nest_d4_lvl2",
+          "role": ":ARG0",
+          "expected_filler": "ent_lucia"
+        },
+        {
+          "event": "e_nest_d4_lvl3",
+          "role": ":ARG0",
+          "expected_filler": "ent_user"
+        },
+        {
+          "event": "e_nest_d4_lvl4",
+          "role": ":ARG0",
+          "expected_filler": "ent_lucia"
+        }
+      ],
+      "expected_paths": [
+        {
+          "start": "e_nest_d4_lvl1",
+          "path": [
+            ":sub-event",
+            ":sub-event",
+            ":sub-event",
+            ":ARG0"
+          ],
+          "expected_terminal": "ent_lucia"
+        }
+      ],
+      "expected_scopes": [
+        {
+          "event": "e_nest_d4_lvl1",
+          "negated": false,
+          "modal_scope": null
+        },
+        {
+          "event": "e_nest_d4_lvl2",
+          "negated": false,
+          "modal_scope": null
+        },
+        {
+          "event": "e_nest_d4_lvl3",
+          "negated": false,
+          "modal_scope": null
+        },
+        {
+          "event": "e_nest_d4_lvl4",
+          "negated": false,
+          "modal_scope": null
+        }
+      ]
+    },
+    {
+      "id": "SCEN_021",
+      "depth": 4,
+      "suite": "nested_with_role_binding",
+      "description": "Nested chain with rich multi-role fillers at depth 4",
+      "root_event": "e_multi_d4_lvl1",
+      "independent_assertion": {
+        "id": "e_indep_03",
+        "predicate": "PREFERS",
+        "roles": {
+          ":ARG0": "ent_user",
+          ":ARG1": "ent_book"
+        },
+        "negated": false
+      },
+      "events": [
+        {
+          "id": "e_multi_d4_lvl1",
+          "predicate": "ACTION_LVL_1",
+          "roles": {
+            ":ARG0": "ent_user",
+            ":ARG1": "ent_office"
+          },
+          "sub_event": "e_multi_d4_lvl2",
+          "negated": false
+        },
+        {
+          "id": "e_multi_d4_lvl2",
+          "predicate": "ACTION_LVL_2",
+          "roles": {
+            ":ARG0": "ent_lucia",
+            ":ARG1": "ent_task"
+          },
+          "sub_event": "e_multi_d4_lvl3",
+          "negated": false
+        },
+        {
+          "id": "e_multi_d4_lvl3",
+          "predicate": "ACTION_LVL_3",
+          "roles": {
+            ":ARG0": "ent_admin",
+            ":ARG1": "ent_office"
+          },
+          "sub_event": "e_multi_d4_lvl4",
+          "negated": false
+        },
+        {
+          "id": "e_multi_d4_lvl4",
+          "predicate": "ACTION_LVL_4",
+          "roles": {
+            ":ARG0": "ent_agent_c",
+            ":ARG1": "ent_book"
+          },
+          "sub_event": null,
+          "negated": false
+        }
+      ],
+      "expected_bindings": [
+        {
+          "event": "e_multi_d4_lvl1",
+          "role": ":ARG0",
+          "expected_filler": "ent_user"
+        },
+        {
+          "event": "e_multi_d4_lvl1",
+          "role": ":ARG1",
+          "expected_filler": "ent_office"
+        },
+        {
+          "event": "e_multi_d4_lvl2",
+          "role": ":ARG0",
+          "expected_filler": "ent_lucia"
+        },
+        {
+          "event": "e_multi_d4_lvl2",
+          "role": ":ARG1",
+          "expected_filler": "ent_task"
+        },
+        {
+          "event": "e_multi_d4_lvl3",
+          "role": ":ARG0",
+          "expected_filler": "ent_admin"
+        },
+        {
+          "event": "e_multi_d4_lvl3",
+          "role": ":ARG1",
+          "expected_filler": "ent_office"
+        },
+        {
+          "event": "e_multi_d4_lvl4",
+          "role": ":ARG0",
+          "expected_filler": "ent_agent_c"
+        },
+        {
+          "event": "e_multi_d4_lvl4",
+          "role": ":ARG1",
+          "expected_filler": "ent_book"
+        }
+      ],
+      "expected_paths": [
+        {
+          "start": "e_multi_d4_lvl1",
+          "path": [
+            ":sub-event",
+            ":sub-event",
+            ":sub-event",
+            ":ARG1"
+          ],
+          "expected_terminal": "ent_book"
+        }
+      ],
+      "expected_scopes": [
+        {
+          "event": "e_multi_d4_lvl1",
+          "negated": false,
+          "modal_scope": null
+        },
+        {
+          "event": "e_multi_d4_lvl2",
+          "negated": false,
+          "modal_scope": null
+        },
+        {
+          "event": "e_multi_d4_lvl3",
+          "negated": false,
+          "modal_scope": null
+        },
+        {
+          "event": "e_multi_d4_lvl4",
+          "negated": false,
+          "modal_scope": null
+        }
+      ]
+    },
+    {
+      "id": "SCEN_022",
+      "depth": 4,
+      "suite": "negated_proposition",
+      "description": "Directly negated event frame at depth 4",
+      "root_event": "e_neg_d4_01",
+      "independent_assertion": {
+        "id": "e_indep_04",
+        "predicate": "ONLINE_STATUS",
+        "roles": {
+          ":ARG0": "ent_lucia",
+          ":ARG1": "ent_home"
+        },
+        "negated": false
+      },
+      "events": [
+        {
+          "id": "e_neg_d4_01",
+          "predicate": "COMPLETED_01",
+          "roles": {
+            ":ARG0": "ent_user",
+            ":ARG1": "ent_task"
+          },
+          "sub_event": null,
+          "negated": true
+        }
+      ],
+      "expected_bindings": [
+        {
+          "event": "e_neg_d4_01",
+          "role": ":ARG0",
+          "expected_filler": "ent_user"
+        },
+        {
+          "event": "e_neg_d4_01",
+          "role": ":ARG1",
+          "expected_filler": "ent_task"
+        }
+      ],
+      "expected_paths": [
+        {
+          "start": "e_neg_d4_01",
+          "path": [
+            ":ARG0"
+          ],
+          "expected_terminal": "ent_user"
+        }
+      ],
+      "expected_scopes": [
+        {
+          "event": "e_neg_d4_01",
+          "negated": true,
+          "modal_scope": null
+        }
+      ]
+    },
+    {
+      "id": "SCEN_023",
+      "depth": 4,
+      "suite": "nested_negation_scope",
+      "description": "Nested proposition where innermost clause is negated at depth 4",
+      "root_event": "e_scope_d4_lvl1",
+      "independent_assertion": {
+        "id": "e_indep_05",
+        "predicate": "TRUST_01",
+        "roles": {
+          ":ARG0": "ent_lucia",
+          ":ARG1": "ent_user"
+        },
+        "negated": false
+      },
+      "events": [
+        {
+          "id": "e_scope_d4_lvl1",
+          "predicate": "BELIEVE_01",
+          "roles": {
+            ":ARG0": "ent_lucia",
+            ":ARG1": "ent_task"
+          },
+          "sub_event": "e_scope_d4_lvl2",
+          "negated": false
+        },
+        {
+          "id": "e_scope_d4_lvl2",
+          "predicate": "BELIEVE_01",
+          "roles": {
+            ":ARG0": "ent_user",
+            ":ARG1": "ent_task"
+          },
+          "sub_event": "e_scope_d4_lvl3",
+          "negated": false
+        },
+        {
+          "id": "e_scope_d4_lvl3",
+          "predicate": "BELIEVE_01",
+          "roles": {
+            ":ARG0": "ent_user",
+            ":ARG1": "ent_task"
+          },
+          "sub_event": "e_scope_d4_lvl4",
+          "negated": false
+        },
+        {
+          "id": "e_scope_d4_lvl4",
+          "predicate": "RESOLVE_01",
+          "roles": {
+            ":ARG0": "ent_user",
+            ":ARG1": "ent_task"
+          },
+          "sub_event": null,
+          "negated": true
+        }
+      ],
+      "expected_bindings": [
+        {
+          "event": "e_scope_d4_lvl1",
+          "role": ":ARG0",
+          "expected_filler": "ent_lucia"
+        },
+        {
+          "event": "e_scope_d4_lvl2",
+          "role": ":ARG0",
+          "expected_filler": "ent_user"
+        },
+        {
+          "event": "e_scope_d4_lvl3",
+          "role": ":ARG0",
+          "expected_filler": "ent_user"
+        },
+        {
+          "event": "e_scope_d4_lvl4",
+          "role": ":ARG0",
+          "expected_filler": "ent_user"
+        }
+      ],
+      "expected_paths": [
+        {
+          "start": "e_scope_d4_lvl1",
+          "path": [
+            ":sub-event",
+            ":sub-event",
+            ":sub-event",
+            ":ARG0"
+          ],
+          "expected_terminal": "ent_user"
+        }
+      ],
+      "expected_scopes": [
+        {
+          "event": "e_scope_d4_lvl1",
+          "negated": false,
+          "modal_scope": "e_scope_d4_lvl2"
+        },
+        {
+          "event": "e_scope_d4_lvl2",
+          "negated": false,
+          "modal_scope": "e_scope_d4_lvl3"
+        },
+        {
+          "event": "e_scope_d4_lvl3",
+          "negated": false,
+          "modal_scope": "e_scope_d4_lvl4"
+        },
+        {
+          "event": "e_scope_d4_lvl4",
+          "negated": true,
+          "modal_scope": null
+        }
+      ]
+    },
+    {
+      "id": "SCEN_024",
+      "depth": 4,
+      "suite": "adversarial_role_swap",
+      "description": "Adversarial repeated entity with role reversal across recursion at depth 4",
+      "root_event": "e_adv_d4_lvl1",
+      "independent_assertion": {
+        "id": "e_indep_06",
+        "predicate": "MAINTAINS_BOND",
+        "roles": {
+          ":ARG0": "ent_lucia",
+          ":ARG1": "ent_user"
+        },
+        "negated": false
+      },
+      "events": [
+        {
+          "id": "e_adv_d4_lvl1",
+          "predicate": "BELIEVE_01",
+          "roles": {
+            ":ARG0": "ent_user",
+            ":ARG1": "ent_task"
+          },
+          "sub_event": "e_adv_d4_lvl2",
+          "negated": false
+        },
+        {
+          "id": "e_adv_d4_lvl2",
+          "predicate": "HELP_01",
+          "roles": {
+            ":ARG0": "ent_lucia",
+            ":ARG1": "ent_user"
+          },
+          "sub_event": "e_adv_d4_lvl3",
+          "negated": false
+        },
+        {
+          "id": "e_adv_d4_lvl3",
+          "predicate": "OBSERVE_01",
+          "roles": {
+            ":ARG0": "ent_admin",
+            ":ARG1": "ent_lucia"
+          },
+          "sub_event": "e_adv_d4_lvl4",
+          "negated": false
+        },
+        {
+          "id": "e_adv_d4_lvl4",
+          "predicate": "RECORD_01",
+          "roles": {
+            ":ARG0": "ent_agent_c",
+            ":ARG1": "ent_admin"
+          },
+          "sub_event": null,
+          "negated": false
+        }
+      ],
+      "expected_bindings": [
+        {
+          "event": "e_adv_d4_lvl1",
+          "role": ":ARG0",
+          "expected_filler": "ent_user"
+        },
+        {
+          "event": "e_adv_d4_lvl1",
+          "role": ":ARG1",
+          "expected_filler": "ent_task"
+        },
+        {
+          "event": "e_adv_d4_lvl2",
+          "role": ":ARG0",
+          "expected_filler": "ent_lucia"
+        },
+        {
+          "event": "e_adv_d4_lvl2",
+          "role": ":ARG1",
+          "expected_filler": "ent_user"
+        },
+        {
+          "event": "e_adv_d4_lvl3",
+          "role": ":ARG0",
+          "expected_filler": "ent_admin"
+        },
+        {
+          "event": "e_adv_d4_lvl3",
+          "role": ":ARG1",
+          "expected_filler": "ent_lucia"
+        },
+        {
+          "event": "e_adv_d4_lvl4",
+          "role": ":ARG0",
+          "expected_filler": "ent_agent_c"
+        },
+        {
+          "event": "e_adv_d4_lvl4",
+          "role": ":ARG1",
+          "expected_filler": "ent_admin"
+        }
+      ],
+      "expected_paths": [
+        {
+          "start": "e_adv_d4_lvl1",
+          "path": [
+            ":ARG0"
+          ],
+          "expected_terminal": "ent_user"
+        },
+        {
+          "start": "e_adv_d4_lvl1",
+          "path": [
+            ":sub-event",
+            ":ARG0"
+          ],
+          "expected_terminal": "ent_lucia"
+        },
+        {
+          "start": "e_adv_d4_lvl1",
+          "path": [
+            ":sub-event",
+            ":ARG1"
+          ],
+          "expected_terminal": "ent_user"
+        }
+      ],
+      "expected_scopes": [
+        {
+          "event": "e_adv_d4_lvl1",
+          "negated": false,
+          "modal_scope": "e_adv_d4_lvl2"
+        },
+        {
+          "event": "e_adv_d4_lvl2",
+          "negated": false,
+          "modal_scope": "e_adv_d4_lvl3"
+        },
+        {
+          "event": "e_adv_d4_lvl3",
+          "negated": false,
+          "modal_scope": "e_adv_d4_lvl4"
+        },
+        {
+          "event": "e_adv_d4_lvl4",
+          "negated": false,
+          "modal_scope": null
+        }
+      ]
+    }
+  ]
+}
