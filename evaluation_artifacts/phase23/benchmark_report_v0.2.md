@@ -35,7 +35,7 @@ Microbenchmark v0.2 supersedes v0.1 following the scientific validity audit. The
 | **G-MB-9** | Track 5 (U5) | Fact Retention After Delta (RUF) | 0.98 | **1.0** | **PASSED** |
 | **G-MB-10** | Track 5 (U5) | Historical Semantic Drift (Delta_drift) | 0.05 | **7.401383855005455e-10** | **PASSED** |
 | **G-MB-11** | Track 6 (U6) | Taxonomic Placement Accuracy (TPA) | 0.8 | **1.0** | **PASSED** |
-| **G-MB-12** | Hardware | Hardware Execution SLA (CPU <= 5.0ms, VRAM == 0MB) | <= 5.0 ms / 0.0 MB | **0.3154 ms / 0.0 MB** | **PASSED** |
+| **G-MB-12** | Hardware | Hardware Execution SLA (CPU <= 5.0ms, VRAM == 0MB) | <= 5.0 ms / 0.0 MB | **0.3553 ms / 0.0 MB** | **PASSED** |
 
 ---
 

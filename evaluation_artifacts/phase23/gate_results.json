@@ -82,7 +82,7 @@
     "G-MB-12": {
       "gate": "G-MB-12",
       "description": "Hardware Execution SLA (CPU <= 5.0ms, VRAM == 0MB)",
-      "measured": "0.3154 ms / 0.0 MB",
+      "measured": "0.3553 ms / 0.0 MB",
       "target": "<= 5.0 ms / 0.0 MB",
       "passed": true
     }
