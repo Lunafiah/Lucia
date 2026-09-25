@@ -227,6 +227,7 @@ To prevent confusion across development phases, Lucia maintains a strict documen
 | **SC Uncertainty Report** | [`uncertainty_report.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/evaluation_artifacts/phase22_sc/uncertainty_report.md) | **Research Truth** | Epistemic confidence calibration and monotonic anchor corroboration under Candidate C4. |
 | **SC Failure Analysis** | [`failure_analysis.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/evaluation_artifacts/phase22_sc/failure_analysis.md) | **Research Truth** | Negative results: why pure dense HDC hypervectors (C3) are classified as INSUFFICIENT due to superposition crosstalk ($N > 5$). |
 | **SC Final Research Report** | [`final_report.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/evaluation_artifacts/phase22_sc/final_report.md) | **Research Truth** | Comprehensive synthesis of Phase 22-SC: 10/10 gates passed; definitive answers to 8 architectural questions; defines the Substrate-Neutral Semantic Conditioning Interface for Phase 23. |
+| **Phase 22 Master Corpus** | [`PHASE_22_FINAL_REPORTS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase22-Epistemic_Foraging/PHASE_22_FINAL_REPORTS.md) | **Master Synthesis** | Authoritative single-file master research corpus consolidating final reports, gate verdicts, cross-phase syntheses, and Phase 23 handoff boundaries across all 20 Phase 22 sub-study branches. |
 
 ---
 
