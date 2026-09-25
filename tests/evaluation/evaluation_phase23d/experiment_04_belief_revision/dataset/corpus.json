@@ -1,0 +1,1665 @@
+{
+  "benchmark": "Phase23D_EXP04_BeliefRevision",
+  "version": "1.0.0",
+  "description": "Deterministic evaluation corpus for belief revision, contradiction detection, and JTMS dependency propagation.",
+  "scenario_count": 10,
+  "scenarios": [
+    {
+      "id": "SC01",
+      "name": "simple_contradiction",
+      "description": "Direct negation in same valid-time interval: P then NOT P.",
+      "initial_assertions": [
+        {
+          "id": "SC01_A1",
+          "predicate": "HAS_STATUS",
+          "arguments": [
+            "Server01",
+            "Online"
+          ],
+          "polarity": true,
+          "conceiver": "User",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 1,
+          "justifications": []
+        }
+      ],
+      "updates": [
+        {
+          "id": "SC01_A2",
+          "predicate": "HAS_STATUS",
+          "arguments": [
+            "Server01",
+            "Online"
+          ],
+          "polarity": false,
+          "conceiver": "User",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 2,
+          "justifications": []
+        }
+      ],
+      "expected_oracle": {
+        "contradictions": [
+          [
+            "SC01_A1",
+            "SC01_A2"
+          ]
+        ],
+        "final_states": {
+          "SC01_A1": "OUT",
+          "SC01_A2": "IN"
+        },
+        "retracted_dependencies": [],
+        "unaffected_in": [],
+        "history_count": 2,
+        "defeaters": {
+          "SC01_A1": "SC01_A2"
+        }
+      }
+    },
+    {
+      "id": "SC02",
+      "name": "authority_conflict",
+      "description": "Two conceivers assert conflicting facts; Admin (high authority) defeats Guest (low authority).",
+      "initial_assertions": [
+        {
+          "id": "SC02_A1",
+          "predicate": "ACCESS_LEVEL",
+          "arguments": [
+            "User01",
+            "ReadOnly"
+          ],
+          "polarity": true,
+          "conceiver": "Guest",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 1,
+          "justifications": []
+        }
+      ],
+      "updates": [
+        {
+          "id": "SC02_A2",
+          "predicate": "ACCESS_LEVEL",
+          "arguments": [
+            "User01",
+            "RootAdmin"
+          ],
+          "polarity": true,
+          "conceiver": "Admin",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 2,
+          "justifications": []
+        }
+      ],
+      "expected_oracle": {
+        "contradictions": [
+          [
+            "SC02_A1",
+            "SC02_A2"
+          ]
+        ],
+        "final_states": {
+          "SC02_A1": "OUT",
+          "SC02_A2": "IN"
+        },
+        "retracted_dependencies": [],
+        "unaffected_in": [],
+        "history_count": 2,
+        "defeaters": {
+          "SC02_A1": "SC02_A2"
+        }
+      }
+    },
+    {
+      "id": "SC03",
+      "name": "dependent_belief",
+      "description": "1-hop dependency: A -> B. When A is defeated, B must become OUT.",
+      "initial_assertions": [
+        {
+          "id": "SC03_A",
+          "predicate": "LOCATED_IN",
+          "arguments": [
+            "User01",
+            "DaNang"
+          ],
+          "polarity": true,
+          "conceiver": "User",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 1,
+          "justifications": []
+        },
+        {
+          "id": "SC03_B",
+          "predicate": "TIMEZONE",
+          "arguments": [
+            "User01",
+            "UTC+7"
+          ],
+          "polarity": true,
+          "conceiver": "LuciaInference",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 2,
+          "justifications": [
+            "SC03_A"
+          ]
+        }
+      ],
+      "updates": [
+        {
+          "id": "SC03_A_DEFEAT",
+          "predicate": "LOCATED_IN",
+          "arguments": [
+            "User01",
+            "Tokyo"
+          ],
+          "polarity": true,
+          "conceiver": "User",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 3,
+          "justifications": []
+        }
+      ],
+      "expected_oracle": {
+        "contradictions": [
+          [
+            "SC03_A",
+            "SC03_A_DEFEAT"
+          ]
+        ],
+        "final_states": {
+          "SC03_A": "OUT",
+          "SC03_B": "OUT",
+          "SC03_A_DEFEAT": "IN"
+        },
+        "retracted_dependencies": [
+          "SC03_B"
+        ],
+        "unaffected_in": [],
+        "history_count": 3,
+        "defeaters": {
+          "SC03_A": "SC03_A_DEFEAT",
+          "SC03_B": "SC03_A"
+        }
+      }
+    },
+    {
+      "id": "SC04",
+      "name": "multi_hop_dependency",
+      "description": "Multi-hop dependency A -> B -> C. Defeat of A propagates all the way to C.",
+      "initial_assertions": [
+        {
+          "id": "SC04_A",
+          "predicate": "EMPLOYED_AT",
+          "arguments": [
+            "User01",
+            "TechCorp"
+          ],
+          "polarity": true,
+          "conceiver": "User",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 1,
+          "justifications": []
+        },
+        {
+          "id": "SC04_B",
+          "predicate": "HOLDS_BADGE",
+          "arguments": [
+            "User01",
+            "TechBadge101"
+          ],
+          "polarity": true,
+          "conceiver": "LuciaInference",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 2,
+          "justifications": [
+            "SC04_A"
+          ]
+        },
+        {
+          "id": "SC04_C",
+          "predicate": "HAS_PHYSICAL_ACCESS",
+          "arguments": [
+            "User01",
+            "ServerRoomB"
+          ],
+          "polarity": true,
+          "conceiver": "LuciaInference",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 3,
+          "justifications": [
+            "SC04_B"
+          ]
+        }
+      ],
+      "updates": [
+        {
+          "id": "SC04_A_DEFEAT",
+          "predicate": "EMPLOYED_AT",
+          "arguments": [
+            "User01",
+            "TechCorp"
+          ],
+          "polarity": false,
+          "conceiver": "Admin",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 4,
+          "justifications": []
+        }
+      ],
+      "expected_oracle": {
+        "contradictions": [
+          [
+            "SC04_A",
+            "SC04_A_DEFEAT"
+          ]
+        ],
+        "final_states": {
+          "SC04_A": "OUT",
+          "SC04_B": "OUT",
+          "SC04_C": "OUT",
+          "SC04_A_DEFEAT": "IN"
+        },
+        "retracted_dependencies": [
+          "SC04_B",
+          "SC04_C"
+        ],
+        "unaffected_in": [],
+        "history_count": 4,
+        "defeaters": {
+          "SC04_A": "SC04_A_DEFEAT",
+          "SC04_B": "SC04_A",
+          "SC04_C": "SC04_B"
+        }
+      }
+    },
+    {
+      "id": "SC05",
+      "name": "local_revision",
+      "description": "Contradiction in Subgraph 1 (P1 -> D1). Subgraph 2 (P2 -> D2) must remain strictly IN.",
+      "initial_assertions": [
+        {
+          "id": "SC05_P1",
+          "predicate": "PREFERS_THEME",
+          "arguments": [
+            "User01",
+            "DarkTheme"
+          ],
+          "polarity": true,
+          "conceiver": "User",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 1,
+          "justifications": []
+        },
+        {
+          "id": "SC05_D1",
+          "predicate": "RENDER_BACKGROUND",
+          "arguments": [
+            "UI",
+            "Hex1A1A1A"
+          ],
+          "polarity": true,
+          "conceiver": "LuciaInference",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 2,
+          "justifications": [
+            "SC05_P1"
+          ]
+        },
+        {
+          "id": "SC05_P2",
+          "predicate": "PRIMARY_LANGUAGE",
+          "arguments": [
+            "User01",
+            "Vietnamese"
+          ],
+          "polarity": true,
+          "conceiver": "User",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 3,
+          "justifications": []
+        },
+        {
+          "id": "SC05_D2",
+          "predicate": "LOCALE_CONFIG",
+          "arguments": [
+            "UI",
+            "vi-VN"
+          ],
+          "polarity": true,
+          "conceiver": "LuciaInference",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 4,
+          "justifications": [
+            "SC05_P2"
+          ]
+        }
+      ],
+      "updates": [
+        {
+          "id": "SC05_P1_UPDATE",
+          "predicate": "PREFERS_THEME",
+          "arguments": [
+            "User01",
+            "LightTheme"
+          ],
+          "polarity": true,
+          "conceiver": "User",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 5,
+          "justifications": []
+        }
+      ],
+      "expected_oracle": {
+        "contradictions": [
+          [
+            "SC05_P1",
+            "SC05_P1_UPDATE"
+          ]
+        ],
+        "final_states": {
+          "SC05_P1": "OUT",
+          "SC05_D1": "OUT",
+          "SC05_P1_UPDATE": "IN",
+          "SC05_P2": "IN",
+          "SC05_D2": "IN"
+        },
+        "retracted_dependencies": [
+          "SC05_D1"
+        ],
+        "unaffected_in": [
+          "SC05_P2",
+          "SC05_D2"
+        ],
+        "history_count": 5,
+        "defeaters": {
+          "SC05_P1": "SC05_P1_UPDATE",
+          "SC05_D1": "SC05_P1"
+        }
+      }
+    },
+    {
+      "id": "SC06",
+      "name": "temporal_conflict",
+      "description": "P true in [2023, 2024], NOT P true in [2025, 2026]. Disjoint valid times -> No contradiction.",
+      "initial_assertions": [
+        {
+          "id": "SC06_A1",
+          "predicate": "HAS_ROLE",
+          "arguments": [
+            "User01",
+            "JuniorDev"
+          ],
+          "polarity": true,
+          "conceiver": "User",
+          "valid_time": [
+            2023,
+            2024
+          ],
+          "tx_time": 1,
+          "justifications": []
+        }
+      ],
+      "updates": [
+        {
+          "id": "SC06_A2",
+          "predicate": "HAS_ROLE",
+          "arguments": [
+            "User01",
+            "JuniorDev"
+          ],
+          "polarity": false,
+          "conceiver": "User",
+          "valid_time": [
+            2025,
+            2026
+          ],
+          "tx_time": 2,
+          "justifications": []
+        }
+      ],
+      "expected_oracle": {
+        "contradictions": [],
+        "final_states": {
+          "SC06_A1": "IN",
+          "SC06_A2": "IN"
+        },
+        "retracted_dependencies": [],
+        "unaffected_in": [
+          "SC06_A1",
+          "SC06_A2"
+        ],
+        "history_count": 2,
+        "defeaters": {}
+      }
+    },
+    {
+      "id": "SC07",
+      "name": "same_interval_conflict",
+      "description": "P valid in [2026-01, 2026-12], NOT P valid in [2026-06, 2026-08]. Overlapping -> Contradiction.",
+      "initial_assertions": [
+        {
+          "id": "SC07_A1",
+          "predicate": "SUBSCRIPTION_STATUS",
+          "arguments": [
+            "User01",
+            "ActivePro"
+          ],
+          "polarity": true,
+          "conceiver": "BillingSystem",
+          "valid_time": [
+            100,
+            200
+          ],
+          "tx_time": 1,
+          "justifications": []
+        }
+      ],
+      "updates": [
+        {
+          "id": "SC07_A2",
+          "predicate": "SUBSCRIPTION_STATUS",
+          "arguments": [
+            "User01",
+            "ActivePro"
+          ],
+          "polarity": false,
+          "conceiver": "BillingSystem",
+          "valid_time": [
+            150,
+            180
+          ],
+          "tx_time": 2,
+          "justifications": []
+        }
+      ],
+      "expected_oracle": {
+        "contradictions": [
+          [
+            "SC07_A1",
+            "SC07_A2"
+          ]
+        ],
+        "final_states": {
+          "SC07_A1": "OUT",
+          "SC07_A2": "IN"
+        },
+        "retracted_dependencies": [],
+        "unaffected_in": [],
+        "history_count": 2,
+        "defeaters": {
+          "SC07_A1": "SC07_A2"
+        }
+      }
+    },
+    {
+      "id": "SC08",
+      "name": "historical_retention",
+      "description": "Belief retracted (OUT), but full provenance and assertion metadata preserved in ledger.",
+      "initial_assertions": [
+        {
+          "id": "SC08_A1",
+          "predicate": "PROJECT_DEADLINE",
+          "arguments": [
+            "LuciaP23",
+            "2026-10-01"
+          ],
+          "polarity": true,
+          "conceiver": "User",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 1,
+          "justifications": []
+        }
+      ],
+      "updates": [
+        {
+          "id": "SC08_A2",
+          "predicate": "PROJECT_DEADLINE",
+          "arguments": [
+            "LuciaP23",
+            "2026-11-15"
+          ],
+          "polarity": true,
+          "conceiver": "User",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 2,
+          "justifications": []
+        }
+      ],
+      "expected_oracle": {
+        "contradictions": [
+          [
+            "SC08_A1",
+            "SC08_A2"
+          ]
+        ],
+        "final_states": {
+          "SC08_A1": "OUT",
+          "SC08_A2": "IN"
+        },
+        "retracted_dependencies": [],
+        "unaffected_in": [],
+        "history_count": 2,
+        "defeaters": {
+          "SC08_A1": "SC08_A2"
+        }
+      }
+    },
+    {
+      "id": "SC09",
+      "name": "repeated_revision",
+      "description": "Repeated revision cycle: P1 -> NOT P2 -> P3. Tests complete state flip and provenance chain.",
+      "initial_assertions": [
+        {
+          "id": "SC09_P1",
+          "predicate": "CAN_EXECUTE_SCRIPTS",
+          "arguments": [
+            "AgentDaemon",
+            "True"
+          ],
+          "polarity": true,
+          "conceiver": "Admin",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 1,
+          "justifications": []
+        }
+      ],
+      "updates": [
+        {
+          "id": "SC09_P2",
+          "predicate": "CAN_EXECUTE_SCRIPTS",
+          "arguments": [
+            "AgentDaemon",
+            "True"
+          ],
+          "polarity": false,
+          "conceiver": "Admin",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 2,
+          "justifications": []
+        },
+        {
+          "id": "SC09_P3",
+          "predicate": "CAN_EXECUTE_SCRIPTS",
+          "arguments": [
+            "AgentDaemon",
+            "True"
+          ],
+          "polarity": true,
+          "conceiver": "Admin",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 3,
+          "justifications": []
+        }
+      ],
+      "expected_oracle": {
+        "contradictions": [
+          [
+            "SC09_P1",
+            "SC09_P2"
+          ],
+          [
+            "SC09_P2",
+            "SC09_P3"
+          ]
+        ],
+        "final_states": {
+          "SC09_P1": "OUT",
+          "SC09_P2": "OUT",
+          "SC09_P3": "IN"
+        },
+        "retracted_dependencies": [],
+        "unaffected_in": [],
+        "history_count": 3,
+        "defeaters": {
+          "SC09_P1": "SC09_P2",
+          "SC09_P2": "SC09_P3"
+        }
+      }
+    },
+    {
+      "id": "SC10",
+      "name": "irrelevant_subgraph",
+      "description": "50 independent background assertions present. Contradiction in target premise must yield CRR=0.",
+      "initial_assertions": [
+        {
+          "id": "SC10_TARGET_P",
+          "predicate": "AUDIO_OUTPUT_DEVICE",
+          "arguments": [
+            "System",
+            "Speakers"
+          ],
+          "polarity": true,
+          "conceiver": "User",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 1,
+          "justifications": []
+        },
+        {
+          "id": "SC10_TARGET_D",
+          "predicate": "SAMPLING_RATE",
+          "arguments": [
+            "System",
+            "48000Hz"
+          ],
+          "polarity": true,
+          "conceiver": "LuciaInference",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 2,
+          "justifications": [
+            "SC10_TARGET_P"
+          ]
+        },
+        {
+          "id": "SC10_BG_00",
+          "predicate": "BACKGROUND_FACT_00",
+          "arguments": [
+            "Entity_00",
+            "Value_00"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 3,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_01",
+          "predicate": "BACKGROUND_FACT_01",
+          "arguments": [
+            "Entity_01",
+            "Value_01"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 4,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_02",
+          "predicate": "BACKGROUND_FACT_02",
+          "arguments": [
+            "Entity_02",
+            "Value_02"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 5,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_03",
+          "predicate": "BACKGROUND_FACT_03",
+          "arguments": [
+            "Entity_03",
+            "Value_03"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 6,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_04",
+          "predicate": "BACKGROUND_FACT_04",
+          "arguments": [
+            "Entity_04",
+            "Value_04"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 7,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_05",
+          "predicate": "BACKGROUND_FACT_05",
+          "arguments": [
+            "Entity_05",
+            "Value_05"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 8,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_06",
+          "predicate": "BACKGROUND_FACT_06",
+          "arguments": [
+            "Entity_06",
+            "Value_06"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 9,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_07",
+          "predicate": "BACKGROUND_FACT_07",
+          "arguments": [
+            "Entity_07",
+            "Value_07"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 10,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_08",
+          "predicate": "BACKGROUND_FACT_08",
+          "arguments": [
+            "Entity_08",
+            "Value_08"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 11,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_09",
+          "predicate": "BACKGROUND_FACT_09",
+          "arguments": [
+            "Entity_09",
+            "Value_09"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 12,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_10",
+          "predicate": "BACKGROUND_FACT_10",
+          "arguments": [
+            "Entity_10",
+            "Value_10"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 13,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_11",
+          "predicate": "BACKGROUND_FACT_11",
+          "arguments": [
+            "Entity_11",
+            "Value_11"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 14,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_12",
+          "predicate": "BACKGROUND_FACT_12",
+          "arguments": [
+            "Entity_12",
+            "Value_12"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 15,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_13",
+          "predicate": "BACKGROUND_FACT_13",
+          "arguments": [
+            "Entity_13",
+            "Value_13"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 16,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_14",
+          "predicate": "BACKGROUND_FACT_14",
+          "arguments": [
+            "Entity_14",
+            "Value_14"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 17,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_15",
+          "predicate": "BACKGROUND_FACT_15",
+          "arguments": [
+            "Entity_15",
+            "Value_15"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 18,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_16",
+          "predicate": "BACKGROUND_FACT_16",
+          "arguments": [
+            "Entity_16",
+            "Value_16"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 19,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_17",
+          "predicate": "BACKGROUND_FACT_17",
+          "arguments": [
+            "Entity_17",
+            "Value_17"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 20,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_18",
+          "predicate": "BACKGROUND_FACT_18",
+          "arguments": [
+            "Entity_18",
+            "Value_18"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 21,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_19",
+          "predicate": "BACKGROUND_FACT_19",
+          "arguments": [
+            "Entity_19",
+            "Value_19"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 22,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_20",
+          "predicate": "BACKGROUND_FACT_20",
+          "arguments": [
+            "Entity_20",
+            "Value_20"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 23,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_21",
+          "predicate": "BACKGROUND_FACT_21",
+          "arguments": [
+            "Entity_21",
+            "Value_21"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 24,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_22",
+          "predicate": "BACKGROUND_FACT_22",
+          "arguments": [
+            "Entity_22",
+            "Value_22"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 25,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_23",
+          "predicate": "BACKGROUND_FACT_23",
+          "arguments": [
+            "Entity_23",
+            "Value_23"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 26,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_24",
+          "predicate": "BACKGROUND_FACT_24",
+          "arguments": [
+            "Entity_24",
+            "Value_24"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 27,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_25",
+          "predicate": "BACKGROUND_FACT_25",
+          "arguments": [
+            "Entity_25",
+            "Value_25"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 28,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_26",
+          "predicate": "BACKGROUND_FACT_26",
+          "arguments": [
+            "Entity_26",
+            "Value_26"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 29,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_27",
+          "predicate": "BACKGROUND_FACT_27",
+          "arguments": [
+            "Entity_27",
+            "Value_27"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 30,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_28",
+          "predicate": "BACKGROUND_FACT_28",
+          "arguments": [
+            "Entity_28",
+            "Value_28"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 31,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_29",
+          "predicate": "BACKGROUND_FACT_29",
+          "arguments": [
+            "Entity_29",
+            "Value_29"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 32,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_30",
+          "predicate": "BACKGROUND_FACT_30",
+          "arguments": [
+            "Entity_30",
+            "Value_30"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 33,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_31",
+          "predicate": "BACKGROUND_FACT_31",
+          "arguments": [
+            "Entity_31",
+            "Value_31"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 34,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_32",
+          "predicate": "BACKGROUND_FACT_32",
+          "arguments": [
+            "Entity_32",
+            "Value_32"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 35,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_33",
+          "predicate": "BACKGROUND_FACT_33",
+          "arguments": [
+            "Entity_33",
+            "Value_33"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 36,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_34",
+          "predicate": "BACKGROUND_FACT_34",
+          "arguments": [
+            "Entity_34",
+            "Value_34"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 37,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_35",
+          "predicate": "BACKGROUND_FACT_35",
+          "arguments": [
+            "Entity_35",
+            "Value_35"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 38,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_36",
+          "predicate": "BACKGROUND_FACT_36",
+          "arguments": [
+            "Entity_36",
+            "Value_36"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 39,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_37",
+          "predicate": "BACKGROUND_FACT_37",
+          "arguments": [
+            "Entity_37",
+            "Value_37"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 40,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_38",
+          "predicate": "BACKGROUND_FACT_38",
+          "arguments": [
+            "Entity_38",
+            "Value_38"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 41,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_39",
+          "predicate": "BACKGROUND_FACT_39",
+          "arguments": [
+            "Entity_39",
+            "Value_39"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 42,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_40",
+          "predicate": "BACKGROUND_FACT_40",
+          "arguments": [
+            "Entity_40",
+            "Value_40"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 43,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_41",
+          "predicate": "BACKGROUND_FACT_41",
+          "arguments": [
+            "Entity_41",
+            "Value_41"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 44,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_42",
+          "predicate": "BACKGROUND_FACT_42",
+          "arguments": [
+            "Entity_42",
+            "Value_42"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 45,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_43",
+          "predicate": "BACKGROUND_FACT_43",
+          "arguments": [
+            "Entity_43",
+            "Value_43"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 46,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_44",
+          "predicate": "BACKGROUND_FACT_44",
+          "arguments": [
+            "Entity_44",
+            "Value_44"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 47,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_45",
+          "predicate": "BACKGROUND_FACT_45",
+          "arguments": [
+            "Entity_45",
+            "Value_45"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 48,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_46",
+          "predicate": "BACKGROUND_FACT_46",
+          "arguments": [
+            "Entity_46",
+            "Value_46"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 49,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_47",
+          "predicate": "BACKGROUND_FACT_47",
+          "arguments": [
+            "Entity_47",
+            "Value_47"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 50,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_48",
+          "predicate": "BACKGROUND_FACT_48",
+          "arguments": [
+            "Entity_48",
+            "Value_48"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 51,
+          "justifications": []
+        },
+        {
+          "id": "SC10_BG_49",
+          "predicate": "BACKGROUND_FACT_49",
+          "arguments": [
+            "Entity_49",
+            "Value_49"
+          ],
+          "polarity": true,
+          "conceiver": "SystemSeed",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 52,
+          "justifications": []
+        }
+      ],
+      "updates": [
+        {
+          "id": "SC10_TARGET_DEFEAT",
+          "predicate": "AUDIO_OUTPUT_DEVICE",
+          "arguments": [
+            "System",
+            "Headphones"
+          ],
+          "polarity": true,
+          "conceiver": "User",
+          "valid_time": [
+            0,
+            100
+          ],
+          "tx_time": 55,
+          "justifications": []
+        }
+      ],
+      "expected_oracle": {
+        "contradictions": [
+          [
+            "SC10_TARGET_P",
+            "SC10_TARGET_DEFEAT"
+          ]
+        ],
+        "final_states": {
+          "SC10_TARGET_P": "OUT",
+          "SC10_TARGET_D": "OUT",
+          "SC10_TARGET_DEFEAT": "IN",
+          "SC10_BG_00": "IN",
+          "SC10_BG_01": "IN",
+          "SC10_BG_02": "IN",
+          "SC10_BG_03": "IN",
+          "SC10_BG_04": "IN",
+          "SC10_BG_05": "IN",
+          "SC10_BG_06": "IN",
+          "SC10_BG_07": "IN",
+          "SC10_BG_08": "IN",
+          "SC10_BG_09": "IN",
+          "SC10_BG_10": "IN",
+          "SC10_BG_11": "IN",
+          "SC10_BG_12": "IN",
+          "SC10_BG_13": "IN",
+          "SC10_BG_14": "IN",
+          "SC10_BG_15": "IN",
+          "SC10_BG_16": "IN",
+          "SC10_BG_17": "IN",
+          "SC10_BG_18": "IN",
+          "SC10_BG_19": "IN",
+          "SC10_BG_20": "IN",
+          "SC10_BG_21": "IN",
+          "SC10_BG_22": "IN",
+          "SC10_BG_23": "IN",
+          "SC10_BG_24": "IN",
+          "SC10_BG_25": "IN",
+          "SC10_BG_26": "IN",
+          "SC10_BG_27": "IN",
+          "SC10_BG_28": "IN",
+          "SC10_BG_29": "IN",
+          "SC10_BG_30": "IN",
+          "SC10_BG_31": "IN",
+          "SC10_BG_32": "IN",
+          "SC10_BG_33": "IN",
+          "SC10_BG_34": "IN",
+          "SC10_BG_35": "IN",
+          "SC10_BG_36": "IN",
+          "SC10_BG_37": "IN",
+          "SC10_BG_38": "IN",
+          "SC10_BG_39": "IN",
+          "SC10_BG_40": "IN",
+          "SC10_BG_41": "IN",
+          "SC10_BG_42": "IN",
+          "SC10_BG_43": "IN",
+          "SC10_BG_44": "IN",
+          "SC10_BG_45": "IN",
+          "SC10_BG_46": "IN",
+          "SC10_BG_47": "IN",
+          "SC10_BG_48": "IN",
+          "SC10_BG_49": "IN"
+        },
+        "retracted_dependencies": [
+          "SC10_TARGET_D"
+        ],
+        "unaffected_in": [
+          "SC10_BG_00",
+          "SC10_BG_01",
+          "SC10_BG_02",
+          "SC10_BG_03",
+          "SC10_BG_04",
+          "SC10_BG_05",
+          "SC10_BG_06",
+          "SC10_BG_07",
+          "SC10_BG_08",
+          "SC10_BG_09",
+          "SC10_BG_10",
+          "SC10_BG_11",
+          "SC10_BG_12",
+          "SC10_BG_13",
+          "SC10_BG_14",
+          "SC10_BG_15",
+          "SC10_BG_16",
+          "SC10_BG_17",
+          "SC10_BG_18",
+          "SC10_BG_19",
+          "SC10_BG_20",
+          "SC10_BG_21",
+          "SC10_BG_22",
+          "SC10_BG_23",
+          "SC10_BG_24",
+          "SC10_BG_25",
+          "SC10_BG_26",
+          "SC10_BG_27",
+          "SC10_BG_28",
+          "SC10_BG_29",
+          "SC10_BG_30",
+          "SC10_BG_31",
+          "SC10_BG_32",
+          "SC10_BG_33",
+          "SC10_BG_34",
+          "SC10_BG_35",
+          "SC10_BG_36",
+          "SC10_BG_37",
+          "SC10_BG_38",
+          "SC10_BG_39",
+          "SC10_BG_40",
+          "SC10_BG_41",
+          "SC10_BG_42",
+          "SC10_BG_43",
+          "SC10_BG_44",
+          "SC10_BG_45",
+          "SC10_BG_46",
+          "SC10_BG_47",
+          "SC10_BG_48",
+          "SC10_BG_49"
+        ],
+        "history_count": 53,
+        "defeaters": {
+          "SC10_TARGET_P": "SC10_TARGET_DEFEAT",
+          "SC10_TARGET_D": "SC10_TARGET_P"
+        }
+      }
+    }
+  ]
+}
