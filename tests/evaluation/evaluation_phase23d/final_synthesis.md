@@ -11,7 +11,7 @@
 ## 1. Executive Summary & Evaluation Mission
 
 Phase 23-D evaluated candidate architectures for Lucia's language-independent semantic layer across six pre-registered experimental tracks:
-- **EXP-01:** Compositionality & Recursion (Depth scaling $D \in [1, 5]$)
+- **EXP-01:** Compositionality & Recursion (Depth scaling $D \in [1, 4]$)
 - **EXP-02:** Cross-Lingual Semantic Convergence (English, Japanese, Vietnamese parallel frames)
 - **EXP-03:** Reference Resolution & Zero-Anaphora (Overt pronouns, pro-drop, kinship deixis)
 - **EXP-04:** Belief Revision & Contradiction (Non-monotonic JTMS dependency retraction, bitemporal auditing)
@@ -32,8 +32,8 @@ The following matrix consolidates empirical measurements across all six Phase 23
 
 | Capability | EXP | UMR-TPG | V-UMR | DRS-Graph | Evidence Boundary |
 |---|---|---|---|---|---|
-| **Compositionality** | EXP-01 | **PASS** (100% role-binding at $D \le 5$) | **PASS** (100% role-binding at $D \le 5$) | **PASS** (100% box nesting at $D \le 5$) | Evaluated on structured proposition trees ($D=1..5$); HDC-pure collapsed ($\text{SPRR}=0.0, \text{BER}=1.0$) |
-| **Recursion** | EXP-01 | **PASS** ($RF_D = 1.000$ at $D \le 5$) | **PASS** ($RF_D = 1.000$ at $D \le 5$) | **PASS** ($RF_D = 1.000$ at $D \le 5$) | Syntactic/semantic tree depth scaling without representation degradation |
+| **Compositionality** | EXP-01 | **PASS** (100% role-binding at $D \le 4$) | **PASS** (100% role-binding at $D \le 4$) | **PASS** (100% box nesting at $D \le 4$) | Evaluated on structured proposition trees ($D=1..4$); HDC-pure collapsed ($\text{SPRR}=0.0, \text{BER}=1.0$) |
+| **Recursion** | EXP-01 | **PASS** ($RF_D = 1.000$ at $D \le 4$) | **PASS** ($RF_D = 1.000$ at $D \le 4$) | **PASS** ($RF_D = 1.000$ at $D \le 4$) | Syntactic/semantic tree depth scaling without representation degradation |
 | **Cross-Lingual Representation** | EXP-02 | **PASS** (Oracle $\text{SQI} = 1.000$) | **PASS** (Oracle $\text{SQI} = 1.000$) | **PASS** (Oracle $\text{SQI} = 1.000$) | Parallel semantic frames (EN/JA/VI); topology varies while functional meaning is equivalent |
 | **Surface Transduction** | EXP-02 | **Rule-Based $\text{SQI} = 0.887$** | **Rule-Based $\text{SQI} = 0.887$** | **Rule-Based $\text{SQI} = 0.887$** | Rule-based transducers exhibit inherent cross-lingual lexical/classifier limitations; open-domain NLU unverified |
 | **Coreference** | EXP-03 | **PASS** ($\text{CEAF}_e = 1.000, \text{EPR} = 1.000$) | **PASS** ($\text{CEAF}_e = 1.000, \text{EPR} = 1.000$) | **PASS** ($\text{CEAF}_e = 1.000, \text{EPR} = 1.000$) | Discourse entity ledger maintains identity across 5-sentence chains without chain splitting |
@@ -66,10 +66,10 @@ The following hypotheses were experimentally tested and **falsified** under the 
 - **Causal Mechanism:** When only acoustic prosody was observed without valence indicators (e.g. `SM_AC_01`), unconstrained Euclidean centroid distance in $\mathbb{R}^{32}$ projected identically onto multimodal `STATE_ALARM` and unimodal `PROSODY_AGITATED`. Without symbolic guardrails, continuous metric proximity produced false multimodal over-attribution.
 
 ### 3. HDC-Pure Primary-Substrate Hypothesis (EXP-01)
-- **Pre-Registered Gate:** Subgraph Pattern Retrieval Precision ($\text{SPRR}$) $\ge 0.80$, Binding Error Rate ($\text{BER}$) $\le 0.10$ across recursion depths $D \in [1, 5]$.
+- **Pre-Registered Gate:** Subgraph Pattern Retrieval Precision ($\text{SPRR}$) $\ge 0.80$, Binding Error Rate ($\text{BER}$) $\le 0.10$ across recursion depths $D \in [1, 4]$.
 - **Empirical Measurement:** **$\text{SPRR} = 0.000$** across $D=1 \dots 4$, **$\text{BER} = 1.000$**.
 - **Verdict:** **`FAIL` (Falsified)**.
-- **Causal Mechanism:** Dense hypervector superposition suffers exponential crosstalk noise and catastrophic clean-up memory degradation during deep unbinding. Pure vector superposition cannot serve as the primary persistent compositional semantic substrate.
+- **Causal Mechanism:** Dense hypervector superposition suffers crosstalk accumulation under superposition and catastrophic clean-up memory degradation during deep unbinding. Pure vector superposition cannot serve as the primary persistent compositional semantic substrate.
 
 ---
 
@@ -149,7 +149,7 @@ The empirical evidence establishes the following candidate-specific dispositions
 
 1. **Capabilities Demonstrated:**  
    Controlled evaluations provide empirical evidence that graph-based semantic substrates can:
-   - represent nested propositions up to depth $D=5$ without role confusion;
+   - represent nested propositions up to depth $D=4$ without role confusion;
    - preserve functionally equivalent meaning across English, Japanese, and Vietnamese representations;
    - track persistent discourse referents and conservative zero-anaphora without hallucinating antecedents;
    - execute non-monotonic belief revisions and multi-hop dependency retractions in $\le 0.036\text{ ms}$;
