@@ -1,0 +1,794 @@
+{
+  "C1": {
+    "candidate_id": "C1",
+    "name": "Lightweight Multilingual Sentence Encoder",
+    "parameter_budget": "20M-40M",
+    "sample_count": 1800,
+    "calibration": {
+      "ece": 0.2366666666666665,
+      "brier": 1.4917700797771052,
+      "nll": 0.3345615389534611,
+      "mean_confidence": 0.63,
+      "accuracy": 0.8077777777777778
+    },
+    "alignment": {
+      "r2": -0.8507283700521262,
+      "mae": 0.18265649210279666,
+      "mse": 0.05634737701879384,
+      "per_language_r2": {
+        "English": -0.8472307744921055,
+        "Vietnamese": -0.8768673273133825,
+        "Japanese": -0.8280870083508909
+      },
+      "vi_en_ratio": 0.0,
+      "ja_en_ratio": 0.0
+    },
+    "temporal_stability": {
+      "mean_flapping_rate": 0.629872596297711,
+      "contradiction_recovery_turns": 1.0666666666666667
+    },
+    "trajectory_forecasting": {
+      "coverage_h1": 0.9555555555555556,
+      "coverage_h2": 1.0
+    },
+    "latency_ms": {
+      "encoder": {
+        "p50": 23.2258384766593,
+        "p95": 26.737569003989073,
+        "p99": 27.120386452094138
+      },
+      "projection": {
+        "p50": 0.08759999764151871,
+        "p95": 0.14090502372710034,
+        "p99": 0.16370299505069852
+      },
+      "filter": {
+        "p50": 0.17370001296512783,
+        "p95": 0.2623150168801658,
+        "p99": 0.3108050092123449
+      },
+      "total_pipeline": {
+        "p50": 23.51889037328267,
+        "p95": 27.001139635619825,
+        "p99": 27.461503192505248
+      }
+    },
+    "resources": {
+      "peak_ram_mb": 180.0,
+      "gpu_vram_mb": 0.0,
+      "execution_mode": "CPU_LOCAL"
+    },
+    "gates": {
+      "G_CALIB_ECE": "FAIL",
+      "G_CALIB_BRIER": "FAIL",
+      "G_ALIGN_R2": "FAIL",
+      "G_ALIGN_MAE": "PASS",
+      "G_STAB_FLAPPING": "FAIL",
+      "G_STAB_RECOVERY": "FAIL",
+      "G_LAT_CPU_P50": "PASS",
+      "G_LAT_TOTAL_P50": "PASS",
+      "G_RES_RAM": "PASS",
+      "G_RES_GPU_VRAM": "PASS",
+      "G_MULTI_VI": "FAIL",
+      "G_MULTI_JA": "FAIL"
+    },
+    "overall_status": "FAIL",
+    "provenance_samples": [
+      {
+        "candidate_id": "C1",
+        "implementation_revision": "olr-eval-v1.0",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "paraphrase-multilingual-MiniLM-L12-v2",
+        "execution_mode": "CPU_LOCAL_ISOLATED",
+        "weights_provenance": "PARAPHRASE_MULTILINGUAL_MINILM_EMBEDDINGS",
+        "timestamp_iso": "2026-09-24T18:55:49.864170+00:00"
+      },
+      {
+        "candidate_id": "C1",
+        "implementation_revision": "olr-eval-v1.0",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "paraphrase-multilingual-MiniLM-L12-v2",
+        "execution_mode": "CPU_LOCAL_ISOLATED",
+        "weights_provenance": "PARAPHRASE_MULTILINGUAL_MINILM_EMBEDDINGS",
+        "timestamp_iso": "2026-09-24T18:55:49.870008+00:00"
+      },
+      {
+        "candidate_id": "C1",
+        "implementation_revision": "olr-eval-v1.0",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "paraphrase-multilingual-MiniLM-L12-v2",
+        "execution_mode": "CPU_LOCAL_ISOLATED",
+        "weights_provenance": "PARAPHRASE_MULTILINGUAL_MINILM_EMBEDDINGS",
+        "timestamp_iso": "2026-09-24T18:55:49.871764+00:00"
+      },
+      {
+        "candidate_id": "C1",
+        "implementation_revision": "olr-eval-v1.0",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "paraphrase-multilingual-MiniLM-L12-v2",
+        "execution_mode": "CPU_LOCAL_ISOLATED",
+        "weights_provenance": "PARAPHRASE_MULTILINGUAL_MINILM_EMBEDDINGS",
+        "timestamp_iso": "2026-09-24T18:55:49.873391+00:00"
+      },
+      {
+        "candidate_id": "C1",
+        "implementation_revision": "olr-eval-v1.0",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "paraphrase-multilingual-MiniLM-L12-v2",
+        "execution_mode": "CPU_LOCAL_ISOLATED",
+        "weights_provenance": "PARAPHRASE_MULTILINGUAL_MINILM_EMBEDDINGS",
+        "timestamp_iso": "2026-09-24T18:55:49.875092+00:00"
+      }
+    ]
+  },
+  "C2": {
+    "candidate_id": "C2",
+    "name": "Distilled Semantic Encoder",
+    "parameter_budget": "15M-60M",
+    "sample_count": 1800,
+    "calibration": {
+      "ece": 0.20466666666666666,
+      "brier": 1.6548468215837029,
+      "nll": 0.3281770704803208,
+      "mean_confidence": 0.6391111111111112,
+      "accuracy": 0.7988888888888889
+    },
+    "alignment": {
+      "r2": -0.5161377530596702,
+      "mae": 0.15350086812814362,
+      "mse": 0.04616041282258727,
+      "per_language_r2": {
+        "English": -0.532752909136784,
+        "Vietnamese": -0.5274833729567601,
+        "Japanese": -0.4881769770854669
+      },
+      "vi_en_ratio": 0.0,
+      "ja_en_ratio": 0.0
+    },
+    "temporal_stability": {
+      "mean_flapping_rate": 0.40583718130671653,
+      "contradiction_recovery_turns": 3.3
+    },
+    "trajectory_forecasting": {
+      "coverage_h1": 0.9555555555555556,
+      "coverage_h2": 1.0
+    },
+    "latency_ms": {
+      "encoder": {
+        "p50": 29.28177120590771,
+        "p95": 34.60384707668178,
+        "p99": 35.04403724900248
+      },
+      "projection": {
+        "p50": 0.05649999366141856,
+        "p95": 0.09450502111576498,
+        "p99": 0.11110100196674466
+      },
+      "filter": {
+        "p50": 0.1661500136833638,
+        "p95": 0.2285099937580526,
+        "p99": 0.27452199487015605
+      },
+      "total_pipeline": {
+        "p50": 29.50641631909766,
+        "p95": 34.83140848736439,
+        "p99": 35.25116838507015
+      }
+    },
+    "resources": {
+      "peak_ram_mb": 220.0,
+      "gpu_vram_mb": 0.0,
+      "execution_mode": "CPU_LOCAL"
+    },
+    "gates": {
+      "G_CALIB_ECE": "FAIL",
+      "G_CALIB_BRIER": "FAIL",
+      "G_ALIGN_R2": "FAIL",
+      "G_ALIGN_MAE": "PASS",
+      "G_STAB_FLAPPING": "FAIL",
+      "G_STAB_RECOVERY": "FAIL",
+      "G_LAT_CPU_P50": "PASS",
+      "G_LAT_TOTAL_P50": "PASS",
+      "G_RES_RAM": "PASS",
+      "G_RES_GPU_VRAM": "PASS",
+      "G_MULTI_VI": "FAIL",
+      "G_MULTI_JA": "FAIL"
+    },
+    "overall_status": "FAIL",
+    "provenance_samples": [
+      {
+        "candidate_id": "C2",
+        "implementation_revision": "olr-eval-v1.0",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "Distil-ModernBERT-Conversational-25M",
+        "execution_mode": "CPU_LOCAL_ISOLATED",
+        "weights_provenance": "DISTIL_MODERNBERT_CONVERSATIONAL_CALIBRATED",
+        "timestamp_iso": "2026-09-24T18:55:53.017735+00:00"
+      },
+      {
+        "candidate_id": "C2",
+        "implementation_revision": "olr-eval-v1.0",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "Distil-ModernBERT-Conversational-25M",
+        "execution_mode": "CPU_LOCAL_ISOLATED",
+        "weights_provenance": "DISTIL_MODERNBERT_CONVERSATIONAL_CALIBRATED",
+        "timestamp_iso": "2026-09-24T18:55:53.019707+00:00"
+      },
+      {
+        "candidate_id": "C2",
+        "implementation_revision": "olr-eval-v1.0",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "Distil-ModernBERT-Conversational-25M",
+        "execution_mode": "CPU_LOCAL_ISOLATED",
+        "weights_provenance": "DISTIL_MODERNBERT_CONVERSATIONAL_CALIBRATED",
+        "timestamp_iso": "2026-09-24T18:55:53.021204+00:00"
+      },
+      {
+        "candidate_id": "C2",
+        "implementation_revision": "olr-eval-v1.0",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "Distil-ModernBERT-Conversational-25M",
+        "execution_mode": "CPU_LOCAL_ISOLATED",
+        "weights_provenance": "DISTIL_MODERNBERT_CONVERSATIONAL_CALIBRATED",
+        "timestamp_iso": "2026-09-24T18:55:53.022682+00:00"
+      },
+      {
+        "candidate_id": "C2",
+        "implementation_revision": "olr-eval-v1.0",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "Distil-ModernBERT-Conversational-25M",
+        "execution_mode": "CPU_LOCAL_ISOLATED",
+        "weights_provenance": "DISTIL_MODERNBERT_CONVERSATIONAL_CALIBRATED",
+        "timestamp_iso": "2026-09-24T18:55:53.024060+00:00"
+      }
+    ]
+  },
+  "C3": {
+    "candidate_id": "C3",
+    "name": "Audio-First Acoustic/Prosodic Encoder",
+    "parameter_budget": "<1M",
+    "sample_count": 1800,
+    "calibration": {
+      "ece": 0.050000000000000044,
+      "brier": 1.8941125300154187,
+      "nll": 0.1751101287261358,
+      "mean_confidence": 0.75,
+      "accuracy": 0.8
+    },
+    "alignment": {
+      "r2": -3.4698161463970996,
+      "mae": 0.2918091161346819,
+      "mse": 0.1360882664799891,
+      "per_language_r2": {
+        "English": -3.4698161463971005,
+        "Vietnamese": -3.4698161463971005,
+        "Japanese": -3.4698161463971005
+      },
+      "vi_en_ratio": 0.0,
+      "ja_en_ratio": 0.0
+    },
+    "temporal_stability": {
+      "mean_flapping_rate": 0.6674783509230993,
+      "contradiction_recovery_turns": 5.0
+    },
+    "trajectory_forecasting": {
+      "coverage_h1": 0.9,
+      "coverage_h2": 1.0
+    },
+    "latency_ms": {
+      "encoder": {
+        "p50": 3.8207042844569967,
+        "p95": 4.921790893122014,
+        "p99": 5.015382765769894
+      },
+      "projection": {
+        "p50": 0.00790000194683671,
+        "p95": 0.0109999964479357,
+        "p99": 0.01360501599265262
+      },
+      "filter": {
+        "p50": 0.11079999967478216,
+        "p95": 0.15670499997213483,
+        "p99": 0.19311298616230488
+      },
+      "total_pipeline": {
+        "p50": 3.9430412607619942,
+        "p95": 5.057536944897539,
+        "p99": 5.142347041732089
+      }
+    },
+    "resources": {
+      "peak_ram_mb": 45.0,
+      "gpu_vram_mb": 0.0,
+      "execution_mode": "CPU_LOCAL"
+    },
+    "gates": {
+      "G_CALIB_ECE": "PASS",
+      "G_CALIB_BRIER": "FAIL",
+      "G_ALIGN_R2": "FAIL",
+      "G_ALIGN_MAE": "PASS",
+      "G_STAB_FLAPPING": "FAIL",
+      "G_STAB_RECOVERY": "FAIL",
+      "G_LAT_CPU_P50": "PASS",
+      "G_LAT_TOTAL_P50": "PASS",
+      "G_RES_RAM": "PASS",
+      "G_RES_GPU_VRAM": "PASS",
+      "G_MULTI_VI": "FAIL",
+      "G_MULTI_JA": "FAIL"
+    },
+    "overall_status": "FAIL",
+    "provenance_samples": [
+      {
+        "candidate_id": "C3",
+        "implementation_revision": "olr-eval-v1.0",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "Acoustic-DSP-Prosodic-Extractor",
+        "execution_mode": "CPU_LOCAL_ISOLATED",
+        "weights_provenance": "AUDIO_DSP_PROSODIC_6D",
+        "timestamp_iso": "2026-09-24T18:55:56.060145+00:00"
+      },
+      {
+        "candidate_id": "C3",
+        "implementation_revision": "olr-eval-v1.0",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "Acoustic-DSP-Prosodic-Extractor",
+        "execution_mode": "CPU_LOCAL_ISOLATED",
+        "weights_provenance": "AUDIO_DSP_PROSODIC_6D",
+        "timestamp_iso": "2026-09-24T18:55:56.060538+00:00"
+      },
+      {
+        "candidate_id": "C3",
+        "implementation_revision": "olr-eval-v1.0",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "Acoustic-DSP-Prosodic-Extractor",
+        "execution_mode": "CPU_LOCAL_ISOLATED",
+        "weights_provenance": "AUDIO_DSP_PROSODIC_6D",
+        "timestamp_iso": "2026-09-24T18:55:56.060879+00:00"
+      },
+      {
+        "candidate_id": "C3",
+        "implementation_revision": "olr-eval-v1.0",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "Acoustic-DSP-Prosodic-Extractor",
+        "execution_mode": "CPU_LOCAL_ISOLATED",
+        "weights_provenance": "AUDIO_DSP_PROSODIC_6D",
+        "timestamp_iso": "2026-09-24T18:55:56.061216+00:00"
+      },
+      {
+        "candidate_id": "C3",
+        "implementation_revision": "olr-eval-v1.0",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "Acoustic-DSP-Prosodic-Extractor",
+        "execution_mode": "CPU_LOCAL_ISOLATED",
+        "weights_provenance": "AUDIO_DSP_PROSODIC_6D",
+        "timestamp_iso": "2026-09-24T18:55:56.061685+00:00"
+      }
+    ]
+  },
+  "C4": {
+    "candidate_id": "C4",
+    "name": "Hybrid Multimodal Observation",
+    "parameter_budget": "25M-50M",
+    "sample_count": 1800,
+    "calibration": {
+      "ece": 0.12839215686274508,
+      "brier": 1.695426333217059,
+      "nll": 0.25039057806796666,
+      "mean_confidence": 0.8009411764705882,
+      "accuracy": 0.8266666666666667
+    },
+    "alignment": {
+      "r2": -0.7522801863760706,
+      "mae": 0.18840578334800853,
+      "mse": 0.05335001824255488,
+      "per_language_r2": {
+        "English": -0.7534540777206689,
+        "Vietnamese": -0.7590897561367282,
+        "Japanese": -0.7442967252708148
+      },
+      "vi_en_ratio": 0.0,
+      "ja_en_ratio": 0.0
+    },
+    "temporal_stability": {
+      "mean_flapping_rate": 0.6835397532623015,
+      "contradiction_recovery_turns": 2.6333333333333333
+    },
+    "trajectory_forecasting": {
+      "coverage_h1": 0.9444444444444444,
+      "coverage_h2": 1.0
+    },
+    "latency_ms": {
+      "encoder": {
+        "p50": 27.742994132244675,
+        "p95": 31.60713370576827,
+        "p99": 32.467522419925565
+      },
+      "projection": {
+        "p50": 0.005999987479299307,
+        "p95": 0.008300004992634058,
+        "p99": 0.010099989885929972
+      },
+      "filter": {
+        "p50": 0.1642499992158264,
+        "p95": 0.2327199967112392,
+        "p99": 0.28010397945763543
+      },
+      "total_pipeline": {
+        "p50": 27.915309996148547,
+        "p95": 31.784843360623437,
+        "p99": 32.60907960486724
+      }
+    },
+    "resources": {
+      "peak_ram_mb": 250.0,
+      "gpu_vram_mb": 0.0,
+      "execution_mode": "CPU_LOCAL"
+    },
+    "gates": {
+      "G_CALIB_ECE": "PASS",
+      "G_CALIB_BRIER": "FAIL",
+      "G_ALIGN_R2": "FAIL",
+      "G_ALIGN_MAE": "PASS",
+      "G_STAB_FLAPPING": "FAIL",
+      "G_STAB_RECOVERY": "FAIL",
+      "G_LAT_CPU_P50": "PASS",
+      "G_LAT_TOTAL_P50": "PASS",
+      "G_RES_RAM": "PASS",
+      "G_RES_GPU_VRAM": "PASS",
+      "G_MULTI_VI": "FAIL",
+      "G_MULTI_JA": "FAIL"
+    },
+    "overall_status": "FAIL",
+    "provenance_samples": [
+      {
+        "candidate_id": "C4",
+        "implementation_revision": "olr-eval-v1.0",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "Hybrid-Multimodal-Fusion-MiniLM-DSP",
+        "execution_mode": "CPU_LOCAL_ISOLATED",
+        "weights_provenance": "MULTIMODAL_FUSION_TEXT_AUDIO",
+        "timestamp_iso": "2026-09-24T18:55:56.788392+00:00"
+      },
+      {
+        "candidate_id": "C4",
+        "implementation_revision": "olr-eval-v1.0",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "Hybrid-Multimodal-Fusion-MiniLM-DSP",
+        "execution_mode": "CPU_LOCAL_ISOLATED",
+        "weights_provenance": "MULTIMODAL_FUSION_TEXT_AUDIO",
+        "timestamp_iso": "2026-09-24T18:55:56.790112+00:00"
+      },
+      {
+        "candidate_id": "C4",
+        "implementation_revision": "olr-eval-v1.0",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "Hybrid-Multimodal-Fusion-MiniLM-DSP",
+        "execution_mode": "CPU_LOCAL_ISOLATED",
+        "weights_provenance": "MULTIMODAL_FUSION_TEXT_AUDIO",
+        "timestamp_iso": "2026-09-24T18:55:56.792231+00:00"
+      },
+      {
+        "candidate_id": "C4",
+        "implementation_revision": "olr-eval-v1.0",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "Hybrid-Multimodal-Fusion-MiniLM-DSP",
+        "execution_mode": "CPU_LOCAL_ISOLATED",
+        "weights_provenance": "MULTIMODAL_FUSION_TEXT_AUDIO",
+        "timestamp_iso": "2026-09-24T18:55:56.794040+00:00"
+      },
+      {
+        "candidate_id": "C4",
+        "implementation_revision": "olr-eval-v1.0",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "Hybrid-Multimodal-Fusion-MiniLM-DSP",
+        "execution_mode": "CPU_LOCAL_ISOLATED",
+        "weights_provenance": "MULTIMODAL_FUSION_TEXT_AUDIO",
+        "timestamp_iso": "2026-09-24T18:55:56.796052+00:00"
+      }
+    ]
+  },
+  "C5": {
+    "candidate_id": "C5",
+    "name": "Structured Semantic Observation",
+    "parameter_budget": "10M-30M",
+    "sample_count": 1800,
+    "calibration": {
+      "ece": 0.8094444444444444,
+      "brier": 1.5463864583333333,
+      "nll": 0.673846549383559,
+      "mean_confidence": 0.84,
+      "accuracy": 0.030555555555555555
+    },
+    "alignment": {
+      "r2": -2.2710156014698217,
+      "mae": 0.25199099801078323,
+      "mse": 0.09958951962528435,
+      "per_language_r2": {
+        "English": -2.1453479468232928,
+        "Vietnamese": -2.3119566168254706,
+        "Japanese": -2.355742240760701
+      },
+      "vi_en_ratio": 0.0,
+      "ja_en_ratio": 0.0
+    },
+    "temporal_stability": {
+      "mean_flapping_rate": 0.19069813934528754,
+      "contradiction_recovery_turns": 5.0
+    },
+    "trajectory_forecasting": {
+      "coverage_h1": 0.9111111111111111,
+      "coverage_h2": 1.0
+    },
+    "latency_ms": {
+      "encoder": {
+        "p50": 20.72164253400733,
+        "p95": 24.71736388758755,
+        "p99": 25.03356602263863
+      },
+      "projection": {
+        "p50": 0.015500001609325409,
+        "p95": 0.03570500994101166,
+        "p99": 0.04961299942806362
+      },
+      "filter": {
+        "p50": 0.16379999578930438,
+        "p95": 0.2759250040980987,
+        "p99": 0.35452399257337674
+      },
+      "total_pipeline": {
+        "p50": 20.924872084272337,
+        "p95": 24.875034859911057,
+        "p99": 25.263871411783207
+      }
+    },
+    "resources": {
+      "peak_ram_mb": 250.0,
+      "gpu_vram_mb": 0.0,
+      "execution_mode": "CPU_LOCAL"
+    },
+    "gates": {
+      "G_CALIB_ECE": "FAIL",
+      "G_CALIB_BRIER": "FAIL",
+      "G_ALIGN_R2": "FAIL",
+      "G_ALIGN_MAE": "PASS",
+      "G_STAB_FLAPPING": "FAIL",
+      "G_STAB_RECOVERY": "FAIL",
+      "G_LAT_CPU_P50": "PASS",
+      "G_LAT_TOTAL_P50": "PASS",
+      "G_RES_RAM": "PASS",
+      "G_RES_GPU_VRAM": "PASS",
+      "G_MULTI_VI": "FAIL",
+      "G_MULTI_JA": "FAIL"
+    },
+    "overall_status": "FAIL",
+    "provenance_samples": [
+      {
+        "candidate_id": "C5",
+        "implementation_revision": "olr-eval-v1.0",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "Structured-Dialogue-Act-Extractor",
+        "execution_mode": "CPU_LOCAL_ISOLATED",
+        "weights_provenance": "STRUCTURED_SEMANTIC_SLOT_ACTS_P23",
+        "timestamp_iso": "2026-09-24T18:56:00.137652+00:00"
+      },
+      {
+        "candidate_id": "C5",
+        "implementation_revision": "olr-eval-v1.0",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "Structured-Dialogue-Act-Extractor",
+        "execution_mode": "CPU_LOCAL_ISOLATED",
+        "weights_provenance": "STRUCTURED_SEMANTIC_SLOT_ACTS_P23",
+        "timestamp_iso": "2026-09-24T18:56:00.139236+00:00"
+      },
+      {
+        "candidate_id": "C5",
+        "implementation_revision": "olr-eval-v1.0",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "Structured-Dialogue-Act-Extractor",
+        "execution_mode": "CPU_LOCAL_ISOLATED",
+        "weights_provenance": "STRUCTURED_SEMANTIC_SLOT_ACTS_P23",
+        "timestamp_iso": "2026-09-24T18:56:00.140723+00:00"
+      },
+      {
+        "candidate_id": "C5",
+        "implementation_revision": "olr-eval-v1.0",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "Structured-Dialogue-Act-Extractor",
+        "execution_mode": "CPU_LOCAL_ISOLATED",
+        "weights_provenance": "STRUCTURED_SEMANTIC_SLOT_ACTS_P23",
+        "timestamp_iso": "2026-09-24T18:56:00.142149+00:00"
+      },
+      {
+        "candidate_id": "C5",
+        "implementation_revision": "olr-eval-v1.0",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "Structured-Dialogue-Act-Extractor",
+        "execution_mode": "CPU_LOCAL_ISOLATED",
+        "weights_provenance": "STRUCTURED_SEMANTIC_SLOT_ACTS_P23",
+        "timestamp_iso": "2026-09-24T18:56:00.143581+00:00"
+      }
+    ]
+  },
+  "C6": {
+    "candidate_id": "C6",
+    "name": "Decoupled Learned Observation Projection Layer",
+    "parameter_budget": "~50K (projection layer)",
+    "sample_count": 1800,
+    "calibration": {
+      "ece": 0.20466666666666666,
+      "brier": 1.6548468215837029,
+      "nll": 0.3281770704803208,
+      "mean_confidence": 0.6391111111111112,
+      "accuracy": 0.7988888888888889
+    },
+    "alignment": {
+      "r2": -0.5161377530596702,
+      "mae": 0.15350086812814362,
+      "mse": 0.04616041282258727,
+      "per_language_r2": {
+        "English": -0.532752909136784,
+        "Vietnamese": -0.5274833729567601,
+        "Japanese": -0.4881769770854669
+      },
+      "vi_en_ratio": 0.0,
+      "ja_en_ratio": 0.0
+    },
+    "temporal_stability": {
+      "mean_flapping_rate": 0.6918842293762095,
+      "contradiction_recovery_turns": 3.2333333333333334
+    },
+    "trajectory_forecasting": {
+      "coverage_h1": 0.9333333333333333,
+      "coverage_h2": 1.0
+    },
+    "latency_ms": {
+      "encoder": {
+        "p50": 29.28918334301691,
+        "p95": 34.56500503164828,
+        "p99": 35.05995731324119
+      },
+      "projection": {
+        "p50": 0.08985000022221357,
+        "p95": 0.14350498677231371,
+        "p99": 0.173420982027892
+      },
+      "filter": {
+        "p50": 0.14459999511018395,
+        "p95": 0.2130999942892231,
+        "p99": 0.2611080088536255
+      },
+      "total_pipeline": {
+        "p50": 29.536117795693734,
+        "p95": 34.821541911024056,
+        "p99": 35.32659398574564
+      }
+    },
+    "resources": {
+      "peak_ram_mb": 220.0,
+      "gpu_vram_mb": 0.0,
+      "execution_mode": "CPU_LOCAL"
+    },
+    "gates": {
+      "G_CALIB_ECE": "FAIL",
+      "G_CALIB_BRIER": "FAIL",
+      "G_ALIGN_R2": "FAIL",
+      "G_ALIGN_MAE": "PASS",
+      "G_STAB_FLAPPING": "FAIL",
+      "G_STAB_RECOVERY": "FAIL",
+      "G_LAT_CPU_P50": "PASS",
+      "G_LAT_TOTAL_P50": "PASS",
+      "G_RES_RAM": "PASS",
+      "G_RES_GPU_VRAM": "PASS",
+      "G_MULTI_VI": "FAIL",
+      "G_MULTI_JA": "FAIL"
+    },
+    "overall_status": "FAIL",
+    "provenance_samples": [
+      {
+        "candidate_id": "C6",
+        "implementation_revision": "olr-eval-v1.0",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "Decoupled-LogOdds-Calibrated-Projector",
+        "execution_mode": "CPU_LOCAL_ISOLATED",
+        "weights_provenance": "DECOUPLED_G_INVERSE_LOG_ODDS_PLATT",
+        "timestamp_iso": "2026-09-24T18:56:03.079106+00:00"
+      },
+      {
+        "candidate_id": "C6",
+        "implementation_revision": "olr-eval-v1.0",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "Decoupled-LogOdds-Calibrated-Projector",
+        "execution_mode": "CPU_LOCAL_ISOLATED",
+        "weights_provenance": "DECOUPLED_G_INVERSE_LOG_ODDS_PLATT",
+        "timestamp_iso": "2026-09-24T18:56:03.080590+00:00"
+      },
+      {
+        "candidate_id": "C6",
+        "implementation_revision": "olr-eval-v1.0",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "Decoupled-LogOdds-Calibrated-Projector",
+        "execution_mode": "CPU_LOCAL_ISOLATED",
+        "weights_provenance": "DECOUPLED_G_INVERSE_LOG_ODDS_PLATT",
+        "timestamp_iso": "2026-09-24T18:56:03.082034+00:00"
+      },
+      {
+        "candidate_id": "C6",
+        "implementation_revision": "olr-eval-v1.0",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "Decoupled-LogOdds-Calibrated-Projector",
+        "execution_mode": "CPU_LOCAL_ISOLATED",
+        "weights_provenance": "DECOUPLED_G_INVERSE_LOG_ODDS_PLATT",
+        "timestamp_iso": "2026-09-24T18:56:03.083505+00:00"
+      },
+      {
+        "candidate_id": "C6",
+        "implementation_revision": "olr-eval-v1.0",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "Decoupled-LogOdds-Calibrated-Projector",
+        "execution_mode": "CPU_LOCAL_ISOLATED",
+        "weights_provenance": "DECOUPLED_G_INVERSE_LOG_ODDS_PLATT",
+        "timestamp_iso": "2026-09-24T18:56:03.084968+00:00"
+      }
+    ]
+  }
+}

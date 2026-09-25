@@ -1,0 +1,59 @@
+{
+  "phase": "22-REL",
+  "description": "Relational & Somatic Memory Consolidation Study",
+  "train_seeds": [
+    42,
+    137,
+    618
+  ],
+  "held_out_seeds": [
+    1024,
+    2026
+  ],
+  "stress_regimes": [
+    "ID",
+    "NoiseSurge",
+    "LexicalSparsity",
+    "ContradictionShock",
+    "TemporalDrift",
+    "CombinedStress"
+  ],
+  "languages": [
+    "English",
+    "Vietnamese",
+    "Japanese"
+  ],
+  "candidates_evaluated": [
+    "O1_Legacy6D",
+    "O2_OpenLoopDecoupled",
+    "O3_EpisodicConsolidation",
+    "O4_EpisodicCorrected",
+    "OracleControl"
+  ],
+  "target_interfaces": {
+    "observable_4d": [
+      "u0_load",
+      "u1_valence",
+      "u2_agency",
+      "u3_urgency"
+    ],
+    "relational_memory_2d": [
+      "m0_fatigue",
+      "m1_relational_warmth"
+    ],
+    "p23_psi_user_12d": [
+      "u_load",
+      "u_valence",
+      "u_agency",
+      "u_urgency",
+      "u_dot_load",
+      "u_dot_valence",
+      "u_dot_agency",
+      "u_dot_urgency",
+      "m_fatigue",
+      "m_warmth",
+      "pi_uncertainty",
+      "r_resonance"
+    ]
+  }
+}

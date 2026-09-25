@@ -1,0 +1,32 @@
+{
+  "G_REL1_Warmth_R2": {
+    "threshold": 0.5,
+    "measured": -4.511997003396178,
+    "passed": false
+  },
+  "G_REL2_Fatigue_R2": {
+    "threshold": 0.5,
+    "measured": 0.3780646013786153,
+    "passed": false
+  },
+  "G_REL3_Session_Retention": {
+    "threshold": 0.8,
+    "measured": 0.9840133949746054,
+    "passed": true
+  },
+  "G_REL4_Contradiction_Recovery": {
+    "threshold": 1.0,
+    "measured": 1.8,
+    "passed": false
+  },
+  "G_REL5_Latency_P50": {
+    "threshold": 2.0,
+    "measured": 0.00010379997547715902,
+    "passed": true
+  },
+  "G_REL6_VRAM_Zero": {
+    "threshold": 0.0,
+    "measured": 0.0,
+    "passed": true
+  }
+}

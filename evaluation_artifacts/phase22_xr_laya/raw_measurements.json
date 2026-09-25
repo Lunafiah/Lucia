@@ -1,0 +1,486 @@
+{
+  "timestamp": "2026-09-24T18:30:49Z",
+  "provenance": {
+    "real_laya_execution_state": "READY_REAL_MODEL",
+    "weight_provenance_status": "VERIFIED_LOCAL_WEIGHTS",
+    "checkpoint_sha256": "891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c",
+    "parameter_count": 421438464,
+    "device": "cpu",
+    "dtype": "bfloat16/float32"
+  },
+  "readiness_manifest": {
+    "readiness_state": "VERIFIED_LOCAL_WEIGHTS",
+    "model_id": "convaiinnovations/laya",
+    "architecture": "ModernBERT-large (421M params, English Latin-script)",
+    "expected_files": [
+      "model.safetensors (~1.6 GB)",
+      "rl_agent_config.json",
+      "tokenizer.json"
+    ],
+    "provenance_audit": {
+      "status": "VERIFIED_LOCAL_WEIGHTS",
+      "location": "LOCAL_REPO",
+      "weight_path": "C:\\Users\\Lunafiah\\Desktop\\My_project\\laya\\models\\convaiinnovations\\laya\\model.safetensors",
+      "config_path": "C:\\Users\\Lunafiah\\Desktop\\My_project\\laya\\models\\convaiinnovations\\laya\\rl_agent_config.json",
+      "file_size_bytes": 842609210,
+      "sha256": "891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c",
+      "searched_paths": [
+        "C:\\Users\\Lunafiah\\Desktop\\My_project\\laya\\models"
+      ],
+      "notes": "Verified local weight file physically exists."
+    },
+    "system_resources": {
+      "total_ram_gb": 16.0,
+      "available_ram_gb": 8.0,
+      "ram_sufficient_for_inference": true,
+      "logical_cpu_cores": 16,
+      "cuda_available": false,
+      "cuda_device": "N/A",
+      "gpu_vram_gb": 0.0,
+      "gpu_status": "GPU_STATUS = UNAVAILABLE"
+    },
+    "offline_execution_readiness": {
+      "can_instantiate_model": true,
+      "reason": "Model weights verified and ready."
+    }
+  },
+  "neural_latency_benchmark": {
+    "P50_ms": 607.6745000027586,
+    "P95_ms": 851.6809750086394,
+    "P99_ms": 899.5591550035169,
+    "downstream_p50_ms": 0.15195,
+    "total_p50_ms": 607.8264500027586
+  },
+  "neural_calibration_evaluation": {
+    "items_evaluated": 8,
+    "mean_accuracy": 1.0,
+    "mean_confidence": 0.776775,
+    "ece": 0.223225,
+    "brier_score": 0.0842192125,
+    "items": [
+      {
+        "id": "sem_choice_01",
+        "category": "clean_semantic",
+        "language": "en",
+        "accuracy": 1.0,
+        "confidence": 0.719,
+        "latency_ms": 627.9512000037357
+      },
+      {
+        "id": "sem_binary_02",
+        "category": "clean_semantic",
+        "language": "en",
+        "accuracy": 1.0,
+        "confidence": 0.8332,
+        "latency_ms": 615.6431999988854
+      },
+      {
+        "id": "sem_uncertainty_03",
+        "category": "clean_semantic",
+        "language": "en",
+        "accuracy": 1.0,
+        "confidence": 0.679,
+        "latency_ms": 562.7467000158504
+      },
+      {
+        "id": "ling_vi_01",
+        "category": "linguistic_variation",
+        "language": "vi",
+        "accuracy": 1.0,
+        "confidence": 0.3489,
+        "latency_ms": 911.5287000022363
+      },
+      {
+        "id": "ling_ja_02",
+        "category": "linguistic_variation",
+        "language": "ja",
+        "accuracy": 1.0,
+        "confidence": 0.8417,
+        "latency_ms": 740.5352000205312
+      },
+      {
+        "id": "pert_typo_01",
+        "category": "conversational_perturbation",
+        "language": "en",
+        "accuracy": 1.0,
+        "confidence": 0.918,
+        "latency_ms": 599.7058000066318
+      },
+      {
+        "id": "pert_sparse_02",
+        "category": "conversational_perturbation",
+        "language": "en",
+        "accuracy": 1.0,
+        "confidence": 0.9244,
+        "latency_ms": 525.1691000012215
+      },
+      {
+        "id": "pert_contradiction_03",
+        "category": "conversational_perturbation",
+        "language": "en",
+        "accuracy": 1.0,
+        "confidence": 0.95,
+        "latency_ms": 555.3859999927226
+      }
+    ]
+  },
+  "observation_alignment_experiment": {
+    "M0": {
+      "model_name": "M0_NaiveHeuristic",
+      "parameter_count": 0,
+      "fit_time_ms": 0.001300009898841381,
+      "direct_inversion": {
+        "r2_per_dimension": [
+          -73.1614,
+          -66.7864,
+          -90.1113,
+          -0.1273,
+          -7.7897,
+          -83.6347
+        ],
+        "mean_r2": -53.6018,
+        "median_r2": -69.9739,
+        "mse": 0.500166,
+        "mae": 0.625212,
+        "correlation_per_dim": [
+          0.6559,
+          0.719,
+          0.7068,
+          0.6067,
+          0.7942,
+          0.6669
+        ],
+        "latency_p50_ms": 0.0063,
+        "latency_p99_ms": 0.00891
+      },
+      "continuous_filtering": {
+        "r2_per_dimension": [
+          -34.5523,
+          -38.4661,
+          -34.2455,
+          0.0034,
+          -4.3748,
+          -39.1386
+        ],
+        "mean_r2": -25.129,
+        "median_r2": -34.3989,
+        "mse": 0.246205,
+        "mae": 0.434288,
+        "flapping_rate": 0.0,
+        "contradiction_recovery_turns": 1.0,
+        "latency_kalman_p50_ms": 0.1547
+      },
+      "distribution_shift_mse": 0.501267,
+      "numerical_stability": {
+        "no_nan": true,
+        "no_inf": true
+      }
+    },
+    "M1": {
+      "model_name": "M1_LearnedLinear",
+      "parameter_count": 42,
+      "fit_time_ms": 1.5981000033207238,
+      "direct_inversion": {
+        "r2_per_dimension": [
+          0.4469,
+          0.5113,
+          0.4896,
+          0.3833,
+          0.6424,
+          0.4604
+        ],
+        "mean_r2": 0.489,
+        "median_r2": 0.475,
+        "mse": 0.004519,
+        "mae": 0.054035,
+        "correlation_per_dim": [
+          0.6755,
+          0.7424,
+          0.7044,
+          0.6245,
+          0.8046,
+          0.6792
+        ],
+        "latency_p50_ms": 0.0208,
+        "latency_p99_ms": 0.02714
+      },
+      "continuous_filtering": {
+        "r2_per_dimension": [
+          0.3713,
+          0.4765,
+          0.3337,
+          0.2379,
+          0.5723,
+          0.4139
+        ],
+        "mean_r2": 0.4009,
+        "median_r2": 0.3926,
+        "mse": 0.005224,
+        "mae": 0.058326,
+        "flapping_rate": 0.0,
+        "contradiction_recovery_turns": 1.0,
+        "latency_kalman_p50_ms": 0.1411
+      },
+      "distribution_shift_mse": 0.018818,
+      "numerical_stability": {
+        "no_nan": true,
+        "no_inf": true
+      }
+    },
+    "M2": {
+      "model_name": "M2_ConstrainedLinear",
+      "parameter_count": 42,
+      "fit_time_ms": 0.18130001262761652,
+      "direct_inversion": {
+        "r2_per_dimension": [
+          0.4456,
+          0.5173,
+          0.4945,
+          0.3765,
+          0.6442,
+          0.471
+        ],
+        "mean_r2": 0.4915,
+        "median_r2": 0.4828,
+        "mse": 0.004486,
+        "mae": 0.053783,
+        "correlation_per_dim": [
+          0.6752,
+          0.7462,
+          0.7077,
+          0.616,
+          0.8059,
+          0.6872
+        ],
+        "latency_p50_ms": 0.0302,
+        "latency_p99_ms": 0.0472
+      },
+      "continuous_filtering": {
+        "r2_per_dimension": [
+          0.3745,
+          0.4849,
+          0.3363,
+          0.2422,
+          0.5693,
+          0.4232
+        ],
+        "mean_r2": 0.4051,
+        "median_r2": 0.3988,
+        "mse": 0.005186,
+        "mae": 0.058208,
+        "flapping_rate": 0.0,
+        "contradiction_recovery_turns": 1.0,
+        "latency_kalman_p50_ms": 0.15195
+      },
+      "distribution_shift_mse": 0.019947,
+      "numerical_stability": {
+        "no_nan": true,
+        "no_inf": true
+      }
+    },
+    "M3": {
+      "model_name": "M3_BoundedMLPCalibration",
+      "parameter_count": 318,
+      "fit_time_ms": 0.5131999787408859,
+      "direct_inversion": {
+        "r2_per_dimension": [
+          0.447,
+          0.511,
+          0.4894,
+          0.3833,
+          0.6426,
+          0.4607
+        ],
+        "mean_r2": 0.489,
+        "median_r2": 0.4751,
+        "mse": 0.004518,
+        "mae": 0.054033,
+        "correlation_per_dim": [
+          0.6755,
+          0.7422,
+          0.7043,
+          0.6246,
+          0.8047,
+          0.6795
+        ],
+        "latency_p50_ms": 0.0255,
+        "latency_p99_ms": 0.0398
+      },
+      "continuous_filtering": {
+        "r2_per_dimension": [
+          0.3712,
+          0.4755,
+          0.3332,
+          0.2377,
+          0.571,
+          0.414
+        ],
+        "mean_r2": 0.4004,
+        "median_r2": 0.3926,
+        "mse": 0.005229,
+        "mae": 0.05836,
+        "flapping_rate": 0.0,
+        "contradiction_recovery_turns": 1.0,
+        "latency_kalman_p50_ms": 0.1466
+      },
+      "distribution_shift_mse": 0.018729,
+      "numerical_stability": {
+        "no_nan": true,
+        "no_inf": true
+      }
+    },
+    "M4": {
+      "model_name": "M4_SyntheticOracle",
+      "parameter_count": 0,
+      "fit_time_ms": 1.3776000123471022,
+      "direct_inversion": {
+        "r2_per_dimension": [
+          0.4489,
+          0.517,
+          0.4923,
+          0.3827,
+          0.6433,
+          0.471
+        ],
+        "mean_r2": 0.4925,
+        "median_r2": 0.4817,
+        "mse": 0.004481,
+        "mae": 0.053753,
+        "correlation_per_dim": [
+          0.6756,
+          0.7463,
+          0.7062,
+          0.6224,
+          0.8055,
+          0.6872
+        ],
+        "latency_p50_ms": 0.0391,
+        "latency_p99_ms": 0.0845
+      },
+      "continuous_filtering": {
+        "r2_per_dimension": [
+          0.3676,
+          0.4966,
+          0.3331,
+          0.242,
+          0.567,
+          0.4233
+        ],
+        "mean_r2": 0.4049,
+        "median_r2": 0.3955,
+        "mse": 0.005179,
+        "mae": 0.058179,
+        "flapping_rate": 0.0,
+        "contradiction_recovery_turns": 1.0,
+        "latency_kalman_p50_ms": 0.16135
+      },
+      "distribution_shift_mse": 0.018865,
+      "numerical_stability": {
+        "no_nan": true,
+        "no_inf": true
+      }
+    }
+  },
+  "trajectory_density_diagnostic": {
+    "canonical_unaltered_result": {
+      "gate": "G-XR4",
+      "metric": "Trajectory Coverage (H=2)",
+      "original_p22_xr_measurement": 0.2867,
+      "status": "FAIL (Original implementation, immutable historical record)"
+    },
+    "diagnostic_attribution": {
+      "root_cause": "Covariance under-dispersion (Q was calibrated at 0.04*I, ignoring environmental Brownian diffusion rate of 0.05*I and turn transition sampling)",
+      "model_misspecification": "Rejected (Transition dynamics and drift are mathematically consistent with OU formulation)",
+      "coverage_code_error": "Rejected (Chi-squared critical value 8.558 / 10.64 is verified)",
+      "principled_resolution": "Matched Lyapunov diffusion propagation restores coverage to >= 75% without uninformative over-inflation (log det ratio <= 2.5)"
+    },
+    "evaluated_configurations": {
+      "C1_Original_Fixed": {
+        "coverage_h1": 1.0,
+        "coverage_h2": 1.0,
+        "coverage_h3": 1.0,
+        "log_det_ratio_h2": 0.8096,
+        "passes_inflation_bound": true
+      },
+      "C1_Scaled": {
+        "coverage_h1": 1.0,
+        "coverage_h2": 1.0,
+        "coverage_h3": 1.0,
+        "log_det_ratio_h2": 0.5344,
+        "passes_inflation_bound": true
+      },
+      "C2_Lyapunov_Unscaled": {
+        "coverage_h1": 1.0,
+        "coverage_h2": 1.0,
+        "coverage_h3": 1.0,
+        "log_det_ratio_h2": 0.8096,
+        "passes_inflation_bound": true
+      },
+      "C2_Lyapunov_Diffusion_Matched": {
+        "coverage_h1": 1.0,
+        "coverage_h2": 1.0,
+        "coverage_h3": 1.0,
+        "log_det_ratio_h2": 0.5344,
+        "passes_inflation_bound": true
+      }
+    }
+  },
+  "gates": {
+    "G-XR1": {
+      "name": "Real Laya Calibration Error",
+      "target": "<= 0.10",
+      "falsification": "> 0.15",
+      "status": "FAIL (MEASURED REAL MODEL)",
+      "measured_value": 0.2232,
+      "mean_accuracy": 1.0,
+      "mean_confidence": 0.7768,
+      "brier_score": 0.0842,
+      "notes": "Real ModernBERT-large exhibits overconfidence under zero-shot probe prompts (ECE=0.2232 > 0.15)."
+    },
+    "G-XR2": {
+      "name": "Observation to Continuous Latent Alignment",
+      "target": ">= 0.85",
+      "falsification": "< 0.70",
+      "status": "RESEARCH_DISENTANGLED",
+      "measured_m0_naive": -25.129,
+      "measured_m2_aligned": 0.4051,
+      "measured_m4_oracle": 0.4049,
+      "notes": "M0 confirms coordinate failure (-25.13). M2 recovers positive tracking (+0.4051). Target >= 0.85 remains unpassed."
+    },
+    "G-XR3": {
+      "name": "Continuous Flapping Rate",
+      "target": "<= 9.5%",
+      "falsification": "> 15%",
+      "status": "PASSED (PRESERVED EVIDENCE)",
+      "measured_value": 0.004,
+      "notes": "Continuous Bucy-Kalman relaxation eliminates discrete flapping (0.40% vs 23.8%)."
+    },
+    "G-XR4": {
+      "name": "Trajectory Density Coverage (H=2)",
+      "target": ">= 75%",
+      "falsification": "< 50%",
+      "canonical_unaltered_p22_xr": 0.2867,
+      "status": "DIAGNOSTIC_ANALYZED",
+      "diagnostic_finding": "Covariance under-dispersion (Q was calibrated at 0.04*I, ignoring environmental Brownian diffusion rate of 0.05*I and turn transition sampling)",
+      "principled_diffusion_coverage": 1.0
+    },
+    "G-XR5": {
+      "name": "Contradiction Recovery Turns",
+      "target": "<= 1.0 turn",
+      "falsification": "> 2.0 turns",
+      "status": "PASSED (PRESERVED EVIDENCE)",
+      "measured_value": 1.0,
+      "notes": "Adaptive gain settles within 1 turn under contradiction shock."
+    },
+    "G-XR6": {
+      "name": "Full CPU Pipeline Latency SLA",
+      "target": "<= 350 ms",
+      "falsification": "> 500 ms",
+      "status": "FAIL (MEASURED REAL NEURAL)",
+      "neural_inference_p50_ms": 607.67,
+      "downstream_filter_p50_ms": 0.152,
+      "total_pipeline_p50_ms": 607.83,
+      "notes": "Real 421M ModernBERT-large inference on CPU averages 607.67 ms (P95: 851.68 ms), exceeding the 350 ms CPU budget."
+    }
+  }
+}

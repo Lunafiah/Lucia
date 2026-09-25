@@ -1,0 +1,23 @@
+{
+  "execution_mode": "BLOCKED_OFFLINE_WEIGHTS",
+  "weight_provenance_status": "BLOCKED_OFFLINE_WEIGHTS",
+  "audit_details": {
+    "status": "BLOCKED_OFFLINE_WEIGHTS",
+    "expected_model_id": "convaiinnovations/laya",
+    "architecture": "ModernBERT-large (421M params, English Latin-script) / mmBERT-base (322M, multilingual)",
+    "expected_files": [
+      "model.safetensors",
+      "rl_agent_config.json",
+      "tokenizer.json"
+    ],
+    "searched_paths": [
+      "C:\\Users\\Lunafiah\\Desktop\\My_project\\laya\\models",
+      "C:\\Users\\Lunafiah\\Desktop\\My_project\\laya\\checkpoints",
+      "C:\\Users\\Lunafiah\\Desktop\\My_project\\laya\\weights",
+      "C:\\Users\\Lunafiah\\Desktop\\My_project\\laya",
+      "C:\\Users\\Lunafiah\\.cache\\huggingface\\hub\\models--convaiinnovations--laya"
+    ],
+    "offline_weights_found": false,
+    "reason": "Neither local repo models/ directory nor Hugging Face cache (C:\\Users\\Lunafiah\\.cache\\huggingface\\hub\\models--convaiinnovations--laya) contains the required 'convaiinnovations/laya' checkpoint files. Per research protocol, execution enters fail-closed BLOCKED_OFFLINE_WEIGHTS mode."
+  }
+}

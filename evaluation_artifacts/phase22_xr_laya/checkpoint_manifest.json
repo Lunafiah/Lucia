@@ -1,0 +1,34 @@
+{
+  "repository_id": "convaiinnovations/laya",
+  "model_revision": "main",
+  "git_commit": "55cf4c4ebb4ebe31b2550e8bdf3bd21b99753851",
+  "checkpoint_files": [
+    "model.safetensors",
+    "encoder/config.json",
+    "rl_agent_config.json",
+    "tokenizer/tokenizer.json",
+    "tokenizer/tokenizer_config.json"
+  ],
+  "file_sizes_bytes": {
+    "model.safetensors": 842609210,
+    "encoder/config.json": 2083,
+    "rl_agent_config.json": 745,
+    "tokenizer/tokenizer.json": 3583228,
+    "tokenizer/tokenizer_config.json": 308
+  },
+  "sha256": {
+    "model.safetensors": "891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c",
+    "encoder/config.json": "bf3ab80598fdccf414855a2ce80f22859e4492d06ca8a62ddd1cfb63972f8979",
+    "rl_agent_config.json": "ae287b56bbcf5f8c4f4541ae9dfd00c914c4c48b940b8398c3058af37ba92bbd",
+    "tokenizer/tokenizer.json": "6c8aaa9a542084f2457eab775d4eeb51f92a70c0fd9de28d5edb0ddec3c08d30",
+    "tokenizer/tokenizer_config.json": "50044de60daaa73df97d262e15a40d4faf0160e7d742df64b377877a1320dd12"
+  },
+  "parameter_count": 421438464,
+  "dtype": "bfloat16/float32",
+  "device": "cpu",
+  "python_version": "3.12.8 (laya virtualenv)",
+  "torch_version": "2.14.0+cpu",
+  "transformers_version": "5.17.0",
+  "acquisition_timestamp": "2026-09-24T18:20:44Z",
+  "execution_status": "READY_REAL_MODEL"
+}

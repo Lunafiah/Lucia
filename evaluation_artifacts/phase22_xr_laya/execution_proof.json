@@ -1,0 +1,24 @@
+{
+  "checkpoint_sha256": "891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c",
+  "model_class": "Agent",
+  "parameter_count": 421438464,
+  "device": "cpu",
+  "dtype": "bfloat16/float32",
+  "forward_pass_sample": {
+    "state": "User: Can we focus on optimizing the memory retrieval pipeline? Lucia: Absolutely.",
+    "question": "What is the user primary conversational objective?",
+    "choice": "Technical deep-dive",
+    "probabilities": {
+      "Technical deep-dive": 0.7173,
+      "Casual chit-chat": 0.1064,
+      "Ending conversation": 0.1082,
+      "Reporting an emergency": 0.0681
+    },
+    "confidence": 0.3505,
+    "answer_confidence": 0.7173,
+    "simplex_sum": 1.0,
+    "latency_first_call_ms": 605.56
+  },
+  "execution_timestamp": "2026-09-24T18:24:07Z",
+  "execution_status": "READY_REAL_MODEL"
+}

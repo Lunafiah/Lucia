@@ -1,0 +1,203 @@
+{
+  "XR-E1": {
+    "experiment": "XR-E1",
+    "seed": 42,
+    "is_available": true,
+    "capabilities": {
+      "bidirectional_encoder": "VERIFIED_FROM_SOURCE",
+      "parallel_question_pass": "VERIFIED_FROM_SOURCE",
+      "choice_score_noul_types": "VERIFIED_FROM_SOURCE",
+      "proper_reward_optimization": "VERIFIED_FROM_SOURCE",
+      "zero_autoregressive_generation": "VERIFIED_FROM_SOURCE",
+      "stateless_memoryless": "VERIFIED_FROM_SOURCE",
+      "jev_wire_equivalence": "CLAIMED_BY_UPSTREAM",
+      "rlcd_sample_efficiency": "CLAIMED_BY_UPSTREAM",
+      "conversational_disfluency_robustness": "UNKNOWN",
+      "user_belief_tracking": "NOT_SUPPORTED",
+      "prospective_intent_prediction": "NOT_SUPPORTED"
+    },
+    "p50_latency_ms": 0.11860000086016953,
+    "p95_latency_ms": 0.12659000203711912,
+    "peak_ram_mb": 0.44303417205810547,
+    "peak_vram_mb": 0.0,
+    "max_determinism_diff": 0.0,
+    "simplex_sum": 1.0000000000000002,
+    "status": "PASSED"
+  },
+  "XR-E2": {
+    "experiment": "XR-E2",
+    "seed": 42,
+    "data": {
+      "B4": {
+        "ID": {
+          "ece": 0.2193320932297502,
+          "brier": 0.9095399070093282,
+          "nll": 2.0418070210737134
+        },
+        "NoiseSurge": {
+          "ece": 0.09487957651850966,
+          "brier": 0.8535907550901152,
+          "nll": 1.8568563749916114
+        },
+        "LexicalSparsity": {
+          "ece": 0.3827196524940917,
+          "brier": 1.1209999595328524,
+          "nll": 2.8381340425787975
+        }
+      },
+      "B1": {
+        "ID": {
+          "ece": 0.17080681999858974,
+          "brier": 0.8458890335529539,
+          "nll": 1.829409217103489
+        },
+        "NoiseSurge": {
+          "ece": 0.057067131611055325,
+          "brier": 0.8404794196832143,
+          "nll": 1.813442079503652
+        },
+        "LexicalSparsity": {
+          "ece": 0.1611825029328422,
+          "brier": 0.8508489061858204,
+          "nll": 1.844502811864907
+        }
+      },
+      "Laya": {
+        "ID": {
+          "ece": 0.22808823663549216,
+          "brier": 0.48368603674762806,
+          "nll": 1.0936236795055982
+        },
+        "NoiseSurge": {
+          "ece": 0.33488968653391266,
+          "brier": 0.9258935719978805,
+          "nll": 2.0669727279871073
+        },
+        "LexicalSparsity": {
+          "ece": 0.3213316841665323,
+          "brier": 0.6799556410480362,
+          "nll": 1.4868559640458185
+        }
+      }
+    }
+  },
+  "XR-E3": {
+    "experiment": "XR-E3",
+    "seed": 42,
+    "aggregate_R2": -34.88209717367406,
+    "R2_per_dimension": {
+      "0": -63.650383253454464,
+      "1": -31.627373568604128,
+      "2": -60.51655805334354,
+      "3": -0.7534759013807129,
+      "4": -1.7508746031449425,
+      "5": -112.39253486658453
+    },
+    "MSE": 0.3917513610633292,
+    "MAE": 0.5314323325506725,
+    "status": "FAILED"
+  },
+  "XR-E4": {
+    "experiment": "XR-E4",
+    "seed": 42,
+    "flapping_discrete": 0.0,
+    "flapping_continuous": 0.004016064257028112,
+    "contradiction_recovery_turns": 1,
+    "status": "PASSED"
+  },
+  "XR-E5": {
+    "experiment": "XR-E5",
+    "seed": 42,
+    "coverage_H1": 0.0,
+    "coverage_H2": 0.2866666666666667,
+    "coverage_H3": 0.92,
+    "status": "FAILED"
+  },
+  "XR-E6": {
+    "experiment": "XR-E6",
+    "seed": 42,
+    "prospective_top1": 0.184,
+    "post_observation_top1": 0.176,
+    "post_observation_top2": 0.3,
+    "status": "FAILED"
+  },
+  "XR-E7": {
+    "experiment": "XR-E7",
+    "seed": 42,
+    "query_ratio": 0.0,
+    "mean_entropy_reduction": 0.0,
+    "status": "FAILED"
+  },
+  "XR-E8": {
+    "experiment": "XR-E8",
+    "seed": 42,
+    "validation": {
+      "dimension": 12,
+      "expected_dimension": 12,
+      "has_nan": false,
+      "has_inf": false,
+      "max_linf": 0.7274101046059294,
+      "bounded_linf": true,
+      "mean_step_displacement": 0.11262324090223998,
+      "max_step_displacement": 0.5536788543485963,
+      "contract_passed": true
+    },
+    "multilingual": {
+      "diff_en_vi": 0.06399534004257795,
+      "diff_en_ja": 0.1037629754532633,
+      "max_cross_lingual_diff": 0.1037629754532633,
+      "language_independent": true
+    },
+    "status": "PASSED"
+  },
+  "Ablations": {
+    "A0": {
+      "mean_R2": -9.627858163786172,
+      "std_R2": 1.878757412555213,
+      "mean_flapping": 0.0,
+      "std_flapping": 0.0
+    },
+    "A1": {
+      "mean_R2": -11.131051136343482,
+      "std_R2": 4.584846233518205,
+      "mean_flapping": 0.06271186440677967,
+      "std_flapping": 0.07021123788884061
+    },
+    "A2": {
+      "mean_R2": -24.66561884165085,
+      "std_R2": 2.8126962881508617,
+      "mean_flapping": 0.0,
+      "std_flapping": 0.0
+    },
+    "A3": {
+      "mean_R2": -7.838615945746399,
+      "std_R2": 1.2899551077602414,
+      "mean_flapping": 0.003389830508474576,
+      "std_flapping": 0.004151677530140979
+    },
+    "A4": {
+      "mean_R2": -7.793867235194284,
+      "std_R2": 1.2668798544624462,
+      "mean_flapping": 0.003389830508474576,
+      "std_flapping": 0.004151677530140979
+    },
+    "A5": {
+      "mean_R2": -24.080561309068365,
+      "std_R2": 3.7336440160724673,
+      "mean_flapping": 0.0,
+      "std_flapping": 0.0
+    },
+    "A6": {
+      "mean_R2": -43.87822666085192,
+      "std_R2": 5.509304252416406,
+      "mean_flapping": 0.001694915254237288,
+      "std_flapping": 0.003389830508474576
+    },
+    "A7": {
+      "mean_R2": -43.87822666085192,
+      "std_R2": 5.509304252416406,
+      "mean_flapping": 0.001694915254237288,
+      "std_flapping": 0.003389830508474576
+    }
+  }
+}

@@ -1,0 +1,150 @@
+{
+  "experiment_e1": {
+    "in_distribution": {
+      "B0": {
+        "ece": 0.028399999999999925,
+        "brier": 0.7760033199999999,
+        "nll": 1.5407115882987723,
+        "acc": 0.2912,
+        "latency_ms": 0.00014257999719120563
+      },
+      "B1": {
+        "ece": 0.2219168105959892,
+        "brier": 0.46108624984351027,
+        "nll": 2.7186529636383057,
+        "acc": 0.7508,
+        "latency_ms": 0.0004340599989518523,
+        "temp": 0.05000000074505806
+      },
+      "B4": {
+        "ece": 0.014913621199131004,
+        "brier": 0.27890067544228003,
+        "nll": 0.48727232217788696,
+        "acc": 0.8036,
+        "latency_ms": 0.0007160799985285849,
+        "temp": 1.0007429122924805
+      }
+    },
+    "distribution_shifts": {
+      "DS-1": {
+        "B1": {
+          "ece": 0.4728918418089549,
+          "brier": 0.9596591389909804,
+          "acc": 0.505
+        },
+        "B4": {
+          "ece": 0.30772711577018097,
+          "brier": 0.7932095689674703,
+          "acc": 0.4696666666666667,
+          "mean_uncertainty": 0.5235183835029602
+        }
+      },
+      "DS-2": {
+        "B1": {
+          "ece": 0.2754190965692202,
+          "brier": 0.5689721268322633,
+          "acc": 0.696
+        },
+        "B4": {
+          "ece": 0.017630602270364757,
+          "brier": 0.3050583082381538,
+          "acc": 0.778,
+          "mean_uncertainty": 0.5322455167770386
+        }
+      },
+      "DS-3": {
+        "B1": {
+          "ece": 0.22047979589303335,
+          "brier": 0.45748527980994325,
+          "acc": 0.7523333333333333
+        },
+        "B4": {
+          "ece": 0.019575720330079417,
+          "brier": 0.2881911271812752,
+          "acc": 0.7986666666666666,
+          "mean_uncertainty": 0.5325680375099182
+        }
+      },
+      "DS-4": {
+        "B1": {
+          "ece": 0.7672040918866794,
+          "brier": 1.5525581031702143,
+          "acc": 0.194
+        },
+        "B4": {
+          "ece": 0.5994100135366123,
+          "brier": 1.3022826645964687,
+          "acc": 0.204,
+          "mean_uncertainty": 0.49733906984329224
+        }
+      },
+      "DS-5": {
+        "B1": {
+          "ece": 0.22897716967264814,
+          "brier": 0.47324150899545625,
+          "acc": 0.746
+        },
+        "B4": {
+          "ece": 0.020307965338230115,
+          "brier": 0.2840286138476702,
+          "acc": 0.7956666666666666,
+          "mean_uncertainty": 0.5321851968765259
+        }
+      }
+    }
+  },
+  "experiment_e2": {
+    "naive_mean_acc": 0.6386,
+    "b1_bayes_mean_acc": 0.7127999999999999,
+    "b4_bayes_mean_acc": 0.7738,
+    "b3_pomdp_mean_acc": 0.7119999999999999,
+    "b1_mean_tv": 0.28829402957054884,
+    "b4_mean_tv": 0.2806664911808356,
+    "mean_recovery_turns": 0.23333333333333334
+  },
+  "experiment_e3": {
+    "static_flip_rate": 0.42231062204010483,
+    "temporal_flip_rate": 0.32659649472923247,
+    "flip_rate_reduction_pct": 22.66439021791473,
+    "static_next_acc": 0.4966836734693878,
+    "temporal_next_acc": 0.5262755102040817,
+    "next_acc_gain_pct": 2.95918367346939
+  },
+  "experiment_e4": {
+    "top1_accuracy": 0.3415384615384615,
+    "top2_recall": 0.5251282051282051,
+    "prior_top1_accuracy": 0.32153846153846155,
+    "intent_ece": 0.02354437964737343,
+    "intent_brier": 0.78714246513054
+  },
+  "experiment_e5": {
+    "mean_latency_us": 362.78399944421835,
+    "p95_latency_us": 559.3100082478485,
+    "max_latency_us": 1854.5000057201833,
+    "mean_node_count": 9.665,
+    "max_node_count": 12,
+    "trajectory_coverage_h1": 0.64,
+    "trajectory_coverage_h2": 0.3,
+    "trajectory_coverage_h3": 0.065,
+    "map_coverage_h2": 0.1
+  },
+  "experiment_e6": {
+    "eig_clarification_ratio": 0.046,
+    "react_clarification_ratio": 0.0023333333333333335,
+    "eig_mean_entropy_reduction": 0.4378402897623921,
+    "react_mean_entropy_reduction": 0.6706108113073762,
+    "eig_excess_query_ratio": 0.30434782608695654,
+    "react_excess_query_ratio": 0.2857142857142857
+  },
+  "experiment_e7": {
+    "num_episodes": 500,
+    "total_turns": 15000,
+    "deadlock_episodes": 0,
+    "deadlock_rate": 0.0,
+    "flapping_episodes": 119,
+    "flapping_rate": 0.238,
+    "attractor_collapse_episodes": 0,
+    "attractor_collapse_rate": 0.0,
+    "loop_stability_rate": 0.762
+  }
+}

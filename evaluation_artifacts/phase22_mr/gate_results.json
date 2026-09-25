@@ -1,0 +1,47 @@
+{
+  "G_MR1_Recall": {
+    "threshold": 0.9,
+    "measured": 1.0,
+    "passed": true
+  },
+  "G_MR2_Precision_K": {
+    "threshold": 0.8,
+    "measured": 0.315945,
+    "passed": false
+  },
+  "G_MR3_Compression": {
+    "threshold": 0.7,
+    "measured": 0.411536,
+    "passed": false
+  },
+  "G_MR4_Token_Budget": {
+    "threshold": 512,
+    "measured": 472.0,
+    "passed": true
+  },
+  "G_MR5_Injection_Rate": {
+    "threshold": 0.05,
+    "measured": 0.399906,
+    "passed": false
+  },
+  "G_MR6_Hallucination": {
+    "threshold": 0.1,
+    "measured": 0.0,
+    "passed": true
+  },
+  "G_MR7_Relational_Cons": {
+    "threshold": 0.85,
+    "measured": 0.991752,
+    "passed": true
+  },
+  "G_MR8_Latency_P50": {
+    "threshold": 5.0,
+    "measured": 0.3548,
+    "passed": true
+  },
+  "G_MR9_VRAM": {
+    "threshold": 0.0,
+    "measured": 0.0,
+    "passed": true
+  }
+}

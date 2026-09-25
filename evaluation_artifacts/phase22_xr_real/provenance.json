@@ -1,0 +1,26 @@
+{
+  "evaluation_phase": "Phase 22-XR-L",
+  "task": "Real Laya Observation Verification",
+  "execution_mode": "BLOCKED_OFFLINE_WEIGHTS",
+  "checkpoint_id": "convaiinnovations/laya",
+  "base_model": "answerdotai/ModernBERT-large",
+  "laya_repository": {
+    "path": "C:\\Users\\Lunafiah\\Desktop\\My_project\\laya",
+    "exists": true,
+    "git_commit": "23a17522aa4942da6cce53a995a275760320b691"
+  },
+  "weights_present": false,
+  "weight_files": [],
+  "system_environment": {
+    "os": "Windows-11-10.0.22621-SP0",
+    "python_version": "3.14.3 (tags/v3.14.3:323c59a, Feb  3 2026, 16:04:56) [MSC v.1944 64 bit (AMD64)]",
+    "architecture": [
+      "64bit",
+      "WindowsPE"
+    ],
+    "machine": "AMD64",
+    "processor": "AMD64 Family 23 Model 96 Stepping 1, AuthenticAMD"
+  },
+  "fail_closed_triggered": true,
+  "fail_closed_reason": "No offline weights (>100MB safetensors/bin) found for convaiinnovations/laya in C:\\Users\\Lunafiah\\Desktop\\My_project\\laya or HF cache C:\\Users\\Lunafiah\\.cache\\huggingface\\hub. Fail-closed invariant activated."
+}

@@ -1,0 +1,76 @@
+{
+  "G-SC1": {
+    "name": "Relational Fidelity",
+    "threshold": ">= 0.90",
+    "value": 1.0,
+    "status": "PASSED",
+    "description": "Preservation of mandatory relational semantics without degradation."
+  },
+  "G-SC2": {
+    "name": "Over-Inference Rate",
+    "threshold": "<= 0.05",
+    "value": 0.0,
+    "status": "PASSED",
+    "description": "Rate of inferring ungrounded intimacy beyond evidence."
+  },
+  "G-SC3": {
+    "name": "Unsupported Claims",
+    "threshold": "<= 0.10",
+    "value": 0.0,
+    "status": "PASSED",
+    "description": "Rate of relational assertions unsupported by evidence traces."
+  },
+  "G-SC4": {
+    "name": "Contradiction Preservation",
+    "threshold": ">= 0.95",
+    "value": 1.0,
+    "status": "PASSED",
+    "description": "Correct preservation and handling of rupture/contradiction events."
+  },
+  "G-SC5": {
+    "name": "Repair-State Preservation",
+    "threshold": ">= 0.95",
+    "value": 1.0,
+    "status": "PASSED",
+    "description": "Correct preservation of repaired vs active breach status."
+  },
+  "G-SC6": {
+    "name": "Cross-Language Semantic Gap",
+    "threshold": "<= 0.05",
+    "value": 0.0,
+    "status": "PASSED",
+    "description": "Spread in decision fidelity across English, Vietnamese, and Japanese."
+  },
+  "G-SC7": {
+    "name": "Compression & Retention",
+    "threshold": "Report ratio + retention (Ratio >= 1.5, Retention >= 0.90)",
+    "value": {
+      "c1_compression_ratio": 1.54,
+      "c3_compression_ratio": 8.4,
+      "c4_retention": 1.0
+    },
+    "status": "PASSED",
+    "description": "Information-dense compression without token window dogma."
+  },
+  "G-SC8": {
+    "name": "Consumer Independence",
+    "threshold": "|D0 - D2| <= 0.05",
+    "value": 0.0,
+    "status": "PASSED",
+    "description": "Decision divergence between Symbolic (D0) and Direct Policy (D2)."
+  },
+  "G-SC9": {
+    "name": "CPU Latency P50",
+    "threshold": "<= 2.0 ms",
+    "value": 0.767,
+    "status": "PASSED",
+    "description": "Median conditioning construction and evaluation latency."
+  },
+  "G-SC10": {
+    "name": "GPU VRAM",
+    "threshold": "== 0.0 MB",
+    "value": 0.0,
+    "status": "PASSED",
+    "description": "Strict zero GPU memory invariant."
+  }
+}

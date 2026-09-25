@@ -1,0 +1,55 @@
+{
+  "phase": "22-ANCHOR",
+  "description": "Relational Memory Grounding & Episodic Anchor Study",
+  "train_seeds": [
+    42,
+    137,
+    618
+  ],
+  "held_out_seeds": [
+    1024,
+    2026
+  ],
+  "stress_regimes": [
+    "ID",
+    "NoiseSurge",
+    "LexicalSparsity",
+    "ContradictionShock",
+    "TemporalDrift",
+    "CombinedStress"
+  ],
+  "languages": [
+    "English",
+    "Vietnamese",
+    "Japanese"
+  ],
+  "candidates_evaluated": [
+    "A0_ContinuousAccumulation",
+    "A1_EpisodicAnchorsOnly",
+    "A2_EpisodicConfidence",
+    "A3_EpisodicDecayConsolidation",
+    "OracleControl"
+  ],
+  "target_interfaces": {
+    "observable_4d": [
+      "u0_load",
+      "u1_valence",
+      "u2_agency",
+      "u3_urgency"
+    ],
+    "p23_psi_user_12d": [
+      "u_load",
+      "u_valence",
+      "u_agency",
+      "u_urgency",
+      "u_dot_load",
+      "u_dot_valence",
+      "u_dot_agency",
+      "u_dot_urgency",
+      "m_fatigue",
+      "m_warmth",
+      "pi_uncertainty",
+      "r_resonance"
+    ]
+  }
+}

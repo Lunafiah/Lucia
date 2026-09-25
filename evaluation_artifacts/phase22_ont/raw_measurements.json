@@ -1,0 +1,162 @@
+{
+  "ontologies": {
+    "O1_Legacy6D": {
+      "r2_observable_4d": 0.630757510838013,
+      "mae_observable_4d": 0.07572185985866665,
+      "mse_observable_4d": 0.013960901386551278,
+      "dim_observable_r2": {
+        "u0_cognitive_load": 0.6979962430536412,
+        "u1_valence": 0.6111880498438932,
+        "u2_agency": 0.46789583815793756,
+        "u3_urgency": 0.5019978094848857
+      },
+      "r2_slow_memory_2d": 0.7704196766349466,
+      "mae_slow_memory_2d": 0.10698538741763969,
+      "mse_slow_memory_2d": 0.025123691996212796,
+      "dim_slow_r2": {
+        "m0_metabolic_fatigue": 0.7653975642329935,
+        "m1_relational_warmth": 0.7636599164306377
+      },
+      "r2_overall_6d": 0.824162294543824,
+      "mae_overall_6d": 0.08614303571165767,
+      "flapping_rate": 0.8005952380952381,
+      "contradiction_recovery_turns": 1.0,
+      "trajectory_h1_coverage": 0.8166666666666667,
+      "trajectory_h2_coverage": 0.8138888888888889,
+      "latency": {
+        "p50_ms": 0.023949993192218244,
+        "p95_ms": 0.03430499928072094
+      }
+    },
+    "O2_Decoupled4D2D": {
+      "r2_observable_4d": 0.630757510838013,
+      "mae_observable_4d": 0.07572185985866665,
+      "mse_observable_4d": 0.013960901386551278,
+      "dim_observable_r2": {
+        "u0_cognitive_load": 0.6979962430536412,
+        "u1_valence": 0.6111880498438932,
+        "u2_agency": 0.46789583815793756,
+        "u3_urgency": 0.5019978094848857
+      },
+      "r2_slow_memory_2d": -1.8235807087880236,
+      "mae_slow_memory_2d": 0.4982373352049112,
+      "mse_slow_memory_2d": 0.30899325784657716,
+      "dim_slow_r2": {
+        "m0_metabolic_fatigue": -11.322067724665741,
+        "m1_relational_warmth": -0.8116893915088048
+      },
+      "r2_overall_6d": -0.11682191768832828,
+      "mae_overall_6d": 0.2165603516407482,
+      "flapping_rate": 0.8005952380952381,
+      "contradiction_recovery_turns": 1.0,
+      "trajectory_h1_coverage": 0.8166666666666667,
+      "trajectory_h2_coverage": 0.8138888888888889,
+      "latency": {
+        "p50_ms": 0.03530000685714185,
+        "p95_ms": 0.040139985503628815
+      }
+    },
+    "O3_MultiTimescale": {
+      "r2_observable_4d": 0.6385210387917664,
+      "mae_observable_4d": 0.07626299545936795,
+      "mse_observable_4d": 0.013667365698337089,
+      "dim_observable_r2": {
+        "u0_cognitive_load": 0.7278313660329687,
+        "u1_valence": 0.6348290244667762,
+        "u2_agency": 0.4245074154579852,
+        "u3_urgency": 0.5385949274241193
+      },
+      "r2_slow_memory_2d": -0.09566344980534902,
+      "mae_slow_memory_2d": 0.17065030206599577,
+      "mse_slow_memory_2d": 0.11990187417171182,
+      "dim_slow_r2": {
+        "m0_metabolic_fatigue": 0.45684402598630935,
+        "m1_relational_warmth": -0.19481784143169456
+      },
+      "r2_overall_6d": 0.5119331623752299,
+      "mae_overall_6d": 0.10772543099491055,
+      "flapping_rate": 0.8623511904761905,
+      "contradiction_recovery_turns": 1.0,
+      "trajectory_h1_coverage": 0.8222222222222222,
+      "trajectory_h2_coverage": 0.825,
+      "latency": {
+        "p50_ms": 0.07850001566112041,
+        "p95_ms": 0.12273000320419666
+      }
+    },
+    "OracleControl": {
+      "r2_observable_4d": 0.9354834935940662,
+      "mae_observable_4d": 0.039298279585548546,
+      "mse_observable_4d": 0.0024393416526419932
+    }
+  },
+  "latencies": {
+    "O1_Legacy6D": {
+      "p50_ms": 0.023949993192218244,
+      "p95_ms": 0.03430499928072094
+    },
+    "O2_Decoupled": {
+      "p50_ms": 0.03530000685714185,
+      "p95_ms": 0.040139985503628815
+    },
+    "O3_MultiTimescale": {
+      "p50_ms": 0.07850001566112041,
+      "p95_ms": 0.12273000320419666
+    }
+  },
+  "languages": {
+    "English": {
+      "r2_observable_4d": 0.6385210387917664,
+      "mae_observable_4d": 0.07626299545936795,
+      "r2_slow_memory_2d": -0.09566344980534902
+    },
+    "Vietnamese": {
+      "r2_observable_4d": 0.6385210387917664,
+      "mae_observable_4d": 0.07626299545936795,
+      "r2_slow_memory_2d": -0.09566344980534902
+    },
+    "Japanese": {
+      "r2_observable_4d": 0.6385210387917664,
+      "mae_observable_4d": 0.07626299545936795,
+      "r2_slow_memory_2d": -0.09566344980534902
+    }
+  },
+  "controls": {
+    "Control_A_Random_Projection": {
+      "r2_observable_4d": -20.97659700348837,
+      "mae_observable_4d": 0.784915091382286
+    },
+    "Control_B_Shuffled_Temporal_Order": {
+      "r2_observable_4d": 0.5100431407485422,
+      "mae_observable_4d": 0.08783419513631605
+    },
+    "Control_C_Shuffled_Targets": {
+      "r2_observable_4d": 0.34950530660577406,
+      "mae_observable_4d": 0.11083588712200086
+    },
+    "Control_D_Oracle_Observable": {
+      "r2_observable_4d": 0.9354834935940662,
+      "mae_observable_4d": 0.039298279585548546,
+      "mse_observable_4d": 0.0024393416526419932
+    }
+  },
+  "gates": {
+    "G_ONT1_OBSERVABLE_4D_R2_TARGET": "FAIL",
+    "G_ONT2_CONTRADICTION_RECOVERY": "PASS",
+    "G_ONT3_FLAPPING_RATE": "FAIL",
+    "G_ONT4_CPU_LATENCY": "PASS"
+  },
+  "peak_observable_4d_r2": 0.6385210387917664,
+  "canonical_baselines": {
+    "REAL_LAYA_MODERNBERT_PARAMS": 421400000.0,
+    "REAL_LAYA_CPU_P50_MS": 607.67,
+    "REAL_LAYA_ECE": 0.2232,
+    "PHASE_22_XR_FLAPPING": 0.004,
+    "PHASE_22_XR_RECOVERY_TURNS": 1.0,
+    "PHASE_22_XR_CALIBRATED_COVERAGE": 1.0,
+    "PHASE_22_AL_PEAK_HELD_OUT_R2": 0.25476,
+    "PHASE_22_INF_PEAK_HELD_OUT_R2": 0.6988,
+    "PHASE_22_SSF_RAW_BASELINE_R2": 0.70034,
+    "PHASE_22_EKF_R2": 0.70303
+  }
+}

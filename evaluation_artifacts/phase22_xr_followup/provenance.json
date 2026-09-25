@@ -1,0 +1,16 @@
+{
+  "status": "BLOCKED_OFFLINE_WEIGHTS",
+  "laya_verification": {
+    "status": "BLOCKED_OFFLINE_WEIGHTS",
+    "weights_present": false,
+    "provenance": "BLOCKED_OFFLINE_WEIGHTS",
+    "reason": "Laya neural backbone SafeTensors weights not present in local storage (models/ directory absent). Fail-closed discipline strictly enforced.",
+    "source_repository": "C:\\Users\\Lunafiah\\Desktop\\My_project\\laya",
+    "checkpoint_path": null,
+    "sha256": null,
+    "latency_backbone_ms": null,
+    "ece": null,
+    "brier": null
+  },
+  "experiment_provenance": "VERIFIED_BY_EXECUTION"
+}

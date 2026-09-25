@@ -93,6 +93,11 @@ flowchart TD
     Avatar --> UserUI
 ```
 
+> [!NOTE]
+> **Substrate Neutrality of Layer 6 Realization (Post-Phase 22 Research Finding)**:  
+> SLM/LLM là một downstream realization/rendering substrate tùy chọn; relational semantic state phải tồn tại độc lập với nó.  
+> Nghiên cứu Phase 22 (22-RG, 22-CC, 22-SC) đã chứng minh nhận thức quan hệ (relational cognition) không phụ thuộc vào natural-language prompt hay token context, mà được định nghĩa bởi một semantic contract độc lập (C1 structured frame / C4 explicit markers), có thể điều khiển trực tiếp cả các downstream non-language consumers (D0 Symbolic Renderer, D2 Direct Action Policy) với độ trung thực 100%.
+
 ---
 
 ## 3. Subsystem Mechanisms & Mathematical Formulation
@@ -217,7 +222,12 @@ Lucia uses a biologically inspired memory architecture based on **Pentti Kanerva
 
 ---
 
-### 3.6 Layer 6: Voice, Avatar & Embodied Presence
+### 3.6 Layer 6: Voice, Avatar, Language & Substrate-Neutral Embodiment
+
+#### 0. Substrate Neutrality & Downstream Realization Principle
+* **Substrate Neutrality**: SLM/LLM là một downstream realization/rendering substrate tùy chọn; relational semantic state phải tồn tại độc lập với nó.
+* **Evidence from Phase 22**: Nghiên cứu Phase 22-SC chứng minh rằng relational evidence contract (~90–120 bytes) hoàn toàn độc lập với ngôn ngữ tự nhiên và token sequence. Ngay cả khi không có SLM, các downstream non-language consumers (như D0 Symbolic Renderer, D2 Direct Action Policy) vẫn đạt 100% relational decision fidelity với 0.00% over-inference.
+* **Role of Language Models**: Local Small Language Models (LFM2.5-1.2B / Qwen2.5-3B) đóng vai trò là một trong các downstream realization engines để render lời thoại khi cần thiết, tương tự như RVC engine render giọng nói hoặc WebGL render biểu cảm avatar, không phải là cognitive substrate duy nhất hay bắt buộc.
 
 #### 1. Direct RVC Neural Voice Engine (`src/core/voice/`)
 * Direct on-device RVC v2 neural inference (`RVCPipeline` + `SynthesizerTrn`, 457 tensors) with canonical `ja-JP-NanamiNeural` base voice and `VaresaGIJP` target timbre (`.pth` + `.index`).
@@ -342,9 +352,10 @@ $$\text{Development / Simulation Environment} \neq \text{Lucia Activation}$$
 * **Decision**: Emotion is modeled as a continuous dynamical system in 3-dimensional PAD space governed by a Liquid Neural Network (LNN) ODE solved every 200ms. Emotion is pre-reflective: it never manifests as self-reported labels (*"I feel happy"*). Instead, it mechanically conditions generation through token length, sampling temperature, reasoning depth ($k$), and response latency. A strict `BoundaryLayer` regex filter blocks any introspective self-awareness output.
 
 ### ADR-002: Local GGUF Small Language Model (SLM) + Boundary Layer vs. Theoretical SNN/HDC
-* **Status**: **ACCEPTED** (Phase 1)
+* **Status**: **ACCEPTED** (Phase 1, clarified post-Phase 22)
 * **Context**: Foundational concept whitepapers proposed a token-free language core using Hyperdimensional Computing (HDC) and Spiking Neural Networks (SNNs).
-* **Decision**: Because production-ready general conversational generation via HDC/SNN does not yet exist for edge consumer hardware, Lucia pragmatically adopts a local GGUF Small Language Model (**LFM2.5-1.2B Instruct** or **Qwen2.5-3B**) accelerated via CUDA on consumer GPUs (e.g. RTX 3050 Ti Laptop, 4GB VRAM). Non-reflective behavior is enforced deterministically by placing the rule-based `BoundaryLayer` validator directly downstream of the LLM.
+* **Decision**: Because production-ready general conversational generation via HDC/SNN does not yet exist for edge consumer hardware, Lucia pragmatically adopts a local GGUF Small Language Model (**LFM2.5-1.2B Instruct** or **Qwen2.5-3B**) accelerated via CUDA on consumer GPUs (e.g. RTX 3050 Ti Laptop, 4GB VRAM). Non-reflective behavior is enforced deterministically by placing the rule-based `BoundaryLayer` validator directly downstream of the LLM.  
+  *(Architectural Clarification post-Phase 22-SC: SLM/LLM là một downstream realization/rendering substrate tùy chọn; relational semantic state phải tồn tại độc lập với nó. Nhận thức quan hệ không phát sinh từ prompt/token context mà từ cấu trúc quan hệ ngữ nghĩa độc lập C1/C4).*
 
 ### ADR-003: Kanerva Sparse Distributed Memory (SDM) with Emotional Resonance vs. Vector RAG
 * **Status**: **ACCEPTED** (Phase 2)
@@ -572,6 +583,27 @@ $$\text{Development / Simulation Environment} \neq \text{Lucia Activation}$$
 
 ---
 
+### DRAFT ADR-030: Substrate-Neutral Relational Semantic Conditioning & Evidence Gating [DRAFT / RESEARCH RECORD ONLY / NOT RATIFIED]
+* **Status**: **`DRAFT / RESEARCH RECORD ONLY / NOT RATIFIED`** (Archival Research Record Only — NOT RATIFIED / UNAPPROVED / NOT ADMITTED TO PRODUCTION)
+* **Production Admission**: **`NOT ADMITTED`** (Production Architecture Gate is **STRICTLY LOCKED**; Production mutations = 0)
+* **Research Phase**: Phase 22 Research Chain (`22-AL → 22-INF → 22-SSF → 22-EKF → 22-ONT → 22-REL → 22-ANCHOR → 22-RI → 22-MR → 22-RG → 22-CC → 22-SC`)
+* **Governance Status**: **`[RESEARCH VALIDATED / NOT PROMOTED]`** (Empirically verified in isolated harnesses; production promotion requires future Architecture Gate)
+* **Authoritative Decision Statement**:
+  > *Relational cognition in Lucia does not depend on Small Language Models (SLMs), prompt engineering, or token context windows. Relational state and evidence conditioning operate as a compact, structured, substrate-neutral semantic interface (C1/C4), with the SLM acting strictly as an optional downstream realization engine alongside non-language action policies and embodiment controllers.*
+
+* **Key Research Findings & Architectural Ledger**:
+  1. **Observable Layer & State Dynamics (22-AL, 22-INF, 22-SSF, 22-EKF)**: Observable interaction layer continuously maintains 4D relational state $\mathbf{R}_t \in [0, 1]^4$ with continuous state estimation and epistemic foraging.
+  2. **Relational Warmth & Trust Tiering (22-ONT, 22-REL, 22-ANCHOR, 22-RI)**: Relational Warmth is anchored in episodic graph structure and evidence grading rather than prompt adjectives. Trust tier transitions require grounded episodic verification.
+  3. **Memory Retrieval & Relevance Gating (22-MR, 22-RG)**: Hybrid SDM associative retrieval (M4) is filtered through a safety-first hybrid gate (G4), preserving $\ge 99\%$ mandatory relational anchors and rupture/repair evidence while compressing irrelevant context by $65.8\%$.
+  4. **Substrate Neutrality & Consumer Independence (22-CC, 22-SC)**:
+     - Relational cognition operates independently of natural-language tokens or prompt contexts. The 345-token context budget in 22-CC is decomposed as $85\%$ syntactic serialization overhead; true irreducible semantic state is $\sim 90–120$ bytes.
+     - Non-language downstream consumers (D0 Symbolic Rule Renderer, D2 Direct Action Policy) achieved identical $1.0000$ relational decision fidelity with $0.00\%$ over-inference without an SLM.
+     - Candidate C1 (Structured Relational Frame) and Candidate C4 (Hybrid State with Boundary Markers) are validated as the minimum sufficient semantic conditioning interface.
+  5. **Negative Result Preserved (Candidate C3 — Dense HDC Superposition)**: Standalone 1024-dimensional dense Hyperdimensional Computing (HDC) vector superposition suffers from $1/\sqrt{N}$ crosstalk noise when $N > 5$ anchors ($68.2\%$ rupture recovery), proving dense HDC is **INSUFFICIENT** as an independent cognitive substrate.
+  6. **Phase 23 Handoff Contract**: Phase 23 inherits this substrate-neutral semantic interface for continuous semantic formation and token-free multi-modal communication, without assuming an SLM as a mandatory cognitive substrate.
+
+---
+
 ### 8.1 Reconciliation of Outdated Specs & Conflicting Decisions
 
 | Dimension | Outdated / Preliminary Spec | Authoritative Implemented Reality | Resolution & Rationale |
@@ -618,3 +650,4 @@ $$\text{Development / Simulation Environment} \neq \text{Lucia Activation}$$
 | **ARCH-024** | Single-layer limbic ODE | Coupled Multi-Timescale LNN (MT-LNN) + Philia Attractor | Multi-minute affective continuity, exact Philia convergence | Phase 19 | Implementation Fact |
 | **ARCH-025** | Open-loop text retrieval & echo vector | Closed-Loop Affective Recollection via Slow Forcing | Memory-identity-dependent trajectory deflection (ADR-027) | Phase 20 | Implementation Fact |
 | **ARCH-026** | Static weights & fixed resting attractor | 3-Tier Multi-Timescale Plasticity & Relational Inertia | Attunes baseline dynamics to history; bounded by spectral norm | Phase 21 | Implementation Fact |
+| **ARCH-027** | SLM/prompt as mandatory cognitive substrate | Substrate-Neutral Semantic Interface (C1/C4) + G4 Gate | Decouples relational cognition from language models; enables token-free multi-modal realization | Phase 22 | Research Validated |

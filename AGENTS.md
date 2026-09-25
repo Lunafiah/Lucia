@@ -4,11 +4,11 @@
 
 ---
 
-## 0. Current Operating Mode — Research-First Governance (Post-Phase 21)
+## 0. Current Operating Mode — Research-First Governance (Post-Phase 21 / Post-Phase 22 Research Closure)
 
 > **CURRENT STAGE: RESEARCH / EVIDENCE BUILDING — NOT ACTIVATION**
 
-Lucia has completed all documented production and research milestones through **Phase 21 — Long-Term Relational Consolidation & Synaptic Homeostasis**. The repository treats the canonical cognitive architecture as an implemented, verified baseline. The next research milestone is established through project governance and canonical documentation rather than inferred by an AI coding agent.
+Lucia has completed all documented production milestones through **Phase 21 — Long-Term Relational Consolidation & Synaptic Homeostasis**, and completed the research milestone chain through **Phase 22 — Substrate-Neutral Semantic Conditioning & Relational Cognition Study** (`[RESEARCH VALIDATED / NOT PROMOTED]`). The repository treats the canonical Phase 21 cognitive architecture as an implemented, verified baseline. Phase 22 establishes substrate neutrality for relational intelligence without promoting changes to production code. The next research milestone is established through project governance and canonical documentation rather than inferred by an AI coding agent.
 
 ### Mandatory Research-First Rules
 
@@ -113,24 +113,32 @@ The repository enforces a consolidated, single-source-of-truth documentation str
 ### 3.1 Document Authority Matrix
 
 ```text
-README.md (Public Front Door)
+README.md (Public Front Door) [L0]
     │
-    ├── docs/00_PROJECT_OVERVIEW.md (Canonical Project Truth)
+    ├── docs/L1_INVARIANTS.md (Canonical Invariant Ledger) [L1]
     │
-    ├── docs/ARCHITECTURE.md (Canonical Technical Truth & ADR Ledger)
+    ├── AGENTS.md (Master Operating Instructions & Decision Protocol) [L2]
     │
-    ├── docs/DOCUMENTATION_INDEX.md (Navigation Map Only)
+    ├── docs/00_PROJECT_OVERVIEW.md (Canonical Project Truth & Roadmap) [L2]
     │
-    └── Historical Evidence (docs/specs/**)
+    ├── docs/ARCHITECTURE.md (Canonical Technical Truth & ADR Ledger) [L3]
+    │
+    ├── docs/CONTEXT_INDEX.md (Context Retrieval Map L0–L6) [L4]
+    │
+    ├── docs/DOCUMENTATION_INDEX.md (Complete Catalog & Spec Navigation) [L4]
+    │
+    └── Historical Evidence (docs/specs/**, tests/evaluation/**) [L5]
 ```
 
 | Document | Authority Tier | Role & Content Scope | Agent Operating Rules |
 |---|---|---|---|
-| [`README.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/README.md) | **Public Front Door** | High-level introduction, philosophy, public concepts, and getting started. | Use it to understand project purpose and top-level navigation. **NOT** the detailed technical specification. |
-| [`docs/00_PROJECT_OVERVIEW.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/00_PROJECT_OVERVIEW.md) | **Canonical Project Truth** | System identity, core philosophy, 6-layer cognitive pipeline summary, 24-subsystem health matrix, test statistics, active REST API surface, and milestone roadmap. | Consult for current project status, phase progress, subsystem operational state, and project-level constraints. **Do NOT recreate `CURRENT_STATUS.md`.** |
-| [`docs/ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/ARCHITECTURE.md) | **Canonical Technical Truth** | Technical architecture, 20-Watt Whole Brain Architecture, concurrency & locking rules, mathematical/dynamical mechanisms (ODEs, SDM, Ecphory, BPTT), and the complete Architectural Decision Record ledger (**ADR-001 through ADR-028**). | Primary technical authority for mechanisms, formulas, component ownership, threading, and design rationale. **Do NOT recreate `MECHANISM.md` or `DESIGN_DECISIONS.md`.** |
-| [`docs/DOCUMENTATION_INDEX.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/DOCUMENTATION_INDEX.md) | **Navigation Map** | Complete catalog of active and historical documentation, authority hierarchy, and reading paths. | Use strictly to navigate documents. **Do NOT turn the index into another source of technical truth.** |
-| **Phase / Research / Acceptance Docs** (`docs/specs/**`) | **Historical Evidence & Records** | Phase specifications, research hypotheses (H1–Hn), evaluation harness reports, mathematical proposals, and formal acceptance reports. | Preserved as evidence and historical records. They must **never** silently override the active canonical architecture in `docs/ARCHITECTURE.md`. |
+| [`README.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/README.md) | **Public Front Door [L0]** | High-level introduction, philosophy, public concepts, and getting started. | Use it to understand project purpose and top-level navigation. **NOT** the detailed technical specification. |
+| [`docs/L1_INVARIANTS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/L1_INVARIANTS.md) | **Canonical Invariant Ledger [L1]** | Consolidated non-negotiable architectural, limbic, concurrency, and governance invariants. | Primary reference before any modification. Must not be bypassed or weakened. |
+| [`docs/00_PROJECT_OVERVIEW.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/00_PROJECT_OVERVIEW.md) | **Canonical Project Truth [L2]** | System identity, core philosophy, 6-layer cognitive pipeline summary, 24-subsystem health matrix, test statistics, active REST API surface, and milestone roadmap. | Consult for current project status, phase progress, subsystem operational state, and project-level constraints. **Do NOT recreate `CURRENT_STATUS.md`.** |
+| [`docs/ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/ARCHITECTURE.md) | **Canonical Technical Truth [L3]** | Technical architecture, 20-Watt Whole Brain Architecture, concurrency & locking rules, mathematical/dynamical mechanisms (ODEs, SDM, Ecphory, BPTT), and the complete Architectural Decision Record ledger (**ADR-001 through ADR-028**). | Primary technical authority for mechanisms, formulas, component ownership, threading, and design rationale. **Do NOT recreate `MECHANISM.md` or `DESIGN_DECISIONS.md`.** |
+| [`docs/CONTEXT_INDEX.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/CONTEXT_INDEX.md) | **Context Routing Map [L4]** | Logical context layers (L0–L6), minimal sufficient context loading rules by task type, anti-patterns. | Consult first to identify minimal sufficient context layers before ingesting files. |
+| [`docs/DOCUMENTATION_INDEX.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/DOCUMENTATION_INDEX.md) | **Navigation Map [L4]** | Complete catalog of active and historical documentation, authority hierarchy, and reading paths. | Use strictly to navigate documents. **Do NOT turn the index into another source of technical truth.** |
+| **Phase / Research / Acceptance Docs** (`docs/specs/**`) | **Historical Evidence & Records [L5]** | Phase specifications, research hypotheses (H1–Hn), evaluation harness reports, mathematical proposals, and formal acceptance reports. | Preserved as evidence and historical records. They must **never** silently override the active canonical architecture in `docs/ARCHITECTURE.md`. |
 
 ### 3.2 Deleted Canonical Files Notice
 
@@ -219,8 +227,9 @@ Step 7: Pre-Commit Invariant Checks & Focused Git Commit
 
 ### Step 1 — Inspect Before Coding
 - Run `git status` to inspect current branch and working tree.
-- Read `AGENTS.md` and check relevant canonical documentation (`00_PROJECT_OVERVIEW.md`, `ARCHITECTURE.md`).
-- Read the governing ADRs and phase specifications.
+- Consult [`docs/CONTEXT_INDEX.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/CONTEXT_INDEX.md) to identify the **minimum sufficient context layers** for the task.
+- Read [`docs/L1_INVARIANTS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/L1_INVARIANTS.md) and [`AGENTS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/AGENTS.md) to verify applicable invariant constraints.
+- Consult canonical documentation (`00_PROJECT_OVERVIEW.md`, `ARCHITECTURE.md`) and relevant ADRs within scope.
 - Inspect the existing implementation and test coverage.
 - **Do not assume the prompt's feature request accurately reflects the current codebase.** Always verify against source code first.
 

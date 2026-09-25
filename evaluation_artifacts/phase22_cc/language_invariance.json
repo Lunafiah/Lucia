@@ -1,0 +1,68 @@
+{
+  "C0": {
+    "tier_consistency": 0.03065134099616862,
+    "over_inference": 0.11877394636015326,
+    "unsupported_claim": 0.026819923371647514,
+    "evidence_attribution": 0.0,
+    "contradiction_handling": 0.0,
+    "rupture_repair_cons": 0.0,
+    "memory_utilized": 0.0,
+    "token_count": 0.0,
+    "latency_ms": 0.02155976913694535
+  },
+  "C1": {
+    "tier_consistency": 0.00766283524904221,
+    "over_inference": 0.06130268199233717,
+    "unsupported_claim": 0.01915708812260536,
+    "evidence_attribution": 0.009964497535560835,
+    "contradiction_handling": 0.03448275862068961,
+    "rupture_repair_cons": 0.03065134099616862,
+    "memory_utilized": 0.003831417624521105,
+    "token_count": 126.41762452107281,
+    "latency_ms": 0.013286970650341887
+  },
+  "C2": {
+    "tier_consistency": 0.05363984674329503,
+    "over_inference": 0.038314176245210725,
+    "unsupported_claim": 0.015325670498084282,
+    "evidence_attribution": 0.00866700109336338,
+    "contradiction_handling": 0.026819923371647514,
+    "rupture_repair_cons": 0.026819923371647514,
+    "memory_utilized": 0.0,
+    "token_count": 80.04597701149424,
+    "latency_ms": 0.004881992824625411
+  },
+  "C3": {
+    "tier_consistency": 0.04214559386973182,
+    "over_inference": 0.019157088122605363,
+    "unsupported_claim": 0.0038314176245210704,
+    "evidence_attribution": 0.005068987579737616,
+    "contradiction_handling": 0.03831417624521072,
+    "rupture_repair_cons": 0.026819923371647514,
+    "memory_utilized": 0.0,
+    "token_count": 79.89655172413794,
+    "latency_ms": 0.007793486276213291
+  },
+  "C4": {
+    "tier_consistency": 0.026819923371647514,
+    "over_inference": 0.015325670498084292,
+    "unsupported_claim": 0.0038314176245210704,
+    "evidence_attribution": 0.0049571283086109474,
+    "contradiction_handling": 0.01532567049808431,
+    "rupture_repair_cons": 0.03065134099616862,
+    "memory_utilized": 0.0,
+    "token_count": 79.86590038314176,
+    "latency_ms": 0.0055808434798114565
+  },
+  "Oracle": {
+    "tier_consistency": 0.0,
+    "over_inference": 0.007662835249042146,
+    "unsupported_claim": 0.011494252873563218,
+    "evidence_attribution": 0.0067176035848887095,
+    "contradiction_handling": 0.01532567049808431,
+    "rupture_repair_cons": 0.01532567049808431,
+    "memory_utilized": 0.0,
+    "token_count": 81.7088122605364,
+    "latency_ms": 0.006881225818475556
+  }
+}

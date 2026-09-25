@@ -1,0 +1,50 @@
+{
+  "C1": {
+    "id": "C1",
+    "name": "Lightweight Multilingual Sentence Encoder",
+    "class": "MiniLM Bi-Encoder Anchor Projector",
+    "param_count": 22700000,
+    "serialized_size_mb": 87.2,
+    "param_budget": "20M-40M"
+  },
+  "C2": {
+    "id": "C2",
+    "name": "Distilled Semantic Encoder",
+    "class": "Distil-ModernBERT-Conversational",
+    "param_count": 28400000,
+    "serialized_size_mb": 108.5,
+    "param_budget": "15M-60M"
+  },
+  "C3": {
+    "id": "C3",
+    "name": "Audio-First Acoustic/Prosodic Encoder",
+    "class": "Acoustic DSP Feature Extractor",
+    "param_count": 125000,
+    "serialized_size_mb": 0.5,
+    "param_budget": "<1M"
+  },
+  "C4": {
+    "id": "C4",
+    "name": "Hybrid Multimodal Observation",
+    "class": "Text Semantic + Audio Prosodic Fusion",
+    "param_count": 22825000,
+    "serialized_size_mb": 87.7,
+    "param_budget": "25M-50M"
+  },
+  "C5": {
+    "id": "C5",
+    "name": "Structured Semantic Observation",
+    "class": "Structured Dialogue Act / Intent Slot Extractor",
+    "param_count": 18200000,
+    "serialized_size_mb": 71.4,
+    "param_budget": "10M-30M"
+  },
+  "C6": {
+    "id": "C6",
+    "name": "Decoupled Learned Observation Projection Layer",
+    "class": "Decoupled g^-1 Calibrated Log-Odds Projector",
+    "param_count": 28450000,
+    "serialized_size_mb": 108.8,
+    "param_budget": "~50K (projection layer)"
+  }
+}

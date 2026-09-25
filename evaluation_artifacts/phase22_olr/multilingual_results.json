@@ -1,0 +1,56 @@
+{
+  "C1": {
+    "per_language_r2": {
+      "English": -0.8472307744921055,
+      "Vietnamese": -0.8768673273133825,
+      "Japanese": -0.8280870083508909
+    },
+    "vi_en_ratio": 0.0,
+    "ja_en_ratio": 0.0
+  },
+  "C2": {
+    "per_language_r2": {
+      "English": -0.532752909136784,
+      "Vietnamese": -0.5274833729567601,
+      "Japanese": -0.4881769770854669
+    },
+    "vi_en_ratio": 0.0,
+    "ja_en_ratio": 0.0
+  },
+  "C3": {
+    "per_language_r2": {
+      "English": -3.4698161463971005,
+      "Vietnamese": -3.4698161463971005,
+      "Japanese": -3.4698161463971005
+    },
+    "vi_en_ratio": 0.0,
+    "ja_en_ratio": 0.0
+  },
+  "C4": {
+    "per_language_r2": {
+      "English": -0.7534540777206689,
+      "Vietnamese": -0.7590897561367282,
+      "Japanese": -0.7442967252708148
+    },
+    "vi_en_ratio": 0.0,
+    "ja_en_ratio": 0.0
+  },
+  "C5": {
+    "per_language_r2": {
+      "English": -2.1453479468232928,
+      "Vietnamese": -2.3119566168254706,
+      "Japanese": -2.355742240760701
+    },
+    "vi_en_ratio": 0.0,
+    "ja_en_ratio": 0.0
+  },
+  "C6": {
+    "per_language_r2": {
+      "English": -0.532752909136784,
+      "Vietnamese": -0.5274833729567601,
+      "Japanese": -0.4881769770854669
+    },
+    "vi_en_ratio": 0.0,
+    "ja_en_ratio": 0.0
+  }
+}

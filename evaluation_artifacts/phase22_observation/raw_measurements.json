@@ -1,0 +1,836 @@
+{
+  "C1": {
+    "candidate_id": "C1",
+    "metadata": {
+      "id": "C1",
+      "name": "Lightweight Multilingual Sentence Encoder",
+      "class": "MiniLM Bi-Encoder Anchor Projector",
+      "param_count": 22700000,
+      "serialized_size_mb": 87.2,
+      "param_budget": "20M-40M"
+    },
+    "sample_count": 1800,
+    "calibration": {
+      "ece": 0.2516666666666665,
+      "brier": 1.4692251637315703,
+      "nll": 0.33153650033618337,
+      "mean_confidence": 0.6339999999999999,
+      "accuracy": 0.8294444444444444
+    },
+    "alignment": {
+      "r2": -0.9706488508625923,
+      "mae": 0.18718827440073763,
+      "mse": 0.058937485208839145,
+      "per_language_r2": {
+        "English": -0.908139383763116,
+        "Vietnamese": -0.997104816389915,
+        "Japanese": -1.0067023524347465
+      },
+      "vi_en_ratio": 0.0,
+      "ja_en_ratio": 0.0
+    },
+    "stability": {
+      "flapping_rate": 0.5910938477786304,
+      "contradiction_recovery_turns": 1.1666666666666667
+    },
+    "trajectory": {
+      "coverage_h1": 0.9555555555555556,
+      "coverage_h2": 1.0
+    },
+    "latency_ms": {
+      "encoder": {
+        "p50": 22.672214428962544,
+        "p95": 26.177730858663224,
+        "p99": 26.50532706519298
+      },
+      "projection": {
+        "p50": 0.059200014220550656,
+        "p95": 0.11043499689549205,
+        "p99": 0.13911898247897622
+      },
+      "filter": {
+        "p50": 0.12509999214671552,
+        "p95": 0.188170006731525,
+        "p99": 0.23041997919790444
+      },
+      "total_pipeline": {
+        "p50": 22.849154422078342,
+        "p95": 26.378352777758675,
+        "p99": 26.68184113307702
+      }
+    },
+    "resources": {
+      "param_count": 22700000,
+      "serialized_size_mb": 87.2,
+      "peak_ram_mb": 180.0,
+      "gpu_vram_mb": 0.0,
+      "cuda_available": false
+    },
+    "multilingual": {
+      "per_language_r2": {
+        "English": -0.908139383763116,
+        "Vietnamese": -0.997104816389915,
+        "Japanese": -1.0067023524347465
+      },
+      "per_language_ece": {
+        "English": 0.20000000000000018,
+        "Vietnamese": 0.20833333333333315,
+        "Japanese": 0.4313333333333333
+      },
+      "per_language_latency_p50": {
+        "English": 22.698924204083454,
+        "Vietnamese": 22.800956417771275,
+        "Japanese": 22.517125408148452
+      }
+    },
+    "interface": {
+      "dimension": 12,
+      "all_dimensions_valid": true,
+      "all_finite": true,
+      "all_bounded": true
+    },
+    "gates": {
+      "G_OBS1_CALIB_ECE": "FAIL",
+      "G_OBS1_CALIB_BRIER": "FAIL",
+      "G_OBS2_ALIGN_R2": "FALSIFIED",
+      "G_OBS3_STAB_FLAPPING": "FAIL",
+      "G_OBS3_STAB_RECOVERY": "FAIL",
+      "G_OBS4_TRAJ_COVERAGE": "PASS",
+      "G_OBS5_LATENCY_CPU_P50": "PASS",
+      "G_OBS6_RES_RAM": "PASS",
+      "G_OBS7_MULTILINGUAL": "FAIL",
+      "G_OBS8_INTERFACE": "PASS"
+    },
+    "overall_status": "FAIL",
+    "provenance_samples": [
+      {
+        "candidate_id": "C1",
+        "implementation_revision": "c1-minilm-v1",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "paraphrase-multilingual-MiniLM-L12-v2",
+        "execution_mode": "CPU_LOCAL",
+        "weights_provenance": "PARAPHRASE_MULTILINGUAL_MINILM_EMBEDDINGS",
+        "timestamp_iso": "2026-09-24T19:03:54.869389+00:00"
+      },
+      {
+        "candidate_id": "C1",
+        "implementation_revision": "c1-minilm-v1",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "paraphrase-multilingual-MiniLM-L12-v2",
+        "execution_mode": "CPU_LOCAL",
+        "weights_provenance": "PARAPHRASE_MULTILINGUAL_MINILM_EMBEDDINGS",
+        "timestamp_iso": "2026-09-24T19:03:54.870543+00:00"
+      },
+      {
+        "candidate_id": "C1",
+        "implementation_revision": "c1-minilm-v1",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "paraphrase-multilingual-MiniLM-L12-v2",
+        "execution_mode": "CPU_LOCAL",
+        "weights_provenance": "PARAPHRASE_MULTILINGUAL_MINILM_EMBEDDINGS",
+        "timestamp_iso": "2026-09-24T19:03:54.871586+00:00"
+      }
+    ]
+  },
+  "C2": {
+    "candidate_id": "C2",
+    "metadata": {
+      "id": "C2",
+      "name": "Distilled Semantic Encoder",
+      "class": "Distil-ModernBERT-Conversational",
+      "param_count": 28400000,
+      "serialized_size_mb": 108.5,
+      "param_budget": "15M-60M"
+    },
+    "sample_count": 1800,
+    "calibration": {
+      "ece": 0.2170666666666667,
+      "brier": 1.6432588532795969,
+      "nll": 0.32884355968120177,
+      "mean_confidence": 0.6424000000000001,
+      "accuracy": 0.8211111111111111
+    },
+    "alignment": {
+      "r2": -0.5750384037802492,
+      "mae": 0.1568244201415052,
+      "mse": 0.04710570459344852,
+      "per_language_r2": {
+        "English": -0.5781864455695842,
+        "Vietnamese": -0.5973961169692699,
+        "Japanese": -0.5495326488018941
+      },
+      "vi_en_ratio": 0.0,
+      "ja_en_ratio": 0.0
+    },
+    "stability": {
+      "flapping_rate": 0.4166719925291258,
+      "contradiction_recovery_turns": 3.033333333333333
+    },
+    "trajectory": {
+      "coverage_h1": 0.9666666666666667,
+      "coverage_h2": 1.0
+    },
+    "latency_ms": {
+      "encoder": {
+        "p50": 28.700141204388125,
+        "p95": 33.989897741927635,
+        "p99": 34.4686245021975
+      },
+      "projection": {
+        "p50": 0.046899993321858346,
+        "p95": 0.08330499404110014,
+        "p99": 0.09730198420584202
+      },
+      "filter": {
+        "p50": 0.11794999591074884,
+        "p95": 0.16660501569276676,
+        "p99": 0.19182600517524404
+      },
+      "total_pipeline": {
+        "p50": 28.878176464438877,
+        "p95": 34.166529203113676,
+        "p99": 34.63063244150736
+      }
+    },
+    "resources": {
+      "param_count": 28400000,
+      "serialized_size_mb": 108.5,
+      "peak_ram_mb": 220.0,
+      "gpu_vram_mb": 0.0,
+      "cuda_available": false
+    },
+    "multilingual": {
+      "per_language_r2": {
+        "English": -0.5781864455695842,
+        "Vietnamese": -0.5973961169692699,
+        "Japanese": -0.5495326488018941
+      },
+      "per_language_ece": {
+        "English": 0.20166666666666647,
+        "Vietnamese": 0.18666666666666673,
+        "Japanese": 0.3944666666666666
+      },
+      "per_language_latency_p50": {
+        "English": 28.77438017512131,
+        "Vietnamese": 28.8992339666663,
+        "Japanese": 28.486446865812617
+      }
+    },
+    "interface": {
+      "dimension": 12,
+      "all_dimensions_valid": true,
+      "all_finite": true,
+      "all_bounded": true
+    },
+    "gates": {
+      "G_OBS1_CALIB_ECE": "FAIL",
+      "G_OBS1_CALIB_BRIER": "FAIL",
+      "G_OBS2_ALIGN_R2": "FALSIFIED",
+      "G_OBS3_STAB_FLAPPING": "FAIL",
+      "G_OBS3_STAB_RECOVERY": "FAIL",
+      "G_OBS4_TRAJ_COVERAGE": "PASS",
+      "G_OBS5_LATENCY_CPU_P50": "PASS",
+      "G_OBS6_RES_RAM": "PASS",
+      "G_OBS7_MULTILINGUAL": "FAIL",
+      "G_OBS8_INTERFACE": "PASS"
+    },
+    "overall_status": "FAIL",
+    "provenance_samples": [
+      {
+        "candidate_id": "C2",
+        "implementation_revision": "c2-distil-v1",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "Distil-ModernBERT-Conversational-25M",
+        "execution_mode": "CPU_LOCAL",
+        "weights_provenance": "DISTIL_MODERNBERT_CONVERSATIONAL_CALIBRATED",
+        "timestamp_iso": "2026-09-24T19:03:56.870125+00:00"
+      },
+      {
+        "candidate_id": "C2",
+        "implementation_revision": "c2-distil-v1",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "Distil-ModernBERT-Conversational-25M",
+        "execution_mode": "CPU_LOCAL",
+        "weights_provenance": "DISTIL_MODERNBERT_CONVERSATIONAL_CALIBRATED",
+        "timestamp_iso": "2026-09-24T19:03:56.871194+00:00"
+      },
+      {
+        "candidate_id": "C2",
+        "implementation_revision": "c2-distil-v1",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "Distil-ModernBERT-Conversational-25M",
+        "execution_mode": "CPU_LOCAL",
+        "weights_provenance": "DISTIL_MODERNBERT_CONVERSATIONAL_CALIBRATED",
+        "timestamp_iso": "2026-09-24T19:03:56.872221+00:00"
+      }
+    ]
+  },
+  "C3": {
+    "candidate_id": "C3",
+    "metadata": {
+      "id": "C3",
+      "name": "Audio-First Acoustic/Prosodic Encoder",
+      "class": "Acoustic DSP Feature Extractor",
+      "param_count": 125000,
+      "serialized_size_mb": 0.5,
+      "param_budget": "<1M"
+    },
+    "sample_count": 1800,
+    "calibration": {
+      "ece": 0.07833333333333337,
+      "brier": 1.898058942421767,
+      "nll": 0.16280768132880769,
+      "mean_confidence": 0.75,
+      "accuracy": 0.8283333333333334
+    },
+    "alignment": {
+      "r2": -3.60962986334666,
+      "mae": 0.29434172546318416,
+      "mse": 0.13786321787887132,
+      "per_language_r2": {
+        "English": -3.60962986334666,
+        "Vietnamese": -3.60962986334666,
+        "Japanese": -3.60962986334666
+      },
+      "vi_en_ratio": 0.0,
+      "ja_en_ratio": 0.0
+    },
+    "stability": {
+      "flapping_rate": 0.6464768166632161,
+      "contradiction_recovery_turns": 5.0
+    },
+    "trajectory": {
+      "coverage_h1": 0.9,
+      "coverage_h2": 1.0
+    },
+    "latency_ms": {
+      "encoder": {
+        "p50": 3.818397405796982,
+        "p95": 4.923315734599774,
+        "p99": 5.015326233710834
+      },
+      "projection": {
+        "p50": 0.008000002708286047,
+        "p95": 0.01069999416358769,
+        "p99": 0.015403000870719549
+      },
+      "filter": {
+        "p50": 0.08755001181270927,
+        "p95": 0.12079998850822449,
+        "p99": 0.16360899433493614
+      },
+      "total_pipeline": {
+        "p50": 3.91836849697777,
+        "p95": 5.025593053977407,
+        "p99": 5.117856500837098
+      }
+    },
+    "resources": {
+      "param_count": 125000,
+      "serialized_size_mb": 0.5,
+      "peak_ram_mb": 45.0,
+      "gpu_vram_mb": 0.0,
+      "cuda_available": false
+    },
+    "multilingual": {
+      "per_language_r2": {
+        "English": -3.60962986334666,
+        "Vietnamese": -3.60962986334666,
+        "Japanese": -3.60962986334666
+      },
+      "per_language_ece": {
+        "English": 0.18000000000000005,
+        "Vietnamese": 0.07999999999999996,
+        "Japanese": 0.135
+      },
+      "per_language_latency_p50": {
+        "English": 3.8588515374779524,
+        "Vietnamese": 3.8094405350421785,
+        "Japanese": 3.778429225850888
+      }
+    },
+    "interface": {
+      "dimension": 12,
+      "all_dimensions_valid": true,
+      "all_finite": true,
+      "all_bounded": true
+    },
+    "gates": {
+      "G_OBS1_CALIB_ECE": "PASS",
+      "G_OBS1_CALIB_BRIER": "FAIL",
+      "G_OBS2_ALIGN_R2": "FALSIFIED",
+      "G_OBS3_STAB_FLAPPING": "FAIL",
+      "G_OBS3_STAB_RECOVERY": "FAIL",
+      "G_OBS4_TRAJ_COVERAGE": "PASS",
+      "G_OBS5_LATENCY_CPU_P50": "PASS",
+      "G_OBS6_RES_RAM": "PASS",
+      "G_OBS7_MULTILINGUAL": "FAIL",
+      "G_OBS8_INTERFACE": "PASS"
+    },
+    "overall_status": "FAIL",
+    "provenance_samples": [
+      {
+        "candidate_id": "C3",
+        "implementation_revision": "c3-dsp-v1",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "Acoustic-DSP-Prosodic-Extractor",
+        "execution_mode": "CPU_LOCAL",
+        "weights_provenance": "AUDIO_DSP_PROSODIC_6D",
+        "timestamp_iso": "2026-09-24T19:03:58.788834+00:00"
+      },
+      {
+        "candidate_id": "C3",
+        "implementation_revision": "c3-dsp-v1",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "Acoustic-DSP-Prosodic-Extractor",
+        "execution_mode": "CPU_LOCAL",
+        "weights_provenance": "AUDIO_DSP_PROSODIC_6D",
+        "timestamp_iso": "2026-09-24T19:03:58.789237+00:00"
+      },
+      {
+        "candidate_id": "C3",
+        "implementation_revision": "c3-dsp-v1",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "Acoustic-DSP-Prosodic-Extractor",
+        "execution_mode": "CPU_LOCAL",
+        "weights_provenance": "AUDIO_DSP_PROSODIC_6D",
+        "timestamp_iso": "2026-09-24T19:03:58.789575+00:00"
+      }
+    ]
+  },
+  "C4": {
+    "candidate_id": "C4",
+    "metadata": {
+      "id": "C4",
+      "name": "Hybrid Multimodal Observation",
+      "class": "Text Semantic + Audio Prosodic Fusion",
+      "param_count": 22825000,
+      "serialized_size_mb": 87.7,
+      "param_budget": "25M-50M"
+    },
+    "sample_count": 1800,
+    "calibration": {
+      "ece": 0.14480522875816995,
+      "brier": 1.6801550541857342,
+      "nll": 0.24124974406295868,
+      "mean_confidence": 0.8031058823529411,
+      "accuracy": 0.8511111111111112
+    },
+    "alignment": {
+      "r2": -0.7605798102737706,
+      "mae": 0.18687906013067437,
+      "mse": 0.05265481289656022,
+      "per_language_r2": {
+        "English": -0.7475207514851334,
+        "Vietnamese": -0.7606944982429924,
+        "Japanese": -0.7735241810931854
+      },
+      "vi_en_ratio": 0.0,
+      "ja_en_ratio": 0.0
+    },
+    "stability": {
+      "flapping_rate": 0.6748384353509429,
+      "contradiction_recovery_turns": 2.466666666666667
+    },
+    "trajectory": {
+      "coverage_h1": 0.9333333333333333,
+      "coverage_h2": 1.0
+    },
+    "latency_ms": {
+      "encoder": {
+        "p50": 27.151237864688838,
+        "p95": 30.980139375112632,
+        "p99": 31.809808237043303
+      },
+      "projection": {
+        "p50": 0.005600013537332416,
+        "p95": 0.007599999662488699,
+        "p99": 0.00930101261474192
+      },
+      "filter": {
+        "p50": 0.11879998783115298,
+        "p95": 0.1651049780775793,
+        "p99": 0.20771198120201007
+      },
+      "total_pipeline": {
+        "p50": 27.272451929498633,
+        "p95": 31.097750322624844,
+        "p99": 31.939583334942434
+      }
+    },
+    "resources": {
+      "param_count": 22825000,
+      "serialized_size_mb": 87.7,
+      "peak_ram_mb": 250.0,
+      "gpu_vram_mb": 0.0,
+      "cuda_available": false
+    },
+    "multilingual": {
+      "per_language_r2": {
+        "English": -0.7475207514851334,
+        "Vietnamese": -0.7606944982429924,
+        "Japanese": -0.7735241810931854
+      },
+      "per_language_ece": {
+        "English": 0.09117647058823529,
+        "Vietnamese": 0.16549019607843138,
+        "Japanese": 0.21832941176470586
+      },
+      "per_language_latency_p50": {
+        "English": 27.19341474893907,
+        "Vietnamese": 27.30608827076784,
+        "Japanese": 26.90405447870889
+      }
+    },
+    "interface": {
+      "dimension": 12,
+      "all_dimensions_valid": true,
+      "all_finite": true,
+      "all_bounded": true
+    },
+    "gates": {
+      "G_OBS1_CALIB_ECE": "FAIL",
+      "G_OBS1_CALIB_BRIER": "FAIL",
+      "G_OBS2_ALIGN_R2": "FALSIFIED",
+      "G_OBS3_STAB_FLAPPING": "FAIL",
+      "G_OBS3_STAB_RECOVERY": "FAIL",
+      "G_OBS4_TRAJ_COVERAGE": "PASS",
+      "G_OBS5_LATENCY_CPU_P50": "PASS",
+      "G_OBS6_RES_RAM": "PASS",
+      "G_OBS7_MULTILINGUAL": "FAIL",
+      "G_OBS8_INTERFACE": "PASS"
+    },
+    "overall_status": "FAIL",
+    "provenance_samples": [
+      {
+        "candidate_id": "C4",
+        "implementation_revision": "c4-hybrid-v1",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "Hybrid-Multimodal-Fusion-MiniLM-DSP",
+        "execution_mode": "CPU_LOCAL",
+        "weights_provenance": "MULTIMODAL_FUSION_TEXT_AUDIO",
+        "timestamp_iso": "2026-09-24T19:03:59.510233+00:00"
+      },
+      {
+        "candidate_id": "C4",
+        "implementation_revision": "c4-hybrid-v1",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "Hybrid-Multimodal-Fusion-MiniLM-DSP",
+        "execution_mode": "CPU_LOCAL",
+        "weights_provenance": "MULTIMODAL_FUSION_TEXT_AUDIO",
+        "timestamp_iso": "2026-09-24T19:03:59.511421+00:00"
+      },
+      {
+        "candidate_id": "C4",
+        "implementation_revision": "c4-hybrid-v1",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "Hybrid-Multimodal-Fusion-MiniLM-DSP",
+        "execution_mode": "CPU_LOCAL",
+        "weights_provenance": "MULTIMODAL_FUSION_TEXT_AUDIO",
+        "timestamp_iso": "2026-09-24T19:03:59.512459+00:00"
+      }
+    ]
+  },
+  "C5": {
+    "candidate_id": "C5",
+    "metadata": {
+      "id": "C5",
+      "name": "Structured Semantic Observation",
+      "class": "Structured Dialogue Act / Intent Slot Extractor",
+      "param_count": 18200000,
+      "serialized_size_mb": 71.4,
+      "param_budget": "10M-30M"
+    },
+    "sample_count": 1800,
+    "calibration": {
+      "ece": 0.8122222222222222,
+      "brier": 1.550465625,
+      "nll": 0.6754792901193983,
+      "mean_confidence": 0.84,
+      "accuracy": 0.027777777777777776
+    },
+    "alignment": {
+      "r2": -2.423196718291611,
+      "mae": 0.256475094025292,
+      "mse": 0.10237978514688019,
+      "per_language_r2": {
+        "English": -2.2961305063802,
+        "Vietnamese": -2.4644428961296216,
+        "Japanese": -2.50901675236501
+      },
+      "vi_en_ratio": 0.0,
+      "ja_en_ratio": 0.0
+    },
+    "stability": {
+      "flapping_rate": 0.1885613872085354,
+      "contradiction_recovery_turns": 5.0
+    },
+    "trajectory": {
+      "coverage_h1": 0.9111111111111111,
+      "coverage_h2": 1.0
+    },
+    "latency_ms": {
+      "encoder": {
+        "p50": 20.18682780054899,
+        "p95": 24.1704427407179,
+        "p99": 24.514747610855558
+      },
+      "projection": {
+        "p50": 0.015600002370774746,
+        "p95": 0.029799994081258774,
+        "p99": 0.03620198491262272
+      },
+      "filter": {
+        "p50": 0.12650000280700624,
+        "p95": 0.17949999892152846,
+        "p99": 0.21911098068812862
+      },
+      "total_pipeline": {
+        "p50": 20.33407635469611,
+        "p95": 24.321984987398142,
+        "p99": 24.649305740863365
+      }
+    },
+    "resources": {
+      "param_count": 18200000,
+      "serialized_size_mb": 71.4,
+      "peak_ram_mb": 250.0,
+      "gpu_vram_mb": 0.0,
+      "cuda_available": false
+    },
+    "multilingual": {
+      "per_language_r2": {
+        "English": -2.2961305063802,
+        "Vietnamese": -2.4644428961296216,
+        "Japanese": -2.50901675236501
+      },
+      "per_language_ece": {
+        "English": 0.84,
+        "Vietnamese": 0.7566666666666666,
+        "Japanese": 0.84
+      },
+      "per_language_latency_p50": {
+        "English": 20.325615516960074,
+        "Vietnamese": 20.14717709043638,
+        "Japanese": 20.051275194275327
+      }
+    },
+    "interface": {
+      "dimension": 12,
+      "all_dimensions_valid": true,
+      "all_finite": true,
+      "all_bounded": true
+    },
+    "gates": {
+      "G_OBS1_CALIB_ECE": "FAIL",
+      "G_OBS1_CALIB_BRIER": "FAIL",
+      "G_OBS2_ALIGN_R2": "FALSIFIED",
+      "G_OBS3_STAB_FLAPPING": "FAIL",
+      "G_OBS3_STAB_RECOVERY": "FAIL",
+      "G_OBS4_TRAJ_COVERAGE": "PASS",
+      "G_OBS5_LATENCY_CPU_P50": "PASS",
+      "G_OBS6_RES_RAM": "PASS",
+      "G_OBS7_MULTILINGUAL": "FAIL",
+      "G_OBS8_INTERFACE": "PASS"
+    },
+    "overall_status": "FAIL",
+    "provenance_samples": [
+      {
+        "candidate_id": "C5",
+        "implementation_revision": "c5-slots-v1",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "Structured-Dialogue-Act-Extractor",
+        "execution_mode": "CPU_LOCAL",
+        "weights_provenance": "STRUCTURED_SEMANTIC_SLOT_ACTS_P23",
+        "timestamp_iso": "2026-09-24T19:04:01.643374+00:00"
+      },
+      {
+        "candidate_id": "C5",
+        "implementation_revision": "c5-slots-v1",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "Structured-Dialogue-Act-Extractor",
+        "execution_mode": "CPU_LOCAL",
+        "weights_provenance": "STRUCTURED_SEMANTIC_SLOT_ACTS_P23",
+        "timestamp_iso": "2026-09-24T19:04:01.644366+00:00"
+      },
+      {
+        "candidate_id": "C5",
+        "implementation_revision": "c5-slots-v1",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "Structured-Dialogue-Act-Extractor",
+        "execution_mode": "CPU_LOCAL",
+        "weights_provenance": "STRUCTURED_SEMANTIC_SLOT_ACTS_P23",
+        "timestamp_iso": "2026-09-24T19:04:01.645421+00:00"
+      }
+    ]
+  },
+  "C6": {
+    "candidate_id": "C6",
+    "metadata": {
+      "id": "C6",
+      "name": "Decoupled Learned Observation Projection Layer",
+      "class": "Decoupled g^-1 Calibrated Log-Odds Projector",
+      "param_count": 28450000,
+      "serialized_size_mb": 108.8,
+      "param_budget": "~50K (projection layer)"
+    },
+    "sample_count": 1800,
+    "calibration": {
+      "ece": 0.2170666666666667,
+      "brier": 1.6432588532795969,
+      "nll": 0.32884355968120177,
+      "mean_confidence": 0.6424000000000001,
+      "accuracy": 0.8211111111111111
+    },
+    "alignment": {
+      "r2": -0.5750384037802492,
+      "mae": 0.1568244201415052,
+      "mse": 0.04710570459344852,
+      "per_language_r2": {
+        "English": -0.5781864455695842,
+        "Vietnamese": -0.5973961169692696,
+        "Japanese": -0.5495326488018941
+      },
+      "vi_en_ratio": 0.0,
+      "ja_en_ratio": 0.0
+    },
+    "stability": {
+      "flapping_rate": 0.698965608234788,
+      "contradiction_recovery_turns": 3.1666666666666665
+    },
+    "trajectory": {
+      "coverage_h1": 0.9222222222222223,
+      "coverage_h2": 1.0
+    },
+    "latency_ms": {
+      "encoder": {
+        "p50": 28.728336331008784,
+        "p95": 34.02886714166019,
+        "p99": 34.50706331160269
+      },
+      "projection": {
+        "p50": 0.08940001134760678,
+        "p95": 0.14949997566873208,
+        "p99": 0.18754703050944949
+      },
+      "filter": {
+        "p50": 0.11779999476857483,
+        "p95": 0.17529999604448676,
+        "p99": 0.2209079940803349
+      },
+      "total_pipeline": {
+        "p50": 28.955707616067592,
+        "p95": 34.21711550767062,
+        "p99": 34.7360723918533
+      }
+    },
+    "resources": {
+      "param_count": 28450000,
+      "serialized_size_mb": 108.8,
+      "peak_ram_mb": 220.0,
+      "gpu_vram_mb": 0.0,
+      "cuda_available": false
+    },
+    "multilingual": {
+      "per_language_r2": {
+        "English": -0.5781864455695842,
+        "Vietnamese": -0.5973961169692696,
+        "Japanese": -0.5495326488018941
+      },
+      "per_language_ece": {
+        "English": 0.20166666666666647,
+        "Vietnamese": 0.18666666666666673,
+        "Japanese": 0.3944666666666666
+      },
+      "per_language_latency_p50": {
+        "English": 28.791737294868152,
+        "Vietnamese": 28.962457791129847,
+        "Japanese": 28.52210361962789
+      }
+    },
+    "interface": {
+      "dimension": 12,
+      "all_dimensions_valid": true,
+      "all_finite": true,
+      "all_bounded": true
+    },
+    "gates": {
+      "G_OBS1_CALIB_ECE": "FAIL",
+      "G_OBS1_CALIB_BRIER": "FAIL",
+      "G_OBS2_ALIGN_R2": "FALSIFIED",
+      "G_OBS3_STAB_FLAPPING": "FAIL",
+      "G_OBS3_STAB_RECOVERY": "FAIL",
+      "G_OBS4_TRAJ_COVERAGE": "PASS",
+      "G_OBS5_LATENCY_CPU_P50": "PASS",
+      "G_OBS6_RES_RAM": "PASS",
+      "G_OBS7_MULTILINGUAL": "FAIL",
+      "G_OBS8_INTERFACE": "PASS"
+    },
+    "overall_status": "FAIL",
+    "provenance_samples": [
+      {
+        "candidate_id": "C6",
+        "implementation_revision": "c6-projector-v1",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "Decoupled-LogOdds-Calibrated-Projector",
+        "execution_mode": "CPU_LOCAL",
+        "weights_provenance": "DECOUPLED_G_INVERSE_LOG_ODDS_PLATT",
+        "timestamp_iso": "2026-09-24T19:04:03.564187+00:00"
+      },
+      {
+        "candidate_id": "C6",
+        "implementation_revision": "c6-projector-v1",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "Decoupled-LogOdds-Calibrated-Projector",
+        "execution_mode": "CPU_LOCAL",
+        "weights_provenance": "DECOUPLED_G_INVERSE_LOG_ODDS_PLATT",
+        "timestamp_iso": "2026-09-24T19:04:03.565385+00:00"
+      },
+      {
+        "candidate_id": "C6",
+        "implementation_revision": "c6-projector-v1",
+        "seed": 42,
+        "stress_regime": "ID",
+        "language": "English",
+        "model_name": "Decoupled-LogOdds-Calibrated-Projector",
+        "execution_mode": "CPU_LOCAL",
+        "weights_provenance": "DECOUPLED_G_INVERSE_LOG_ODDS_PLATT",
+        "timestamp_iso": "2026-09-24T19:04:03.566461+00:00"
+      }
+    ]
+  }
+}

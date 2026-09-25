@@ -1,0 +1,37 @@
+{
+  "G_ANC1_Retrieval_Accuracy": {
+    "threshold": 0.8,
+    "measured": 0.7662337662337663,
+    "passed": false
+  },
+  "G_ANC2_Drift_Resistance": {
+    "threshold": 0.05,
+    "measured": 0.0,
+    "passed": true
+  },
+  "G_ANC3_Warmth_R2": {
+    "threshold": 0.5,
+    "measured": -1.1374726608407366,
+    "passed": false
+  },
+  "G_ANC4_False_Anchor_Rate": {
+    "threshold": 0.1,
+    "measured": 0.0,
+    "passed": true
+  },
+  "G_ANC5_Session_Retention": {
+    "threshold": 0.85,
+    "measured": -3.8556832494129956,
+    "passed": false
+  },
+  "G_ANC6_Latency_P50": {
+    "threshold": 2.0,
+    "measured": 0.07484940002905205,
+    "passed": true
+  },
+  "G_ANC7_VRAM_Zero": {
+    "threshold": 0.0,
+    "measured": 0.0,
+    "passed": true
+  }
+}

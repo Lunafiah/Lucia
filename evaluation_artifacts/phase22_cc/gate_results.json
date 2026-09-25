@@ -1,0 +1,65 @@
+{
+  "G_CC1_Tier_Consistency": {
+    "threshold": 0.85,
+    "measured": 0.924649,
+    "passed": true
+  },
+  "G_CC2_Over_Inference": {
+    "threshold": 0.05,
+    "measured": 0.016603,
+    "passed": true
+  },
+  "G_CC3_Unsupported_Claim": {
+    "threshold": 0.1,
+    "measured": 0.029374,
+    "passed": true
+  },
+  "G_CC4_Evidence_Attribution": {
+    "threshold": 0.7,
+    "measured": 0.838239,
+    "passed": true
+  },
+  "G_CC5_Contradiction_Handling": {
+    "threshold": 0.9,
+    "measured": 0.960409,
+    "passed": true
+  },
+  "G_CC6_Rupture_Repair_Cons": {
+    "threshold": 0.95,
+    "measured": 0.98212,
+    "passed": true
+  },
+  "G_CC7_Memory_Utilization": {
+    "threshold": 0.6,
+    "measured": 0.988506,
+    "passed": true
+  },
+  "G_CC8_Language_Gap": {
+    "threshold": 0.05,
+    "measured": 0.02682,
+    "passed": true
+  },
+  "G_CC9_Context_Window": {
+    "threshold": 300,
+    "measured": 345.0,
+    "passed": false
+  },
+  "G_CC10_CPU_Latency": {
+    "threshold": 10.0,
+    "measured": 0.1014,
+    "passed": true
+  },
+  "G_CC11_VRAM": {
+    "threshold": 0.0,
+    "measured": 0.0,
+    "passed": true
+  },
+  "G_CC12_C0_C2_Delta": {
+    "threshold": 0.1,
+    "measured": 0.312899,
+    "c0_tc": 0.4879,
+    "c2_tc": 0.8008,
+    "passed": true,
+    "interpretation": "Context conditioning IS detectable and beneficial"
+  }
+}

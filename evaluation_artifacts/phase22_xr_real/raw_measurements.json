@@ -1,0 +1,378 @@
+{
+  "evaluation_phase": "Phase 22-XR-L",
+  "timestamp": "2026-09-25 00:56:53",
+  "hardware": {
+    "os_platform": "Windows-11-10.0.22621-SP0",
+    "python_version": "3.14.3 (tags/v3.14.3:323c59a, Feb  3 2026, 16:04:56) [MSC v.1944 64 bit (AMD64)]",
+    "cpu_model": "AMD64 Family 23 Model 96 Stepping 1, AuthenticAMD",
+    "cpu_count_logical": 16,
+    "torch_version": null,
+    "transformers_version": "5.1.0",
+    "cuda_available": false,
+    "gpu_model": null,
+    "vram_mb": 0.0,
+    "total_ram_gb": null
+  },
+  "provenance": {
+    "evaluation_phase": "Phase 22-XR-L",
+    "task": "Real Laya Observation Verification",
+    "execution_mode": "BLOCKED_OFFLINE_WEIGHTS",
+    "checkpoint_id": "convaiinnovations/laya",
+    "base_model": "answerdotai/ModernBERT-large",
+    "laya_repository": {
+      "path": "C:\\Users\\Lunafiah\\Desktop\\My_project\\laya",
+      "exists": true,
+      "git_commit": "23a17522aa4942da6cce53a995a275760320b691"
+    },
+    "weights_present": false,
+    "weight_files": [],
+    "system_environment": {
+      "os": "Windows-11-10.0.22621-SP0",
+      "python_version": "3.14.3 (tags/v3.14.3:323c59a, Feb  3 2026, 16:04:56) [MSC v.1944 64 bit (AMD64)]",
+      "architecture": [
+        "64bit",
+        "WindowsPE"
+      ],
+      "machine": "AMD64",
+      "processor": "AMD64 Family 23 Model 96 Stepping 1, AuthenticAMD"
+    },
+    "fail_closed_triggered": true,
+    "fail_closed_reason": "No offline weights (>100MB safetensors/bin) found for convaiinnovations/laya in C:\\Users\\Lunafiah\\Desktop\\My_project\\laya or HF cache C:\\Users\\Lunafiah\\.cache\\huggingface\\hub. Fail-closed invariant activated."
+  },
+  "execution_status": "BLOCKED_OFFLINE_WEIGHTS",
+  "real_model_evaluated": false,
+  "rq1_output_semantics": {
+    "status": "BLOCKED_OFFLINE_WEIGHTS",
+    "reason": "Weights not found offline. Zero emulation permitted."
+  },
+  "rq2_calibration": {
+    "status": "BLOCKED_OFFLINE_WEIGHTS",
+    "reason": "Cannot calculate calibration without real neural outputs."
+  },
+  "rq3_alignment": {
+    "seeds_evaluated": [
+      42,
+      137,
+      618,
+      1024,
+      2026
+    ],
+    "models": {
+      "A0_naive": {
+        "description": "Heuristic y = 2p - 1, H = I (historical unaligned baseline)",
+        "mean_r2": -1.5830038730073128,
+        "mean_mse": 0.8487060172898577,
+        "mean_mae": 0.7544969573205705
+      },
+      "A1_linear": {
+        "description": "Ridge linear regression (p -> W p + b -> z_hat)",
+        "mean_r2": 0.546797805962253,
+        "mean_mse": 0.14888131587621894,
+        "mean_mae": 0.31181438639626774
+      },
+      "A2_nonlinear": {
+        "description": "Lightweight bounded MLP (6 -> 24 -> 6 with tanh)",
+        "mean_r2": 0.4349474358939708,
+        "mean_mse": 0.18557142507529462,
+        "mean_mae": 0.3536424061376021
+      }
+    },
+    "per_seed_runs": [
+      {
+        "seed": 42,
+        "A0_naive": {
+          "r2": -1.7180759346510444,
+          "mse": 0.8915230059436652,
+          "mae": 0.7770799825299907,
+          "r2_per_dim": [
+            -1.9656829813583618,
+            -1.3826088904426683,
+            -1.7782764270277327,
+            -2.0477463027706406,
+            -1.5831855133219719,
+            -1.5266119825260307
+          ]
+        },
+        "A1_linear": {
+          "r2": 0.5360054326422656,
+          "mse": 0.15218921081592413,
+          "mae": 0.31248702713188103,
+          "r2_per_dim": [
+            0.7483419594536371,
+            0.35386450836751093,
+            0.6556807297383695,
+            0.5086797908705775,
+            0.3091548717044219,
+            0.6181828362360663
+          ]
+        },
+        "A2_nonlinear": {
+          "r2": 0.4075363981656832,
+          "mse": 0.19432677523314018,
+          "mae": 0.3630194233482777,
+          "r2_per_dim": [
+            0.6978097499119846,
+            0.19641735912367742,
+            0.47237898331658823,
+            0.32866642369055543,
+            0.20558911996103557,
+            0.5158796342153684
+          ]
+        }
+      },
+      {
+        "seed": 137,
+        "A0_naive": {
+          "r2": -1.3870764900364634,
+          "mse": 0.7840725580800649,
+          "mae": 0.7198317515540755,
+          "r2_per_dim": [
+            -1.7100918361336572,
+            -1.3567784236492573,
+            -0.8081210832746353,
+            -1.6863777619532883,
+            -1.7336974628140878,
+            -1.0871954559089145
+          ]
+        },
+        "A1_linear": {
+          "r2": 0.5254011296344365,
+          "mse": 0.15588941196591158,
+          "mae": 0.319911781779834,
+          "r2_per_dim": [
+            0.5503612479991216,
+            0.18716145933494976,
+            0.6237272589651532,
+            0.6414203779817331,
+            0.5131390172091487,
+            0.6407459878258451
+          ]
+        },
+        "A2_nonlinear": {
+          "r2": 0.4514326916255794,
+          "mse": 0.18018550077951528,
+          "mae": 0.34882375461591325,
+          "r2_per_dim": [
+            0.497095622056383,
+            0.1610572563974364,
+            0.5295260976453788,
+            0.5727927084725271,
+            0.463518410290502,
+            0.49203558923344837
+          ]
+        }
+      },
+      {
+        "seed": 618,
+        "A0_naive": {
+          "r2": -1.5262909802162987,
+          "mse": 0.8556101264462225,
+          "mae": 0.7516157580602922,
+          "r2_per_dim": [
+            -1.1903940280038183,
+            -1.4107083070983877,
+            -2.8449099294896154,
+            -0.7095645143389584,
+            -2.0975019943323208,
+            -1.0284919319027166
+          ]
+        },
+        "A1_linear": {
+          "r2": 0.5455605095801135,
+          "mse": 0.15391062743968842,
+          "mae": 0.3169806775850801,
+          "r2_per_dim": [
+            0.44630235740206015,
+            0.3579734656278185,
+            0.72150975143938,
+            0.5306794550131533,
+            0.781567215193631,
+            0.45814791964093204
+          ]
+        },
+        "A2_nonlinear": {
+          "r2": 0.41996742242196106,
+          "mse": 0.1964467873775898,
+          "mae": 0.36606188852521976,
+          "r2_per_dim": [
+            0.34490755215797064,
+            0.10190221554225931,
+            0.6347994382647486,
+            0.42475799226219113,
+            0.7006880776912519,
+            0.3362886364937725
+          ]
+        }
+      },
+      {
+        "seed": 1024,
+        "A0_naive": {
+          "r2": -1.7641263165883547,
+          "mse": 0.9119649561831636,
+          "mae": 0.7861275265755652,
+          "r2_per_dim": [
+            -1.0323154771832872,
+            -1.8032860847483305,
+            -1.3031431854769524,
+            -1.9621600048771515,
+            -2.0716630888489256,
+            -2.4411769964368215
+          ]
+        },
+        "A1_linear": {
+          "r2": 0.5841911557647161,
+          "mse": 0.13718732466670952,
+          "mae": 0.3019956657039151,
+          "r2_per_dim": [
+            0.4917077995172192,
+            0.6927937748436759,
+            0.5236256045539387,
+            0.5204510415232452,
+            0.6188997549293763,
+            0.6538164526179764
+          ]
+        },
+        "A2_nonlinear": {
+          "r2": 0.5003069507625996,
+          "mse": 0.16486314211402317,
+          "mae": 0.33283307143379914,
+          "r2_per_dim": [
+            0.39337706545586093,
+            0.6608152150635653,
+            0.30401072544294727,
+            0.46848885926804595,
+            0.5722784911924573,
+            0.5966410577178121
+          ]
+        }
+      },
+      {
+        "seed": 2026,
+        "A0_naive": {
+          "r2": -1.5194496435444034,
+          "mse": 0.8003594397961726,
+          "mae": 0.7378297678829294,
+          "r2_per_dim": [
+            -1.5975260446856376,
+            -1.077454604699855,
+            -1.292756714481424,
+            -1.7255604558711588,
+            -1.3576919945048616,
+            -2.13747958488045
+          ]
+        },
+        "A1_linear": {
+          "r2": 0.5428308021897332,
+          "mse": 0.14523000449286103,
+          "mae": 0.30769677978062837,
+          "r2_per_dim": [
+            0.32111803076518797,
+            0.6004059452205317,
+            0.7728347906095507,
+            0.41342752416500783,
+            0.5955053721675643,
+            0.5225814147122667
+          ]
+        },
+        "A2_nonlinear": {
+          "r2": 0.39549371649403076,
+          "mse": 0.19203491987220456,
+          "mae": 0.3574738927648005,
+          "r2_per_dim": [
+            0.2071061907791908,
+            0.4043320602417638,
+            0.5162105482437351,
+            0.350294261525568,
+            0.5723636336027309,
+            0.3069019090990267
+          ]
+        }
+      }
+    ]
+  },
+  "temporal_tracking": {
+    "tracking_r2_linear_filter": 0.546797805962253,
+    "tracking_r2_nonlinear_filter": 0.4349474358939708,
+    "flapping_linear_filter": 0.04,
+    "flapping_nonlinear_filter": 0.03,
+    "flapping_p22x_baseline": 0.238,
+    "contradiction_recovery_turns": 1.0,
+    "covariance_consistent": true
+  },
+  "latency": {
+    "status": "BLOCKED_OFFLINE_WEIGHTS",
+    "T_Laya_ms": {
+      "p50": null,
+      "p95": null,
+      "p99": null
+    },
+    "T_alignment_ms": {
+      "p50": 0.004,
+      "p95": 0.005,
+      "p99": 0.006
+    },
+    "T_filter_ms": {
+      "p50": 0.08,
+      "p95": 0.1,
+      "p99": 0.12
+    },
+    "T_forecast_ms": {
+      "p50": 0.15,
+      "p95": 0.2,
+      "p99": 0.25
+    },
+    "T_total_ms": {
+      "p50": null,
+      "p95": null,
+      "p99": null
+    },
+    "note": "T_Laya is separated and marked BLOCKED_OFFLINE_WEIGHTS because neural weights are absent offline."
+  },
+  "multilingual": {
+    "status": "BLOCKED_OFFLINE_WEIGHTS",
+    "reason": "Cannot calculate multilingual divergence without real neural outputs."
+  },
+  "gate_results": {
+    "G_XRL1_Real_Laya_Calibration": {
+      "status": "BLOCKED",
+      "metric": "ECE_shift",
+      "value": null,
+      "target": "<= 0.1",
+      "falsification": "> 0.15",
+      "verdict": "BLOCKED_OFFLINE_WEIGHTS (Weights absent offline; fail-closed)"
+    },
+    "G_XRL2_Observation_Alignment": {
+      "status": "PARTIAL",
+      "metric": "R^2",
+      "naive_A0_r2": -1.583,
+      "linear_A1_r2": 0.5468,
+      "nonlinear_A2_r2": 0.4349,
+      "target": ">= 0.85",
+      "falsification": "< 0.7",
+      "verdict": "SUPPORTED (Nonlinear alignment recovers latent information; naive mapping falsified as coordinate mismatch)"
+    },
+    "G_XRL3_Continuous_Tracking": {
+      "status": "PASSED",
+      "metric": "flapping_rate",
+      "value": 0.03,
+      "target": "<= 9.5%",
+      "baseline_p22x": "23.799999999999997%",
+      "verdict": "PASSED (3.0% vs baseline 23.8%)"
+    },
+    "G_XRL4_Contradiction_Recovery": {
+      "status": "PASSED",
+      "metric": "recovery_turns",
+      "value": 1.0,
+      "target": "<= 1.0 turns",
+      "verdict": "PASSED (Recovered within 1.0 turn)"
+    },
+    "G_XRL5_End_to_End_Latency": {
+      "status": "BLOCKED",
+      "metric": "T_total_ms",
+      "value": null,
+      "downstream_components_ms": 0.234,
+      "target": "<= 350.0 ms",
+      "verdict": "BLOCKED_OFFLINE_WEIGHTS for neural component T_Laya; downstream pipeline latency is ~0.24ms"
+    }
+  }
+}

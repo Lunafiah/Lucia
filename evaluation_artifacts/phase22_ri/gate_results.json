@@ -1,0 +1,37 @@
+{
+  "G_RI1_Tier_Accuracy": {
+    "threshold": 0.85,
+    "measured": 0.7833333333333333,
+    "passed": false
+  },
+  "G_RI2_Over_Inference_Resistance": {
+    "threshold": 0.05,
+    "measured": 0.0,
+    "passed": true
+  },
+  "G_RI3_Rupture_Sensitivity": {
+    "threshold": 0.9,
+    "measured": 1.0,
+    "passed": true
+  },
+  "G_RI4_Repair_Verification": {
+    "threshold": 0.8,
+    "measured": 1.0,
+    "passed": true
+  },
+  "G_RI5_Calibration_ECE": {
+    "threshold": 0.1,
+    "measured": 0.20000000000000007,
+    "passed": false
+  },
+  "G_RI6_Latency_P50": {
+    "threshold": 2.0,
+    "measured": 0.007525600027292967,
+    "passed": true
+  },
+  "G_RI7_VRAM_Zero": {
+    "threshold": 0.0,
+    "measured": 0.0,
+    "passed": true
+  }
+}

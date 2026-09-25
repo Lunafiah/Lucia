@@ -1,0 +1,160 @@
+{
+  "candidates": {
+    "A0_ContinuousAccumulation": {
+      "overall_observable_4d_r2": 0.48781337204163666,
+      "fatigue_r2": -2.8902107525971075,
+      "warmth_r2": -2.9071470266310597,
+      "mae_warmth": 0.575126436802874,
+      "anchor_precision_recall": 0.0,
+      "false_anchor_rate": 0.0,
+      "mean_turn_drift": 0.002146731140880455,
+      "session_retention_ratio": -20.01640721996417
+    },
+    "A1_EpisodicAnchorsOnly": {
+      "overall_observable_4d_r2": 0.48781337204163666,
+      "fatigue_r2": -2.8902107525971075,
+      "warmth_r2": -1.265481713920651,
+      "mae_warmth": 0.41150789370370366,
+      "anchor_precision_recall": 1.0,
+      "false_anchor_rate": 0.0,
+      "mean_turn_drift": 0.0,
+      "session_retention_ratio": -113.1666666666666
+    },
+    "A2_EpisodicConfidence": {
+      "overall_observable_4d_r2": 0.48781337204163666,
+      "fatigue_r2": -2.8902107525971075,
+      "warmth_r2": -1.9861064421156969,
+      "mae_warmth": 0.5025821140398363,
+      "anchor_precision_recall": 0.7012987012987013,
+      "false_anchor_rate": 0.0,
+      "mean_turn_drift": 0.0,
+      "session_retention_ratio": 1.0
+    },
+    "A3_EpisodicDecayConsolidation": {
+      "overall_observable_4d_r2": 0.48781337204163666,
+      "fatigue_r2": -2.8902107525971075,
+      "warmth_r2": -1.1374726608407366,
+      "mae_warmth": 0.4147500314101862,
+      "anchor_precision_recall": 0.7662337662337663,
+      "false_anchor_rate": 0.0,
+      "mean_turn_drift": 0.0,
+      "session_retention_ratio": -3.8556832494129956
+    },
+    "OracleControl": {
+      "overall_observable_4d_r2": 0.9972555915941091,
+      "fatigue_r2": 0.9394792451692503,
+      "warmth_r2": 0.999147813472677,
+      "mae_warmth": 0.007992957533830655,
+      "anchor_precision_recall": 0.0,
+      "false_anchor_rate": 0.0,
+      "mean_turn_drift": 0.011300714352509253,
+      "session_retention_ratio": 1.0
+    }
+  },
+  "latencies": {
+    "A0_ContinuousAccumulation": {
+      "p50_ms": 0.08267700002761558,
+      "ram_mb": 0.0,
+      "vram_mb": 0.0
+    },
+    "A1_EpisodicAnchorsOnly": {
+      "p50_ms": 0.07331120001617819,
+      "ram_mb": 0.0,
+      "vram_mb": 0.0
+    },
+    "A2_EpisodicConfidence": {
+      "p50_ms": 0.10676920000696555,
+      "ram_mb": 0.0,
+      "vram_mb": 0.0
+    },
+    "A3_EpisodicDecayConsolidation": {
+      "p50_ms": 0.07484940002905205,
+      "ram_mb": 0.0,
+      "vram_mb": 0.0
+    },
+    "OracleControl": {
+      "p50_ms": 0.006660000013653189,
+      "ram_mb": 0.0,
+      "vram_mb": 0.0
+    }
+  },
+  "languages": {
+    "English": {
+      "warmth_r2": -6.946133549675666,
+      "drift": 0.0,
+      "retention": 0.9867900098533292
+    },
+    "Vietnamese": {
+      "warmth_r2": -7.200946095169577,
+      "drift": 0.0,
+      "retention": 0.9867558218191412
+    },
+    "Japanese": {
+      "warmth_r2": -7.200946095169577,
+      "drift": 0.0,
+      "retention": 0.9867558218191412
+    }
+  },
+  "controls": {
+    "Control_A_Random_Noise": {
+      "overall_observable_4d_r2": -0.20863900903719734,
+      "fatigue_r2": -0.916528810631613,
+      "warmth_r2": -0.8140140775229072,
+      "mae_warmth": 1.1112771774659438,
+      "anchor_precision_recall": 0.0,
+      "false_anchor_rate": 0.34,
+      "mean_turn_drift": 0.021785714285714287,
+      "session_retention_ratio": 1.0
+    }
+  },
+  "gate_results": {
+    "G_ANC1_Retrieval_Accuracy": {
+      "threshold": 0.8,
+      "measured": 0.7662337662337663,
+      "passed": false
+    },
+    "G_ANC2_Drift_Resistance": {
+      "threshold": 0.05,
+      "measured": 0.0,
+      "passed": true
+    },
+    "G_ANC3_Warmth_R2": {
+      "threshold": 0.5,
+      "measured": -1.1374726608407366,
+      "passed": false
+    },
+    "G_ANC4_False_Anchor_Rate": {
+      "threshold": 0.1,
+      "measured": 0.0,
+      "passed": true
+    },
+    "G_ANC5_Session_Retention": {
+      "threshold": 0.85,
+      "measured": -3.8556832494129956,
+      "passed": false
+    },
+    "G_ANC6_Latency_P50": {
+      "threshold": 2.0,
+      "measured": 0.07484940002905205,
+      "passed": true
+    },
+    "G_ANC7_VRAM_Zero": {
+      "threshold": 0.0,
+      "measured": 0.0,
+      "passed": true
+    }
+  },
+  "baselines": {
+    "O4_Warmth_R2": -4.512,
+    "O4_Fatigue_R2": 0.3781,
+    "O3_Fatigue_R2": 0.5702,
+    "Observable_4D_R2": 0.5192,
+    "Session_Retention_Ratio": 0.984,
+    "Latency_CPU_P50_ms": 0.0001
+  },
+  "governance": {
+    "zero_production_diff": true,
+    "genesis_invariant_preserved": true,
+    "classification": "ANCHOR_GROUNDING_SUPPORTED"
+  }
+}

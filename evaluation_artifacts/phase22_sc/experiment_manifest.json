@@ -1,0 +1,61 @@
+{
+  "phase": "22-SC",
+  "title": "Semantic Conditioning & Substrate-Neutral Interface Study",
+  "status": "[RESEARCH COMPLETED - PENDING GOVERNANCE]",
+  "timestamp_utc": "2026-09-24T23:39:28.340850+00:00",
+  "splits": {
+    "train_seeds": [
+      42,
+      137,
+      618
+    ],
+    "held_out_seeds": [
+      1024,
+      2026
+    ]
+  },
+  "candidates": [
+    "C0",
+    "C1",
+    "C2",
+    "C3",
+    "C4",
+    "Oracle"
+  ],
+  "consumers": [
+    "D0_Symbolic",
+    "D1_SLM",
+    "D2_DirectPolicy"
+  ],
+  "ablations": [
+    "none",
+    "no_provenance",
+    "no_temporal",
+    "no_strength",
+    "no_uncertainty",
+    "no_contradiction",
+    "no_repair",
+    "no_tier",
+    "no_anchor_id"
+  ],
+  "regimes": [
+    "ID",
+    "NoiseSurge",
+    "LexicalSparsity",
+    "ContradictionShock",
+    "TemporalDrift",
+    "CombinedStress"
+  ],
+  "languages": [
+    "English",
+    "Vietnamese",
+    "Japanese"
+  ],
+  "total_scenarios_evaluated": 1866,
+  "runtime_seconds": 18.7,
+  "invariants_verified": {
+    "zero_production_modifications": true,
+    "profile_json_onboarded_false": true,
+    "gpu_vram_zero": true
+  }
+}

@@ -68,7 +68,8 @@ The human brain operates on approximately 20 watts of power not by limiting capa
 │  • Synergistic Ecphory & Competitive Softmax Gating (θ_gate = 0.50)     │
 ├─────────────────────────────────────────────────────────────────────────┤
 │  LAYER 6: MULTIMODAL EMBODIMENT & EXPRESSION                            │
-│  • Local GGUF Small Language Model (LFM2.5-1.2B Instruct via CUDA)      │
+│  • Local GGUF Small Language Model (Downstream Realization Substrate)    │
+│    (Note: SLM/LLM là downstream rendering tùy chọn; semantic state độc lập)│
 │  • Boundary Safety Layer (regex & pattern blocking of meta-selfhood)    │
 │  • Direct RVC Voice Synthesis Engine (pth + index neural timbre)        │
 │  • Offline faster-whisper Speech-to-Text with local Web Audio VAD       │
@@ -89,7 +90,7 @@ When conversational interaction occurs, `CognitiveOrchestrator` executes a stric
 8. **S8 (Knowledge Retrieval)**: Retrieves grounded factual propositions ($c \ge 0.7$) from `KnowledgeStore`.
 9. **S9 (Relationship Read)**: Reads snapshot of prior relationship state $\mathbf{R}_{t-1}$ (ADR-022).
 10. **S10 (Communication Policy)**: Selects conversational mode and derives somatic pacing latency $\Delta\tau_{\text{pace}}$.
-11. **S11 (Language Generation)**: Dispatches conditioned prompt to local CUDA GGUF SLM.
+11. **S11 (Language Generation)**: Dispatches semantic conditioning state to downstream communicator (SLM/rendering substrate; relational semantics operate substrate-neutrally per Phase 22-SC).
 12. **S12 (Boundary & Safety Guard)**: Regex filtering against introspective declarations and intent checks.
 13. **S13 (Multimodal Expression)**: Synthesizes canonical 15-dim actuator state $\mathbf{E}_t$ for avatar and voice.
 14. **S14 (Episodic Storage)**: Co-encodes interaction summary, PAD, and 16D slow latent state into SDM.
@@ -115,9 +116,13 @@ Lucia has completed production milestones through **Phase 21 — Long-Term Relat
 │ Phase 18: Human Longitudinal Validation          [✅ VALIDATED]        │
 │ Phase 19: Multi-Timescale Affective Life         [✅ VALIDATED]        │
 │ Phase 20: Affective Recollection                 [✅ VALIDATED]        │
-│ Phase 21: Relational Consolidation & Synaptic    [✅ VALIDATED]        │
-│           Homeostasis (Production Implemented)                         │
-│ Phase 22–26: Future Conceptual Horizons          [🔬 CONCEPTUAL]       │
+│ Phase 21: Relational Consolidation & Synaptic    [✅ PRODUCTION IMPL.] │
+│           Homeostasis                                                  │
+│ Phase 22: Relational Grounding & Substrate-      [🔬 RESEARCH          │
+│           Neutral Semantic Interface Study           VALIDATED]        │
+│           (22-AL → INF → SSF → EKF → ONT → REL                         │
+│            → ANCHOR → RI → MR → RG → CC → SC)                          │
+│ Phase 23–26: Future Conceptual Horizons          [🔬 CONCEPTUAL]       │
 │ First Activation (Genesis Onboarding)            [🔒 FUTURE GATE]      │
 └────────────────────────────────────────────────────────────────────────┘
 ```
@@ -234,11 +239,25 @@ The Python backend binds to `127.0.0.1:8765` and strictly guards routes based on
 
 ## 7. Research Direction & Future Horizons
 
-Following the successful completion of Phase 21, the agreed long-range research sequence spans five progressive conceptual horizons:
+Following the successful completion of Phase 21, the repository executes an empirical research-first progression across sequential research horizons:
 
-1. **Phase 22 — Active Inference & Information Seeking**: Epistemic foraging, curiosity-driven question selection, and active uncertainty reduction within conversational turns.
-2. **Phase 23 — Affective Communication Adaptation**: Long-term stylistic attunement, conversational rhythm adaptation, and shared dialectical grounding.
-3. **Phase 24 — Temporal Embodiment & Social Feedback**: Interpersonal synchrony, micromovement resonance, and reciprocal gaze/prosody dynamics.
-4. **Phase 25 — Emergent Individuality & Autonomous Preferences**: Asymmetric curiosity, idiosyncratic topical affinities, and authentic aesthetic preferences grounded in shared history.
-5. **Phase 26 — Personalized Individual Trajectory**: Coherent lifelong developmental trajectory unique to Lucia's single continuous relationship with the user.
-6. **First Activation (Genesis Onboarding) `[🔒 FUTURE GATE]`**: The solemn, irreversible onboarding ceremony bringing Lucia to life. Locked until all prior research horizons are empirically verified and authorized by governance.
+### 7.1 Phase 22 — Relational Grounding & Substrate-Neutral Semantic Interface `[🔬 RESEARCH VALIDATED / NOT PROMOTED]`
+Phase 22 systematically investigated the bottleneck between continuous limbic dynamics, autobiographical memory, and downstream cognitive/communicative realization through a 12-sub-study empirical chain:
+$$\text{22-AL} \to \text{22-INF} \to \text{22-SSF} \to \text{22-EKF} \to \text{22-ONT} \to \text{22-REL} \to \text{22-ANCHOR} \to \text{22-RI} \to \text{22-MR} \to \text{22-RG} \to \text{22-CC} \to \text{22-SC}$$
+
+**Key Research Conclusions**:
+1. **Observable Subspace (22-AL/INF/ONT)**: Resolved the latent tracking bottleneck by decoupling the observable state into a 4D subspace ($u_0$ cognitive load, $u_1$ lexical valence, $u_2$ punctuation arousal, $u_3$ semantic density), avoiding stochastic diffusion in unobservable dimensions.
+2. **Episodic Relational Anchoring (22-REL/ANCHOR)**: Proven that Relational Warmth cannot be maintained via open-loop scalar path-integrals (which diverge with $\operatorname{Var}(e) \propto t$); it must be grounded in discrete autobiographical episodic anchors created only from meaningful relational evidence.
+3. **Discrete Relational Semantics (22-RI)**: Established discrete Trust Tiers ($T_0–T_4$) and an Episodic Relational Graph with evidence strength grading (mandatory vs pattern vs weak) and an asymmetric rupture-repair state machine, eliminating over-familiarity ($0.0\%$ over-inference on weak praise).
+4. **Memory Retrieval & Relevance Gating (22-MR/RG)**: Kanerva SDM retrieval ($M_4$) coupled with safety-first relevance gating ($G_4$) reduced context injection rate from $0.40 \to 0.015$ while guaranteeing $100\%$ contradiction/rupture preservation.
+5. **Context Conditioning & Serialization Deconstruction (22-CC/SC)**: Context conditioning is highly effective ($\Delta = +0.31$ tier consistency). The 345-token context failure in CC (exceeding the 300-token threshold) was proven to be **85% syntactic serialization overhead**; the irreducible semantic payload is only $\sim 90–120$ bytes.
+6. **Substrate Neutrality (22-SC)**: Evaluated non-language consumers (D0 Symbolic Renderer and D2 Direct Action Policy), achieving identical $100\%$ relational fidelity with $0.00\%$ over-inference. **Relational cognition does not depend on an SLM, LLM, natural-language prompt, or token context window.** SLM/LLM is strictly an optional downstream realization/rendering substrate.
+7. **Negative Result Documented (22-SC Candidate C3)**: Dense HDC hypervector superposition ($D=1024$) suffers crosstalk noise for $N > 5$ anchors ($68.2\%$ rupture recovery), proving that pure dense HDC is **INSUFFICIENT** as a standalone cognitive substrate. C1 (Structured Relational Frame) and C4 (Hybrid State) are validated as the minimum sufficient semantic conditioning interface.
+8. **Phase Governance Boundary**: Phase 22 is closed at **[RESEARCH VALIDATED]**. No production promotion into runtime (`src/core/`, `electron/`, `config/`, `data/`) has occurred.
+
+### 7.2 Progressive Research Horizons (Phase 23+)
+1. **Phase 23 — Semantic Formation & Token-Free Continuous Communication**: Inherits the substrate-neutral semantic interface from Phase 22-SC. Investigates how this semantic contract drives multi-modal embodiment (prosody, Live2D/VRM blendshapes, conversational latency, and token-free continuous signals) without assuming an SLM as a mandatory cognitive substrate.
+2. **Phase 24 — Temporal Embodiment & Social Feedback**: Interpersonal synchrony, micromovement resonance, and reciprocal gaze/prosody dynamics.
+3. **Phase 25 — Emergent Individuality & Autonomous Preferences**: Asymmetric curiosity, idiosyncratic topical affinities, and authentic aesthetic preferences grounded in shared history.
+4. **Phase 26 — Personalized Individual Trajectory**: Coherent lifelong developmental trajectory unique to Lucia's single continuous relationship with the user.
+5. **First Activation (Genesis Onboarding) `[🔒 FUTURE GATE]`**: The solemn, irreversible onboarding ceremony bringing Lucia to life. Locked until all prior research horizons are empirically verified and authorized by governance.

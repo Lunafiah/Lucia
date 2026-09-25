@@ -1,0 +1,116 @@
+{
+  "C1": {
+    "metadata": {
+      "name": "Lightweight Multilingual Sentence Encoder",
+      "description": "Compact bi-encoder embedding with anchor vector projection (MiniLM-style)",
+      "parameter_budget": "20M-40M"
+    },
+    "provenance_sample": {
+      "candidate_id": "C1",
+      "implementation_revision": "olr-eval-v1.0",
+      "seed": 42,
+      "stress_regime": "ID",
+      "language": "English",
+      "model_name": "paraphrase-multilingual-MiniLM-L12-v2",
+      "execution_mode": "CPU_LOCAL_ISOLATED",
+      "weights_provenance": "PARAPHRASE_MULTILINGUAL_MINILM_EMBEDDINGS",
+      "timestamp_iso": "2026-09-24T18:55:49.864170+00:00"
+    },
+    "status": "FAIL"
+  },
+  "C2": {
+    "metadata": {
+      "name": "Distilled Semantic Encoder",
+      "description": "Compressed conversational act encoder distilled with temperature scaling",
+      "parameter_budget": "15M-60M"
+    },
+    "provenance_sample": {
+      "candidate_id": "C2",
+      "implementation_revision": "olr-eval-v1.0",
+      "seed": 42,
+      "stress_regime": "ID",
+      "language": "English",
+      "model_name": "Distil-ModernBERT-Conversational-25M",
+      "execution_mode": "CPU_LOCAL_ISOLATED",
+      "weights_provenance": "DISTIL_MODERNBERT_CONVERSATIONAL_CALIBRATED",
+      "timestamp_iso": "2026-09-24T18:55:53.017735+00:00"
+    },
+    "status": "FAIL"
+  },
+  "C3": {
+    "metadata": {
+      "name": "Audio-First Acoustic/Prosodic Encoder",
+      "description": "Non-verbal acoustic DSP (pitch, jitter, energy, tempo, silence duration)",
+      "parameter_budget": "<1M"
+    },
+    "provenance_sample": {
+      "candidate_id": "C3",
+      "implementation_revision": "olr-eval-v1.0",
+      "seed": 42,
+      "stress_regime": "ID",
+      "language": "English",
+      "model_name": "Acoustic-DSP-Prosodic-Extractor",
+      "execution_mode": "CPU_LOCAL_ISOLATED",
+      "weights_provenance": "AUDIO_DSP_PROSODIC_6D",
+      "timestamp_iso": "2026-09-24T18:55:56.060145+00:00"
+    },
+    "status": "FAIL"
+  },
+  "C4": {
+    "metadata": {
+      "name": "Hybrid Multimodal Observation",
+      "description": "Dynamically fused text semantic embedding and acoustic prosodic features",
+      "parameter_budget": "25M-50M"
+    },
+    "provenance_sample": {
+      "candidate_id": "C4",
+      "implementation_revision": "olr-eval-v1.0",
+      "seed": 42,
+      "stress_regime": "ID",
+      "language": "English",
+      "model_name": "Hybrid-Multimodal-Fusion-MiniLM-DSP",
+      "execution_mode": "CPU_LOCAL_ISOLATED",
+      "weights_provenance": "MULTIMODAL_FUSION_TEXT_AUDIO",
+      "timestamp_iso": "2026-09-24T18:55:56.788392+00:00"
+    },
+    "status": "FAIL"
+  },
+  "C5": {
+    "metadata": {
+      "name": "Structured Semantic Observation",
+      "description": "Renderer-independent dialogue acts & intent slot representation (P23 compatible)",
+      "parameter_budget": "10M-30M"
+    },
+    "provenance_sample": {
+      "candidate_id": "C5",
+      "implementation_revision": "olr-eval-v1.0",
+      "seed": 42,
+      "stress_regime": "ID",
+      "language": "English",
+      "model_name": "Structured-Dialogue-Act-Extractor",
+      "execution_mode": "CPU_LOCAL_ISOLATED",
+      "weights_provenance": "STRUCTURED_SEMANTIC_SLOT_ACTS_P23",
+      "timestamp_iso": "2026-09-24T18:56:00.137652+00:00"
+    },
+    "status": "FAIL"
+  },
+  "C6": {
+    "metadata": {
+      "name": "Decoupled Learned Observation Projection Layer",
+      "description": "Frozen encoder with explicit calibrated inverse measurement projection g^-1",
+      "parameter_budget": "~50K (projection layer)"
+    },
+    "provenance_sample": {
+      "candidate_id": "C6",
+      "implementation_revision": "olr-eval-v1.0",
+      "seed": 42,
+      "stress_regime": "ID",
+      "language": "English",
+      "model_name": "Decoupled-LogOdds-Calibrated-Projector",
+      "execution_mode": "CPU_LOCAL_ISOLATED",
+      "weights_provenance": "DECOUPLED_G_INVERSE_LOG_ODDS_PLATT",
+      "timestamp_iso": "2026-09-24T18:56:03.079106+00:00"
+    },
+    "status": "FAIL"
+  }
+}

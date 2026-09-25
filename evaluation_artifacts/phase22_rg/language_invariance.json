@@ -1,0 +1,80 @@
+{
+  "G0_NoGate": {
+    "mandatory_recall": 0.01731336989957699,
+    "precision": 0.06924080608824923,
+    "overall_recall": 0.0982796724598618,
+    "injection_rate": 0.16852177967262838,
+    "hallucination_risk": 0.0,
+    "relational_cons": 0.006056023025170054,
+    "compression": 0.046074023210265214,
+    "contradiction_pres": 0.0,
+    "evidence_sufficiency": 0.0,
+    "token_estimate": 53.56321839080459,
+    "gating_latency_ms": 0.005945210836620793
+  },
+  "G1_StaticThreshold": {
+    "mandatory_recall": 0.01731336989957699,
+    "precision": 0.015226809851556222,
+    "overall_recall": 0.09540610924147108,
+    "injection_rate": 0.0,
+    "hallucination_risk": 0.0,
+    "relational_cons": 0.0025500755723881774,
+    "compression": 0.015355608044759328,
+    "contradiction_pres": 0.0,
+    "evidence_sufficiency": 0.0,
+    "token_estimate": 80.95785440613028,
+    "gating_latency_ms": 0.0024130262373821716
+  },
+  "G2_EvidenceStrength": {
+    "mandatory_recall": 0.01731336989957699,
+    "precision": 0.015226809851556222,
+    "overall_recall": 0.09540610924147108,
+    "injection_rate": 0.0,
+    "hallucination_risk": 0.0,
+    "relational_cons": 0.0025500755723881774,
+    "compression": 0.015355608044759328,
+    "contradiction_pres": 0.0,
+    "evidence_sufficiency": 0.0,
+    "token_estimate": 80.95785440613028,
+    "gating_latency_ms": 0.0025237580606092998
+  },
+  "G3_TemporalDecay": {
+    "mandatory_recall": 0.01731336989957699,
+    "precision": 0.01148207588369865,
+    "overall_recall": 0.07723487822372188,
+    "injection_rate": 0.0,
+    "hallucination_risk": 0.0,
+    "relational_cons": 0.0022394591360108684,
+    "compression": 0.010218445108345797,
+    "contradiction_pres": 0.0,
+    "evidence_sufficiency": 0.0,
+    "token_estimate": 81.7088122605364,
+    "gating_latency_ms": 0.0038555540256844517
+  },
+  "G4_SafetyFirstHybrid": {
+    "mandatory_recall": 0.01731336989957699,
+    "precision": 0.0059427763281718615,
+    "overall_recall": 0.07723487822372188,
+    "injection_rate": 0.014238464813177453,
+    "hallucination_risk": 0.0,
+    "relational_cons": 0.002688881999227233,
+    "compression": 0.005932877701591122,
+    "contradiction_pres": 0.0,
+    "evidence_sufficiency": 0.0,
+    "token_estimate": 80.04597701149424,
+    "gating_latency_ms": 0.0037099613890166083
+  },
+  "Oracle": {
+    "mandatory_recall": 0.01731336989957699,
+    "precision": 0.015226809851556222,
+    "overall_recall": 0.09540610924147108,
+    "injection_rate": 0.0,
+    "hallucination_risk": 0.0,
+    "relational_cons": 0.0025500755723881774,
+    "compression": 0.015355608044759328,
+    "contradiction_pres": 0.0,
+    "evidence_sufficiency": 0.0,
+    "token_estimate": 80.95785440613028,
+    "gating_latency_ms": 0.0024505744160106605
+  }
+}

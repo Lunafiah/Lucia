@@ -1,0 +1,43 @@
+{
+  "readiness_state": "BLOCKED_OFFLINE_WEIGHTS",
+  "model_id": "convaiinnovations/laya",
+  "architecture": "ModernBERT-large (421M params, English Latin-script)",
+  "expected_files": [
+    "model.safetensors (~1.6 GB)",
+    "rl_agent_config.json",
+    "tokenizer.json"
+  ],
+  "provenance_audit": {
+    "status": "BLOCKED_OFFLINE_WEIGHTS",
+    "expected_model_id": "convaiinnovations/laya",
+    "architecture": "ModernBERT-large (421M params, English Latin-script) / mmBERT-base (322M, multilingual)",
+    "expected_files": [
+      "model.safetensors",
+      "rl_agent_config.json",
+      "tokenizer.json"
+    ],
+    "searched_paths": [
+      "C:\\Users\\Lunafiah\\Desktop\\My_project\\laya\\models",
+      "C:\\Users\\Lunafiah\\Desktop\\My_project\\laya\\checkpoints",
+      "C:\\Users\\Lunafiah\\Desktop\\My_project\\laya\\weights",
+      "C:\\Users\\Lunafiah\\Desktop\\My_project\\laya",
+      "C:\\Users\\Lunafiah\\.cache\\huggingface\\hub\\models--convaiinnovations--laya"
+    ],
+    "offline_weights_found": false,
+    "reason": "Neither local repo models/ directory nor Hugging Face cache (C:\\Users\\Lunafiah\\.cache\\huggingface\\hub\\models--convaiinnovations--laya) contains the required 'convaiinnovations/laya' checkpoint files. Per research protocol, execution enters fail-closed BLOCKED_OFFLINE_WEIGHTS mode."
+  },
+  "system_resources": {
+    "total_ram_gb": 16.0,
+    "available_ram_gb": 8.0,
+    "ram_sufficient_for_inference": true,
+    "logical_cpu_cores": 16,
+    "cuda_available": false,
+    "cuda_device": "N/A",
+    "gpu_vram_gb": 0.0,
+    "gpu_status": "GPU_STATUS = UNAVAILABLE"
+  },
+  "offline_execution_readiness": {
+    "can_instantiate_model": false,
+    "reason": "Neither local repo models/ directory nor Hugging Face cache (C:\\Users\\Lunafiah\\.cache\\huggingface\\hub\\models--convaiinnovations--laya) contains the required 'convaiinnovations/laya' checkpoint files. Per research protocol, execution enters fail-closed BLOCKED_OFFLINE_WEIGHTS mode."
+  }
+}

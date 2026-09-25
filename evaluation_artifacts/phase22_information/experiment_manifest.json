@@ -1,0 +1,42 @@
+{
+  "study": "Phase 22-INF Information Sufficiency & Semantic State Formation",
+  "train_seeds": [
+    42,
+    137,
+    618
+  ],
+  "held_out_seeds": [
+    1024,
+    2026
+  ],
+  "regimes": [
+    "ID",
+    "NoiseSurge",
+    "LexicalSparsity",
+    "ContradictionShock",
+    "TemporalDrift",
+    "CombinedStress"
+  ],
+  "languages": [
+    "English",
+    "Vietnamese",
+    "Japanese"
+  ],
+  "ablations": [
+    "E0_Baseline",
+    "E1_Temporal",
+    "E2_Prosodic",
+    "E3_Interaction",
+    "E4_Relational",
+    "E5_FullMultimodal",
+    "E6_Oracle"
+  ],
+  "gates": {
+    "G_INF1_HELD_OUT_R2_TARGET": "FAIL",
+    "G_INF2_FALSIFICATION_CHECK": "FALSIFIED",
+    "G_INF3_DOWNSTREAM_FLAPPING": "FAIL",
+    "G_INF4_TRAJECTORY_COVERAGE": "FAIL",
+    "G_INF5_CPU_LATENCY": "PASS"
+  },
+  "peak_held_out_r2": 0.6725529713617826
+}

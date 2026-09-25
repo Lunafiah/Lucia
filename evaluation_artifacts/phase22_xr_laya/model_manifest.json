@@ -1,0 +1,24 @@
+{
+  "model_id": "convaiinnovations/laya",
+  "expected_architecture": "ModernBERT-large (421M params, English Latin-script) / mmBERT-base (322M, multilingual)",
+  "parameter_count": 421438464,
+  "required_files": [
+    "model.safetensors",
+    "config.json",
+    "rl_agent_config.json",
+    "tokenizer.json",
+    "tokenizer_config.json"
+  ],
+  "local_availability_status": "BLOCKED_OFFLINE_WEIGHTS",
+  "verified_offline_files": [],
+  "sha256_hashes": {},
+  "system_environment": {
+    "os": "Windows-11-10.0.22621-SP0",
+    "python_version": "3.14.3",
+    "logical_cpu_cores": 16,
+    "ram_total_gb": 16.0,
+    "cuda_available": false,
+    "gpu_status": "GPU_STATUS = UNAVAILABLE"
+  },
+  "provenance_policy": "Strict Fail-Closed (No surrogate, no heuristic emulation, no cloud API fallback)"
+}

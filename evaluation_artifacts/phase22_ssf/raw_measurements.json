@@ -1,0 +1,187 @@
+{
+  "comparison": {
+    "raw_baseline": {
+      "r2": 0.7003371071898186,
+      "fast_r2": 0.5716025560464353,
+      "slow_r2": 0.44021272722035776,
+      "mae": 0.08065932126196339,
+      "mse": 0.015562838248080416,
+      "dim_r2": {
+        "z0_cognitive_load": 0.6766731788389171,
+        "z1_valence": 0.6332956340398288,
+        "z2_agency": 0.46375786136768726,
+        "z3_urgency": 0.5126835499393076,
+        "z4_metabolic_fatigue": 0.5806812268851539,
+        "z5_relational_warmth": 0.2997442275555616
+      },
+      "flapping_rate": 0.8179563492063492,
+      "contradiction_recovery_turns": 2.0,
+      "trajectory_h1_coverage": 0.8138888888888889,
+      "trajectory_h2_coverage": 0.8027777777777778
+    },
+    "decoupled_ssf": {
+      "r2": 0.4766584447174751,
+      "fast_r2": 0.5716025560464353,
+      "slow_r2": -0.9445816936819971,
+      "mae": 0.10716901538871514,
+      "mse": 0.027179474565507646,
+      "dim_r2": {
+        "z0_cognitive_load": 0.6766731788389171,
+        "z1_valence": 0.6332956340398288,
+        "z2_agency": 0.46375786136768726,
+        "z3_urgency": 0.5126835499393076,
+        "z4_metabolic_fatigue": -1.6088881911095552,
+        "z5_relational_warmth": -0.280275196254439
+      },
+      "flapping_rate": 0.6875,
+      "contradiction_recovery_turns": 4.75,
+      "trajectory_h1_coverage": 0.7527777777777778,
+      "trajectory_h2_coverage": 0.7722222222222223,
+      "p50_latency_ms": 0.034900003811344504,
+      "p95_latency_ms": 0.0517999884323217
+    },
+    "oracle_control": {
+      "r2": 0.9531306323412932,
+      "mae": 0.03911200565070566,
+      "mse": 0.002434136508601045
+    }
+  },
+  "ablations": {
+    "no_interaction": {
+      "r2": 0.46893271249983426,
+      "fast_r2": 0.5348471396351843,
+      "slow_r2": -0.9469165747762633,
+      "mae": 0.10743256474915586,
+      "mse": 0.027580706495572774,
+      "dim_r2": {
+        "z0_cognitive_load": 0.7034605265196925,
+        "z1_valence": 0.6427607001893614,
+        "z2_agency": 0.40463628288747466,
+        "z3_urgency": 0.38853104894420876,
+        "z4_metabolic_fatigue": -1.617787973362098,
+        "z5_relational_warmth": -0.2760451761904288
+      },
+      "flapping_rate": 0.6780753968253969,
+      "contradiction_recovery_turns": 4.75,
+      "trajectory_h1_coverage": 0.7527777777777778,
+      "trajectory_h2_coverage": 0.7722222222222223
+    },
+    "no_temporal": {
+      "r2": 0.4749956451775631,
+      "fast_r2": 0.5617009800527429,
+      "slow_r2": -0.9433501963346652,
+      "mae": 0.10744464523101996,
+      "mse": 0.027265831204582824,
+      "dim_r2": {
+        "z0_cognitive_load": 0.6675358911486551,
+        "z1_valence": 0.6297276854712506,
+        "z2_agency": 0.47640446354728283,
+        "z3_urgency": 0.47313588004378315,
+        "z4_metabolic_fatigue": -1.6078978851142343,
+        "z5_relational_warmth": -0.27880250755509617
+      },
+      "flapping_rate": 0.6964285714285714,
+      "contradiction_recovery_turns": 4.75,
+      "trajectory_h1_coverage": 0.7527777777777778,
+      "trajectory_h2_coverage": 0.7722222222222223
+    },
+    "text_only": {
+      "r2": 0.34263601922543063,
+      "fast_r2": 0.25368699752850526,
+      "slow_r2": -0.9396964661373377,
+      "mae": 0.12272823671414877,
+      "mse": 0.034139860317604444,
+      "dim_r2": {
+        "z0_cognitive_load": 0.5225332972236623,
+        "z1_valence": 0.24093794513746947,
+        "z2_agency": 0.09362620476661987,
+        "z3_urgency": 0.15765054298626946,
+        "z4_metabolic_fatigue": -1.6315584329876938,
+        "z5_relational_warmth": -0.24783449928698165
+      },
+      "flapping_rate": 0.6999007936507936,
+      "contradiction_recovery_turns": 5.0,
+      "trajectory_h1_coverage": 0.7444444444444445,
+      "trajectory_h2_coverage": 0.7583333333333333
+    },
+    "acoustics_only": {
+      "r2": 0.473127918249841,
+      "fast_r2": 0.5164946386845896,
+      "slow_r2": -0.9211598661310689,
+      "mae": 0.1066046428311926,
+      "mse": 0.027362830642167962,
+      "dim_r2": {
+        "z0_cognitive_load": 0.707263772344287,
+        "z1_valence": 0.6415859503705379,
+        "z2_agency": 0.4100255117373792,
+        "z3_urgency": 0.3071033202861543,
+        "z4_metabolic_fatigue": -1.6183916486216061,
+        "z5_relational_warmth": -0.22392808364053174
+      },
+      "flapping_rate": 0.6974206349206349,
+      "contradiction_recovery_turns": 4.75,
+      "trajectory_h1_coverage": 0.7555555555555555,
+      "trajectory_h2_coverage": 0.775
+    }
+  },
+  "languages": {
+    "English": {
+      "r2": 0.4766584447174751,
+      "mae": 0.10716901538871514,
+      "mse": 0.027179474565507646
+    },
+    "Vietnamese": {
+      "r2": 0.4766584447174751,
+      "mae": 0.10716901538871514,
+      "mse": 0.027179474565507646
+    },
+    "Japanese": {
+      "r2": 0.4766584447174751,
+      "mae": 0.10716901538871514,
+      "mse": 0.027179474565507646
+    }
+  },
+  "controls": {
+    "Control_A_Random_Projection": {
+      "r2": -10.540778171331613,
+      "mae": 0.6292512660942777,
+      "mse": 0.5993643799306899
+    },
+    "Control_B_Shuffled_Temporal_Order": {
+      "r2": 0.40958634497022306,
+      "mae": 0.11911002197243882,
+      "mse": 0.030662829576656135
+    },
+    "Control_C_Shuffled_Targets": {
+      "r2": -0.09559027545630894,
+      "mae": 0.16688192354833198,
+      "mse": 0.05689891759103078
+    },
+    "Control_D_Oracle_Observation": {
+      "r2": 0.9531306323412932,
+      "mae": 0.03911200565070566,
+      "mse": 0.002434136508601045
+    }
+  },
+  "gates": {
+    "G_SSF1_HELD_OUT_R2_TARGET": "FAIL",
+    "G_SSF2_FALSIFICATION_CHECK": "FALSIFIED",
+    "G_SSF3_FAST_STATES_R2": "FAIL",
+    "G_SSF4_DOWNSTREAM_FLAPPING": "FAIL",
+    "G_SSF5_CPU_LATENCY": "PASS"
+  },
+  "peak_held_out_r2": 0.4766584447174751,
+  "fast_states_r2": 0.5716025560464353,
+  "slow_states_r2": -0.9445816936819971,
+  "canonical_baselines": {
+    "REAL_LAYA_MODERNBERT_PARAMS": 421400000.0,
+    "REAL_LAYA_CPU_P50_MS": 607.67,
+    "REAL_LAYA_ECE": 0.2232,
+    "PHASE_22_XR_FLAPPING": 0.004,
+    "PHASE_22_XR_RECOVERY_TURNS": 1.0,
+    "PHASE_22_XR_CALIBRATED_COVERAGE": 1.0,
+    "PHASE_22_AL_PEAK_HELD_OUT_R2": 0.25476,
+    "PHASE_22_INF_PEAK_HELD_OUT_R2": 0.6988,
+    "PHASE_22_AL_ORACLE_R2": 0.90179
+  }
+}

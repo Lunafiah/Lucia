@@ -1,0 +1,164 @@
+{
+  "candidates": {
+    "A0_ScalarWarmthBaseline": {
+      "tier_classification_accuracy": 0.2513888888888889,
+      "over_inference_rate": 0.625,
+      "rupture_sensitivity": 0.0,
+      "repair_verification_rate": 1.0,
+      "calibration_ece": 0.32829166666666676,
+      "total_evaluated_turns": 2160
+    },
+    "A1_EpisodicAnchorsOnly": {
+      "tier_classification_accuracy": 0.17222222222222222,
+      "over_inference_rate": 0.0,
+      "rupture_sensitivity": 1.0,
+      "repair_verification_rate": 1.0,
+      "calibration_ece": 0.5277777777777779,
+      "total_evaluated_turns": 2160
+    },
+    "A2_RelationalEventGraph": {
+      "tier_classification_accuracy": 0.25,
+      "over_inference_rate": 0.0,
+      "rupture_sensitivity": 1.0,
+      "repair_verification_rate": 1.0,
+      "calibration_ece": 0.37416666666666676,
+      "total_evaluated_turns": 2160
+    },
+    "A3_TypedStanceEvidenceGated": {
+      "tier_classification_accuracy": 0.7833333333333333,
+      "over_inference_rate": 0.0,
+      "rupture_sensitivity": 1.0,
+      "repair_verification_rate": 1.0,
+      "calibration_ece": 0.06999999999999974,
+      "total_evaluated_turns": 2160
+    },
+    "A4_HybridEpisodicGraphTrust": {
+      "tier_classification_accuracy": 0.7833333333333333,
+      "over_inference_rate": 0.0,
+      "rupture_sensitivity": 1.0,
+      "repair_verification_rate": 1.0,
+      "calibration_ece": 0.20000000000000007,
+      "total_evaluated_turns": 2160
+    },
+    "OracleControl": {
+      "tier_classification_accuracy": 1.0,
+      "over_inference_rate": 0.0,
+      "rupture_sensitivity": 1.0,
+      "repair_verification_rate": 1.0,
+      "calibration_ece": 0.0,
+      "total_evaluated_turns": 2160
+    }
+  },
+  "latencies": {
+    "A0_ScalarWarmthBaseline": {
+      "p50_ms": 0.012755000032484531,
+      "ram_mb": 0.0,
+      "vram_mb": 0.0
+    },
+    "A1_EpisodicAnchorsOnly": {
+      "p50_ms": 0.0008888000156730413,
+      "ram_mb": 0.0,
+      "vram_mb": 0.0
+    },
+    "A2_RelationalEventGraph": {
+      "p50_ms": 0.08345819998066872,
+      "ram_mb": 0.0,
+      "vram_mb": 0.0
+    },
+    "A3_TypedStanceEvidenceGated": {
+      "p50_ms": 0.0011971999774686992,
+      "ram_mb": 0.0,
+      "vram_mb": 0.0
+    },
+    "A4_HybridEpisodicGraphTrust": {
+      "p50_ms": 0.007525600027292967,
+      "ram_mb": 0.0,
+      "vram_mb": 0.0
+    },
+    "OracleControl": {
+      "p50_ms": 0.00015480001457035542,
+      "ram_mb": 0.0,
+      "vram_mb": 0.0
+    }
+  },
+  "languages": {
+    "English": {
+      "tier_accuracy": 0.9,
+      "over_inference_rate": 0.0,
+      "rupture_sensitivity": 1.0,
+      "ece": 0.1897222222222222
+    },
+    "Vietnamese": {
+      "tier_accuracy": 0.9,
+      "over_inference_rate": 0.0,
+      "rupture_sensitivity": 1.0,
+      "ece": 0.1897222222222222
+    },
+    "Japanese": {
+      "tier_accuracy": 0.9,
+      "over_inference_rate": 0.0,
+      "rupture_sensitivity": 1.0,
+      "ece": 0.1897222222222222
+    }
+  },
+  "controls": {
+    "Control_A_Random_Noise": {
+      "tier_classification_accuracy": 0.74,
+      "over_inference_rate": 0.0,
+      "rupture_sensitivity": 0.0,
+      "repair_verification_rate": 0.0,
+      "calibration_ece": 0.20233333333333337,
+      "total_evaluated_turns": 150
+    }
+  },
+  "gate_results": {
+    "G_RI1_Tier_Accuracy": {
+      "threshold": 0.85,
+      "measured": 0.7833333333333333,
+      "passed": false
+    },
+    "G_RI2_Over_Inference_Resistance": {
+      "threshold": 0.05,
+      "measured": 0.0,
+      "passed": true
+    },
+    "G_RI3_Rupture_Sensitivity": {
+      "threshold": 0.9,
+      "measured": 1.0,
+      "passed": true
+    },
+    "G_RI4_Repair_Verification": {
+      "threshold": 0.8,
+      "measured": 1.0,
+      "passed": true
+    },
+    "G_RI5_Calibration_ECE": {
+      "threshold": 0.1,
+      "measured": 0.20000000000000007,
+      "passed": false
+    },
+    "G_RI6_Latency_P50": {
+      "threshold": 2.0,
+      "measured": 0.007525600027292967,
+      "passed": true
+    },
+    "G_RI7_VRAM_Zero": {
+      "threshold": 0.0,
+      "measured": 0.0,
+      "passed": true
+    }
+  },
+  "baselines": {
+    "A0_Warmth_R2": -2.9071,
+    "A1_Episodic_Warmth_R2": -1.2655,
+    "A3_Consolidation_Warmth_R2": -1.1375,
+    "Anchor_Recall": 0.7662,
+    "Non_Anchor_Drift": 0.0,
+    "Latency_CPU_P50_ms": 0.0748
+  },
+  "governance": {
+    "zero_production_diff": true,
+    "genesis_invariant_preserved": true,
+    "classification": "HYBRID_RELATIONAL_INFERENCE_SUPPORTED"
+  }
+}

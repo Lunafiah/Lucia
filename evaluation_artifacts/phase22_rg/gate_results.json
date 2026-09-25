@@ -1,0 +1,62 @@
+{
+  "G_RG1_Mandatory_Recall": {
+    "threshold": 0.99,
+    "measured": 0.990538,
+    "passed": true
+  },
+  "G_RG2_Precision_K": {
+    "threshold": 0.8,
+    "measured": 0.50887,
+    "passed": false
+  },
+  "G_RG3_Injection_Rate": {
+    "threshold": 0.05,
+    "measured": 0.015088,
+    "passed": true
+  },
+  "G_RG4_Hallucination_Risk": {
+    "threshold": 0.1,
+    "measured": 0.0,
+    "passed": true
+  },
+  "G_RG5_Overall_Recall": {
+    "threshold": 0.85,
+    "measured": 0.884531,
+    "passed": true
+  },
+  "G_RG6_Relational_Cons": {
+    "threshold": 0.85,
+    "measured": 0.986006,
+    "passed": true
+  },
+  "G_RG7_Compression": {
+    "threshold": 0.7,
+    "measured": 0.507998,
+    "passed": false
+  },
+  "G_RG8_Contradiction_Pres": {
+    "threshold": 1.0,
+    "measured": 1.0,
+    "passed": true
+  },
+  "G_RG9_Language_Gap": {
+    "threshold": 0.05,
+    "measured": 0.005943,
+    "passed": true
+  },
+  "G_RG10_Latency_P50": {
+    "threshold": 2.0,
+    "measured": 0.0626,
+    "passed": true
+  },
+  "G_RG11_VRAM": {
+    "threshold": 0.0,
+    "measured": 0.0,
+    "passed": true
+  },
+  "G_RG12_Token_Budget": {
+    "threshold": 300,
+    "measured": 289.0,
+    "passed": true
+  }
+}

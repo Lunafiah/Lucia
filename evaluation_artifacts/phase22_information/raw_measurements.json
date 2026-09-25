@@ -1,0 +1,210 @@
+{
+  "ablations": {
+    "E0_Baseline": {
+      "r2": 0.6087247936042839,
+      "mae": 0.09327094330869641,
+      "mse": 0.020320676646067255,
+      "dim_r2": {
+        "z0_cognitive_load": 0.6945799082887554,
+        "z1_valence": 0.6500277773320855,
+        "z2_agency": 0.4266320600195417,
+        "z3_urgency": 0.34892893446939766,
+        "z4_metabolic_fatigue": -0.20312754905124009,
+        "z5_relational_warmth": 0.056924737835289285
+      },
+      "flapping_rate": 0.8040674603174603,
+      "contradiction_recovery_turns": 3.5,
+      "trajectory_h1_coverage": 0.8083333333333333,
+      "trajectory_h2_coverage": 0.8,
+      "p50_latency_ms": 0.022799998987466097,
+      "p95_latency_ms": 0.023800006601959467,
+      "feature_dim": 13
+    },
+    "E1_Temporal": {
+      "r2": 0.6379727065518292,
+      "mae": 0.08873915723020497,
+      "mse": 0.018801701326740968,
+      "dim_r2": {
+        "z0_cognitive_load": 0.7034605265196925,
+        "z1_valence": 0.6427607001893614,
+        "z2_agency": 0.40463628288747466,
+        "z3_urgency": 0.38853104894420876,
+        "z4_metabolic_fatigue": 0.3173742376416103,
+        "z5_relational_warmth": 0.021276825230101548
+      },
+      "flapping_rate": 0.8338293650793651,
+      "contradiction_recovery_turns": 3.5,
+      "trajectory_h1_coverage": 0.8111111111111111,
+      "trajectory_h2_coverage": 0.8055555555555556,
+      "p50_latency_ms": 0.023100001271814108,
+      "p95_latency_ms": 0.029804994119331237,
+      "feature_dim": 19
+    },
+    "E2_Prosodic": {
+      "r2": 0.6552721347810118,
+      "mae": 0.08591391220872076,
+      "mse": 0.017903264417218158,
+      "dim_r2": {
+        "z0_cognitive_load": 0.6772884919229221,
+        "z1_valence": 0.6274436963294217,
+        "z2_agency": 0.4353158583067699,
+        "z3_urgency": 0.49864017422368334,
+        "z4_metabolic_fatigue": 0.5339422098975208,
+        "z5_relational_warmth": 0.020173582521300415
+      },
+      "flapping_rate": 0.8209325396825397,
+      "contradiction_recovery_turns": 2.5,
+      "trajectory_h1_coverage": 0.8083333333333333,
+      "trajectory_h2_coverage": 0.8055555555555556,
+      "p50_latency_ms": 0.03369999467395246,
+      "p95_latency_ms": 0.03510497626848518,
+      "feature_dim": 14
+    },
+    "E3_Interaction": {
+      "r2": 0.698804859372899,
+      "mae": 0.08121957198476983,
+      "mse": 0.015642414750553137,
+      "dim_r2": {
+        "z0_cognitive_load": 0.6675358911486551,
+        "z1_valence": 0.6297276854712506,
+        "z2_agency": 0.47640446354728283,
+        "z3_urgency": 0.47313588004378315,
+        "z4_metabolic_fatigue": 0.545931324757138,
+        "z5_relational_warmth": 0.3201690107143146
+      },
+      "flapping_rate": 0.8368055555555556,
+      "contradiction_recovery_turns": 2.25,
+      "trajectory_h1_coverage": 0.8138888888888889,
+      "trajectory_h2_coverage": 0.8055555555555556,
+      "p50_latency_ms": 0.023300002794712782,
+      "p95_latency_ms": 0.033899996196851134,
+      "feature_dim": 17
+    },
+    "E4_Relational": {
+      "r2": 0.6292655488550258,
+      "mae": 0.08912211996629059,
+      "mse": 0.019253903084406426,
+      "dim_r2": {
+        "z0_cognitive_load": 0.6737711123555814,
+        "z1_valence": 0.5336536886675274,
+        "z2_agency": 0.45834394757495445,
+        "z3_urgency": 0.3347523859677928,
+        "z4_metabolic_fatigue": -0.0040925023592672805,
+        "z5_relational_warmth": 0.2399423715298863
+      },
+      "flapping_rate": 0.7946428571428571,
+      "contradiction_recovery_turns": 3.25,
+      "trajectory_h1_coverage": 0.7972222222222223,
+      "trajectory_h2_coverage": 0.7805555555555556,
+      "p50_latency_ms": 0.023200002033263445,
+      "p95_latency_ms": 0.03880000440403819,
+      "feature_dim": 17
+    },
+    "E5_FullMultimodal": {
+      "r2": 0.6725529713617826,
+      "mae": 0.08214533302235273,
+      "mse": 0.017005793055395582,
+      "dim_r2": {
+        "z0_cognitive_load": 0.612826082004563,
+        "z1_valence": 0.5451072250572702,
+        "z2_agency": 0.4326264087149061,
+        "z3_urgency": 0.5088212436257924,
+        "z4_metabolic_fatigue": 0.5119536947739957,
+        "z5_relational_warmth": 0.3123738408037974
+      },
+      "flapping_rate": 0.7981150793650794,
+      "contradiction_recovery_turns": 3.0,
+      "trajectory_h1_coverage": 0.8055555555555556,
+      "trajectory_h2_coverage": 0.7888888888888889,
+      "p50_latency_ms": 0.022899999748915434,
+      "p95_latency_ms": 0.023600005079060793,
+      "feature_dim": 27
+    },
+    "E6_Oracle": {
+      "r2": 0.8422728198884339,
+      "mae": 0.056151745994835744,
+      "mse": 0.008191479994011286,
+      "dim_r2": {
+        "z0_cognitive_load": 0.7847966333856505,
+        "z1_valence": 0.785930882638822,
+        "z2_agency": 0.7463188858893082,
+        "z3_urgency": 0.6452208637834616,
+        "z4_metabolic_fatigue": 0.7191439967546531,
+        "z5_relational_warmth": 0.7342135706836083
+      },
+      "flapping_rate": 0.8199404761904762,
+      "contradiction_recovery_turns": 1.75,
+      "trajectory_h1_coverage": 0.8138888888888889,
+      "trajectory_h2_coverage": 0.8,
+      "p50_latency_ms": 0.02300000051036477,
+      "p95_latency_ms": 0.02340000355616212,
+      "feature_dim": 6
+    }
+  },
+  "dim_analysis": {
+    "z0_cognitive_load": 0.612826082004563,
+    "z1_valence": 0.5451072250572702,
+    "z2_agency": 0.4326264087149061,
+    "z3_urgency": 0.5088212436257924,
+    "z4_metabolic_fatigue": 0.5119536947739957,
+    "z5_relational_warmth": 0.3123738408037974
+  },
+  "controls": {
+    "Control_A_Random_Projection": {
+      "r2": -10.845457164667803,
+      "mae": 0.6682340392539019,
+      "mse": 0.6151877267802535
+    },
+    "Control_B_Shuffled_Temporal_Order": {
+      "r2": 0.6159535738727682,
+      "mae": 0.09111548871380178,
+      "mse": 0.01994525365994332
+    },
+    "Control_C_Shuffled_Targets": {
+      "r2": -0.4891302154088548,
+      "mae": 0.20322691266916362,
+      "mse": 0.07733721200982062
+    },
+    "Control_D_Oracle_Observation": {
+      "r2": 0.9531306323412932,
+      "mae": 0.03911200565070566,
+      "mse": 0.002434136508601045
+    }
+  },
+  "languages": {
+    "English": {
+      "r2": 0.6725529713617826,
+      "mae": 0.08214533302235273,
+      "mse": 0.017005793055395582
+    },
+    "Vietnamese": {
+      "r2": 0.6725529713617826,
+      "mae": 0.08214533302235273,
+      "mse": 0.017005793055395582
+    },
+    "Japanese": {
+      "r2": 0.6725529713617826,
+      "mae": 0.08214533302235273,
+      "mse": 0.017005793055395582
+    }
+  },
+  "latency": {},
+  "gates": {
+    "G_INF1_HELD_OUT_R2_TARGET": "FAIL",
+    "G_INF2_FALSIFICATION_CHECK": "FALSIFIED",
+    "G_INF3_DOWNSTREAM_FLAPPING": "FAIL",
+    "G_INF4_TRAJECTORY_COVERAGE": "FAIL",
+    "G_INF5_CPU_LATENCY": "PASS"
+  },
+  "peak_held_out_r2": 0.6725529713617826,
+  "canonical_baselines": {
+    "REAL_LAYA_MODERNBERT_PARAMS": 421400000.0,
+    "REAL_LAYA_CPU_P50_MS": 607.67,
+    "REAL_LAYA_ECE": 0.2232,
+    "PHASE_22_XR_FLAPPING": 0.004,
+    "PHASE_22_XR_RECOVERY_TURNS": 1.0,
+    "PHASE_22_XR_CALIBRATED_COVERAGE": 1.0,
+    "PHASE_22_AL_PEAK_HELD_OUT_R2": 0.25476,
+    "PHASE_22_AL_ORACLE_R2": 0.90179
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "real_laya": {
+    "model": "convaiinnovations/laya",
+    "architecture": "ModernBERT-large",
+    "params": 421438464,
+    "ece": 0.2232,
+    "brier": 0.0842,
+    "cpu_p50_ms": 607.67,
+    "total_p50_ms": 607.83,
+    "flapping_rate": 0.004,
+    "contradiction_recovery_turns": 1.0,
+    "m0_r2": -25.13,
+    "m2_r2": 0.4051,
+    "m4_r2": 0.4049,
+    "original_trajectory_coverage_h2": 0.2867,
+    "calibrated_c2_coverage": 1.0
+  },
+  "phase22_x_discrete": {
+    "flapping_rate": 0.238
+  }
+}

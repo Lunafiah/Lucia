@@ -1,0 +1,23 @@
+{
+  "model_id": "convaiinnovations/laya",
+  "base_architecture": "ModernBERT-large (421M parameters)",
+  "intended_task": "Categorical Next-Action Probe (6 classes)",
+  "output_format": "Logits / Softmax over 6 discrete action categories",
+  "required_files": [
+    "config.json",
+    "model.safetensors",
+    "tokenizer.json",
+    "tokenizer_config.json",
+    "rl_agent_config.json"
+  ],
+  "local_availability": {
+    "status": "BLOCKED_OFFLINE_WEIGHTS",
+    "verified_offline": false,
+    "sha256": null
+  },
+  "research_invariants": {
+    "fail_closed_rule": "If weights are missing, DO NOT substitute emulator or call cloud API. Report BLOCKED_OFFLINE_WEIGHTS.",
+    "emulation_forbidden": true,
+    "production_impact": "Zero. src/core/** and electron/** untouched."
+  }
+}
