@@ -1,0 +1,92 @@
+{
+  "version": "v0.2",
+  "all_passed": true,
+  "passed_count": 12,
+  "total_gates": 12,
+  "gates": {
+    "G-MB-1": {
+      "gate": "G-MB-1",
+      "description": "Structural Graph Validity Rate (SGVR)",
+      "measured": 1.0,
+      "target": 0.95,
+      "passed": true
+    },
+    "G-MB-2": {
+      "gate": "G-MB-2",
+      "description": "Causal Formation Sensitivity (CFS)",
+      "measured": 1.0,
+      "target": 0.8,
+      "passed": true
+    },
+    "G-MB-3": {
+      "gate": "G-MB-3",
+      "description": "Referential Grounding Precision (RGP)",
+      "measured": 1.0,
+      "target": 0.9,
+      "passed": true
+    },
+    "G-MB-4": {
+      "gate": "G-MB-4",
+      "description": "50-Turn Longitudinal Drift (D50)",
+      "measured": 0.0,
+      "target": 0.05,
+      "passed": true
+    },
+    "G-MB-5": {
+      "gate": "G-MB-5",
+      "description": "Nested Proposition Fidelity @ D=3 (RF3)",
+      "measured": 0.8640625,
+      "target": 0.85,
+      "passed": true
+    },
+    "G-MB-6": {
+      "gate": "G-MB-6",
+      "description": "Negation Polarity Accuracy (NPA)",
+      "measured": 1.0,
+      "target": 0.95,
+      "passed": true
+    },
+    "G-MB-7": {
+      "gate": "G-MB-7",
+      "description": "Decision Flapping Rate (DFR)",
+      "measured": 0.0,
+      "target": 0.05,
+      "passed": true
+    },
+    "G-MB-8": {
+      "gate": "G-MB-8",
+      "description": "Limbic Lyapunov Exponent (lambda_max)",
+      "measured": -0.02058321618261521,
+      "target": 0.0,
+      "passed": true
+    },
+    "G-MB-9": {
+      "gate": "G-MB-9",
+      "description": "Fact Retention After Delta (RUF)",
+      "measured": 1.0,
+      "target": 0.98,
+      "passed": true
+    },
+    "G-MB-10": {
+      "gate": "G-MB-10",
+      "description": "Historical Semantic Drift (Delta_drift)",
+      "measured": 7.401383855005455e-10,
+      "target": 0.05,
+      "passed": true
+    },
+    "G-MB-11": {
+      "gate": "G-MB-11",
+      "description": "Taxonomic Placement Accuracy (TPA)",
+      "measured": 1.0,
+      "target": 0.8,
+      "passed": true
+    },
+    "G-MB-12": {
+      "gate": "G-MB-12",
+      "description": "Hardware Execution SLA (CPU <= 5.0ms, VRAM == 0MB)",
+      "measured": "0.3154 ms / 0.0 MB",
+      "target": "<= 5.0 ms / 0.0 MB",
+      "passed": true
+    }
+  }
+}
