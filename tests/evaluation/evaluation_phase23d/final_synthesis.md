@@ -35,7 +35,7 @@ The following matrix consolidates empirical measurements across all six Phase 23
 | **Compositionality** | EXP-01 | **PASS** (100% role-binding at $D \le 4$) | **PASS** (100% role-binding at $D \le 4$) | **PASS** (100% box nesting at $D \le 4$) | Evaluated on structured proposition trees ($D=1..4$); HDC-pure collapsed ($\text{SPRR}=0.0, \text{BER}=1.0$) |
 | **Recursion** | EXP-01 | **PASS** ($RF_D = 1.000$ at $D \le 4$) | **PASS** ($RF_D = 1.000$ at $D \le 4$) | **PASS** ($RF_D = 1.000$ at $D \le 4$) | Syntactic/semantic tree depth scaling without representation degradation |
 | **Cross-Lingual Representation** | EXP-02 | **PASS** (Oracle $\text{SQI} = 1.000$) | **PASS** (Oracle $\text{SQI} = 1.000$) | **PASS** (Oracle $\text{SQI} = 1.000$) | Parallel semantic frames (EN/JA/VI); topology varies while functional meaning is equivalent |
-| **Surface Transduction** | EXP-02 | **Rule-Based $\text{SQI} = 0.887$** | **Rule-Based $\text{SQI} = 0.887$** | **Rule-Based $\text{SQI} = 0.887$** | Rule-based transducers exhibit inherent cross-lingual lexical/classifier limitations; open-domain NLU unverified |
+| **Surface Transduction** | EXP-02 | **Rule-Based $\text{SQI} = 0.887$** | **Rule-Based $\text{SQI} = 0.887$** | **Rule-Based $\text{SQI} = 0.950$** | Rule-based transducers exhibit inherent cross-lingual lexical/classifier limitations; open-domain NLU unverified |
 | **Coreference** | EXP-03 | **PASS** ($\text{CEAF}_e = 1.000, \text{EPR} = 1.000$) | **PASS** ($\text{CEAF}_e = 1.000, \text{EPR} = 1.000$) | **PASS** ($\text{CEAF}_e = 1.000, \text{EPR} = 1.000$) | Discourse entity ledger maintains identity across 5-sentence chains without chain splitting |
 | **Zero-Anaphora** | EXP-03 | **PASS** ($\text{URP} = 1.000, \text{CRA} = 1.000$) | **PASS** ($\text{URP} = 1.000, \text{CRA} = 1.000$) | **PASS** ($\text{URP} = 1.000, \text{CRA} = 1.000$) | Subject/object pro-drop resolved; ungrounded zero-anaphora safely preserved as `UNKNOWN_ENTITY` |
 | **Belief Revision** | EXP-04 | **PASS** ($\text{RC} = 1.0, \text{DPA} = 1.0, \text{CRR} = 0.0$) | **PASS** ($\text{RC} = 1.0, \text{DPA} = 1.0, \text{CRR} = 0.0$) | **PASS** ($\text{RC} = 1.0, \text{DPA} = 1.0, \text{CRR} = 0.0$) | Non-monotonic JTMS dependency retraction; multi-hop propagation ($A \to B \to C$); zero collateral retraction |
@@ -69,7 +69,7 @@ The following hypotheses were experimentally tested and **falsified** under the 
 - **Pre-Registered Gate:** Subgraph Pattern Retrieval Precision ($\text{SPRR}$) $\ge 0.80$, Binding Error Rate ($\text{BER}$) $\le 0.10$ across recursion depths $D \in [1, 4]$.
 - **Empirical Measurement:** **$\text{SPRR} = 0.000$** across $D=1 \dots 4$, **$\text{BER} = 1.000$**.
 - **Verdict:** **`FAIL` (Falsified)**.
-- **Causal Mechanism:** Dense hypervector superposition suffers crosstalk accumulation under superposition and catastrophic clean-up memory degradation during deep unbinding. Pure vector superposition cannot serve as the primary persistent compositional semantic substrate.
+- **Causal Mechanism:** Dense hypervector superposition suffers crosstalk accumulation under dense-vector superposition and catastrophic clean-up memory degradation during deep unbinding. Pure vector superposition cannot serve as the primary persistent compositional semantic substrate.
 
 ---
 
