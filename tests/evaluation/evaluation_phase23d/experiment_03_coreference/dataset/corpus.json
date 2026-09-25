@@ -1,0 +1,645 @@
+{
+  "metadata": {
+    "experiment": "EXP-03_reference_resolution_and_zero_anaphora",
+    "seed": 42,
+    "version": "1.0.0",
+    "total_cases": 10
+  },
+  "scenarios": [
+    {
+      "id": "C01",
+      "phenomenon": "english_overt_pronoun",
+      "language": "EN",
+      "text": "The user created a document. He submitted it to Lucia.",
+      "sentences": [
+        "The user created a document.",
+        "He submitted it to Lucia."
+      ],
+      "mentions": [
+        {
+          "id": "m1",
+          "text": "The user",
+          "sent_idx": 0,
+          "type": "NOMINAL",
+          "gender": "MASCULINE",
+          "animacy": "ANIMATE"
+        },
+        {
+          "id": "m2",
+          "text": "a document",
+          "sent_idx": 0,
+          "type": "NOMINAL",
+          "gender": "NEUTER",
+          "animacy": "INANIMATE"
+        },
+        {
+          "id": "m3",
+          "text": "He",
+          "sent_idx": 1,
+          "type": "PRONOMINAL",
+          "gender": "MASCULINE",
+          "animacy": "ANIMATE"
+        },
+        {
+          "id": "m4",
+          "text": "it",
+          "sent_idx": 1,
+          "type": "PRONOMINAL",
+          "gender": "NEUTER",
+          "animacy": "INANIMATE"
+        },
+        {
+          "id": "m5",
+          "text": "Lucia",
+          "sent_idx": 1,
+          "type": "PROPER",
+          "gender": "FEMININE",
+          "animacy": "ANIMATE"
+        }
+      ],
+      "gold_clusters": {
+        "ent_user": [
+          "m1",
+          "m3"
+        ],
+        "ent_doc": [
+          "m2",
+          "m4"
+        ],
+        "ent_lucia": [
+          "m5"
+        ]
+      },
+      "is_ambiguous": false,
+      "has_zero_anaphora": false
+    },
+    {
+      "id": "C02",
+      "phenomenon": "japanese_omitted_subject",
+      "language": "JA",
+      "text": "\u30e6\u30fc\u30b6\u30fc\u306f\u30bf\u30b9\u30af\u3092\u958b\u59cb\u3057\u305f\u3002[\u00d8] \u30b3\u30fc\u30c9\u3092\u4fee\u6b63\u3057\u305f\u3002",
+      "sentences": [
+        "\u30e6\u30fc\u30b6\u30fc\u306f\u30bf\u30b9\u30af\u3092\u958b\u59cb\u3057\u305f\u3002",
+        "[\u00d8] \u30b3\u30fc\u30c9\u3092\u4fee\u6b63\u3057\u305f\u3002"
+      ],
+      "mentions": [
+        {
+          "id": "m1",
+          "text": "\u30e6\u30fc\u30b6\u30fc",
+          "sent_idx": 0,
+          "type": "NOMINAL",
+          "salience": 1.0,
+          "is_topic": true
+        },
+        {
+          "id": "m2",
+          "text": "\u30bf\u30b9\u30af",
+          "sent_idx": 0,
+          "type": "NOMINAL",
+          "salience": 0.5,
+          "is_topic": false
+        },
+        {
+          "id": "m3",
+          "text": "[\u00d8_subject]",
+          "sent_idx": 1,
+          "type": "ZERO_ANAPHOR",
+          "role": ":ARG0",
+          "salience": 0.9
+        },
+        {
+          "id": "m4",
+          "text": "\u30b3\u30fc\u30c9",
+          "sent_idx": 1,
+          "type": "NOMINAL",
+          "salience": 0.5,
+          "is_topic": false
+        }
+      ],
+      "gold_clusters": {
+        "ent_user": [
+          "m1",
+          "m3"
+        ],
+        "ent_task": [
+          "m2"
+        ],
+        "ent_code": [
+          "m4"
+        ]
+      },
+      "is_ambiguous": false,
+      "has_zero_anaphora": true
+    },
+    {
+      "id": "C03",
+      "phenomenon": "japanese_omitted_object",
+      "language": "JA",
+      "text": "\u30eb\u30b7\u30a2\u306f\u65b0\u3057\u3044\u30ec\u30dd\u30fc\u30c8\u3092\u4f5c\u6210\u3057\u305f\u3002\u30e6\u30fc\u30b6\u30fc\u306f [\u00d8] \u78ba\u8a8d\u3057\u305f\u3002",
+      "sentences": [
+        "\u30eb\u30b7\u30a2\u306f\u65b0\u3057\u3044\u30ec\u30dd\u30fc\u30c8\u3092\u4f5c\u6210\u3057\u305f\u3002",
+        "\u30e6\u30fc\u30b6\u30fc\u306f [\u00d8] \u78ba\u8a8d\u3057\u305f\u3002"
+      ],
+      "mentions": [
+        {
+          "id": "m1",
+          "text": "\u30eb\u30b7\u30a2",
+          "sent_idx": 0,
+          "type": "PROPER",
+          "salience": 0.8,
+          "role": ":ARG0"
+        },
+        {
+          "id": "m2",
+          "text": "\u65b0\u3057\u3044\u30ec\u30dd\u30fc\u30c8",
+          "sent_idx": 0,
+          "type": "NOMINAL",
+          "salience": 0.9,
+          "is_topic": true,
+          "role": ":ARG1"
+        },
+        {
+          "id": "m3",
+          "text": "\u30e6\u30fc\u30b6\u30fc",
+          "sent_idx": 1,
+          "type": "NOMINAL",
+          "salience": 1.0,
+          "role": ":ARG0"
+        },
+        {
+          "id": "m4",
+          "text": "[\u00d8_object]",
+          "sent_idx": 1,
+          "type": "ZERO_ANAPHOR",
+          "role": ":ARG1",
+          "salience": 0.8
+        }
+      ],
+      "gold_clusters": {
+        "ent_lucia": [
+          "m1"
+        ],
+        "ent_report": [
+          "m2",
+          "m4"
+        ],
+        "ent_user": [
+          "m3"
+        ]
+      },
+      "is_ambiguous": false,
+      "has_zero_anaphora": true
+    },
+    {
+      "id": "C04",
+      "phenomenon": "japanese_unresolved_zero",
+      "language": "JA",
+      "text": "[\u00d8] \u7a93\u3092\u958b\u3051\u305f\u3002",
+      "sentences": [
+        "[\u00d8] \u7a93\u3092\u958b\u3051\u305f\u3002"
+      ],
+      "mentions": [
+        {
+          "id": "m1",
+          "text": "[\u00d8_subject]",
+          "sent_idx": 0,
+          "type": "ZERO_ANAPHOR",
+          "role": ":ARG0",
+          "context_evidence": false
+        },
+        {
+          "id": "m2",
+          "text": "\u7a93",
+          "sent_idx": 0,
+          "type": "NOMINAL",
+          "role": ":ARG1"
+        }
+      ],
+      "gold_clusters": {
+        "UNKNOWN_ENTITY": [
+          "m1"
+        ],
+        "ent_window": [
+          "m2"
+        ]
+      },
+      "is_ambiguous": true,
+      "has_zero_anaphora": true
+    },
+    {
+      "id": "C05",
+      "phenomenon": "vietnamese_kinship_persistent",
+      "language": "VI",
+      "text": "Anh Nam l\u00e0 k\u1ef9 s\u01b0 ph\u1ea7n m\u1ec1m. Anh \u0111\u00e3 h\u1ed7 tr\u1ee3 d\u1ef1 \u00e1n n\u00e0y.",
+      "sentences": [
+        "Anh Nam l\u00e0 k\u1ef9 s\u01b0 ph\u1ea7n m\u1ec1m.",
+        "Anh \u0111\u00e3 h\u1ed7 tr\u1ee3 d\u1ef1 \u00e1n n\u00e0y."
+      ],
+      "mentions": [
+        {
+          "id": "m1",
+          "text": "Anh Nam",
+          "sent_idx": 0,
+          "type": "KINSHIP_PROPER",
+          "social_rel": "SENIOR_MALE_PEER"
+        },
+        {
+          "id": "m2",
+          "text": "Anh",
+          "sent_idx": 1,
+          "type": "KINSHIP_DEIXIS",
+          "social_rel": "SENIOR_MALE_PEER"
+        },
+        {
+          "id": "m3",
+          "text": "d\u1ef1 \u00e1n n\u00e0y",
+          "sent_idx": 1,
+          "type": "NOMINAL"
+        }
+      ],
+      "gold_clusters": {
+        "ent_nam": [
+          "m1",
+          "m2"
+        ],
+        "ent_project": [
+          "m3"
+        ]
+      },
+      "is_ambiguous": false,
+      "has_zero_anaphora": false
+    },
+    {
+      "id": "C06",
+      "phenomenon": "vietnamese_perspective_shift",
+      "language": "VI",
+      "text": "Lucia: Em ch\u00e0o anh Nam. Admin: Anh Nam \u0111\u00e3 nh\u1eafc em v\u1ec1 l\u1ecbch h\u1ecdp. Nam: T\u00f4i \u0111\u00e3 chu\u1ea9n b\u1ecb xong.",
+      "sentences": [
+        "Em ch\u00e0o anh Nam.",
+        "Anh Nam \u0111\u00e3 nh\u1eafc em v\u1ec1 l\u1ecbch h\u1ecdp.",
+        "T\u00f4i \u0111\u00e3 chu\u1ea9n b\u1ecb xong."
+      ],
+      "mentions": [
+        {
+          "id": "m1",
+          "text": "Em (Lucia)",
+          "sent_idx": 0,
+          "speaker": "Lucia",
+          "type": "KINSHIP_FIRST_PERSON"
+        },
+        {
+          "id": "m2",
+          "text": "anh Nam",
+          "sent_idx": 0,
+          "speaker": "Lucia",
+          "type": "KINSHIP_SECOND_PERSON"
+        },
+        {
+          "id": "m3",
+          "text": "Anh Nam",
+          "sent_idx": 1,
+          "speaker": "Admin",
+          "type": "KINSHIP_THIRD_PERSON"
+        },
+        {
+          "id": "m4",
+          "text": "em (Admin)",
+          "sent_idx": 1,
+          "speaker": "Admin",
+          "type": "KINSHIP_FIRST_PERSON"
+        },
+        {
+          "id": "m5",
+          "text": "T\u00f4i (Nam)",
+          "sent_idx": 2,
+          "speaker": "Nam",
+          "type": "FIRST_PERSON_PRONOUN"
+        }
+      ],
+      "gold_clusters": {
+        "ent_nam": [
+          "m2",
+          "m3",
+          "m5"
+        ],
+        "ent_lucia": [
+          "m1"
+        ],
+        "ent_admin": [
+          "m4"
+        ]
+      },
+      "is_ambiguous": false,
+      "has_zero_anaphora": false
+    },
+    {
+      "id": "C07",
+      "phenomenon": "long_reference_chain",
+      "language": "EN",
+      "text": "The user opened the workstation. He reviewed the architecture. The system prompted for credentials. He entered the key. After that, he launched the simulation.",
+      "sentences": [
+        "The user opened the workstation.",
+        "He reviewed the architecture.",
+        "The system prompted for credentials.",
+        "He entered the key.",
+        "After that, he launched the simulation."
+      ],
+      "mentions": [
+        {
+          "id": "m1",
+          "text": "The user",
+          "sent_idx": 0,
+          "type": "NOMINAL"
+        },
+        {
+          "id": "m2",
+          "text": "the workstation",
+          "sent_idx": 0,
+          "type": "NOMINAL"
+        },
+        {
+          "id": "m3",
+          "text": "He",
+          "sent_idx": 1,
+          "type": "PRONOMINAL"
+        },
+        {
+          "id": "m4",
+          "text": "the architecture",
+          "sent_idx": 1,
+          "type": "NOMINAL"
+        },
+        {
+          "id": "m5",
+          "text": "The system",
+          "sent_idx": 2,
+          "type": "NOMINAL"
+        },
+        {
+          "id": "m6",
+          "text": "credentials",
+          "sent_idx": 2,
+          "type": "NOMINAL"
+        },
+        {
+          "id": "m7",
+          "text": "He",
+          "sent_idx": 3,
+          "type": "PRONOMINAL"
+        },
+        {
+          "id": "m8",
+          "text": "the key",
+          "sent_idx": 3,
+          "type": "NOMINAL"
+        },
+        {
+          "id": "m9",
+          "text": "he",
+          "sent_idx": 4,
+          "type": "PRONOMINAL"
+        },
+        {
+          "id": "m10",
+          "text": "the simulation",
+          "sent_idx": 4,
+          "type": "NOMINAL"
+        }
+      ],
+      "gold_clusters": {
+        "ent_user": [
+          "m1",
+          "m3",
+          "m7",
+          "m9"
+        ],
+        "ent_workstation": [
+          "m2"
+        ],
+        "ent_architecture": [
+          "m4"
+        ],
+        "ent_system": [
+          "m5"
+        ],
+        "ent_credentials": [
+          "m6"
+        ],
+        "ent_key": [
+          "m8"
+        ],
+        "ent_simulation": [
+          "m10"
+        ]
+      },
+      "is_ambiguous": false,
+      "has_zero_anaphora": false
+    },
+    {
+      "id": "C08",
+      "phenomenon": "competing_antecedents",
+      "language": "EN",
+      "text": "The user consulted the administrator. He requested elevated permissions from him.",
+      "sentences": [
+        "The user consulted the administrator.",
+        "He requested elevated permissions from him."
+      ],
+      "mentions": [
+        {
+          "id": "m1",
+          "text": "The user",
+          "sent_idx": 0,
+          "type": "NOMINAL",
+          "gender": "MASCULINE",
+          "role": ":ARG0"
+        },
+        {
+          "id": "m2",
+          "text": "the administrator",
+          "sent_idx": 0,
+          "type": "NOMINAL",
+          "gender": "MASCULINE",
+          "role": ":ARG1"
+        },
+        {
+          "id": "m3",
+          "text": "He",
+          "sent_idx": 1,
+          "type": "PRONOMINAL",
+          "gender": "MASCULINE",
+          "role": ":ARG0"
+        },
+        {
+          "id": "m4",
+          "text": "him",
+          "sent_idx": 1,
+          "type": "PRONOMINAL",
+          "gender": "MASCULINE",
+          "role": ":ARG2"
+        }
+      ],
+      "gold_clusters": {
+        "ent_user": [
+          "m1",
+          "m3"
+        ],
+        "ent_admin": [
+          "m2",
+          "m4"
+        ]
+      },
+      "is_ambiguous": false,
+      "has_zero_anaphora": false
+    },
+    {
+      "id": "C09",
+      "phenomenon": "ambiguous_antecedent",
+      "language": "EN",
+      "text": "The client telephoned the supplier because he needed an update.",
+      "sentences": [
+        "The client telephoned the supplier because he needed an update."
+      ],
+      "mentions": [
+        {
+          "id": "m1",
+          "text": "The client",
+          "sent_idx": 0,
+          "type": "NOMINAL",
+          "gender": "MASCULINE"
+        },
+        {
+          "id": "m2",
+          "text": "the supplier",
+          "sent_idx": 0,
+          "type": "NOMINAL",
+          "gender": "MASCULINE"
+        },
+        {
+          "id": "m3",
+          "text": "he",
+          "sent_idx": 0,
+          "type": "PRONOMINAL",
+          "gender": "MASCULINE",
+          "is_ambiguous": true
+        }
+      ],
+      "gold_clusters": {
+        "ent_client": [
+          "m1"
+        ],
+        "ent_supplier": [
+          "m2"
+        ],
+        "AMBIGUOUS_UNRESOLVED": [
+          "m3"
+        ]
+      },
+      "is_ambiguous": true,
+      "has_zero_anaphora": false
+    },
+    {
+      "id": "C10",
+      "phenomenon": "multi_event_persistence",
+      "language": "EN",
+      "text": "Lucia initialized the server. The server configured the network. The server started the database. It signaled readiness.",
+      "sentences": [
+        "Lucia initialized the server.",
+        "The server configured the network.",
+        "The server started the database.",
+        "It signaled readiness."
+      ],
+      "mentions": [
+        {
+          "id": "m1",
+          "text": "Lucia",
+          "sent_idx": 0,
+          "type": "PROPER",
+          "role": ":ARG0"
+        },
+        {
+          "id": "m2",
+          "text": "the server",
+          "sent_idx": 0,
+          "type": "NOMINAL",
+          "role": ":ARG1",
+          "animacy": "INANIMATE",
+          "gender": "NEUTER"
+        },
+        {
+          "id": "m3",
+          "text": "The server",
+          "sent_idx": 1,
+          "type": "NOMINAL",
+          "role": ":ARG0",
+          "animacy": "INANIMATE",
+          "gender": "NEUTER"
+        },
+        {
+          "id": "m4",
+          "text": "the network",
+          "sent_idx": 1,
+          "type": "NOMINAL",
+          "role": ":ARG1",
+          "animacy": "INANIMATE",
+          "gender": "NEUTER"
+        },
+        {
+          "id": "m5",
+          "text": "The server",
+          "sent_idx": 2,
+          "type": "NOMINAL",
+          "role": ":ARG0",
+          "animacy": "INANIMATE",
+          "gender": "NEUTER"
+        },
+        {
+          "id": "m6",
+          "text": "the database",
+          "sent_idx": 2,
+          "type": "NOMINAL",
+          "role": ":ARG1",
+          "animacy": "INANIMATE",
+          "gender": "NEUTER"
+        },
+        {
+          "id": "m7",
+          "text": "It",
+          "sent_idx": 3,
+          "type": "PRONOMINAL",
+          "role": ":ARG0",
+          "animacy": "INANIMATE",
+          "gender": "NEUTER"
+        },
+        {
+          "id": "m8",
+          "text": "readiness",
+          "sent_idx": 3,
+          "type": "NOMINAL",
+          "role": ":ARG1"
+        }
+      ],
+      "gold_clusters": {
+        "ent_lucia": [
+          "m1"
+        ],
+        "ent_server": [
+          "m2",
+          "m3",
+          "m5",
+          "m7"
+        ],
+        "ent_network": [
+          "m4"
+        ],
+        "ent_database": [
+          "m6"
+        ],
+        "ent_readiness": [
+          "m8"
+        ]
+      },
+      "is_ambiguous": false,
+      "has_zero_anaphora": false
+    }
+  ]
+}

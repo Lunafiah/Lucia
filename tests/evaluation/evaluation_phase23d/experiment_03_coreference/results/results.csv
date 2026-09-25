@@ -1,0 +1,7 @@
+Mode,Candidate,Verdict,CEAF_e_F1,B3_F1,CRA,URP,EPR,RSA
+Representation,UMR-TPG,PASS,1.0,1.0,1.0,1.0,1.0,1.0
+Representation,V-UMR,PASS,1.0,1.0,1.0,1.0,1.0,1.0
+Representation,DRS-Graph,PASS,1.0,1.0,1.0,1.0,1.0,1.0
+Resolution,UMR-TPG,PASS,1.0,1.0,1.0,1.0,1.0,1.0
+Resolution,V-UMR,PASS,1.0,1.0,1.0,1.0,1.0,1.0
+Resolution,DRS-Graph,PASS,1.0,1.0,1.0,1.0,1.0,1.0

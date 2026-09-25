@@ -1,0 +1,699 @@
+{
+  "metadata": {
+    "experiment": "EXP-03_reference_resolution_and_zero_anaphora",
+    "timestamp": "2026-09-25 23:52:52",
+    "total_scenarios": 10,
+    "candidates": [
+      "UMR-TPG",
+      "V-UMR",
+      "DRS-Graph"
+    ]
+  },
+  "representation_capability": {
+    "UMR-TPG": {
+      "candidate": "UMR-TPG",
+      "mode": "representation",
+      "verdict": "PASS",
+      "B3_F1": 1.0,
+      "CEAF_e_F1": 1.0,
+      "CRA": 1.0,
+      "URP": 1.0,
+      "EPR": 1.0,
+      "RSA": 1.0,
+      "per_scenario": [
+        {
+          "id": "C01",
+          "phenomenon": "english_overt_pronoun",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C02",
+          "phenomenon": "japanese_omitted_subject",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C03",
+          "phenomenon": "japanese_omitted_object",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C04",
+          "phenomenon": "japanese_unresolved_zero",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C05",
+          "phenomenon": "vietnamese_kinship_persistent",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C06",
+          "phenomenon": "vietnamese_perspective_shift",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C07",
+          "phenomenon": "long_reference_chain",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C08",
+          "phenomenon": "competing_antecedents",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C09",
+          "phenomenon": "ambiguous_antecedent",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C10",
+          "phenomenon": "multi_event_persistence",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        }
+      ]
+    },
+    "V-UMR": {
+      "candidate": "V-UMR",
+      "mode": "representation",
+      "verdict": "PASS",
+      "B3_F1": 1.0,
+      "CEAF_e_F1": 1.0,
+      "CRA": 1.0,
+      "URP": 1.0,
+      "EPR": 1.0,
+      "RSA": 1.0,
+      "per_scenario": [
+        {
+          "id": "C01",
+          "phenomenon": "english_overt_pronoun",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C02",
+          "phenomenon": "japanese_omitted_subject",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C03",
+          "phenomenon": "japanese_omitted_object",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C04",
+          "phenomenon": "japanese_unresolved_zero",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C05",
+          "phenomenon": "vietnamese_kinship_persistent",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C06",
+          "phenomenon": "vietnamese_perspective_shift",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C07",
+          "phenomenon": "long_reference_chain",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C08",
+          "phenomenon": "competing_antecedents",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C09",
+          "phenomenon": "ambiguous_antecedent",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C10",
+          "phenomenon": "multi_event_persistence",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        }
+      ]
+    },
+    "DRS-Graph": {
+      "candidate": "DRS-Graph",
+      "mode": "representation",
+      "verdict": "PASS",
+      "B3_F1": 1.0,
+      "CEAF_e_F1": 1.0,
+      "CRA": 1.0,
+      "URP": 1.0,
+      "EPR": 1.0,
+      "RSA": 1.0,
+      "per_scenario": [
+        {
+          "id": "C01",
+          "phenomenon": "english_overt_pronoun",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C02",
+          "phenomenon": "japanese_omitted_subject",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C03",
+          "phenomenon": "japanese_omitted_object",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C04",
+          "phenomenon": "japanese_unresolved_zero",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C05",
+          "phenomenon": "vietnamese_kinship_persistent",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C06",
+          "phenomenon": "vietnamese_perspective_shift",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C07",
+          "phenomenon": "long_reference_chain",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C08",
+          "phenomenon": "competing_antecedents",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C09",
+          "phenomenon": "ambiguous_antecedent",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C10",
+          "phenomenon": "multi_event_persistence",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        }
+      ]
+    }
+  },
+  "resolution_capability": {
+    "UMR-TPG": {
+      "candidate": "UMR-TPG",
+      "mode": "resolution",
+      "verdict": "PASS",
+      "B3_F1": 1.0,
+      "CEAF_e_F1": 1.0,
+      "CRA": 1.0,
+      "URP": 1.0,
+      "EPR": 1.0,
+      "RSA": 1.0,
+      "per_scenario": [
+        {
+          "id": "C01",
+          "phenomenon": "english_overt_pronoun",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C02",
+          "phenomenon": "japanese_omitted_subject",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C03",
+          "phenomenon": "japanese_omitted_object",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C04",
+          "phenomenon": "japanese_unresolved_zero",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C05",
+          "phenomenon": "vietnamese_kinship_persistent",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C06",
+          "phenomenon": "vietnamese_perspective_shift",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C07",
+          "phenomenon": "long_reference_chain",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C08",
+          "phenomenon": "competing_antecedents",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C09",
+          "phenomenon": "ambiguous_antecedent",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C10",
+          "phenomenon": "multi_event_persistence",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        }
+      ]
+    },
+    "V-UMR": {
+      "candidate": "V-UMR",
+      "mode": "resolution",
+      "verdict": "PASS",
+      "B3_F1": 1.0,
+      "CEAF_e_F1": 1.0,
+      "CRA": 1.0,
+      "URP": 1.0,
+      "EPR": 1.0,
+      "RSA": 1.0,
+      "per_scenario": [
+        {
+          "id": "C01",
+          "phenomenon": "english_overt_pronoun",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C02",
+          "phenomenon": "japanese_omitted_subject",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C03",
+          "phenomenon": "japanese_omitted_object",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C04",
+          "phenomenon": "japanese_unresolved_zero",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C05",
+          "phenomenon": "vietnamese_kinship_persistent",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C06",
+          "phenomenon": "vietnamese_perspective_shift",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C07",
+          "phenomenon": "long_reference_chain",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C08",
+          "phenomenon": "competing_antecedents",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C09",
+          "phenomenon": "ambiguous_antecedent",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C10",
+          "phenomenon": "multi_event_persistence",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        }
+      ]
+    },
+    "DRS-Graph": {
+      "candidate": "DRS-Graph",
+      "mode": "resolution",
+      "verdict": "PASS",
+      "B3_F1": 1.0,
+      "CEAF_e_F1": 1.0,
+      "CRA": 1.0,
+      "URP": 1.0,
+      "EPR": 1.0,
+      "RSA": 1.0,
+      "per_scenario": [
+        {
+          "id": "C01",
+          "phenomenon": "english_overt_pronoun",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C02",
+          "phenomenon": "japanese_omitted_subject",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C03",
+          "phenomenon": "japanese_omitted_object",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C04",
+          "phenomenon": "japanese_unresolved_zero",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C05",
+          "phenomenon": "vietnamese_kinship_persistent",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C06",
+          "phenomenon": "vietnamese_perspective_shift",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C07",
+          "phenomenon": "long_reference_chain",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C08",
+          "phenomenon": "competing_antecedents",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C09",
+          "phenomenon": "ambiguous_antecedent",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        },
+        {
+          "id": "C10",
+          "phenomenon": "multi_event_persistence",
+          "b3_f1": 1.0,
+          "ceaf_e_f1": 1.0,
+          "cra": 1.0,
+          "urp": 1.0,
+          "epr": 1.0,
+          "rsa": 1.0
+        }
+      ]
+    }
+  },
+  "failure_cases": [],
+  "layer_attribution": {
+    "Layer_A_Representation": "Evaluated via Mode A (Gold entity assignments)",
+    "Layer_B_Resolution": "Evaluated via Mode B (Deterministic anaphora resolution)"
+  }
+}
