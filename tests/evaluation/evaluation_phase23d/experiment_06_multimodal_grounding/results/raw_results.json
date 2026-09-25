@@ -1,0 +1,275 @@
+{
+  "benchmark": "Phase23D_EXP06_Multimodal_Grounding",
+  "timestamp": "2026-09-26 00:27:04",
+  "hardware_profile": {
+    "execution": "Single-Core CPU",
+    "vram_mb": 0.0,
+    "tdp_status": "UNVERIFIED (hardware power meter absent in environment)"
+  },
+  "candidates": {
+    "UMR-TPG": {
+      "candidate": "UMR-TPG",
+      "metrics": {
+        "CPA": 1.0,
+        "CMC": 1.0,
+        "UCP": 1.0,
+        "TCI": 0.7778,
+        "lambda_max": -1.3065,
+        "DFR": 0.0,
+        "r_embodiment": 1.0,
+        "mean_latency_ms": 0.0278,
+        "vram_mb": 0.0,
+        "token_free_compliance": 1.0
+      },
+      "gates": {
+        "CPA_gate": true,
+        "CMC_gate": true,
+        "UCP_gate": true,
+        "Lyapunov_gate": true,
+        "DFR_gate": true,
+        "Embodiment_gate": true,
+        "VRAM_gate": true,
+        "TDP_status": "UNVERIFIED (hardware power meter absent in environment)",
+        "overall_verdict": "PASS"
+      },
+      "sample_predictions": [
+        [
+          "SM_PAD_01",
+          "AFFECT_JOY",
+          "AFFECT_JOY"
+        ],
+        [
+          "SM_PAD_02",
+          "AFFECT_SORROW",
+          "AFFECT_SORROW"
+        ],
+        [
+          "SM_AC_01",
+          "PROSODY_AGITATED",
+          "PROSODY_AGITATED"
+        ],
+        [
+          "SM_AC_02",
+          "PROSODY_CALM",
+          "PROSODY_CALM"
+        ],
+        [
+          "CONV_01",
+          "RELATIONAL_PHILIA",
+          "RELATIONAL_PHILIA"
+        ],
+        [
+          "CONV_02",
+          "STATE_ALARM",
+          "STATE_ALARM"
+        ],
+        [
+          "TEMP_01",
+          "TEMPORAL_SMOOTH_TRAJECTORY",
+          "TEMPORAL_SMOOTH_TRAJECTORY"
+        ],
+        [
+          "CONF_01",
+          "EVIDENCE_CONFLICT",
+          "EVIDENCE_CONFLICT"
+        ],
+        [
+          "DROP_01",
+          "AFFECT_SERENE",
+          "AFFECT_SERENE"
+        ],
+        [
+          "PERT_01",
+          "AFFECT_JOY",
+          "AFFECT_JOY"
+        ],
+        [
+          "OSC_01",
+          "STABLE_DEADBAND_RETENTION",
+          "STABLE_DEADBAND_RETENTION"
+        ],
+        [
+          "UNRELATED_01",
+          "ENVIRONMENTAL_AMBIENCE_ISOLATION",
+          "ENVIRONMENTAL_AMBIENCE_ISOLATION"
+        ]
+      ]
+    },
+    "V-UMR": {
+      "candidate": "V-UMR",
+      "metrics": {
+        "CPA": 0.8333,
+        "CMC": 1.0,
+        "UCP": 1.0,
+        "TCI": 0.7778,
+        "lambda_max": -1.3065,
+        "DFR": 0.0,
+        "r_embodiment": 1.0,
+        "mean_latency_ms": 0.0611,
+        "vram_mb": 0.0,
+        "token_free_compliance": 1.0
+      },
+      "gates": {
+        "CPA_gate": false,
+        "CMC_gate": true,
+        "UCP_gate": true,
+        "Lyapunov_gate": true,
+        "DFR_gate": true,
+        "Embodiment_gate": true,
+        "VRAM_gate": true,
+        "TDP_status": "UNVERIFIED (hardware power meter absent in environment)",
+        "overall_verdict": "FAIL"
+      },
+      "sample_predictions": [
+        [
+          "SM_PAD_01",
+          "AFFECT_JOY",
+          "AFFECT_JOY"
+        ],
+        [
+          "SM_PAD_02",
+          "AFFECT_SORROW",
+          "AFFECT_SORROW"
+        ],
+        [
+          "SM_AC_01",
+          "STATE_ALARM",
+          "PROSODY_AGITATED"
+        ],
+        [
+          "SM_AC_02",
+          "PROSODY_CALM",
+          "PROSODY_CALM"
+        ],
+        [
+          "CONV_01",
+          "RELATIONAL_PHILIA",
+          "RELATIONAL_PHILIA"
+        ],
+        [
+          "CONV_02",
+          "STATE_ALARM",
+          "STATE_ALARM"
+        ],
+        [
+          "TEMP_01",
+          "TEMPORAL_SMOOTH_TRAJECTORY",
+          "TEMPORAL_SMOOTH_TRAJECTORY"
+        ],
+        [
+          "CONF_01",
+          "EVIDENCE_CONFLICT",
+          "EVIDENCE_CONFLICT"
+        ],
+        [
+          "DROP_01",
+          "AFFECT_SERENE",
+          "AFFECT_SERENE"
+        ],
+        [
+          "PERT_01",
+          "AFFECT_SERENE",
+          "AFFECT_JOY"
+        ],
+        [
+          "OSC_01",
+          "STABLE_DEADBAND_RETENTION",
+          "STABLE_DEADBAND_RETENTION"
+        ],
+        [
+          "UNRELATED_01",
+          "ENVIRONMENTAL_AMBIENCE_ISOLATION",
+          "ENVIRONMENTAL_AMBIENCE_ISOLATION"
+        ]
+      ]
+    },
+    "DRS-Graph": {
+      "candidate": "DRS-Graph",
+      "metrics": {
+        "CPA": 1.0,
+        "CMC": 1.0,
+        "UCP": 1.0,
+        "TCI": 0.7778,
+        "lambda_max": -1.3065,
+        "DFR": 0.0,
+        "r_embodiment": 1.0,
+        "mean_latency_ms": 0.0242,
+        "vram_mb": 0.0,
+        "token_free_compliance": 1.0
+      },
+      "gates": {
+        "CPA_gate": true,
+        "CMC_gate": true,
+        "UCP_gate": true,
+        "Lyapunov_gate": true,
+        "DFR_gate": true,
+        "Embodiment_gate": true,
+        "VRAM_gate": true,
+        "TDP_status": "UNVERIFIED (hardware power meter absent in environment)",
+        "overall_verdict": "PASS"
+      },
+      "sample_predictions": [
+        [
+          "SM_PAD_01",
+          "AFFECT_JOY",
+          "AFFECT_JOY"
+        ],
+        [
+          "SM_PAD_02",
+          "AFFECT_SORROW",
+          "AFFECT_SORROW"
+        ],
+        [
+          "SM_AC_01",
+          "PROSODY_AGITATED",
+          "PROSODY_AGITATED"
+        ],
+        [
+          "SM_AC_02",
+          "PROSODY_CALM",
+          "PROSODY_CALM"
+        ],
+        [
+          "CONV_01",
+          "RELATIONAL_PHILIA",
+          "RELATIONAL_PHILIA"
+        ],
+        [
+          "CONV_02",
+          "STATE_ALARM",
+          "STATE_ALARM"
+        ],
+        [
+          "TEMP_01",
+          "TEMPORAL_SMOOTH_TRAJECTORY",
+          "TEMPORAL_SMOOTH_TRAJECTORY"
+        ],
+        [
+          "CONF_01",
+          "EVIDENCE_CONFLICT",
+          "EVIDENCE_CONFLICT"
+        ],
+        [
+          "DROP_01",
+          "AFFECT_SERENE",
+          "AFFECT_SERENE"
+        ],
+        [
+          "PERT_01",
+          "AFFECT_JOY",
+          "AFFECT_JOY"
+        ],
+        [
+          "OSC_01",
+          "STABLE_DEADBAND_RETENTION",
+          "STABLE_DEADBAND_RETENTION"
+        ],
+        [
+          "UNRELATED_01",
+          "ENVIRONMENTAL_AMBIENCE_ISOLATION",
+          "ENVIRONMENTAL_AMBIENCE_ISOLATION"
+        ]
+      ]
+    }
+  }
+}
