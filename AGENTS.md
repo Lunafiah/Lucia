@@ -249,31 +249,43 @@ Explicitly identify whether the task is:
 Lucia uses a strict gated progression. New cognitive or physical mechanisms must advance through defined lifecycle gates:
 
 ```text
-Research Hypothesis (H1–Hn)
+Research (Gemini)
        │
        ▼
-Isolated Evaluation Harness (tests/evaluation/phaseXX/)
+Architecture / Conceptual Analysis
        │
        ▼
-Deterministic Empirical Verification (100% Pre-registered criteria satisfied)
+Research-to-Contract Synthesis
        │
        ▼
-Architecture Gate & Production Realization Design (docs/specs/...)
+Ciah Review / Challenge
        │
        ▼
-Formal Architectural Approval (ADR in docs/ARCHITECTURE.md)
+Implementation Authorization (User)
        │
        ▼
-Production Implementation (src/core/**)
+Antigravity Implementation (src/core/**)
        │
        ▼
-Full Regression & Invariant Test Suite (tests/unit/, tests/property/)
+Post-Implementation Audit
        │
        ▼
-Promotion, Acceptance & Phase Closure Sign-Off
+Required Fixes
+       │
+       ▼
+Regression / Falsification (tests/unit/, tests/property/)
+       │
+       ▼
+Freeze
 ```
 
-### Research Isolation Rules
+### 6.1 Agent Roles & Decision Boundaries
+- **Gemini:** Research arm — hypothesis formulation, exploratory investigations, empirical benchmark evaluation, and scientific synthesis.
+- **Ciah:** Review / architecture / reasoning / prompt layer — rigorous peer challenge, epistemic auditing, invariant verification, red-team review, and contract sign-off.
+- **Antigravity:** Execution / coding agent — disciplined, scoped implementation strictly bounded by approved contracts, regression testing, and canonical documentation synchronization. Antigravity never promotes unverified hypotheses or invents architecture.
+- **User:** Final decision-maker — sole authority for implementation authorization, architecture approvals, and the locked First Activation gate.
+
+### 6.2 Research Isolation Rules
 - **No direct-to-production:** research concepts stay out of `src/core/**` until the Architecture Gate is approved.
 - **Isolate experiments:** use `tests/evaluation/phaseXX/`, disposable fixtures, temporary data, and isolated models.
 - **Success ≠ promotion:** passing evaluation criteria proves only the tested claim under tested conditions.
