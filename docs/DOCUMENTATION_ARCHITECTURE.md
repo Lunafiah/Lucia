@@ -233,26 +233,28 @@ Phase 23 (Root Milestone)
 ├── P23-F: Language Adapter Boundary Subsystem  [VALIDATED / PRODUCTION IMPLEMENTED]
 ├── P23-G: Cognitive Core Contract Subsystem    [VALIDATED / PRODUCTION IMPLEMENTED]
 ├── P23-H: Bounded Reasoning Kernel & JTMS      [VALIDATED / PRODUCTION IMPLEMENTED / FROZEN @ 3eef803]
-└── P23-I: Concept-to-Reasoning Investigation   [RESEARCH COMPLETED — CONTRACT TRANSITION CANDIDATE — PENDING CIAH REVIEW]
+└── P23-I: Concept-to-Reasoning Investigation   [RESEARCH & EVIDENCE CLOSURE COMPLETED — EVIDENCE STILL INSUFFICIENT — CONTRACT NOT FROZEN]
 ```
 
 The transition from exploratory research to contract freeze strictly enforces the following gated progression:
 ```text
 Research (Gemini)
       ↓
-Gemini Final Research Report
+Gemini Final Research Report (Preliminary Recommendation: "Contract Transition Ready" [SUPERSEDED])
       ↓
-Research Completed (Contract Transition Candidate)
+Empirical Evidence Closure & Falsification Audit (P23-I_EVIDENCE_CLOSURE_AND_FALSIFICATION_REPORT.md)
       ↓
-Ciah Epistemic / Architectural Review
+Research Completed + Evidence Closure Completed (Evidence Still Insufficient)
       ↓
-[Freeze Decision Pending]
+Gate 23-I-EVAL (Tracks A, B, C: Referent Envelope, Concurrency Runtime, Epistemic Ingress)
       ↓
-Contract Frozen (If approved by Governance)
+Ciah Epistemic & Architectural Review
+      ↓
+[Contract Freeze Decision]
       ↓
 Implementation Authorization (User Gate)
 ```
-A research arm claim such as "Contract Transition Ready" represents an **attributed research proposal**, never an automatic authorization for production implementation or canonical freeze.
+A preliminary research recommendation such as "Contract Transition Ready" represents an **attributed research proposal (now superseded in P23-I by evidence closure)**, never an automatic authorization for production implementation or canonical freeze.
 
 ---
 

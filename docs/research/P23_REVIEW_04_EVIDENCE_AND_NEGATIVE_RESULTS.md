@@ -97,10 +97,32 @@ During the post-implementation audit of Phase 23-H, four specific findings were 
 
 ---
 
-## 5. Hypotheses Evaluated in P23-I & Gemini Research Disposition
+## 5. Hypotheses Evaluated in P23-I & Evidence Closure Audit
 
-Gemini completed empirical investigation of these hypotheses in [`docs/research/P23-I_FINAL_RESEARCH_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_FINAL_RESEARCH_REPORT.md):
-1. **The Concept-to-Reasoning Bridge:** Evaluated in simulation fixtures; Gemini concluded bridging is feasible (`RESEARCH-VALIDATED`) without token sequences.
-2. **Open-Domain Dynamic Rules (Negative Result):** Evaluated and **REJECTED**; runtime compilation of novel Horn rules corrupts $O(1)$ lookup and violates bounded recursion invariants.
-3. **Sub-Phase Disposition Candidate:** Gemini proposed advancing under `FREEZE WITH PARAMETER` as `Contract Transition Ready`.
-4. **Epistemic Status:** These conclusions are attributed research proposals submitted for Ciah review ([`docs/research/P23_REVIEW_05_P23-I_RESEARCH_BOUNDARY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23_REVIEW_05_P23-I_RESEARCH_BOUNDARY.md)). Contract freeze is pending; implementation is strictly unauthorized.
+P23-I underwent both empirical investigation and a rigorous evidence-closure and falsification audit ([`docs/research/P23-I_EVIDENCE_CLOSURE_AND_FALSIFICATION_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_EVIDENCE_CLOSURE_AND_FALSIFICATION_REPORT.md)). Gemini's earlier preliminary research report ([`docs/research/P23-I_FINAL_RESEARCH_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_FINAL_RESEARCH_REPORT.md)) recommending "Contract Transition Ready" under "FREEZE WITH PARAMETER" is **explicitly superseded**.
+
+### Preserved Negative Results Ledger (P23-I)
+
+| Result ID | Hypothesis / Mechanism Evaluated | Outcome | Scientific Falsification / Failure Mechanism |
+|---|---|---|---|
+| **NEG-01** | Unbounded Dynamic Horn-Rule Compilation | **REJECTED** | Compiling learned rules into `RuleIndex` at runtime breaks loop-detection, depth bounds ($\le 8$), step bounds ($\le 256$), and $O(1)$ indexing guarantees. |
+| **NEG-02** | Naive Confidence Thresholding | **REJECTED** | Unsoundly asserts continuous perceptual scalar as discrete truth. Commits epistemic fallacy: transforms `UNKNOWN` into `TRUE` without justification. |
+| **NEG-03** | Unconstrained Graph/Subgraph Matching | **REJECTED** | NP-hard subgraph isomorphism scales exponentially with entity count; violates 20W edge CPU real-time response budgets. |
+| **NEG-04** | Anchor Expiration as Logical Negation | **REJECTED** | Perceptual anchor decay or loss of visual contact is unbinding, not falsity; collapsing expired entities to `FALSE` violates Strong Kleene K3. |
+| **NEG-05** | Dense HDC Multi-Referent Superposition | **REJECTED** | Dense vector bundling suffers catastrophic crosstalk noise when binding multiple simultaneous discourse referents ($N \ge 8$). |
+
+### Canonical Epistemic Findings (E1–E4)
+
+1. **E1 (Architectural Necessity):** Autonomous P23-I subsystem is NOT justified; full absorption into P23-C + P23-G + P23-H is rejected; candidate disposition is a Stateless Semantic Interface Adapter / Contract Boundary (SSIS-Adapter), pending Gate 23-I-EVAL.
+2. **E2 (Parameter Envelope):** $N=16$ discourse referents is an unverified engineering heuristic; relational depth $\le 3$ is a theoretical safety envelope, not empirically verified at the boundary.
+3. **E3 (Epistemic Grounding):** Confidence $	o$ assertion boundary is an unresolved blocker (continuous confidence must not silently become UNKNOWN $	o$ TRUE; defeasible GVT $	o$ JTMS ingress policy not yet specified).
+4. **E4 (Runtime):** $\le 5	ext{ ms}$ binding latency is NOT verified under active $200	ext{ ms}$ MT-LNN ODE contention; $0.0	ext{ MB}$ GPU VRAM preserved.
+
+### Next Governance Gate: GATE 23-I-EVAL
+
+The required next gate comprises three empirical evidence tracks before any contract freeze:
+- **Track A (Referent Envelope):** Stress $N \in \{8, 16, 24, 32, 64\}$ under perceptual ambiguity/noise to establish an empirical capacity cliff.
+- **Track B (Concurrency Runtime):** Measure adapter binding latency while the $200	ext{ ms}$ MT-LNN ODE loop actively consumes CPU.
+- **Track C (Epistemic Ingress):** Evaluate low-confidence and ambiguous perceptual ingress, enforcing defeasible justification or `InformationSubgoal` / `DisambiguationSubgoal` (never raw assertion).
+
+**Implementation Mandate:** Zero production code authorized. `src/core/**` and `electron/**` remain strictly off-limits.

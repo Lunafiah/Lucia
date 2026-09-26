@@ -300,6 +300,25 @@ Freeze
 - **Antigravity:** Execution / coding agent — disciplined, scoped implementation strictly bounded by approved contracts, regression testing, and canonical documentation synchronization. Antigravity never promotes unverified hypotheses or invents architecture.
 - **User:** Final decision-maker — sole authority for implementation authorization, architecture approvals, and the locked First Activation gate.
 
+**Strict Decision & Execution Boundary:**
+```text
+Gemini research conclusion
+        ≠
+Ciah approval
+        ≠
+User authorization
+        ≠
+Antigravity implementation authorization
+```
+A research finding, hypothesis validation, or preliminary transition recommendation (e.g. Gemini recommending "Contract Transition Ready") does **NOT** constitute implementation authorization. Antigravity is strictly forbidden from implementing unapproved or unfrozen research concepts.
+
+Specifically, for Phase 23-I (awaiting empirical evidence closure under `GATE 23-I-EVAL`):
+- `src/core/**`
+- `electron/**`
+- runtime data structures
+- production cognitive pipeline (S1–S16)
+remain **STRICTLY OFF-LIMITS**. Agents must **NEVER** create implementation scaffolding, stub classes, or production files merely to satisfy a research report.
+
 ### 6.2 Research Isolation Rules
 - **No direct-to-production:** research concepts stay out of `src/core/**` until the Architecture Gate is approved.
 - **Isolate experiments:** use `tests/evaluation/phaseXX/`, disposable fixtures, temporary data, and isolated models.

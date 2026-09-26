@@ -141,12 +141,19 @@ Where any link in the chain is incomplete or unverified, it is explicitly classi
 ---
 
 ### 2.11 Concept-to-Reasoning Substrate Investigation (Phase 23-I)
-- **Architectural Status**: `RESEARCH COMPLETED — CONTRACT TRANSITION CANDIDATE — PENDING CIAH REVIEW`.
-- **Attributed Research Claim**: Concept-to-reasoning bridge is feasible without token sequences or autoregressive SLM; dynamic role-filler binding achieves structural preservation in simulation; recommended disposition `FREEZE WITH PARAMETER` ($\text{MAX\_DISCOURSE\_REFERENTS} = 16, D \le 3$, latency $\le 5.0\text{ ms}$, 0 dynamic heap alloc, 0.0 MB GPU VRAM).
+- **Architectural Status**: `RESEARCH COMPLETED + EVIDENCE CLOSURE COMPLETED + EVIDENCE STILL INSUFFICIENT + CONTRACT NOT FROZEN + IMPLEMENTATION NOT AUTHORIZED`.
+- **Authoritative Evidence Document**: [`docs/research/P23-I_EVIDENCE_CLOSURE_AND_FALSIFICATION_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_EVIDENCE_CLOSURE_AND_FALSIFICATION_REPORT.md).
+- **Canonical Empirical Findings (E1–E4)**:
+  - **E1 (Architectural Necessity):** Autonomous stateful P23-I subsystem is `NOT JUSTIFIED`. Full absorption into P23-C/G/H is `REJECTED`. Supported interpretation is a `Stateless Semantic Interface Adapter (SSIS-Adapter)`.
+  - **E2 (Parameter Envelope):** $\text{MAX\_DISCOURSE\_REFERENTS} = 16$ is an arbitrary heuristic without empirical cliff; $\text{MAX\_RELATIONAL\_DEPTH} \le 3$ is a theoretical safety envelope unverified at boundary. Neither is frozen.
+  - **E3 (Epistemic Grounding):** Confidence-to-assertion boundary is an `UNRESOLVED BLOCKER`. Continuous confidence must NOT silently become propositional certainty (`UNKNOWN -> TRUE`). Defeasible GVT $\to$ JTMS policy is not yet specified.
+  - **E4 (Runtime):** Latency $\le 5.0\text{ ms}$ is `NOT VERIFIED` under active 200ms MT-LNN ODE CPU contention. GPU VRAM = 0.0 MB is repository-established.
+- **Preserved Negative Results**: NEG-01 through NEG-05 permanently preserved (dynamic rule compilation, naive thresholding, unconstrained subgraph matching, anchor expiration to false, dense HDC superposition).
+- **Next Governance Gate**: `GATE 23-I-EVAL` (Track A: Referent Envelope, Track B: Concurrency Runtime, Track C: Epistemic Ingress).
+- **Superseded Preliminary Report**: [`docs/research/P23-I_FINAL_RESEARCH_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_FINAL_RESEARCH_REPORT.md) (Preliminary recommendation "Contract Transition Ready" / "FREEZE WITH PARAMETER" is **SUPERSEDED**).
 - **Canonical Document**: [`docs/research/P23-I_RESEARCH_CONTEXT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_RESEARCH_CONTEXT.md); [`docs/00_PROJECT_OVERVIEW.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/00_PROJECT_OVERVIEW.md) §7.2.
-- **Governing Decision**: `PENDING CIAH REVIEW` (Contract is NOT yet frozen).
+- **Governing Decision**: `PENDING GATE 23-I-EVAL` (Contract is NOT frozen; implementation NOT authorized).
 - **Pre-P23-I Governance Baseline**: Commit `bed9299` (`docs: establish repository-wide documentation and knowledge architecture`). *Note: Serves strictly as governance context, NOT empirical technical evidence.*
-- **Research Final Report**: [`docs/research/P23-I_FINAL_RESEARCH_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_FINAL_RESEARCH_REPORT.md).
 - **Ciah Review Projection**: [`docs/research/P23_REVIEW_05_P23-I_RESEARCH_BOUNDARY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23_REVIEW_05_P23-I_RESEARCH_BOUNDARY.md).
 - **Production Code**: `IMPLEMENTATION NOT AUTHORIZED` (0 files changed in `src/core/**` and `electron/**`).
 

@@ -527,7 +527,7 @@ Phase 23-G: Cognitive Core Contract (Numeric Terms, Strong Kleene K3, Static Are
 Phase 23-H: Bounded Goal-Directed Reasoning Kernel & JTMS [FROZEN at 3eef803]
       │
       ▼
-Phase 23-I: Conceptual & Relational Semantic Substrate Investigation [RESEARCH ONLY]
+Phase 23-I: Concept-to-Reasoning Substrate Investigation [EVIDENCE CLOSURE COMPLETED / EVIDENCE STILL INSUFFICIENT]
 ```
 
 ---
@@ -544,6 +544,12 @@ Phase 23-I: Conceptual & Relational Semantic Substrate Investigation [RESEARCH O
 | **Direct Speech-to-Graph** | P23-C | **Rejected** | Scientifically premature on 20W edge CPU; unconstrained acoustic speech requires intermediate phonetic/lexical bottleneck. |
 | **Vectorized UMR (V-UMR)** | P23-D | **Falsified** | Memory bloat ($660.3\text{ MB}$ Working Set vs $\le 350.0\text{ MB}$ gate) and multimodal over-attribution ($\text{CPA}=0.833$ vs $\ge 0.90$ gate). |
 | **Denying Antecedent to False** | P23-H | **Defect / Fixed** | Engine returned FALSE when premise failed, violating **UNKNOWN must never silently become certainty**; resolved by `FIX-23H-01`. |
+| **Unbounded Dynamic Horn Rules (NEG-01)** | P23-I | **Rejected** | Runtime compilation of dynamic Horn rules violates bounded search depth ($\le 8$) and breaks pre-compiled $O(1)$ `RuleIndex`. |
+| **Naive Confidence Thresholding (NEG-02)** | P23-I | **Rejected** | Unsoundly asserts continuous perceptual scalar as discrete truth; converts `UNKNOWN` to `TRUE` without justification. |
+| **Unconstrained Subgraph Isomorphism (NEG-03)** | P23-I | **Rejected** | NP-hard matching scales exponentially with scene entity count; incompatible with 20W real-time budget. |
+| **Anchor Expiration Collapsing to Falsity (NEG-04)** | P23-I | **Rejected** | Perceptual anchor decay or loss of visual contact is unbinding, not falsity; collapsing expired entities to `FALSE` violates Strong Kleene K3. |
+| **Dense HDC Multi-Referent Superposition (NEG-05)** | P23-I | **Rejected** | Dense vector superposition suffers catastrophic crosstalk noise when binding multiple simultaneous discourse referents ($N \ge 8$). |
+| **Gemini "Contract Transition Ready" / "FREEZE WITH PARAMETER"** | P23-I | **Superseded** | Preliminary research proposal superseded by formal evidence closure and falsification audit. |
 
 ---
 
@@ -554,6 +560,9 @@ Phase 23-I: Conceptual & Relational Semantic Substrate Investigation [RESEARCH O
 3. **Continuity cannot be achieved by open-loop drift:** State accumulation without discrete structured anchors causes divergence and catastrophic relational hallucinations.
 4. **Absence of proof is not proof of negation:** Formal fallacies in cognitive kernels lead directly to epistemic corruption; unproven goals must remain UNKNOWN.
 5. **Continuous metric proximity causes multimodal false alarms:** Without symbolic role guardrails, continuous Euclidean distance over-attributes acoustic agitation to unrelated cognitive states.
+6. **Dynamic Horn compilation breaks bounded deduction (NEG-01):** Novel rules cannot be compiled into static indices at runtime without destroying bounded complexity, $O(1)$ indexing, and loop-free guarantees.
+7. **Continuous confidence cannot collapse into logical certainty (NEG-02):** A high perceptual confidence scalar is not a proof; asserting truth without justification corrupts the truth maintenance system (UNKNOWN must never silently become certainty).
+8. **Discourse expiration is unbinding, not negation (NEG-04):** An object disappearing or losing attentional focus does not make propositions about it false; it transitions to UNKNOWN.
 
 ---
 
@@ -566,12 +575,30 @@ Phase 23-I: Conceptual & Relational Semantic Substrate Investigation [RESEARCH O
 
 ---
 
-## Phase 23-I Research Closure & Current Candidate Status
+## Phase 23-I Research Closure, Evidence Closure & Current Governance State
 
-Following the whole-repository documentation and knowledge architecture audit (`bed9299`), Gemini completed the P23-I empirical investigation and submitted the Final Research Report ([`docs/research/P23-I_FINAL_RESEARCH_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_FINAL_RESEARCH_REPORT.md)).
+Following the preliminary empirical investigation, P23-I underwent a comprehensive evidence-closure and falsification audit ([`docs/research/P23-I_EVIDENCE_CLOSURE_AND_FALSIFICATION_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_EVIDENCE_CLOSURE_AND_FALSIFICATION_REPORT.md)). The previous preliminary Gemini recommendation ("Contract Transition Ready" / "FREEZE WITH PARAMETER" in [`docs/research/P23-I_FINAL_RESEARCH_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_FINAL_RESEARCH_REPORT.md)) is **explicitly superseded**.
 
-- **Research Status:** `RESEARCH COMPLETED`
-- **Research Conclusion:** `CONTRACT TRANSITION READY` with `FREEZE WITH PARAMETER` (Attributed to Gemini)
-- **Review Gate:** Currently undergoing Ciah Epistemic & Architectural Review ([`docs/research/P23_REVIEW_05_P23-I_RESEARCH_BOUNDARY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23_REVIEW_05_P23-I_RESEARCH_BOUNDARY.md))
-- **Contract Status:** `NOT YET FROZEN` (Freeze decision pending Ciah review)
-- **Implementation Status:** `STRICTLY NOT AUTHORIZED` (Zero production mutations in `src/core/**` or `electron/**`)
+- **Governance State:**
+  ```text
+  P23-I:
+  RESEARCH COMPLETED
+          +
+  EVIDENCE CLOSURE COMPLETED
+          +
+  EVIDENCE STILL INSUFFICIENT
+          +
+  CONTRACT NOT FROZEN
+          +
+  IMPLEMENTATION NOT AUTHORIZED
+  ```
+- **Authoritative Evidence Document:** [`docs/research/P23-I_EVIDENCE_CLOSURE_AND_FALSIFICATION_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_EVIDENCE_CLOSURE_AND_FALSIFICATION_REPORT.md)
+- **Superseded Preliminary Report:** [`docs/research/P23-I_FINAL_RESEARCH_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_FINAL_RESEARCH_REPORT.md)
+- **Ciah Review Context (File 5):** [`docs/research/P23_REVIEW_05_P23-I_RESEARCH_BOUNDARY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23_REVIEW_05_P23-I_RESEARCH_BOUNDARY.md)
+- **Core Epistemic Findings:**
+  1. *E1 (Architectural Necessity):* Autonomous P23-I subsystem is NOT justified; full absorption into P23-C + P23-G + P23-H is rejected; candidate disposition is a Stateless Semantic Interface Adapter / Contract Boundary (SSIS-Adapter), pending Gate 23-I-EVAL.
+  2. *E2 (Parameter Envelope):* $N=16$ discourse referents is an unverified engineering heuristic; relational depth $\le 3$ is a theoretical safety envelope, not empirically verified at the boundary.
+  3. *E3 (Epistemic Grounding):* Confidence $\to$ assertion boundary is an unresolved blocker (continuous confidence must not silently become UNKNOWN $\to$ TRUE; defeasible GVT $\to$ JTMS ingress policy not yet specified).
+  4. *E4 (Runtime):* $\le 5\text{ ms}$ binding latency is NOT verified under active $200\text{ ms}$ MT-LNN ODE contention; $0.0\text{ MB}$ GPU VRAM preserved.
+- **Next Governance Gate:** `GATE 23-I-EVAL` (Track A: Referent Envelope, Track B: Concurrency Runtime, Track C: Epistemic Ingress).
+- **Implementation Status:** `STRICTLY NOT AUTHORIZED` (Zero production mutations in `src/core/**` or `electron/**`).

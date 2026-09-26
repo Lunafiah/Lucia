@@ -105,7 +105,12 @@ The repository exhibits a distinct architectural discontinuity between **upstrea
 └────────────────────────────────────────────────────────┘
 ```
 
-> **Note on Phase 23-I Research Outcome:** Gemini completed empirical research investigating this interface gap ([`docs/research/P23-I_FINAL_RESEARCH_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_FINAL_RESEARCH_REPORT.md)), proposing a candidate transition under `FREEZE WITH PARAMETER`. This attributed conclusion is currently undergoing Ciah review ([`docs/research/P23_REVIEW_05_P23-I_RESEARCH_BOUNDARY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23_REVIEW_05_P23-I_RESEARCH_BOUNDARY.md)). Contract freeze remains pending; implementation is strictly unauthorized.
+> **Note on Phase 23-I Research & Evidence Closure:** Gemini completed preliminary research ([`docs/research/P23-I_FINAL_RESEARCH_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_FINAL_RESEARCH_REPORT.md)), proposing transition under `FREEZE WITH PARAMETER`. That preliminary recommendation was audited and superseded by the formal evidence closure report ([`docs/research/P23-I_EVIDENCE_CLOSURE_AND_FALSIFICATION_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_EVIDENCE_CLOSURE_AND_FALSIFICATION_REPORT.md)). The current architectural disposition establishes:
+> - **E1 (Architecture):** Autonomous P23-I subsystem is NOT justified; full absorption is rejected; candidate disposition is a Stateless Semantic Interface Adapter / Contract Boundary (SSIS-Adapter), pending Gate 23-I-EVAL.
+> - **E2 (Parameters):** $N=16$ referents is an unverified engineering heuristic; relational depth $\le 3$ is a theoretical safety envelope, not empirically verified at the boundary.
+> - **E3 (Epistemic Grounding):** Confidence $\to$ assertion boundary is an unresolved blocker (continuous confidence must not silently become UNKNOWN $\to$ TRUE; defeasible GVT $\to$ JTMS ingress policy not yet specified).
+> - **E4 (Runtime):** $\le 5\text{ ms}$ binding latency is unverified under active $200\text{ ms}$ MT-LNN ODE contention; $0.0\text{ MB}$ GPU VRAM preserved.
+> - **Status:** `RESEARCH COMPLETED — EVIDENCE CLOSURE COMPLETED — EVIDENCE STILL INSUFFICIENT — CONTRACT NOT FROZEN — IMPLEMENTATION NOT AUTHORIZED`. Next milestone is `GATE 23-I-EVAL`. Zero production code in `src/core/` or `electron/`.
 
 ---
 

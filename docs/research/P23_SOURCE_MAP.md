@@ -121,13 +121,15 @@
 ---
 
 ### Phase 23-I: Concept-to-Reasoning Substrate Investigation
+- **Authoritative Evidence Closure Report:** [`docs/research/P23-I_EVIDENCE_CLOSURE_AND_FALSIFICATION_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_EVIDENCE_CLOSURE_AND_FALSIFICATION_REPORT.md)
+- **Superseded Preliminary Research Report:** [`docs/research/P23-I_FINAL_RESEARCH_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_FINAL_RESEARCH_REPORT.md) *(Preliminary Gemini proposal; superseded by evidence closure audit)*
 - **Authoritative Research Context Specification:** [`docs/research/P23-I_RESEARCH_CONTEXT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_RESEARCH_CONTEXT.md)
-- **Gemini Final Research Report:** [`docs/research/P23-I_FINAL_RESEARCH_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_FINAL_RESEARCH_REPORT.md)
 - **Reviewer Context Projection (File 5):** [`docs/research/P23_REVIEW_05_P23-I_RESEARCH_BOUNDARY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23_REVIEW_05_P23-I_RESEARCH_BOUNDARY.md)
 - **Pre-P23-I Governance Baseline:** Commit `bed9299` (`docs: establish repository-wide documentation and knowledge architecture`). *Note: Serves strictly as governance context, NOT empirical technical evidence.*
-- **Current Milestone Status:** `[RESEARCH COMPLETED — CONTRACT TRANSITION CANDIDATE — PENDING CIAH REVIEW]`
-- **Contract State:** `NOT YET FROZEN` (Decision pending Ciah epistemic review)
+- **Current Milestone Status:** `[RESEARCH COMPLETED — EVIDENCE CLOSURE COMPLETED — EVIDENCE STILL INSUFFICIENT — CONTRACT NOT FROZEN — IMPLEMENTATION NOT AUTHORIZED]`
+- **Contract State:** `NOT FROZEN` (Evidence insufficient; candidate SSIS-Adapter disposition pending Gate 23-I-EVAL)
 - **Production Implementation:** `NOT AUTHORIZED` (Zero modifications to `src/core/**` or `electron/**`)
+- **Next Governance Gate:** `GATE 23-I-EVAL` (Track A: Referent Envelope, Track B: Concurrency Runtime, Track C: Epistemic Ingress)
 
 ---
 
@@ -139,4 +141,4 @@
 | **Pack File 2** | [`docs/research/P23_REVIEW_02_PHASE_HISTORY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23_REVIEW_02_PHASE_HISTORY.md) | Detailed progression ledger reconstructing P23-A through P23-H. |
 | **Pack File 3** | [`docs/research/P23_REVIEW_03_ARCHITECTURE_STATE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23_REVIEW_03_ARCHITECTURE_STATE.md) | 7-tier epistemic boundary audit and unresolved interface gap analysis. |
 | **Pack File 4** | [`docs/research/P23_REVIEW_04_EVIDENCE_AND_NEGATIVE_RESULTS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23_REVIEW_04_EVIDENCE_AND_NEGATIVE_RESULTS.md) | Authoritative ledger of validated findings, falsified hypotheses, and audit fixes. |
-| **Pack File 5** | [`docs/research/P23_REVIEW_05_P23-I_RESEARCH_BOUNDARY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23_REVIEW_05_P23-I_RESEARCH_BOUNDARY.md) | Ciah P23-I review context, Gemini research findings, parameter bounds, open challenge checklist, and non-implementation mandate. |
+| **Pack File 5** | [`docs/research/P23_REVIEW_05_P23-I_RESEARCH_BOUNDARY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23_REVIEW_05_P23-I_RESEARCH_BOUNDARY.md) | Ciah P23-I review context: awaiting empirical evidence closure (GATE 23-I-EVAL), 5 active review questions, E1–E4 findings, NEG-01..05 ledger, and non-implementation mandate. |

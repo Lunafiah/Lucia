@@ -92,14 +92,17 @@ For phase-level reviews, architectural gates, or contract audits, Ciah must neve
   - **Audit Corrections**: Post-implementation defect discoveries and verified fixes (e.g. `FIX-23H-01` unproven goal epistemic safety).
 
 ### 2.5 File 5: Ciah Review Context & Epistemic Boundary (`docs/research/P23_REVIEW_05_P23-I_RESEARCH_BOUNDARY.md`)
-- **Question Answered**: *What is the completed research outcome, what are the attributed claims to audit, and what are the strict non-implementation boundaries?*
+- **Question Answered**: *What is the completed research outcome, what is the empirical evidence closure state, and what active review questions are posed to Ciah?*
 - **Contents**:
-  - P23-I research status (`RESEARCH COMPLETED`, `CONTRACT TRANSITION CANDIDATE`).
+  - Active Epistemic State: **P23-I is NOT awaiting implementation. P23-I is awaiting empirical evidence closure.**
+  - Current Governance State: `RESEARCH COMPLETED + EVIDENCE CLOSURE COMPLETED + EVIDENCE STILL INSUFFICIENT + CONTRACT NOT FROZEN + IMPLEMENTATION NOT AUTHORIZED`.
   - Immutable baseline: relationship to P23-H frozen state (`3eef803`).
-  - Evaluation of Gemini Final Research Report ([`docs/research/P23-I_FINAL_RESEARCH_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_FINAL_RESEARCH_REPORT.md)) attributed claims (`FREEZE WITH PARAMETER`, `Contract Transition Ready`).
-  - Epistemic invariants (Strong Kleene K3, UNKNOWN preservation).
-  - Open challenge checklist for Ciah review.
-  - Explicit non-authorization of implementation and pending freeze decision.
+  - Superseded preliminary recommendation: Gemini's Final Research Report proposal (`Contract Transition Ready` / `FREEZE WITH PARAMETER`) was evaluated against falsification benchmarks in [`docs/research/P23-I_EVIDENCE_CLOSURE_AND_FALSIFICATION_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_EVIDENCE_CLOSURE_AND_FALSIFICATION_REPORT.md) and is **SUPERSEDED**.
+  - Canonical empirical findings: E1 (SSIS-Adapter supported, autonomous subsystem not justified, full absorption rejected); E2 ($N=16$ arbitrary heuristic, $D \le 3$ theoretical safety envelope); E3 (confidence $\to$ assertion boundary unresolved blocker; UNKNOWN must never become certainty); E4 (latency unverified under MT-LNN contention).
+  - Preserved negative evidence: NEG-01 through NEG-05 permanently preserved.
+  - Active review checklist: Five targeted questions for Ciah on scoping, defeasible ingress, referent capacity, contention latency, and relational depth.
+  - Next governance gate: `GATE 23-I-EVAL` (Tracks A, B, C).
+  - Explicit non-authorization: `src/core/**` and `electron/**` remain strictly off-limits.
 
 ---
 
@@ -129,25 +132,25 @@ When Gemini and NotebookLM ingest repository artifacts surrounding Phase 23-I, t
 │          Repository-wide documentation architecture, registries,       │
 │          and authority rules. GOVERNANCE ONLY — NOT TECHNICAL EVIDENCE.│
 │                                  ≠                                     │
-│ Layer 2: P23-I TECHNICAL RESEARCH EVIDENCE                             │
-│          Simulation fixtures, binding benchmark measurements, and      │
-│          negative results (e.g. rejection of dynamic rule compilation).│
+│ Layer 2: P23-I PRELIMINARY RESEARCH (Gemini Research Arm)              │
+│          docs/research/P23-I_FINAL_RESEARCH_REPORT.md                  │
+│          Preliminary recommendations (Transition Ready) [SUPERSEDED]   │
 │                                  ≠                                     │
-│ Layer 3: P23-I FINAL RESEARCH CONCLUSION                               │
-│          Gemini Final Research Report (docs/research/P23-I_FINAL_...); │
-│          attributed research recommendation (Contract Transition Ready)│
+│ Layer 3: P23-I EVIDENCE CLOSURE & FALSIFICATION AUDIT                  │
+│          docs/research/P23-I_EVIDENCE_CLOSURE_AND_FALSIFICATION_REPORT │
+│          E1–E4 findings, NEG-01..05, EVIDENCE STILL INSUFFICIENT       │
 │                                  ≠                                     │
 │ Layer 4: CANONICAL FROZEN CONTRACT                                     │
-│          [CURRENTLY PENDING CIAH REVIEW — NOT YET RATIFIED/FROZEN]      │
+│          [UNAVAILABLE / NOT RATIFIED / PENDING GATE 23-I-EVAL]         │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
 1. **Commit `bed9299` is Pre-P23-I Governance Context:**  
    The whole-repository documentation and knowledge architecture audit committed at `bed9299` established document authority, source-map registries, and projection structures. It must **NEVER** be represented as technical evidence validating P23-I research claims.
-2. **Research Conclusions Remain Attributed:**  
-   Gemini's final claims (`RESEARCH-VALIDATED`, `FREEZE WITH PARAMETER`, `Contract Transition Ready`) are preserved in [`docs/research/P23-I_FINAL_RESEARCH_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_FINAL_RESEARCH_REPORT.md) with explicit provenance. They remain research proposals until ratified by Ciah and governance.
+2. **Preliminary Recommendations are Superseded:**  
+   Gemini's preliminary recommendation (`Contract Transition Ready` / `FREEZE WITH PARAMETER`) was evaluated against falsification benchmarks and is **SUPERSEDED** by [`docs/research/P23-I_EVIDENCE_CLOSURE_AND_FALSIFICATION_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_EVIDENCE_CLOSURE_AND_FALSIFICATION_REPORT.md).
 3. **No Unilateral Promotion to Canonical Contract:**  
-   Gemini corpus queries must not treat `Contract Transition Ready` as an implemented capability or ratified contract. Contract freeze remains strictly pending Ciah review.
+   Gemini and NotebookLM corpus queries must not treat research findings or preliminary proposals as an implemented capability, ratified contract, or architectural freeze. Contract freeze remains strictly pending `GATE 23-I-EVAL` and Ciah review.
 
 ---
 
@@ -176,6 +179,18 @@ L6: Production Source Code     ──► src/core/**, electron/**, config/**
 | **Architecture Gate / ADR**| `L1` (Invariants), `L2` (Health matrix), `L3` (ADR ledger) | `L4` (Registries), `L5` (Synthesis) | Historical Phase 1–6 tasks, scratch files |
 | **UI / Mascot Physics** | `L1` (Mascot bounds INV-7), `L6` (`electron/`) | `docs/specs/lucia-phase7-UI_refractoring/` | Math derivations of LNN ODE, BPTT consolidation |
 | **Documentation / Registry**| `L1` (Invariants), `L4` (Registries & Maps) | Target documentation file | Unrelated test suites |
+
+---
+
+### 4.3 Antigravity Execution Boundary & Strict Non-Authorization
+To protect repository integrity, Antigravity operates under a strict execution boundary:
+$$\textbf{Gemini research conclusion} \neq \textbf{Ciah approval} \neq \textbf{User authorization} \neq \textbf{Antigravity implementation authorization}$$
+
+For Phase 23-I:
+- `src/core/**` and `electron/**` remain **STRICTLY OFF-LIMITS**.
+- Production cognitive pipeline modifications, runtime data structures, and implementation scaffoldings are **STRICTLY PROHIBITED**.
+- Antigravity must never create scaffolding merely to satisfy a research report or preliminary recommendation.
+- Implementation authorization requires formal User sign-off following completed evidence closure (`GATE 23-I-EVAL`) and ratified ADR.
 
 ---
 

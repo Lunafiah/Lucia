@@ -1,11 +1,12 @@
 # Phase 23-I — Concept-to-Reasoning Substrate Investigation: Research Context & Boundary Specification
 
 > **Document Type:** Research Boundary & Context Specification (Canonical Research Owner)  
-> **Status:** `[RESEARCH COMPLETED — CONTRACT TRANSITION CANDIDATE — PENDING CIAH REVIEW]`  
-> **Architecture Gate:** `[PENDING REVIEW — NOT DECIDED]`  
+> **Status:** `[RESEARCH COMPLETED — EVIDENCE CLOSURE COMPLETED — EVIDENCE STILL INSUFFICIENT — CONTRACT NOT FROZEN — IMPLEMENTATION NOT AUTHORIZED]`  
+> **Architecture Gate:** `GATE 23-I-EVAL` (Tracks A, B, C) `[EVIDENCE CLOSURE PENDING]`  
 > **Implementation Status:** `[STRICTLY PROHIBITED / NOT AUTHORIZED]`  
 > **Preceding Milestone:** Phase 23-H Frozen (`3eef803`)  
-> **Input Research Report:** Gemini P23-I Final Research Report ([`docs/research/P23-I_FINAL_RESEARCH_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_FINAL_RESEARCH_REPORT.md))  
+> **Authoritative Evidence Document:** [`docs/research/P23-I_EVIDENCE_CLOSURE_AND_FALSIFICATION_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_EVIDENCE_CLOSURE_AND_FALSIFICATION_REPORT.md)  
+> **Superseded Preliminary Report:** Gemini Final Research Report ([`docs/research/P23-I_FINAL_RESEARCH_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_FINAL_RESEARCH_REPORT.md): "Contract Transition Ready" / "Freeze with parameter" is **SUPERSEDED**)  
 > **Reviewer Projection:** Ciah Review Pack File 5 ([`docs/research/P23_REVIEW_05_P23-I_RESEARCH_BOUNDARY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23_REVIEW_05_P23-I_RESEARCH_BOUNDARY.md))  
 > **Governance Authority:** `AGENTS.md` §0, §2, §6, §7; `docs/L1_INVARIANTS.md`; `docs/00_PROJECT_OVERVIEW.md`; `docs/DOCUMENTATION_ARCHITECTURE.md`
 
@@ -13,13 +14,29 @@
 
 > [!CAUTION]
 > ### MANDATORY RESEARCH BOUNDARY & GOVERNANCE PERIMETER
-> 1. **Research Completed $\neq$ Contract Frozen:**  
->    Gemini has completed the research investigation and submitted the Final Research Report concluding `Contract Transition Ready` with `FREEZE WITH PARAMETER`. This conclusion is an **attributed research proposal**, not a ratified architectural freeze.
-> 2. **Implementation is STRICTLY PROHIBITED:**  
->    No production code in `src/core/**` or `electron/**` may be created, modified, or deleted. Implementation is unauthorized until formal Ciah review and User Approval.
-> 3. **Pre-P23-I Governance Audit $\neq$ Technical Evidence:**  
->    Commit `bed9299` established repository documentation and knowledge architecture. It is **pre-P23-I governance context** and must never be cited as technical evidence validating P23-I research hypotheses.
-> 4. **Epistemic Invariant:**  
+> 1. **Current P23-I Governance State:**  
+>    $$\textbf{P23-I is NOT awaiting implementation. P23-I is awaiting empirical evidence closure.}$$
+>    ```text
+>    P23-I:
+>    RESEARCH COMPLETED
+>            +
+>    EVIDENCE CLOSURE COMPLETED
+>            +
+>    EVIDENCE STILL INSUFFICIENT
+>            +
+>    CONTRACT NOT FROZEN
+>            +
+>    IMPLEMENTATION NOT AUTHORIZED
+>    ```
+> 2. **Previous Gemini Recommendation is SUPERSEDED:**  
+>    Gemini completed preliminary research concluding `Contract Transition Ready` with `FREEZE WITH PARAMETER`. That recommendation was audited against repository falsification benchmarks in [`docs/research/P23-I_EVIDENCE_CLOSURE_AND_FALSIFICATION_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_EVIDENCE_CLOSURE_AND_FALSIFICATION_REPORT.md) and is **SUPERSEDED**.
+> 3. **Stateless Adapter Boundary $\neq$ Frozen Contract:**  
+>    P23-I as a Stateless Semantic Interface Adapter (SSIS-Adapter) is a **research-supported candidate** pending `GATE 23-I-EVAL`; it is **NOT** a ratified implementation contract.
+> 4. **Implementation is STRICTLY PROHIBITED:**  
+>    No production code in `src/core/**` or `electron/**` may be created, modified, or deleted. Implementation remains unauthorized.
+> 5. **Pre-P23-I Governance Audit $\neq$ Technical Evidence:**  
+>    Commit `bed9299` established repository documentation and knowledge architecture. It is **pre-P23-I governance context** and must never be cited as technical evidence validating P23-I research claims.
+> 6. **Epistemic Invariant:**  
 >    $$\textbf{UNKNOWN MUST NEVER SILENTLY BECOME CERTAINTY.}$$
 
 ---
@@ -52,7 +69,7 @@ Phase 23: Semantic Formation & Continuous Communication [ACTIVE RESEARCH HORIZON
     ├── P23-F: Language Adapter Boundary [VALIDATED / PRODUCTION IMPLEMENTED]
     ├── P23-G: Cognitive Core Contract [VALIDATED / PRODUCTION IMPLEMENTED]
     ├── P23-H: Bounded Goal-Directed Reasoning Kernel & JTMS [FROZEN at 3eef803]
-    └── P23-I: Concept-to-Reasoning Substrate Investigation [RESEARCH COMPLETED — CANDIDATE]
+    └── P23-I: Concept-to-Reasoning Substrate Investigation [RESEARCH & EVIDENCE CLOSURE COMPLETED — EVIDENCE STILL INSUFFICIENT — CONTRACT NOT FROZEN]
     │
     ▼
 Phase 24: Temporal Embodiment & Social Feedback [FUTURE RESEARCH]
@@ -166,49 +183,70 @@ The research was designed to determine:
 
 ---
 
-## 11. Research Outcome: Gemini Final Research Report
+## 11. Research Outcome: Preliminary Gemini Report & Evidence Closure Audit
 
-Gemini completed the empirical investigation and submitted [`docs/research/P23-I_FINAL_RESEARCH_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_FINAL_RESEARCH_REPORT.md).
+Gemini completed exploratory investigation and submitted [`docs/research/P23-I_FINAL_RESEARCH_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_FINAL_RESEARCH_REPORT.md). Following this submission, an empirical evidence closure and falsification audit was conducted in [`docs/research/P23-I_EVIDENCE_CLOSURE_AND_FALSIFICATION_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_EVIDENCE_CLOSURE_AND_FALSIFICATION_REPORT.md).
 
-### 11.1 Key Attributed Conclusions
-- **Bridging Feasibility (`RESEARCH-VALIDATED`):** Simulation fixtures demonstrate that dynamic role-filler binding over active discourse referents achieves structural preservation ($>94\%$) without superposition crosstalk.
-- **Runtime Rule Compilation Rejected:** Generating or compiling new Horn rules dynamically at runtime was tested and rejected to protect $O(1)$ lookup and deterministic termination.
-- **Candidate Recommendation (`FREEZE WITH PARAMETER`):** Recommended transitioning to contract under explicit parameters ($\text{MAX\_DISCOURSE\_REFERENTS} = 16$, $D \le 3$, latency $\le 5.0\text{ ms}$, $0$ dynamic heap alloc, $0.0\text{ MB}$ GPU VRAM).
-- **Status Recommendation:** `Contract Transition Ready`.
+### 11.1 Canonical Empirical Findings (E1–E4)
+- **E1 (Architectural Necessity):** Autonomous stateful P23-I subsystem is **NOT JUSTIFIED**. Full absorption into P23-C/P23-G/P23-H is **REJECTED**. Supported interpretation is a **Stateless Semantic Interface Adapter (SSIS-Adapter)**. This remains a research disposition, not a frozen contract.
+- **E2 (Parameter Envelope):** $\text{MAX\_DISCOURSE\_REFERENTS} = 16$ is an **unestablished, arbitrary engineering heuristic** with no demonstrated empirical cliff. $\text{MAX\_RELATIONAL\_DEPTH} \le 3$ is a **theoretically supported safety envelope** but not empirically verified at the boundary. Neither is frozen.
+- **E3 (Epistemic Grounding):** The confidence-to-assertion boundary is an **UNRESOLVED BLOCKER**. Continuous perceptual confidence must NOT silently become propositional certainty (`UNKNOWN -> TRUE`). A defeasible justification pipeline (Perceptual Evidence $\to$ GVT $\to$ JTMS Assumption $\to$ P23-H) or explicit `InformationSubgoal` / `DisambiguationSubgoal` is required. The exact GVT $\to$ JTMS policy is not yet specified.
+- **E4 (Runtime):** $\text{BINDING\_LATENCY\_SLA} \le 5.0\text{ ms}$ is **NOT VERIFIED** under active 200ms MT-LNN ODE CPU contention. GPU VRAM = 0.0 MB is repository-established.
+
+### 11.2 Preserved Negative Evidence Ledger
+- **NEG-01:** Unbounded dynamic Horn-rule compilation into `RuleIndex` at runtime was tested and **REJECTED**.
+- **NEG-02:** Naive confidence thresholding converting continuous confidence directly into asserted facts was **REJECTED**.
+- **NEG-03:** Unconstrained semantic graph/subgraph isomorphism matching was **REJECTED** ($O(V^k)$ scaling).
+- **NEG-04:** Anchor expiration collapsing to logical `FALSE` was **REJECTED**; must strictly evaluate to `UNKNOWN`.
+- **NEG-05:** Dense HDC superposition for binding $N > 5$ referents was **REJECTED** (superposition crosstalk).
 
 ---
 
 ## 12. Explicit Statement of Non-Commitment & Epistemic Boundary
 
-- **GEMINI'S CONCLUSION IS A RESEARCH PROPOSAL, NOT AN ARCHITECTURAL DECISION.**
-- **NO CONTRACT HAS BEEN SIGNED OFF.**
+- **GEMINI'S PRELIMINARY RECOMMENDATION ("Contract Transition Ready" / "FREEZE WITH PARAMETER") IS SUPERSEDED.**
+- **EMPIRICAL EVIDENCE REMAINS INSUFFICIENT.**
+- **NO CONTRACT HAS BEEN SIGNED OFF OR FROZEN.**
 - **NO PROMOTION TO PRODUCTION IS IMPLIED.**
-- **NO CODE IN `src/core/**` MAY BE CREATED OR MODIFIED.**
+- **`src/core/**` AND `electron/**` REMAIN STRICTLY OFF-LIMITS (NO SCAFFOLDING OR IMPLEMENTATION).**
 
 ---
 
-## 13. Current Transition Stage & Governance Pipeline
+## 13. Next Governance Gate: GATE 23-I-EVAL
+
+Phase 23-I cannot proceed to contract freeze or implementation until it satisfies **`GATE 23-I-EVAL`**:
 
 ```text
                       P23-I EMPIRICAL RESEARCH
                                  │
                                  ▼
                     GEMINI FINAL RESEARCH REPORT
+        (Preliminary Recommendation: Transition Ready [SUPERSEDED])
                                  │
                                  ▼
-                        RESEARCH COMPLETED
+             EVIDENCE CLOSURE & FALSIFICATION AUDIT
+       (P23-I_EVIDENCE_CLOSURE_AND_FALSIFICATION_REPORT.md)
                                  │
                                  ▼
-                   CONTRACT TRANSITION CANDIDATE
+        EVIDENCE STILL INSUFFICIENT / CONTRACT NOT FROZEN
                                  │
                                  ▼
-               CIAH EPISTEMIC & ARCHITECTURAL REVIEW ◄── [ACTIVE GATING STAGE]
+                          GATE 23-I-EVAL
+                 (Tracks A, B, C: Referent, Contention, Ingress)
                                  │
                                  ▼
-                     [FREEZE DECISION PENDING]
+               CIAH EPISTEMIC & ARCHITECTURAL REVIEW
+                                 │
+                                 ▼
+                     [IMPLEMENTATION NOT AUTHORIZED]
 ```
 
-The governance promotion sequence remains:
-$$\text{Research (Gemini)} \longrightarrow \text{Ciah Review / Challenge} \longrightarrow \text{Research-to-Contract} \longrightarrow \text{User Approval} \longrightarrow \text{Antigravity Implementation}$$
+### GATE 23-I-EVAL Evidence Tracks
+1. **Track A (Referent Operating Envelope):** Stress $N \in \{8, 16, 24, 32, 64\}$ under noise and coreference ambiguity to determine an actual empirical operating envelope rather than assuming 16.
+2. **Track B (Concurrency Runtime):** Measure adapter binding latency while the 5Hz (200ms) Coupled MT-LNN ODE solver is actively consuming CPU resources under `_state_lock`.
+3. **Track C (Epistemic Ingress & Defeasible Policy):** Inject low-confidence and ambiguous perceptual evidence; verify zero ungrounded assertions (`UNKNOWN`, JTMS defeasible assumptions, or emitted subgoals).
 
-Until Ciah completes review and the User authorizes an Architecture Gate, Phase 23-I remains strictly a candidate.
+The governance promotion sequence remains:
+$$\text{Research (Gemini)} \longrightarrow \text{Evidence Closure Audit} \longrightarrow \text{Gate 23-I-EVAL} \longrightarrow \text{Ciah Review} \longrightarrow \text{User Approval} \longrightarrow \text{Antigravity Implementation}$$
+
+Until `GATE 23-I-EVAL` produces empirical evidence resolving E1–E4, Phase 23-I remains an open research investigation.
