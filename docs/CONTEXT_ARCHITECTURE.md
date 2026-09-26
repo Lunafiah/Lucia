@@ -91,12 +91,15 @@ For phase-level reviews, architectural gates, or contract audits, Ciah must neve
   - **Preserved Negative Results**: Explicit documentation of disproven approaches (e.g., dense HDC vector crosstalk, V-UMR memory collapse, sentence embedding degradation).
   - **Audit Corrections**: Post-implementation defect discoveries and verified fixes (e.g. `FIX-23H-01` unproven goal epistemic safety).
 
-### 2.5 File 5: Research Boundary & Non-Implementation Mandate (`docs/research/P23_REVIEW_05_P23-I_RESEARCH_BOUNDARY.md`)
-- **Question Answered**: *What is the active research boundary, and what are the strict non-implementation constraints?*
+### 2.5 File 5: Ciah Review Context & Epistemic Boundary (`docs/research/P23_REVIEW_05_P23-I_RESEARCH_BOUNDARY.md`)
+- **Question Answered**: *What is the completed research outcome, what are the attributed claims to audit, and what are the strict non-implementation boundaries?*
 - **Contents**:
-  - Formulation of the active research question.
-  - Pre-registered falsification criteria and candidate avenues.
-  - **Strict Non-Implementation Mandate**: Explicit prohibition against mutating production code (`src/core/**`, `electron/**`) during exploratory research.
+  - P23-I research status (`RESEARCH COMPLETED`, `CONTRACT TRANSITION CANDIDATE`).
+  - Immutable baseline: relationship to P23-H frozen state (`3eef803`).
+  - Evaluation of Gemini Final Research Report ([`docs/research/P23-I_FINAL_RESEARCH_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_FINAL_RESEARCH_REPORT.md)) attributed claims (`FREEZE WITH PARAMETER`, `Contract Transition Ready`).
+  - Epistemic invariants (Strong Kleene K3, UNKNOWN preservation).
+  - Open challenge checklist for Ciah review.
+  - Explicit non-authorization of implementation and pending freeze decision.
 
 ---
 
@@ -114,6 +117,37 @@ Never compress the Gemini corpus into 5 files. The Gemini ingestion set must inc
 
 ### 3.2 Ingestion Provenance Anchoring
 Gemini queries must trace conclusions back to canonical files via [`docs/SOURCE_MAP.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/SOURCE_MAP.md) and [`docs/PHASE_REGISTRY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PHASE_REGISTRY.md). If Gemini uncovers a contradiction between an older research report and `docs/ARCHITECTURE.md`, it must defer to `docs/ARCHITECTURE.md` as the living canonical truth.
+
+### 3.3 Epistemic Corpus Stratification for Phase 23-I
+When Gemini and NotebookLM ingest repository artifacts surrounding Phase 23-I, the corpus retrieval mechanism must strictly stratify artifacts into four distinct epistemic tiers:
+
+```text
+┌────────────────────────────────────────────────────────────────────────┐
+│                   PHASE 23-I CORPUS STRATIFICATION                     │
+├────────────────────────────────────────────────────────────────────────┤
+│ Layer 1: PRE-P23-I GOVERNANCE CONTEXT (Commit bed9299)                 │
+│          Repository-wide documentation architecture, registries,       │
+│          and authority rules. GOVERNANCE ONLY — NOT TECHNICAL EVIDENCE.│
+│                                  ≠                                     │
+│ Layer 2: P23-I TECHNICAL RESEARCH EVIDENCE                             │
+│          Simulation fixtures, binding benchmark measurements, and      │
+│          negative results (e.g. rejection of dynamic rule compilation).│
+│                                  ≠                                     │
+│ Layer 3: P23-I FINAL RESEARCH CONCLUSION                               │
+│          Gemini Final Research Report (docs/research/P23-I_FINAL_...); │
+│          attributed research recommendation (Contract Transition Ready)│
+│                                  ≠                                     │
+│ Layer 4: CANONICAL FROZEN CONTRACT                                     │
+│          [CURRENTLY PENDING CIAH REVIEW — NOT YET RATIFIED/FROZEN]      │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+1. **Commit `bed9299` is Pre-P23-I Governance Context:**  
+   The whole-repository documentation and knowledge architecture audit committed at `bed9299` established document authority, source-map registries, and projection structures. It must **NEVER** be represented as technical evidence validating P23-I research claims.
+2. **Research Conclusions Remain Attributed:**  
+   Gemini's final claims (`RESEARCH-VALIDATED`, `FREEZE WITH PARAMETER`, `Contract Transition Ready`) are preserved in [`docs/research/P23-I_FINAL_RESEARCH_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_FINAL_RESEARCH_REPORT.md) with explicit provenance. They remain research proposals until ratified by Ciah and governance.
+3. **No Unilateral Promotion to Canonical Contract:**  
+   Gemini corpus queries must not treat `Contract Transition Ready` as an implemented capability or ratified contract. Contract freeze remains strictly pending Ciah review.
 
 ---
 

@@ -233,8 +233,26 @@ Phase 23 (Root Milestone)
 ├── P23-F: Language Adapter Boundary Subsystem  [VALIDATED / PRODUCTION IMPLEMENTED]
 ├── P23-G: Cognitive Core Contract Subsystem    [VALIDATED / PRODUCTION IMPLEMENTED]
 ├── P23-H: Bounded Reasoning Kernel & JTMS      [VALIDATED / PRODUCTION IMPLEMENTED / FROZEN @ 3eef803]
-└── P23-I: Concept-to-Reasoning Investigation   [CURRENT RESEARCH ONLY]
+└── P23-I: Concept-to-Reasoning Investigation   [RESEARCH COMPLETED — CONTRACT TRANSITION CANDIDATE — PENDING CIAH REVIEW]
 ```
+
+The transition from exploratory research to contract freeze strictly enforces the following gated progression:
+```text
+Research (Gemini)
+      ↓
+Gemini Final Research Report
+      ↓
+Research Completed (Contract Transition Candidate)
+      ↓
+Ciah Epistemic / Architectural Review
+      ↓
+[Freeze Decision Pending]
+      ↓
+Contract Frozen (If approved by Governance)
+      ↓
+Implementation Authorization (User Gate)
+```
+A research arm claim such as "Contract Transition Ready" represents an **attributed research proposal**, never an automatic authorization for production implementation or canonical freeze.
 
 ---
 

@@ -97,8 +97,10 @@ During the post-implementation audit of Phase 23-H, four specific findings were 
 
 ---
 
-## 5. Unresolved Hypotheses Entering P23-I
+## 5. Hypotheses Evaluated in P23-I & Gemini Research Disposition
 
-1. **The Concept-to-Reasoning Bridge:** Whether dynamic concept formation (P23-C) can interface directly with static Horn reasoning (P23-H) without an intermediate compositional semantic substrate.
-2. **Open-Domain Dynamic Rules:** Whether situational conversational rules can be generated dynamically at runtime without corrupting the $O(1)$ static rule index.
-3. **Necessity of Sub-Phase P23-I:** Whether P23-I addresses a genuine missing architectural component or should be consolidated into existing Phase 23 work or deferred to Phase 24.
+Gemini completed empirical investigation of these hypotheses in [`docs/research/P23-I_FINAL_RESEARCH_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_FINAL_RESEARCH_REPORT.md):
+1. **The Concept-to-Reasoning Bridge:** Evaluated in simulation fixtures; Gemini concluded bridging is feasible (`RESEARCH-VALIDATED`) without token sequences.
+2. **Open-Domain Dynamic Rules (Negative Result):** Evaluated and **REJECTED**; runtime compilation of novel Horn rules corrupts $O(1)$ lookup and violates bounded recursion invariants.
+3. **Sub-Phase Disposition Candidate:** Gemini proposed advancing under `FREEZE WITH PARAMETER` as `Contract Transition Ready`.
+4. **Epistemic Status:** These conclusions are attributed research proposals submitted for Ciah review ([`docs/research/P23_REVIEW_05_P23-I_RESEARCH_BOUNDARY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23_REVIEW_05_P23-I_RESEARCH_BOUNDARY.md)). Contract freeze is pending; implementation is strictly unauthorized.

@@ -105,6 +105,8 @@ The repository exhibits a distinct architectural discontinuity between **upstrea
 └────────────────────────────────────────────────────────┘
 ```
 
+> **Note on Phase 23-I Research Outcome:** Gemini completed empirical research investigating this interface gap ([`docs/research/P23-I_FINAL_RESEARCH_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_FINAL_RESEARCH_REPORT.md)), proposing a candidate transition under `FREEZE WITH PARAMETER`. This attributed conclusion is currently undergoing Ciah review ([`docs/research/P23_REVIEW_05_P23-I_RESEARCH_BOUNDARY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23_REVIEW_05_P23-I_RESEARCH_BOUNDARY.md)). Contract freeze remains pending; implementation is strictly unauthorized.
+
 ---
 
 ## 5. Interaction with Canonical Cognitive Pipeline (S1–S16)

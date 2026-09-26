@@ -101,3 +101,13 @@
 - **Negative Result / Critical Audit Fix:** Identified epistemic defect where unproven goals returned FALSE (denying the antecedent). Resolved by `FIX-23H-01` in commit `3eef803`: unproven goals now evaluate strictly to `UNKNOWN` with `InformationSubgoal`.
 - **Final Status:** **`[VALIDATED / PRODUCTION IMPLEMENTED / FROZEN at 3eef803]`**
 - **Source Link:** [`evaluation_artifacts/phase23h/P23H_CORE_REASONING_EVALUATION_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/evaluation_artifacts/phase23h/P23H_CORE_REASONING_EVALUATION_REPORT.md)
+
+---
+
+### P23-I — Concept-to-Reasoning Substrate Investigation
+- **Objective:** Investigate whether an intermediate semantic substrate must exist between raw concept prototypes (P23-C) and the bounded reasoning kernel (P23-H).
+- **Major Capability:** Empirical research and simulation fixtures evaluating dynamic role-filler binding, situational discourse tracking, and runtime rule bounds.
+- **Major Finding:** Dynamic concept-to-reasoning bridging is feasible without token sequences (`RESEARCH-VALIDATED`). Recommended parameter bounds: $\text{MAX\_DISCOURSE\_REFERENTS} = 16, D \le 3$, latency $\le 5.0\text{ ms}$, 0 dynamic heap alloc, $0.0\text{ MB}$ GPU VRAM.
+- **Negative Result:** Runtime compilation of dynamic Horn rules into `RuleIndex` tested and rejected (violates bounded recursion and $O(1)$ index guarantees).
+- **Final Status:** `[RESEARCH COMPLETED — CONTRACT TRANSITION CANDIDATE — PENDING CIAH REVIEW — IMPLEMENTATION NOT AUTHORIZED]`
+- **Source Link:** [`docs/research/P23-I_FINAL_RESEARCH_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_FINAL_RESEARCH_REPORT.md)

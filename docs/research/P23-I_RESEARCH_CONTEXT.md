@@ -1,23 +1,26 @@
-# Phase 23-I — Research Context & Boundary Specification
+# Phase 23-I — Concept-to-Reasoning Substrate Investigation: Research Context & Boundary Specification
 
-> **Document Type:** Research Boundary & Context Document  
-> **Status:** `[RESEARCH ONLY — NOT PROMOTED — NOT IMPLEMENTED]`  
-> **Architecture Gate:** `[NOT DECIDED]`  
+> **Document Type:** Research Boundary & Context Specification (Canonical Research Owner)  
+> **Status:** `[RESEARCH COMPLETED — CONTRACT TRANSITION CANDIDATE — PENDING CIAH REVIEW]`  
+> **Architecture Gate:** `[PENDING REVIEW — NOT DECIDED]`  
 > **Implementation Status:** `[STRICTLY PROHIBITED / NOT AUTHORIZED]`  
 > **Preceding Milestone:** Phase 23-H Frozen (`3eef803`)  
-> **Governance Authority:** `AGENTS.md` §0, §2, §6, §7; `docs/L1_INVARIANTS.md`; `docs/00_PROJECT_OVERVIEW.md`
+> **Input Research Report:** Gemini P23-I Final Research Report ([`docs/research/P23-I_FINAL_RESEARCH_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_FINAL_RESEARCH_REPORT.md))  
+> **Reviewer Projection:** Ciah Review Pack File 5 ([`docs/research/P23_REVIEW_05_P23-I_RESEARCH_BOUNDARY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23_REVIEW_05_P23-I_RESEARCH_BOUNDARY.md))  
+> **Governance Authority:** `AGENTS.md` §0, §2, §6, §7; `docs/L1_INVARIANTS.md`; `docs/00_PROJECT_OVERVIEW.md`; `docs/DOCUMENTATION_ARCHITECTURE.md`
 
 ---
 
 > [!CAUTION]
-> ### MANDATORY RESEARCH BOUNDARY
-> **P23-I IS STRICTLY A RESEARCH INVESTIGATION — NOT AN IMPLEMENTATION TASK.**  
-> 1. No implementation contract exists yet.
-> 2. No semantic representation architecture has been selected.
-> 3. No production code in `src/core/**` or `electron/**` may be created, modified, or deleted.
-> 4. Research findings must not be promoted to implementation merely because a research report recommends an architecture.
-> 5. The purpose of this research is to determine whether an additional semantic substrate is necessary and, if so, what minimum properties it must have.
-> 6. P23-I itself may be merged, re-scoped, or completely rejected based on empirical evidence.
+> ### MANDATORY RESEARCH BOUNDARY & GOVERNANCE PERIMETER
+> 1. **Research Completed $\neq$ Contract Frozen:**  
+>    Gemini has completed the research investigation and submitted the Final Research Report concluding `Contract Transition Ready` with `FREEZE WITH PARAMETER`. This conclusion is an **attributed research proposal**, not a ratified architectural freeze.
+> 2. **Implementation is STRICTLY PROHIBITED:**  
+>    No production code in `src/core/**` or `electron/**` may be created, modified, or deleted. Implementation is unauthorized until formal Ciah review and User Approval.
+> 3. **Pre-P23-I Governance Audit $\neq$ Technical Evidence:**  
+>    Commit `bed9299` established repository documentation and knowledge architecture. It is **pre-P23-I governance context** and must never be cited as technical evidence validating P23-I research hypotheses.
+> 4. **Epistemic Invariant:**  
+>    $$\textbf{UNKNOWN MUST NEVER SILENTLY BECOME CERTAINTY.}$$
 
 ---
 
@@ -49,7 +52,7 @@ Phase 23: Semantic Formation & Continuous Communication [ACTIVE RESEARCH HORIZON
     ├── P23-F: Language Adapter Boundary [VALIDATED / PRODUCTION IMPLEMENTED]
     ├── P23-G: Cognitive Core Contract [VALIDATED / PRODUCTION IMPLEMENTED]
     ├── P23-H: Bounded Goal-Directed Reasoning Kernel & JTMS [FROZEN at 3eef803]
-    └── P23-I: Concept-to-Reasoning Substrate Investigation [CURRENT RESEARCH ONLY]
+    └── P23-I: Concept-to-Reasoning Substrate Investigation [RESEARCH COMPLETED — CANDIDATE]
     │
     ▼
 Phase 24: Temporal Embodiment & Social Feedback [FUTURE RESEARCH]
@@ -105,16 +108,14 @@ As frozen at commit `3eef803`, P23-H provides:
 
 ---
 
-## 7. Current Unresolved Architectural Gap
-
-While P23-C establishes how raw sensory input transforms into concept prototypes and P23-H establishes how static Horn rules deduce goals over flat numeric terms:
+## 7. The P23-I Architectural Gap Investigated
 
 ```text
 Raw Sensory Input (Audio/Text)
        ↓ (P23-C Monograph: Dual-Stream Asymmetric Convergence)
 Concept Formation & Prototypes
        ↓
-       ? ◄── [THE UNRESOLVED P23-I GAP]
+       ? ◄── [THE INVESTIGATED P23-I GAP]
        ↓     How are dynamic, situational, open-domain compositional concepts
        ↓     formed, maintained, modified, and bound into relational propositions
        ↓     before being reasoned over by P23-H static Horn rules?
@@ -127,7 +128,7 @@ Downstream Surface Realization (P23-F / D0, D1, D2)
 Specifically:
 - P23-H relies on pre-asserted facts in `TermArena` and pre-indexed static Horn rules in `RuleIndex`.
 - P23-C demonstrates front-end acoustic prosody and syntactic dependency parsing, but does not provide dynamic semantic graph manipulation during an active multi-turn conversation.
-- The interface connecting dynamic concept formation, ongoing conversational context, and formal goal derivation remains an unformalized boundary.
+- The interface connecting dynamic concept formation, ongoing conversational context, and formal goal derivation was the object of P23-I investigation.
 
 ---
 
@@ -156,7 +157,7 @@ Every candidate representation or mechanism evaluated in P23-I must satisfy:
 
 > **What, if anything, must exist between language-independent concept formation and the bounded reasoning substrate established by P23-H so that Lucia can form, maintain, manipulate, and communicate compositional meaning without natural-language token sequences as its cognitive substrate?**
 
-The research must also explicitly determine:
+The research was designed to determine:
 - **Option A:** P23-I is strictly necessary to bridge concept formation and formal reasoning;
 - **Option B:** P23-I should be merged into existing Phase 23 contracts (P23-C / P23-G);
 - **Option C:** The missing problem belongs to Phase 24 (Temporal Embodiment & Social Feedback);
@@ -165,42 +166,49 @@ The research must also explicitly determine:
 
 ---
 
-## 11. Candidate Research Areas for Investigation
+## 11. Research Outcome: Gemini Final Research Report
 
-1. **Dynamic Concept Binding vs. Static Rules:** Can open-domain relations be instantiated dynamically without pre-compiled rule IDs?
-2. **Vector-Symbolic Architectures (VSA / Resonator Networks):** Can dynamic factorization solve role-filler binding on a 20W CPU without superposition crosstalk?
-3. **Discourse Entity Tracking & Anaphora:** How are discourse referents tracked across multi-turn exchanges without natural language tokens?
-4. **Compositional Semantic State Representation:** Is UMR-TPG sufficient for open-domain dialogic communication, or is an intermediate representation required?
+Gemini completed the empirical investigation and submitted [`docs/research/P23-I_FINAL_RESEARCH_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_FINAL_RESEARCH_REPORT.md).
+
+### 11.1 Key Attributed Conclusions
+- **Bridging Feasibility (`RESEARCH-VALIDATED`):** Simulation fixtures demonstrate that dynamic role-filler binding over active discourse referents achieves structural preservation ($>94\%$) without superposition crosstalk.
+- **Runtime Rule Compilation Rejected:** Generating or compiling new Horn rules dynamically at runtime was tested and rejected to protect $O(1)$ lookup and deterministic termination.
+- **Candidate Recommendation (`FREEZE WITH PARAMETER`):** Recommended transitioning to contract under explicit parameters ($\text{MAX\_DISCOURSE\_REFERENTS} = 16$, $D \le 3$, latency $\le 5.0\text{ ms}$, $0$ dynamic heap alloc, $0.0\text{ MB}$ GPU VRAM).
+- **Status Recommendation:** `Contract Transition Ready`.
 
 ---
 
-## 12. Explicit Statement of Non-Commitment
+## 12. Explicit Statement of Non-Commitment & Epistemic Boundary
 
-- **NO ARCHITECTURE HAS BEEN SELECTED FOR P23-I.**
+- **GEMINI'S CONCLUSION IS A RESEARCH PROPOSAL, NOT AN ARCHITECTURAL DECISION.**
 - **NO CONTRACT HAS BEEN SIGNED OFF.**
 - **NO PROMOTION TO PRODUCTION IS IMPLIED.**
+- **NO CODE IN `src/core/**` MAY BE CREATED OR MODIFIED.**
 
 ---
 
-## 13. Explicit Possibility of Rejection
+## 13. Current Transition Stage & Governance Pipeline
 
-If empirical analysis reveals that:
-- Existing P23 components (P23-C through P23-H) already provide sufficient representational power; OR
-- Proposed intermediate substrates introduce unacceptable computational latency (>30ms) or memory overhead; OR
-- The proposed mechanisms violate epistemic safety;
-
-**Phase 23-I WILL BE FORMALLY REJECTED.**
-
----
-
-## 14. Prohibited Implementation Before Research Conclusion
-
-All agents (Gemini, Antigravity, Ciah) are strictly prohibited from:
-- Creating source files in `src/core/`;
-- Adding new S1–S16 cognitive stages;
-- Modifying `src/core/cognition/kernel/` (P23-H);
-- Implementing semantic graph neural networks, HDC/VSA binding layers, or ontology engines;
-- Writing production adapters or communication protocols.
+```text
+                      P23-I EMPIRICAL RESEARCH
+                                 │
+                                 ▼
+                    GEMINI FINAL RESEARCH REPORT
+                                 │
+                                 ▼
+                        RESEARCH COMPLETED
+                                 │
+                                 ▼
+                   CONTRACT TRANSITION CANDIDATE
+                                 │
+                                 ▼
+               CIAH EPISTEMIC & ARCHITECTURAL REVIEW ◄── [ACTIVE GATING STAGE]
+                                 │
+                                 ▼
+                     [FREEZE DECISION PENDING]
+```
 
 The governance promotion sequence remains:
 $$\text{Research (Gemini)} \longrightarrow \text{Ciah Review / Challenge} \longrightarrow \text{Research-to-Contract} \longrightarrow \text{User Approval} \longrightarrow \text{Antigravity Implementation}$$
+
+Until Ciah completes review and the User authorizes an Architecture Gate, Phase 23-I remains strictly a candidate.

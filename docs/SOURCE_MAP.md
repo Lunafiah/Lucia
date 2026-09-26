@@ -35,7 +35,7 @@ Where any link in the chain is incomplete or unverified, it is explicitly classi
 - **Governing Decision**: ADR-026 (Coupled MT-LNN), ARCH-001, ARCH-024.
 - **Research Specification**: [`docs/specs/Lucia-phase19-Multi_Timescale_Affective_Life/PHASE_19_RESEARCH_PROPOSAL.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase19-Multi_Timescale_Affective_Life/PHASE_19_RESEARCH_PROPOSAL.md).
 - **Evaluation Evidence**: [`docs/specs/Lucia-phase19-Multi_Timescale_Affective_Life/PHASE_19_RESULTS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase19-Multi_Timescale_Affective_Life/PHASE_19_RESULTS.md); Phase 19 Acceptance Report (Commit `19db677`).
-- **Production Code**: [`src/core/emotion/lnn_fast.py`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/src/core/emotion/lnn_fast.py), [`src/core/emotion/lnn_slow.py`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/src/core/emotion/lnn_slow.py), [`src/core/emotion/emotion_core.py`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/src/core/emotion/emotion_core.py).
+- **Production Code**: [`src/core/emotion/emotion_core.py`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/src/core/emotion/emotion_core.py), [`src/core/emotion/homeostatic_engine.py`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/src/core/emotion/homeostatic_engine.py).
 - **Verification Suite**: `tests/unit/test_emotion_dynamics.py`, `tests/evaluation/evaluation_phase19/test_mt_lnn.py`.
 
 ---
@@ -57,7 +57,7 @@ Where any link in the chain is incomplete or unverified, it is explicitly classi
 - **Governing Decision**: ADR-003, ADR-027 (Closed-Loop Affective Recollection), ARCH-025.
 - **Research Specification**: [`docs/specs/Lucia-phase20-Affective_Recollection/PHASE_20_RESEARCH_SPEC.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase20-Affective_Recollection/PHASE_20_RESEARCH_SPEC.md).
 - **Evaluation Evidence**: [`docs/specs/Lucia-phase20-Affective_Recollection/PHASE_20_RESULTS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase20-Affective_Recollection/PHASE_20_RESULTS.md); Phase 20 Acceptance Report (Commit `f20420a`).
-- **Production Code**: [`src/core/memory/sdm.py`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/src/core/memory/sdm.py), [`src/core/memory/ecphory.py`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/src/core/memory/ecphory.py), [`src/core/memory/decay_engine.py`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/src/core/memory/decay_engine.py).
+- **Production Code**: [`src/core/memory/sdm.py`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/src/core/memory/sdm.py), [`src/core/memory/ecphory.py`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/src/core/memory/ecphory.py), [`src/core/memory/decay.py`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/src/core/memory/decay.py).
 - **Verification Suite**: `tests/unit/test_sdm.py`, `tests/unit/test_ecphory.py`, `tests/evaluation/evaluation_phase20/test_recollection.py`.
 
 ---
@@ -140,7 +140,19 @@ Where any link in the chain is incomplete or unverified, it is explicitly classi
 
 ---
 
+### 2.11 Concept-to-Reasoning Substrate Investigation (Phase 23-I)
+- **Architectural Status**: `RESEARCH COMPLETED — CONTRACT TRANSITION CANDIDATE — PENDING CIAH REVIEW`.
+- **Attributed Research Claim**: Concept-to-reasoning bridge is feasible without token sequences or autoregressive SLM; dynamic role-filler binding achieves structural preservation in simulation; recommended disposition `FREEZE WITH PARAMETER` ($\text{MAX\_DISCOURSE\_REFERENTS} = 16, D \le 3$, latency $\le 5.0\text{ ms}$, 0 dynamic heap alloc, 0.0 MB GPU VRAM).
+- **Canonical Document**: [`docs/research/P23-I_RESEARCH_CONTEXT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_RESEARCH_CONTEXT.md); [`docs/00_PROJECT_OVERVIEW.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/00_PROJECT_OVERVIEW.md) §7.2.
+- **Governing Decision**: `PENDING CIAH REVIEW` (Contract is NOT yet frozen).
+- **Pre-P23-I Governance Baseline**: Commit `bed9299` (`docs: establish repository-wide documentation and knowledge architecture`). *Note: Serves strictly as governance context, NOT empirical technical evidence.*
+- **Research Final Report**: [`docs/research/P23-I_FINAL_RESEARCH_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_FINAL_RESEARCH_REPORT.md).
+- **Ciah Review Projection**: [`docs/research/P23_REVIEW_05_P23-I_RESEARCH_BOUNDARY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23_REVIEW_05_P23-I_RESEARCH_BOUNDARY.md).
+- **Production Code**: `IMPLEMENTATION NOT AUTHORIZED` (0 files changed in `src/core/**` and `electron/**`).
+
+---
+
 ## 3. Sub-Phase Granular Source Maps
 For detailed sub-phase source maps covering:
-- Phase 23 (P23-A through P23-H): See [`docs/research/P23_SOURCE_MAP.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23_SOURCE_MAP.md).
+- Phase 23 (P23-A through P23-I): See [`docs/research/P23_SOURCE_MAP.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23_SOURCE_MAP.md).
 - Phase 22 (20 Sub-Study Branches): See Section 2 of [`docs/specs/Lucia-phase22-Epistemic_Foraging/PHASE_22_FINAL_REPORTS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase22-Epistemic_Foraging/PHASE_22_FINAL_REPORTS.md).
