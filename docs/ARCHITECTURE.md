@@ -769,4 +769,6 @@ $$\text{Development / Simulation Environment} \neq \text{Lucia Activation}$$
 | **ARCH-027** | SLM/prompt as mandatory cognitive substrate | Substrate-Neutral Semantic Interface (C1/C4) + G4 Gate | Decouples relational cognition from language models; enables token-free multi-modal realization | Phase 22 | Research Validated |
 | **ARCH-028** | Unfortified session-boundary persistence | Conservative Semantic Fortification Subsystem (P23-E) | Preserves meaning ($\text{Meaning}_{\text{out}} \subseteq \text{Meaning}_{\text{in}}$), protects epistemic states, JTMS retraction, zero-ingress | Phase 23-E | Implementation Fact |
 | **ARCH-029** | Direct natural language processing in cognitive core | Language Adapter Boundary & Substrate Contract (P23-F) | Strict ingress/egress gating ({en, vi, ja}), substrate purity, zero language leakage, epistemic preservation | Phase 23-F | Implementation Fact |
+| **ARCH-030** | Language-dependent or unstructured cognitive core interface | Semantic Substrate → Cognitive Core Contract (P23-G) | Zero natural language strings in Core (strictly numeric IDs); Strong Kleene 3-valued logic; non-monotonic JTMS cascade invalidation; DisambiguationSubgoal for ambiguous branches; zero dynamic allocation in inner loop via static TermArena | Phase 23-G | Implementation Fact |
+
 
