@@ -68,6 +68,13 @@ When answering questions or designing changes, look up the canonical source of t
 | **Hardware Tiers (20W Target)** | [`docs/ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/ARCHITECTURE.md) §6 | CPU_ONLY, LAPTOP, DESKTOP, HIGH_END runtime profiles. |
 | **Simulation Runtime** | [`docs/ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/ARCHITECTURE.md) §7, ADR-011 | `SimClock`, virtual time advancement, ephemeral in-memory storage. |
 | **ADR Ledger** | [`docs/ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/ARCHITECTURE.md) §8 | Full architectural decision records: ADR-001 through ADR-028, DRAFT ADR-029. |
+| **Documentation Architecture** | [`docs/DOCUMENTATION_ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/DOCUMENTATION_ARCHITECTURE.md) | Authoritative knowledge taxonomy, 7 knowledge classes, and lifecycle rules. |
+| **Phase Registry** | [`docs/PHASE_REGISTRY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PHASE_REGISTRY.md) | Exhaustive master milestone ledger: P01 to P23-I, P24–P27, and Genesis gate. |
+| **Document Registry** | [`docs/DOCUMENT_REGISTRY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/DOCUMENT_REGISTRY.md) | Comprehensive 15-attribute classification catalog of all repository documents. |
+| **Repository Source Map** | [`docs/SOURCE_MAP.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/SOURCE_MAP.md) | Unbroken claim-to-evidence provenance map across all cognitive subsystems. |
+| **Context Architecture** | [`docs/CONTEXT_ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/CONTEXT_ARCHITECTURE.md) | Multi-agent projection architecture: Ciah $\le 5$-file pack, Gemini deep corpus. |
+| **Conflict Ledger** | [`docs/DOCUMENTATION_CONFLICTS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/DOCUMENTATION_CONFLICTS.md) | Systematic catalog of historical contradictions and recommended resolutions. |
+| **Migration Plan** | [`docs/DOCUMENTATION_MIGRATION_PLAN.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/DOCUMENTATION_MIGRATION_PLAN.md) | Phased, safe, non-destructive migration roadmap for knowledge architecture. |
 | **Full Spec Catalog** | [`docs/DOCUMENTATION_INDEX.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/DOCUMENTATION_INDEX.md) | Exhaustive directory of all active and historical phase specifications. |
 | **User Operation & Voice Setup** | [`docs/USER_MANUAL.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/USER_MANUAL.md) | Shortcuts, RVC model setup, hardware configuration. |
 

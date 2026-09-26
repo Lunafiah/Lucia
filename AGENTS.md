@@ -121,13 +121,23 @@ README.md (Public Front Door) [L0]
     │
     ├── docs/00_PROJECT_OVERVIEW.md (Canonical Project Truth & Roadmap) [L2]
     │
+    ├── docs/DOCUMENTATION_ARCHITECTURE.md (Canonical Knowledge Architecture) [L2]
+    │
+    ├── docs/PHASE_REGISTRY.md (Canonical Milestone & Sub-Phase Registry) [L2]
+    │
     ├── docs/ARCHITECTURE.md (Canonical Technical Truth & ADR Ledger) [L3]
+    │
+    ├── docs/DOCUMENT_REGISTRY.md (Master Document Catalog & Metadata) [L3]
+    │
+    ├── docs/SOURCE_MAP.md (Authoritative Provenance Map) [L3]
+    │
+    ├── docs/CONTEXT_ARCHITECTURE.md (Agent Context Projection Spec) [L4]
     │
     ├── docs/CONTEXT_INDEX.md (Context Retrieval Map L0–L6) [L4]
     │
     ├── docs/DOCUMENTATION_INDEX.md (Complete Catalog & Spec Navigation) [L4]
     │
-    └── Historical Evidence (docs/specs/**, tests/evaluation/**) [L5]
+    └── Historical Evidence (docs/specs/**, evaluation_artifacts/**, tests/evaluation/**) [L5]
 ```
 
 | Document | Authority Tier | Role & Content Scope | Agent Operating Rules |
@@ -135,10 +145,15 @@ README.md (Public Front Door) [L0]
 | [`README.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/README.md) | **Public Front Door [L0]** | High-level introduction, philosophy, public concepts, and getting started. | Use it to understand project purpose and top-level navigation. **NOT** the detailed technical specification. |
 | [`docs/L1_INVARIANTS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/L1_INVARIANTS.md) | **Canonical Invariant Ledger [L1]** | Consolidated non-negotiable architectural, limbic, concurrency, and governance invariants. | Primary reference before any modification. Must not be bypassed or weakened. |
 | [`docs/00_PROJECT_OVERVIEW.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/00_PROJECT_OVERVIEW.md) | **Canonical Project Truth [L2]** | System identity, core philosophy, 6-layer cognitive pipeline summary, 24-subsystem health matrix, test statistics, active REST API surface, and milestone roadmap. | Consult for current project status, phase progress, subsystem operational state, and project-level constraints. **Do NOT recreate `CURRENT_STATUS.md`.** |
-| [`docs/ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/ARCHITECTURE.md) | **Canonical Technical Truth [L3]** | Technical architecture, 20-Watt Whole Brain Architecture, concurrency & locking rules, mathematical/dynamical mechanisms (ODEs, SDM, Ecphory, BPTT), and the complete Architectural Decision Record ledger (**ADR-001 through ADR-028**). | Primary technical authority for mechanisms, formulas, component ownership, threading, and design rationale. **Do NOT recreate `MECHANISM.md` or `DESIGN_DECISIONS.md`.** |
+| [`docs/DOCUMENTATION_ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/DOCUMENTATION_ARCHITECTURE.md) | **Canonical Knowledge Canon [L2]** | Information classes (Classes 1–7), canonical single-ownership model, unflattened evidence rules, and controlled taxonomies. | Primary authority for documentation organization, status labels, and lifecycle rules. |
+| [`docs/PHASE_REGISTRY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PHASE_REGISTRY.md) | **Canonical Phase Truth [L2]** | Master registry covering P01 through P23-I, future horizons P24–P27, and Genesis gate. | Consult for official phase status, lifecycle stage, and freeze commits before assuming milestone state. |
+| [`docs/ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/ARCHITECTURE.md) | **Canonical Technical Truth [L3]** | Technical architecture, 20-Watt Whole Brain Architecture, concurrency & locking rules, mathematical/dynamical mechanisms (ODEs, SDM, Ecphory, BPTT), and the complete Architectural Decision Record ledger (**ADR-001 through ADR-028**; ARCH-001 to ARCH-031). | Primary technical authority for mechanisms, formulas, component ownership, threading, and design rationale. **Do NOT recreate `MECHANISM.md` or `DESIGN_DECISIONS.md`.** |
+| [`docs/DOCUMENT_REGISTRY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/DOCUMENT_REGISTRY.md) | **Master Catalog [L3]** | Complete 15-attribute classification catalog of all active, research, and historical documents. | Consult to identify canonical owners, parent documents, and superseding links. |
+| [`docs/SOURCE_MAP.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/SOURCE_MAP.md) | **Provenance Authority [L3]** | Repository-wide claim-to-evidence provenance map tracing architectural mechanisms to raw measurements and commits. | Trace core architectural claims to their verifying evidence before proposing modifications. |
+| [`docs/CONTEXT_ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/CONTEXT_ARCHITECTURE.md) | **Context Projection Spec [L4]** | Multi-agent projection architecture: Ciah $\le 5$-file reviewer pack, Gemini deep research corpus, Antigravity L0–L6 routing. | Authoritative rules for creating or updating derived context files. |
 | [`docs/CONTEXT_INDEX.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/CONTEXT_INDEX.md) | **Context Routing Map [L4]** | Logical context layers (L0–L6), minimal sufficient context loading rules by task type, anti-patterns. | Consult first to identify minimal sufficient context layers before ingesting files. |
 | [`docs/DOCUMENTATION_INDEX.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/DOCUMENTATION_INDEX.md) | **Navigation Map [L4]** | Complete catalog of active and historical documentation, authority hierarchy, and reading paths. | Use strictly to navigate documents. **Do NOT turn the index into another source of technical truth.** |
-| **Phase / Research / Acceptance Docs** (`docs/specs/**`) | **Historical Evidence & Records [L5]** | Phase specifications, research hypotheses (H1–Hn), evaluation harness reports, mathematical proposals, and formal acceptance reports. | Preserved as evidence and historical records. They must **never** silently override the active canonical architecture in `docs/ARCHITECTURE.md`. |
+| **Phase / Research / Acceptance Docs** (`docs/specs/**`, `evaluation_artifacts/**`) | **Historical Evidence & Records [L5]** | Phase specifications, research hypotheses (H1–Hn), evaluation harness reports, mathematical proposals, and formal acceptance reports. | Preserved as evidence and historical records. They must **never** silently override the active canonical architecture in `docs/ARCHITECTURE.md`. |
 
 ### 3.2 Deleted Canonical Files Notice
 
@@ -153,9 +168,9 @@ Agents must **NEVER** recreate these files, create compatibility wrappers, or in
 
 When behavior, mechanisms, architecture, or phase status changes:
 1. Update the canonical owner; do not create duplicate sources of truth.
-2. Put genuine research specs/evaluations/phase records in `docs/specs/`.
-3. Put **all phase evaluation artifacts** in `tests/evaluation/phaseXX/` under the shared `tests/evaluation/` parent.
-4. Update `DOCUMENTATION_INDEX.md` for added/moved/removed docs.
+2. Put genuine research specs/evaluations/phase records in `docs/specs/` (or `docs/research/` during active research).
+3. Put **executable phase evaluation harnesses and test suites** in `tests/evaluation/phaseXX/`, and **persistent markdown evaluation reports & raw JSON telemetry** in `evaluation_artifacts/`.
+4. Update `DOCUMENTATION_INDEX.md` and `DOCUMENT_REGISTRY.md` for added/moved/removed docs.
 5. Update `README.md` only for public-facing changes.
 6. Search for and fix stale references to renamed/deleted files.
 
@@ -168,7 +183,7 @@ Lucia/
 │   ├── api/
 │   │   └── server.py                           # FastAPI server (127.0.0.1:8765)
 │   └── core/
-│       ├── sensors/                            # Layer 1: Lexical valence & density encoding
+│       ├── gating/                             # Layer 1: Lexical valence & density encoding
 │       ├── emotion/                            # Layers 2–3: Coupled MT-LNN, Philia attractor & ConsolidationEngine
 │       ├── inference/                          # Layer 4: Active Inference & CPU LNNTrainer
 │       ├── memory/                             # Layer 5: Kanerva SDM, DecayEngine, Ecphory
