@@ -18,11 +18,13 @@ F11 — Strict goal-directed relevance
 F12 — Deterministic reproducibility
 """
 
+import gc
 import sys
 import tracemalloc
 import pytest
 from typing import Dict, List, Tuple
 
+from src.core.language.adapter import LanguageDriverRegistry, LanguageIngressGate
 from src.core.cognition.contract.arena import TermArena
 from src.core.cognition.contract.epistemic import EpistemicStatus, KleeneValue
 from src.core.cognition.contract.inference import DisambiguationSubgoal
@@ -275,30 +277,55 @@ class TestP23HFalsificationSuite:
     def test_f6_cross_lingual_invariance(self):
         """
         F6: Cross-lingual invariance.
-        Identical numeric projection from English, Vietnamese, or Japanese substrate
-        produces bit-exact identical inference results in Cognitive Core.
+        Real parallel semantic projections from English, Vietnamese, and Japanese substrates
+        (via LanguageIngressGate + ProjectGraphToTerms) produce bit-exact identical inference
+        results in Cognitive Core.
         """
+        registry = LanguageDriverRegistry.create_default_registry()
+        ingress_gate = LanguageIngressGate()
+
+        # Parallel canonical sentences across 3 admitted languages
+        sentences = {
+            "en": "User solves the problem",
+            "vi": "Anh người dùng giải quyết cái vấn đề",
+            "ja": "ユーザーが問題を解決した",
+        }
+
+        shared_sym_table = SymbolTable()
+        results = []
+
+        # Define domain rule in Cognitive Core:
+        # c:SOLVE_PROBLEM(user, problem) -> c:ACHIEVE_GOAL(user, problem)
+        pred_solve = shared_sym_table.intern_concept("c:SOLVE_PROBLEM")
+        pred_achieve = shared_sym_table.intern_concept("c:ACHIEVE_GOAL")
+
         rule = InferenceRule(
-            rule_id=10,
-            head=RuleHead(predicate_id=PRED_VERTEBRATE, arg0=VAR_0),
-            premises=(RulePremise(predicate_id=PRED_MAMMAL, arg0=VAR_0),),
+            rule_id=901,
+            head=RuleHead(predicate_id=pred_achieve, arg0=VAR_0, arg1=VAR_1),
+            premises=(RulePremise(predicate_id=pred_solve, arg0=VAR_0, arg1=VAR_1),),
         )
         idx = RuleIndex([rule])
 
-        # Three isolated environments representing projections from EN, VI, JA
-        results = []
-        for _lang in ("en", "vi", "ja"):
+        for lang, text in sentences.items():
+            parsed = ingress_gate.admit_and_parse(text, lang, registry)
             arena = TermArena(max_terms=100)
-            # All three languages project to identical concept IDs
-            arena.allocate_term(predicate_id=PRED_MAMMAL, arg0_id=ENT_DOG)
+            proj = ProjectGraphToTerms(parsed.graph, arena, shared_sym_table)
+            assert proj.success
+
+            active_terms = arena.active_terms()
+            assert len(active_terms) >= 1
+            source_term = active_terms[0]
+
             kernel = ReasoningKernel(rule_index=idx, arena=arena)
-            res = kernel.resolve_goal(Goal(predicate_id=PRED_VERTEBRATE, arg0_id=ENT_DOG))
+            res = kernel.resolve_goal(
+                Goal(predicate_id=pred_achieve, arg0_id=source_term.arg0_id, arg1_id=source_term.arg1_id)
+            )
             results.append((res.status, res.rule_id, res.steps_taken, res.depth_reached))
 
-        # All results must be identical across languages
+        # Bit-exact identity across all 3 language substrates
         assert results[0] == results[1] == results[2]
         assert results[0][0] == KleeneValue.TRUE
-        assert results[0][1] == 10
+        assert results[0][1] == 901
 
     def test_f7_zero_string_dependency(self):
         """
@@ -334,10 +361,11 @@ class TestP23HFalsificationSuite:
 
     def test_f8_zero_heap_allocation(self):
         """
-        F8: Zero dynamic heap allocation in steady-state inner loop.
-        Using tracemalloc, verify that repeated resolution on warmed-up structures
-        performs 0 memory allocations.
+        F8: Zero dynamic container growth / 0 net persistent heap growth in steady state.
+        Verifies both single-step and deep multi-step (depth 4) reasoning:
+        after warm-up, repeated resolution in steady-state loop exhibits 0 net persistent heap growth.
         """
+        # Part A: Grounded single-step resolution
         rule = InferenceRule(
             rule_id=1,
             head=RuleHead(predicate_id=PRED_CYCLE_B, arg0=VAR_0),
@@ -345,36 +373,70 @@ class TestP23HFalsificationSuite:
         )
         idx = RuleIndex([rule])
         arena = TermArena(max_terms=100)
-        # Grounded fact
         arena.allocate_term(predicate_id=PRED_CYCLE_B, arg0_id=ENT_DOG)
         kernel = ReasoningKernel(rule_index=idx, arena=arena)
-
         goal = Goal(predicate_id=PRED_CYCLE_B, arg0_id=ENT_DOG)
 
-        # Warm-up pass to compile functions and initialize buffers
         for _ in range(5):
             kernel.resolve_goal(goal)
 
-        # Measure steady-state allocation
+        gc.collect()
         tracemalloc.start()
         snapshot1 = tracemalloc.take_snapshot()
 
         for _ in range(20):
             kernel.resolve_goal(goal)
 
+        gc.collect()
         snapshot2 = tracemalloc.take_snapshot()
         tracemalloc.stop()
 
-        # Filter out tracemalloc internal bookkeeping structures
         src_filter = tracemalloc.Filter(True, "*src*")
         filtered_snap1 = snapshot1.filter_traces([src_filter])
         filtered_snap2 = snapshot2.filter_traces([src_filter])
 
         stats = filtered_snap2.compare_to(filtered_snap1, 'lineno')
-        total_diff = sum(stat.size_diff for stat in stats if stat.size_diff > 0)
+        total_diff_single = sum(stat.size_diff for stat in stats if stat.size_diff > 0)
+        assert total_diff_single == 0, f"Detected single-step persistent heap growth: {total_diff_single} bytes"
 
-        # Steady-state repeat query allocates 0 bytes in src/
-        assert total_diff == 0, f"Detected non-zero heap allocation diff in src: {total_diff} bytes"
+        # Part B: Deep multi-step reasoning (Depth 4 deduction chain: 101 -> 102 -> 103 -> 104 -> 105)
+        r1 = InferenceRule(rule_id=11, head=RuleHead(predicate_id=102, arg0=VAR_0), premises=(RulePremise(predicate_id=101, arg0=VAR_0),))
+        r2 = InferenceRule(rule_id=12, head=RuleHead(predicate_id=103, arg0=VAR_0), premises=(RulePremise(predicate_id=102, arg0=VAR_0),))
+        r3 = InferenceRule(rule_id=13, head=RuleHead(predicate_id=104, arg0=VAR_0), premises=(RulePremise(predicate_id=103, arg0=VAR_0),))
+        r4 = InferenceRule(rule_id=14, head=RuleHead(predicate_id=105, arg0=VAR_0), premises=(RulePremise(predicate_id=104, arg0=VAR_0),))
+        rule_idx_deep = RuleIndex([r1, r2, r3, r4])
+
+        arena_deep = TermArena(max_terms=100)
+        arena_deep.allocate_term(predicate_id=101, arg0_id=ENT_DOG)
+        kernel_deep = ReasoningKernel(rule_index=rule_idx_deep, arena=arena_deep)
+        goal_deep = Goal(predicate_id=105, arg0_id=ENT_DOG)
+
+        # Initial chain derivation reaches depth 4
+        res_deep = kernel_deep.resolve_goal(goal_deep)
+        assert res_deep.status == KleeneValue.TRUE
+        assert res_deep.depth_reached == 4
+
+        for _ in range(5):
+            kernel_deep.resolve_goal(goal_deep)
+
+        gc.collect()
+        tracemalloc.start()
+        snap_deep1 = tracemalloc.take_snapshot()
+
+        for _ in range(50):
+            kernel_deep.resolve_goal(goal_deep)
+
+        gc.collect()
+        snap_deep2 = tracemalloc.take_snapshot()
+        tracemalloc.stop()
+
+        filtered_deep1 = snap_deep1.filter_traces([src_filter])
+        filtered_deep2 = snap_deep2.filter_traces([src_filter])
+        stats_deep = filtered_deep2.compare_to(filtered_deep1, 'lineno')
+        total_diff_deep = sum(stat.size_diff for stat in stats_deep if stat.size_diff > 0)
+
+        # 0 net persistent heap growth in steady state across deep multi-step deduction
+        assert total_diff_deep == 0, f"Detected deep multi-step persistent heap growth: {total_diff_deep} bytes"
 
     def test_f9_bounded_termination(self):
         """
@@ -487,3 +549,68 @@ class TestP23HFalsificationSuite:
                 reference_result = snapshot
             else:
                 assert snapshot == reference_result
+
+    def test_f13_epistemic_truth_quadrant(self):
+        """
+        FIX-23H-01 Falsification: Comprehensive 4-Quadrant Epistemic Truth Verification.
+        Proves that unproven goals remain UNKNOWN and never collapse into FALSE:
+        1. Antecedent FALSE -> Consequent UNKNOWN (Denying the antecedent fallacy prevented).
+        2. Explicit Negative Fact -> FALSE (Polar conflict detected).
+        3. Negative Rule Firing -> FALSE (Rule derives negation, polar conflict detected).
+        4. Explicit Positive Fact -> TRUE (Direct grounded fact matching).
+        """
+        # Case 1: Antecedent FALSE -> Consequent UNKNOWN
+        arena_c1 = TermArena(max_terms=100)
+        arena_c1.allocate_term(predicate_id=PRED_MAMMAL, arg0_id=ENT_DOG, polarity=False)
+        r_c1 = InferenceRule(
+            rule_id=101,
+            head=RuleHead(predicate_id=PRED_WARM_BLOODED, arg0=VAR_0),
+            premises=(RulePremise(predicate_id=PRED_MAMMAL, arg0=VAR_0),),
+        )
+        kernel_c1 = ReasoningKernel(rule_index=RuleIndex([r_c1]), arena=arena_c1)
+        res_c1 = kernel_c1.resolve_goal(Goal(predicate_id=PRED_WARM_BLOODED, arg0_id=ENT_DOG))
+        assert res_c1.status == KleeneValue.UNKNOWN
+        assert res_c1.term_id == 0
+        assert res_c1.conflict is None
+        assert res_c1.subgoal is not None
+
+        # Case 2: Explicit Negative Fact -> FALSE
+        arena_c2 = TermArena(max_terms=100)
+        fact_neg_id = arena_c2.allocate_term(
+            predicate_id=PRED_FLY, arg0_id=ENT_PENGUIN, polarity=False, epistemic_status=EpistemicStatus.FACT
+        )
+        kernel_c2 = ReasoningKernel(rule_index=RuleIndex([]), arena=arena_c2)
+        res_c2 = kernel_c2.resolve_goal(Goal(predicate_id=PRED_FLY, arg0_id=ENT_PENGUIN, polarity=True))
+        assert res_c2.status == KleeneValue.FALSE
+        assert res_c2.conflict is not None
+        assert res_c2.conflict.existing_term_id == fact_neg_id
+        assert res_c2.conflict.existing_polarity is False
+        assert res_c2.conflict.new_polarity is True
+
+        # Case 3: Negative Rule Firing -> FALSE
+        arena_c3 = TermArena(max_terms=100)
+        arena_c3.allocate_term(predicate_id=PRED_CARNIVORE, arg0_id=ENT_CAT, polarity=True, epistemic_status=EpistemicStatus.FACT)
+        neg_rule = InferenceRule(
+            rule_id=202,
+            head=RuleHead(predicate_id=PRED_BARKS, arg0=VAR_0, polarity=False),
+            premises=(RulePremise(predicate_id=PRED_CARNIVORE, arg0=VAR_0, polarity=True),),
+        )
+        kernel_c3 = ReasoningKernel(rule_index=RuleIndex([neg_rule]), arena=arena_c3)
+        res_c3 = kernel_c3.resolve_goal(Goal(predicate_id=PRED_BARKS, arg0_id=ENT_CAT, polarity=True))
+        assert res_c3.status == KleeneValue.FALSE
+        assert res_c3.rule_id == 202
+        assert res_c3.conflict is not None
+        assert res_c3.term_id > 0
+        derived = arena_c3.get_term(res_c3.term_id)
+        assert derived.polarity is False
+
+        # Case 4: Explicit Positive Fact -> TRUE
+        arena_c4 = TermArena(max_terms=100)
+        fact_pos_id = arena_c4.allocate_term(
+            predicate_id=PRED_BARKS, arg0_id=ENT_DOG, polarity=True, epistemic_status=EpistemicStatus.FACT
+        )
+        kernel_c4 = ReasoningKernel(rule_index=RuleIndex([]), arena=arena_c4)
+        res_c4 = kernel_c4.resolve_goal(Goal(predicate_id=PRED_BARKS, arg0_id=ENT_DOG, polarity=True))
+        assert res_c4.status == KleeneValue.TRUE
+        assert res_c4.term_id == fact_pos_id
+        assert res_c4.conflict is None

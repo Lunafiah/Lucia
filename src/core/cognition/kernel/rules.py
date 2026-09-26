@@ -101,6 +101,9 @@ class InferenceRule:
             )
 
 
+_EMPTY_RULES: List[InferenceRule] = []
+
+
 class RuleIndex:
     """
     Static index of inference rules keyed by head predicate_id.
@@ -132,7 +135,7 @@ class RuleIndex:
 
     def get_rules_for_head(self, predicate_id: int) -> List[InferenceRule]:
         """Fast indexed lookup for rules deriving predicate_id. Returns empty list if none."""
-        return self._rules_by_head_pred.get(predicate_id, [])
+        return self._rules_by_head_pred.get(predicate_id, _EMPTY_RULES)
 
     def get_rule_by_id(self, rule_id: int) -> Optional[InferenceRule]:
         """Lookup rule by numeric ID."""

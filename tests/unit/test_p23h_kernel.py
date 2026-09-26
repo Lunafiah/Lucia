@@ -390,8 +390,10 @@ class TestReasoningKernelExecution:
         assert res.steps_taken <= MAX_INFERENCE_STEPS
         assert res.depth_reached < MAX_SEARCH_DEPTH
 
-    def test_kleene_short_circuit_on_false(self):
-        # P1 ∧ P2 -> C. P1 is FALSE. C should fail with FALSE.
+    def test_kleene_short_circuit_on_false_yields_unknown(self):
+        # FIX-23H-01 / Epistemic Safety:
+        # P1 ∧ P2 -> C. P1 is FALSE. Denying the antecedent does not prove ¬C.
+        # The rule fails, and C remains UNKNOWN (never FALSE).
         arena = TermArena(max_terms=100)
         arena.allocate_term(predicate_id=PRED_CANINE, arg0_id=ENT_CAT, polarity=False)
 
@@ -407,7 +409,90 @@ class TestReasoningKernelExecution:
         kernel = ReasoningKernel(rule_index=idx, arena=arena)
 
         res = kernel.resolve_goal(Goal(predicate_id=PRED_BARKS, arg0_id=ENT_CAT))
+        assert res.status == KleeneValue.UNKNOWN
+        assert res.subgoal is not None
+
+    def test_epistemic_antecedent_false_yields_unknown(self):
+        """
+        FIX-23H-01 Case 1: Antecedent FALSE -> Consequent UNKNOWN.
+        Rule: Q(x) -> P(x).
+        Fact: Q(e) has polarity=False (FALSE).
+        Query: P(e) with polarity=True.
+        Since Q(e) is FALSE, rule premise fails. In Strong Kleene K3 logic,
+        failure to prove does not prove negation. P(e) must be UNKNOWN.
+        """
+        arena = TermArena(max_terms=100)
+        arena.allocate_term(predicate_id=PRED_MAMMAL, arg0_id=ENT_DOG, polarity=False)
+        r = InferenceRule(
+            rule_id=101,
+            head=RuleHead(predicate_id=PRED_WARM_BLOODED, arg0=VAR_0),
+            premises=(RulePremise(predicate_id=PRED_MAMMAL, arg0=VAR_0),),
+        )
+        kernel = ReasoningKernel(rule_index=RuleIndex([r]), arena=arena)
+        res = kernel.resolve_goal(Goal(predicate_id=PRED_WARM_BLOODED, arg0_id=ENT_DOG))
+        assert res.status == KleeneValue.UNKNOWN
+        assert res.term_id == 0
+        assert res.conflict is None
+
+    def test_epistemic_explicit_negative_fact_yields_false(self):
+        """
+        FIX-23H-01 Case 2: Explicit Negative Fact -> FALSE.
+        Fact in arena: P(e) with polarity=False.
+        Query: P(e) with polarity=True.
+        Result: Direct polar conflict -> FALSE with ConflictRecord.
+        """
+        arena = TermArena(max_terms=100)
+        fact_id = arena.allocate_term(
+            predicate_id=PRED_FLY, arg0_id=ENT_PENGUIN, polarity=False, epistemic_status=EpistemicStatus.FACT
+        )
+        kernel = ReasoningKernel(rule_index=RuleIndex([]), arena=arena)
+        res = kernel.resolve_goal(Goal(predicate_id=PRED_FLY, arg0_id=ENT_PENGUIN, polarity=True))
         assert res.status == KleeneValue.FALSE
+        assert res.conflict is not None
+        assert res.conflict.existing_term_id == fact_id
+        assert res.conflict.existing_polarity is False
+        assert res.conflict.new_polarity is True
+
+    def test_epistemic_negative_rule_firing_yields_false(self):
+        """
+        FIX-23H-01 Case 3: Negative Rule Firing -> FALSE.
+        Fact in arena: R(e) with polarity=True.
+        Rule: R(x) -> ¬P(x) (rule head has polarity=False).
+        Query: P(e) with polarity=True.
+        Result: Negative rule fires deriving ¬P(e). Query for positive P(e) returns FALSE with ConflictRecord.
+        """
+        arena = TermArena(max_terms=100)
+        arena.allocate_term(predicate_id=PRED_CARNIVORE, arg0_id=ENT_CAT, polarity=True, epistemic_status=EpistemicStatus.FACT)
+        neg_rule = InferenceRule(
+            rule_id=202,
+            head=RuleHead(predicate_id=PRED_BARKS, arg0=VAR_0, polarity=False),
+            premises=(RulePremise(predicate_id=PRED_CARNIVORE, arg0=VAR_0, polarity=True),),
+        )
+        kernel = ReasoningKernel(rule_index=RuleIndex([neg_rule]), arena=arena)
+        res = kernel.resolve_goal(Goal(predicate_id=PRED_BARKS, arg0_id=ENT_CAT, polarity=True))
+        assert res.status == KleeneValue.FALSE
+        assert res.rule_id == 202
+        assert res.conflict is not None
+        assert res.term_id > 0
+        derived = arena.get_term(res.term_id)
+        assert derived.polarity is False
+
+    def test_epistemic_explicit_positive_fact_yields_true(self):
+        """
+        FIX-23H-01 Case 4: Explicit Positive Fact -> TRUE.
+        Fact in arena: P(e) with polarity=True.
+        Query: P(e) with polarity=True.
+        Result: Direct match -> TRUE.
+        """
+        arena = TermArena(max_terms=100)
+        fact_id = arena.allocate_term(
+            predicate_id=PRED_BARKS, arg0_id=ENT_DOG, polarity=True, epistemic_status=EpistemicStatus.FACT
+        )
+        kernel = ReasoningKernel(rule_index=RuleIndex([]), arena=arena)
+        res = kernel.resolve_goal(Goal(predicate_id=PRED_BARKS, arg0_id=ENT_DOG, polarity=True))
+        assert res.status == KleeneValue.TRUE
+        assert res.term_id == fact_id
+        assert res.conflict is None
 
     def test_arena_capacity_exhaustion(self):
         # Arena with capacity 1

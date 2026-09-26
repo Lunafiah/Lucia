@@ -302,10 +302,9 @@ class ReasoningKernel:
             )
 
         first_unknown_subgoal: Optional[Union[InformationSubgoal, DisambiguationSubgoal]] = None
-        has_unknown = False
-
         current_frame = self._frames[depth]
 
+        # Pass A: Rules deriving the requested polarity
         for rule in rules:
             if rule.head.polarity != pol:
                 continue
@@ -394,7 +393,6 @@ class ReasoningKernel:
                 continue
 
             if rule_unknown:
-                has_unknown = True
                 if first_unknown_subgoal is None:
                     first_unknown_subgoal = rule_subgoal
                 continue
@@ -459,16 +457,129 @@ class ReasoningKernel:
                     depth_reached=self._max_depth_reached,
                 )
 
-        if has_unknown:
-            return GoalResult(
-                status=KleeneValue.UNKNOWN,
-                subgoal=first_unknown_subgoal,
-                steps_taken=self._steps_taken,
-                depth_reached=self._max_depth_reached,
+        # Pass B: Check if opposite-polarity rules fire (proving negation of goal)
+        for rule in rules:
+            if rule.head.polarity == pol:
+                continue
+
+            current_frame.reset()
+
+            if not unify_terms(
+                rule.head.predicate_id, rule.head.arg0, rule.head.arg1, rule.head.arg2,
+                pred_id, a0, a1, a2,
+                current_frame,
+            ):
+                continue
+
+            num_premises = len(rule.premises)
+            premise_ids_collected = []
+            rule_failed = False
+            rule_unknown = False
+
+            p_idx = 0
+            while p_idx < num_premises:
+                premise = rule.premises[p_idx]
+                p_a0 = self._resolve_arg(premise.arg0, current_frame)
+                p_a1 = self._resolve_arg(premise.arg1, current_frame)
+                p_a2 = self._resolve_arg(premise.arg2, current_frame)
+
+                if p_a0 < 0 or p_a1 < 0 or p_a2 < 0:
+                    rule_unknown = True
+                    break
+
+                child_depth = depth + 1
+                if child_depth <= MAX_SEARCH_DEPTH:
+                    self._frames[child_depth].copy_from(current_frame)
+
+                premise_res = self._resolve_internal(
+                    pred_id=premise.predicate_id,
+                    a0=p_a0,
+                    a1=p_a1,
+                    a2=p_a2,
+                    pol=premise.polarity,
+                    scope_id=scope_id,
+                    depth=child_depth,
+                )
+
+                if premise_res.status == KleeneValue.FALSE:
+                    rule_failed = True
+                    break
+                elif premise_res.status == KleeneValue.UNKNOWN:
+                    rule_unknown = True
+                elif premise_res.status == KleeneValue.TRUE:
+                    if premise_res.term_id > 0:
+                        premise_ids_collected.append(premise_res.term_id)
+
+                p_idx += 1
+
+            if rule_failed or rule_unknown:
+                continue
+
+            # Opposite polarity rule fired!
+            if len(premise_ids_collected) == num_premises:
+                g_a0 = self._resolve_arg(rule.head.arg0, current_frame)
+                g_a1 = self._resolve_arg(rule.head.arg1, current_frame)
+                g_a2 = self._resolve_arg(rule.head.arg2, current_frame)
+
+                premise_tuple = tuple(premise_ids_collected)
+                prov = ProvenanceRecord(
+                    rule_id=rule.rule_id,
+                    supporting_premise_ids=premise_tuple,
+                )
+                neg_term_id = self.arena.allocate_term(
+                    predicate_id=pred_id,
+                    arg0_id=g_a0,
+                    arg1_id=g_a1,
+                    arg2_id=g_a2,
+                    scope_id=scope_id,
+                    epistemic_status=EpistemicStatus.INFERRED,
+                    polarity=rule.head.polarity,
+                    rule_id=rule.rule_id,
+                    premise_ids=premise_tuple,
+                    provenance=prov,
+                )
+                self.jtms.register_justification(
+                    rule_id=rule.rule_id,
+                    consequence_id=neg_term_id,
+                    premise_ids=premise_tuple,
+                )
+
+                conflict = ConflictRecord(
+                    predicate_id=pred_id,
+                    arg0_id=g_a0,
+                    arg1_id=g_a1,
+                    arg2_id=g_a2,
+                    existing_term_id=neg_term_id,
+                    conflicting_term_id=0,
+                    existing_polarity=rule.head.polarity,
+                    new_polarity=pol,
+                )
+                return GoalResult(
+                    status=KleeneValue.FALSE,
+                    term_id=neg_term_id,
+                    conflict=conflict,
+                    rule_id=rule.rule_id,
+                    premise_ids=premise_tuple,
+                    steps_taken=self._steps_taken,
+                    depth_reached=self._max_depth_reached,
+                )
+
+        # Unproven goal: in Strong Kleene logic, unproven remains UNKNOWN
+        subgoal = first_unknown_subgoal
+        if subgoal is None:
+            subgoal = InformationSubgoal(
+                target_predicate_id=pred_id,
+                arg0_id=a0,
+                arg1_id=a1,
+                arg2_id=a2,
+                polarity=pol,
+                scope_id=scope_id,
+                reason_code=INFO_REASON_MISSING_PREMISE,
             )
 
         return GoalResult(
-            status=KleeneValue.FALSE,
+            status=KleeneValue.UNKNOWN,
+            subgoal=subgoal,
             steps_taken=self._steps_taken,
             depth_reached=self._max_depth_reached,
         )
