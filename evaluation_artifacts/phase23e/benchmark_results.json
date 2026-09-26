@@ -1,0 +1,144 @@
+{
+  "benchmark": "Phase 23-E Conservative Semantic Fortification Across Session Boundaries",
+  "timestamp": 1790388128.1563132,
+  "hardware": {
+    "platform": "Windows-11-10.0.22621-SP0",
+    "processor": "AMD64 Family 23 Model 96 Stepping 1, AuthenticAMD",
+    "python_version": "3.12.10",
+    "machine": "AMD64"
+  },
+  "scales": {
+    "Small (Session Dialog)": {
+      "num_nodes": 20,
+      "num_edges": 30,
+      "num_iterations": 40,
+      "latency_ms": {
+        "min": 0.4107,
+        "p50_median": 0.4567,
+        "p95": 0.4977,
+        "p99": 0.5028,
+        "max": 0.5055
+      },
+      "peak_ram_mb": 0.0649,
+      "target": {
+        "latency_ms": 10.0,
+        "ram_mb": 15.0
+      },
+      "hard_ceiling": {
+        "latency_ms": 25.0,
+        "ram_mb": 30.0
+      },
+      "gates": {
+        "latency_target_met": true,
+        "ram_target_met": true,
+        "latency_ceiling_met": true,
+        "ram_ceiling_met": true
+      },
+      "invariants": {
+        "fortification_originated_unsupported_insertion_rate": 0.0,
+        "epistemic_safety_invariant_satisfied": true,
+        "structural_checksum_verified": true
+      },
+      "status": "PASS_TARGET"
+    },
+    "Medium (Extended Session)": {
+      "num_nodes": 100,
+      "num_edges": 150,
+      "num_iterations": 30,
+      "latency_ms": {
+        "min": 1.9802,
+        "p50_median": 2.0668,
+        "p95": 2.3247,
+        "p99": 2.3855,
+        "max": 2.3926
+      },
+      "peak_ram_mb": 0.3505,
+      "target": {
+        "latency_ms": 10.0,
+        "ram_mb": 15.0
+      },
+      "hard_ceiling": {
+        "latency_ms": 25.0,
+        "ram_mb": 30.0
+      },
+      "gates": {
+        "latency_target_met": true,
+        "ram_target_met": true,
+        "latency_ceiling_met": true,
+        "ram_ceiling_met": true
+      },
+      "invariants": {
+        "fortification_originated_unsupported_insertion_rate": 0.0,
+        "epistemic_safety_invariant_satisfied": true,
+        "structural_checksum_verified": true
+      },
+      "status": "PASS_TARGET"
+    },
+    "Large (Multi-Session Consolidation)": {
+      "num_nodes": 500,
+      "num_edges": 800,
+      "num_iterations": 20,
+      "latency_ms": {
+        "min": 12.0328,
+        "p50_median": 12.6915,
+        "p95": 14.3079,
+        "p99": 19.2565,
+        "max": 20.4937
+      },
+      "peak_ram_mb": 1.8432,
+      "target": {
+        "latency_ms": 10.0,
+        "ram_mb": 15.0
+      },
+      "hard_ceiling": {
+        "latency_ms": 25.0,
+        "ram_mb": 30.0
+      },
+      "gates": {
+        "latency_target_met": false,
+        "ram_target_met": true,
+        "latency_ceiling_met": true,
+        "ram_ceiling_met": true
+      },
+      "invariants": {
+        "fortification_originated_unsupported_insertion_rate": 0.0,
+        "epistemic_safety_invariant_satisfied": true,
+        "structural_checksum_verified": true
+      },
+      "status": "PASS_WITHIN_HARD_CEILING"
+    },
+    "Stress (High-Density Graph)": {
+      "num_nodes": 1000,
+      "num_edges": 2000,
+      "num_iterations": 10,
+      "latency_ms": {
+        "min": 32.1152,
+        "p50_median": 37.0912,
+        "p95": 47.8501,
+        "p99": 49.1051,
+        "max": 49.4188
+      },
+      "peak_ram_mb": 4.218,
+      "target": {
+        "latency_ms": 10.0,
+        "ram_mb": 15.0
+      },
+      "hard_ceiling": {
+        "latency_ms": 25.0,
+        "ram_mb": 30.0
+      },
+      "gates": {
+        "latency_target_met": false,
+        "ram_target_met": true,
+        "latency_ceiling_met": false,
+        "ram_ceiling_met": true
+      },
+      "invariants": {
+        "fortification_originated_unsupported_insertion_rate": 0.0,
+        "epistemic_safety_invariant_satisfied": true,
+        "structural_checksum_verified": true
+      },
+      "status": "FAIL_RESOURCE_BUDGET"
+    }
+  }
+}

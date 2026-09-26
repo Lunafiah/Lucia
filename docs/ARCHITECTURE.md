@@ -256,6 +256,73 @@ To anchor the floating toolbar dock and hit-test user interactions, `AvatarRende
 
 ---
 
+### 3.7 Layer 5 / Cognitive Boundary: Conservative Semantic Fortification Subsystem (Phase 23-E) (`src/core/knowledge/fortification.py`)
+
+The Conservative Semantic Fortification subsystem executes at the cognitive-memory boundary prior to cross-session persistence:
+
+```text
+Surface Language
+      ↓
+Language Adapter
+      ↓
+Language-Independent Semantic Representation (Graph Topology)
+      ↓
+Cognitive Core
+      ↓
+Conservative Semantic Fortification (Audit → Normalize → Validate → Preserve → Freeze → Checksum)
+      ↓
+Persistent Semantic Memory
+```
+
+#### 1. Core Architectural Contract & Epistemic Invariant
+* **Language Independence**: Fortification operates strictly on symbolic semantic graphs with **zero knowledge** of natural language strings, morphology, classifiers, honorifics, phonology, tokenization, or language-specific grammar.
+* **Conservation of Meaning**:
+  $$\text{Meaning}_{\text{out}} \subseteq \text{Meaning}_{\text{in}}$$
+  Fortification protects semantic structure that has already been formed upstream; it **never creates new meaning**.
+* **Zero-Ingress Guarantee**: Fortification-Originated Unsupported Insertion Rate is strictly $0.00\%$. The subsystem contains no ingress path for novel entity or fact fabrication.
+* **Epistemic Commitment Invariance**:
+  - Supported Epistemic States: `FACT`, `INFERRED`, `AMBIGUOUS`, `UNKNOWN`.
+  - Fortification **never increases epistemic commitment**: Transitions `UNKNOWN → FACT`, `UNKNOWN → INFERRED`, `UNKNOWN → concrete entity`, or `AMBIGUOUS → FACT` without explicit upstream disambiguation are unconditionally rejected.
+
+#### 2. Subsystem Responsibilities vs. Strict Prohibitions
+* **Authorized Responsibilities**:
+  1. *Graph Canonicalization & Sorting*: Deterministic identifier and canonical topological edge ordering ($O((N + E) \log(N + E))$).
+  2. *Bounded Local Consistency Auditing*: Linear-time $O(N + E)$ checks detecting dangling references, contradictory polarity conflicts, functional clashing, and illegal scope crossings.
+  3. *Uncertainty & Disambiguation Preservation*: Preserves `UNKNOWN` and `AMBIGUOUS` alternative branches intact.
+  4. *Provenance & Derivation Tracking*: Enforces that every `INFERRED` element retains rule ID, premise references, and originating session metadata.
+  5. *Non-Monotonic Premise Retraction (JTMS)*: If supporting premise $P$ is retracted or marked inactive, all dependent `INFERRED` nodes are recursively deactivated without collateral damage to independent knowledge.
+  6. *Snapshot Immutability*: Freezes validated graphs (`frozen=True`) to prevent post-audit mutation.
+  7. *Structural Integrity Checksum*: Computes SHA-256 over canonicalized topological bytes to detect serialization corruption.
+  8. *Atomic Persistence*: Atomically serializes graph state to disk via temporary write-and-replace.
+* **Forbidden Transformations (Architectural Prohibitions)**:
+  - Speculative entity creation, hallucinated fact injection, or automatic ambiguity resolution.
+  - Redundancy injection into semantic topology (e.g. `SessionRoot → entity` shortcut edges).
+  - Scope boundary penetration: edges crossing `NEGATION`, `MODAL`, or `INTENSIONAL` barriers are strictly blocked.
+  - Equating structural checksum with real-world semantic truth or absence of upstream hallucination.
+  - Utilization of GPU VRAM, LLMs, or conversational token history buffers.
+
+#### 3. Bounded Consistency & Scoping Rules
+* **Local Consistency ($O(N + E)$)**: Replaces computationally unbounded first-order theorem proving with deterministic localized checks:
+  - Polar contradiction check: opposing polarities on identical predicate-argument pairs within the same scope.
+  - Single-valued functional clashing: conflicting attribute values assigned to the same entity attribute within root scope.
+  - Dangling reference validation: source, target, and premise node IDs must exist within the graph registry.
+* **Scope Barriers**: All nodes belong to an explicit `ScopeBoundary` (`ROOT`, `NEGATION`, `MODAL`, `INTENSIONAL`). Ordinary semantic relations are forbidden from crossing scope boundaries without explicit provenance bridge structures.
+
+#### 4. Resource Envelope & Verification
+* **Target Budget**: Peak RAM $\le 15\text{ MB}$, Consolidation Latency $\le 10\text{ ms}$.
+* **Hard Safety Ceiling**: Peak RAM $> 30\text{ MB}$ or Consolidation Latency $> 25\text{ ms}$ constitutes failure.
+* **Empirical Validation (AMD Ryzen 7 5800H CPU, 0.0 MB GPU VRAM)**:
+  - Small (20 nodes, 30 edges): Latency **0.46 ms**, Peak RAM **0.065 MB** $\to$ `PASS_TARGET`.
+  - Medium (100 nodes, 150 edges): Latency **2.07 ms** (p95: 2.32 ms), Peak RAM **0.35 MB** $\to$ `PASS_TARGET`.
+  - Large (500 nodes, 800 edges): Latency **12.69 ms** (p95: 14.31 ms), Peak RAM **1.84 MB** $\to$ `PASS_WITHIN_HARD_CEILING`.
+  - Stress (1,000 nodes, 2,000 edges): Latency **37.09 ms**, Peak RAM **4.22 MB** $\to$ Identifies single-core Python boundary; graphs $> 500$ nodes should be partitioned into session-scoped batches.
+
+#### 5. Known Limitations & Upstream Assumptions
+1. *Upstream Hallucination Independence*: The overall system Hallucinated Entity Rate ($HER(t)$) may be non-zero due to upstream Language Adapters or SLM generation. Fortification only guarantees zero internal insertion.
+2. *Non-Comprehensive Modal Proof*: Modal and intensional consistency checking is strictly structural and scoped, not modal logic complete (e.g. Kripke frame theorem proving is intentionally omitted).
+
+---
+
 ## 4. Desktop & Mascot Window IPC Architecture
 
 Lucia provides two presentation contexts managed by Electron:
@@ -651,3 +718,4 @@ $$\text{Development / Simulation Environment} \neq \text{Lucia Activation}$$
 | **ARCH-025** | Open-loop text retrieval & echo vector | Closed-Loop Affective Recollection via Slow Forcing | Memory-identity-dependent trajectory deflection (ADR-027) | Phase 20 | Implementation Fact |
 | **ARCH-026** | Static weights & fixed resting attractor | 3-Tier Multi-Timescale Plasticity & Relational Inertia | Attunes baseline dynamics to history; bounded by spectral norm | Phase 21 | Implementation Fact |
 | **ARCH-027** | SLM/prompt as mandatory cognitive substrate | Substrate-Neutral Semantic Interface (C1/C4) + G4 Gate | Decouples relational cognition from language models; enables token-free multi-modal realization | Phase 22 | Research Validated |
+| **ARCH-028** | Unfortified session-boundary persistence | Conservative Semantic Fortification Subsystem (P23-E) | Preserves meaning ($\text{Meaning}_{\text{out}} \subseteq \text{Meaning}_{\text{in}}$), protects epistemic states, JTMS retraction, zero-ingress | Phase 23-E | Implementation Fact |
