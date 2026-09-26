@@ -161,6 +161,7 @@ Lucia has completed production milestones through **Phase 21 — Long-Term Relat
 | **Stability Telemetry** | `src/core/telemetry/` | **STABLE** | Computes Fast-Loop tick jitter, ODE velocity variance, Free Energy surprise entropy, and Composite Limbic Stability Index (LSI). Watchdog recovers from stalls. |
 | **Desktop Process & IPC** | `electron/main/` | **STABLE** | Electron lifecycle management, global hotkey (`Ctrl+Shift+L`), System Tray, context isolation (`ContextBridge`), and model-anchored mascot physics. |
 | **Desktop UI System** | `electron/renderer/` | **STABLE** | Personal Digital Room: progressive disclosure navigation, subtle status indicators, settings, dedicated read-only diagnostics console (`Ctrl+Shift+D`), Mascot Mode. |
+| **Language Adapter (P23-F)** | `src/core/language/adapter/` | **STABLE** | Language ingress/egress firewall, language-independent substrate contract, strict language admission ({en, vi, ja}), and epistemic preservation. |
 
 ---
 
@@ -170,8 +171,10 @@ All mechanisms are verified by automated test suites executed against the reposi
 
 | Test Suite | Scope & Purpose | Total Tests | Passed | Verdict |
 |---|---|---|---|---|
-| **Unit Test Suite** (`tests/unit/`) | Subsystem correctness, component boundaries, and pipeline execution | 617 | **617** | **100% PASS** |
+| **Unit Test Suite** (`tests/unit/`) | Subsystem correctness, component boundaries, and pipeline execution | 630 | **630** | **100% PASS** |
 | **Property Test Suite** (`tests/property/`) | Hypothesis property invariants (P1–P35) | 35 | **35** | **100% PASS** |
+| **Phase 23-F Language Adapter** (`tests/unit/test_language_adapter.py`) | Language adapter boundary, ingress/egress gating, EN/VI/JA driver contracts | 13 | **13** | **100% PASS** |
+| **Phase 23-F Falsification Gates** (`tests/evaluation/phase23f/test_p23f_falsification.py`) | 4 Preregistered falsification tests (gate leakage, substrate purity, epistemic, invariance) | 4 | **4** | **100% PASS** |
 | **Phase 23-E Fortification** (`tests/unit/test_semantic_fortification.py`) | Conservative Semantic Fortification across session boundaries (Req A–J) | 12 | **12** | **100% PASS** |
 | **Phase 23-E Benchmark Gates** (`tests/evaluation/phase23e/test_fortification_benchmark.py`) | Latency SLA, peak RAM, zero unsupported insertion rate, and epistemic safety | 3 | **3** | **100% PASS** |
 | **Phase 21 Production** (`tests/unit/test_phase21_production.py`) | Plasticity, Tier 2 attractor, offline BPTT consolidation, fallback & lock safety | 13 | **13** | **100% PASS** |
@@ -261,6 +264,8 @@ $$\text{22-AL} \to \text{22-INF} \to \text{22-SSF} \to \text{22-EKF} \to \text{2
 1. **Phase 23 — Semantic Formation, Evaluation & Fortification**:
    - **Phase 23-D (Substrate Evaluation)**: Evaluated UMR-TPG (primary), V-UMR, and DRS-Graph across 6 experimental tracks (EXP-01–06), retaining UMR-TPG as leading candidate while rejecting dense hypervector superposition (`SPRR=0.0`) and unconstrained persistent vectors (memory failure).
    - **Phase 23-E (Conservative Semantic Fortification Across Session Boundaries) `[VALIDATED / PRODUCTION IMPLEMENTED]`**: Implemented language-independent semantic fortification layer (`src/core/knowledge/fortification.py`) protecting formed semantic state. Enforces zero novel entity insertion, bounded local consistency checks, non-monotonic JTMS premise retraction invalidation, UNKNOWN/AMBIGUOUS preservation, scope boundary protection, and structural checksums. Benchmarked at **$2.07\text{ ms}$** median latency at 100 nodes (Target: $\le 10\text{ ms}$) and **$0.35\text{ MB}$** peak RAM (Target: $\le 15\text{ MB}$), zero GPU VRAM impact (Report: [`evaluation_artifacts/phase23e/P23E_FORTIFICATION_EVALUATION_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/evaluation_artifacts/phase23e/P23E_FORTIFICATION_EVALUATION_REPORT.md)).
+   - **Phase 23-F (Language Adapter Boundary & Semantic Substrate Contract) `[VALIDATED / ADAPTER BOUNDARY IMPLEMENTED]`**: Implemented decoupled Language Adapter subsystem (`src/core/language/adapter/`) isolating surface natural language from the Semantic Substrate, Cognitive Core, and Fortification. Enforces strict ingress/egress firewalls (only `{en, vi, ja}` admitted; unsupported languages blocked at perimeter), minimal adapter contract (ParseToSubstrate, RealizeFromSubstrate, CanHandleLanguage, ValidateCoverage), substrate purity verification, and strict epistemic preservation (Japanese zero-anaphora UNKNOWN preservation, Vietnamese kinship/classifier separation). Benchmarked at **$0.0197\text{ ms}$** (EN), **$0.0397\text{ ms}$** (VI), **$0.0184\text{ ms}$** (JA) parse latency, **$0.1060\text{ ms}$** round-trip latency, **$0.0124\text{ MB}$** peak RAM, and **$0.0\text{ MB}$** GPU VRAM (Report: [`evaluation_artifacts/phase23f/P23F_ADAPTER_EVALUATION_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/evaluation_artifacts/phase23f/P23F_ADAPTER_EVALUATION_REPORT.md)).
+
 2. **Phase 24 — Temporal Embodiment & Social Feedback**: Interpersonal synchrony, micromovement resonance, and reciprocal gaze/prosody dynamics.
 3. **Phase 25 — Emergent Individuality & Autonomous Preferences**: Asymmetric curiosity, idiosyncratic topical affinities, and authentic aesthetic preferences grounded in shared history.
 4. **Phase 26 — Personalized Individual Trajectory**: Coherent lifelong developmental trajectory unique to Lucia's single continuous relationship with the user.

@@ -323,6 +323,55 @@ Persistent Semantic Memory
 
 ---
 
+### 3.8 Layer 6 / Periphery: Language Adapter Boundary & Semantic Substrate Contract (Phase 23-F) (`src/core/language/adapter/`)
+
+Phase 23-F introduces the formal Language Adapter Boundary, physically isolating natural-language syntax, morphology, tokens, and grammar from the Cognitive Core, Semantic Graph representation, and Conservative Semantic Fortification:
+
+```text
+Surface Language (EN, VI, JA)
+      ↓
+Language Ingress Gate [Strict Gating: {en, vi, ja}]
+      ↓
+Language Adapter Driver (ParseToSubstrate)
+      ↓
+Language-Independent Semantic Substrate (SemanticGraph)
+      ↓
+Cognitive Core & Conservative Semantic Fortification (P23-E)
+      ↓
+Language Egress Gate [Strict Gating: {en, vi, ja}]
+      ↓
+Language Adapter Driver (RealizeFromSubstrate)
+      ↓
+Surface Language Output
+```
+
+#### 1. Core Architectural Contract & Substrate Neutrality
+* **Substrate Language Independence**: The Semantic Graph, Cognitive Core, and Semantic Fortifier contain strictly ZERO natural-language tokens, grammar rules, Part-of-Speech tags, or language-specific branching.
+* **Perimeter Language Firewalls**:
+  - `LanguageIngressGate`: Evaluates incoming language codes. Only `en`, `vi`, and `ja` are admitted; all other languages (e.g. `fr`, `de`, `zh`, `es`, `ru`) are unconditionally rejected with `IngressGateBlockedError` before entering the Core.
+  - `LanguageEgressGate`: Evaluates realization requests. Requests targeting unadmitted languages are rejected with `EgressGateBlockedError`.
+* **Substrate Purity Verification**: The Ingress Gate audits emitted semantic graphs, rejecting any node IDs or concept symbols containing raw token prefixes (`token:`, `word:`, `pos:`, `tag:`).
+
+#### 2. Minimal Driver Contract & Epistemic Preservation
+* **Minimal Interface Contract**:
+  - `can_handle_language(lang: str) -> bool`
+  - `parse_to_substrate(text: str, lang: str, session_id: str, turn_id: str) -> ParseResult`
+  - `realize_from_substrate(graph: SemanticGraph, lang: str) -> RealizeResult`
+  - `validate_coverage(text: str, lang: str) -> CoverageReport`
+* **Epistemic Invariant Compliance**:
+  - *Zero-Anaphora Preservation (Japanese)*: When Japanese drops the subject (e.g. "問題を解決した"), the driver creates `:ARG0` with `EpistemicState.UNKNOWN` (`ent:unknown_agent_01`). It is NEVER auto-bound to speaker, user, or Lucia.
+  - *Kinship & Classifier Separation (Vietnamese)*: Vietnamese honorifics ("anh", "chị") and classifiers ("cái", "con") are cleanly separated from core entities (`ent:user`, `c:USER`), stored strictly as peripheral attributes.
+  - *Ambiguity Preservation*: Ambiguous expressions (e.g. "bank") generate `EpistemicState.AMBIGUOUS` with alternative hypotheses intact without unilateral resolution.
+
+#### 3. Empirical Performance Profile (AMD Ryzen 7 5800H CPU, 0.0 MB GPU VRAM)
+* Ingress Gate Latency: **1.60 µs** (Admit), **29.70 µs** (Reject)
+* Parse Latency: **0.0197 ms** (EN), **0.0397 ms** (VI), **0.0184 ms** (JA)
+* Realize Latency: **0.0085 ms** (VI)
+* End-to-End Round-Trip (EN -> Fortify -> VI): **0.1060 ms**
+* Peak Additional RAM: **0.0124 MB** (~12.7 KB)
+
+---
+
 ## 4. Desktop & Mascot Window IPC Architecture
 
 Lucia provides two presentation contexts managed by Electron:
@@ -719,3 +768,5 @@ $$\text{Development / Simulation Environment} \neq \text{Lucia Activation}$$
 | **ARCH-026** | Static weights & fixed resting attractor | 3-Tier Multi-Timescale Plasticity & Relational Inertia | Attunes baseline dynamics to history; bounded by spectral norm | Phase 21 | Implementation Fact |
 | **ARCH-027** | SLM/prompt as mandatory cognitive substrate | Substrate-Neutral Semantic Interface (C1/C4) + G4 Gate | Decouples relational cognition from language models; enables token-free multi-modal realization | Phase 22 | Research Validated |
 | **ARCH-028** | Unfortified session-boundary persistence | Conservative Semantic Fortification Subsystem (P23-E) | Preserves meaning ($\text{Meaning}_{\text{out}} \subseteq \text{Meaning}_{\text{in}}$), protects epistemic states, JTMS retraction, zero-ingress | Phase 23-E | Implementation Fact |
+| **ARCH-029** | Direct natural language processing in cognitive core | Language Adapter Boundary & Substrate Contract (P23-F) | Strict ingress/egress gating ({en, vi, ja}), substrate purity, zero language leakage, epistemic preservation | Phase 23-F | Implementation Fact |
+

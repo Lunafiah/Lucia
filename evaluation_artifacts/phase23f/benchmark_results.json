@@ -1,0 +1,113 @@
+{
+  "benchmark_timestamp": "2026-09-26 11:09:33",
+  "hardware": {
+    "platform": "Windows-11-10.0.22621-SP0",
+    "processor": "AMD64 Family 23 Model 96 Stepping 1, AuthenticAMD",
+    "python_version": "3.12.10",
+    "vram_mb": 0.0
+  },
+  "gates": {
+    "ingress_admitted_latency": {
+      "median_ms": 0.0016,
+      "mean_ms": 0.0016,
+      "p95_ms": 0.0017,
+      "min_ms": 0.0015,
+      "max_ms": 0.0032,
+      "trials": 200
+    },
+    "ingress_rejected_latency": {
+      "median_ms": 0.0297,
+      "mean_ms": 0.0308,
+      "p95_ms": 0.0351,
+      "min_ms": 0.0282,
+      "max_ms": 0.0579,
+      "trials": 200
+    },
+    "egress_latency": {
+      "median_ms": 0.0016,
+      "mean_ms": 0.0016,
+      "p95_ms": 0.0017,
+      "min_ms": 0.0015,
+      "max_ms": 0.002,
+      "trials": 200
+    },
+    "peak_ram_mb": 0.008627
+  },
+  "parsing": {
+    "english": {
+      "median_ms": 0.0197,
+      "mean_ms": 0.0199,
+      "p95_ms": 0.0215,
+      "min_ms": 0.0194,
+      "max_ms": 0.0232,
+      "trials": 100
+    },
+    "vietnamese": {
+      "median_ms": 0.0397,
+      "mean_ms": 0.0399,
+      "p95_ms": 0.0415,
+      "min_ms": 0.0393,
+      "max_ms": 0.0419,
+      "trials": 100
+    },
+    "japanese": {
+      "median_ms": 0.0184,
+      "mean_ms": 0.0185,
+      "p95_ms": 0.0193,
+      "min_ms": 0.0181,
+      "max_ms": 0.0202,
+      "trials": 100
+    },
+    "peak_ram_mb": {
+      "en": 0.047212,
+      "vi": 0.049516,
+      "ja": 0.047158
+    }
+  },
+  "realization": {
+    "english": {
+      "median_ms": 0.0085,
+      "mean_ms": 0.009,
+      "p95_ms": 0.0116,
+      "min_ms": 0.0083,
+      "max_ms": 0.012,
+      "trials": 100
+    },
+    "vietnamese": {
+      "median_ms": 0.0085,
+      "mean_ms": 0.0085,
+      "p95_ms": 0.0087,
+      "min_ms": 0.0083,
+      "max_ms": 0.0093,
+      "trials": 100
+    },
+    "japanese": {
+      "median_ms": 0.0085,
+      "mean_ms": 0.0085,
+      "p95_ms": 0.0087,
+      "min_ms": 0.0084,
+      "max_ms": 0.0091,
+      "trials": 100
+    },
+    "peak_ram_mb": 0.01736
+  },
+  "round_trip_end_to_end": {
+    "en_to_vi": {
+      "median_ms": 0.106,
+      "mean_ms": 0.1078,
+      "p95_ms": 0.1147,
+      "min_ms": 0.105,
+      "max_ms": 0.1481,
+      "trials": 50
+    },
+    "ja_to_en": {
+      "median_ms": 0.104,
+      "mean_ms": 0.1056,
+      "p95_ms": 0.1094,
+      "min_ms": 0.103,
+      "max_ms": 0.1464,
+      "trials": 50
+    },
+    "peak_ram_mb": 0.012426
+  }
+}
