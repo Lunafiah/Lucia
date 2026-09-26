@@ -1,0 +1,54 @@
+[
+  {
+    "num_terms": 20,
+    "rule_lookup_latency_us": 0.12,
+    "goal_resolution_latency_us": 9.526,
+    "invalidation_latency_us": 20.0,
+    "invalidated_term_count": 5,
+    "steps_taken": 5,
+    "depth_reached": 4,
+    "peak_ram_kb": 32.8,
+    "setup_allocation_count": 71,
+    "inner_loop_allocation_count": 0,
+    "gpu_vram_mb": 0.0
+  },
+  {
+    "num_terms": 100,
+    "rule_lookup_latency_us": 0.121,
+    "goal_resolution_latency_us": 9.354,
+    "invalidation_latency_us": 17.1,
+    "invalidated_term_count": 5,
+    "steps_taken": 5,
+    "depth_reached": 4,
+    "peak_ram_kb": 31.59,
+    "setup_allocation_count": 70,
+    "inner_loop_allocation_count": 0,
+    "gpu_vram_mb": 0.0
+  },
+  {
+    "num_terms": 500,
+    "rule_lookup_latency_us": 0.111,
+    "goal_resolution_latency_us": 9.522,
+    "invalidation_latency_us": 14.4,
+    "invalidated_term_count": 5,
+    "steps_taken": 5,
+    "depth_reached": 4,
+    "peak_ram_kb": 31.05,
+    "setup_allocation_count": 70,
+    "inner_loop_allocation_count": 0,
+    "gpu_vram_mb": 0.0
+  },
+  {
+    "num_terms": 1000,
+    "rule_lookup_latency_us": 0.109,
+    "goal_resolution_latency_us": 9.371,
+    "invalidation_latency_us": 12.2,
+    "invalidated_term_count": 5,
+    "steps_taken": 5,
+    "depth_reached": 4,
+    "peak_ram_kb": 30.49,
+    "setup_allocation_count": 70,
+    "inner_loop_allocation_count": 0,
+    "gpu_vram_mb": 0.0
+  }
+]
