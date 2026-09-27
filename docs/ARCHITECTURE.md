@@ -19,356 +19,484 @@ Lucia's internal limbic baseline is centered around **Philia** ($\phi\iota\lambd
 
 ---
 
-## 2. 6-Layer Cognitive Hierarchy & End-to-End System Data Flow
+## 2. Layer A — Overall System Architecture
 
-Lucia decouples high-frequency biological reflexes (Limbic Fast Loop) from heavy cognitive computation (Language Generation) across 6 coordinated layers:
+### 2.1 Architectural Philosophy: The 20-Watt Whole Brain Architecture (WBA)
+The human brain operates on approximately 20 watts of power through massive temporal parallelism, localized specialization, and sparse activation. Lucia emulates this biological efficiency by decoupling high-frequency biological reflexes (Limbic Fast Loop at 5 Hz) from heavy cognitive computation, symbolic reasoning, and language generation.
+
+```text
+┌────────────────────────────────────────────────────────────────────────┐
+│               ARCHITECTURE VS. ROADMAP DISCIPLINE                      │
+├────────────────────────────────────────────────────────────────────────┤
+│ • ARCHITECTURE (Current Baseline): Documents what is actively          │
+│   implemented, verified, and frozen in the codebase (Phases 1–21,      │
+│   Phase 23-C..H). Every component corresponds to verified Python/Node  │
+│   code and automated test suites.                                      │
+│ • ROADMAP (Future Horizons): Future development (Phase 24, Phase 25,   │
+│   Phase 26, Phase 27, Gate 28) is strictly [PLANNED / NOT IMPLEMENTED] │
+│   and is excluded from active system architecture diagrams.            │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+### 2.2 High-Level System Architecture Diagram
+Lucia is structured into five distinct subsystem domains operating at different biological timescales. The overall architecture prioritizes unidirectional top-down and left-to-right information flow, eliminating ambiguous crossed connections:
 
 ```mermaid
 flowchart TD
-    subgraph User["👤 User Multimodal Interaction"]
-        UserInput["User Input (Text / Microphone STT)"]
-        UserUI["Personal Digital Room UI\n(Chat Feed, 60 FPS Avatar Stage, Mascot Mode, Diagnostics)"]
+    subgraph PRESENTATION ["1. Presentation & Embodiment (Desktop UI)"]
+        direction LR
+        Studio["Personal Digital Room\n(Studio Window)"]
+        Mascot["Always-on-Top Mascot\n(Transparent Window)"]
+        AvatarStage["Quad-Engine Avatar\n& Neural Voice (RVC)"]
     end
 
-    subgraph Layer1["Layer 1: Sensors & Stimulus Gating"]
-        Sensors["Lexical Valence [-1.0, 1.0]\nPunctuation Arousal [0.0, 1.0]\nSemantic Density [0.0, 1.0]"]
-        StimVector["16-Dimensional Continuous Stimulus Vector x(t)"]
-        Sensors --> StimVector
+    subgraph PERCEPTION ["2. Perception & Sensory Ingress"]
+        direction LR
+        SensoryInput["Audio STT / Text Input"]
+        StimulusProc["Stimulus Processor\n(Valence, Arousal, Density)"]
+        LangIngress["Language Ingress Gate\n{en, vi, ja}"]
     end
 
-    subgraph Layer2["Layer 2: Dual-Timescale MT-LNN ODE (200ms Cadence)"]
-        LNN_ODE["Coupled MT-LNN ODE (Fast h_fast ∈ ℝ³², Slow s_slow ∈ ℝ¹⁶)\nTier 2 Relational Attractor: s*_eff(R) = s*_philia + W_rel(R - R₀)\nSpectral Norm Bound: ||W_rel||₂ ≤ 0.08"]
-        PADState["3D PAD Attractor State\n• Pleasure (P) ∈ [-1.0, 1.0]\n• Arousal (A) ∈ [-1.0, 1.0]\n• Dominance (D) ∈ [-1.0, 1.0]"]
-        LNN_ODE --> PADState
+    subgraph COGNITIVE_CORE ["3. Cognitive Core & Reasoning"]
+        direction TB
+        Orchestrator["CognitiveOrchestrator (Stages S1–S16)"]
+        LimbicODE["Coupled MT-LNN Limbic ODE\n(Fast h_f ∈ ℝ³² | Slow s_s ∈ ℝ¹⁶)"]
+        Homeostasis["Homeostatic Metabolic Budgeting\n(Energy, Cognitive Load, Tension)"]
+        ReasoningKernel["TermArena & Reasoning Kernel\n(Strong Kleene K3 & JTMS)"]
     end
 
-    subgraph Layer3["Layer 3: Survival / Homeostatic Engine"]
-        Homeostasis["Metabolic Budgeting\nSomatic Markers (Energy, Load, Tension)"]
-        Constraints["Behavioral Constraints\n• Max Tokens & Temperature\n• Latency Delay (ms) & Reasoning Depth (k)"]
-        Homeostasis --> Constraints
+    subgraph SEMANTIC_SUBSTRATE ["4. Semantic & Knowledge Substrate"]
+        direction LR
+        SemGraph["UMR-TPG SemanticGraph"]
+        Fortification["Conservative Fortification\n(Cross-Session Invariants)"]
+        KnowStore["Propositional KnowledgeStore"]
     end
 
-    subgraph Layer4["Layer 4: Active Inference & Offline Synaptic Consolidation"]
-        ActiveInf["3x3 Generative Model (Free Energy & Surprise)\nSurprise 𝓢 = ||A·p + b - q||"]
-        LNNTrainer["Tier 3 Offline ConsolidationEngine\n(CPU PyTorch BPTT-through-ODE, Dual Regularization)"]
-        ActiveInf --> LNNTrainer
+    subgraph MEMORY_RELATIONAL ["5. Associative Memory & Relational Dynamics"]
+        direction LR
+        SDMMemory["Kanerva SDM Memory\n(Salience-Resistant Decay)"]
+        RelState["4D Relationship State R_t\n(Philia Attractor Grounding)"]
+        Consolidation["Offline Rest Consolidation\n(CPU PyTorch BPTT)"]
     end
 
-    subgraph Layer5["Layer 5: Memory, Knowledge & Relational Subsystem"]
-        SDM["Kanerva Sparse Distributed Memory\n(1,000 Locations, 1000-bit Address, 64-dim Content)"]
-        Decay["60s Emotional Decay Engine\n(Salience-Resistant Forgetting: λ_eff)"]
-        Ecphory["Synergistic Ecphory Engine\n(Closed-Loop Slow Forcing r_slow)"]
-        RelStore["Relationship Subsystem\n(4D State R_t with Inertia α=0.03)"]
-        KnowStore["KnowledgeStore\n(Grounded Propositions c ≥ 0.7)"]
-        SDM <--> Decay
-        SDM --> Ecphory
-    end
+    %% Clean Main Data Flows
+    PRESENTATION -->|"User Speech / Text"| PERCEPTION
+    PERCEPTION -->|"16D Stimulus Vector x(t)"| COGNITIVE_CORE
+    PERCEPTION -->|"Language-Gated Meaning"| SEMANTIC_SUBSTRATE
 
-    subgraph Layer6["Layer 6: Generation & Embodied Presence"]
-        PromptAssembler["Pre-Reflective Prompt Assembler\n(Constraints + Knowledge + Relationship Snapshot R_{t-1})"]
-        LLM["Local GGUF Small Language Model (LFM2.5-1.2B)\n(CUDA GPU Acceleration sm_86)"]
-        Boundary["Boundary Layer Safety Guard\n(Pattern & Selfhood Filter)"]
-        Voice["Direct RVC Voice Engine (models/voice/rvc/)\n(Local CTranslate2 Whisper + RVC v2)"]
-        Avatar["Polymorphic Avatar Stage\n(Canvas / Sprites / Live2D / VRM + 60 FPS Lip-Sync)"]
+    SEMANTIC_SUBSTRATE <-->|"Graph-to-Term Projection"| COGNITIVE_CORE
+    MEMORY_RELATIONAL <-->|"Recollection Forcing & Relational Context"| COGNITIVE_CORE
+    MEMORY_RELATIONAL -.->|"Idle Rest Replay Tuples"| Consolidation
 
-        PromptAssembler --> LLM --> Boundary
-        Boundary --> Voice
-        Boundary --> Avatar
-    end
-
-    %% Pipeline Flow
-    UserInput --> Sensors
-    StimVector --> LNN_ODE
-    PADState --> Homeostasis
-    PADState --> ActiveInf
-    PADState --> Ecphory
-
-    Constraints --> PromptAssembler
-    KnowStore --> PromptAssembler
-    RelStore --> PromptAssembler
-    UserInput --> PromptAssembler
-
-    Boundary --> UserUI
-    Voice --> UserUI
-    Avatar --> UserUI
+    COGNITIVE_CORE -->|"15D Actuator State E_t & Vocal Text"| PRESENTATION
 ```
 
-> [!NOTE]
-> **Substrate Neutrality of Layer 6 Realization (Post-Phase 22 Research Finding)**:  
-> SLM/LLM là một downstream realization/rendering substrate tùy chọn; relational semantic state phải tồn tại độc lập với nó.  
-> Nghiên cứu Phase 22 (22-RG, 22-CC, 22-SC) đã chứng minh nhận thức quan hệ (relational cognition) không phụ thuộc vào natural-language prompt hay token context, mà được định nghĩa bởi một semantic contract độc lập (C1 structured frame / C4 explicit markers), có thể điều khiển trực tiếp cả các downstream non-language consumers (D0 Symbolic Renderer, D2 Direct Action Policy) với độ trung thực 100%.
+### 2.3 Subsystem Communication Matrix
+The five major systems communicate through strictly guarded interfaces and contracts:
+
+| Source Domain | Target Domain | Channel / Contract | Frequency / Trigger | Data Payload |
+|---|---|---|---|---|
+| **Presentation** | **Perception** | Desktop IPC / Web Audio VAD | On User Action | Raw audio stream or user text string |
+| **Perception** | **Cognitive Core** | Stage S1 Stimulus Ingress | Every Turn | 16D Continuous Stimulus Vector $\mathbf{x}(t)$ |
+| **Perception** | **Semantic Substrate** | `ParseToSubstrate()` (P23-F) | Every Turn | Language-independent semantic graph nodes |
+| **Semantic Substrate** | **Cognitive Core** | `ProjectGraphToTerms()` (P23-G) | On Demand / S8 | Static numeric `TermArena` integer terms |
+| **Cognitive Core** | **Memory & Relational** | Stage S6 Query / S16 Storage | Every Turn | Contextual address, PAD tag, slow latent vector $\mathbf{s}_s$ |
+| **Memory & Relational** | **Cognitive Core** | Closed-Loop Forcing $\mathbf{r}_{\text{slow}}$ (P20) | Turn S6 | Bounded slow-field recollection vector |
+| **Cognitive Core** | **Presentation** | Stage S13 Actuator Dispatch | Turn Completion | Canonical 15-dim actuator state $\mathbf{E}_t$ + speech text |
+| **Memory & Relational** | **Consolidation** | Background Buffer Replay (P21) | Idle ($T \ge 45\text{s}$) | Salient experience tuples for CPU BPTT |
+
+### 2.4 The Canonical S1–S16 Cognitive Turn Sequence
+When an interaction occurs, `CognitiveOrchestrator` executes a strictly ordered 16-stage pipeline under `_turn_lock`:
+1. **S1 (Sensory Gating)**: Extracts lexical valence, punctuation arousal, and semantic density.
+2. **S2 (Limbic Integration)**: Ingests stimulus vector into MT-LNN ODE and commits PAD transition.
+3. **S3 (Homeostatic Assessment)**: Evaluates metabolic energy, cognitive load, and somatic tension.
+4. **S4 (Active Inference)**: Compares committed PAD with prediction to calculate Free Energy Surprise $\mathcal{S}$.
+5. **S5 (Generation Conditioning)**: Sets sampling temperature, token budgets, and reasoning depth ($k$).
+6. **S6 (Affective Ecphory)**: Queries associative SDM memory and computes competitive recollection forcing.
+7. **S7 (Bounded Contextualization)**: Prepares bounded episodic context priming ($m_{\text{ctx}} \le 0.50$).
+8. **S8 (Knowledge Retrieval)**: Retrieves grounded factual propositions ($c \ge 0.7$) from `KnowledgeStore`.
+9. **S9 (Relationship Read)**: Reads snapshot of prior relationship state $\mathbf{R}_{t-1}$ (ADR-022).
+10. **S10 (Communication Policy)**: Selects conversational mode and derives somatic pacing latency $\Delta\tau_{\text{pace}}$.
+11. **S11 (Language Generation)**: Dispatches semantic conditioning state to downstream communicator (SLM/rendering substrate; relational semantics operate substrate-neutrally per Phase 22-SC).
+12. **S12 (Boundary & Safety Guard)**: Regex filtering against introspective declarations and intent checks.
+13. **S13 (Multimodal Expression)**: Synthesizes canonical 15-dim actuator state $\mathbf{E}_t$ for avatar and voice.
+14. **S14 (Episodic Storage)**: Co-encodes interaction summary, PAD, and 16D slow latent state into SDM.
+15. **S15 (Plasticity Queueing)**: Evaluates interaction salience and queues experience into `ConsolidationEngine`.
+16. **S16 (Relationship Update)**: Computes updated relationship vector $\mathbf{R}_t$ with inertia ($\alpha=0.03$), updating `EmotionCore` relational context for subsequent turns.
 
 ---
 
-## 3. Subsystem Mechanisms & Mathematical Formulation
+## 3. Layer B — Subsystem Architecture Details
 
-### 3.1 Layer 1: Sensors & Stimulus Processor (`src/core/gating/stimulus_processor.py`)
-*Historical path: `src/core/sensors/` (retained in historical Phase 1 specs).*
-
-The Stimulus Processor converts raw user input into continuous floating-point signals without cloud embeddings:
-1. **Valence Scoring ($v \in [-1.0, 1.0]$)**: Analyzes lexical sentiment polarity using an affective dictionary, mapping positive emotional cues towards $+1.0$ and negative cues towards $-1.0$.
-2. **Arousal Scoring ($a \in [0.0, 1.0]$)**: Quantifies conversational urgency from capitalization bursts, exclamation density, question marks, and punctuation cadence.
-3. **Semantic Density Scoring ($d \in [0.0, 1.0]$)**: Computes the ratio of unique information tokens to total words, measuring input complexity.
-4. **Stimulus Vector Assembly**: Packages $(v, a, d)$ into a 16-dimensional continuous vector $\mathbf{x}(t) \in \mathbb{R}^{16}$ padded with temporal delta features, which is injected directly into the limbic differential equation.
-
----
-
-### 3.2 Layer 2: Limbic System — Coupled MT-LNN Fast/Slow Loop & Relational Attractor (`src/core/emotion/`)
-
-Lucia's emotional core runs a continuous **Coupled Multi-Timescale Liquid Neural Network (MT-LNN)** differential equation solved every **200ms**:
-
-$$\frac{d\mathbf{h}_{\text{fast}}}{dt} = \frac{-\mathbf{h}_{\text{fast}} + \tanh(\mathbf{W}_f \mathbf{h}_{\text{fast}} + \mathbf{U}_f \mathbf{x} + \mathbf{W}_{fs} \mathbf{s}_{\text{slow}} + \mathbf{b}_f)}{\tau_{\text{fast}}(\mathbf{h}_{\text{fast}}, \mathbf{x})}$$
-
-$$\frac{d\mathbf{s}_{\text{slow}}}{dt} = -\frac{\mathbf{s}_{\text{slow}} - \mathbf{s}^*_{\text{eff}}(\mathbf{R}_t)}{\tau_{\text{slow, decay}}} + \frac{\tanh\Big(\mathbf{W}_{sf} \mathbf{h}_{\text{fast}} + \mathbf{W}_{sh} \Delta\mathbf{m} + \mathbf{W}_{\text{rec}} \mathbf{r}_{\text{slow}}^{\text{bounded}}\Big)}{\tau_{\text{slow, charge}}}$$
-
-* **Coupled Substrates**: Fast reactive hidden state $\mathbf{h}_{\text{fast}} \in \mathbb{R}^{32}$ ($\tau_f \in [0.10, 1.50]\text{s}$) coupled bidirectionally with slow affective latent field $\mathbf{s}_{\text{slow}} \in \mathbb{R}^{16}$ ($\tau_{\text{charge}} = 3.5\text{s}, \tau_{\text{decay}} = 28.0\text{s}$).
-* **Dynamic Time-Constants**: Fast timescale:
-  $$\tau_{\text{fast}} = \tau_{\text{fast, min}} + (\tau_{\text{fast, max}} - \tau_{\text{fast, min}}) \cdot \sigma(\mathbf{W}_\tau \mathbf{h}_{\text{fast}} + \mathbf{U}_\tau \mathbf{x} + \mathbf{b}_\tau) \in [0.10, 1.50]\text{ s}$$
-* **Coupling Strengths**: $\mathbf{W}_{fs} = 0.05$ (slow-to-fast), $\mathbf{W}_{sf} = 1.00$ (fast-to-slow), $\mathbf{W}_{sh} = 0.40$ (homeostatic deviation $\Delta\mathbf{m}$).
-* **Phase 20 Closed-Loop Recollection Forcing ($\mathbf{W}_{\text{rec}}\mathbf{r}_{\text{slow}}^{\text{bounded}}$)**: Diagonal coupling $\mathbf{W}_{\text{rec}} = 0.35 \mathbf{I}_{16}$ injecting auxiliary bounded forcing for 4.0s simulation time when salient memories are recollected.
-* **Tier 2 Relational Attractor Grounding ($\mathbf{s}^*_{\text{eff}}(\mathbf{R}_t)$)**:
-  $$\mathbf{s}^*_{\text{eff}}(\mathbf{R}_t) = \mathbf{s}^*_{\text{philia}} + \mathbf{W}_{\text{rel}} (\mathbf{R}_t - \mathbf{R}_0)$$
-  where $\mathbf{R}_0 = [0, 0.50, 0, 0.50]^T$ is the stranger baseline.
-  - *Spectral Norm Bound*: $\|\mathbf{W}_{\text{rel}}\|_2 \le 0.08$ is enforced by dynamic singular value decomposition projection.
-  - *Displacement Bounds*: For any relationship state $\mathbf{R} \in [0, 1]^4$, with $\|\mathbf{R} - \mathbf{R}_0\|_2 \le 1.0$ (and maximum Euclidean distance $\sqrt{2.5} \approx 1.581$), the initialization target norm $\sigma_{\max}(\mathbf{W}_{\text{rel}}) \approx 0.0475$ ensures:
-    $$\|\Delta\mathbf{s}^*\|_2 \le 0.0475 \times 1.581 = 0.0751 \le 0.08$$
-    and the resting PAD displacement satisfies:
-    $$\|\Delta\mathbf{PAD}^*\|_2 \le \|\mathbf{W}_{\text{proj}, s}\|_2 \cdot \|\mathbf{W}_{\text{rel}}\|_2 \cdot \|\Delta\mathbf{R}\|_2 \le 0.45 \times 0.08 \times 1.0 = 0.036 \le 0.05$$
-  - *Fallback Compatibility*: When `enable_relational_consolidation = False`, $\mathbf{s}^*_{\text{eff}} = \mathbf{s}^*_{\text{philia}}$ bit-exact, bypassing $\mathbf{W}_{\text{rel}}$ and preserving pure Phase 20 limbic dynamics.
-* **Philia Resting Attractor Grounding (State Space Distinction)**:
-  - **3D PAD Resting Baseline**: $\mathbf{p}^*_{\text{philia}} = [+0.25, -0.05, +0.05]^T \in [-1, 1]^3$ (`EmotionConfig.resting_baseline = (0.25, -0.05, 0.05)`). Represents the emotional output baseline in Pleasure, Arousal, Dominance.
-  - **16D Slow Latent Field Attractor**: $\mathbf{s}^*_{\text{philia}} = [0.20, -0.05, 0.05, 0, \dots, 0]^T \in \mathbb{R}^{16}$ (`EmotionConfig.philia_slow_baseline = (0.20, -0.05, 0.05)`). Represents the resting coordinates centering the slow latent manifold ($\Delta\mathbf{s} = \mathbf{s}_{\text{slow}} - \mathbf{s}^*_{\text{philia}}$).
-  - *Equilibrium Readout*: When the coupled system relaxes at unforced resting equilibrium ($\mathbf{h}_{\text{fast}} = \mathbf{0}, \mathbf{s}_{\text{slow}} = \mathbf{s}^*_{\text{eff}}$), the linear readout projection restores the baseline coordinate directly.
-* **Strict Contraction Invariant**: The Jacobian trace is strictly dissipative ($\text{Tr}(J) \approx -46.46 < 0$), preventing runaway saturation or autonomous limit cycles under tested bounds.
-* **Temporal Synchronization Barrier (`commit_stimulus`)**:
-  To guarantee causal determinism, every cognitive turn injects stimulus $x$ via `token = push_stimulus(x)` and synchronously resolves the state transition via `commit_stimulus(token)`.
-  * *Intra-Turn Transition*: The ODE advances exactly once under `_step_lock` consuming the stimulus in FIFO order, publishing the new PAD snapshot, and marking the token committed.
-  * *Inter-Turn Autonomous Relaxation*: Between conversation turns, the 200ms background thread integrates autonomous relaxation towards Philia. Idle ticks never increment `_committed_stimulus_seq`.
-* **Microsecond Lock Safety**: Reading the state holds a lightweight `_state_lock` for $\le 1\text{ms}$, ensuring UI and API polling never block ODE integration.
+```text
+┌────────────────────────────────────────────────────────────────────────┐
+│                    SUBSYSTEM ARCHITECTURE DIRECTORY                    │
+├────────────────────────────────────────────────────────────────────────┤
+│ §3.1 Perception & Sensory Gating Subsystem                             │
+│ §3.2 Semantic & Knowledge Substrate Subsystem                          │
+│ §3.3 Cognitive Core & Reasoning Subsystem                              │
+│ §3.4 Associative Memory & Relational Dynamics Subsystem                │
+│ §3.5 Presentation, Multimodal Embodiment & Safety Subsystem            │
+└────────────────────────────────────────────────────────────────────────┘
+```
 
 ---
 
-### 3.3 Layer 3: Survival & Homeostatic Engine (`src/core/emotion/homeostatic_engine.py`)
-*Historical path: `src/core/homeostasis/` (retained in historical Phase 1 specs).*
+### 3.1 Perception & Sensory Gating Subsystem (`src/core/gating/`)
 
-The Homeostatic Engine prevents emotional extremes, anxiety spirals, or conversational burnout:
-1. **Metabolic Energy Budgeting**: Every conversational turn consumes energy proportional to input length and emotional arousal: $\mathcal{E}_{next} = \max(0.0, \mathcal{E} - 0.05)$. While idle, energy recharges linearly at $+0.05/\text{sec}$ beyond a 60-second threshold.
-2. **Somatic Markers & Multi-Turn Accumulation**:
-   * **Stability**: Resistance to sudden emotional turbulence based on arousal and dominance.
-   * **Cognitive Load ($\mathcal{C}$)**: Increases with input frequency across a 60-second rolling window and high arousal, modulated causally by Active Inference prediction surprise:
-     $$\mathcal{C} = \text{clip}\left(\frac{\text{clip}(\text{count}_{60s}/10, 0, 1) + \text{arousal\_comp}}{2} + 0.25 \cdot \mathcal{S}, 0.0, 1.0\right)$$
-     Multi-turn accumulation drives $\mathcal{C}$ up from $\sim 0.08$ to $> 0.58$, dynamically contracting the token budget from 350 to 150.
-   * **Energy ($\mathcal{E}$)**: Available conversational stamina. Drains monotonically across active turns ($\Delta\mathcal{E} = -0.05$ per turn; recovers during idle ticks).
-   * **Tension ($\mathcal{T}$)**: Instantaneous discrepancy between homeostatic targets and external demands:
-     $$\mathcal{T}_{\text{base}} = \begin{cases} |v - P_{01}| & \text{if valence } v \text{ is provided} \\ 0.0 & \text{otherwise} \end{cases}$$
-     $$\mathcal{T} = \text{clip}\left(\mathcal{T}_{\text{base}} + 0.50 \cdot \max(0.0, \mathcal{S} - 0.40), 0.0, 1.0\right)$$
-     *Instantaneous Signal Semantics*: Tension represents an **acute threat / mismatch signal**, evaluated fresh per turn with **zero inter-turn leaky persistence**. Because single-step surprise $\mathcal{S} \approx 0.06 - 0.10$ remains below the onset threshold ($0.40$), tension evaluates to $0.0000$ during steady-state or gradual shifts. It is not an emotional reservoir; multi-turn fatigue is handled by Cognitive Load ($\mathcal{C}$) and Energy ($\mathcal{E}$).
-3. **Dynamic Behavioral Conditioning**:
-   * Cognitive Load $> 0.30$ or Low Energy $\rightarrow$ Throttles token budget ($350 \to 150 \to 80$ tokens), increases temperature.
-   * High Surprise / High Tension ($\mathcal{S} \ge 0.60 \text{ or } \mathcal{T} \ge 0.70$) $\rightarrow$ Increased reasoning depth ($k=2$, deliberate cognitive appraisal rather than reflexive habit).
-   * Low Energy $\rightarrow$ Injects simulated conversational latency delay.
+The Perception & Sensory Gating subsystem ingests user communication across modalities, extracts physiological stimuli without expensive cloud embeddings, and validates linguistic ingress before passing signals to the core.
+
+```mermaid
+flowchart LR
+    UserInput["User Raw Input\n(Microphone / Keyboard)"] --> IngressCheck{"Input Type"}
+    
+    IngressCheck -->|"Spoken Audio"| LocalSTT["faster-whisper STT\n(Local CTranslate2 + VAD)"]
+    IngressCheck -->|"Text String"| TextStream["Raw Text Stream"]
+    
+    LocalSTT --> TextStream
+    
+    TextStream --> LexicalValence["Lexical Valence\n[-1.0, +1.0]"]
+    TextStream --> PunctArousal["Punctuation Arousal\n[0.0, 1.0]"]
+    TextStream --> SemDensity["Semantic Density\n[0.0, 1.0]"]
+    
+    LexicalValence --> StimAssembly["16D Continuous Stimulus\nVector x(t)"]
+    PunctArousal --> StimAssembly
+    SemDensity --> StimAssembly
+    
+    TextStream --> IngressGate["Language Ingress Gate\n{en, vi, ja}"]
+    IngressGate -->|"Admitted"| ConceptFormation["Concept Formation Front-End\n(Mahalanobis Novelty D_M)"]
+    IngressGate -->|"Rejected"| IngressBlock["IngressGateBlockedError"]
+    
+    StimAssembly -->|"Stage S1 Ingress"| CoreOut["To Cognitive Core (S1/S2)"]
+    ConceptFormation -->|"Semantic Nodes"| SubstrateOut["To Semantic Substrate"]
+```
+
+#### 1. Core Components
+* **`StimulusProcessor` (`src/core/gating/stimulus_processor.py`)**: Converts lexical sentiment, punctuation bursts, and information density into a continuous 16D vector $\mathbf{x}(t)$.
+* **`LanguageIngressGate` (`src/core/language/adapter/ingress_gate.py`)**: Physical firewall enforcing language admission (`{en, vi, ja}`). Unadmitted languages are rejected at the perimeter with zero processing overhead.
+* **Concept Formation Front-End (P23-C)**: Extracts multimodal concept features and derives regularized Mahalanobis novelty ($D_M$) to partition observations into known, ambiguous, or novel tiers.
+
+#### 2. Interactions & Data Flow
+1. **Raw Input Capture**: The Electron desktop frontend streams microphone audio via local Web Audio VAD or dispatches typed user text.
+2. **Local Transcription**: Audio bytes are transcribed offline via `faster-whisper` running on local CTranslate2.
+3. **Lexical & Rhythm Scoring**: The text stream is analyzed instantaneously:
+   - *Lexical Valence*: Affective dictionary scoring mapping cues to $[-1.0, +1.0]$.
+   - *Punctuation Arousal*: Cadence, exclamation marks, question marks, and capitalization bursts mapped to $[0.0, 1.0]$.
+   - *Semantic Density*: Ratio of unique informative tokens to total words mapped to $[0.0, 1.0]$.
+4. **Stimulus Assembly**: Packed into a 16-dimensional continuous floating-point vector $\mathbf{x}(t) \in \mathbb{R}^{16}$ padded with temporal delta features, which is injected directly into `EmotionCore` at Stage S1.
+5. **Language Gating**: The language tag is audited against the allowed set (`en`, `vi`, `ja`).
 
 ---
 
-### 3.4 Layer 4: Active Inference & Tier 3 Offline Synaptic Consolidation (`src/core/inference/`, `src/core/emotion/consolidation.py`)
+### 3.2 Semantic & Knowledge Substrate Subsystem (`src/core/knowledge/`, `src/core/language/adapter/`)
 
-Lucia adapts her emotional generative model and limbic dynamics using **Active Inference** (Free Energy Minimization) and **Two-Stage LNN Plasticity**:
+The Semantic & Knowledge Substrate maintains language-independent conceptual understanding, protects formed meaning across session boundaries, and manages grounded factual propositions.
 
-1. **Short-Horizon Generative Model**: Predicts upcoming PAD emotional transitions before stimulus integration: $\hat{p}_{next} = A \cdot p_{current} + b$.
-2. **Prediction Error & Free Energy Surprise**: When observed limbic outcome $p_{actual}$ is committed by the ODE barrier, calculates Free Energy Surprise:
-   $$\mathcal{S} = \|A \cdot p_{current} + b - p_{actual}\|_2$$
-   * **Online Belief Adaptation ($b$)**: Updates online via analytic gradient descent:
-     $$\Delta b = \eta \cdot (p_{actual} - (A \cdot p_{current} + b))$$
-     Under repeated identical stimuli, the belief vector learns directional trends ($\|\Delta b\| \approx 1.5 \times 10^{-4}$ per step), causing prediction surprise $\mathcal{S}$ to decline monotonically ($0.0927 \to 0.0699$ across 5 turns).
-   * **Same-Probe Hysteresis**: Because the ODE derivative $\frac{dh}{dt} = f(h, x)$ depends nonlinearly on both the stimulus $x$ and current hidden state $h(t)$, an identical sensory probe $x$ injected from different prior limbic histories ($h_{\text{neutral}}$ vs $h_{\text{stressed}}$ vs $h_{\text{relaxed}}$) follows distinct vector trajectories, arriving at divergent post-probe PAD coordinates, prediction errors, and cognitive load levels.
-3. **Tier 3 Offline Synaptic Consolidation (`ConsolidationEngine`)**:
-   * **Online Salience Tagging (Stage 16.2)**: Evaluates composite interaction salience:
-     $$\text{Salience} = 0.6 \cdot \mathcal{S} + 0.4 \cdot \|p_{actual} - p_{philia}\|_2$$
-     If $\text{Salience} \ge 0.50$, the interaction tuple $(x, h_{before}, h_{after})$ is queued into the consolidation buffer.
-   * **Multi-Turn Sequential Continuity**: During offline rest intervals ($T_{\text{idle}} \ge 45\text{s}$) or buffer accumulation ($\ge 8$ salient samples), initial hidden states maintain sequential continuity:
-     $$\mathbf{h}_0^{(k)} = 0.60\mathbf{h}_{\text{prev}} + 0.40\mathbf{h}_{\text{before}}^{(k)}$$
-     preventing single-turn overfitting.
-   * **Dual Regularization Objective**: Training executes on CPU using `torchdiffeq.odeint` under dual homeostatic and Philia regularization:
+```mermaid
+flowchart TD
+    subgraph Ingress_Egress ["Language Adapter Boundary (P23-F)"]
+        direction LR
+        IngressGate["Language Ingress Gate\n{en, vi, ja}"]
+        AdapterDrivers["Language Adapter Drivers\n(ParseToSubstrate / RealizeFromSubstrate)"]
+        EgressGate["Language Egress Gate\n{en, vi, ja}"]
+    end
+
+    subgraph Substrate ["Language-Independent Semantic Substrate"]
+        direction TB
+        SemGraph["Discrete SemanticGraph (UMR-TPG)\n• Language-Neutral Entity & Role Nodes\n• Epistemic States: FACT, INFERRED, AMBIGUOUS, UNKNOWN\n• Zero Lexical Token Leakage"]
+        KnowStore["KnowledgeStore\n(Typed Propositions & Concepts, c ≥ 0.7)"]
+    end
+
+    subgraph Fortification_Pipeline ["Conservative Semantic Fortification (P23-E)"]
+        direction LR
+        Canon["1. Graph Canonicalization\n& Topological Sort"] --> Audit["2. Bounded Local Consistency\n(Polarity & Clashing)"]
+        Audit --> Scoping["3. Scope Boundary Protection\n(Negation / Modal / Intensional)"]
+        Scoping --> JTMS["4. Non-Monotonic JTMS\nPremise Retraction"]
+        JTMS --> Freeze["5. Graph Freeze & SHA-256 Checksum"]
+    end
+
+    subgraph Persistence ["Session Persistence"]
+        Storage["Atomic JSON Storage\n(Zero Novel Entity Ingress Guarantee)"]
+    end
+
+    IngressGate --> AdapterDrivers
+    AdapterDrivers -->|"Raw Semantic Graph"| SemGraph
+    SemGraph --> Canon
+    Freeze --> Storage
+    SemGraph <--> KnowStore
+    SemGraph -->|"Render Request"| AdapterDrivers
+    AdapterDrivers --> EgressGate
+```
+
+#### 1. Core Components
+* **`LanguageAdapter` Subsystem (`src/core/language/adapter/`)**: Decoupled boundary isolating surface natural language from the semantic substrate. Houses drivers for English, Vietnamese, and Japanese adhering to the minimal contract (`parse_to_substrate`, `realize_from_substrate`, `can_handle_language`, `validate_coverage`).
+* **`SemanticGraph` (UMR-TPG)**: Language-independent graph structure with typed entities, concept nodes, and role relations. Enforces strictly zero surface lexical tokens or grammar constructs.
+* **`ConservativeSemanticFortification` (`src/core/knowledge/fortification.py`)**: Conservative boundary auditor running before cross-session persistence to enforce meaning conservation, non-monotonic premise retraction, and scope barriers.
+* **`KnowledgeStore` (`src/core/knowledge/`)**: Thread-safe repository storing grounded factual propositions ($c \ge 0.7$) and taxonomic concept definitions with atomic JSON persistence.
+
+#### 2. Key Epistemic Invariants & Mechanics
+1. **Conservation of Meaning**:
+   $$\text{Meaning}_{\text{out}} \subseteq \text{Meaning}_{\text{in}}$$
+   Fortification never fabricates new facts or entities. Unsupported novel entity insertion rate is strictly **$0.00\%$**.
+2. **Epistemic Invariance**:
+   Supported epistemic states: `FACT`, `INFERRED`, `AMBIGUOUS`, `UNKNOWN`. Transitions that ungroundedly increase certainty (`UNKNOWN → FACT` or `AMBIGUOUS → FACT`) are strictly forbidden.
+3. **Non-Monotonic Justification Tracking (JTMS)**:
+   If a supporting premise is retracted, all dependent inferred nodes are recursively deactivated without collateral damage to independent facts.
+4. **Scope Boundaries**:
+   Nodes reside inside explicit scopes (`ROOT`, `NEGATION`, `MODAL`, `INTENSIONAL`). Edges crossing scope boundaries without explicit bridges are blocked.
+5. **Resource Envelope**:
+   Median fortification latency at 100 nodes is **$2.07\text{ ms}$** with **$0.35\text{ MB}$** peak RAM and **$0.0\text{ MB}$** GPU VRAM.
+
+---
+
+### 3.3 Cognitive Core & Reasoning Subsystem (`src/core/emotion/`, `src/core/inference/`, `src/core/cognition/`, `src/core/orchestrator/`)
+
+The Cognitive Core coordinates the physiological emotional dynamics, metabolic stamina, active inference predictions, and bounded logical deduction.
+
+```mermaid
+flowchart TD
+    subgraph Orchestration ["Cognitive Turn Management"]
+        TurnLock["Serialized Turn Mutex (_turn_lock)"]
+        S1_S16["CognitiveOrchestrator (Canonical Stages S1–S16)"]
+        TurnLock --> S1_S16
+    end
+
+    subgraph Limbic_Dynamics ["Limbic & Affective Engine (200ms Cadence)"]
+        FastLoop["Fast Reactive Layer\nh_fast ∈ ℝ³² (τ_f ∈ [0.1, 1.5]s)"]
+        SlowLoop["Slow Affective Latent Field\ns_slow ∈ ℝ¹⁶ (τ_decay = 28s)"]
+        PhiliaAttractor["Dynamic Relational Attractor s*_eff(R)\nSpectral Norm Bound: ||W_rel||₂ ≤ 0.08"]
+        PADSnapshot["3D PAD Coordinates Snapshot\n[Pleasure, Arousal, Dominance]"]
+        
+        FastLoop <-->|"Bidirectional Coupling"| SlowLoop
+        PhiliaAttractor --> SlowLoop
+        FastLoop --> PADSnapshot
+        SlowLoop --> PADSnapshot
+    end
+
+    subgraph Homeostatic_Loop ["Survival & Metabolic Budgeting"]
+        Metabolism["Energy (E), Cognitive Load (C), Tension (T)"]
+        Constraints["Behavioral Conditioning:\n• max_tokens (350 → 150 → 80)\n• Sampling Temperature\n• Somatic Pacing Latency Δτ"]
+        Metabolism --> Constraints
+    end
+
+    subgraph Active_Inference ["Active Inference (Generative Model)"]
+        Predictor["Short-Horizon PAD Prediction (A·p + b)"]
+        SurpriseEval["Free Energy Surprise 𝓢 = ||p_pred - p_actual||"]
+        BeliefAdapt["Online Belief Adaptation (Δb)"]
+        
+        Predictor --> SurpriseEval
+        SurpriseEval --> BeliefAdapt
+        SurpriseEval -->|"Modulates Load & k=2"| Metabolism
+    end
+
+    subgraph Symbolic_Reasoning ["Bounded Reasoning Kernel & JTMS (P23-G / P23-H)"]
+        Projection["ProjectGraphToTerms()"]
+        TermArena["Static TermArena\n(Strictly Numeric Integer IDs, Zero Heap Allocs)"]
+        Engine["Bounded Reasoning Kernel\n(Max Depth = 8, Max Steps = 256)"]
+        K3_Logic["Strong Kleene 3-Valued Logic\n(TRUE, FALSE, UNKNOWN)"]
+        JTMS_Retract["JTMS Dependency Graph\n(Cascade Invalidation of Inferred Terms)"]
+        
+        Projection --> TermArena
+        TermArena --> Engine
+        Engine --> K3_Logic
+        Engine --> JTMS_Retract
+    end
+
+    S1_S16 --> Limbic_Dynamics
+    Limbic_Dynamics --> Homeostatic_Loop
+    PADSnapshot --> Active_Inference
+    S1_S16 --> Symbolic_Reasoning
+```
+
+#### 1. Core Components
+* **`CognitiveOrchestrator` (`src/core/orchestrator/`)**: Single authoritative turn manager composing Layers 1–6 through dependency injection and executing stages S1–S16 under `_turn_lock`.
+* **`EmotionCore` (`src/core/emotion/`)**: Continuous Coupled MT-LNN ODE integrating every 200 ms.
+* **`HomeostaticEngine` (`src/core/emotion/homeostatic_engine.py`)**: Computes metabolic budgeting and behavioral conditioning parameters.
+* **`ActiveInferenceEngine` (`src/core/inference/`)**: Generative model predicting upcoming emotional transitions and calculating Free Energy Surprise $\mathcal{S}$.
+* **`TermArena` & Projection (`src/core/cognition/contract/` - P23-G)**: Preallocated arena storing strictly numeric integer terms with zero heap allocations in the query loop.
+* **Bounded Reasoning Kernel & JTMS (`src/core/cognition/kernel/` - P23-H)**: Goal-directed backward chaining over Horn rules with Strong Kleene K3 3-valued logic and JTMS dependency tracking.
+
+#### 2. Mathematical Mechanics & Formulas
+1. **Coupled MT-LNN Differential Equations**:
+   $$\frac{d\mathbf{h}_{\text{fast}}}{dt} = \frac{-\mathbf{h}_{\text{fast}} + \tanh(\mathbf{W}_f \mathbf{h}_{\text{fast}} + \mathbf{U}_f \mathbf{x} + \mathbf{W}_{fs} \mathbf{s}_{\text{slow}} + \mathbf{b}_f)}{\tau_{\text{fast}}(\mathbf{h}_{\text{fast}}, \mathbf{x})}$$
+   $$\frac{d\mathbf{s}_{\text{slow}}}{dt} = -\frac{\mathbf{s}_{\text{slow}} - \mathbf{s}^*_{\text{eff}}(\mathbf{R}_t)}{\tau_{\text{slow, decay}}} + \frac{\tanh\Big(\mathbf{W}_{sf} \mathbf{h}_{\text{fast}} + \mathbf{W}_{sh} \Delta\mathbf{m} + \mathbf{W}_{\text{rec}} \mathbf{r}_{\text{slow}}^{\text{bounded}}\Big)}{\tau_{\text{slow, charge}}}$$
+   - *Coupled Substrates*: Fast hidden state $\mathbf{h}_{\text{fast}} \in \mathbb{R}^{32}$ ($\tau_f \in [0.10, 1.50]\text{s}$) coupled with slow latent field $\mathbf{s}_{\text{slow}} \in \mathbb{R}^{16}$ ($\tau_{\text{charge}} = 3.5\text{s}, \tau_{\text{decay}} = 28.0\text{s}$).
+   - *Strict Contraction*: Dissipative Jacobian trace $\text{Tr}(J) \approx -46.46 < 0$ prevents runaway instability.
+2. **Tier 2 Dynamic Relational Attractor**:
+   $$\mathbf{s}^*_{\text{eff}}(\mathbf{R}_t) = \mathbf{s}^*_{\text{philia}} + \mathbf{W}_{\text{rel}} (\mathbf{R}_t - \mathbf{R}_0)$$
+   Subject to spectral norm constraint $\|\mathbf{W}_{\text{rel}}\|_2 \le 0.08$ (empirically $0.0475$), guaranteeing resting PAD shift $\le 0.05$.
+3. **Philia Resting Attractor Coordinates**:
+   - 3D PAD Baseline: $\mathbf{p}^*_{\text{philia}} = [+0.25, -0.05, +0.05]^T$ (warmth, calm, equal agency).
+   - 16D Slow Field Baseline: $\mathbf{s}^*_{\text{philia}} = [0.20, -0.05, 0.05, 0, \dots, 0]^T$.
+4. **Metabolic Budgeting & Somatic Markers**:
+   - Cognitive Load: $\mathcal{C} = \text{clip}\left(\frac{\text{clip}(\text{count}_{60s}/10, 0, 1) + \text{arousal\_comp}}{2} + 0.25 \cdot \mathcal{S}, 0.0, 1.0\right)$.
+   - Energy $\mathcal{E}$: Drains by $-0.05$ per active turn; recovers $+0.05/\text{s}$ during idle periods $> 60\text{s}$.
+   - Acute Tension $\mathcal{T}$: Fresh per-turn mismatch signal with zero inter-turn persistence.
+5. **Bounded Reasoning Kernel (P23-H)**:
+   - Search bounds: `MAX_SEARCH_DEPTH = 8`, `MAX_INFERENCE_STEPS = 256`.
+   - Goal resolution latency: **$9.46\text{--}9.60\text{ µs}$** ($O(1)$ scaling up to 1,000 terms), **$0$ inner loop allocations**.
+   - Epistemic safety: Strong Kleene K3 ensures unproven goals remain `UNKNOWN`; denying the antecedent never produces false certainty.
+
+---
+
+### 3.4 Associative Memory & Relational Dynamics Subsystem (`src/core/memory/`, `src/core/relationship/`, `src/core/emotion/consolidation.py`)
+
+The Associative Memory & Relational Dynamics subsystem provides biologically inspired sparse distributed memory, salience-resistant forgetting, closed-loop emotional recollection, and offline synaptic plasticity.
+
+```mermaid
+flowchart TD
+    subgraph SDM_Subsystem ["Kanerva Sparse Distributed Memory"]
+        SDM_Core["SDM Matrix\n(1,000 Hard Locations, 1000-bit Address Space, 64-dim Content)"]
+        TraceStruct["Multi-Modal Memory Trace\n[Content 64D | Address 1000b | PAD 3D | s_slow 16D | Timestamp]"]
+        DecayDaemon["60-Second Background Decay Daemon\nλ_eff = λ_0 / (1 + 3·max(|P|,|A|,|D|))\n(Salience-Resistant Resistance up to 4x)"]
+        
+        TraceStruct --> SDM_Core
+        DecayDaemon -->|"Continuous Strength Decay"| SDM_Core
+    end
+
+    subgraph Recollection ["Closed-Loop Affective Recollection (P20)"]
+        Query["Associative Query (Stage S6)"]
+        SalienceScore["Multi-Modal Salience Scoring\nS_i = 0.60·S_sem + 0.25·S_aff + 0.15·w_decay"]
+        SoftmaxGate["Competitive Softmax Gating (θ_gate = 0.50)"]
+        SlowForcing["Bounded Slow Forcing Vector r_slow\nAuxiliary Pulse (W_rec = 0.35·I_16, 4.0s)"]
+        
+        Query --> SDM_Core
+        SDM_Core --> SalienceScore
+        SalienceScore --> SoftmaxGate
+        SoftmaxGate --> SlowForcing
+    end
+
+    subgraph Relational_State ["Interpersonal Relationship Subsystem (ADR-022)"]
+        RelVector["4D Relationship State R_t\n[Trust, Familiarity, Attunement, Shared Experience]"]
+        LifecycleSplit["Two-Phase Turn Lifecycle:\n• Stage S9: Read Snapshot R_{t-1}\n• Stage S16: Update R_t with Inertia α=0.03"]
+        RelVector --> LifecycleSplit
+    end
+
+    subgraph Offline_Plasticity ["Tier 3 Offline Synaptic Consolidation (P21)"]
+        SalienceQueue["Online Salience Gating (Stage S16.2)\n(Salience ≥ 0.50 Enqueues Experience Tuple)"]
+        BPTT["ConsolidationEngine (CPU PyTorch BPTT)\n(Dual Homeostatic + Philia Regularization)"]
+        WeightSwap["Atomic Weight Swap (_train_lock ≤ 0.1ms)\n(0.0 MB GPU VRAM Contention)"]
+        
+        SalienceQueue --> BPTT
+        BPTT --> WeightSwap
+    end
+
+    SlowForcing -->|"Injected into Slow ODE"| Recollection
+    LifecycleSplit -->|"Shifts Resting Attractor"| RelVector
+```
+
+#### 1. Core Components
+* **`SDMCore` (`src/core/memory/sdm.py`)**: Kanerva Sparse Distributed Memory with $N=1,000$ distributed locations across a 1,000-bit Hamming space and 64-dimensional content vectors.
+* **`DecayEngine` (`src/core/memory/decay.py`)**: Continuous 60-second decay daemon implementing salience-resistant exponential trace fading.
+* **`EcphoryEngine` (`src/core/memory/ecphory.py`)**: Computes affective resonance and competitive softmax gating to generate bounded slow-field forcing pulses ($\mathbf{r}_{\text{slow}}^{\text{bounded}}$).
+* **`RelationshipUpdater` (`src/core/relationship/`)**: Maintains the slowly evolving 4D relationship state $\mathbf{R}_t \in [0, 1]^4$ with decoupled two-phase lifecycle semantics.
+* **`ConsolidationEngine` (`src/core/emotion/consolidation.py`)**: Tier 3 offline CPU BPTT plasticity engine executing during rest periods ($T_{\text{idle}} \ge 45\text{s}$) or buffer accumulation ($\ge 8$).
+
+#### 2. Mathematical Mechanics & Formulas
+1. **Salience-Resistant Exponential Decay**:
+   $$\text{Strength}(t) = \text{Strength}_0 \cdot e^{-\lambda_{\text{eff}} t}, \quad \lambda_{\text{eff}} = \frac{\lambda_0}{1 + 3 \cdot \max(|P|, |A|, |D|)}$$
+   Emotionally intense interactions ($|PAD| \gg 0$) resist forgetting up to **$4\times$ longer**.
+2. **Synergistic Ecphory & Bounded Recollection Forcing (P20)**:
+   - Multi-modal salience score: $S_i = 0.60 S_{\text{sem}} + 0.25 S_{\text{aff}} + 0.15 w_{\text{decay}}$.
+   - Traces exceeding $\theta_{\text{gate}} = 0.50$ pass competitive softmax gating ($\tau_{\text{comp}} = 0.20$), generating:
+     $$\mathbf{r}_{\text{slow}}^{\text{bounded}} = \text{clip}\left(\tanh\Big(\sum_i w_i \mathbf{s}_i\Big) \cdot 0.85, -0.85, 0.85\right)$$
+   - Couplings: Auxiliary forcing $\mathbf{W}_{\text{rec}} = 0.35 \mathbf{I}_{16}$ applied for 4.0 seconds in simulation time; induces conversational pacing delay $\Delta\tau_{\text{pace}} = w_{\text{pace}} \cdot \|\mathbf{r}_{\text{slow}}^{\text{bounded}}\|$.
+3. **Two-Phase Relationship Lifecycle (ADR-022)**:
+   - *Phase 1 (Stage 9)*: Reads static snapshot $\mathbf{R}_{t-1}$ to condition current turn generation.
+   - *Phase 2 (Stage 16)*: Extracts observed interaction signals and updates state with inertia $\alpha = 0.03$:
+     $$\mathbf{R}_t = (1 - \alpha)\mathbf{R}_{t-1} + \alpha \mathbf{R}_{\text{obs}}$$
+4. **Tier 3 Offline Synaptic Consolidation (ADR-028)**:
+   - Salience gating at Stage 16.2 queues experiences if $\text{Salience} \ge 0.50$.
+   - CPU BPTT training runs under dual regularization:
      $$\mathcal{L} = \frac{1}{K}\sum_{k=1}^K \|\mathbf{h}_{\text{pred}}^{(k)} - \mathbf{h}_{\text{target}}^{(k)}\|_2^2 + \lambda_{\text{homeo}} \|\boldsymbol{\Theta} - \boldsymbol{\Theta}_0\|_2^2 + \lambda_{\text{philia}} \|\mathbf{h}_{\text{unforced}}(\Delta t)\|_2^2$$
-     where $\lambda_{\text{homeo}} = 0.05$ constrains parameter drift from baseline $\boldsymbol{\Theta}_0$ and $\lambda_{\text{philia}} = 0.10$ guarantees unforced Philia attractor restoration.
-   * **Sub-2ms Atomic Weight Swap**: Updated weights are swapped into `EmotionCore` inside a sub-2ms `_train_lock`, guaranteeing **0.0 MB GPU VRAM contention** and zero active turn disruption.
+   - Atomic parameter swap under `_train_lock` held $\le 0.1\text{ms}$ with **0.0 MB GPU VRAM contention**.
 
 ---
 
-### 3.5 Layer 5: Hippocampus Affective Memory & Closed-Loop Recollection (`src/core/memory/`)
+### 3.5 Presentation, Multimodal Embodiment & Safety Subsystem (`src/core/safety/`, `src/core/language/`, `src/core/voice/`, `electron/`)
 
-Lucia uses a biologically inspired memory architecture based on **Pentti Kanerva's Sparse Distributed Memory (SDM)** (1988) augmented with Phase 20 Closed-Loop Affective Recollection:
+The Presentation, Multimodal Embodiment & Safety subsystem handles prompt assembly, local language model inference, boundary safety filtering, neural speech synthesis, avatar rendering, and desktop window kinematics.
 
-```text
-┌─────────────────────────────────────────────────────────────────────────┐
-│                     AFFECTIVE MEMORY TRACE STRUCTURE                    │
-├─────────────────────────────────────────────────────────────────────────┤
-│ • 1,000-bit Address Vector   (Contextual & semantic Hamming address)    │
-│ • 64-dim Content Vector      (Sensory stimulus signature)               │
-│ • PAD Tag [P, A, D]          (Emotional state when memory was formed)   │
-│ • Slow Latent Trace s_slow   (16D slow-field physiological state)       │
-│ • Somatic State              (Energy, Stability, Load, Tension)         │
-│ • Timestamp & Base Intensity (|PAD| emotional salience magnitude)       │
-└─────────────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    subgraph Cognitive_Handoff ["Cognitive Turn Handoff"]
+        TurnOutput["CognitiveOrchestrator Output (Stage S11)"]
+        ActuatorState["Canonical 15-Dim Actuator Vector E_t\n[Text 3, Prosody 4, Facial 5, Posture 2, Latency 1]"]
+    end
+
+    subgraph Language_Substrate ["Language Realization & Safety"]
+        PromptAssembler["Pre-Reflective Context Assembler\n(Zero Introspective Ego Prompts)"]
+        LocalSLM["Local GGUF Small Language Model\n(LFM2.5-1.2B / Qwen2.5-3B via CUDA sm_86)"]
+        BoundaryFilter["BoundaryLayer Regex Validator\n(Strips Self-Reported Affect & Meta-Ego Loops)"]
+        
+        TurnOutput --> PromptAssembler
+        PromptAssembler --> LocalSLM
+        LocalSLM --> BoundaryFilter
+    end
+
+    subgraph Voice_Pipeline ["Offline Neural Audio Pipeline"]
+        VoiceService["Decoupled Voice Service (IPC Event)"]
+        RVC["Direct On-Device RVC v2 Engine\n(Nanami Base Voice + VaresaGIJP Timbre)"]
+        PhraseCache["In-Memory Short Phrase Cache"]
+        AudioPlayback["Desktop Audio Output & Echo Guard"]
+        
+        BoundaryFilter --> VoiceService
+        VoiceService --> PhraseCache
+        PhraseCache -->|"Cache Miss"| RVC
+        PhraseCache -->|"Cache Hit"| AudioPlayback
+        RVC --> AudioPlayback
+    end
+
+    subgraph Visual_Embodiment ["Polymorphic Avatar Stage (Electron)"]
+        AvatarDispatcher["AvatarRenderer Polymorphic Dispatcher"]
+        Canvas2D["2D Procedural Canvas Engine"]
+        Sprites2D["2D Expression Sprites Engine"]
+        Live2D["Live2D Cubism 4 Engine (WebGL/PixiJS)"]
+        VRM3D["3D Humanoid VRM Engine (Three.js)"]
+        LipSync["60 FPS Web Audio Lip-Sync (FFT 200–2500Hz)"]
+        
+        ActuatorState --> AvatarDispatcher
+        AvatarDispatcher --> Canvas2D
+        AvatarDispatcher --> Sprites2D
+        AvatarDispatcher --> Live2D
+        AvatarDispatcher --> VRM3D
+        AudioPlayback --> LipSync
+        LipSync --> AvatarDispatcher
+    end
+
+    subgraph Desktop_Shell ["Electron Presentation Shell"]
+        StudioWin["Personal Digital Room (Studio Window)"]
+        MascotWin["Floating Mascot Mode (Always-on-Top)\n• Dynamic Model Bounds Dock Anchoring\n• 800ms Trackpad Inertia Cooldown\n• IPC moveMascotBy(dx, dy)"]
+        
+        AvatarDispatcher --> StudioWin
+        AvatarDispatcher --> MascotWin
+    end
 ```
 
-1. **Sparse Distributed Memory (SDM) Mechanics**: Operates $N=1,000$ distributed memory locations across a 1,000-bit Hamming space (`address_dim = 1000`, `m = 64`). Writing activates all locations within critical radius $r \le 451$ (binomial threshold for 1,000 bits).
-2. **60-Second Slow-Loop Decay Engine**: A background daemon ticks every 60 seconds, decaying memory trace strengths exponentially: $\text{Strength}(t) = \text{Strength}_0 \cdot e^{-\lambda_{eff} t}$. High-intensity emotional memories ($|PAD| \gg 0$) resist decay up to **$4\times$ longer**:
-   $$\lambda_{eff} = \frac{\lambda_0}{1 + 3 \cdot \max(|P|, |A|, |D|)}$$
-3. **Synergistic Ecphory & Multi-Modal Salience (Stage 6)**: `EcphoryEngine` evaluates stored traces using multi-modal scoring: $S_i = 0.60 S_{\text{sem}} + 0.25 S_{\text{aff}} + 0.15 w_{\text{decay}}$. Traces above $\theta_{\text{gate}} = 0.50$ undergo softmax normalization at temperature $\tau_{\text{comp}} = 0.20$, synthesizing bounded slow forcing:
-   $$\mathbf{r}_{\text{slow}}^{\text{bounded}} = \text{clip}\left(\tanh\Big(\sum_i w_i \mathbf{s}_i\Big) \cdot 0.85, -0.85, 0.85\right)$$
-4. **Closed-Loop Actuation via CognitiveOrchestrator**: `EcphoryEngine` has strictly ZERO import or actuation coupling to `EmotionCore`. `CognitiveOrchestrator` receives `RecollectionResult` in Stage 6 and dispatches `EmotionCore.inject_recollection(r_slow, duration_sec=4.0)`. In Stage 12, derives conversational pacing latency delta $\Delta\tau_{\text{pace}} = w_{\text{pace}} \cdot \|\mathbf{r}_{\text{slow}}^{\text{bounded}}\|$ ($+111.8\text{ms}$ observed). In Stage 16.1, queries live slow latent state $\mathbf{s}_{\text{slow}}(t)$ and passes to `AffectiveMemory.store()`.
-5. **Deterministic Legacy Compatibility Approximation**: Pre-Phase-20 memories utilize `AffectiveMemory.synthesize_legacy_latent()` enforcing a 3-case contract: Case 1 (Baseline PAD $\to$ bit-exact $\mathbf{s}^*_{\text{philia}}$), Case 2 (Valid non-baseline $\to$ bounded linear projection clipped to $[-0.85, 0.85]$), Case 3 (Defensive fallback to $\mathbf{s}^*_{\text{philia}}$).
+#### 1. Core Components
+* **`BoundaryLayer` (`src/core/safety/`)**: Deterministic regex safety validator operating downstream of the language model to intercept and drop self-reported affective declarations (*"I feel"*, *"As an AI"*).
+* **Local GGUF Small Language Model (`src/core/language/`)**: Edge-native SLM (LFM2.5-1.2B or Qwen2.5-3B) accelerated on consumer CUDA GPUs (`sm_86`), acting as an optional downstream language realization substrate.
+* **Direct RVC Voice Engine (`src/core/voice/`)**: On-device RVC v2 neural voice inference (`ja-JP-NanamiNeural` base + `VaresaGIJP` target timbre) with in-memory short-phrase caching.
+* **`AvatarRenderer` (`electron/renderer/avatar/`)**: Polymorphic avatar engine driving 2D Procedural Canvas, 2D Expression Sprites, Live2D Cubism 4, and 3D Humanoid VRM.
+* **Mascot Window Manager (`electron/main/mascot.js`)**: Manages the transparent, click-through, always-on-top desktop mascot window.
 
----
+#### 2. Substrate Neutrality & Downstream Realization Principle
+Phase 22 research (22-RG, 22-CC, 22-SC) established that **relational cognition does not depend on an SLM, LLM, or natural language prompt**. Relational state and evidence are fully captured by a compact semantic contract (~90–120 bytes). The language model serves as an optional rendering engine for dialogue, operating alongside non-verbal controllers (voice timbre, avatar blendshapes, conversational latency) with complete modular decoupling.
 
-### 3.6 Layer 6: Voice, Avatar, Language & Substrate-Neutral Embodiment
-
-#### 0. Substrate Neutrality & Downstream Realization Principle
-* **Substrate Neutrality**: SLM/LLM là một downstream realization/rendering substrate tùy chọn; relational semantic state phải tồn tại độc lập với nó.
-* **Evidence from Phase 22**: Nghiên cứu Phase 22-SC chứng minh rằng relational evidence contract (~90–120 bytes) hoàn toàn độc lập với ngôn ngữ tự nhiên và token sequence. Ngay cả khi không có SLM, các downstream non-language consumers (như D0 Symbolic Renderer, D2 Direct Action Policy) vẫn đạt 100% relational decision fidelity với 0.00% over-inference.
-* **Role of Language Models**: Local Small Language Models (LFM2.5-1.2B / Qwen2.5-3B) đóng vai trò là một trong các downstream realization engines để render lời thoại khi cần thiết, tương tự như RVC engine render giọng nói hoặc WebGL render biểu cảm avatar, không phải là cognitive substrate duy nhất hay bắt buộc.
-
-#### 1. Direct RVC Neural Voice Engine (`src/core/voice/`)
-* Direct on-device RVC v2 neural inference (`RVCPipeline` + `SynthesizerTrn`, 457 tensors) with canonical `ja-JP-NanamiNeural` base voice and `VaresaGIJP` target timbre (`.pth` + `.index`).
-* In-memory phrase cache for short frequently-spoken acknowledgments (under 200 characters) provides instantaneous zero-latency playback.
-* Emotionally modulates speech pitch and tempo based on live PAD state.
-
-#### 2. Quad-Engine Electron Desktop Avatar (`electron/renderer/avatar/`)
-Managed polymorphically by `AvatarRenderer`:
-* **🎨 2D Procedural Canvas**: Calculates real-time vector contours: eyebrows via quadratic bezier curves, smile geometry via parabolic arc math ($y = y_0 + \text{smile} \cdot k \cdot (x - x_0)^2$), cheek blush via radial gradients ($\alpha = \text{clamp}(0, 0.8, \text{blush})$), and eye vertical compression for blinks. Zero VRAM overhead.
-* **🖼️ 2D Expression Sprites**: Priority state machine (`thinking` $\to$ `speaking` $\to$ `blush` $\to$ `smile` $\to$ `idle`).
-* **🎬 Live2D Cubism 4 Engine**: WebGL rendering via PixiJS and Official Cubism Core (`live2dcubismcore.min.js`), mapping normalized mouse and PAD variables to Cubism parameter IDs (`ParamAngleX/Y`, `ParamEyeL/ROpen`, `ParamMouthOpenY`, `ParamCheek`).
-* **🌐 3D Humanoid VRM Engine**: WebGL rendering via Three.js and `@pixiv/three-vrm`. Head bone quaternions update via SLERP toward cursor gaze vectors; blendshapes drive facial morph targets (`happy`, `aa`, `blink`, `relaxed`). Includes a holographic procedural fallback rig.
-
-#### 3. Visual Model Bounds Computation & Mascot Dock Anchoring
-To anchor the floating toolbar dock and hit-test user interactions, `AvatarRenderer` computes visual bounds:
-* **Sprites**: $\text{scale} = \min(\frac{W_{canvas} \cdot 0.95}{W_{natural}}, \frac{H_{canvas} \cdot 0.95}{H_{natural}}) \cdot \text{scale}$, $\text{centerX} = \text{left} + \frac{W_{draw}}{2}$, $\text{bottomY} = \text{top} + H_{draw}$.
-* **Live2D**: $\text{centerX} = M_x + \frac{W_{model}}{2}$, $\text{bottomY} = M_y + H_{model}$.
-* **VRM**: $H_{model} = H_{canvas} \cdot 0.75 \cdot \text{scale}$, $\text{bottomY} = H_{canvas} \cdot 0.88 + \text{pan}_y$, $\text{centerX} = \frac{W_{canvas}}{2} + \text{pan}_x$.
-* **Toolbar Anchoring**:
-  $$\text{safeX} = \text{clamp}(120, W_{window} - 120, \text{bounds.centerX})$$
-  $$\text{safeY} = \text{clamp}(H_{dock}, H_{window} - H_{dock} - 6, \text{bounds.bottomY} + 8)$$
-* **Trackpad Inertia Cooldown**: An 800ms cooldown after drag release discards residual trackpad wheel events, preventing accidental zooming.
-* **Aero Snap Prevention**: The Mascot BrowserWindow sets `maximizable: false`, `fullscreenable: false`, and `resizable: false`. Double-click invokes `window:reset-mascot-bounds` to unmaximize and enforce standard 380×540 dimensions.
-* **Lip-Sync**: 60 FPS real-time FFT spectrum analysis across vocal formants (200Hz–2500Hz) computing mouth aperture and vowel width.
-* **Offline STT & Echo Prevention**: Local Web Audio VAD streams audio to local `faster-whisper` (CTranslate2). Recording automatically suspends during Lucia's speech playback to eliminate feedback echo loops.
-
----
-
-### 3.7 Layer 5 / Cognitive Boundary: Conservative Semantic Fortification Subsystem (Phase 23-E) (`src/core/knowledge/fortification.py`)
-
-The Conservative Semantic Fortification subsystem executes at the cognitive-memory boundary prior to cross-session persistence:
-
-```text
-Surface Language
-      ↓
-Language Adapter
-      ↓
-Language-Independent Semantic Representation (Graph Topology)
-      ↓
-Cognitive Core
-      ↓
-Conservative Semantic Fortification (Audit → Normalize → Validate → Preserve → Freeze → Checksum)
-      ↓
-Persistent Semantic Memory
-```
-
-#### 1. Core Architectural Contract & Epistemic Invariant
-* **Language Independence**: Fortification operates strictly on symbolic semantic graphs with **zero knowledge** of natural language strings, morphology, classifiers, honorifics, phonology, tokenization, or language-specific grammar.
-* **Conservation of Meaning**:
-  $$\text{Meaning}_{\text{out}} \subseteq \text{Meaning}_{\text{in}}$$
-  Fortification protects semantic structure that has already been formed upstream; it **never creates new meaning**.
-* **Zero-Ingress Guarantee**: Fortification-Originated Unsupported Insertion Rate is strictly $0.00\%$. The subsystem contains no ingress path for novel entity or fact fabrication.
-* **Epistemic Commitment Invariance**:
-  - Supported Epistemic States: `FACT`, `INFERRED`, `AMBIGUOUS`, `UNKNOWN`.
-  - Fortification **never increases epistemic commitment**: Transitions `UNKNOWN → FACT`, `UNKNOWN → INFERRED`, `UNKNOWN → concrete entity`, or `AMBIGUOUS → FACT` without explicit upstream disambiguation are unconditionally rejected.
-
-#### 2. Subsystem Responsibilities vs. Strict Prohibitions
-* **Authorized Responsibilities**:
-  1. *Graph Canonicalization & Sorting*: Deterministic identifier and canonical topological edge ordering ($O((N + E) \log(N + E))$).
-  2. *Bounded Local Consistency Auditing*: Linear-time $O(N + E)$ checks detecting dangling references, contradictory polarity conflicts, functional clashing, and illegal scope crossings.
-  3. *Uncertainty & Disambiguation Preservation*: Preserves `UNKNOWN` and `AMBIGUOUS` alternative branches intact.
-  4. *Provenance & Derivation Tracking*: Enforces that every `INFERRED` element retains rule ID, premise references, and originating session metadata.
-  5. *Non-Monotonic Premise Retraction (JTMS)*: If supporting premise $P$ is retracted or marked inactive, all dependent `INFERRED` nodes are recursively deactivated without collateral damage to independent knowledge.
-  6. *Snapshot Immutability*: Freezes validated graphs (`frozen=True`) to prevent post-audit mutation.
-  7. *Structural Integrity Checksum*: Computes SHA-256 over canonicalized topological bytes to detect serialization corruption.
-  8. *Atomic Persistence*: Atomically serializes graph state to disk via temporary write-and-replace.
-* **Forbidden Transformations (Architectural Prohibitions)**:
-  - Speculative entity creation, hallucinated fact injection, or automatic ambiguity resolution.
-  - Redundancy injection into semantic topology (e.g. `SessionRoot → entity` shortcut edges).
-  - Scope boundary penetration: edges crossing `NEGATION`, `MODAL`, or `INTENSIONAL` barriers are strictly blocked.
-  - Equating structural checksum with real-world semantic truth or absence of upstream hallucination.
-  - Utilization of GPU VRAM, LLMs, or conversational token history buffers.
-
-#### 3. Bounded Consistency & Scoping Rules
-* **Local Consistency ($O(N + E)$)**: Replaces computationally unbounded first-order theorem proving with deterministic localized checks:
-  - Polar contradiction check: opposing polarities on identical predicate-argument pairs within the same scope.
-  - Single-valued functional clashing: conflicting attribute values assigned to the same entity attribute within root scope.
-  - Dangling reference validation: source, target, and premise node IDs must exist within the graph registry.
-* **Scope Barriers**: All nodes belong to an explicit `ScopeBoundary` (`ROOT`, `NEGATION`, `MODAL`, `INTENSIONAL`). Ordinary semantic relations are forbidden from crossing scope boundaries without explicit provenance bridge structures.
-
-#### 4. Resource Envelope & Verification
-* **Target Budget**: Peak RAM $\le 15\text{ MB}$, Consolidation Latency $\le 10\text{ ms}$.
-* **Hard Safety Ceiling**: Peak RAM $> 30\text{ MB}$ or Consolidation Latency $> 25\text{ ms}$ constitutes failure.
-* **Empirical Validation (AMD Ryzen 7 5800H CPU, 0.0 MB GPU VRAM)**:
-  - Small (20 nodes, 30 edges): Latency **0.46 ms**, Peak RAM **0.065 MB** $\to$ `PASS_TARGET`.
-  - Medium (100 nodes, 150 edges): Latency **2.07 ms** (p95: 2.32 ms), Peak RAM **0.35 MB** $\to$ `PASS_TARGET`.
-  - Large (500 nodes, 800 edges): Latency **12.69 ms** (p95: 14.31 ms), Peak RAM **1.84 MB** $\to$ `PASS_WITHIN_HARD_CEILING`.
-  - Stress (1,000 nodes, 2,000 edges): Latency **37.09 ms**, Peak RAM **4.22 MB** $\to$ Identifies single-core Python boundary; graphs $> 500$ nodes should be partitioned into session-scoped batches.
-
-#### 5. Known Limitations & Upstream Assumptions
-1. *Upstream Hallucination Independence*: The overall system Hallucinated Entity Rate ($HER(t)$) may be non-zero due to upstream Language Adapters or SLM generation. Fortification only guarantees zero internal insertion.
-2. *Non-Comprehensive Modal Proof*: Modal and intensional consistency checking is strictly structural and scoped, not modal logic complete (e.g. Kripke frame theorem proving is intentionally omitted).
-
----
-
-### 3.8 Layer 6 / Periphery: Language Adapter Boundary & Semantic Substrate Contract (Phase 23-F) (`src/core/language/adapter/`)
-
-Phase 23-F introduces the formal Language Adapter Boundary, physically isolating natural-language syntax, morphology, tokens, and grammar from the Cognitive Core, Semantic Graph representation, and Conservative Semantic Fortification:
-
-```text
-Surface Language (EN, VI, JA)
-      ↓
-Language Ingress Gate [Strict Gating: {en, vi, ja}]
-      ↓
-Language Adapter Driver (ParseToSubstrate)
-      ↓
-Language-Independent Semantic Substrate (SemanticGraph)
-      ↓
-Cognitive Core & Conservative Semantic Fortification (P23-E)
-      ↓
-Language Egress Gate [Strict Gating: {en, vi, ja}]
-      ↓
-Language Adapter Driver (RealizeFromSubstrate)
-      ↓
-Surface Language Output
-```
-
-#### 1. Core Architectural Contract & Substrate Neutrality
-* **Substrate Language Independence**: The Semantic Graph, Cognitive Core, and Semantic Fortifier contain strictly ZERO natural-language tokens, grammar rules, Part-of-Speech tags, or language-specific branching.
-* **Perimeter Language Firewalls**:
-  - `LanguageIngressGate`: Evaluates incoming language codes. Only `en`, `vi`, and `ja` are admitted; all other languages (e.g. `fr`, `de`, `zh`, `es`, `ru`) are unconditionally rejected with `IngressGateBlockedError` before entering the Core.
-  - `LanguageEgressGate`: Evaluates realization requests. Requests targeting unadmitted languages are rejected with `EgressGateBlockedError`.
-* **Substrate Purity Verification**: The Ingress Gate audits emitted semantic graphs, rejecting any node IDs or concept symbols containing raw token prefixes (`token:`, `word:`, `pos:`, `tag:`).
-
-#### 2. Minimal Driver Contract & Epistemic Preservation
-* **Minimal Interface Contract**:
-  - `can_handle_language(lang: str) -> bool`
-  - `parse_to_substrate(text: str, lang: str, session_id: str, turn_id: str) -> ParseResult`
-  - `realize_from_substrate(graph: SemanticGraph, lang: str) -> RealizeResult`
-  - `validate_coverage(text: str, lang: str) -> CoverageReport`
-* **Epistemic Invariant Compliance**:
-  - *Zero-Anaphora Preservation (Japanese)*: When Japanese drops the subject (e.g. "問題を解決した"), the driver creates `:ARG0` with `EpistemicState.UNKNOWN` (`ent:unknown_agent_01`). It is NEVER auto-bound to speaker, user, or Lucia.
-  - *Kinship & Classifier Separation (Vietnamese)*: Vietnamese honorifics ("anh", "chị") and classifiers ("cái", "con") are cleanly separated from core entities (`ent:user`, `c:USER`), stored strictly as peripheral attributes.
-  - *Ambiguity Preservation*: Ambiguous expressions (e.g. "bank") generate `EpistemicState.AMBIGUOUS` with alternative hypotheses intact without unilateral resolution.
-
-#### 3. Empirical Performance Profile (AMD Ryzen 7 5800H CPU, 0.0 MB GPU VRAM)
-* Ingress Gate Latency: **1.60 µs** (Admit), **29.70 µs** (Reject)
-* Parse Latency: **0.0197 ms** (EN), **0.0397 ms** (VI), **0.0184 ms** (JA)
-* Realize Latency: **0.0085 ms** (VI)
-* End-to-End Round-Trip (EN -> Fortify -> VI): **0.1060 ms**
-* Peak Additional RAM: **0.0124 MB** (~12.7 KB)
+#### 3. Embodiment Mechanics & Kinematics
+1. **Canonical 15-Dimensional Actuator Vector ($\mathbf{E}_t \in [0, 1]^{15}$)**:
+   - Text (3): Warmth, Formality, Verbosity.
+   - Prosody (4): Pitch scale, Speaking rate, Breathiness, Energy.
+   - Facial (5): Smile intensity, Eyebrow raise, Cheek blush, Eye squint, Mouth aperture.
+   - Posture (2): Head tilt, Lean angle.
+   - Latency (1): Somatic pacing delay $\Delta\tau_{\text{pace}}$ (ms).
+2. **Visual Bounds & Mascot Toolbar Dock Anchoring**:
+   $$\text{safeX} = \text{clamp}(120, W_{\text{window}} - 120, \text{bounds.centerX})$$
+   $$\text{safeY} = \text{clamp}(H_{\text{dock}}, H_{\text{window}} - H_{\text{dock}} - 6, \text{bounds.bottomY} + 8)$$
+3. **Trackpad Inertia Cooldown & Aero Snap Prevention**:
+   An 800ms cooldown after drag release discards residual touchpad inertia events. Mascot BrowserWindow enforces `maximizable: false`, preventing Windows Aero Snap resizing.
+4. **Real-Time Lip-Sync**:
+   60 FPS Web Audio FFT formant analysis (200Hz–2500Hz) dynamically calculates mouth opening and vowel aperture during speech playback, muting microphone input during playback to prevent acoustic echo loops.
 
 ---
 

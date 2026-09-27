@@ -10,7 +10,6 @@
 ## 1. Executive Summary & Progression Roadmap
 
 Lucia's developmental trajectory is structured across distinct research, architecture, implementation, and validation horizons. The repository enforces an evidence-first progression: no milestone is promoted to production without passing rigorous architectural gates and automated verification suites.
-
 ```text
 ┌────────────────────────────────────────────────────────────────────────┐
 │                        ROADMAP PROGRESSION                             │
@@ -24,11 +23,14 @@ Lucia's developmental trajectory is structured across distinct research, archite
 │ Phase 22:     Substrate-Neutral Relational Semantic Conditioning       │
 │ Phase 23:     Continuous Substrate-Neutral Semantic Architecture       │
 │               (P23-A..D Canonical/Validated; P23-E..H Implemented/Frozen; P23-I Closed) │
-│ Phases 24–27: Affective Adaptation, Social Feedback & Individuality    │
+│ Phase 24:     Affective Communication Adaptation (Planned)             │
+│ Phase 25:     Temporal Embodiment & Social Feedback (Planned)          │
+│ Phase 26:     Emergent Individuality & Autonomous Preferences (Planned)│
+│ Phase 27:     Personalized Individual Trajectory (Planned)             │
 │ Gate 28:      First Activation (Genesis Onboarding — LOCKED)          │
 └────────────────────────────────────────────────────────────────────────┘
 ```
-
+ 
 ---
 
 ## 2. Master Phase Registry (Earliest Available Phase → Current P23-I)
@@ -104,7 +106,41 @@ Phase 22 explored substrate neutrality and relational grounding across 20 distin
 
 ---
 
-## 4. Phase Governance & Promotion Matrix
+## 4. Future Developmental Horizons (Phase 24, Phase 25, Phase 26, Phase 27)
+
+Each future phase represents an independent developmental milestone with its own distinct purpose, dependencies, and lifecycle status. They are not grouped into a single monolithic stage.
+
+### Phase 24 — Affective Communication Adaptation
+
+* **Purpose**: Enable dynamic communicative and pragmatic adaptation during live dialogue, allowing Lucia to attune speech latency, conversational strategy, repair misunderstandings, and modulate vocal prosody in response to ongoing conversational context.
+* **Current status**: `PLANNED` (Future Horizon / Not Implemented)
+* **Depends on**: Phase 23 (Continuous Substrate-Neutral Semantic Architecture & Reasoning Kernel) and Phase 21 (Relational Consolidation & Synaptic Homeostasis).
+* **Expected capability**: Dynamic conversational strategy selection, affective prosody modulation, conversational repair pacing, and real-time pragmatic attunement without prompt engineering or token context hacking.
+
+### Phase 25 — Temporal Embodiment & Social Feedback
+
+* **Purpose**: Synchronize multimodal embodiment with temporal interaction dynamics, establishing reciprocal feedback loops between the user's conversational rhythm and Lucia's physical expressions.
+* **Current status**: `PLANNED` (Future Horizon / Not Implemented)
+* **Depends on**: Phase 24 (Affective Communication Adaptation) and Phase 14 / Phase 18 (Multimodal Presence & Expression Engine).
+* **Expected capability**: Interpersonal synchrony, micromovement resonance, reciprocal gaze, reactive head tilting, and naturalistic non-verbal feedback loops between user and mascot/avatar.
+
+### Phase 26 — Emergent Individuality & Autonomous Preferences
+
+* **Purpose**: Provide the architectural mechanisms for genuine, unprompted individuality to emerge over time from accumulated relational history and epistemic curiosity.
+* **Current status**: `PLANNED` (Future Horizon / Not Implemented)
+* **Depends on**: Phase 25 (Temporal Embodiment & Social Feedback) and Phase 12 / Phase 23 (Semantic Knowledge & Epistemic Reasoning).
+* **Expected capability**: Asymmetric curiosity, idiosyncratic topical affinities, authentic aesthetic preferences, and spontaneous conversational initiative grounded in shared history rather than random token sampling.
+
+### Phase 27 — Personalized Individual Trajectory
+
+* **Purpose**: Ensure that Lucia's long-term developmental path forms a coherent, irreversible, and deeply personalized trajectory unique to her single continuous bond with the user.
+* **Current status**: `PLANNED` (Future Horizon / Not Implemented)
+* **Depends on**: Phase 26 (Emergent Individuality & Autonomous Preferences) and Phase 13 / Phase 21 (Relational Dynamics & Synaptic Consolidation).
+* **Expected capability**: A coherent lifelong developmental trajectory unique to Lucia's single continuous relationship with the user over months and years, immune to generic reset and preserving authentic relational history.
+
+---
+
+## 5. Phase Governance & Promotion Matrix
 
 Every phase advances according to defined governance rules:
 
