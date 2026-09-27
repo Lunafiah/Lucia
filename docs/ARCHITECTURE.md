@@ -720,6 +720,59 @@ $$\text{Development / Simulation Environment} \neq \text{Lucia Activation}$$
 
 ---
 
+### ARCH-030 — Cognitive Core Contracts & Projection
+* **Status**: **ACCEPTED & PRODUCTION IMPLEMENTED** (Phase 23-G, Commit: `b1ee99c`)
+* **Canonical Architecture Pipeline**:
+  ```text
+  P23-C
+    ↓
+  P23-D — UMR-TPG semantic substrate
+    ↓
+  P23-E — SemanticGraph / Fortification
+    ↓
+  P23-F — Language Adapter
+    ↓
+  P23-G — Graph → TermArena projection
+    ↓
+  P23-H — Reasoning Kernel / JTMS
+  ```
+  *(Note: P23-I was investigated and formally rejected as an independent subsystem; its surviving boundary requirement is absorbed into ARCH-030.1 below. P23-I does not represent a missing implementation layer.)*
+* **Decision**: Establish language-independent cognitive core interface operating on strictly numeric integer IDs (`TermArena`), Strong Kleene 3-valued logic (`epistemic.py`), derivation provenance (`provenance.py`), and non-monotonic justification cascade retraction (`jtms.py`). Ingress is mediated by `ProjectGraphToTerms()` projecting `SemanticGraph` substrate into preallocated static arena buffers with zero heap allocation in the inner reasoning loop.
+
+#### ARCH-030.1: Upstream Perceptual Ingress Mapping Contract (P23-C → P23-G)
+The Cognitive Core contracts accept semantic graphs formed from upstream raw multimodal concept formation (P23-C) according to a deterministic geometric novelty mapping:
+
+1. **Tier 1 (Known Concept Assimilation)**:
+   - Condition: $D_M \le 2.5\sigma$ (regularized Mahalanobis distance to active concept prototype centroid $\boldsymbol{\mu}_k$).
+   - Semantic State: Mapped to `SemanticNode.epistemic_state = EpistemicState.FACT`.
+   - Projection: Projected into `TermArena` as `EntityTerm` / `LogicalTerm` with `EpistemicStatus.FACT`.
+
+2. **Tier 2 (Boundary Ambiguity / Competing Hypotheses)**:
+   - Condition: $2.5\sigma < D_M \le 4.0\sigma$.
+   - Semantic State: Mapped to `SemanticNode.epistemic_state = EpistemicState.AMBIGUOUS`. Candidate hypotheses are preserved in `SemanticNode.attributes["alternative_hypotheses"]`.
+   - Projection: Projected into `TermArena` as `EntityTerm` / `LogicalTerm` with `EpistemicStatus.AMBIGUOUS`. Competing candidate concepts are preserved through `alternative_concept_ids: Tuple[int, ...]`. In P23-H reasoning, un-disambiguated ambiguous terms evaluate to `KleeneValue.UNKNOWN` and emit `DisambiguationSubgoal`.
+
+3. **Tier 3 (Novel Concept Accommodation vs. Transient Outlier)**:
+   - Condition: $D_M > 4.0\sigma$.
+   - Transient Outlier: If an isolated single outlier without density recurrence, discarded at perception boundary before `SemanticGraph` / `TermArena` ingress (zero symbolic ingress).
+   - Recurrent Density Peak ($k \ge 3$): Accommodated as a provisional concept. Enters `SemanticGraph` as `SemanticNode.epistemic_state = EpistemicState.UNKNOWN`.
+   - Projection: Projected into `TermArena` as `EntityTerm` / `LogicalTerm` with `EpistemicStatus.UNKNOWN`. In P23-H reasoning, unknown terms evaluate to `KleeneValue.UNKNOWN` and emit `InformationSubgoal`.
+
+4. **Non-Promotion Invariant**:
+   > **Tier 2 and Tier 3 must never be silently promoted to `FACT`.**  
+   Under zero circumstances may un-disambiguated ambiguous observations ($2.5\sigma < D_M \le 4.0\sigma$) or novel/unproven observations ($D_M > 4.0\sigma$) enter `TermArena` as `EpistemicStatus.FACT`. The governing epistemic invariant remains absolute: **UNKNOWN MUST NEVER SILENTLY BECOME CERTAINTY.**
+
+5. **Parsimony & Zero-Runtime Guarantee**:
+   > **This contract requires no new runtime subsystem, adapter, state manager, daemon, confidence scalar, or background process.**  
+   All mechanisms are natively implemented and enforced by existing contracts: `src/core/knowledge/fortification.py`, `src/core/cognition/contract/projection.py`, `src/core/cognition/contract/epistemic.py`, and `src/core/cognition/kernel/engine.py`.
+
+6. **Ownership Boundaries**:
+   - **P23-C** owns perceptual evidence representation, regularized Mahalanobis distance calculation, and novelty tier derivation.
+   - **P23-G** owns semantic, provenance, and epistemic projection into numeric term structures (`TermArena`).
+   - `ProjectGraphToTerms()` remains the sole, authoritative projection boundary between semantic graphs and cognitive core terms.
+
+---
+
 ### 8.1 Reconciliation of Outdated Specs & Conflicting Decisions
 
 | Dimension | Outdated / Preliminary Spec | Authoritative Implemented Reality | Resolution & Rationale |
