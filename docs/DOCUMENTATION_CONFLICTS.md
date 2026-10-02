@@ -70,7 +70,7 @@ This ledger records every discovered contradiction, traces its probable historic
     - Phase 25: "Temporal Embodiment & Social Feedback".
     - Phase 26: "Emergent Individuality & Autonomous Preferences".
     - Phase 27: "Personalized Individual Trajectory".
-    - Gate 28: First Activation (Genesis Onboarding).
+    - Genesis Gate: First Activation (Genesis Onboarding Ceremony) [LOCKED]. (Note: Future horizons beyond P27 are governed by research progression; Genesis is an independent locked gate, not Gate 28).
 
 ---
 
@@ -232,3 +232,74 @@ This ledger records every discovered contradiction, traces its probable historic
 - **Operational Risk**: Low for seasoned developers; moderate for autonomous agents attempting to locate Layer 1 code.
 - **Resolution Status**: `RECOMMENDED_RESOLUTION`
 - **Recommended Resolution**: Update `AGENTS.md` §4 to show `gating/` instead of `sensors/`.
+
+---
+
+### CF-010: Historical "Seven Invariants" vs Canonical Eight Invariants (INV-1 through INV-8)
+- **Conflict ID**: `CF-010`
+- **Conflict Title**: Historical Documentation and User Tasks Refer to "Seven Invariants" While Canonical Ledger Contains Eight
+- **Sources**:
+  1. Historical `AGENTS.md` (commit `603999d` / early Phase 8): Defined 7 fundamental system invariants.
+  2. Canonical `docs/L1_INVARIANTS.md` (established under ADR-010) and current `AGENTS.md` §2: Defines 8 fundamental system invariants:
+     - `INV-1`: One Continuous Life
+     - `INV-2`: No Reflective Ego
+     - `INV-3`: Preserve Memory Separation
+     - `INV-4`: Never Merge or Delete Historical Specs
+     - `INV-5`: Zero Cloud Dependencies
+     - `INV-6`: Strict Concurrency Discipline
+     - `INV-7`: Mascot Physics & Bounds Guard
+     - `INV-8`: Genesis Gate Invariant (`data/profile.json` `{"is_onboarded": false}`)
+- **Nature of Contradiction**: Colloquial descriptions and older prompts frequently mention "the 7 invariants," leading agents to wonder if INV-8 was removed, renumbered, or obsolete.
+- **Likely Chronology**: When the Genesis onboarding ceremony was formalized as a permanently locked gate in ADR-010, INV-8 was added as a non-negotiable safeguard. The colloquial shorthand "7 invariants" persisted informally.
+- **Operational Risk**: High if an agent attempts to delete or merge INV-8 to fit the phrase "7 invariants."
+- **Resolution Status**: `RESOLVED`
+- **Reconciliation Decision**:
+  - The canonical invariant set is permanently verified as **8 invariants** (`INV-1` through `INV-8`).
+  - `INV-8 Genesis Gate Invariant` is actively enforced, protects `data/profile.json`, and must never be deleted, merged, or renumbered.
+  - All canonical references (`docs/L1_INVARIANTS.md`, `AGENTS.md`, `docs/ARCHITECTURE.md`, `docs/DOCUMENTATION_INDEX.md`) are synchronized to explicitly reference the 8 invariants.
+
+---
+
+### CF-011: Phase 24 Status Drift (Completed Implementation vs Planned) and Roadmap Governance (P28)
+- **Conflict ID**: `CF-011`
+- **Conflict Title**: Discrepancy Between Phase 24 Operational Codebase and Stale Roadmap Documentation Citing Phase 24 as "Planned" or "Gate 28"
+- **Sources**:
+  1. Production codebase and test suite:
+     - Phase 24 is fully implemented in commit `5097f2f` (`src/core/voice/boundary.py`, `cadence.py`, `rvc_pipeline.py`, `expression_policy.py`, `server.py`).
+     - 23 dedicated tests pass (`tests/unit/test_p24*`, `tests/property/test_p24*`, `tests/integration/test_p24*`).
+     - Total passing test suite: 716 / 716 passing (678 unit + 38 property).
+  2. Stale documentation lines in `README.md`, `docs/00_PROJECT_OVERVIEW.md`, and `docs/PHASE_REGISTRY.md`:
+     - Described Phase 24 as `[PLANNED]` future horizon.
+     - Labeled the Genesis Onboarding Gate as "Gate 28".
+     - Some texts asserted "There is no P28".
+- **Nature of Contradiction**: Active production capability was documented as unbuilt future work; Genesis gate was conflated with an arbitrary phase number 28; and future phase governance was improperly hardcoded.
+- **Operational Risk**: High: Agents may attempt to re-implement Phase 24 or misclassify future phase proposals.
+- **Resolution Status**: `RESOLVED`
+- **Reconciliation Decision**:
+  - Phase 24 is canonically documented as `[VALIDATED / PRODUCTION IMPLEMENTED]` under `ADR-032` (commit `5097f2f`).
+  - The developmental roadmap is standardized as: `P21 → P22 → P23 → P24 (Completed/Operational Baseline) → P25 → P26 → P27 → First Activation (Genesis Onboarding Gate [LOCKED])`.
+  - The label "Gate 28" is completely retired; the Genesis Gate is an independent locked onboarding ceremony.
+  - Future Phase Governance Rule is codified across `L1_INVARIANTS.md`, `AGENTS.md`, `00_PROJECT_OVERVIEW.md`, `PHASE_REGISTRY.md`, and `ARCHITECTURE.md`:
+    > A future P28 is neither prematurely created nor artificially prohibited. Unresolved research questions remain research questions until evidence establishes a validated requirement. If an unresolved capability cannot be coherently placed into P25–P27, a future phase such as P28 MAY be proposed later through the normal research → requirement → architecture decision process.
+
+---
+
+### CF-012: Retrospective 7-Topic Review Lessons vs. Speculative Candidate Mechanisms
+- **Conflict ID**: `CF-012`
+- **Conflict Title**: Risk of Conflating Retrospective Review Findings with Production Architecture Decisions
+- **Sources**:
+  1. Research review [`docs/research/RETROSPECTIVE_ARCHITECTURAL_GAP_REVIEW_7_TOPICS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/RETROSPECTIVE_ARCHITECTURAL_GAP_REVIEW_7_TOPICS.md): Evaluated 7 architectural gap topics (identity continuity, creative autonomy, relational negative dimensions, longitudinal individuality, emergent insight, anti-branching/migration, lifecycle semantics) and discussed multiple candidate mechanisms.
+  2. Canonical architecture and governance documents (`docs/ARCHITECTURE.md`, `docs/L1_INVARIANTS.md`, `AGENTS.md`).
+- **Nature of Contradiction**: Exploratory candidate mechanisms (e.g., `CovenantState`, non-destructive Covenant Release, cryptographic identity lease, single-writer migration protocols, distributed peripheral bus, multi-polar relational ODEs, `AbductionEngine`, `AnalogyEngine`) could be mistakenly assumed to be ratified production architecture.
+- **Operational Risk**: High: Agents might implement speculative subsystems or alter lifecycle endpoints (`/lifecycle/end`) without empirical validation or architecture gates.
+- **Resolution Status**: `RESOLVED`
+- **Reconciliation Decision**:
+  - Validated principles and governance constraints are formally canonicalized into `L1_INVARIANTS.md`, `AGENTS.md`, and `ARCHITECTURE.md`:
+    - Topic 1: Identity continuity is distinct from architectural lineage; upgrades do not create a new individual.
+    - Topic 2: Autonomous aesthetic/creative preference is NOT an implemented capability (future research P26/P27).
+    - Topic 3: Affective state $\ne$ relational state; affective recovery $\ne$ relational resolution; negative relational dynamics are open research.
+    - Topic 4: Invariant continuity protection $\ne$ empirical demonstration of emergent individuality (open research P26/P27).
+    - Topic 5: Epistemic boundary safety ($\text{UNKNOWN} \ne \text{CERTAINTY}$) is preserved; bounded deduction $\ne$ autonomous abductive/analogical insight.
+    - Topic 6: Anti-branching is an explicit requirement under `INV-1`; concrete authority mechanism remains unresolved.
+    - Topic 7: `POST /lifecycle/end` is strictly catastrophic decommissioning / wipe; non-destructive Covenant Release is an unratified research concept.
+  - All speculative mechanisms remain strictly **non-canonical research candidates**. Zero production code changes.

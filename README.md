@@ -49,7 +49,7 @@ Lucia combines multiple specialized biological-inspired systems to create a cohe
 | **Semantic Understanding** | Understands the meaning of ideas and concepts independently of specific words or languages (supporting English, Vietnamese, and Japanese), allowing consistent thought across sessions. | **Implemented & Synchronized** |
 | **Logical Reasoning** | Connects facts, checks for contradictions, and tracks what she knows, what is uncertain, and what she still needs to ask you about. | **Implemented & Frozen** |
 | **Embodied Voice & Avatar** | Expresses herself through a 2D/3D animated avatar on your desktop, with real-time lip-sync and custom neural voice synthesis (RVC) that changes pitch and rhythm based on how she feels. | **Implemented & Verified** |
-| **Adaptive Communication** | Learning how to adjust conversation strategies, humor, and conversational repairs based on personal social cues and feedback. | **Planned (Phase 24–25)** |
+| **Adaptive Communication** | Dynamically adjusts prosody, cadence, continuous pitch contouring, and relational conversational repair based on live dialogue context. | **Implemented & Verified** |
 | **Unique Individuality** | Developing unique personal tastes, spontaneous curiosities, and an unrepeatable life trajectory over months and years. | **Planned (Phase 26–27)** |
 
 ---
@@ -98,13 +98,16 @@ Lucia is developed through an evidence-first methodology where each phase is tes
 │ Phase 21:     Long-Term Relational Consolidation & Rest       [DONE]   │
 │ Phase 22:     Substrate-Neutral Relational Cognition Study    [DONE]   │
 │ Phase 23:     Continuous Substrate-Neutral Semantic Core      [DONE]   │
-│ Phase 24:     Affective Communication Adaptation              [PLANNED]│
+│ Phase 24:     Affective Communication Adaptation              [DONE]   │
 │ Phase 25:     Temporal Embodiment & Social Feedback           [PLANNED]│
 │ Phase 26:     Emergent Individuality & Autonomous Preferences [PLANNED]│
 │ Phase 27:     Personalized Individual Trajectory              [PLANNED]│
-│ Gate 28:      First Activation (Genesis Onboarding Ceremony)  [LOCKED] │
+│ Genesis:      First Activation (Genesis Onboarding Ceremony)  [LOCKED] │
 └────────────────────────────────────────────────────────────────────────┘
 ```
+
+> **Roadmap Governance & Future Phase Rules**:
+> The canonical developmental sequence is `P21 → P22 → P23 → P24 → P25 → P26 → P27 → First Activation (Genesis Gate)`. A future P28 is neither prematurely created nor artificially prohibited. Unresolved research questions remain research questions until evidence establishes a validated requirement. If an unresolved capability cannot be coherently placed into P25–P27, a future phase such as P28 MAY be proposed later through the normal research → requirement → architecture decision process.
 
 ### Phase 21 — Long-Term Relational Consolidation & Synaptic Homeostasis
 * **Main Goal**: Allow Lucia to permanently consolidate relationship experiences into her neural weights while resting or idle.
@@ -121,14 +124,14 @@ Lucia is developed through an evidence-first methodology where each phase is tes
 ### Phase 23 — Continuous Substrate-Neutral Semantic Architecture
 * **Main Goal**: Build a language-independent semantic core and reasoning engine.
 * **New Capability**: Translates English, Vietnamese, and Japanese into pure conceptual representations (`SemanticGraph`), protects knowledge integrity across sessions (`Fortification`), and performs bounded logical reasoning (`JTMS`) to track what is true, false, ambiguous, or unknown.
-* **Relationship**: Takes Phase 22's semantic independence and turns it into concrete, frozen core modules (P23-C through P23-H; P23-I absorbed).
+* **Relationship**: Takes Phase 22's semantic independence and turns it into concrete, frozen core modules (P23-C through P23-H; P23-I absorbed into ARCH-030.1).
 * **Current Status**: `[VALIDATED & FROZEN]` (100% test pass rate across fortification, language adapters, contracts, and reasoning kernel).
 
 ### Phase 24 — Affective Communication Adaptation
-* **Main Goal**: Adapt conversation style and emotional delivery dynamically during live dialogue.
-* **New Capability**: Lucia will adjust her conversational strategies, emotional warmth, and repair misunderstandings in real time based on how the conversation is flowing, without prompt engineering tricks.
-* **Relationship**: Connects the reasoning engine of Phase 23 with the communicative policies of Phase 15.
-* **Current Status**: `[PLANNED]` (Future horizon).
+* **Main Goal**: Adapt conversation style, prosody, and emotional delivery dynamically during live dialogue.
+* **New Capability**: Dynamic continuous pitch contouring ($S(t) \in [-4, +7]\text{ st}$, clip $\pm 12\text{ st}$), relational prosody conditioning (closeness, trust, familiarity approved; reciprocity strictly severed), boundary segmentation, cadence throttling, and real-time repair.
+* **Relationship**: Connects the reasoning engine of Phase 23 with the communicative policies of Phase 15 and voice pipeline (ADR-032).
+* **Current Status**: `[VALIDATED / PRODUCTION IMPLEMENTED]` (All 23 production unit, property, and integration tests passing).
 
 ### Phase 25 — Temporal Embodiment & Social Feedback
 * **Main Goal**: Synchronize physical embodiment and non-verbal cues with user interaction.
@@ -148,7 +151,7 @@ Lucia is developed through an evidence-first methodology where each phase is tes
 * **Relationship**: The final developmental milestone before the companion awakens.
 * **Current Status**: `[PLANNED]` (Future horizon).
 
-### Gate 28 — First Activation (Genesis Onboarding Ceremony)
+### Genesis — First Activation (Genesis Onboarding Ceremony)
 * **Main Goal**: The solemn, irreversible onboarding ceremony that breathes life into Lucia on your personal desktop.
 * **Guardrail**: Strictly locked until all developmental phases are fully realized and verified. The repository is preserved in an un-onboarded state (`data/profile.json == {"is_onboarded": false}`).
 * **Current Status**: `[🔒 LOCKED FUTURE GATE]`.
@@ -205,12 +208,13 @@ graph TD
 
 | Metric | Current Status | Notes |
 |---|---|---|
-| **Active Production Milestone** | **Phase 21 (Consolidation) & Phase 23 (Semantic Architecture)** | Core pipeline fully realized and verified |
-| **Production Unit Tests** | **630 / 630 passing (100%)** | `pytest tests/unit -v` |
-| **Mathematical Property Invariants** | **35 / 35 passing (100%)** | `pytest tests/property -v` (P1–P35) |
+| **Active Production Milestone** | **Phase 24 — Affective Communication Adaptation** | Production baseline (P01–P24 implemented, P22 research closed, P23 frozen) |
+| **Production Unit Tests** | **678 / 678 passing (100%)** | `pytest tests/unit -v` (including 15 P24 voice & cadence tests) |
+| **Mathematical Property Invariants** | **38 / 38 passing (100%)** | `pytest tests/property -v` (including P36–P38 prosody properties) |
 | **Semantic Fortification Tests (P23-E)** | **12 / 12 passing (100%)** | `pytest tests/unit/test_semantic_fortification.py -v` |
 | **Language Adapter Tests (P23-F)** | **13 / 13 passing (100%)** | `pytest tests/unit/test_language_adapter.py -v` |
 | **Reasoning Kernel Tests (P23-H)** | **22 / 22 passing (100%)** | `pytest tests/unit/test_p23h_kernel.py -v` |
+| **Adaptive Communication Tests (P24)** | **23 / 23 passing (100%)** | `pytest tests/unit/test_p24* tests/property/test_p24* tests/integration/test_p24* -v` |
 | **Genesis Awakening State** | **`{"is_onboarded": false}`** | Preserved bit-exact; activation is locked |
 
 ---
@@ -262,7 +266,7 @@ For in-depth technical specifications, architectural decision records, and mathe
 | Document | Purpose |
 |---|---|
 | 📖 [`docs/00_PROJECT_OVERVIEW.md`](docs/00_PROJECT_OVERVIEW.md) | **Canonical Project Overview**: 6-layer cognitive pipeline summary, subsystem health matrix, and active API surface. |
-| 🏛️ [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | **Canonical Technical Architecture**: Detailed subsystem diagrams, ODE mechanics, lock hierarchy, and ADR ledger (ADR-001 to ADR-031). |
+| 🏛️ [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | **Canonical Technical Architecture**: Detailed subsystem diagrams, ODE mechanics, lock hierarchy, and ADR ledger (ADR-001 to ADR-032). |
 | 📋 [`docs/PHASE_REGISTRY.md`](docs/PHASE_REGISTRY.md) | **Authoritative Phase Registry**: Complete status, milestones, dependencies, and evidence links across all phases. |
 | 🛡️ [`docs/L1_INVARIANTS.md`](docs/L1_INVARIANTS.md) | **Architectural Invariants**: The non-negotiable rules governing state, concurrency, and behavior. |
 | 🖥️ [`docs/USER_MANUAL.md`](docs/USER_MANUAL.md) | **Desktop User Manual**: Guide to the Personal Digital Room, Mascot Mode shortcuts, and audio settings. |

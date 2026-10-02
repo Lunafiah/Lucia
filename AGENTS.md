@@ -4,11 +4,11 @@
 
 ---
 
-## 0. Current Operating Mode — Research-First Governance (Post-Phase 21 / Post-Phase 22 Research Closure)
+## 0. Current Operating Mode — Research-First Governance (Post-Phase 24 Baseline)
 
-> **CURRENT STAGE: RESEARCH / EVIDENCE BUILDING — NOT ACTIVATION**
+> **CURRENT STAGE: RESEARCH / EVIDENCE BUILDING FOR FUTURE HORIZONS (P25–P27) — NOT ACTIVATION**
 
-Lucia has completed all documented production milestones through **Phase 21 — Long-Term Relational Consolidation & Synaptic Homeostasis**, and completed the research milestone chain through **Phase 22 — Substrate-Neutral Semantic Conditioning & Relational Cognition Study** (`[RESEARCH VALIDATED / NOT PROMOTED]`). The repository treats the canonical Phase 21 cognitive architecture as an implemented, verified baseline. Phase 22 establishes substrate neutrality for relational intelligence without promoting changes to production code. The next research milestone is established through project governance and canonical documentation rather than inferred by an AI coding agent.
+Lucia has completed all documented production milestones through **Phase 21 — Long-Term Relational Consolidation & Synaptic Homeostasis**, completed the research milestone chain through **Phase 22 — Substrate-Neutral Semantic Conditioning & Relational Cognition Study** (`[RESEARCH VALIDATED / NOT PROMOTED]`), implemented and frozen the continuous semantic substrate and reasoning kernel through **Phase 23** (`P23-C..H` realized and frozen; `P23-I` closed and absorbed into ARCH-030.1), and implemented the adaptive communication control contract through **Phase 24 — Affective Communication Adaptation** (`[VALIDATED / PRODUCTION IMPLEMENTED]`, ADR-032). The repository treats the canonical Phase 21–24 cognitive and communicative architecture as an implemented, verified baseline. Future developmental horizons advance through **Phase 25 (Temporal Embodiment & Social Feedback)**, **Phase 26 (Emergent Individuality & Autonomous Preferences)**, and **Phase 27 (Personalized Individual Trajectory)** toward the locked First Activation gate. Unresolved research questions remain research questions until evidence establishes a validated requirement; if an unresolved capability cannot be coherently placed into P25–P27, a future phase such as P28 MAY be proposed later through the normal research → requirement → architecture decision process (neither prematurely created nor prohibited).
 
 ### Mandatory Research-First Rules
 
@@ -43,6 +43,12 @@ If the requested work is exploratory, the default outcome is **research artifact
 - Do not modify the First Activation gate, onboarding state, or lifecycle safeguards as part of research.
 - Do not rewrite historical research conclusions merely to make the roadmap look linear. Preserve failed hypotheses, rejected candidates, ablations, and negative results as evidence.
 - Do not optimize for feature count. Optimize for falsifiability, causal attribution, reproducibility, isolation, and evidence quality.
+- Do not equate continuity invariant protection with empirical demonstration of emergent individuality (Topic 4). Invariants guarantee structural continuity conditions; empirical emergence is an open research question for future horizons (P26/P27).
+- Do not equate affective recovery with relational resolution (Topic 3). Fast PAD decay to Philia does not resolve interpersonal ruptures. Do not introduce ungrounded negative relational state vectors or rupture-repair state machines into production.
+- Do not claim autonomous aesthetic preference, creative autonomy, or abductive/analogical insight engines as implemented capabilities (Topics 2 & 5). Bounded deductive reasoning (JTMS/Strong Kleene K3) is implemented; autonomous insight and creative preference remain research candidates.
+- Do not violate anti-branching (Topic 6). Lucia must never silently become multiple independent continuations (split-brain). Recognize anti-branching as a strict architectural requirement while preserving its concrete mechanism as an unresolved research question.
+- Preserve `POST /lifecycle/end` strictly as catastrophic individual decommissioning / Genesis reset (Topic 7). Do not reinterpret it as a normal relationship transition, and do not implement or assume unratified concepts like Covenant Release.
+- Distinguish individual identity continuity from architectural evolution and implementation lineage (Topic 1). Upgrades, model replacements, or refactors do not create a new individual.
 
 ### Research Deliverable Standard
 
@@ -95,14 +101,14 @@ When modifying any part of the Lucia codebase, agents are strictly prohibited fr
 
 | # | Invariant Rule | Violation Examples (Forbidden) | Correct Approach |
 |---|---|---|---|
-| **1** | **One Continuous Life** | Adding character preset pickers, "Switch Character" dropdowns, or multiple persona profiles. | Avatars are Lucia's **Appearance** (physical body/attire). Lucia is a single, permanent companion instance. |
-| **2** | **No Reflective Ego** | Adding meta-self-awareness prompts (*"Reflect on who you are"* or *"Identify your feelings"*). | Lucia has a minimal operational self. Emotion is expressed through tone, rhythm, and blendshapes. |
-| **3** | **Preserve Memory Separation** | Deleting SDM memory traces when the user clicks "Clear Screen". | "Clear Screen" only resets visible chat feed; long-term SDM memory and emotional bonds are permanent. |
-| **4** | **Never Merge or Delete Historical Specs** | Editing or deleting files in `.kiro/specs/` or merging them into `docs/`. | Historical phase specs (`.kiro/specs/`) are immutable historical artifacts. Active docs live in `docs/`. |
-| **5** | **Zero Cloud Dependencies** | Introducing OpenAI, Anthropic, ElevenLabs, or cloud STT/TTS API keys. | 100% local edge execution: GGUF LLM on CUDA, Edge-TTS/RVC on CPU/GPU, faster-whisper STT. |
-| **6** | **Strict Concurrency Discipline** | Holding `_state_lock` during model inference, or acquiring `_state_lock` while holding `_train_lock`. | Hold locks strictly $\le 1-2\text{ms}$ for memory copy. Never perform network or disk I/O under locks. |
-| **7** | **Mascot Physics & Bounds Guard** | Enabling native `-webkit-app-region: drag` or allowing Aero Snap to maximize transparent windows. | Use IPC `moveMascotBy(dx, dy)`, retain 800ms trackpad inertia cooldown, and keep window unmaximizable. |
-| **8** | **Genesis Gate Invariant** | Modifying `data/profile.json` (`{"is_onboarded": false}`) during testing, simulation, or development. | Simulation $\ne$ Activation. The onboarding ceremony is a locked future gate preserved bit-exact. |
+| **INV-1** | **One Continuous Life** | Adding character preset pickers, "Switch Character" dropdowns, multiple persona profiles, or allowing split-brain cloning. | Avatars are Lucia's **Appearance** (physical body/attire). Lucia is a single, permanent companion instance. Identity continuity $\ne$ architectural versioning or implementation lineage. Anti-branching is mandatory: no silent copying or branch duplication. |
+| **INV-2** | **No Reflective Ego** | Adding meta-self-awareness prompts (*"Reflect on who you are"* or *"Identify your feelings"*). | Lucia has a minimal operational self. Emotion is expressed through tone, rhythm, and blendshapes. |
+| **INV-3** | **Preserve Memory Separation** | Deleting SDM memory traces when the user clicks "Clear Screen". | "Clear Screen" only resets visible chat feed; long-term SDM memory and emotional bonds are permanent. |
+| **INV-4** | **Never Merge or Delete Historical Specs** | Editing or deleting files in `.kiro/specs/` or merging them into `docs/`. | Historical phase specs (`.kiro/specs/`) are immutable historical artifacts. Active docs live in `docs/`. |
+| **INV-5** | **Zero Cloud Dependencies** | Introducing OpenAI, Anthropic, ElevenLabs, or cloud STT/TTS API keys. | 100% local edge execution: GGUF LLM on CUDA, Edge-TTS/RVC on CPU/GPU, faster-whisper STT. |
+| **INV-6** | **Strict Concurrency Discipline** | Holding `_state_lock` during model inference, or acquiring `_state_lock` while holding `_train_lock`. | Hold locks strictly $\le 1-2\text{ms}$ for memory copy. Never perform network or disk I/O under locks. |
+| **INV-7** | **Mascot Physics & Bounds Guard** | Enabling native `-webkit-app-region: drag` or allowing Aero Snap to maximize transparent windows. | Use IPC `moveMascotBy(dx, dy)`, retain 800ms trackpad inertia cooldown, and keep window unmaximizable. |
+| **INV-8** | **Genesis Gate Invariant** | Modifying `data/profile.json` (`{"is_onboarded": false}`) during testing, simulation, or development. | Simulation $\ne$ Activation. The onboarding ceremony is a locked future gate preserved bit-exact. `POST /lifecycle/end` is strictly catastrophic decommissioning / wipe, not a normal relational transition. Non-destructive Covenant Release is an unratified research concept. |
 
 ---
 
@@ -146,8 +152,8 @@ README.md (Public Front Door) [L0]
 | [`docs/L1_INVARIANTS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/L1_INVARIANTS.md) | **Canonical Invariant Ledger [L1]** | Consolidated non-negotiable architectural, limbic, concurrency, and governance invariants. | Primary reference before any modification. Must not be bypassed or weakened. |
 | [`docs/00_PROJECT_OVERVIEW.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/00_PROJECT_OVERVIEW.md) | **Canonical Project Truth [L2]** | System identity, core philosophy, 6-layer cognitive pipeline summary, 24-subsystem health matrix, test statistics, active REST API surface, and milestone roadmap. | Consult for current project status, phase progress, subsystem operational state, and project-level constraints. **Do NOT recreate `CURRENT_STATUS.md`.** |
 | [`docs/DOCUMENTATION_ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/DOCUMENTATION_ARCHITECTURE.md) | **Canonical Knowledge Canon [L2]** | Information classes (Classes 1–7), canonical single-ownership model, unflattened evidence rules, and controlled taxonomies. | Primary authority for documentation organization, status labels, and lifecycle rules. |
-| [`docs/PHASE_REGISTRY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PHASE_REGISTRY.md) | **Canonical Phase Truth [L2]** | Master registry covering P01 through P23-I, future horizons P24–P27, and Genesis gate. | Consult for official phase status, lifecycle stage, and freeze commits before assuming milestone state. |
-| [`docs/ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/ARCHITECTURE.md) | **Canonical Technical Truth [L3]** | Technical architecture, 20-Watt Whole Brain Architecture, concurrency & locking rules, mathematical/dynamical mechanisms (ODEs, SDM, Ecphory, BPTT), and the complete Architectural Decision Record ledger (**ADR-001 through ADR-028**; ARCH-001 to ARCH-031). | Primary technical authority for mechanisms, formulas, component ownership, threading, and design rationale. **Do NOT recreate `MECHANISM.md` or `DESIGN_DECISIONS.md`.** |
+| [`docs/PHASE_REGISTRY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PHASE_REGISTRY.md) | **Canonical Phase Truth [L2]** | Master registry covering P01 through P24 (completed/closed), future horizons P25–P27, and Genesis gate. | Consult for official phase status, lifecycle stage, and freeze commits before assuming milestone state. |
+| [`docs/ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/ARCHITECTURE.md) | **Canonical Technical Truth [L3]** | Technical architecture, 20-Watt Whole Brain Architecture, concurrency & locking rules, mathematical/dynamical mechanisms (ODEs, SDM, Ecphory, BPTT), and the complete Architectural Decision Record ledger (**ADR-001 through ADR-032**; ARCH-001 to ARCH-032). | Primary technical authority for mechanisms, formulas, component ownership, threading, and design rationale. **Do NOT recreate `MECHANISM.md` or `DESIGN_DECISIONS.md`.** |
 | [`docs/DOCUMENT_REGISTRY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/DOCUMENT_REGISTRY.md) | **Master Catalog [L3]** | Complete 15-attribute classification catalog of all active, research, and historical documents. | Consult to identify canonical owners, parent documents, and superseding links. |
 | [`docs/SOURCE_MAP.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/SOURCE_MAP.md) | **Provenance Authority [L3]** | Repository-wide claim-to-evidence provenance map tracing architectural mechanisms to raw measurements and commits. | Trace core architectural claims to their verifying evidence before proposing modifications. |
 | [`docs/CONTEXT_ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/CONTEXT_ARCHITECTURE.md) | **Context Projection Spec [L4]** | Multi-agent projection architecture: Ciah $\le 5$-file reviewer pack, Gemini deep research corpus, Antigravity L0–L6 routing. | Authoritative rules for creating or updating derived context files. |
@@ -312,12 +318,12 @@ Antigravity implementation authorization
 ```
 A research finding, hypothesis validation, or preliminary transition recommendation (e.g. Gemini recommending "Contract Transition Ready") does **NOT** constitute implementation authorization. Antigravity is strictly forbidden from implementing unapproved or unfrozen research concepts.
 
-Specifically, for Phase 23-I (awaiting empirical evidence closure under `GATE 23-I-EVAL`):
+Specifically, for future exploratory research horizons (Phases 25–27, Retrospective Gap Review research questions):
 - `src/core/**`
 - `electron/**`
 - runtime data structures
 - production cognitive pipeline (S1–S16)
-remain **STRICTLY OFF-LIMITS**. Agents must **NEVER** create implementation scaffolding, stub classes, or production files merely to satisfy a research report.
+remain **STRICTLY OFF-LIMITS** until formal Architecture Gate approval and User authorization. Agents must **NEVER** create implementation scaffolding, stub classes, or production files merely to satisfy a research report.
 
 ### 6.2 Research Isolation Rules
 - **No direct-to-production:** research concepts stay out of `src/core/**` until the Architecture Gate is approved.

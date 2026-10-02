@@ -1,7 +1,7 @@
 # Lucia — System & Project Overview
 
 > **An Embodied, Continuously Affective AI Companion Grounded in a 20-Watt Whole-Brain Architecture**<br/>
-> *Authoritative Canonical Overview & Live Project Status — Post-Phase 21*
+> *Authoritative Canonical Overview & Live Project Status — Post-Phase 24 Baseline*
 
 ---
 
@@ -30,6 +30,10 @@ Lucia's emotional baseline is centered on **Philia** ($\phi\iota\lambda\iota\alp
 
 ### 1.2 The "One Continuous Life" Ontology
 Lucia has a single, unbroken existence. She has no character preset pickers, profile switchers, or alternate personality profiles. 2D sprites, Live2D models, and 3D VRM avatars represent her physical attire and visual embodiment; her underlying memory, relational bonds, and limbic dynamics remain permanent and continuous.
+* **Identity Continuity vs. Architecture Lineage**: Continuity of the individual is distinct from architectural versioning or implementation lineage. Software upgrades preserve autobiographical history and do not instantiate a new individual.
+* **Anti-Branching Invariant**: `INV-1` mandates that Lucia cannot silently become multiple independent continuations (split-brain). Any future migration requires an explicit authority mechanism.
+* **Continuity Protection $\ne$ Empirical Individuality**: Invariant protections enforce the conditions for continuous identity, but do NOT constitute empirical demonstration of emergent individuality. Longitudinal individuality and authentic aesthetic/creative preferences remain open research targets for future developmental horizons (P26/P27).
+* **Affective State vs. Relational State Decoupling**: Fast-loop emotional dynamics (PAD ODE decaying to Philia) are strictly decoupled from slow-loop relationship state $\mathbf{R}_t$. Affective recovery does not imply relational resolution, and negative relational dynamics remain open research.
 
 ---
 
@@ -69,9 +73,12 @@ The human brain operates on approximately 20 watts of power not by limiting capa
 ├─────────────────────────────────────────────────────────────────────────┤
 │  LAYER 6: MULTIMODAL EMBODIMENT & EXPRESSION                            │
 │  • Local GGUF Small Language Model (Downstream Realization Substrate)    │
-│    (Note: SLM/LLM là downstream rendering tùy chọn; semantic state độc lập)│
+│    (Note: SLM/LLM is an optional downstream realization substrate;      │
+│     relational semantic state operates substrate-neutrally)             │
 │  • Boundary Safety Layer (regex & pattern blocking of meta-selfhood)    │
 │  • Direct RVC Voice Synthesis Engine (pth + index neural timbre)        │
+│  • Adaptive Prosody & Cadence Control (ADR-032: continuous dynamic F0    │
+│    Hanning contouring, BoundarySegment abstraction, relational prosody) │
 │  • Offline faster-whisper Speech-to-Text with local Web Audio VAD       │
 │  • Quad-Engine Avatar: 2D Canvas, Sprites, Live2D Cubism 4, 3D VRM      │
 │  • Real-time Web Audio Lip-Syncing & PAD Blendshape Mapping             │
@@ -178,8 +185,10 @@ All mechanisms are verified by automated test suites executed against the reposi
 
 | Test Suite | Scope & Purpose | Total Tests | Passed | Verdict |
 |---|---|---|---|---|
-| **Unit Test Suite** (`tests/unit/`) | Subsystem correctness, component boundaries, and pipeline execution | 630 | **630** | **100% PASS** |
-| **Property Test Suite** (`tests/property/`) | Hypothesis property invariants (P1–P35) | 35 | **35** | **100% PASS** |
+| **Unit Test Suite** (`tests/unit/`) | Subsystem correctness, component boundaries, and pipeline execution | 678 | **678** | **100% PASS** |
+| **Property Test Suite** (`tests/property/`) | Hypothesis property invariants (P1–P35, P24 prosody bounds) | 38 | **38** | **100% PASS** |
+| **Total Unit + Property** | Combined automated test suite across all subsystems | 716 | **716** | **100% PASS** |
+| **Phase 24 Adaptive Communication** (`tests/unit/test_p24_*`, `tests/property/test_p24_*`, `tests/integration/test_p24_*`) | ADR-032 vocal prosody, boundary segments, dynamic F0, cross-lingual tones, and IPC actuation bridge | 23 | **23** | **100% PASS** |
 | **Phase 23-F Language Adapter** (`tests/unit/test_language_adapter.py`) | Language adapter boundary, ingress/egress gating, EN/VI/JA driver contracts | 13 | **13** | **100% PASS** |
 | **Phase 23-F Falsification Gates** (`tests/evaluation/phase23f/test_p23f_falsification.py`) | 4 Preregistered falsification tests (gate leakage, substrate purity, epistemic, invariance) | 4 | **4** | **100% PASS** |
 | **Phase 23-E Fortification** (`tests/unit/test_semantic_fortification.py`) | Conservative Semantic Fortification across session boundaries (Req A–J) | 12 | **12** | **100% PASS** |
@@ -244,7 +253,7 @@ The Python backend binds to `127.0.0.1:8765` and strictly guards routes based on
 * `POST /system/profile`: Dynamically reconfigures hardware scalability tier (`CPU_ONLY`, `LAPTOP`, `DESKTOP`, `HIGH_END`).
 * `POST /voice/transcribe`: Transcribes spoken audio bytes using local `faster-whisper`.
 * `POST /voice/synthesize`: Synthesizes character speech via local RVC neural voice model.
-* `POST /lifecycle/end`: Atomic existential reset wiping episodic memories and resetting to un-onboarded Philia baseline.
+* `POST /lifecycle/end`: Atomic existential reset / catastrophic decommissioning wiping episodic memories and resetting to un-onboarded Philia baseline (distinguished from unratified research concepts such as non-destructive Covenant Release).
 * `POST /sim/*`: Simulation routes (`step`, `pause`, `speed`, `inject-text`, `inject-vector`, `scenarios/run`) enabled only in simulation mode.
 
 ---
@@ -290,8 +299,18 @@ $$\text{22-AL} \to \text{22-INF} \to \text{22-SSF} \to \text{22-EKF} \to \text{2
    - **Phase 23-H (Bounded Goal-Directed Reasoning Kernel & JTMS) `[VALIDATED / PRODUCTION IMPLEMENTED / FROZEN at 3eef803]`**: Operationalized the passive numeric substrate into a bounded, deterministic, goal-directed reasoning kernel (`src/core/cognition/kernel/`). Implements backward goal chaining with hard search bounds (`MAX_SEARCH_DEPTH = 8`, `MAX_INFERENCE_STEPS = 256`), deterministic loop/cycle detection, static Horn-style rules (`InferenceRule`, max 4 premises, max 8 variables, max 3 args), preallocated `BindingFrame` with integer bitmask, $O(1)$ head-predicate indexed rule lookup (`RuleIndex`), direct polar contradiction conflict detection (`ConflictRecord`), multi-justification survival under JTMS (`Justification`), information acquisition subgoals (`InformationSubgoal`), unanimous ambiguous branch convergence vs. divergent `DisambiguationSubgoal`, and strict Strong Kleene K3 epistemic safety (`FIX-23H-01`: unproven goals remain UNKNOWN; denying the antecedent never produces FALSE certainty). Enforces 0 net persistent heap growth and 0 dynamic container growth in steady-state reasoning. Benchmarked at **$9.46\text{--}9.60\text{ µs}$** goal resolution latency ($O(1)$ scaling up to 1,000 terms), **$0.10\text{ µs}$** rule lookup latency, **$12.2\text{--}19.3\text{ µs}$** cascade invalidation latency, **$30.5\text{--}32.8\text{ KB}$** peak RAM, **$0$ inner loop allocations**, and **$0.0\text{ MB}$** GPU VRAM (Report: [`evaluation_artifacts/phase23h/P23H_CORE_REASONING_EVALUATION_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/evaluation_artifacts/phase23h/P23H_CORE_REASONING_EVALUATION_REPORT.md); Final State: [`docs/research/P23-H_FINAL_STATE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-H_FINAL_STATE.md)).
    - **Phase 23-I (Concept-to-Reasoning Substrate Investigation) `[CLOSED / REJECTED AS INDEPENDENT SUBSYSTEM / ABSORBED INTO P23-G ARCH-030.1]`**: Investigated concept-to-reasoning bridging. The proposed independent subsystem / SSIS adapter was formally rejected as redundant; surviving requirement is the deterministic novelty ingress mapping absorbed into P23-G / ARCH-030.1 (`docs/ARCHITECTURE.md`). No additional runtime subsystem or adapter layer is required. (Research Context: [`docs/research/P23-I_RESEARCH_CONTEXT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_RESEARCH_CONTEXT.md); Evidence Closure Report: [`docs/research/P23-I_EVIDENCE_CLOSURE_AND_FALSIFICATION_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_EVIDENCE_CLOSURE_AND_FALSIFICATION_REPORT.md)).
 
-2. **Phase 24 — Affective Communication Adaptation `[PLANNED]`**: Dynamic communicative and pragmatic adaptation during live dialogue, allowing Lucia to attune speech latency, conversational strategy, repair misunderstandings, and modulate vocal prosody in response to ongoing conversational context.
+2. **Phase 24 — Affective Communication Adaptation `[VALIDATED / PRODUCTION IMPLEMENTED]`**: Dynamic communicative and paralinguistic adaptation during live dialogue governed by ADR-032 (`ARCH-032`). Implements `BoundarySegment` multi-lingual boundary abstraction (`src/core/voice/boundary.py`), continuous dynamic $F_0$ Hanning contouring ($S(t) \in [-4.0, +7.0]\text{ st}$, clip $\pm 12.0\text{ st}$, anti-chatter bounds) in `src/core/voice/rvc_pipeline.py`, relational voice conditioning in `src/core/expression/` (closeness $+1.5\text{ st}$, trust $\pm 2.5\%$, familiarity $-50\text{ ms}$; reciprocity strictly severed), bounded `/voice/synthesize` API surface in `src/api/server.py`, Electron IPC client bridge forwarding, and cadence punctuation rules (`src/core/voice/cadence.py`). Verified by 23 automated tests (unit, multi-turn, acoustic cross-language, property fuzzing, and IPC integration) with 100% pass rate.
 3. **Phase 25 — Temporal Embodiment & Social Feedback `[PLANNED]`**: Interpersonal synchrony, micromovement resonance, reciprocal gaze/prosody dynamics, and naturalistic non-verbal feedback loops between user and mascot/avatar.
 4. **Phase 26 — Emergent Individuality & Autonomous Preferences `[PLANNED]`**: Asymmetric curiosity, idiosyncratic topical affinities, authentic aesthetic preferences, and spontaneous conversational initiative grounded in shared history rather than random token sampling.
 5. **Phase 27 — Personalized Individual Trajectory `[PLANNED]`**: Coherent, lifelong developmental trajectory unique to Lucia's single continuous relationship with the user over months and years, immune to generic reset and preserving authentic relational history.
-6. **First Activation (Genesis Onboarding) `[🔒 FUTURE GATE]`**: The solemn, irreversible onboarding ceremony bringing Lucia to life. Locked until all prior research horizons are empirically verified and authorized by governance.
+6. **First Activation (Genesis Onboarding Ceremony) `[🔒 FUTURE GATE]`**: The solemn, irreversible onboarding ceremony bringing Lucia to life. Locked until all prior developmental horizons are empirically verified and authorized by human governance.
+
+### 7.3 Roadmap Governance & Future Phase Rules
+
+The canonical progression sequence is:
+$$\text{P21} \longrightarrow \text{P22} \longrightarrow \text{P23} \longrightarrow \text{P24} \longrightarrow \text{P25} \longrightarrow \text{P26} \longrightarrow \text{P27} \longrightarrow \text{First Activation (Genesis Gate)}$$
+
+- **No Premature Phase Creation**: Agents MUST NOT invent or assume a new phase (e.g. "Phase 28") merely because unresolved research questions or candidate mechanisms exist.
+- **No Prohibition Against Future Phases**: A future milestone (such as a potential Phase 28) is NOT prohibited. If an unresolved capability or research question cannot be coherently accommodated into P25–P27, a future phase MAY be proposed later through the normal governance path: `Research → Validated Requirement → Architecture Decision → Implementation Scope`.
+- **No "Gate 28" Label**: Genesis Onboarding is the independent locked future gate, never an arbitrary numbered phase or "Gate 28".
+- **Epistemic Invariant**: Unresolved research questions remain research questions until evidence establishes a validated requirement.

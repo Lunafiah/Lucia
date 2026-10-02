@@ -36,7 +36,7 @@ Every documented artifact in the Lucia repository is registered and classified a
 | **DOC-CAN-002** | Master Invariant Ledger | [`docs/L1_INVARIANTS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/L1_INVARIANTS.md) | Canonical Current | REPO-WIDE | Operational | `CANONICAL` | `CANONICAL` | Self | Codifies 8 core invariants & lock rules |
 | **DOC-CAN-003** | Master Agent Operating Instructions | [`AGENTS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/AGENTS.md) | Canonical Current | REPO-WIDE | Operational | `CANONICAL` | `CANONICAL` | Self | Master instructions, decision sequences |
 | **DOC-CAN-004** | Canonical Project Truth & Roadmap | [`docs/00_PROJECT_OVERVIEW.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/00_PROJECT_OVERVIEW.md) | Canonical Current | REPO-WIDE | Operational | `CANONICAL` | `CANONICAL` | Self | Subsystem health matrix, milestone status |
-| **DOC-CAN-005** | Technical Architecture & ADR Ledger | [`docs/ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/ARCHITECTURE.md) | Canonical Current | REPO-WIDE | Operational | `CANONICAL` | `CANONICAL` | Self | ADR-001 to ADR-028, ARCH-001 to ARCH-031 |
+| **DOC-CAN-005** | Technical Architecture & ADR Ledger | [`docs/ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/ARCHITECTURE.md) | Canonical Current | REPO-WIDE | Operational | `CANONICAL` | `CANONICAL` | Self | ADR-001 to ADR-032, ARCH-001 to ARCH-032 |
 | **DOC-CAN-006** | Documentation Architecture | [`docs/DOCUMENTATION_ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/DOCUMENTATION_ARCHITECTURE.md) | Canonical Current | REPO-WIDE | Operational | `CANONICAL` | `CANONICAL` | Self | Information architecture & taxonomy |
 | **DOC-CAN-007** | Master Phase Registry | [`docs/PHASE_REGISTRY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PHASE_REGISTRY.md) | Canonical Current | REPO-WIDE | Operational | `CANONICAL` | `CANONICAL` | Self | Exhaustive milestone progression ledger |
 | **DOC-CAN-008** | Master Document Registry | [`docs/DOCUMENT_REGISTRY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/DOCUMENT_REGISTRY.md) | Canonical Current | REPO-WIDE | Operational | `CANONICAL` | `CANONICAL` | Self | This document: full catalog & metadata |
@@ -183,10 +183,22 @@ Every documented artifact in the Lucia repository is registered and classified a
 
 ---
 
-## 7. Maintenance & Registration Rules
+## 7. Phase 24 Adaptive Communication Series & Retrospective Research
+
+| Doc ID | Title | File Path | Class | Phase | Stage | Status | Authority | Canonical Owner |
+|---|---|---|---|---|---|---|---|---|
+| **DOC-P24-001** | P24 Adaptive Communication Contract | [`tests/evaluation/phase24/P24_ADAPTIVE_COMMUNICATION_CONTRACT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation/phase24/P24_ADAPTIVE_COMMUNICATION_CONTRACT.md) | Architectural Decision | P24 | Contract | `RATIFIED / IMPLEMENTED` | `DECISION` | `docs/ARCHITECTURE.md` §8 (ADR-032) |
+| **DOC-P24-002** | P24 ADR Adaptive Communication | [`tests/evaluation/phase24/P24_ADR_ADAPTIVE_COMMUNICATION.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation/phase24/P24_ADR_ADAPTIVE_COMMUNICATION.md) | Architectural Decision | P24 | ADR Specification | `RATIFIED / IMPLEMENTED` | `DECISION` | `docs/ARCHITECTURE.md` §8 (ADR-032) |
+| **DOC-P24-003** | P24 Gemini Final Research Report | [`docs/research/P24_GEMINI'S_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P24_GEMINI%27S_REPORT.md) | Research History | P24 | Synthesis | `RESEARCH VALIDATED` | `RESEARCH` | Self |
+| **DOC-P24-004** | P24 Voice Benchmark Prosody Report | [`tests/evaluation/phase24/voice_benchmark/VOICE_BENCHMARK_PROSODY_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation/phase24/voice_benchmark/VOICE_BENCHMARK_PROSODY_REPORT.md) | Evaluation Evidence | P24 | Benchmark Report | `EMPIRICALLY VERIFIED` | `EVIDENCE` | Self |
+| **DOC-RES-001** | Retrospective 7-Topic Architectural Gap Review | [`docs/research/RETROSPECTIVE_ARCHITECTURAL_GAP_REVIEW_7_TOPICS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/RETROSPECTIVE_ARCHITECTURAL_GAP_REVIEW_7_TOPICS.md) | Research History | Post-P24 | Architectural Review | `RESEARCH REVIEW (NON-CANONICAL)` | `RESEARCH` | Self |
+
+---
+
+## 8. Maintenance & Registration Rules
 
 When authoring any new document, specification, or evaluation report:
-1. **Assign a Document ID**: Prepend with standard category prefix (`DOC-CAN`, `DOC-SPC`, `DOC-P22`, `DOC-P23`, `DOC-REV`).
+1. **Assign a Document ID**: Prepend with standard category prefix (`DOC-CAN`, `DOC-SPC`, `DOC-P22`, `DOC-P23`, `DOC-P24`, `DOC-REV`, `DOC-RES`).
 2. **Explicit Canonical Owner**: The document must explicitly declare which document owns the underlying facts.
 3. **Register in Document Registry**: Add the document entry to this catalog before merging into main.
 4. **Epistemic Invariant Check**: Ensure unproven hypotheses are marked `RESEARCH` and never `VERIFIED`.

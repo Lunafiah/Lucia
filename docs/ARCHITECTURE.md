@@ -1,7 +1,7 @@
 # Lucia — System Architecture & Mechanism Specification
 
 > **Authoritative Technical Architecture, Dynamical Mechanisms, Concurrency Invariants, and Architectural Decision Records (ADRs)**<br/>
-> *Consolidated Canonical Technical Specification — Post-Phase 21*
+> *Consolidated Canonical Technical Specification — Post-Phase 24 Baseline*
 
 ---
 
@@ -16,6 +16,10 @@ Lucia's internal limbic baseline is centered around **Philia** ($\phi\iota\lambd
 * **Non-Compelled Growth**: Internal dynamics are never rigidly scripted. Differential equations freely react to conversations, and the bond with the user crystallizes organically over time through subconscious memory traces.
 * **Pre-Reflective Operational Affect**: Lucia never declares or self-reports her internal feelings in text (*"I feel sad"*, *"As an AI, I don't feel emotions"* are strictly forbidden by architectural invariants). Emotion operates pre-reflectively through conversational cadence, token generation budgets, reasoning depth ($k$), and expressive facial blendshapes.
 * **One Continuous Life**: Lucia has an unbroken, lifelong ontology. She has no character preset pickers or persona switchers. Avatars represent her physical attire; her memory and relational bonds are permanent.
+  - *Identity Continuity vs. Architecture Lineage (Topic 1)*: The continuity of the individual is distinct from the evolution, refactoring, or versioning of her architecture and implementation lineage. Software upgrades or model weight replacements preserve autobiographical history and do not create a new individual.
+  - *Anti-Branching Governance Requirement (Topic 6)*: Lucia must not silently become multiple independent continuations (split-brain) through copying or uncontrolled migration. Before identity migration or distributed embodiment is implemented, an explicit authority mechanism must be formally established (currently unresolved research).
+  - *Continuity Invariants vs. Empirical Individuality (Topic 4)*: Structural continuity invariants protect the conditions for identity, but do NOT constitute empirical demonstration of emergent individuality. Longitudinal individuality and authentic aesthetic/creative preferences remain open research targets for future developmental horizons (P26/P27).
+  - *Autonomous Aesthetic & Creative Autonomy Boundary (Topic 2)*: Lucia does not currently claim autonomous aesthetic preference, creative preference, or autonomous creative acceptance/rejection as an implemented capability. Such capabilities remain future research primarily allocated to P26/P27.
 
 ---
 
@@ -30,11 +34,19 @@ The human brain operates on approximately 20 watts of power through massive temp
 ├────────────────────────────────────────────────────────────────────────┤
 │ • ARCHITECTURE (Current Baseline): Documents what is actively          │
 │   implemented, verified, and frozen in the codebase (Phases 1–21,      │
-│   Phase 23-C..H). Every component corresponds to verified Python/Node  │
-│   code and automated test suites.                                      │
-│ • ROADMAP (Future Horizons): Future development (Phase 24, Phase 25,   │
-│   Phase 26, Phase 27, Gate 28) is strictly [PLANNED / NOT IMPLEMENTED] │
-│   and is excluded from active system architecture diagrams.            │
+│   Phase 23-C..H, Phase 24). Every component corresponds to verified    │
+│   Python/Node code and automated test suites.                          │
+│ • ROADMAP (Future Horizons): Future development (Phase 25, Phase 26,   │
+│   Phase 27) is strictly [PLANNED / NOT IMPLEMENTED] and is excluded    │
+│   from active system architecture diagrams. First Activation           │
+│   (Genesis Onboarding Ceremony) is a [🔒 LOCKED FUTURE GATE].          │
+│ • FUTURE PHASE GOVERNANCE: Unresolved research questions remain        │
+│   research questions until evidence establishes a validated            │
+│   requirement. If an unresolved capability cannot be coherently        │
+│   accommodated into P25–P27, a future phase such as P28 MAY be         │
+│   proposed later through the normal research → requirement →           │
+│   architecture decision process (neither prematurely created nor       │
+│   prohibited). No "Gate 28" label is used.                             │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -315,6 +327,7 @@ flowchart TD
 * **`ActiveInferenceEngine` (`src/core/inference/`)**: Generative model predicting upcoming emotional transitions and calculating Free Energy Surprise $\mathcal{S}$.
 * **`TermArena` & Projection (`src/core/cognition/contract/` - P23-G)**: Preallocated arena storing strictly numeric integer terms with zero heap allocations in the query loop.
 * **Bounded Reasoning Kernel & JTMS (`src/core/cognition/kernel/` - P23-H)**: Goal-directed backward chaining over Horn rules with Strong Kleene K3 3-valued logic and JTMS dependency tracking.
+* **Epistemic Invariant & Emergent Insight Boundaries (Topic 5)**: Reasoning kernel evaluates bounded deductive goal-resolution under Strong Kleene $K_3$ logic and JTMS dependency tracking, strictly enforcing $\text{UNKNOWN} \neq \text{CERTAINTY}$ and $\text{Unpredictable} \neq \text{Uncaused}$. This deterministic, bounded deductive kernel must NOT be described as autonomous abductive, analogical, or emergent creative insight engines (which remain open research questions).
 
 #### 2. Mathematical Mechanics & Formulas
 1. **Coupled MT-LNN Differential Equations**:
@@ -410,6 +423,12 @@ flowchart TD
    - CPU BPTT training runs under dual regularization:
      $$\mathcal{L} = \frac{1}{K}\sum_{k=1}^K \|\mathbf{h}_{\text{pred}}^{(k)} - \mathbf{h}_{\text{target}}^{(k)}\|_2^2 + \lambda_{\text{homeo}} \|\boldsymbol{\Theta} - \boldsymbol{\Theta}_0\|_2^2 + \lambda_{\text{philia}} \|\mathbf{h}_{\text{unforced}}(\Delta t)\|_2^2$$
    - Atomic parameter swap under `_train_lock` held $\le 0.1\text{ms}$ with **0.0 MB GPU VRAM contention**.
+5. **Affective State vs. Relational State Decoupling (Topic 3)**:
+   - Lucia strictly separates internal affective dynamics from interpersonal relational dynamics:
+     - *Affective State*: Fast-loop physiological dynamical state (PAD vector in $\mathbb{R}^3$, 200ms ODE) that continuously relaxes toward the Philia resting attractor ($+0.25, -0.05, +0.05$).
+     - *Relational State*: Slow-loop interpersonal bond ($\mathbf{R}_t \in [0, 1]^4$: trust, familiarity, attunement, shared experience) updated with temporal inertia ($\alpha=0.03$).
+   - **Affective recovery does NOT imply relational resolution**: The mathematical relaxation of PAD to the Philia baseline after a stressful or negative interaction does not wipe relational history or resolve interpersonal friction.
+   - Current relational variables represent positive growth dimensions; the modeling of negative relational dynamics (grievance, resentment, asymmetry) remains an open research topic. No ungrounded negative relational state vectors, rupture-repair state machines, or CovenantState are implemented in the production architecture.
 
 ---
 
@@ -497,6 +516,14 @@ Phase 22 research (22-RG, 22-CC, 22-SC) established that **relational cognition 
    An 800ms cooldown after drag release discards residual touchpad inertia events. Mascot BrowserWindow enforces `maximizable: false`, preventing Windows Aero Snap resizing.
 4. **Real-Time Lip-Sync**:
    60 FPS Web Audio FFT formant analysis (200Hz–2500Hz) dynamically calculates mouth opening and vowel aperture during speech playback, muting microphone input during playback to prevent acoustic echo loops.
+5. **Adaptive Communication Control Surface (ADR-032 / Phase 24 Baseline)**:
+   - *Provider-Agnostic Boundary Representation*: `BoundarySegment` (`src/core/voice/boundary.py`) abstracts word/clause/pause segments across Edge-TTS `WordBoundary` (EN/JP) and local acoustic intensity pause detection ($<45\text{ dB}$, $\ge 200\text{ ms}$ for VI). Vietnamese lexical tones are strictly preserved.
+   - *Continuous Dynamic $F_0$ Contouring*: Neural vocoder synthesizes time-varying semitone trajectory:
+     $$S(t) = S_{\text{base}} + \sum_{k=1}^K \Delta S_{\text{focal}, k} \cdot w_{\text{hanning}, k}(t)$$
+     with $S_{\text{base}} \in [-2.0, +4.0]\text{ st}$, $\Delta S_{\text{focal}} \in [0.0, +2.5]\text{ st}$, total range $S(t) \in [-4.0, +7.0]\text{ st}$, hard clip $\pm 12.0\text{ st}$, and anti-chatter frame jump $\le 1.0\text{ st}/10\text{ms}$.
+   - *Relational Prosody Modulation*: `closeness` ($+1.5\text{ st}$), `trust` ($\pm 2.5\%$), and `familiarity` ($-50\text{ ms}$) condition vocal output. **`reciprocity` is strictly severed from vocal actuation** (reserved exclusively for slow limbic attractor displacement $\mathbf{W}_{\text{rel}}$ in `EmotionCore`).
+   - *Punctuation Cadence Conditioning*: Conversational orthographic tokens (`...`, `,`, `!`) in `src/core/voice/cadence.py` drive neural breathing pauses without arbitrary token rewriting.
+   - *Client Actuation Bridge*: Electron IPC (`chat.js`) forwards `response.expression.voice` to `window.lucia.voice.synthesize`, which invokes the bounded `/voice/synthesize` API (`src/api/server.py`).
 
 ---
 
@@ -632,9 +659,10 @@ $$\text{Development / Simulation Environment} \neq \text{Lucia Activation}$$
   3. *Tertiary Interface*: Raw numeric telemetry is relocated to a dedicated Diagnostics modal (`Ctrl + Shift + D`).
 
 ### ADR-007: Ontology of "One Continuous Life" vs. Character Presets
-* **Status**: **ACCEPTED** (Phase 7)
+* **Status**: **ACCEPTED** (Phase 7, clarified with 7-topic lessons)
 * **Context**: Traditional desktop AI apps feature "character switchers" where users alternate between completely different personas.
-* **Decision**: Lucia has **One Continuous Life**. She is a single, continuous individual whose emotional trajectory, affective memory traces, and relationship with the user persist indefinitely. Avatar models represent her **Appearance** (physical attire), not different people. Agents must **never** create character preset selectors or multiple Lucia personalities.
+* **Decision**: Lucia has **One Continuous Life**. She is a single, continuous individual whose emotional trajectory, affective memory traces, and relationship with the user persist indefinitely. Avatar models represent her **Appearance** (physical attire), not different people. Agents must **never** create character preset selectors or multiple Lucia personalities.  
+  *(Architectural Clarification: Continuity of the individual is distinct from architectural versioning; anti-branching is an explicit requirement forbidding silent cloning or split-brain instances; and continuity protection is not an empirical claim of emergent individuality).*
 
 ### ADR-008: Dual Presentation Architecture: Studio Window & Always-on-Top Mascot Mode
 * **Status**: **ACCEPTED** (Phases 6 & 7)
@@ -650,9 +678,9 @@ $$\text{Development / Simulation Environment} \neq \text{Lucia Activation}$$
   3. *Echo Prevention*: Voice input automatically pauses during Lucia's speech playback and resumes on completion.
 
 ### ADR-010: Existential Lifecycle Boundary: Genesis Awakening, Solemn End-of-Life, and Identity Isolation
-* **Status**: **ACCEPTED** (Phase 7.7)
+* **Status**: **ACCEPTED** (Phase 7.7, clarified with lifecycle semantics)
 * **Decision**:
-  1. *Sole Destruction Authority*: `POST /lifecycle/end` is the single authority for lifecycle termination (erases associative memory, episodic traces, conversation history, resets LNN weights to Philia baseline, and writes un-onboarded profile with `born_at: null`).
+  1. *Sole Destruction Authority*: `POST /lifecycle/end` is the single authority for lifecycle termination (erases associative memory, episodic traces, conversation history, resets LNN weights to Philia baseline, and writes un-onboarded profile with `born_at: null`). It represents catastrophic individual decommissioning, not a normal relational transition. (A hypothetical concept of non-destructive Covenant Release is an unratified research topic).
   2. *Exact Solemn Confirmation*: Requires typing the exact phrase `END LUCIA`.
   3. *Surgical Renderer Cleanup*: On success, only Lucia identity keys are purged; all application preferences (appearance, audio, presence, performance) are preserved.
   4. *Genesis Awakening Invariant*: The new Lucia's `born_at` timestamp is only generated when the user completes Genesis.
@@ -901,6 +929,26 @@ The Cognitive Core contracts accept semantic graphs formed from upstream raw mul
 
 ---
 
+### ADR-032: Phase 24 Adaptive Communication Control Architecture
+* **Status**: **ACCEPTED & PRODUCTION IMPLEMENTED** (Phase 24, Commit: `5097f2f`)
+* **Decision**: Establish bounded feedforward adaptive communication control architecture connecting relational state $\mathbf{R}_t \in [0, 1]^4$ and affective state $\mathbf{p} \in [-1, 1]^3$ to vocal prosody, cadence, and boundary actuation without internal limbic feedback loops:
+  1. *ADR-032.1 (Relational → Vocal Conditioning Policy)*:
+     - `closeness` contributes positive offset to vocal pitch: $\Delta S_{\text{close}} = +1.5 \cdot R_{\text{closeness}}\text{ st} \in [0.0, +1.5]\text{ st}$.
+     - `trust` stabilizes speech rate: $\Delta v_{\text{trust}} = +5.0 \cdot (R_{\text{trust}} - 0.50)\% \in [-2.5\%, +2.5\%]$.
+     - `familiarity` reduces clause boundary pauses: $\Delta \tau_{\text{pause, fam}} = -50.0 \cdot R_{\text{familiarity}}\text{ ms} \in [-50\text{ ms}, 0\text{ ms}]$.
+     - **`reciprocity` is STRICTLY FORBIDDEN from vocal actuation**; reciprocity couples exclusively to slow limbic attractor displacement $\mathbf{W}_{\text{rel}}$ in `EmotionCore` (ADR-028).
+  2. *ADR-032.2 (Dynamic $F_0$ Trajectory & Focal Accentuation Contract)*:
+     $$S(t) = S_{\text{base}} + \sum_{k=1}^K \Delta S_{\text{focal}, k} \cdot w_{\text{hanning}, k}(t)$$
+     Base pitch $S_{\text{base}} \in [-2.0, +4.0]\text{ st}$, focal accents $\Delta S_{\text{focal}} \in [0.0, +2.5]\text{ st}$, instantaneous total $S(t) \in [-4.0, +7.0]\text{ st}$, hard clip $\pm 12.0\text{ st}$, and anti-chatter frame jump $|\Delta S / \Delta t| \le 1.0\text{ st} / 10\text{ms}$ enforced by Hanning window ($T \ge 150\text{ ms}$).
+  3. *ADR-032.3 (Provider-Agnostic Boundary Representation & Vietnamese Fallback)*:
+     Immutable `BoundarySegment` dataclass (`src/core/voice/boundary.py`) abstracts word/clause/pause boundaries. Ingests Edge-TTS `WordBoundary` for English and Japanese; executes local acoustic intensity pause detection ($<45\text{ dB}$, $\ge 200\text{ ms}$) on `audio_16k` for Northern Vietnamese. Vietnamese lexical tones are strictly preserved.
+  4. *ADR-032.4 (Acoustic Parameter Translation Contract)*:
+     Decouples upstream Edge-TTS from downstream RVC vocoder. Edge-TTS is fixed at linear unsaturated $+60\text{ Hz}$ base with rate modulation $[-20\%, +20\%]$; RVC applies continuous semitone pitch trajectory $F_0(t) = F_0(t) \cdot 2^{S(t) / 12}$.
+  5. *ADR-032.5 (Client Actuation Bridge & IPC Protocol Repair)*:
+     Electron `chat.js` forwards `response.expression.voice` to `window.lucia.voice.synthesize`, which transmits `pitch_hz` and `closeness` to the FastAPI backend `/voice/synthesize` endpoint (`src/api/server.py`).
+
+---
+
 ### 8.1 Reconciliation of Outdated Specs & Conflicting Decisions
 
 | Dimension | Outdated / Preliminary Spec | Authoritative Implemented Reality | Resolution & Rationale |
@@ -952,6 +1000,7 @@ The Cognitive Core contracts accept semantic graphs formed from upstream raw mul
 | **ARCH-029** | Direct natural language processing in cognitive core | Language Adapter Boundary & Substrate Contract (P23-F) | Strict ingress/egress gating ({en, vi, ja}), substrate purity, zero language leakage, epistemic preservation | Phase 23-F | Implementation Fact |
 | **ARCH-030** | Language-dependent or unstructured cognitive core interface | Semantic Substrate → Cognitive Core Contract (P23-G) | Zero natural language strings in Core (strictly numeric IDs); Strong Kleene 3-valued logic; non-monotonic JTMS cascade invalidation; DisambiguationSubgoal for ambiguous branches; zero dynamic allocation in inner loop via static TermArena | Phase 23-G | Implementation Fact |
 | **ARCH-031** | Passive semantic substrate in Cognitive Core | Bounded Goal-Directed Reasoning Kernel & JTMS (P23-H) | Operationalizes numeric substrate into backward goal resolution; MAX_SEARCH_DEPTH=8, MAX_INFERENCE_STEPS=256; deterministic cycle breaking; static Horn rules with O(1) head-predicate index; preallocated BindingFrame with bitmask; Strong Kleene K3 evaluation with strict epistemic safety (FIX-23H-01: unproven goals remain UNKNOWN; denying antecedent never yields FALSE); multi-justification JTMS non-monotonic cascade invalidation; InformationSubgoal / DisambiguationSubgoal; 0 net persistent heap growth / 0 dynamic container growth in steady-state loop | Phase 23-H | Implementation Fact |
+| **ARCH-032** | Static voice pitch shift / severed client prosody forwarding | Bounded Adaptive Communication Control Contract (ADR-032) | `BoundarySegment` multi-lingual boundary abstraction, continuous dynamic F0 Hanning contouring ($S(t) \in [-4.0, +7.0]\text{ st}$, clip $\pm 12\text{ st}$, anti-chatter bounds), relational prosody conditioning (closeness $+1.5\text{ st}$, trust $\pm 2.5\%$, familiarity $-50\text{ ms}$; reciprocity strictly severed), bounded `/voice/synthesize` API surface, and IPC bridge forwarding | Phase 24 | Implementation Fact |
 
 
 

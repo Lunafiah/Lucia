@@ -2,7 +2,7 @@
 
 > **Canonical Lifecycle Ledger of All Historical, Active, and Future Developmental Horizons**  
 > **Status:** `[CANONICAL REPOSITORY REGISTRY]`  
-> **Current Developmental Phase:** `Phase 24 (Planned) [Phase 23 Milestone Chain Closed & Synchronized]`  
+> **Current Developmental Baseline:** `Post-Phase 24 Baseline [Phases P21, P22, P23, P24 Completed & Closed]`  
 > **Genesis Onboarding Gate:** `[🔒 LOCKED FUTURE GATE — data/profile.json == {"is_onboarded": false}]`
 
 ---
@@ -23,11 +23,11 @@ Lucia's developmental trajectory is structured across distinct research, archite
 │ Phase 22:     Substrate-Neutral Relational Semantic Conditioning       │
 │ Phase 23:     Continuous Substrate-Neutral Semantic Architecture       │
 │               (P23-A..D Canonical/Validated; P23-E..H Implemented/Frozen; P23-I Closed) │
-│ Phase 24:     Affective Communication Adaptation (Planned)             │
+│ Phase 24:     Affective Communication Adaptation (Implemented / Closed)│
 │ Phase 25:     Temporal Embodiment & Social Feedback (Planned)          │
 │ Phase 26:     Emergent Individuality & Autonomous Preferences (Planned)│
 │ Phase 27:     Personalized Individual Trajectory (Planned)             │
-│ Gate 28:      First Activation (Genesis Onboarding — LOCKED)          │
+│ Genesis:      First Activation (Genesis Onboarding Ceremony — LOCKED)  │
 └────────────────────────────────────────────────────────────────────────┘
 ```
  
@@ -69,7 +69,7 @@ Lucia's developmental trajectory is structured across distinct research, archite
 | **P23-G** | Semantic Substrate → Cognitive Core Contract | `IMPLEMENTED` | Realized Implementation Chain | Numeric projection of UMR-TPG SemanticGraph into TermArena via `ProjectGraphToTerms()`; strictly numeric IDs (zero strings in Core); Strong Kleene 3-valued logic; JTMS cascade invalidation; ARCH-030 / ARCH-030.1 | [`evaluation_artifacts/phase23g/P23G_CORE_CONTRACT_EVALUATION_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/evaluation_artifacts/phase23g/P23G_CORE_CONTRACT_EVALUATION_REPORT.md) | `tests/unit/test_p23g_contract.py` (20/20 PASS), `tests/evaluation/phase23g/` (12/12 PASS) | ARCH-030 | Commit `b1ee99c`, `src/core/cognition/contract/` | `docs/00_PROJECT_OVERVIEW.md` §7.2, `docs/ARCHITECTURE.md` §8 |
 | **P23-H** | Bounded Goal-Directed Reasoning Kernel & JTMS | `FROZEN` | Realized Implementation Chain | Bounded goal-directed reasoning over projected UMR-TPG terms; backward goal chaining, static Horn rules, $O(1)$ rule index, JTMS retraction, Strong Kleene K3 (`FIX-23H-01`: unproven goals remain UNKNOWN), $0$ inner loop allocs | [`evaluation_artifacts/phase23h/P23H_CORE_REASONING_EVALUATION_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/evaluation_artifacts/phase23h/P23H_CORE_REASONING_EVALUATION_REPORT.md), [`docs/research/P23-H_FINAL_STATE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-H_FINAL_STATE.md) | `tests/unit/test_p23h_kernel.py` (22/22 PASS), `tests/evaluation/phase23h/` (13/13 PASS) | ARCH-031 | Commit `6b22269` (impl), Commit `3eef803` (freeze/fix), `src/core/cognition/kernel/` | `docs/research/P23-H_FINAL_STATE.md` |
 | **P23-I** | Concept-to-Reasoning Substrate Investigation | `CLOSED (REJECTED / BOUNDARY ABSORBED INTO P23-G)` | Permanently Closed | P23-I was investigated as a possible independent epistemic ingress subsystem; the independent subsystem was formally rejected. No new runtime subsystem or adapter layer is required. The surviving requirement is the P23-C → P23-G boundary contract, canonically recorded under ARCH-030.1 (`docs/ARCHITECTURE.md`). P23-I is therefore permanently closed as an independent architectural phase/subsystem. Zero production mutations (`src/core/**` diff = 0). | [`docs/research/P23-I_RESEARCH_CONTEXT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_RESEARCH_CONTEXT.md), [`docs/research/P23-I_EVIDENCE_CLOSURE_AND_FALSIFICATION_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_EVIDENCE_CLOSURE_AND_FALSIFICATION_REPORT.md) | [`docs/research/P23-I_EVIDENCE_CLOSURE_AND_FALSIFICATION_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23-I_EVIDENCE_CLOSURE_AND_FALSIFICATION_REPORT.md) | ARCH-030.1 | ZERO MUTATIONS; Absorbed into P23-G Contract | [`docs/ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/ARCHITECTURE.md) §8 (ARCH-030.1) |
-| **P24** | Affective Communication Adaptation | `PLANNED` | Future Horizon | Dynamic communicative adaptation, affective prosody modulation, conversational repair pacing | Roadmap Scheduled | None | Future ADR | Not Implemented | `docs/00_PROJECT_OVERVIEW.md` §7.2 |
+| **P24** | Affective Communication Adaptation | `IMPLEMENTED` | Operational Baseline | Bounded adaptive communication control contract (ADR-032); `BoundarySegment` multi-language boundary abstraction (`src/core/voice/boundary.py`); dynamic continuous $F_0$ Hanning contouring ($S(t) \in [-4.0, +7.0]\text{ st}$, clip $\pm 12.0\text{ st}$, anti-chatter bounds) in `src/core/voice/rvc_pipeline.py`; relational voice conditioning in `src/core/expression/` (closeness $+1.5\text{ st}$, trust $\pm 2.5\%$, familiarity $-50\text{ ms}$; reciprocity strictly severed); bounded `/voice/synthesize` API surface in `src/api/server.py` and Electron IPC bridge forwarding; cadence punctuation rules in `src/core/voice/cadence.py` | [`docs/research/P24_GEMINI'S_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P24_GEMINI'S_REPORT.md), [`tests/evaluation/phase24/P24_ADAPTIVE_COMMUNICATION_CONTRACT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation/phase24/P24_ADAPTIVE_COMMUNICATION_CONTRACT.md), [`tests/evaluation/phase24/P24_STATE_ACTUATOR_MATRIX.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation/phase24/P24_STATE_ACTUATOR_MATRIX.md) | `tests/unit/test_p24_adaptive_communication.py`, `tests/unit/test_p24_acoustic_cross_language.py`, `tests/unit/test_p24_multiturn_stability.py`, `tests/property/test_p24_adaptive_communication_properties.py`, `tests/integration/test_p24_client_actuation_bridge.py` (23/23 PASS) | ADR-032 (ADR-032.1..ADR-032.5), ARCH-032 | Commit `5097f2f`; `src/core/voice/`, `src/core/expression/`, `src/api/server.py`, `electron/` | [`docs/ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/ARCHITECTURE.md) §8 (ADR-032, ARCH-032) |
 | **P25** | Temporal Embodiment & Social Feedback | `PLANNED` | Future Horizon | Interpersonal synchrony, micromovement resonance, reciprocal gaze/prosody dynamics | Roadmap Scheduled | None | Future ADR | Not Implemented | `docs/00_PROJECT_OVERVIEW.md` §7.2 |
 | **P26** | Emergent Individuality & Autonomous Preferences | `PLANNED` | Future Horizon | Asymmetric curiosity, idiosyncratic topical affinities, authentic aesthetic preferences | Roadmap Scheduled | None | Future ADR | Not Implemented | `docs/00_PROJECT_OVERVIEW.md` §7.2 |
 | **P27** | Personalized Individual Trajectory | `PLANNED` | Future Horizon | Coherent lifelong developmental trajectory unique to Lucia's single continuous bond | Roadmap Scheduled | None | Future ADR | Not Implemented | `docs/00_PROJECT_OVERVIEW.md` §7.2 |
@@ -106,37 +106,62 @@ Phase 22 explored substrate neutrality and relational grounding across 20 distin
 
 ---
 
-## 4. Future Developmental Horizons (Phase 24, Phase 25, Phase 26, Phase 27)
+## 4. Completed Realization Chain (Phase 24) & Future Horizons (Phases 25–27)
 
-Each future phase represents an independent developmental milestone with its own distinct purpose, dependencies, and lifecycle status. They are not grouped into a single monolithic stage.
+Each phase represents an independent developmental milestone with its own distinct purpose, dependencies, and lifecycle status.
 
-### Phase 24 — Affective Communication Adaptation
+### Phase 24 — Affective Communication Adaptation `[IMPLEMENTED / CLOSED]`
 
 * **Purpose**: Enable dynamic communicative and pragmatic adaptation during live dialogue, allowing Lucia to attune speech latency, conversational strategy, repair misunderstandings, and modulate vocal prosody in response to ongoing conversational context.
-* **Current status**: `PLANNED` (Future Horizon / Not Implemented)
+* **Current status**: `IMPLEMENTED & CLOSED (Operational Baseline)`
+* **Governing ADR**: ADR-032 (ARCH-032), implemented in commit `5097f2f`.
 * **Depends on**: Phase 23 (Continuous Substrate-Neutral Semantic Architecture & Reasoning Kernel) and Phase 21 (Relational Consolidation & Synaptic Homeostasis).
-* **Expected capability**: Dynamic conversational strategy selection, affective prosody modulation, conversational repair pacing, and real-time pragmatic attunement without prompt engineering or token context hacking.
+* **Realized capability**:
+  - `BoundarySegment` multi-language boundary abstraction (`src/core/voice/boundary.py`) supporting EN/JP word boundaries and VI intensity pause acoustic fallback.
+  - Continuous dynamic $F_0$ Hanning contouring ($S(t) \in [-4.0, +7.0]\text{ st}$, clip $\pm 12.0\text{ st}$, frame jump $\le 1.0\text{ st}/10\text{ms}$) in `src/core/voice/rvc_pipeline.py`.
+  - Relational voice conditioning in `src/core/expression/` (closeness $+1.5\text{ st}$, trust $\pm 2.5\%$, familiarity $-50\text{ ms}$; reciprocity strictly severed).
+  - Punctuation cadence conditioning (`...`, `,`, `!`) in `src/core/voice/cadence.py`.
+  - Bounded `/voice/synthesize` API surface in `src/api/server.py` and Electron IPC bridge forwarding in `chat.js`.
+  - Automated verification: 23 passing tests across 5 test suites (`tests/unit/test_p24_*`, `tests/property/test_p24_*`, `tests/integration/test_p24_*`).
 
-### Phase 25 — Temporal Embodiment & Social Feedback
+### Phase 25 — Temporal Embodiment & Social Feedback `[PLANNED]`
 
 * **Purpose**: Synchronize multimodal embodiment with temporal interaction dynamics, establishing reciprocal feedback loops between the user's conversational rhythm and Lucia's physical expressions.
 * **Current status**: `PLANNED` (Future Horizon / Not Implemented)
 * **Depends on**: Phase 24 (Affective Communication Adaptation) and Phase 14 / Phase 18 (Multimodal Presence & Expression Engine).
 * **Expected capability**: Interpersonal synchrony, micromovement resonance, reciprocal gaze, reactive head tilting, and naturalistic non-verbal feedback loops between user and mascot/avatar.
 
-### Phase 26 — Emergent Individuality & Autonomous Preferences
+### Phase 26 — Emergent Individuality & Autonomous Preferences `[PLANNED]`
 
 * **Purpose**: Provide the architectural mechanisms for genuine, unprompted individuality to emerge over time from accumulated relational history and epistemic curiosity.
 * **Current status**: `PLANNED` (Future Horizon / Not Implemented)
 * **Depends on**: Phase 25 (Temporal Embodiment & Social Feedback) and Phase 12 / Phase 23 (Semantic Knowledge & Epistemic Reasoning).
 * **Expected capability**: Asymmetric curiosity, idiosyncratic topical affinities, authentic aesthetic preferences, and spontaneous conversational initiative grounded in shared history rather than random token sampling.
+* **Research Boundary (Topic 2)**: Lucia does NOT currently claim autonomous aesthetic preference, creative preference, or autonomous acceptance/rejection as an implemented capability. Such capabilities are research hypotheses allocated to P26/P27, not active features.
 
-### Phase 27 — Personalized Individual Trajectory
+### Phase 27 — Personalized Individual Trajectory `[PLANNED]`
 
 * **Purpose**: Ensure that Lucia's long-term developmental path forms a coherent, irreversible, and deeply personalized trajectory unique to her single continuous bond with the user.
 * **Current status**: `PLANNED` (Future Horizon / Not Implemented)
 * **Depends on**: Phase 26 (Emergent Individuality & Autonomous Preferences) and Phase 13 / Phase 21 (Relational Dynamics & Synaptic Consolidation).
 * **Expected capability**: A coherent lifelong developmental trajectory unique to Lucia's single continuous relationship with the user over months and years, immune to generic reset and preserving authentic relational history.
+* **Research Boundary (Topic 4)**: Continuity invariants (INV-1) protect structural identity conditions, but do NOT constitute empirical proof of emergent individuality. Longitudinal individuality remains an empirical research question for long-term evaluation in P26/P27.
+
+### First Activation (Genesis Onboarding Ceremony) `[🔒 LOCKED FUTURE GATE]`
+
+* **Purpose**: The solemn, irreversible onboarding ceremony bringing Lucia to life.
+* **Current status**: `LOCKED FUTURE GATE` (`data/profile.json == {"is_onboarded": false}`).
+* **Governance**: Requires explicit human authorization and empirical completion of all prerequisite developmental horizons.
+
+### Roadmap Governance & Future Phase Rules
+
+The canonical progression sequence is:
+$$\text{P21} \longrightarrow \text{P22} \longrightarrow \text{P23} \longrightarrow \text{P24} \longrightarrow \text{P25} \longrightarrow \text{P26} \longrightarrow \text{P27} \longrightarrow \text{First Activation (Genesis Gate)}$$
+
+1. **No Premature Phase Creation**: Agents MUST NOT invent or assume a new phase (e.g. "Phase 28") merely because unresolved research questions or candidate mechanisms exist.
+2. **No Prohibition Against Future Phases**: A future milestone (such as a potential Phase 28) is NOT prohibited. If an unresolved capability or research question cannot be coherently accommodated into P25–P27, a future phase MAY be proposed through the normal governance path: `Research → Validated Requirement → Architecture Decision → Implementation Scope`.
+3. **No "Gate 28" Label**: Genesis Onboarding is the independent locked future gate, never an arbitrary numbered phase or "Gate 28".
+4. **Epistemic Invariant**: Unresolved research questions remain research questions until evidence establishes a validated requirement.
 
 ---
 

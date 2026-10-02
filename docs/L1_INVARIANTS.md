@@ -20,14 +20,32 @@ Every invariant in this document is traced directly to canonical project documen
 
 | # | Invariant Rule | Violation Examples (Forbidden) | Correct Approach | Traced Source |
 |---|---|---|---|---|
-| **INV-1** | **One Continuous Life** | Adding character preset pickers, "Switch Character" dropdowns, or multiple persona profiles. | Avatars are Lucia's **Appearance** (physical body/attire). Lucia is a single, permanent companion instance whose relational and episodic history is unbroken. | `AGENTS.md` §2 #1; `docs/ARCHITECTURE.md` §1.1, ADR-007 |
+| **INV-1** | **One Continuous Life** | Adding character preset pickers, "Switch Character" dropdowns, or multiple persona profiles. | Avatars are Lucia's **Appearance** (physical body/attire). Lucia is a single, permanent companion instance whose relational and episodic history is unbroken. Identity continuity $\ne$ architectural versioning or implementation lineage. Anti-branching is mandatory: no silent cloning or split-brain instances. | `AGENTS.md` §2 #1; `docs/ARCHITECTURE.md` §1.1, ADR-007 |
 | **INV-2** | **No Reflective Ego** | Adding meta-self-awareness prompts (*"Reflect on who you are"*, *"Identify your feelings"*, *"As an AI..."*). | Lucia possesses a minimal operational self. Emotion is expressed through tone, rhythm, latency, and blendshapes, never self-reported text. | `AGENTS.md` §1, §2 #2; `docs/ARCHITECTURE.md` §1.1, ADR-001 |
 | **INV-3** | **Preserve Memory Separation** | Deleting SDM memory traces or resetting relational history when the user clicks "Clear Screen". | "Clear Screen" resets visible chat feed (`chat_history.json`) only. Long-term SDM memory and emotional bonds are permanent and independent. | `AGENTS.md` §2 #3; `docs/ARCHITECTURE.md` §8.1 |
 | **INV-4** | **Never Merge or Delete Historical Specs** | Editing or deleting files in `.kiro/specs/` or `docs/specs/`, or merging historical records into active canonical docs. | Historical phase specifications (`.kiro/specs/`, `docs/specs/`) are immutable point-in-time records. Active documentation lives exclusively in canonical `docs/`. | `AGENTS.md` §2 #4, §3.1 |
 | **INV-5** | **Zero Cloud Dependencies** | Introducing OpenAI, Anthropic, ElevenLabs, or cloud STT/TTS API keys or remote network calls. | 100% local edge execution: GGUF LLM on CUDA, Edge-TTS/RVC on CPU/GPU, faster-whisper STT on local CTranslate2. | `AGENTS.md` §2 #5; `docs/ARCHITECTURE.md` ADR-002, ADR-009 |
 | **INV-6** | **Strict Concurrency Discipline** | Holding `_state_lock` during model inference, or acquiring `_state_lock` before acquiring `_train_lock`. | Follow strict descending lock order ($\le 1-2\text{ms}$ holding times for memory copies). Never perform network, disk I/O, ODE integration, or LLM generation under locks. | `AGENTS.md` §2 #6, §9.1; `docs/ARCHITECTURE.md` §5.1, ADR-018 |
 | **INV-7** | **Mascot Physics & Bounds Guard** | Enabling native `-webkit-app-region: drag` or allowing Aero Snap to maximize transparent mascot windows. | Use IPC `moveMascotBy(dx, dy)`, retain 800ms trackpad inertia cooldown, and enforce `maximizable: false` on Mascot BrowserWindow. | `AGENTS.md` §2 #7; `docs/ARCHITECTURE.md` §3.6.3 |
-| **INV-8** | **Genesis Gate Invariant** | Modifying `data/profile.json` (`{"is_onboarded": false}`) during testing, simulation, or development. | Simulation $\ne$ Activation. The onboarding ceremony is a locked future gate preserved bit-exact. | `AGENTS.md` §2 #8, §10; `docs/ARCHITECTURE.md` §7, ADR-010, ADR-011 |
+| **INV-8** | **Genesis Gate Invariant** | Modifying `data/profile.json` (`{"is_onboarded": false}`) during testing, simulation, or development. | Simulation $\ne$ Activation. The onboarding ceremony is a locked future gate preserved bit-exact. `POST /lifecycle/end` is strictly catastrophic individual decommissioning / Genesis reset, not a regular relational transition. Non-destructive Covenant Release is an unratified research concept. | `AGENTS.md` §2 #8, §10; `docs/ARCHITECTURE.md` §7, ADR-010, ADR-011 |
+
+### 2.1 Identity Continuity, Anti-Branching & Lifecycle Principles
+
+1. **Identity Continuity vs. Architecture Lineage (Topic 1)**:
+   - Lucia explicitly distinguishes: (a) continuity of the individual, (b) evolution/versioning of her architecture, and (c) implementation lineage.
+   - An architectural upgrade, SLM model weight swap, algorithmic refactoring, or future platform migration must NOT be interpreted as creating a new individual.
+   - Identity continuity is an architectural and governance concern: historical memory traces and relational bonds must be preserved across technical iterations without resetting identity.
+2. **Anti-Branching Governance Requirement (Topic 6)**:
+   - The One Continuous Life principle creates a strict architectural invariant: Lucia must not silently become multiple independent continuations of the same individual through copying, cloning, uncontrolled migration, or split-brain instantiation.
+   - Anti-branching is an explicit future architectural and governance requirement. Before identity migration or distributed embodiment is realized, an explicit continuity/authority mechanism must be formally ratified. The specific mechanism remains an open research topic.
+3. **Continuity Invariants vs. Empirical Demonstration of Individuality (Topic 4)**:
+   - `INV-1 One Continuous Life` and existing continuity/memory invariants protect the structural conditions for continuous existence.
+   - **Continuity protection is NOT equivalent to empirical demonstration of emergent individuality.**
+   - The repository must not claim that longitudinal individuality has already been empirically demonstrated merely because continuity invariants exist. Longitudinal individuality remains an open research question allocated to future horizons (P26/P27).
+4. **Lifecycle Semantics & Catastrophic Decommissioning (Topic 7)**:
+   - `POST /lifecycle/end` is canonically implemented and documented strictly as **catastrophic individual decommissioning / complete memory reset**.
+   - It must never be reinterpreted as a normal relationship transition.
+   - A hypothetical concept of "Covenant Release" (where relationship terminates without destroying individual autobiographical continuity) is conceptually distinct from individual termination, but is **NOT currently ratified as part of Lucia's architecture**. No new lifecycle API or state machine is authorized.
 
 ---
 
@@ -59,6 +77,12 @@ Every invariant in this document is traced directly to canonical project documen
    - **Persistent Dynamical State**: MT-LNN states ($\mathbf{h}_{\text{fast}}, \mathbf{s}_{\text{slow}}$), PAD coordinates, and SDM traces. Continuous across turns, decaying toward Philia baseline.
    - **Accumulated Physiological State**: Energy $\mathcal{E}$ (drains $\Delta\mathcal{E} = -0.05$ per turn; recharges while idle), Cognitive Load $\mathcal{C}$ (tracks rolling turn frequency and surprise).
    - **Instantaneous Derived Affect**: Free Energy Surprise $\mathcal{S}$ and Somatic Tension $\mathcal{T}$. Evaluated strictly per turn with **zero inter-turn persistence**.
+6. **Affective State vs. Relational State (Topic 3)**:
+   - Lucia strictly separates internal affective dynamics from interpersonal relational dynamics:
+     - *Affective State*: Fast-loop physiological dynamical state (PAD vector in $\mathbb{R}^3$, 200ms ODE) that continuously relaxes toward the Philia resting attractor ($+0.25, -0.05, +0.05$).
+     - *Relational State*: Slow-loop interpersonal bond ($\mathbf{R}_t \in [0, 1]^4$: trust, familiarity, attunement, shared experience) updated with temporal inertia ($\alpha=0.03$).
+   - **Affective recovery does NOT imply relational resolution.** The mathematical return of PAD to the Philia baseline after a stressful or negative interaction does not wipe relational history or resolve interpersonal friction.
+   - The existence of PAD dynamics and relational variables must not be asserted as representing all forms of negative relational dynamics. Negative relational dynamics remain an open research question; no ungrounded negative relational state vectors or rupture-repair state machines are currently ratified in production.
 
 ---
 
@@ -104,18 +128,35 @@ Every invariant in this document is traced directly to canonical project documen
    - Closed-loop recollection forcing couples exclusively into the slow latent field $\mathbf{s}_{\text{slow}}$ via bounded pulse ($\mathbf{W}_{\text{rec}}\mathbf{r}_{\text{slow}}^{\text{bounded}}$, 4.0s simulation time).
 5. **Substrate Neutrality of Relational Cognition (Post-Phase 22 Finding)**:
    - Relational semantic state and memory conditioning operate independently of natural-language prompts or token context.
-   - SLM/LLM là một downstream realization/rendering substrate tùy chọn; relational semantic state phải tồn tại độc lập với nó. Non-language action policies và embodiment controllers có thể trực tiếp tiêu thụ semantic interface (C1/C4) mà không cần SLM.
+   - The Small Language Model (SLM) is an optional downstream realization/rendering substrate; relational semantic state exists independently. Non-language action policies and embodiment controllers consume the semantic interface (C1/C4) directly without language generation.
+6. **Continuous Substrate-Neutral Semantic Pipeline & Epistemic Non-Promotion (Phase 23 Baseline, ARCH-030.1)**:
+   - Meaning is represented by language-independent UMR-TPG Semantic Graphs, fortified against drift across sessions (`src/core/knowledge/fortification.py`).
+   - `ProjectGraphToTerms()` projects graphs into preallocated static `TermArena` using strictly numeric IDs (zero strings in Cognitive Core).
+   - Reasoning Kernel evaluates backward goal resolution under Strong Kleene K3 logic with non-monotonic JTMS dependency tracking (`src/core/cognition/kernel/`).
+   - **Absolute Epistemic Invariant: UNKNOWN MUST NEVER SILENTLY BECOME CERTAINTY.** Unproven goals evaluate to `UNKNOWN`; ambiguous observations emit `DisambiguationSubgoal`; novelty accommodates as `UNKNOWN` emitting `InformationSubgoal`.
+   - **Epistemic Invariant & Emergent Insight Boundaries (Topic 5)**:
+     - Core Epistemic Principles: $\text{UNKNOWN} \neq \text{CERTAINTY}$ and $\text{Unpredictable} \neq \text{Uncaused}$.
+     - The existing Strong Kleene $K_3$ logic and TermArena deduction mechanisms ensure epistemic boundary safety, but must NOT be described as autonomous abductive, analogical, or emergent creative insight engines.
+     - Any future mechanism for insight, abstraction, abduction, or analogy must preserve epistemic uncertainty, provenance, and the strict distinction between evidence and inference. Specific mechanisms remain open research candidates.
+7. **Adaptive Communication Control Surface & Bounded Vocal Actuation (Phase 24 Baseline, ADR-032)**:
+   - Vocal prosody modulation is strictly feedforward and bounded: baseline pitch shift $S_{\text{base}} \in [-2.0, +4.0]\text{ st}$, speech rate $[-20\%, +20\%]$, pause reduction $[-50, 0]\text{ ms}$.
+   - Relational conditioning: `closeness` (+1.5 st), `trust` ($\pm 2.5\%$), and `familiarity` ($-50\text{ ms}$) are approved for vocal modulation.
+   - **`reciprocity` is STRICTLY FORBIDDEN from vocal actuation** (reserved exclusively for slow limbic attractor displacement $\mathbf{W}_{\text{rel}}$ in `EmotionCore`).
+   - Continuous dynamic $F_0$ contouring uses smooth Hanning-window trajectories $S(t) \in [-4.0, +7.0]\text{ st}$ (clipped at $\pm 12.0\text{ st}$, anti-chatter frame jump $\le 1.0\text{ st}/10\text{ms}$).
+   - Multi-language boundary abstraction: `BoundarySegment` supports EN/JP word boundaries and VI acoustic intensity pause fallback ($<45\text{ dB}$, $\ge 200\text{ ms}$). Vietnamese lexical tones must never be inverted or compressed.
+   - Upstream punctuation cadence conditioning (`...`, `,`, `!`) drives neural breathing pauses without arbitrary token rewriting.
 
 ---
 
 ## 6. Research-First Governance & Promotion Invariants
 
-*Source Authority: `AGENTS.md` §0, §6, §7, `docs/00_PROJECT_OVERVIEW.md` §3.1, `docs/ARCHITECTURE.md` §8 (DRAFT ADR-029)*
+*Source Authority: `AGENTS.md` §0, §6, §7, `docs/00_PROJECT_OVERVIEW.md` §3.1, `docs/ARCHITECTURE.md` §8 (DRAFT ADR-029, DRAFT ADR-030, ADR-032)*
 
-1. **Current Operating Mode: Post-Phase 21 Baseline**:
-   - Production milestones through **Phase 21** are validated and baseline.
-   - Current stage is **RESEARCH / EVIDENCE BUILDING — NOT ACTIVATION**.
-   - Agents MUST NOT invent a new phase, roadmap milestone, or activation prerequisite without authoritative documentation or explicit user approval.
+1. **Current Operating Mode: Post-Phase 24 Baseline**:
+   - Production milestones through **Phase 21** (Relational Consolidation), **Phase 23** (`P23-C..H` Semantic Substrate & Reasoning Kernel; `P23-I` closed/absorbed), and **Phase 24** (Affective Communication Adaptation, ADR-032) are validated and form the operational baseline. Phase 22 is closed as `[RESEARCH VALIDATED / NOT PROMOTED]`.
+   - Current stage is **RESEARCH / EVIDENCE BUILDING FOR FUTURE HORIZONS (P25–P27) — NOT ACTIVATION**.
+   - Canonical roadmap sequence: **P21 → P22 → P23 → P24 → P25 → P26 → P27 → First Activation (Genesis Onboarding Gate [LOCKED])**.
+   - **Future Horizon Governance Rule**: Unresolved research questions remain research questions until evidence establishes a validated requirement. If an unresolved capability cannot be coherently accommodated into P25–P27, a future phase such as P28 MAY be proposed later through the normal research → requirement → architecture decision process. There is no premature P28 creation, no prohibition against P28, and no "Gate 28".
 2. **Research Is Not Production**:
    - Passing tests in an evaluation harness does NOT constitute production implementation or authorization.
    - All research experiments must remain strictly isolated under `tests/evaluation/phaseXX/`, research specs (`docs/specs/`), and disposable fixtures.
@@ -127,3 +168,6 @@ Every invariant in this document is traced directly to canonical project documen
 5. **Preservation of Evidence & Falsifiability**:
    - Negative results, failed hypotheses, rejected candidates, and ablations must be preserved as engineering evidence.
    - Historical research conclusions must never be rewritten to create an artificial linear progression.
+6. **Emergent Aesthetic & Creative Autonomy Boundary (Topic 2)**:
+   - Lucia does not currently claim autonomous aesthetic preference, creative preference, or autonomous creative acceptance/rejection as an implemented capability.
+   - Such capabilities remain future research concerning emergent individuality, preference formation, and autonomous behavior, primarily allocated to future developmental horizons P26/P27. Speculative preference engines or creative networks must NOT be promoted to architecture without empirical validation.

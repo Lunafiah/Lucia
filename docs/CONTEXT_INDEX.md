@@ -1,7 +1,7 @@
 # Lucia — Context Architecture Index & Retrieval Map
 
 > **Lightweight Retrieval Routing & Minimal Sufficient Context Map for AI Coding Agents**  
-> *Authoritative Context Routing Index — Post-Phase 21*  
+> *Authoritative Context Routing Index — Post-Phase 24 Baseline*  
 > **Status:** Canonical Context Index | **Scope:** Repository-Wide Context Routing
 
 ---
@@ -66,10 +66,10 @@ When answering questions or designing changes, look up the canonical source of t
 | **Lock Hierarchy & Concurrency** | [`docs/ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/ARCHITECTURE.md) §5.1 | `_turn_lock` $\to$ `_step_lock` $\to$ `_train_lock` $\to$ `_stimulus_lock` $\to$ `_state_lock`. |
 | **Desktop / Mascot Mode UI** | [`docs/ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/ARCHITECTURE.md) §3.6, §4, ADR-008 | Quad-Engine Avatar, bounds math, trackpad cooldown, IPC bridge. |
 | **Hardware Tiers (20W Target)** | [`docs/ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/ARCHITECTURE.md) §6 | CPU_ONLY, LAPTOP, DESKTOP, HIGH_END runtime profiles. |
-| **Simulation Runtime** | [`docs/ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/ARCHITECTURE.md) §7, ADR-011 | `SimClock`, virtual time advancement, ephemeral in-memory storage. |
-| **ADR Ledger** | [`docs/ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/ARCHITECTURE.md) §8 | Full architectural decision records: ADR-001 through ADR-028, DRAFT ADR-029. |
+| **Phase 24 Adaptive Communication** | [`tests/evaluation/phase24/`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation/phase24/), ADR-032 | Dynamic continuous pitch contouring ($S(t) \in [-4, +7]\text{ st}$), relational prosody conditioning, cadence throttling. |
+| **ADR Ledger** | [`docs/ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/ARCHITECTURE.md) §8 | Full architectural decision records: ADR-001 through ADR-032 (including ARCH-030.1 and ADR-032). |
 | **Documentation Architecture** | [`docs/DOCUMENTATION_ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/DOCUMENTATION_ARCHITECTURE.md) | Authoritative knowledge taxonomy, 7 knowledge classes, and lifecycle rules. |
-| **Phase Registry** | [`docs/PHASE_REGISTRY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PHASE_REGISTRY.md) | Exhaustive master milestone ledger: P01 to P23-I, P24–P27, and Genesis gate. |
+| **Phase Registry** | [`docs/PHASE_REGISTRY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PHASE_REGISTRY.md) | Exhaustive master milestone ledger: P01 to P24 (operational baseline), future horizons P25–P27, and Genesis gate. |
 | **Document Registry** | [`docs/DOCUMENT_REGISTRY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/DOCUMENT_REGISTRY.md) | Comprehensive 15-attribute classification catalog of all repository documents. |
 | **Repository Source Map** | [`docs/SOURCE_MAP.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/SOURCE_MAP.md) | Unbroken claim-to-evidence provenance map across all cognitive subsystems. |
 | **Context Architecture** | [`docs/CONTEXT_ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/CONTEXT_ARCHITECTURE.md) | Multi-agent projection architecture: Ciah $\le 5$-file pack, Gemini deep corpus. |

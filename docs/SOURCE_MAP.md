@@ -159,7 +159,20 @@ Where any link in the chain is incomplete or unverified, it is explicitly classi
 
 ---
 
+### 2.12 Phase 24 Adaptive Communication Control Surface
+- **Architectural Claim**: Dynamic continuous pitch contouring ($S(t) \in [-4, +7]\text{ st}$, hard clip $\pm 12\text{ st}$), relational prosody conditioning (closeness, trust, familiarity approved; reciprocity strictly severed), boundary segmentation, cadence throttling, and real-time repair.
+- **Canonical Document**: [`docs/00_PROJECT_OVERVIEW.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/00_PROJECT_OVERVIEW.md) §7.2; [`docs/ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/ARCHITECTURE.md) §3.6.5, §8 (ADR-032).
+- **Governing Decision**: ADR-032 (ARCH-032).
+- **Research Specification**: [`tests/evaluation/phase24/P24_ADAPTIVE_COMMUNICATION_CONTRACT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation/phase24/P24_ADAPTIVE_COMMUNICATION_CONTRACT.md), [`tests/evaluation/phase24/P24_ADR_ADAPTIVE_COMMUNICATION.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation/phase24/P24_ADR_ADAPTIVE_COMMUNICATION.md).
+- **Evaluation Evidence**: [`tests/evaluation/phase24/voice_benchmark/VOICE_BENCHMARK_PROSODY_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation/phase24/voice_benchmark/VOICE_BENCHMARK_PROSODY_REPORT.md), [`docs/research/P24_GEMINI'S_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P24_GEMINI%27S_REPORT.md).
+- **Production Code**: [`src/core/voice/boundary.py`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/src/core/voice/boundary.py), [`src/core/voice/cadence.py`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/src/core/voice/cadence.py), [`src/core/voice/rvc_pipeline.py`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/src/core/voice/rvc_pipeline.py), [`src/core/voice/voice_engine.py`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/src/core/voice/voice_engine.py), [`src/core/voice/expression_policy.py`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/src/core/voice/expression_policy.py), [`src/api/server.py`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/src/api/server.py), [`electron/renderer/chat/chat.js`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/electron/renderer/chat/chat.js).
+- **Implementation Commit**: Commit `5097f2f`.
+- **Verification Suite**: `tests/unit/test_p24*`, `tests/property/test_p24*`, `tests/integration/test_p24*` (23/23 PASS).
+
+---
+
 ## 3. Sub-Phase Granular Source Maps
 For detailed sub-phase source maps covering:
+- Phase 24: See [`tests/evaluation/phase24/`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation/phase24/).
 - Phase 23 (P23-A through P23-I): See [`docs/research/P23_SOURCE_MAP.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23_SOURCE_MAP.md).
 - Phase 22 (20 Sub-Study Branches): See Section 2 of [`docs/specs/Lucia-phase22-Epistemic_Foraging/PHASE_22_FINAL_REPORTS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase22-Epistemic_Foraging/PHASE_22_FINAL_REPORTS.md).
