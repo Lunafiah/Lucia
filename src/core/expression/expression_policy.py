@@ -48,7 +48,14 @@ class ExpressionPolicy:
         """
         return ExpressionState(
             text=TextStyle(temperature_mod=0.0, verbosity_factor=1.0, formality_score=0.5, cadence_style="balanced"),
-            voice=VoiceProsody(pitch_shift_hz=0.0, speech_rate_pct=0.0, volume_pct=0.0, pause_duration_ms=200.0),
+            voice=VoiceProsody(
+                pitch_shift_hz=0.0,
+                speech_rate_pct=0.0,
+                volume_pct=0.0,
+                pause_duration_ms=200.0,
+                closeness=0.0,
+                pitch_shift_semitones=0.0,
+            ),
             facial=FacialExpression(smile=0.0, frown=0.0, eye_open=0.80, brow_angle=0.0, blush=0.0),
             posture_gaze=PostureGaze(head_tilt_deg=0.0, gaze_aversion_prob=0.10),
             extra_latency_ms=0.0,
@@ -86,8 +93,10 @@ class ExpressionPolicy:
         energy = float(np.clip(somatic.energy if somatic else 1.0, 0.0, 1.0))
         tension = float(np.clip(somatic.tension if somatic else 0.0, 0.0, 1.0))
 
-        trust = float(np.clip(relationship.get("trust", 0.5) if relationship else 0.5, 0.0, 1.0))
-        closeness = float(np.clip(relationship.get("closeness", 0.1) if relationship else 0.1, 0.0, 1.0))
+        trust = float(np.clip(relationship.get("trust", 0.50) if relationship else 0.50, 0.0, 1.0))
+        closeness = float(np.clip(relationship.get("closeness", 0.0) if relationship else 0.0, 0.0, 1.0))
+        familiarity = float(np.clip(relationship.get("familiarity", 0.0) if relationship else 0.0, 0.0, 1.0))
+        # RECIPROCITY IS STRICTLY FORBIDDEN FROM VOCAL ACTUATOR INPUT (ADR-032.1)
 
         # --- Text Modality ---
         if text_enabled:
@@ -104,17 +113,30 @@ class ExpressionPolicy:
         else:
             text_style = self.get_neutral_actuator_baseline().text
 
-        # --- Voice Modality ---
+        # --- Voice Modality (ADR-032.1 & ADR-032.4) ---
         if voice_enabled:
+            # 1. Affective pitch shift in Hz
             pitch = float(np.clip(15.0 * p + 10.0 * a, -30.0, 30.0))
-            rate = float(np.clip(15.0 * a - 10.0 * (1.0 - energy), -25.0, 25.0))
+
+            # 2. Relational trust stabilizes speech rate: Δv_trust = 5.0 * (R_trust - 0.50)%
+            rate = float(np.clip(15.0 * a - 10.0 * (1.0 - energy) + 5.0 * (trust - 0.50), -20.0, 20.0))
+
+            # 3. Volume
             vol = float(np.clip(10.0 * d + 5.0 * a, -20.0, 20.0))
-            pause = float(np.clip(200.0 + 300.0 * (1.0 - energy) + 150.0 * tension, 100.0, 1000.0))
+
+            # 4. Relational familiarity reduces pause duration: Δτ_pause = -50.0 * R_fam ms
+            pause = float(np.clip(200.0 + 300.0 * (1.0 - energy) + 150.0 * tension - 50.0 * familiarity, 100.0, 1000.0))
+
+            # 5. Base semitone shift: S_base = clip(12 * log2(1 + pitch / 250) + 1.50 * R_close, -2.0, 4.0)
+            pitch_semitones = float(np.clip(12.0 * np.log2(1.0 + pitch / 250.0) + 1.50 * closeness, -2.0, 4.0))
+
             voice_prosody = VoiceProsody(
                 pitch_shift_hz=pitch,
                 speech_rate_pct=rate,
                 volume_pct=vol,
                 pause_duration_ms=pause,
+                closeness=closeness,
+                pitch_shift_semitones=pitch_semitones,
             )
         else:
             voice_prosody = self.get_neutral_actuator_baseline().voice
@@ -179,6 +201,8 @@ class ExpressionPolicy:
             speech_rate_pct=lerp(prev.voice.speech_rate_pct, target.voice.speech_rate_pct),
             volume_pct=lerp(prev.voice.volume_pct, target.voice.volume_pct),
             pause_duration_ms=lerp(prev.voice.pause_duration_ms, target.voice.pause_duration_ms),
+            closeness=lerp(prev.voice.closeness, target.voice.closeness),
+            pitch_shift_semitones=lerp(prev.voice.pitch_shift_semitones, target.voice.pitch_shift_semitones),
         )
 
         facial = FacialExpression(

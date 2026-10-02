@@ -1,0 +1,44 @@
+[
+  {
+    "lang": "EN",
+    "file": "EN_combined_mechanisms.wav",
+    "text": "Good morning! I'm really, really glad to see you today... Everything turned out wonderfully!",
+    "base_semitones": 3.0,
+    "focal_boost": 2.5,
+    "rvc_latency": 8.15,
+    "duration": 7.16,
+    "mean_f0": 350.7,
+    "std_f0": 72.1,
+    "min_f0": 233.1,
+    "max_f0": 522.3,
+    "peak_headroom": 0.905
+  },
+  {
+    "lang": "VI",
+    "file": "VI_combined_mechanisms.wav",
+    "text": "Ch\u00e0o bu\u1ed5i s\u00e1ng! M\u00ecnh r\u1ea5t, r\u1ea5t vui \u0111\u01b0\u1ee3c g\u1eb7p l\u1ea1i c\u1eadu... M\u1ecdi chuy\u1ec7n h\u00f4m nay, \u0111\u1ec1u di\u1ec5n ra th\u1eadt tuy\u1ec7t v\u1eddi!",
+    "base_semitones": 2.0,
+    "focal_boost": 2.0,
+    "rvc_latency": 9.46,
+    "duration": 8.36,
+    "mean_f0": 352.1,
+    "std_f0": 69.3,
+    "min_f0": 264.2,
+    "max_f0": 566.7,
+    "peak_headroom": 0.89
+  },
+  {
+    "lang": "JP",
+    "file": "JP_combined_mechanisms.wav",
+    "text": "\u304a\u306f\u3088\u3046\u3054\u3056\u3044\u307e\u3059\uff01\u4eca\u65e5\u3082\u4f1a\u3048\u3066\u2026\u672c\u5f53\u306b\u3088\u304b\u3063\u305f\uff01\u5168\u90e8\u9806\u8abf\u306b\u9032\u3093\u3067\u3044\u307e\u3059\u3088\u3002",
+    "base_semitones": 2.0,
+    "focal_boost": 2.0,
+    "rvc_latency": 8.49,
+    "duration": 8.36,
+    "mean_f0": 441.6,
+    "std_f0": 95.8,
+    "min_f0": 50.0,
+    "max_f0": 616.3,
+    "peak_headroom": 0.904
+  }
+]

@@ -36,11 +36,13 @@ class TextStyle:
 
 @dataclass
 class VoiceProsody:
-    """Acoustic speech synthesis and prosody parameters (4 continuous dims)."""
-    pitch_shift_hz: float = 0.0       # [-30.0, +30.0]
-    speech_rate_pct: float = 0.0      # [-25.0, +25.0]
-    volume_pct: float = 0.0           # [-20.0, +20.0]
-    pause_duration_ms: float = 200.0  # [100.0, 1000.0]
+    """Acoustic speech synthesis and prosody parameters."""
+    pitch_shift_hz: float = 0.0          # [-30.0, +30.0]
+    speech_rate_pct: float = 0.0         # [-20.0, +20.0]
+    volume_pct: float = 0.0              # [-20.0, +20.0]
+    pause_duration_ms: float = 200.0     # [100.0, 1000.0]
+    closeness: float = 0.0               # [0.0, 1.0] relational closeness
+    pitch_shift_semitones: float = 0.0   # [-2.0, +4.0] base semitone shift
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
@@ -48,6 +50,7 @@ class VoiceProsody:
     @classmethod
     def from_dict(cls, d: Dict[str, Any]) -> "VoiceProsody":
         return cls(**d)
+
 
 
 @dataclass

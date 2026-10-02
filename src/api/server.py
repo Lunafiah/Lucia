@@ -25,6 +25,8 @@ import time
 import uuid
 from typing import Any, Dict, List, Optional, Tuple, Union
 
+import numpy as np
+
 # Ensure project root is on sys.path regardless of execution mode or IDE root
 _PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 if _PROJECT_ROOT not in sys.path:
@@ -426,6 +428,9 @@ class SynthesizeRequest(BaseModel):
     rate: Optional[str] = None
     volume: Optional[str] = None
     pitch: Optional[str] = None
+    pitch_hz: Optional[float] = None
+    closeness: Optional[float] = None
+    focal_words: Optional[List[str]] = None
 
 
 class SelectModelRequest(BaseModel):
@@ -436,12 +441,25 @@ class SelectModelRequest(BaseModel):
 async def synthesize_voice(req: SynthesizeRequest) -> Response:
     """
     Synthesize spoken audio for the given text using current voice/RVC settings.
+    Bounded voice control surface (ADR-032): pitch_hz in [-30, 30], closeness in [0, 1].
     """
-    if not req.text.strip():
+    clean_text = req.text.strip()
+    if not clean_text:
         return Response(content=b"", media_type="audio/mpeg")
     try:
+        # Bounded validation and clamping (ADR-032)
+        clamped_pitch_hz = float(np.clip(req.pitch_hz, -30.0, 30.0)) if req.pitch_hz is not None else None
+        clamped_closeness = float(np.clip(req.closeness, 0.0, 1.0)) if req.closeness is not None else None
+        safe_focal = [str(w)[:50] for w in req.focal_words[:10]] if req.focal_words else None
+
         audio_data = await _voice_engine.synthesize_speech(
-            req.text, rate=req.rate, volume=req.volume, pitch=req.pitch
+            clean_text,
+            rate=req.rate,
+            volume=req.volume,
+            pitch=req.pitch,
+            pitch_hz=clamped_pitch_hz,
+            closeness=clamped_closeness,
+            focal_words=safe_focal,
         )
         return Response(content=audio_data, media_type="audio/mpeg")
     except Exception as exc:

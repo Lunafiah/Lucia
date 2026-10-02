@@ -516,7 +516,8 @@ function registerHandlers(port = 8765, isPreview = false, getMascotManager = nul
   // ---------------------------------------------------------------------------
 
   // voice:synthesize — synthesize speech and return audio Buffer
-  ipcMain.handle('voice:synthesize', async (_event, { text, rate, volume, pitch }) => {
+  ipcMain.handle('voice:synthesize', async (_event, payload) => {
+    const { text, rate, volume, pitch, pitch_hz, closeness, focal_words } = payload || {};
     if (!text || !text.trim()) {
       return Buffer.alloc(0);
     }
@@ -524,6 +525,9 @@ function registerHandlers(port = 8765, isPreview = false, getMascotManager = nul
     if (rate) body.rate = rate;
     if (volume) body.volume = volume;
     if (pitch) body.pitch = pitch;
+    if (pitch_hz !== undefined && pitch_hz !== null) body.pitch_hz = pitch_hz;
+    if (closeness !== undefined && closeness !== null) body.closeness = closeness;
+    if (focal_words) body.focal_words = focal_words;
     try {
       const res = await fetch(`${baseUrl}/voice/synthesize`, {
         method: 'POST',

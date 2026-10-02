@@ -1,0 +1,9 @@
+condition,strategy,directness,supportiveness,comm_formality,expr_formality,formality_delta,cadence,pitch_shift_hz,speech_rate_pct,pause_ms,smile,gaze_avert,pacing_ms
+C01_Baseline,elaborative_explanatory,0.5,0.33,0.57,0.57,0.0,balanced,1.5,0.0,200.0,0.1,0.05,0.0
+C02_High_Familiarity,elaborative_explanatory,0.48,0.39,0.5,0.52,0.01,balanced,2.8,-0.2,230.0,0.15,0.09,60.0
+C03_High_Trust,elaborative_explanatory,0.44,0.56,0.35,0.37,0.02,balanced,4.5,-0.5,215.0,0.3,0.03,30.0
+C04_High_Closeness,elaborative_explanatory,0.34,0.71,0.18,0.23,0.04,balanced,7.0,0.5,230.0,0.4,0.06,50.0
+C05_Low_Trust_Alienated,direct_factual,0.34,0.08,0.88,0.78,0.1,concise,-3.0,0.5,425.0,0.0,0.46,385.0
+C06_High_Positive_Affect,elaborative_explanatory,0.53,0.62,0.32,0.32,0.0,balanced,18.0,8.5,222.0,0.8,0.09,68.0
+C07_Low_Energy_Depleted,concise_reserved,0.27,0.26,0.68,0.63,0.05,concise,-9.5,-16.0,522.0,0.0,0.53,578.0
+C08_High_Relational_Warmth,elaborative_explanatory,0.37,0.8,0.1,0.15,0.05,balanced,11.0,2.5,215.0,0.6,0.03,30.0

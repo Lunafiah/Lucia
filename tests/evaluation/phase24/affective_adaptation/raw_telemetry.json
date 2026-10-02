@@ -1,0 +1,515 @@
+[
+  {
+    "condition": "C01_Baseline",
+    "description": "Stranger neutral baseline (R0, resting Philia attractor, high energy, zero tension)",
+    "inputs": {
+      "pad": {
+        "p": 0.1,
+        "a": 0.0,
+        "d": 0.0
+      },
+      "somatic": {
+        "stability": 1.0,
+        "load": 0.0,
+        "energy": 1.0,
+        "tension": 0.0
+      },
+      "relationship": {
+        "familiarity": 0.0,
+        "trust": 0.5,
+        "closeness": 0.0,
+        "reciprocity": 0.5,
+        "timestamp": 1790577476.1430953
+      }
+    },
+    "communication_state": {
+      "strategy": "elaborative_explanatory",
+      "directness": 0.5,
+      "elaboration_depth": 0.8,
+      "supportiveness": 0.335,
+      "formality_score": 0.57,
+      "acknowledgement_level": 0.6,
+      "question_frequency": 0.1,
+      "pacing_latency_ms": 0.0
+    },
+    "expression_state": {
+      "text": {
+        "temperature_mod": 0.0,
+        "verbosity_factor": 1.02,
+        "formality_score": 0.57,
+        "cadence_style": "balanced"
+      },
+      "voice": {
+        "pitch_shift_hz": 1.5,
+        "speech_rate_pct": 0.0,
+        "volume_pct": 0.0,
+        "pause_duration_ms": 200.0
+      },
+      "facial": {
+        "smile": 0.1,
+        "frown": 0.0,
+        "eye_open": 0.8,
+        "brow_angle": 0.03,
+        "blush": 0.0
+      },
+      "posture_gaze": {
+        "head_tilt_deg": -0.0,
+        "gaze_aversion_prob": 0.05
+      }
+    },
+    "consistency_checks": {
+      "formality_delta": 0.0,
+      "formality_consistent": true,
+      "warmth_consistent": true,
+      "gaze_consistent": true
+    }
+  },
+  {
+    "condition": "C02_High_Familiarity",
+    "description": "Frequent interaction history without established deep trust or closeness",
+    "inputs": {
+      "pad": {
+        "p": 0.15,
+        "a": 0.05,
+        "d": 0.05
+      },
+      "somatic": {
+        "stability": 0.9,
+        "load": 0.1,
+        "energy": 0.9,
+        "tension": 0.0
+      },
+      "relationship": {
+        "familiarity": 0.9,
+        "trust": 0.5,
+        "closeness": 0.2,
+        "reciprocity": 0.5
+      }
+    },
+    "communication_state": {
+      "strategy": "elaborative_explanatory",
+      "directness": 0.482,
+      "elaboration_depth": 0.735,
+      "supportiveness": 0.392,
+      "formality_score": 0.505,
+      "acknowledgement_level": 0.825,
+      "question_frequency": 0.11,
+      "pacing_latency_ms": 60.0
+    },
+    "expression_state": {
+      "text": {
+        "temperature_mod": 0.005,
+        "verbosity_factor": 0.975,
+        "formality_score": 0.515,
+        "cadence_style": "balanced"
+      },
+      "voice": {
+        "pitch_shift_hz": 2.75,
+        "speech_rate_pct": -0.25,
+        "volume_pct": 0.75,
+        "pause_duration_ms": 230.0
+      },
+      "facial": {
+        "smile": 0.15,
+        "frown": 0.0,
+        "eye_open": 0.812,
+        "brow_angle": 0.045,
+        "blush": 0.0
+      },
+      "posture_gaze": {
+        "head_tilt_deg": -0.3,
+        "gaze_aversion_prob": 0.09
+      }
+    },
+    "consistency_checks": {
+      "formality_delta": 0.01,
+      "formality_consistent": true,
+      "warmth_consistent": true,
+      "gaze_consistent": true
+    }
+  },
+  {
+    "condition": "C03_High_Trust",
+    "description": "Reliable, expectation-congruent partnership with neutral familiarity/closeness",
+    "inputs": {
+      "pad": {
+        "p": 0.3,
+        "a": 0.0,
+        "d": 0.1
+      },
+      "somatic": {
+        "stability": 0.95,
+        "load": 0.05,
+        "energy": 0.95,
+        "tension": 0.0
+      },
+      "relationship": {
+        "familiarity": 0.3,
+        "trust": 0.9,
+        "closeness": 0.3,
+        "reciprocity": 0.6
+      }
+    },
+    "communication_state": {
+      "strategy": "elaborative_explanatory",
+      "directness": 0.44,
+      "elaboration_depth": 0.768,
+      "supportiveness": 0.565,
+      "formality_score": 0.355,
+      "acknowledgement_level": 0.675,
+      "question_frequency": 0.2,
+      "pacing_latency_ms": 30.0
+    },
+    "expression_state": {
+      "text": {
+        "temperature_mod": 0.0,
+        "verbosity_factor": 1.033,
+        "formality_score": 0.37,
+        "cadence_style": "balanced"
+      },
+      "voice": {
+        "pitch_shift_hz": 4.5,
+        "speech_rate_pct": -0.5,
+        "volume_pct": 1.0,
+        "pause_duration_ms": 215.0
+      },
+      "facial": {
+        "smile": 0.3,
+        "frown": 0.0,
+        "eye_open": 0.8,
+        "brow_angle": 0.09,
+        "blush": 0.225
+      },
+      "posture_gaze": {
+        "head_tilt_deg": -0.6,
+        "gaze_aversion_prob": 0.03
+      }
+    },
+    "consistency_checks": {
+      "formality_delta": 0.015,
+      "formality_consistent": true,
+      "warmth_consistent": true,
+      "gaze_consistent": true
+    }
+  },
+  {
+    "condition": "C04_High_Closeness",
+    "description": "High relational proximity and shared history (intimate companion state)",
+    "inputs": {
+      "pad": {
+        "p": 0.4,
+        "a": 0.1,
+        "d": 0.05
+      },
+      "somatic": {
+        "stability": 0.95,
+        "load": 0.05,
+        "energy": 0.9,
+        "tension": 0.0
+      },
+      "relationship": {
+        "familiarity": 0.8,
+        "trust": 0.85,
+        "closeness": 0.9,
+        "reciprocity": 0.75
+      }
+    },
+    "communication_state": {
+      "strategy": "elaborative_explanatory",
+      "directness": 0.342,
+      "elaboration_depth": 0.753,
+      "supportiveness": 0.708,
+      "formality_score": 0.185,
+      "acknowledgement_level": 0.8,
+      "question_frequency": 0.208,
+      "pacing_latency_ms": 50.0
+    },
+    "expression_state": {
+      "text": {
+        "temperature_mod": 0.01,
+        "verbosity_factor": 1.04,
+        "formality_score": 0.23,
+        "cadence_style": "balanced"
+      },
+      "voice": {
+        "pitch_shift_hz": 7.0,
+        "speech_rate_pct": 0.5,
+        "volume_pct": 1.0,
+        "pause_duration_ms": 230.0
+      },
+      "facial": {
+        "smile": 0.4,
+        "frown": 0.0,
+        "eye_open": 0.825,
+        "brow_angle": 0.12,
+        "blush": 0.375
+      },
+      "posture_gaze": {
+        "head_tilt_deg": -0.3,
+        "gaze_aversion_prob": 0.055
+      }
+    },
+    "consistency_checks": {
+      "formality_delta": 0.045,
+      "formality_consistent": true,
+      "warmth_consistent": true,
+      "gaze_consistent": true
+    }
+  },
+  {
+    "condition": "C05_Low_Trust_Alienated",
+    "description": "Relational rupture or boundary threat (low trust, negative valence, high tension)",
+    "inputs": {
+      "pad": {
+        "p": -0.4,
+        "a": 0.3,
+        "d": -0.2
+      },
+      "somatic": {
+        "stability": 0.4,
+        "load": 0.6,
+        "energy": 0.6,
+        "tension": 0.7
+      },
+      "relationship": {
+        "familiarity": 0.4,
+        "trust": 0.1,
+        "closeness": 0.1,
+        "reciprocity": 0.2
+      }
+    },
+    "communication_state": {
+      "strategy": "direct_factual",
+      "directness": 0.335,
+      "elaboration_depth": 0.47,
+      "supportiveness": 0.08,
+      "formality_score": 0.88,
+      "acknowledgement_level": 0.595,
+      "question_frequency": 0.0,
+      "pacing_latency_ms": 385.0
+    },
+    "expression_state": {
+      "text": {
+        "temperature_mod": -0.005,
+        "verbosity_factor": 0.64,
+        "formality_score": 0.78,
+        "cadence_style": "concise"
+      },
+      "voice": {
+        "pitch_shift_hz": -3.0,
+        "speech_rate_pct": 0.5,
+        "volume_pct": -0.5,
+        "pause_duration_ms": 425.0
+      },
+      "facial": {
+        "smile": 0.0,
+        "frown": 0.4,
+        "eye_open": 0.875,
+        "brow_angle": -0.305,
+        "blush": 0.0
+      },
+      "posture_gaze": {
+        "head_tilt_deg": 1.2,
+        "gaze_aversion_prob": 0.46
+      }
+    },
+    "consistency_checks": {
+      "formality_delta": 0.1,
+      "formality_consistent": true,
+      "warmth_consistent": true,
+      "gaze_consistent": true
+    }
+  },
+  {
+    "condition": "C06_High_Positive_Affect",
+    "description": "High acute joy/excitement with moderate stranger relationship baseline",
+    "inputs": {
+      "pad": {
+        "p": 0.8,
+        "a": 0.6,
+        "d": 0.3
+      },
+      "somatic": {
+        "stability": 0.85,
+        "load": 0.2,
+        "energy": 0.95,
+        "tension": 0.05
+      },
+      "relationship": {
+        "familiarity": 0.2,
+        "trust": 0.5,
+        "closeness": 0.2,
+        "reciprocity": 0.5
+      }
+    },
+    "communication_state": {
+      "strategy": "elaborative_explanatory",
+      "directness": 0.535,
+      "elaboration_depth": 0.715,
+      "supportiveness": 0.62,
+      "formality_score": 0.318,
+      "acknowledgement_level": 0.643,
+      "question_frequency": 0.207,
+      "pacing_latency_ms": 67.5
+    },
+    "expression_state": {
+      "text": {
+        "temperature_mod": 0.057,
+        "verbosity_factor": 1.088,
+        "formality_score": 0.32,
+        "cadence_style": "balanced"
+      },
+      "voice": {
+        "pitch_shift_hz": 18.0,
+        "speech_rate_pct": 8.5,
+        "volume_pct": 6.0,
+        "pause_duration_ms": 222.5
+      },
+      "facial": {
+        "smile": 0.8,
+        "frown": 0.0,
+        "eye_open": 0.95,
+        "brow_angle": 0.232,
+        "blush": 0.975
+      },
+      "posture_gaze": {
+        "head_tilt_deg": -1.8,
+        "gaze_aversion_prob": 0.085
+      }
+    },
+    "consistency_checks": {
+      "formality_delta": 0.003,
+      "formality_consistent": true,
+      "warmth_consistent": true,
+      "gaze_consistent": true
+    }
+  },
+  {
+    "condition": "C07_Low_Energy_Depleted",
+    "description": "Metabolic exhaustion and high cognitive load with neutral relationship",
+    "inputs": {
+      "pad": {
+        "p": -0.3,
+        "a": -0.5,
+        "d": -0.4
+      },
+      "somatic": {
+        "stability": 0.5,
+        "load": 0.85,
+        "energy": 0.15,
+        "tension": 0.45
+      },
+      "relationship": {
+        "familiarity": 0.5,
+        "trust": 0.5,
+        "closeness": 0.3,
+        "reciprocity": 0.5
+      }
+    },
+    "communication_state": {
+      "strategy": "concise_reserved",
+      "directness": 0.265,
+      "elaboration_depth": 0.248,
+      "supportiveness": 0.255,
+      "formality_score": 0.682,
+      "acknowledgement_level": 0.658,
+      "question_frequency": 0.0,
+      "pacing_latency_ms": 577.5
+    },
+    "expression_state": {
+      "text": {
+        "temperature_mod": -0.073,
+        "verbosity_factor": 0.5,
+        "formality_score": 0.63,
+        "cadence_style": "concise"
+      },
+      "voice": {
+        "pitch_shift_hz": -9.5,
+        "speech_rate_pct": -16.0,
+        "volume_pct": -6.5,
+        "pause_duration_ms": 522.5
+      },
+      "facial": {
+        "smile": 0.0,
+        "frown": 0.3,
+        "eye_open": 0.675,
+        "brow_angle": -0.217,
+        "blush": 0.0
+      },
+      "posture_gaze": {
+        "head_tilt_deg": 2.4,
+        "gaze_aversion_prob": 0.525
+      }
+    },
+    "consistency_checks": {
+      "formality_delta": 0.052,
+      "formality_consistent": true,
+      "warmth_consistent": true,
+      "gaze_consistent": true
+    }
+  },
+  {
+    "condition": "C08_High_Relational_Warmth",
+    "description": "Integrated mature bond (high trust, high closeness, positive affect, high reciprocity)",
+    "inputs": {
+      "pad": {
+        "p": 0.6,
+        "a": 0.2,
+        "d": 0.2
+      },
+      "somatic": {
+        "stability": 0.98,
+        "load": 0.05,
+        "energy": 0.95,
+        "tension": 0.0
+      },
+      "relationship": {
+        "familiarity": 0.85,
+        "trust": 0.95,
+        "closeness": 0.9,
+        "reciprocity": 0.85
+      }
+    },
+    "communication_state": {
+      "strategy": "elaborative_explanatory",
+      "directness": 0.37,
+      "elaboration_depth": 0.768,
+      "supportiveness": 0.803,
+      "formality_score": 0.105,
+      "acknowledgement_level": 0.812,
+      "question_frequency": 0.253,
+      "pacing_latency_ms": 30.0
+    },
+    "expression_state": {
+      "text": {
+        "temperature_mod": 0.02,
+        "verbosity_factor": 1.093,
+        "formality_score": 0.15,
+        "cadence_style": "balanced"
+      },
+      "voice": {
+        "pitch_shift_hz": 11.0,
+        "speech_rate_pct": 2.5,
+        "volume_pct": 3.0,
+        "pause_duration_ms": 215.0
+      },
+      "facial": {
+        "smile": 0.6,
+        "frown": 0.0,
+        "eye_open": 0.85,
+        "brow_angle": 0.18,
+        "blush": 0.675
+      },
+      "posture_gaze": {
+        "head_tilt_deg": -1.2,
+        "gaze_aversion_prob": 0.025
+      }
+    },
+    "consistency_checks": {
+      "formality_delta": 0.045,
+      "formality_consistent": true,
+      "warmth_consistent": true,
+      "gaze_consistent": true
+    }
+  }
+]

@@ -267,10 +267,12 @@ class RVCPipeline:
         index_path: Optional[str] = None,
         model_name: str = "VaresaGIJP",
         index_rate: float = 0.25,
-        pitch_shift_semitones: int = 0,
+        pitch_shift_semitones: float = 0.0,
+        f0_contour: Optional[np.ndarray] = None,
     ) -> RVCConversionResult:
         """
         Execute full RVC voice conversion on input speech bytes.
+        Supports both static pitch_shift_semitones and continuous dynamic f0_contour (ADR-032.2).
         """
         # 1. Validate environment & checkpoint existence
         if not Path(pth_path).exists():
@@ -306,8 +308,26 @@ class RVCPipeline:
 
             # 4. Extract continuous F0 and coarse pitch
             f0_hz, f0_coarse = estimate_f0_pyin(audio_16k, hop_length=160)
-            if pitch_shift_semitones != 0:
-                f0_hz = f0_hz * (2.0 ** (pitch_shift_semitones / 12.0))
+            p_len = len(f0_hz)
+
+            if f0_contour is not None:
+                # Dynamic F0 trajectory S(t) in semitones (ADR-032.2)
+                contour = np.asarray(f0_contour, dtype=np.float32)
+                if len(contour) != p_len:
+                    contour = np.interp(
+                        np.linspace(0, 1, p_len),
+                        np.linspace(0, 1, len(contour)),
+                        contour,
+                    )
+                # Hard safety clamp to [-12.0, +12.0] st
+                semitone_curve = np.clip(contour, -12.0, 12.0)
+                f0_hz = f0_hz * (2.0 ** (semitone_curve / 12.0))
+            elif pitch_shift_semitones != 0:
+                # Clamp static shift to [-12.0, +12.0] st
+                shift_clamped = float(np.clip(pitch_shift_semitones, -12.0, 12.0))
+                f0_hz = f0_hz * (2.0 ** (shift_clamped / 12.0))
+
+            if f0_contour is not None or pitch_shift_semitones != 0:
                 # Recompute coarse mel bins
                 f0_mel_min = 1127.0 * np.log(1.0 + 50.0 / 700.0)
                 f0_mel_max = 1127.0 * np.log(1.0 + 1100.0 / 700.0)

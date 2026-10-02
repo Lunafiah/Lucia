@@ -1279,12 +1279,34 @@ class ChatController {
       if (response && response.response) {
         this.appendMessage('companion', response.response);
 
-        // Synthesize and play voice if not muted — via IPC (ADR-019) with fetch fallback
+        // Synthesize and play voice if not muted — via IPC (ADR-019 & ADR-032.5) with fetch fallback
         if (!this.isVoiceMuted && window.avatarRenderer) {
           try {
             let audioBlob = null;
+            // Extract approved bounded voice actuator parameters (ADR-032.5)
+            const voiceExpr = response.expression && response.expression.voice ? response.expression.voice : null;
+            const voiceOpts = {};
+            if (voiceExpr) {
+              if (typeof voiceExpr.speech_rate_pct === 'number') {
+                const r = Math.round(voiceExpr.speech_rate_pct);
+                voiceOpts.rate = `${r >= 0 ? '+' : ''}${r}%`;
+              }
+              if (typeof voiceExpr.volume_pct === 'number') {
+                const v = Math.round(voiceExpr.volume_pct);
+                voiceOpts.volume = `${v >= 0 ? '+' : ''}${v}%`;
+              }
+              if (typeof voiceExpr.pitch_shift_hz === 'number') {
+                voiceOpts.pitch_hz = voiceExpr.pitch_shift_hz;
+              }
+              if (typeof voiceExpr.closeness === 'number') {
+                voiceOpts.closeness = voiceExpr.closeness;
+              }
+            } else if (response.relationship && typeof response.relationship.closeness === 'number') {
+              voiceOpts.closeness = response.relationship.closeness;
+            }
+
             if (window.lucia && window.lucia.voice && window.lucia.voice.synthesize) {
-              const audioBuffer = await window.lucia.voice.synthesize(response.response);
+              const audioBuffer = await window.lucia.voice.synthesize(response.response, voiceOpts);
               if (audioBuffer && audioBuffer.byteLength > 0) {
                 audioBlob = new Blob([audioBuffer], { type: 'audio/mpeg' });
               }
@@ -1292,7 +1314,7 @@ class ChatController {
               const voiceRes = await fetch('http://127.0.0.1:8765/voice/synthesize', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ text: response.response }),
+                body: JSON.stringify({ text: response.response, ...voiceOpts }),
               });
               if (voiceRes.ok) {
                 audioBlob = await voiceRes.blob();

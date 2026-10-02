@@ -1,0 +1,322 @@
+{
+  "results": [
+    {
+      "id": "JP-01",
+      "file": "JP_01_baseline.wav",
+      "text": "おはようございます。今日も穏やかな一日になりそうですね。",
+      "romaji": "Ohayou gozaimasu. Kyou mo odayaka na ichinichi ni narisou desu ne.",
+      "meaning": "Good morning. It looks like today will be another peaceful day.",
+      "purpose": "Native-language baseline timbre & conversational greeting",
+      "target_pitch_hz": 0,
+      "target_pitch_str": "+0Hz",
+      "target_rate_percent": 0,
+      "target_rate_str": "+0%",
+      "latencies": {
+        "edge_tts_ms": 2486.31,
+        "rvc_ms": 5627.63,
+        "total_ms": 8194.7,
+        "real_time_factor": 1.438
+      },
+      "pre_rvc": {
+        "duration_s": 5.711,
+        "total_frames": 566,
+        "voiced_frames": 307,
+        "voiced_fraction": 0.5424,
+        "f0_mean": 249.85,
+        "f0_median": 258.59,
+        "f0_std": 46.96,
+        "f0_min": 164.49,
+        "f0_max": 361.57,
+        "octave_jumps": 0,
+        "rms": 0.1364,
+        "peak": 0.6869,
+        "clipping_ratio": 0.0
+      },
+      "post_rvc": {
+        "duration_s": 5.7,
+        "total_frames": 565,
+        "voiced_frames": 304,
+        "voiced_fraction": 0.5381,
+        "f0_mean": 249.3,
+        "f0_median": 259.39,
+        "f0_std": 48.98,
+        "f0_min": 50.0,
+        "f0_max": 361.8,
+        "octave_jumps": 2,
+        "rms": 0.1827,
+        "peak": 0.8984,
+        "clipping_ratio": 0.0
+      },
+      "derived": {
+        "realized_post_f0_shift_hz": 0.0,
+        "rvc_f0_discrepancy_hz": -0.55,
+        "duration_preservation_ratio": 0.9981
+      }
+    },
+    {
+      "id": "JP-02",
+      "file": "JP_02_pitch_plus15.wav",
+      "text": "お疲れ様でした。温かいお茶でも淹れましょうか？",
+      "romaji": "Otsukaresama deshita. Atatakai ocha demo iremashou ka?",
+      "meaning": "Thank you for your hard work. Shall I make some warm tea for you?",
+      "purpose": "Moderate upward pitch (+15 Hz), gentle caring inquiry",
+      "target_pitch_hz": 15,
+      "target_pitch_str": "+15Hz",
+      "target_rate_percent": 0,
+      "target_rate_str": "+0%",
+      "latencies": {
+        "edge_tts_ms": 1275.5,
+        "rvc_ms": 4623.05,
+        "total_ms": 5930.05,
+        "real_time_factor": 1.186
+      },
+      "pre_rvc": {
+        "duration_s": 5.015,
+        "total_frames": 496,
+        "voiced_frames": 227,
+        "voiced_fraction": 0.4577,
+        "f0_mean": 294.24,
+        "f0_median": 295.74,
+        "f0_std": 66.26,
+        "f0_min": 184.31,
+        "f0_max": 451.72,
+        "octave_jumps": 0,
+        "rms": 0.1132,
+        "peak": 0.6422,
+        "clipping_ratio": 0.0
+      },
+      "post_rvc": {
+        "duration_s": 5.0,
+        "total_frames": 495,
+        "voiced_frames": 231,
+        "voiced_fraction": 0.4667,
+        "f0_mean": 287.86,
+        "f0_median": 291.19,
+        "f0_std": 66.45,
+        "f0_min": 183.92,
+        "f0_max": 438.64,
+        "octave_jumps": 0,
+        "rms": 0.1737,
+        "peak": 0.8769,
+        "clipping_ratio": 0.0
+      },
+      "derived": {
+        "realized_post_f0_shift_hz": 38.56,
+        "rvc_f0_discrepancy_hz": -6.38,
+        "duration_preservation_ratio": 0.997
+      }
+    },
+    {
+      "id": "JP-03",
+      "file": "JP_03_pitch_minus15.wav",
+      "text": "少し静かにして、落ち着いて考えてみましょう。",
+      "romaji": "Sukoshi shizuka ni shite, ochitsuite kangaete mimashou.",
+      "meaning": "Let's be quiet for a moment, and think about it calmly.",
+      "purpose": "Moderate downward pitch (-15 Hz), subdued/comforting register",
+      "target_pitch_hz": -15,
+      "target_pitch_str": "-15Hz",
+      "target_rate_percent": 0,
+      "target_rate_str": "+0%",
+      "latencies": {
+        "edge_tts_ms": 1510.65,
+        "rvc_ms": 4244.89,
+        "total_ms": 5783.65,
+        "real_time_factor": 1.314
+      },
+      "pre_rvc": {
+        "duration_s": 4.415,
+        "total_frames": 436,
+        "voiced_frames": 202,
+        "voiced_fraction": 0.4633,
+        "f0_mean": 242.69,
+        "f0_median": 235.7,
+        "f0_std": 67.86,
+        "f0_min": 156.21,
+        "f0_max": 542.26,
+        "octave_jumps": 1,
+        "rms": 0.1271,
+        "peak": 0.6488,
+        "clipping_ratio": 0.0
+      },
+      "post_rvc": {
+        "duration_s": 4.4,
+        "total_frames": 435,
+        "voiced_frames": 194,
+        "voiced_fraction": 0.446,
+        "f0_mean": 232.05,
+        "f0_median": 228.89,
+        "f0_std": 51.43,
+        "f0_min": 142.19,
+        "f0_max": 319.45,
+        "octave_jumps": 0,
+        "rms": 0.183,
+        "peak": 0.8806,
+        "clipping_ratio": 0.0
+      },
+      "derived": {
+        "realized_post_f0_shift_hz": -17.25,
+        "rvc_f0_discrepancy_hz": -10.64,
+        "duration_preservation_ratio": 0.9966
+      }
+    },
+    {
+      "id": "JP-04",
+      "file": "JP_04_pitch_plus30.wav",
+      "text": "すごいですね！本当にうまくいって良かったです！",
+      "romaji": "Sugoi desu ne! Hontou ni umaku itte yokatta desu!",
+      "meaning": "That's amazing! I'm so glad everything worked out well!",
+      "purpose": "Upper pitch boundary (+30 Hz), high-valence joyful inflection",
+      "target_pitch_hz": 30,
+      "target_pitch_str": "+30Hz",
+      "target_rate_percent": 0,
+      "target_rate_str": "+0%",
+      "latencies": {
+        "edge_tts_ms": 1256.41,
+        "rvc_ms": 4535.99,
+        "total_ms": 5821.58,
+        "real_time_factor": 1.164
+      },
+      "pre_rvc": {
+        "duration_s": 5.015,
+        "total_frames": 496,
+        "voiced_frames": 226,
+        "voiced_fraction": 0.4556,
+        "f0_mean": 339.33,
+        "f0_median": 355.07,
+        "f0_std": 82.21,
+        "f0_min": 213.13,
+        "f0_max": 499.88,
+        "octave_jumps": 0,
+        "rms": 0.1145,
+        "peak": 0.686,
+        "clipping_ratio": 0.0
+      },
+      "post_rvc": {
+        "duration_s": 5.0,
+        "total_frames": 495,
+        "voiced_frames": 221,
+        "voiced_fraction": 0.4465,
+        "f0_mean": 341.0,
+        "f0_median": 362.56,
+        "f0_std": 81.53,
+        "f0_min": 209.64,
+        "f0_max": 502.11,
+        "octave_jumps": 0,
+        "rms": 0.17,
+        "peak": 0.8904,
+        "clipping_ratio": 0.0
+      },
+      "derived": {
+        "realized_post_f0_shift_hz": 91.7,
+        "rvc_f0_discrepancy_hz": 1.67,
+        "duration_preservation_ratio": 0.997
+      }
+    },
+    {
+      "id": "JP-05",
+      "file": "JP_05_rate_plus20.wav",
+      "text": "時間がありません、急いで次のステップへ進みましょう。",
+      "romaji": "Jikan ga arimasen, isoide tsugi no suteppu e susumimashou.",
+      "meaning": "We don't have much time, let's hurry and move to the next step.",
+      "purpose": "Faster speech rate (+20%), brisk tempo, consonant clarity under speed",
+      "target_pitch_hz": 0,
+      "target_pitch_str": "+0Hz",
+      "target_rate_percent": 20,
+      "target_rate_str": "+20%",
+      "latencies": {
+        "edge_tts_ms": 1768.65,
+        "rvc_ms": 3996.87,
+        "total_ms": 5795.41,
+        "real_time_factor": 1.442
+      },
+      "pre_rvc": {
+        "duration_s": 4.031,
+        "total_frames": 398,
+        "voiced_frames": 218,
+        "voiced_fraction": 0.5477,
+        "f0_mean": 249.96,
+        "f0_median": 250.78,
+        "f0_std": 56.11,
+        "f0_min": 166.04,
+        "f0_max": 399.59,
+        "octave_jumps": 0,
+        "rms": 0.1277,
+        "peak": 0.6475,
+        "clipping_ratio": 0.0
+      },
+      "post_rvc": {
+        "duration_s": 4.02,
+        "total_frames": 396,
+        "voiced_frames": 214,
+        "voiced_fraction": 0.5404,
+        "f0_mean": 251.48,
+        "f0_median": 251.68,
+        "f0_std": 55.47,
+        "f0_min": 165.53,
+        "f0_max": 398.87,
+        "octave_jumps": 1,
+        "rms": 0.1718,
+        "peak": 0.9041,
+        "clipping_ratio": 0.0
+      },
+      "derived": {
+        "realized_post_f0_shift_hz": 2.18,
+        "rvc_f0_discrepancy_hz": 1.52,
+        "duration_preservation_ratio": 0.9973
+      }
+    },
+    {
+      "id": "JP-06",
+      "file": "JP_06_rate_minus20.wav",
+      "text": "焦らなくても大丈夫ですよ。ゆっくり進めればいいんです。",
+      "romaji": "Asaranakutemo daijoubu desu yo. Yukkuri susumereba ii n desu.",
+      "meaning": "There is no need to rush. It's completely fine to take it slowly.",
+      "purpose": "Slower speech rate (-20%), deliberate relaxed pacing, vowel glide stability",
+      "target_pitch_hz": 0,
+      "target_pitch_str": "+0Hz",
+      "target_rate_percent": -20,
+      "target_rate_str": "-20%",
+      "latencies": {
+        "edge_tts_ms": 2829.25,
+        "rvc_ms": 6778.56,
+        "total_ms": 9642.38,
+        "real_time_factor": 1.347
+      },
+      "pre_rvc": {
+        "duration_s": 7.175,
+        "total_frames": 712,
+        "voiced_frames": 363,
+        "voiced_fraction": 0.5098,
+        "f0_mean": 247.4,
+        "f0_median": 232.63,
+        "f0_std": 67.67,
+        "f0_min": 81.27,
+        "f0_max": 394.76,
+        "octave_jumps": 1,
+        "rms": 0.1297,
+        "peak": 0.6271,
+        "clipping_ratio": 0.0
+      },
+      "post_rvc": {
+        "duration_s": 7.16,
+        "total_frames": 711,
+        "voiced_frames": 348,
+        "voiced_fraction": 0.4895,
+        "f0_mean": 247.76,
+        "f0_median": 233.22,
+        "f0_std": 69.4,
+        "f0_min": 50.0,
+        "f0_max": 404.8,
+        "octave_jumps": 2,
+        "rms": 0.1711,
+        "peak": 0.9004,
+        "clipping_ratio": 0.0
+      },
+      "derived": {
+        "realized_post_f0_shift_hz": -1.54,
+        "rvc_f0_discrepancy_hz": 0.36,
+        "duration_preservation_ratio": 0.9979
+      }
+    }
+  ]
+}

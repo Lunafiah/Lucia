@@ -150,35 +150,73 @@ class VoiceEngine:
         rate: Optional[str] = None,
         volume: Optional[str] = None,
         pitch: Optional[str] = None,
+        pitch_hz: Optional[float] = None,
+        closeness: Optional[float] = None,
+        focal_words: Optional[List[str]] = None,
     ) -> bytes:
         """
-        Synthesize speech from text asynchronously.
+        Synthesize speech from text asynchronously with adaptive prosody support (ADR-032).
 
         Parameters
         ----------
         text : str
             Text string to speak.
         rate : Optional[str]
-            Override speech rate (e.g. '+5%').
+            Override speech rate (clamped to [-20%, +20%]).
         volume : Optional[str]
-            Override speech volume (e.g. '+0%').
+            Override speech volume (clamped to [-20%, +20%]).
         pitch : Optional[str]
-            Override speech pitch (e.g. '+0Hz' or '+2Hz').
+            Override speech pitch string for Edge-TTS (baseline fixed at +60Hz).
+        pitch_hz : Optional[float]
+            Limbic affect pitch shift in Hz in [-30.0, +30.0].
+        closeness : Optional[float]
+            Relational closeness in [0.0, 1.0] (+1.50 semitones max).
+        focal_words : Optional[List[str]]
+            List of words to receive dynamic Hanning focal accentuation.
 
         Returns
         -------
         bytes
             Audio stream bytes (MP3/WAV format).
         """
+        import re
+        import numpy as np
+        from src.core.voice.boundary import extract_boundaries, compute_f0_contour
+        from src.core.voice.rvc_pipeline import decode_audio_to_16k
+
         clean_text = text.strip()
         if not clean_text:
             return b""
 
-        speech_rate = rate or self._config.speech_rate
-        speech_volume = volume or self._config.speech_volume
-        pitch_str = pitch or (f"{self._config.pitch_shift:+d}Hz" if self._config.pitch_shift != 0 else "+0Hz")
+        # Sanitize text: strip any stray XML/SSML tags to avoid NoAudioReceived
+        clean_text = re.sub(r"<[^>]+>", "", clean_text).strip()
+        if not clean_text:
+            return b""
 
-        cache_key = f"{clean_text.lower()}|{self._config.active_rvc_model}|{speech_rate}|{speech_volume}|{pitch_str}"
+        # Clamp speech rate to [-20%, +20%]
+        raw_rate = rate or self._config.speech_rate
+        try:
+            rate_num = float(raw_rate.replace("%", "").replace("+", "").strip())
+            speech_rate = f"{int(np.clip(rate_num, -20.0, 20.0)):+d}%"
+        except (ValueError, TypeError):
+            speech_rate = "+0%"
+
+        # Clamp speech volume to [-20%, +20%]
+        raw_vol = volume or self._config.speech_volume
+        try:
+            vol_num = float(raw_vol.replace("%", "").replace("+", "").strip())
+            speech_volume = f"{int(np.clip(vol_num, -20.0, 20.0)):+d}%"
+        except (ValueError, TypeError):
+            speech_volume = "+0%"
+
+        # Baseline pitch in Edge-TTS: fixed at +60Hz to provide a bright acoustic base below saturation ceiling
+        speech_pitch = pitch or "+60Hz"
+
+        # Determine language telemetry support: vi-* rejects WordBoundary with NoAudioReceived
+        is_vietnamese = self._config.base_voice.lower().startswith("vi-") or self._config.base_voice.lower().startswith("vi_")
+        boundary_arg = "SentenceBoundary" if is_vietnamese else "WordBoundary"
+
+        cache_key = f"{clean_text.lower()}|{self._config.active_rvc_model}|{speech_rate}|{speech_volume}|{speech_pitch}|{pitch_hz}|{closeness}"
         if cache_key in self._cache:
             self._last_rvc_result = self._rvc_result_cache.get(cache_key)
             return self._cache[cache_key]
@@ -188,13 +226,17 @@ class VoiceEngine:
             voice=self._config.base_voice,
             rate=speech_rate,
             volume=speech_volume,
-            pitch=pitch_str,
+            pitch=speech_pitch,
+            boundary=boundary_arg,
         )
 
         audio_buffer = io.BytesIO()
+        telemetry_events: List[Dict[str, Any]] = []
         async for chunk in communicate.stream():
             if chunk["type"] == "audio":
                 audio_buffer.write(chunk["data"])
+            elif chunk["type"] in ("WordBoundary", "SentenceBoundary"):
+                telemetry_events.append(chunk)
 
         raw_audio = audio_buffer.getvalue()
 
@@ -204,7 +246,37 @@ class VoiceEngine:
             and self._config.active_rvc_model in self._available_models
         ):
             model_info = self._available_models[self._config.active_rvc_model]
-            raw_audio = self._apply_rvc_conversion(raw_audio, model_info)
+
+            # Compute canonical semitone base shift (ADR-032.1 & ADR-032.4)
+            if pitch_hz is not None or closeness is not None:
+                p_hz = float(np.clip(pitch_hz or 0.0, -30.0, 30.0))
+                c = float(np.clip(closeness or 0.0, 0.0, 1.0))
+                s_base = float(np.clip(12.0 * np.log2(1.0 + p_hz / 250.0) + 1.50 * c, -2.0, 4.0))
+            else:
+                s_base = float(self._config.pitch_shift)
+
+            # Extract boundaries and build continuous F0 contour
+            try:
+                audio_16k = decode_audio_to_16k(raw_audio)
+                p_len = max(1, len(audio_16k) // 160)
+                segments = extract_boundaries(
+                    clean_text,
+                    self._config.base_voice,
+                    telemetry_events=telemetry_events,
+                    audio_16k=audio_16k,
+                    focal_words=focal_words,
+                )
+                f0_contour = compute_f0_contour(p_len, s_base, segments)
+            except Exception as b_err:
+                logger.warning("VoiceEngine: Boundary extraction failed (%s), falling back to static pitch", b_err)
+                f0_contour = None
+
+            raw_audio = self._apply_rvc_conversion(
+                raw_audio,
+                model_info,
+                pitch_shift=s_base,
+                f0_contour=f0_contour,
+            )
         else:
             self._last_rvc_result = None
 
@@ -223,7 +295,13 @@ class VoiceEngine:
         """Return the result of the most recent RVC conversion attempt, if any."""
         return self._last_rvc_result
 
-    def _apply_rvc_conversion(self, base_audio: bytes, model_info: RVCModelInfo) -> bytes:
+    def _apply_rvc_conversion(
+        self,
+        base_audio: bytes,
+        model_info: RVCModelInfo,
+        pitch_shift: float = 0.0,
+        f0_contour: Optional[Any] = None,
+    ) -> bytes:
         """
         Pass base audio through authentic RVC neural network weights.
         Returns converted audio bytes if successful, or base_audio on failure/limitation.
@@ -264,9 +342,10 @@ class VoiceEngine:
                 return base_audio
 
         logger.info(
-            "VoiceEngine: Applying RVC conversion with model=%s (pth=%s)",
+            "VoiceEngine: Applying RVC conversion with model=%s (pth=%s, pitch_shift=%.2f st)",
             model_info.name,
             model_info.pth_path,
+            pitch_shift,
         )
 
         try:
@@ -276,7 +355,8 @@ class VoiceEngine:
                 index_path=model_info.index_path,
                 model_name=model_info.name,
                 index_rate=self._config.index_rate,
-                pitch_shift_semitones=self._config.pitch_shift,
+                pitch_shift_semitones=pitch_shift,
+                f0_contour=f0_contour,
             )
             self._last_rvc_result = result
             if result.rvc_applied and result.execution_status == "success":
