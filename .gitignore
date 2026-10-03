@@ -92,6 +92,7 @@ logs/
 scratch/
 
 # Temporary evaluation harness scratch stores
+docs/PhaseDocs/**/temp_run_store/
 docs/specs/**/temp_run_store/
 evaluation_artifacts/**/temp_harness/
 evaluation_artifacts/phase18/manifests/audiovisual_manifest.json
@@ -106,3 +107,10 @@ electron/node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# NotebookLM Sync MCP & Tooling
+tools/
+evaluation_artifacts/notebooklm_sync/
+docs/others/notebooklm_sync/
+.agents/mcp_config.json
+
