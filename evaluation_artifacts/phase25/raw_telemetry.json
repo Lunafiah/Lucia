@@ -2,16 +2,34 @@
   "metadata": {
     "phase": "Phase 25 \u2014 Temporal Embodiment & Social Feedback",
     "type": "EVALUATION_HARNESS_DATASET",
-    "execution_timestamp": 1791091092.4985425,
-    "elapsed_seconds": 15.638974666595459,
+    "execution_timestamp": 1791116257.4719977,
+    "elapsed_seconds": 13.738316535949707,
     "status": "RESEARCH_EVALUATED_BOUNDARY_LEVEL",
     "genesis_invariant_preserved": true,
     "production_mutation_count": 0
   },
   "p25_q1_assessment": {
     "question": "What computational representation, if any, is necessary for Lucia to maintain persistent relational consequences of significant interaction events beyond the timescale of instantaneous affective recovery, while preserving stability and INV-2?",
-    "status": "INCONCLUSIVE \u2014 MORE RESEARCH REQUIRED",
-    "reasoning": "The evaluation model based on the existing 4D R_t dynamics exhibits basic relational persistence without requiring an additional state representation (no RelationalRupture, RepairEvent, JTMS relational state, or dimensional expansion). Harness evidence is clearly distinguished from production-runtime evidence: the evaluation model does NOT prove production RelationshipState is sufficient for all relational persistence. Three mutually unresolved hypotheses remain under investigation: (A) R_t alone may be sufficient; (B) R_t + existing memory/semantic substrate may be sufficient; (C) a new computational representation may be necessary. EXP-P25-DISCRIM provides empirical evidence against H-A (R_t alone cannot distinguish converged histories, Delta S < 0.05) and evidence supporting H-B for the tested capability (R_t + existing KnowledgeStore/SDM differentiates histories, Delta S >= 0.15). Critically, this does NOT prove H-B universally. Status remains strictly INCONCLUSIVE \u2014 MORE RESEARCH REQUIRED."
+    "status": "P25-Q1 \u2014 RESEARCH COMPLETE / ARCHIVED AS EVIDENCE",
+    "canonical_conclusion": {
+      "h_a": "REJECTED only for the tested history-sensitive relational capabilities under matched-endpoint convergence.",
+      "h_b": "PARTIALLY GENERALIZES under tested conditions.",
+      "h_c": "NOT CURRENTLY WARRANTED; remains an open research hypothesis.",
+      "long_horizon_degradation": "MULTI-FACTOR under tested fixtures.",
+      "memory_decay": "CAUSALLY SUPPORTED UNDER THE TESTED INTERVENTION as dominant contributor in tested D1/D2 conditions.",
+      "retrieval_cueing_limitations": "Material contributor in tested D4 conditions (separated into affective retrieval-gating limitation, semantic cue insufficiency, and ecphory scoring/gating fragility).",
+      "sdm_crosstalk": "NOT SUPPORTED AS DOMINANT FACTOR UNDER TESTED FIXTURES.",
+      "representation_verdict": "No new persistent relational representation is currently warranted by the tested failure modes.",
+      "r_t_clarification": "Existing R_t remains an adequate aggregate relational state representation for the tested capabilities when supplemented by the existing memory and semantic substrates.",
+      "combined_intervention": "Supports a multi-factor explanation of recovery under the tested configuration.",
+      "degradation_onset": "Degradation becomes observable from the tested medium-to-long horizons (30\u2013100 turns), with distinct failure profiles across domains.",
+      "zero_vector_math": "Cosine similarity with a zero vector is mathematically undefined; Lucia's 0.0 result is the observed defensive zero-vector fallback in the implementation.",
+      "architecture_gate": "LOCKED",
+      "implementation_gate": "LOCKED",
+      "production_diff": 0,
+      "genesis_invariant": "UNCHANGED AND LOCKED ({\"is_onboarded\": false})"
+    },
+    "reasoning": "The evaluation model demonstrates that existing R_t remains an adequate aggregate relational state representation for the tested capabilities when supplemented by the existing memory and semantic substrates (no RelationalRupture, RepairEvent, JTMS relational state, or dimensional expansion). No new persistent relational representation is currently warranted by the tested failure modes, allowing the explicit conclusion that no new representation/mechanism is necessary for the tested baseline. While the empirical question P25-Q1 is archived as evidence, broader longitudinal research questions remain under investigation for future horizons (P26/P27)."
   },
   "tracks": {
     "e1_recovery_asymmetry": {
@@ -2390,7 +2408,7 @@
             "mean_lag_ms": 161.80945056266017,
             "jitter_std_ms": 63.89613730635913,
             "bounded_stability_ratio": 1.0,
-            "mean_cpu_time_us": 3.624623115577889
+            "mean_cpu_time_us": 2.6562814070351766
           },
           "gamma_0.05": {
             "gamma": 0.05,
@@ -2399,7 +2417,7 @@
             "mean_lag_ms": 133.18571719837865,
             "jitter_std_ms": 94.8267728451709,
             "bounded_stability_ratio": 1.0,
-            "mean_cpu_time_us": 3.320100502512563
+            "mean_cpu_time_us": 2.648241206030152
           },
           "gamma_0.10": {
             "gamma": 0.1,
@@ -2408,7 +2426,7 @@
             "mean_lag_ms": 115.30957729143934,
             "jitter_std_ms": 118.32966120895323,
             "bounded_stability_ratio": 1.0,
-            "mean_cpu_time_us": 3.252763819095477
+            "mean_cpu_time_us": 2.7974874371859304
           },
           "gamma_0.20": {
             "gamma": 0.2,
@@ -2417,7 +2435,7 @@
             "mean_lag_ms": 102.09059628653536,
             "jitter_std_ms": 152.4311206160899,
             "bounded_stability_ratio": 1.0,
-            "mean_cpu_time_us": 3.2507537688442216
+            "mean_cpu_time_us": 2.619095477386935
           },
           "gamma_0.30": {
             "gamma": 0.3,
@@ -2426,7 +2444,7 @@
             "mean_lag_ms": 95.0831482409655,
             "jitter_std_ms": 149.43419231988156,
             "bounded_stability_ratio": 1.0,
-            "mean_cpu_time_us": 3.248743718592965
+            "mean_cpu_time_us": 2.629648241206031
           },
           "gamma_0.50": {
             "gamma": 0.5,
@@ -2435,7 +2453,7 @@
             "mean_lag_ms": 100.03630559123863,
             "jitter_std_ms": 154.94914496927896,
             "bounded_stability_ratio": 1.0,
-            "mean_cpu_time_us": 3.348241206030152
+            "mean_cpu_time_us": 2.6442211055276394
           },
           "gamma_0.80": {
             "gamma": 0.8,
@@ -2444,14 +2462,14 @@
             "mean_lag_ms": 106.18649658642335,
             "jitter_std_ms": 170.94516212410835,
             "bounded_stability_ratio": 1.0,
-            "mean_cpu_time_us": 3.290954773869347
+            "mean_cpu_time_us": 2.632160804020101
           }
         },
         "best_coordination_gamma": 0.3,
         "lowest_jitter_gamma": 0.0,
         "lowest_lag_gamma": 0.3,
         "all_sweeps_bounded": true,
-        "evidence_statement": "Observed: Sweep across 7 configurations demonstrated clear trade-offs: gamma=0.00 yields lowest jitter (63.9ms) but zero correlation; higher gamma improves correlation and PLV (peak at gamma=0.30, PLV=0.3201) while increasing jitter (149.4ms). All configurations maintained bounded stability >= 98%. Mean CPU cost per tick: 3.33 us.",
+        "evidence_statement": "Observed: Sweep across 7 configurations demonstrated clear trade-offs: gamma=0.00 yields lowest jitter (63.9ms) but zero correlation; higher gamma improves correlation and PLV (peak at gamma=0.30, PLV=0.3201) while increasing jitter (149.4ms). All configurations maintained bounded stability >= 98%. Mean CPU cost per tick: 2.66 us.",
         "p25_q1_implication": "Conversational entrainment demonstrates an observed trade-off / empirical candidate region between coordination quality and latency jitter. Crucially, NO parameter value is promoted to production architecture; all values remain experimental configurations under research investigation. Whether entrainment requires persistent relational state or operates purely on transient timing remains an open inquiry for P25."
       },
       "metrics_map": {
@@ -2462,7 +2480,7 @@
           "mean_lag_ms": 161.80945056266017,
           "jitter_std_ms": 63.89613730635913,
           "bounded_stability_ratio": 1.0,
-          "mean_cpu_time_us": 3.624623115577889
+          "mean_cpu_time_us": 2.6562814070351766
         },
         "gamma_0.05": {
           "gamma": 0.05,
@@ -2471,7 +2489,7 @@
           "mean_lag_ms": 133.18571719837865,
           "jitter_std_ms": 94.8267728451709,
           "bounded_stability_ratio": 1.0,
-          "mean_cpu_time_us": 3.320100502512563
+          "mean_cpu_time_us": 2.648241206030152
         },
         "gamma_0.10": {
           "gamma": 0.1,
@@ -2480,7 +2498,7 @@
           "mean_lag_ms": 115.30957729143934,
           "jitter_std_ms": 118.32966120895323,
           "bounded_stability_ratio": 1.0,
-          "mean_cpu_time_us": 3.252763819095477
+          "mean_cpu_time_us": 2.7974874371859304
         },
         "gamma_0.20": {
           "gamma": 0.2,
@@ -2489,7 +2507,7 @@
           "mean_lag_ms": 102.09059628653536,
           "jitter_std_ms": 152.4311206160899,
           "bounded_stability_ratio": 1.0,
-          "mean_cpu_time_us": 3.2507537688442216
+          "mean_cpu_time_us": 2.619095477386935
         },
         "gamma_0.30": {
           "gamma": 0.3,
@@ -2498,7 +2516,7 @@
           "mean_lag_ms": 95.0831482409655,
           "jitter_std_ms": 149.43419231988156,
           "bounded_stability_ratio": 1.0,
-          "mean_cpu_time_us": 3.248743718592965
+          "mean_cpu_time_us": 2.629648241206031
         },
         "gamma_0.50": {
           "gamma": 0.5,
@@ -2507,7 +2525,7 @@
           "mean_lag_ms": 100.03630559123863,
           "jitter_std_ms": 154.94914496927896,
           "bounded_stability_ratio": 1.0,
-          "mean_cpu_time_us": 3.348241206030152
+          "mean_cpu_time_us": 2.6442211055276394
         },
         "gamma_0.80": {
           "gamma": 0.8,
@@ -2516,7 +2534,7 @@
           "mean_lag_ms": 106.18649658642335,
           "jitter_std_ms": 170.94516212410835,
           "bounded_stability_ratio": 1.0,
-          "mean_cpu_time_us": 3.290954773869347
+          "mean_cpu_time_us": 2.632160804020101
         }
       }
     },

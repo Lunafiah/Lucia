@@ -78,19 +78,30 @@ All concrete mechanisms remain **UNRATIFIED**. No production files in `src/core/
 **Research Question P25-Q1:**
 > *What computational representation, if any, is necessary for Lucia to maintain persistent relational consequences of significant interaction events beyond the timescale of instantaneous affective recovery, while preserving stability and INV-2?*
 
-**Verdict:**
-### **INCONCLUSIVE — MORE RESEARCH REQUIRED**
+**Status & Official Classification:**
+### **P25-Q1 — RESEARCH COMPLETE / ARCHIVED AS EVIDENCE**
+*(Historical Evaluation Verdict: INCONCLUSIVE — MORE RESEARCH REQUIRED; Permitted Null Result: No new representation/mechanism is necessary for tested baseline capabilities)*
 
-**Key Empirical Finding & Preserved Distinctions:**
-1. **Basic Persistence Without New Ontology**: The evaluation model based on the existing 4D R_t dynamics exhibits basic relational persistence without requiring an additional state representation (no RelationalRupture, RepairEvent, JTMS relational state, or dimensional expansion). Harness evidence does not prove production RelationshipState is sufficient for all relational persistence.
-2. **EXP-P25-DISCRIM Outcome**:
-   - **Hypothesis A (R_t alone)**: Fails when distinct histories converge to identical R_t values (mean Delta S = 0.0002 < 0.05). R_t alone lacks sufficient degrees of freedom to differentiate interaction trajectories.
-   - **Hypothesis B (R_t + existing memory/semantic substrates)**: Successfully differentiates histories (mean Delta S = 0.7066 >= 0.15) using existing KnowledgeStore propositions and AffectiveMemory traces without introducing new classes or dimensional expansion.
-   - **Hypothesis C (New representation)**: Not indicated for the tested single-domain capability, but remains an open research candidate for complex longitudinal multi-agent or qualitative rupture severity classes.
-3. **Strict Epistemic Guardrail**:
-   - Condition B success supports H-B **only for the tested configuration**; it does NOT prove H-B universally.
-   - Architecture Decision: NONE. Zero production mutation. P25-Q1 remains strictly INCONCLUSIVE.
-4. **Next Step**: Further isolated research distinguishing Hypotheses A, B, and C under multi-domain, cross-session longitudinal evaluation.
+**Canonical Audited Findings & Required Corrections Applied:**
+1. **Mathematical Precision**: Cosine similarity with a zero vector is mathematically undefined; Lucia's 0.0 result is the observed defensive zero-vector fallback in the implementation.
+2. **Causal Attribution**: Memory decay is **CAUSALLY SUPPORTED UNDER THE TESTED INTERVENTION** as dominant contributor specifically in D1 and D2 under the tested long-horizon configuration.
+3. **Crosstalk Factor**: SDM crosstalk is **NOT SUPPORTED AS DOMINANT FACTOR UNDER TESTED FIXTURES** (findings not generalized beyond tested workload).
+4. **Cold-Affect Retrieval Separation**: Retrieval failure under cold affect is separated into distinct factors: (a) affective retrieval-gating limitation, (b) semantic cue insufficiency, and (c) ecphory scoring/gating fragility — NOT collapsed into a single proven biological mechanism.
+5. **Persistent State Representation**: **No new persistent relational representation is currently warranted by the tested failure modes.**
+6. **H-B Clarification**: **Existing R_t remains an adequate aggregate relational state representation for the tested capabilities when supplemented by the existing memory and semantic substrates.**
+7. **Combined Intervention**: The combined recovery intervention **supports a multi-factor explanation of recovery under the tested configuration.**
+8. **Degradation Horizon**: **Degradation becomes observable from the tested medium-to-long horizons (30–100 turns), with distinct failure profiles across domains.**
+
+**Canonical Hypothesis Verdicts:**
+- **H-A**: REJECTED only for the tested history-sensitive relational capabilities under matched-endpoint convergence.
+- **H-B**: PARTIALLY GENERALIZES under tested conditions.
+- **H-C**: NOT CURRENTLY WARRANTED; remains an open research hypothesis.
+- **Architecture Gate**: LOCKED
+- **Implementation Gate**: LOCKED
+- **Production Diff**: 0
+- **Genesis Invariant**: UNCHANGED AND LOCKED (`{"is_onboarded": false}`)
+
+> Refer to authoritative research artifact: `evaluation_artifacts/phase25/P25_Q1_FINAL_RESEARCH_REPORT.md`.
 
 ---
 

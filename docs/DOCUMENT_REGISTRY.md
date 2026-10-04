@@ -195,10 +195,19 @@ Every documented artifact in the Lucia repository is registered and classified a
 
 ---
 
-## 8. Maintenance & Registration Rules
+## 8. Phase 25 Research Evidence & Inquiries
+
+| Doc ID | Title | File Path | Class | Phase | Stage | Status | Authority | Canonical Owner |
+|---|---|---|---|---|---|---|---|---|
+| **DOC-P25-001** | Phase 25 Evaluation Report | [`evaluation_artifacts/phase25/evaluation_report.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/evaluation_artifacts/phase25/evaluation_report.md) | Evaluation Evidence | P25 | Harness Report | `RESEARCH EVIDENCE` | `EVIDENCE` | Self |
+| **DOC-P25-002** | P25-Q1 Final Research Report | [`evaluation_artifacts/phase25/P25_Q1_FINAL_RESEARCH_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/evaluation_artifacts/phase25/P25_Q1_FINAL_RESEARCH_REPORT.md) | Research Synthesis | P25 | Final Research Artifact | `P25-Q1 RESEARCH COMPLETE / ARCHIVED AS EVIDENCE` | `EVIDENCE` | Self |
+
+---
+
+## 9. Maintenance & Registration Rules
 
 When authoring any new document, specification, or evaluation report:
-1. **Assign a Document ID**: Prepend with standard category prefix (`DOC-CAN`, `DOC-SPC`, `DOC-P22`, `DOC-P23`, `DOC-P24`, `DOC-REV`, `DOC-RES`).
+1. **Assign a Document ID**: Prepend with standard category prefix (`DOC-CAN`, `DOC-SPC`, `DOC-P22`, `DOC-P23`, `DOC-P24`, `DOC-P25`, `DOC-REV`, `DOC-RES`).
 2. **Explicit Canonical Owner**: The document must explicitly declare which document owns the underlying facts.
 3. **Register in Document Registry**: Add the document entry to this catalog before merging into main.
 4. **Epistemic Invariant Check**: Ensure unproven hypotheses are marked `RESEARCH` and never `VERIFIED`.

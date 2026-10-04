@@ -128,6 +128,7 @@ Each phase represents an independent developmental milestone with its own distin
 
 * **Purpose**: Synchronize multimodal embodiment with temporal interaction dynamics, establishing reciprocal feedback loops between the user's conversational rhythm and Lucia's physical expressions.
 * **Current status**: `PLANNED` (Future Horizon / Not Implemented)
+* **Sub-Inquiry P25-Q1**: `P25-Q1 — RESEARCH COMPLETE / ARCHIVED AS EVIDENCE` (Empirical evaluation and audited conclusion archived in `evaluation_artifacts/phase25/P25_Q1_FINAL_RESEARCH_REPORT.md`; Architecture Gate & Implementation Gate remain LOCKED; Phase 25 overall remains `PLANNED` as an active future research horizon).
 * **Depends on**: Phase 24 (Affective Communication Adaptation) and Phase 14 / Phase 18 (Multimodal Presence & Expression Engine).
 * **Expected capability**: Interpersonal synchrony, micromovement resonance, reciprocal gaze, reactive head tilting, and naturalistic non-verbal feedback loops between user and mascot/avatar.
 

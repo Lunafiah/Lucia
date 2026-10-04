@@ -128,19 +128,32 @@ def run_full_phase25_benchmark() -> Dict[str, Any]:
                 "persistent relational consequences of significant interaction events beyond the "
                 "timescale of instantaneous affective recovery, while preserving stability and INV-2?"
             ),
-            "status": "INCONCLUSIVE — MORE RESEARCH REQUIRED",
+            "status": "P25-Q1 — RESEARCH COMPLETE / ARCHIVED AS EVIDENCE",
+            "canonical_conclusion": {
+                "h_a": "REJECTED only for the tested history-sensitive relational capabilities under matched-endpoint convergence.",
+                "h_b": "PARTIALLY GENERALIZES under tested conditions.",
+                "h_c": "NOT CURRENTLY WARRANTED; remains an open research hypothesis.",
+                "long_horizon_degradation": "MULTI-FACTOR under tested fixtures.",
+                "memory_decay": "CAUSALLY SUPPORTED UNDER THE TESTED INTERVENTION as dominant contributor in tested D1/D2 conditions.",
+                "retrieval_cueing_limitations": "Material contributor in tested D4 conditions (separated into affective retrieval-gating limitation, semantic cue insufficiency, and ecphory scoring/gating fragility).",
+                "sdm_crosstalk": "NOT SUPPORTED AS DOMINANT FACTOR UNDER TESTED FIXTURES.",
+                "representation_verdict": "No new persistent relational representation is currently warranted by the tested failure modes.",
+                "r_t_clarification": "Existing R_t remains an adequate aggregate relational state representation for the tested capabilities when supplemented by the existing memory and semantic substrates.",
+                "combined_intervention": "Supports a multi-factor explanation of recovery under the tested configuration.",
+                "degradation_onset": "Degradation becomes observable from the tested medium-to-long horizons (30–100 turns), with distinct failure profiles across domains.",
+                "zero_vector_math": "Cosine similarity with a zero vector is mathematically undefined; Lucia's 0.0 result is the observed defensive zero-vector fallback in the implementation.",
+                "architecture_gate": "LOCKED",
+                "implementation_gate": "LOCKED",
+                "production_diff": 0,
+                "genesis_invariant": "UNCHANGED AND LOCKED ({\"is_onboarded\": false})",
+            },
             "reasoning": (
-                "The evaluation model based on the existing 4D R_t dynamics exhibits basic relational persistence "
-                "without requiring an additional state representation (no RelationalRupture, RepairEvent, JTMS relational "
-                "state, or dimensional expansion). Harness evidence is clearly distinguished from production-runtime evidence: "
-                "the evaluation model does NOT prove production RelationshipState is sufficient for all relational persistence. "
-                "Three mutually unresolved hypotheses remain under investigation: "
-                "(A) R_t alone may be sufficient; "
-                "(B) R_t + existing memory/semantic substrate may be sufficient; "
-                "(C) a new computational representation may be necessary. "
-                "EXP-P25-DISCRIM provides empirical evidence against H-A (R_t alone cannot distinguish converged histories, Delta S < 0.05) "
-                "and evidence supporting H-B for the tested capability (R_t + existing KnowledgeStore/SDM differentiates histories, Delta S >= 0.15). "
-                "Critically, this does NOT prove H-B universally. Status remains strictly INCONCLUSIVE — MORE RESEARCH REQUIRED."
+                "The evaluation model demonstrates that existing R_t remains an adequate aggregate relational state representation "
+                "for the tested capabilities when supplemented by the existing memory and semantic substrates (no RelationalRupture, "
+                "RepairEvent, JTMS relational state, or dimensional expansion). No new persistent relational representation is currently warranted "
+                "by the tested failure modes, allowing the explicit conclusion that no new representation/mechanism is necessary for the tested "
+                "baseline. While the empirical question P25-Q1 is archived as evidence, broader longitudinal research questions remain under "
+                "investigation for future horizons (P26/P27)."
             ),
         },
         "tracks": {
@@ -317,23 +330,27 @@ def generate_markdown_report(telemetry: Dict[str, Any]) -> str:
         "**Research Question P25-Q1:**\n"
         "> *What computational representation, if any, is necessary for Lucia to maintain persistent relational consequences "
         "of significant interaction events beyond the timescale of instantaneous affective recovery, while preserving stability and INV-2?*\n\n"
-        "**Verdict:**\n"
-        "### **INCONCLUSIVE — MORE RESEARCH REQUIRED**\n\n"
-        "**Key Empirical Finding & Preserved Distinctions:**\n"
-        "1. **Basic Persistence Without New Ontology**: The evaluation model based on the existing 4D R_t dynamics exhibits basic relational persistence "
-        "without requiring an additional state representation (no RelationalRupture, RepairEvent, JTMS relational state, or dimensional expansion). "
-        "Harness evidence does not prove production RelationshipState is sufficient for all relational persistence.\n"
-        "2. **EXP-P25-DISCRIM Outcome**:\n"
-        "   - **Hypothesis A (R_t alone)**: Fails when distinct histories converge to identical R_t values (mean Delta S = 0.0002 < 0.05). "
-        "R_t alone lacks sufficient degrees of freedom to differentiate interaction trajectories.\n"
-        "   - **Hypothesis B (R_t + existing memory/semantic substrates)**: Successfully differentiates histories (mean Delta S = 0.7066 >= 0.15) "
-        "using existing KnowledgeStore propositions and AffectiveMemory traces without introducing new classes or dimensional expansion.\n"
-        "   - **Hypothesis C (New representation)**: Not indicated for the tested single-domain capability, but remains an open research candidate "
-        "for complex longitudinal multi-agent or qualitative rupture severity classes.\n"
-        "3. **Strict Epistemic Guardrail**:\n"
-        "   - Condition B success supports H-B **only for the tested configuration**; it does NOT prove H-B universally.\n"
-        "   - Architecture Decision: NONE. Zero production mutation. P25-Q1 remains strictly INCONCLUSIVE.\n"
-        "4. **Next Step**: Further isolated research distinguishing Hypotheses A, B, and C under multi-domain, cross-session longitudinal evaluation.\n\n"
+        "**Status & Official Classification:**\n"
+        "### **P25-Q1 — RESEARCH COMPLETE / ARCHIVED AS EVIDENCE**\n"
+        "*(Historical Evaluation Verdict: INCONCLUSIVE — MORE RESEARCH REQUIRED; Permitted Null Result: No new representation/mechanism is necessary for tested baseline capabilities)*\n\n"
+        "**Canonical Audited Findings & Required Corrections Applied:**\n"
+        "1. **Mathematical Precision**: Cosine similarity with a zero vector is mathematically undefined; Lucia's 0.0 result is the observed defensive zero-vector fallback in the implementation.\n"
+        "2. **Causal Attribution**: Memory decay is **CAUSALLY SUPPORTED UNDER THE TESTED INTERVENTION** as dominant contributor specifically in D1 and D2 under the tested long-horizon configuration.\n"
+        "3. **Crosstalk Factor**: SDM crosstalk is **NOT SUPPORTED AS DOMINANT FACTOR UNDER TESTED FIXTURES** (findings not generalized beyond tested workload).\n"
+        "4. **Cold-Affect Retrieval Separation**: Retrieval failure under cold affect is separated into distinct factors: (a) affective retrieval-gating limitation, (b) semantic cue insufficiency, and (c) ecphory scoring/gating fragility — NOT collapsed into a single proven biological mechanism.\n"
+        "5. **Persistent State Representation**: **No new persistent relational representation is currently warranted by the tested failure modes.**\n"
+        "6. **H-B Clarification**: **Existing R_t remains an adequate aggregate relational state representation for the tested capabilities when supplemented by the existing memory and semantic substrates.**\n"
+        "7. **Combined Intervention**: The combined recovery intervention **supports a multi-factor explanation of recovery under the tested configuration.**\n"
+        "8. **Degradation Horizon**: **Degradation becomes observable from the tested medium-to-long horizons (30–100 turns), with distinct failure profiles across domains.**\n\n"
+        "**Canonical Hypothesis Verdicts:**\n"
+        "- **H-A**: REJECTED only for the tested history-sensitive relational capabilities under matched-endpoint convergence.\n"
+        "- **H-B**: PARTIALLY GENERALIZES under tested conditions.\n"
+        "- **H-C**: NOT CURRENTLY WARRANTED; remains an open research hypothesis.\n"
+        "- **Architecture Gate**: LOCKED\n"
+        "- **Implementation Gate**: LOCKED\n"
+        "- **Production Diff**: 0\n"
+        "- **Genesis Invariant**: UNCHANGED AND LOCKED (`{\"is_onboarded\": false}`)\n\n"
+        "> Refer to authoritative research artifact: `evaluation_artifacts/phase25/P25_Q1_FINAL_RESEARCH_REPORT.md`.\n\n"
         "---\n\n"
         "## 4. Production Changes & Invariant Verification\n\n"
         "| Invariant / Check | Status | Verification Note |\n"
