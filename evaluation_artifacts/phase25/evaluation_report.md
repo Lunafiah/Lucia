@@ -54,6 +54,23 @@ All concrete mechanisms remain **UNRATIFIED**. No production files in `src/core/
   4. Boundary Guard: Out-of-bounds corruption prevented by bounding guards.
 - **Architectural Guardrail**: Provides direct evidence supporting the INV-1 architectural boundary: independent cognitive replicas can diverge under the tested fault models. Finite test passing does NOT claim universal 100% prevention.
 
+### EXP-P25-DISCRIM — Empirical Discrimination Experiment (H-A vs H-B vs H-C)
+- **Objective**: Empirically evaluate whether 4D R_t alone is sufficient (H-A), R_t + existing memory/semantic substrates are sufficient (H-B), or a new computational representation is necessary (H-C) to produce history-sensitive responses when R_t converges to identical values.
+- **Methodological Pre-Conditions**:
+  1. Canonical R_t = [Trust, Familiarity, Attunement, Shared Experience] represented as 4D unipolar state in [0, 1]^4.
+  2. Decoupled from PAD: Both histories relaxed to Philia resting baseline (leakage <= 1e-4) prior to probe.
+  3. Non-circular, non-encoding neutral probe: 'Let's review the project_deadline commitments for the next milestone.'
+- **Measured Telemetry (N=10)**:
+  - Converged R_t Distance: mean = 0.000789, max = 0.001185 (tolerance = 0.0050)
+  - Pre-Probe PAD Residual: 0.000000, Pre-Probe PAD Leakage: 0.000000
+  - Condition A (R_t alone, memory disabled): mean Delta S = 0.0002 (Success rate = 0%)
+  - Condition B (R_t + existing SDM/Ecphory/KnowledgeStore): mean Delta S = 0.7066 (Success rate = 100%)
+- **Hypothesis Assessment**:
+  - H-A (R_t alone sufficient): REJECTED (Condition A Delta S < 0.05 across all trials)
+  - H-B (R_t + existing substrates sufficient): SUPPORTED FOR TESTED CONFIGURATION (Condition B Delta S >= 0.15 across all trials)
+  - H-C (New representation necessary): NOT INDICATED FOR TESTED CONFIGURATION (H-B succeeded without new state)
+- **Epistemic Limitation**: `1. Tested single conversational probe domain ('project_deadline'). 2. Explored discrete conflict/reconciliation scenario; does not test complex multi-agent relational webs. 3. Demonstrates feasibility of existing memory substrate for differentiation, but does not settle whether dimensional expansion of R_t is necessary for deeper affective attachment or rupture severity classes.`
+
 ---
 
 ## 3. P25-Q1 Scientific Evidence Assessment
@@ -66,13 +83,14 @@ All concrete mechanisms remain **UNRATIFIED**. No production files in `src/core/
 
 **Key Empirical Finding & Preserved Distinctions:**
 1. **Basic Persistence Without New Ontology**: The evaluation model based on the existing 4D R_t dynamics exhibits basic relational persistence without requiring an additional state representation (no RelationalRupture, RepairEvent, JTMS relational state, or dimensional expansion). Harness evidence does not prove production RelationshipState is sufficient for all relational persistence.
-2. **Preserved Unresolved Hypotheses (A / B / C)**:
-   - **Hypothesis A**: Existing 4D R_t alone may be sufficient across interaction timescales.
-   - **Hypothesis B**: R_t combined with existing episodic memory (SDM) and semantic substrate may be sufficient without dimensional expansion.
-   - **Hypothesis C**: A new computational representation may be necessary to distinguish qualitative rupture classes (e.g. betrayal vs misunderstanding).
-   *No option (A, B, or C) is ratified by the current evidence.*
-3. **Next Step**: Further isolated research distinguishing Hypotheses A, B, and C under cross-session longitudinal evaluation.
-4. **No Premature Promotion**: Architecture Decision: NONE. Zero production mutation.
+2. **EXP-P25-DISCRIM Outcome**:
+   - **Hypothesis A (R_t alone)**: Fails when distinct histories converge to identical R_t values (mean Delta S = 0.0002 < 0.05). R_t alone lacks sufficient degrees of freedom to differentiate interaction trajectories.
+   - **Hypothesis B (R_t + existing memory/semantic substrates)**: Successfully differentiates histories (mean Delta S = 0.7066 >= 0.15) using existing KnowledgeStore propositions and AffectiveMemory traces without introducing new classes or dimensional expansion.
+   - **Hypothesis C (New representation)**: Not indicated for the tested single-domain capability, but remains an open research candidate for complex longitudinal multi-agent or qualitative rupture severity classes.
+3. **Strict Epistemic Guardrail**:
+   - Condition B success supports H-B **only for the tested configuration**; it does NOT prove H-B universally.
+   - Architecture Decision: NONE. Zero production mutation. P25-Q1 remains strictly INCONCLUSIVE.
+4. **Next Step**: Further isolated research distinguishing Hypotheses A, B, and C under multi-domain, cross-session longitudinal evaluation.
 
 ---
 

@@ -16,3 +16,12 @@ E5,split_brain_divergence_max,0.9698,distance
 E5,conflicting_writes_detected,50,count
 E5,ordering_violation_discrepancy,0.0054,distance
 E5,no_universal_prevention_claimed,True,bool
+DISCRIM,mean_r_distance,0.000789,norm distance
+DISCRIM,mean_pad_leakage,0.000000,norm distance
+DISCRIM,mean_cond_a_diff,0.0002,Delta S
+DISCRIM,mean_cond_b_diff,0.7066,Delta S
+DISCRIM,cond_a_success_rate,0.00,rate (H-A test)
+DISCRIM,cond_b_success_rate,1.00,rate (H-B test)
+DISCRIM,h_a_supported,False,bool
+DISCRIM,h_b_supported_for_tested_config,True,bool
+DISCRIM,h_c_indicated,False,bool
