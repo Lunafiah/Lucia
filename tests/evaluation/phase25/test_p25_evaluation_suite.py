@@ -102,7 +102,7 @@ def test_e1_no_hardcoded_thresholds_or_mandatory_classes(e1_benchmark_results):
 def test_e2_repair_exhibits_lower_spe_and_higher_directness(e2_benchmark_results):
     """Verify explicit repair achieves lower SPE, higher Directness, and higher Supportiveness than neutral."""
     summary, trials = e2_benchmark_results
-    assert summary.statistical_separation_observed is True
+    assert summary.measurable_separation_observed is True
     assert summary.mean_repair_spe < summary.mean_no_repair_spe
     assert summary.spe_diff_mean > 0.0
     assert summary.mean_repair_directness > summary.mean_no_repair_directness

@@ -281,8 +281,8 @@ class E5PeripheralAuthorityEvaluator:
         )
 
         implication = (
-            "Empirical fault characterization confirms that INV-1 strictly prohibits competing continuous cognitive "
-            "authorities for the same Lucia identity. All peripheral channels must act as stateless I/O streams "
+            "Provides direct evidence supporting the INV-1 architectural boundary: independent cognitive "
+            "replicas can diverge under the tested fault models. All peripheral channels must act as stateless I/O streams "
             "subordinate to a single authoritative cognitive core. "
             "CRITICAL SCIENTIFIC DISCLAIMER: Finite test passing does NOT guarantee universal 100% prevention "
             "of distributed concurrency anomalies in asynchronous environments."

@@ -305,11 +305,13 @@ class E1RecoveryAsymmetryEvaluator:
         )
 
         implication = (
-            "Evidence indicates that the existing 4D R_t high-inertia architecture (tau_rel >> tau_fast) "
-            "already exhibits persistent relational consequences beyond instantaneous affective recovery. "
-            "However, scalar trust cannot distinguish qualitative rupture types (betrayal vs misunderstanding). "
-            "Thus, while persistence is confirmed within the existing 4D substrate, whether a new dimensional representation "
-            "is necessary remains INCONCLUSIVE — MORE RESEARCH REQUIRED."
+            "The evaluation model based on the existing 4D R_t dynamics exhibits basic relational persistence "
+            "without requiring an additional state representation. Harness evidence must be clearly distinguished "
+            "from production-runtime evidence: while the evaluation harness demonstrates persistence under controlled "
+            "simulation, production RelationshipState is NOT proven sufficient for all relational persistence. "
+            "Unresolved questions remain whether (A) R_t alone may be sufficient, (B) R_t + existing memory/semantic "
+            "substrate may be sufficient, or (C) a new computational representation may be necessary. No option is ratified. "
+            "Status remains INCONCLUSIVE — MORE RESEARCH REQUIRED."
         )
 
         summary = E1TrackSummary(

@@ -112,7 +112,7 @@ class E2TrackSummary:
     mean_no_repair_directness: float
     mean_repair_supportiveness: float
     mean_no_repair_supportiveness: float
-    statistical_separation_observed: bool
+    measurable_separation_observed: bool
     evidence_statement: str
     p25_q1_implication: str
 
@@ -301,8 +301,8 @@ class E2RepairDynamicsEvaluator:
             float(diff_mean + 1.96 * diff_std / math.sqrt(len(spe_diffs))),
         )
 
-        # Statistical separation confirmed when 95% CI strictly excludes zero
-        stat_sep = bool(ci95[0] > 0.0 and diff_mean > 0.0)
+        # Measurable separation under this configuration confirmed when 95% CI strictly excludes zero
+        meas_sep = bool(ci95[0] > 0.0 and diff_mean > 0.0)
 
         evidence = (
             f"Observed: Explicit repair achieved lower final SPE than neutral continuation "
@@ -313,10 +313,14 @@ class E2RepairDynamicsEvaluator:
         )
 
         implication = (
-            "Evidence confirms measurable trajectory divergence between explicit repair and neutral continuation "
-            "using evaluation metrics alone. However, this divergence occurs through existing high-inertia 4D updates "
-            "without requiring a dedicated production RelationalRupture or RepairEvent class. "
-            "Whether fine-grained social nuance requires new production ontology remains INCONCLUSIVE — MORE RESEARCH REQUIRED."
+            "Evidence confirms that explicit repair and neutral continuation trajectories are "
+            "measurably separable under this evaluation configuration using evaluation metrics alone. "
+            "The evaluation model based on the existing 4D R_t dynamics exhibits basic relational persistence "
+            "and recovery without requiring an additional state representation (no RelationalRupture or RepairEvent in production). "
+            "Harness evidence does not prove production RelationshipState is sufficient for all relational persistence. "
+            "Unresolved questions remain whether (A) R_t alone may be sufficient, (B) R_t + existing memory/semantic "
+            "substrate may be sufficient, or (C) a new computational representation may be necessary. No option is ratified. "
+            "Status remains INCONCLUSIVE — MORE RESEARCH REQUIRED."
         )
 
         summary = E2TrackSummary(
@@ -331,7 +335,7 @@ class E2RepairDynamicsEvaluator:
             mean_no_repair_directness=float(np.mean(norepair_dirs)),
             mean_repair_supportiveness=float(np.mean(repair_sups)),
             mean_no_repair_supportiveness=float(np.mean(norepair_sups)),
-            statistical_separation_observed=stat_sep,
+            measurable_separation_observed=meas_sep,
             evidence_statement=evidence,
             p25_q1_implication=implication,
         )

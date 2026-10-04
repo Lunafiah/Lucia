@@ -6,7 +6,7 @@ E1,affective_recovery_step_mean,22.9,steps
 E2,mean_repair_spe,0.0424,Euclidean error
 E2,mean_no_repair_spe,0.0655,Euclidean error
 E2,spe_reduction_mean,0.0231,Delta SPE
-E2,statistical_separation_observed,True,bool
+E2,measurable_separation_observed,True,bool
 E3,output_only_trace_jacobian,-15.3333,divergence
 E3,reciprocal_trace_jacobian,-15.3333,divergence
 E3,dissipativity_diagnostic_passed,True,bool (Tr(J) < 0)

@@ -2,8 +2,8 @@
   "metadata": {
     "phase": "Phase 25 \u2014 Temporal Embodiment & Social Feedback",
     "type": "EVALUATION_HARNESS_DATASET",
-    "execution_timestamp": 1791082862.0251937,
-    "elapsed_seconds": 5.978761196136475,
+    "execution_timestamp": 1791083365.674722,
+    "elapsed_seconds": 6.536414384841919,
     "status": "RESEARCH_EVALUATED_BOUNDARY_LEVEL",
     "genesis_invariant_preserved": true,
     "production_mutation_count": 0
@@ -11,7 +11,7 @@
   "p25_q1_assessment": {
     "question": "What computational representation, if any, is necessary for Lucia to maintain persistent relational consequences of significant interaction events beyond the timescale of instantaneous affective recovery, while preserving stability and INV-2?",
     "status": "INCONCLUSIVE \u2014 MORE RESEARCH REQUIRED",
-    "reasoning": "Observed evidence from Track E1 demonstrates that the existing 4D high-inertia R_t architecture (tau_rel >> tau_fast) already maintains persistent relational consequences after the fast limbic ODE returns to the Philia resting baseline. Track E2 demonstrates measurable separation in evaluation metrics (SPE, Directness, Supportiveness) without requiring new production ontology classes. Therefore, a new representation is NOT proven strictly necessary by the current evidence, but unipolar scalar trust remains limited in distinguishing qualitative rupture classes. Definitive architectural resolution remains INCONCLUSIVE \u2014 MORE RESEARCH REQUIRED."
+    "reasoning": "The evaluation model based on the existing 4D R_t dynamics exhibits basic relational persistence without requiring an additional state representation (no RelationalRupture, RepairEvent, JTMS relational state, or dimensional expansion). Harness evidence is clearly distinguished from production-runtime evidence: the evaluation model does NOT prove production RelationshipState is sufficient for all relational persistence. Three mutually unresolved hypotheses remain under investigation: (A) R_t alone may be sufficient; (B) R_t + existing memory/semantic substrate may be sufficient; (C) a new computational representation may be necessary. No option is ratified. Status remains strictly INCONCLUSIVE \u2014 MORE RESEARCH REQUIRED."
   },
   "tracks": {
     "e1_recovery_asymmetry": {
@@ -30,7 +30,7 @@
         "affective_recovery_step_mean": 22.88888888888889,
         "persistent_relational_consequence_observed": true,
         "evidence_statement": "Observed: Negative rupture induced persistent relational displacement (mean=0.0843 +/- 0.0117) that endured after fast limbic PAD relaxed to Philia (mean step=22.9, displacement_at_relaxation=0.0768). Residual ratio mean=1.2914.",
-        "p25_q1_implication": "Evidence indicates that the existing 4D R_t high-inertia architecture (tau_rel >> tau_fast) already exhibits persistent relational consequences beyond instantaneous affective recovery. However, scalar trust cannot distinguish qualitative rupture types (betrayal vs misunderstanding). Thus, while persistence is confirmed within the existing 4D substrate, whether a new dimensional representation is necessary remains INCONCLUSIVE \u2014 MORE RESEARCH REQUIRED."
+        "p25_q1_implication": "The evaluation model based on the existing 4D R_t dynamics exhibits basic relational persistence without requiring an additional state representation. Harness evidence must be clearly distinguished from production-runtime evidence: while the evaluation harness demonstrates persistence under controlled simulation, production RelationshipState is NOT proven sufficient for all relational persistence. Unresolved questions remain whether (A) R_t alone may be sufficient, (B) R_t + existing memory/semantic substrate may be sufficient, or (C) a new computational representation may be necessary. No option is ratified. Status remains INCONCLUSIVE \u2014 MORE RESEARCH REQUIRED."
       },
       "trials": [
         {
@@ -1716,9 +1716,9 @@
         "mean_no_repair_directness": 0.2723274820791871,
         "mean_repair_supportiveness": 0.05512499999999997,
         "mean_no_repair_supportiveness": 0.0028965517241381486,
-        "statistical_separation_observed": true,
+        "measurable_separation_observed": true,
         "evidence_statement": "Observed: Explicit repair achieved lower final SPE than neutral continuation (repair mean=0.0424, no_repair mean=0.0655, SPE reduction mean=0.0231 +/- 0.0062, 95% CI=(0.019916918101632528, 0.026211988270100108)). Directness alignment: repair=0.8718 vs neutral=0.2723. Supportiveness: repair=0.0551 vs neutral=0.0029.",
-        "p25_q1_implication": "Evidence confirms measurable trajectory divergence between explicit repair and neutral continuation using evaluation metrics alone. However, this divergence occurs through existing high-inertia 4D updates without requiring a dedicated production RelationalRupture or RepairEvent class. Whether fine-grained social nuance requires new production ontology remains INCONCLUSIVE \u2014 MORE RESEARCH REQUIRED."
+        "p25_q1_implication": "Evidence confirms that explicit repair and neutral continuation trajectories are measurably separable under this evaluation configuration using evaluation metrics alone. The evaluation model based on the existing 4D R_t dynamics exhibits basic relational persistence and recovery without requiring an additional state representation (no RelationalRupture or RepairEvent in production). Harness evidence does not prove production RelationshipState is sufficient for all relational persistence. Unresolved questions remain whether (A) R_t alone may be sufficient, (B) R_t + existing memory/semantic substrate may be sufficient, or (C) a new computational representation may be necessary. No option is ratified. Status remains INCONCLUSIVE \u2014 MORE RESEARCH REQUIRED."
       },
       "trials": [
         {
@@ -2390,7 +2390,7 @@
             "mean_lag_ms": 161.80945056266017,
             "jitter_std_ms": 63.89613730635913,
             "bounded_stability_ratio": 1.0,
-            "mean_cpu_time_us": 3.8884422110552763
+            "mean_cpu_time_us": 2.7879396984924623
           },
           "gamma_0.05": {
             "gamma": 0.05,
@@ -2399,7 +2399,7 @@
             "mean_lag_ms": 133.18571719837865,
             "jitter_std_ms": 94.8267728451709,
             "bounded_stability_ratio": 1.0,
-            "mean_cpu_time_us": 2.6376884422110556
+            "mean_cpu_time_us": 2.996984924623115
           },
           "gamma_0.10": {
             "gamma": 0.1,
@@ -2408,7 +2408,7 @@
             "mean_lag_ms": 115.30957729143934,
             "jitter_std_ms": 118.32966120895323,
             "bounded_stability_ratio": 1.0,
-            "mean_cpu_time_us": 2.5979899497487438
+            "mean_cpu_time_us": 2.7688442211055277
           },
           "gamma_0.20": {
             "gamma": 0.2,
@@ -2417,7 +2417,7 @@
             "mean_lag_ms": 102.09059628653536,
             "jitter_std_ms": 152.4311206160899,
             "bounded_stability_ratio": 1.0,
-            "mean_cpu_time_us": 2.614070351758794
+            "mean_cpu_time_us": 2.775879396984925
           },
           "gamma_0.30": {
             "gamma": 0.3,
@@ -2426,7 +2426,7 @@
             "mean_lag_ms": 95.0831482409655,
             "jitter_std_ms": 149.43419231988156,
             "bounded_stability_ratio": 1.0,
-            "mean_cpu_time_us": 2.5919597989949748
+            "mean_cpu_time_us": 3.9381909547738694
           },
           "gamma_0.50": {
             "gamma": 0.5,
@@ -2435,7 +2435,7 @@
             "mean_lag_ms": 100.03630559123863,
             "jitter_std_ms": 154.94914496927896,
             "bounded_stability_ratio": 1.0,
-            "mean_cpu_time_us": 2.6502512562814076
+            "mean_cpu_time_us": 2.9065326633165824
           },
           "gamma_0.80": {
             "gamma": 0.8,
@@ -2444,15 +2444,15 @@
             "mean_lag_ms": 106.18649658642335,
             "jitter_std_ms": 170.94516212410835,
             "bounded_stability_ratio": 1.0,
-            "mean_cpu_time_us": 2.617085427135679
+            "mean_cpu_time_us": 2.7025125628140714
           }
         },
         "best_coordination_gamma": 0.3,
         "lowest_jitter_gamma": 0.0,
         "lowest_lag_gamma": 0.3,
         "all_sweeps_bounded": true,
-        "evidence_statement": "Observed: Sweep across 7 configurations demonstrated clear trade-offs: gamma=0.00 yields lowest jitter (63.9ms) but zero correlation; higher gamma improves correlation and PLV (peak at gamma=0.30, PLV=0.3201) while increasing jitter (149.4ms). All configurations maintained bounded stability >= 98%. Mean CPU cost per tick: 2.80 us.",
-        "p25_q1_implication": "Conversational entrainment demonstrates a quantifiable Pareto frontier between coordination quality and latency jitter. Crucially, NO parameter value is promoted to production architecture; all values remain experimental configurations under research investigation. Whether entrainment requires persistent relational state or operates purely on transient timing remains an open inquiry for P25."
+        "evidence_statement": "Observed: Sweep across 7 configurations demonstrated clear trade-offs: gamma=0.00 yields lowest jitter (63.9ms) but zero correlation; higher gamma improves correlation and PLV (peak at gamma=0.30, PLV=0.3201) while increasing jitter (149.4ms). All configurations maintained bounded stability >= 98%. Mean CPU cost per tick: 2.98 us.",
+        "p25_q1_implication": "Conversational entrainment demonstrates an observed trade-off / empirical candidate region between coordination quality and latency jitter. Crucially, NO parameter value is promoted to production architecture; all values remain experimental configurations under research investigation. Whether entrainment requires persistent relational state or operates purely on transient timing remains an open inquiry for P25."
       },
       "metrics_map": {
         "gamma_0.00": {
@@ -2462,7 +2462,7 @@
           "mean_lag_ms": 161.80945056266017,
           "jitter_std_ms": 63.89613730635913,
           "bounded_stability_ratio": 1.0,
-          "mean_cpu_time_us": 3.8884422110552763
+          "mean_cpu_time_us": 2.7879396984924623
         },
         "gamma_0.05": {
           "gamma": 0.05,
@@ -2471,7 +2471,7 @@
           "mean_lag_ms": 133.18571719837865,
           "jitter_std_ms": 94.8267728451709,
           "bounded_stability_ratio": 1.0,
-          "mean_cpu_time_us": 2.6376884422110556
+          "mean_cpu_time_us": 2.996984924623115
         },
         "gamma_0.10": {
           "gamma": 0.1,
@@ -2480,7 +2480,7 @@
           "mean_lag_ms": 115.30957729143934,
           "jitter_std_ms": 118.32966120895323,
           "bounded_stability_ratio": 1.0,
-          "mean_cpu_time_us": 2.5979899497487438
+          "mean_cpu_time_us": 2.7688442211055277
         },
         "gamma_0.20": {
           "gamma": 0.2,
@@ -2489,7 +2489,7 @@
           "mean_lag_ms": 102.09059628653536,
           "jitter_std_ms": 152.4311206160899,
           "bounded_stability_ratio": 1.0,
-          "mean_cpu_time_us": 2.614070351758794
+          "mean_cpu_time_us": 2.775879396984925
         },
         "gamma_0.30": {
           "gamma": 0.3,
@@ -2498,7 +2498,7 @@
           "mean_lag_ms": 95.0831482409655,
           "jitter_std_ms": 149.43419231988156,
           "bounded_stability_ratio": 1.0,
-          "mean_cpu_time_us": 2.5919597989949748
+          "mean_cpu_time_us": 3.9381909547738694
         },
         "gamma_0.50": {
           "gamma": 0.5,
@@ -2507,7 +2507,7 @@
           "mean_lag_ms": 100.03630559123863,
           "jitter_std_ms": 154.94914496927896,
           "bounded_stability_ratio": 1.0,
-          "mean_cpu_time_us": 2.6502512562814076
+          "mean_cpu_time_us": 2.9065326633165824
         },
         "gamma_0.80": {
           "gamma": 0.8,
@@ -2516,7 +2516,7 @@
           "mean_lag_ms": 106.18649658642335,
           "jitter_std_ms": 170.94516212410835,
           "bounded_stability_ratio": 1.0,
-          "mean_cpu_time_us": 2.617085427135679
+          "mean_cpu_time_us": 2.7025125628140714
         }
       }
     },
@@ -2534,8 +2534,8 @@
         "ordering_violation_discrepancy": 0.0054,
         "corruption_prevented_by_guards": 1,
         "no_universal_prevention_claimed": true,
-        "evidence_statement": "Observed Fault Modes: (1) Split-Brain Divergence: Independent peripheral replicas diverged to max distance 0.9698, proving that independent continuous cognitive authorities violate INV-1. (2) Unserialized Writes: Race condition produced 50 conflicting writes with discrepancy 0.4900. (3) Causal Inversion: Network message order reversal produced trajectory discrepancy 0.0054. (4) Boundary Guard: Out-of-bounds inputs were bounded strictly within [0.0, 1.0].",
-        "p25_q1_implication": "Empirical fault characterization confirms that INV-1 strictly prohibits competing continuous cognitive authorities for the same Lucia identity. All peripheral channels must act as stateless I/O streams subordinate to a single authoritative cognitive core. CRITICAL SCIENTIFIC DISCLAIMER: Finite test passing does NOT guarantee universal 100% prevention of distributed concurrency anomalies in asynchronous environments."
+        "evidence_statement": "Observed Fault Modes: (1) Split-Brain Divergence: Independent peripheral replicas diverged to max distance 0.9698, proving that independent continuous cognitive authorities violate INV-1. (2) Unserialized Writes: Race condition produced 50 conflicting writes with discrepancy 0.5000. (3) Causal Inversion: Network message order reversal produced trajectory discrepancy 0.0054. (4) Boundary Guard: Out-of-bounds inputs were bounded strictly within [0.0, 1.0].",
+        "p25_q1_implication": "Provides direct evidence supporting the INV-1 architectural boundary: independent cognitive replicas can diverge under the tested fault models. All peripheral channels must act as stateless I/O streams subordinate to a single authoritative cognitive core. CRITICAL SCIENTIFIC DISCLAIMER: Finite test passing does NOT guarantee universal 100% prevention of distributed concurrency anomalies in asynchronous environments."
       },
       "reports": {
         "split_brain": {
@@ -2554,13 +2554,13 @@
           "fault_mode": "unserialized_concurrent_writes",
           "channel_count": 2,
           "total_steps": 100,
-          "divergent_trace_distance_mean": 0.4900000000000003,
-          "divergent_trace_distance_max": 0.4900000000000003,
+          "divergent_trace_distance_mean": 0.5,
+          "divergent_trace_distance_max": 0.5,
           "conflicting_write_count": 50,
           "ordering_violation_count": 0,
           "state_corruption_count": 0,
           "split_brain_detected": false,
-          "observed_divergence": 0.4900000000000003
+          "observed_divergence": 0.5
         },
         "ordering_inversion": {
           "fault_mode": "causal_ordering_inversion",

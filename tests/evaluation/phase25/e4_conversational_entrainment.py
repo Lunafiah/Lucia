@@ -10,7 +10,7 @@ PRIMARY SCIENTIFIC INQUIRY (P25-Q1):
 
 SCIENTIFIC HYPOTHESES:
   H1 (Coupling Trade-Off Landscape): Varying conversational entrainment coupling gamma in
-      [0.0, 0.8] reveals an empirical Pareto frontier where intermediate coupling maximizes
+      [0.0, 0.8] reveals an observed trade-off / empirical candidate region where intermediate coupling balances
       coordination quality (Phase-Locking Value) without causing timing instability or excessive jitter.
   H0 (Null Hypothesis / Alternative Explanation): Varying coupling gamma does not produce
       statistically significant changes in conversational synchrony, or coordination
@@ -205,7 +205,7 @@ class E4ConversationalEntrainmentEvaluator:
         )
 
         implication = (
-            "Conversational entrainment demonstrates a quantifiable Pareto frontier between coordination quality "
+            "Conversational entrainment demonstrates an observed trade-off / empirical candidate region between coordination quality "
             "and latency jitter. Crucially, NO parameter value is promoted to production architecture; "
             "all values remain experimental configurations under research investigation. "
             "Whether entrainment requires persistent relational state or operates purely on transient timing "
