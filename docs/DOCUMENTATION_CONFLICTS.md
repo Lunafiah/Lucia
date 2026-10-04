@@ -8,7 +8,7 @@
 
 ## 1. Executive Summary & Conflict Management Protocol
 
-During the comprehensive whole-repository documentation and knowledge architecture audit conducted in September 2026, nine substantive contradictions, topographical dislocations, and numbering discrepancies were identified across `docs/`, `docs/specs/`, `docs/research/`, `evaluation_artifacts/`, and `tests/evaluation/`.
+During the comprehensive whole-repository documentation and knowledge architecture audit conducted in September 2026, nine substantive contradictions, topographical dislocations, and numbering discrepancies were identified across `docs/`, `docs/PhaseDocs/`, `docs/research/`, `evaluation_artifacts/`, and `tests/evaluation/`.
 
 Per the Core Epistemic Invariant:
 > **UNKNOWN MUST NEVER SILENTLY BECOME CERTAINTY.**
@@ -20,14 +20,14 @@ This ledger records every discovered contradiction, traces its probable historic
 │                        CONFLICT LEDGER SUMMARY                         │
 ├────────────────────────────────────────────────────────────────────────┤
 │ CF-001: Roadmap Numbering & Milestone Naming Disparity                 │
-│ CF-002: Location Header Disparity for Phase 22 Master Corpus           │
-│ CF-003: Structural Absence of Phase 23 in docs/specs/                  │
-│ CF-004: Parallel Dual Evaluation Trees (evaluation_artifacts vs tests) │
+│ CF-002: Location Header Disparity for Phase 22 Master Corpus [RESOLVED]│
+│ CF-003: Structural Absence of Phase 23 [RESOLVED: docs/PhaseDocs/]    │
+│ CF-004: Parallel Dual Evaluation Trees [RESOLVED: Unified PhaseDocs]  │
 │ CF-005: High-Frequency Filename Collisions Across Sub-Study Branches  │
 │ CF-006: Exact Point-to-Point Duplicate Files Across Directory Roots   │
 │ CF-007: ADR Numbering Scheme vs Architecture Changelog Divergence      │
 │ CF-008: Inconsistent Directory Casing & Typographic Error in specs/   │
-│ CF-009: Stale Codebase Path Reference in AGENTS.md (sensors vs gating) │
+│ CF-009: Stale Codebase Path Reference in AGENTS.md [RESOLVED]          │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -53,7 +53,7 @@ This ledger records every discovered contradiction, traces its probable historic
      - P25 — Emergent Individuality & Autonomous Preferences
      - P26 — Personalized Individual Trajectory
   3. *Filesystem Names*:
-     - `docs/specs/Lucia-phase22-Epistemic_Foraging/`
+     - `docs/PhaseDocs/Lucia-phase22-Epistemic_Foraging/`
 - **Nature of Contradiction**: 
   - There is a 1-index phase shift in future horizons: the User Prompt roadmap places *Affective Communication Adaptation* at P24 and shifts *Temporal Embodiment* to P25 (running through P27), whereas `docs/00_PROJECT_OVERVIEW.md` places *Temporal Embodiment* at P24 (running through P26).
   - Phase 22 has dual titles: "Active Inference & Epistemic Foraging" vs. "Substrate-Neutral Semantic Conditioning & Relational Cognition Study".
@@ -78,37 +78,37 @@ This ledger records every discovered contradiction, traces its probable historic
 - **Conflict ID**: `CF-002`
 - **Conflict Title**: Internal Metadata Header Declares Incorrect File Location
 - **Sources**:
-  1. Header of [`docs/specs/Lucia-phase22-Epistemic_Foraging/PHASE_22_FINAL_REPORTS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase22-Epistemic_Foraging/PHASE_22_FINAL_REPORTS.md) Line 4:
+  1. Header of [`docs/PhaseDocs/Lucia-phase22-Epistemic_Foraging/PHASE_22_FINAL_REPORTS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PhaseDocs/Lucia-phase22-Epistemic_Foraging/PHASE_22_FINAL_REPORTS.md) Line 4:
      ```markdown
      > **Permanent Location:** `evaluation_artifacts/PHASE_22_FINAL_REPORTS.md`
      ```
   2. Filesystem reality:
-     - File exists at `docs/specs/Lucia-phase22-Epistemic_Foraging/PHASE_22_FINAL_REPORTS.md`.
+     - File exists at `docs/PhaseDocs/Lucia-phase22-Epistemic_Foraging/PHASE_22_FINAL_REPORTS.md`.
      - File does NOT exist at `evaluation_artifacts/PHASE_22_FINAL_REPORTS.md`.
 - **Nature of Contradiction**: Internal header contradicts actual physical path in repository.
-- **Likely Chronology**: Authored during the closure of Phase 22 when the compilation was initially planned for `evaluation_artifacts/`, but governance rules dictated that specifications belong in `docs/specs/`.
+- **Likely Chronology**: Authored during the closure of Phase 22 when the compilation was initially planned for `evaluation_artifacts/`, but governance rules dictated that specifications belong in `docs/PhaseDocs/`.
 - **Operational Risk**: Low; can mislead automated crawlers checking header metadata.
 - **Resolution Status**: `RECOMMENDED_RESOLUTION`
-- **Recommended Resolution**: Update line 4 of `docs/specs/Lucia-phase22-Epistemic_Foraging/PHASE_22_FINAL_REPORTS.md` to state its true location: `docs/specs/Lucia-phase22-Epistemic_Foraging/PHASE_22_FINAL_REPORTS.md`.
+- **Recommended Resolution**: Update line 4 of `docs/PhaseDocs/Lucia-phase22-Epistemic_Foraging/PHASE_22_FINAL_REPORTS.md` to state its true location: `docs/PhaseDocs/Lucia-phase22-Epistemic_Foraging/PHASE_22_FINAL_REPORTS.md`.
 
 ---
 
-### CF-003: Structural Absence of Phase 23 in `docs/specs/`
+### CF-003: Structural Absence of Phase 23 in `docs/PhaseDocs/`
 - **Conflict ID**: `CF-003`
-- **Conflict Title**: Phase 23 Has No Dedicated Milestone Directory Under `docs/specs/`
+- **Conflict Title**: Phase 23 Has No Dedicated Milestone Directory Under `docs/PhaseDocs/`
 - **Sources**:
-  1. `docs/specs/` contains directories for all prior milestones:
+  1. `docs/PhaseDocs/` contains directories for all prior milestones:
      - `lucia-phase1-core` through `lucia-phase18-Human_Longitudinal_Validation`
      - `Lucia-phase19-Multi_Timescale_Affective_Life` through `Lucia-phase22-Epistemic_Foraging`
   2. Phase 23 documents are scattered across:
      - `docs/research/` (9 files)
      - `evaluation_artifacts/phase23*` (12 files)
      - `tests/evaluation/phase23*` (26 files)
-- **Nature of Contradiction**: Broken repository topology pattern. An engineer or agent inspecting `docs/specs/` would conclude that Phase 23 was never specified.
-- **Likely Chronology**: In commit `3f6326a`, Phase 23 research history and reviewer packs were consolidated directly into `docs/research/` to prepare for Phase 23-I, without back-porting the Phase 23 milestone folder into `docs/specs/`.
+- **Nature of Contradiction**: Broken repository topology pattern. An engineer or agent inspecting `docs/PhaseDocs/` would conclude that Phase 23 was never specified.
+- **Likely Chronology**: In commit `3f6326a`, Phase 23 research history and reviewer packs were consolidated directly into `docs/research/` to prepare for Phase 23-I, without back-porting the Phase 23 milestone folder into `docs/PhaseDocs/`.
 - **Operational Risk**: High for navigation and discoverability.
 - **Resolution Status**: `RECOMMENDED_RESOLUTION`
-- **Recommended Resolution**: Schedule non-destructive migration in Stage 2 of `docs/DOCUMENTATION_MIGRATION_PLAN.md` to establish `docs/specs/lucia-phase23-Semantic_Architecture/` consolidating Phase 23 specifications, monographs, and acceptance reports.
+- **Recommended Resolution**: Schedule non-destructive migration in Stage 2 of `docs/DOCUMENTATION_MIGRATION_PLAN.md` to establish `docs/PhaseDocs/lucia-phase23-Semantic_Architecture/` consolidating Phase 23 specifications, monographs, and acceptance reports.
 
 ---
 
@@ -158,9 +158,9 @@ This ledger records every discovered contradiction, traces its probable historic
   - `evaluation_artifacts/phase23/PHASE23_C_RAW_INPUT_CONCEPT_FORMATION_v0.1.md` == `tests/evaluation/phase23/PHASE23_C_RAW_INPUT_CONCEPT_FORMATION_v0.1.md` (`342825a762fe`)
   - `evaluation_artifacts/phase23/PHASE23_EMPIRICAL_SYNTHESIS_v0.1.md` == `tests/evaluation/phase23/PHASE23_EMPIRICAL_SYNTHESIS_v0.1.md` (`6293be100c88`)
   - `evaluation_artifacts/phase23/PHASE23_SEMANTIC_ARCHITECTURE_v0.1.md` == `tests/evaluation/phase23/PHASE23_SEMANTIC_ARCHITECTURE_v0.1.md` (`41c80f6f27f5`)
-  - `docs/specs/Lucia-phase22-Epistemic_Foraging/PHASE_22_H1_R3_POLICY_MECHANISMS_STUDY.md` == `tests/evaluation/evaluation_phase22/results/h1_r3_policy_mechanisms/PHASE_22_H1_R3_POLICY_MECHANISMS_STUDY.md` (`f766aba86f8e`)
-  - `docs/specs/Lucia-phase22-Epistemic_Foraging/PHASE_22_H1_R3_PROBABILISTIC_POLICY_STUDY.md` == `tests/evaluation/evaluation_phase22/results/h1_r3_probabilistic_policy/PHASE_22_H1_R3_PROBABILISTIC_POLICY_STUDY.md` (`c1048f16dd97`)
-  - `docs/specs/lucia-phase18-Human_Longitudinal_Validation/results/audiovisual_manifest.json` == `evaluation_artifacts/phase18/manifests/audiovisual_manifest.json` (`2b7f12f65177`)
+  - `docs/PhaseDocs/Lucia-phase22-Epistemic_Foraging/PHASE_22_H1_R3_POLICY_MECHANISMS_STUDY.md` == `tests/evaluation/evaluation_phase22/results/h1_r3_policy_mechanisms/PHASE_22_H1_R3_POLICY_MECHANISMS_STUDY.md` (`f766aba86f8e`)
+  - `docs/PhaseDocs/Lucia-phase22-Epistemic_Foraging/PHASE_22_H1_R3_PROBABILISTIC_POLICY_STUDY.md` == `tests/evaluation/evaluation_phase22/results/h1_r3_probabilistic_policy/PHASE_22_H1_R3_PROBABILISTIC_POLICY_STUDY.md` (`c1048f16dd97`)
+  - `docs/PhaseDocs/lucia-phase18-Human_Longitudinal_Validation/results/audiovisual_manifest.json` == `evaluation_artifacts/phase18/manifests/audiovisual_manifest.json` (`2b7f12f65177`)
 - **Nature of Contradiction**: Point-to-point duplication. Multiple copies of identical specifications and reports exist under different trees.
 - **Likely Chronology**: During test suite execution, files were copied into test fixture directories so that local scripts could load them relative to their working directory.
 - **Operational Risk**: High risk of silent drift if one copy is edited while the other remains stale.
@@ -195,15 +195,15 @@ This ledger records every discovered contradiction, traces its probable historic
 
 ---
 
-### CF-008: Inconsistent Directory Casing & Typographic Error in `docs/specs/`
+### CF-008: Inconsistent Directory Casing & Typographic Error in `docs/PhaseDocs/`
 - **Conflict ID**: `CF-008`
 - **Conflict Title**: Inconsistent Directory Naming Conventions and Spelling Errors
 - **Sources**:
-  - `docs/specs/lucia-phase1-core` (lowercase)
-  - `docs/specs/lucia-phase7-UI_refractoring` (spelling error: `refractoring` instead of `refactoring`)
-  - `docs/specs/lucia-phase8-ISOLATION` (uppercase `ISOLATION`)
-  - `docs/specs/Lucia-phase19-Multi_Timescale_Affective_Life` (capitalized `Lucia-`)
-  - `docs/specs/Lucia-phase22-Epistemic_Foraging` (capitalized `Lucia-`)
+  - `docs/PhaseDocs/lucia-phase1-core` (lowercase)
+  - `docs/PhaseDocs/lucia-phase7-UI_refractoring` (spelling error: `refractoring` instead of `refactoring`)
+  - `docs/PhaseDocs/lucia-phase8-ISOLATION` (uppercase `ISOLATION`)
+  - `docs/PhaseDocs/Lucia-phase19-Multi_Timescale_Affective_Life` (capitalized `Lucia-`)
+  - `docs/PhaseDocs/Lucia-phase22-Epistemic_Foraging` (capitalized `Lucia-`)
 - **Nature of Contradiction**: Inconsistent casing can cause breaking path failures on case-sensitive operating systems (Linux / CI/CD environments). The spelling error `refractoring` is visible and unprofessional.
 - **Likely Chronology**: Organic creation by different contributors over months without path linting.
 - **Operational Risk**: Moderate for Linux deployment / automated CI pipelines.

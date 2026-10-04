@@ -113,8 +113,8 @@ Gemini and NotebookLM require maximum information depth to conduct cross-phase m
 ### 3.1 Corpus Completeness Standard
 Never compress the Gemini corpus into 5 files. The Gemini ingestion set must include:
 1. **Master Living Canon**: [`docs/00_PROJECT_OVERVIEW.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/00_PROJECT_OVERVIEW.md), [`docs/ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/ARCHITECTURE.md), [`docs/L1_INVARIANTS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/L1_INVARIANTS.md), [`AGENTS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/AGENTS.md).
-2. **Master Corpus Syntheses**: [`docs/specs/Lucia-phase22-Epistemic_Foraging/PHASE_22_FINAL_REPORTS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/specs/Lucia-phase22-Epistemic_Foraging/PHASE_22_FINAL_REPORTS.md), [`docs/research/P23_HISTORY_CONSOLIDATED.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23_HISTORY_CONSOLIDATED.md).
-3. **Full Research Specs & Monographs**: All monographs in `docs/specs/**` and `evaluation_artifacts/**`.
+2. **Master Corpus Syntheses**: [`docs/PhaseDocs/Lucia-phase22-Epistemic_Foraging/PHASE_22_FINAL_REPORTS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PhaseDocs/Lucia-phase22-Epistemic_Foraging/PHASE_22_FINAL_REPORTS.md), [`docs/research/P23_HISTORY_CONSOLIDATED.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/research/P23_HISTORY_CONSOLIDATED.md).
+3. **Full Research Specs & Monographs**: All monographs in `docs/PhaseDocs/**` and `evaluation_artifacts/**`.
 4. **All Sub-Study Evaluation Reports**: All 20 Phase 22 reports, Phase 23 benchmark reports, and Phase 18 audio diagnostics.
 5. **Raw Data Artifacts**: JSON benchmark dumps and experiment matrices in `evaluation_artifacts/**` and `tests/evaluation/**`.
 
@@ -166,7 +166,7 @@ L1: Non-Negotiable Invariants  ──► docs/L1_INVARIANTS.md, AGENTS.md §2
 L2: Project Truth & Roadmap    ──► docs/00_PROJECT_OVERVIEW.md, AGENTS.md §0
 L3: Technical Architecture     ──► docs/ARCHITECTURE.md, ADR Ledger
 L4: Navigation & Registries    ──► docs/CONTEXT_INDEX.md, docs/PHASE_REGISTRY.md
-L5: Historical & Evidence Docs ──► docs/specs/**, evaluation_artifacts/**
+L5: Historical & Evidence Docs ──► docs/PhaseDocs/**, evaluation_artifacts/**
 L6: Production Source Code     ──► src/core/**, electron/**, config/**
 ```
 
@@ -177,7 +177,7 @@ L6: Production Source Code     ──► src/core/**, electron/**, config/**
 | **Core Bug Fix** | `L1` (Invariants), `L6` (Target module) | `L3` (Relevant ADR section) | `L5` (Historical specs), raw benchmark dumps |
 | **Research Investigation**| `L1` (Invariants), `L2` (Roadmap), `L5` (Target spec) | `L4` (Source Map), evaluation fixtures | `L6` (`electron/**`), active persistent files |
 | **Architecture Gate / ADR**| `L1` (Invariants), `L2` (Health matrix), `L3` (ADR ledger) | `L4` (Registries), `L5` (Synthesis) | Historical Phase 1–6 tasks, scratch files |
-| **UI / Mascot Physics** | `L1` (Mascot bounds INV-7), `L6` (`electron/`) | `docs/specs/lucia-phase7-UI_refractoring/` | Math derivations of LNN ODE, BPTT consolidation |
+| **UI / Mascot Physics** | `L1` (Mascot bounds INV-7), `L6` (`electron/`) | `docs/PhaseDocs/lucia-phase7-UI_refractoring/` | Math derivations of LNN ODE, BPTT consolidation |
 | **Documentation / Registry**| `L1` (Invariants), `L4` (Registries & Maps) | Target documentation file | Unrelated test suites |
 
 ---

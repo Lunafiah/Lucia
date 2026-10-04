@@ -94,8 +94,8 @@ scratch/
 # Temporary evaluation harness scratch stores
 docs/PhaseDocs/**/temp_run_store/
 docs/specs/**/temp_run_store/
-evaluation_artifacts/**/temp_harness/
-evaluation_artifacts/phase18/manifests/audiovisual_manifest.json
+docs/PhaseDocs/**/temp_harness/
+docs/PhaseDocs/**/manifests/audiovisual_manifest.json
 
 # Local config
 config/local/
@@ -110,7 +110,6 @@ yarn-error.log*
 
 # NotebookLM Sync MCP & Tooling
 tools/
-evaluation_artifacts/notebooklm_sync/
 docs/others/notebooklm_sync/
 .agents/mcp_config.json
 

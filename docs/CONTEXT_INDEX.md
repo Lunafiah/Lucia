@@ -24,7 +24,7 @@ Lucia organizes context into **logical conceptual tiers (L0–L6)** to deliver *
 │ L3: Technical Canon & ADRs   ──► docs/ARCHITECTURE.md                  │
 │ L4: Navigation & Index Map   ──► docs/CONTEXT_INDEX.md,                │
 │                                  docs/DOCUMENTATION_INDEX.md           │
-│ L5: Domain / Historical Specs ──► docs/specs/**, docs/research/**, tests/evaluation/**│
+│ L5: Domain / Historical Specs ──► docs/PhaseDocs/**, docs/research/**, tests/evaluation/**│
 │ L6: Production Codebase       ──► src/core/**, electron/**, config/**   │
 └────────────────────────────────────────────────────────────────────────┘
 ```
@@ -37,9 +37,9 @@ Before reading large files or starting implementation, determine the task type a
 
 | Task Type | Primary Context (Must Read) | Secondary / Reference Context | What NOT to Load (Avoid Context Bloat) |
 |---|---|---|---|
-| **Bug Fix / Core Logic** | `docs/L1_INVARIANTS.md`<br/>`src/core/<subsystem>/` | `docs/ARCHITECTURE.md` (§ relevant mechanism) | Historical specs in `docs/specs/**`<br/>Research evaluation reports |
-| **Research / Evaluation** | `AGENTS.md` (§0, §6)<br/>`docs/L1_INVARIANTS.md` (§6)<br/>Target spec in `docs/specs/` or `docs/research/` | `tests/evaluation/phaseXX/`<br/>`docs/research/` Reviewer Pack | Production `electron/**`<br/>Active user persistence files |
-| **UI / Presentation / Desktop** | `docs/L1_INVARIANTS.md` (§2 INV-1, INV-7)<br/>`docs/ARCHITECTURE.md` (§3.6, §4)<br/>`electron/` target module | `docs/specs/lucia-phase7-UI_refractoring/` | Math derivations in `docs/ARCHITECTURE.md`<br/>BPTT consolidation details |
+| **Bug Fix / Core Logic** | `docs/L1_INVARIANTS.md`<br/>`src/core/<subsystem>/` | `docs/ARCHITECTURE.md` (§ relevant mechanism) | Historical specs in `docs/PhaseDocs/**`<br/>Research evaluation reports |
+| **Research / Evaluation** | `AGENTS.md` (§0, §6)<br/>`docs/L1_INVARIANTS.md` (§6)<br/>Target spec in `docs/PhaseDocs/` or `docs/research/` | `tests/evaluation/phaseXX/`<br/>`docs/research/` Reviewer Pack | Production `electron/**`<br/>Active user persistence files |
+| **UI / Presentation / Desktop** | `docs/L1_INVARIANTS.md` (§2 INV-1, INV-7)<br/>`docs/ARCHITECTURE.md` (§3.6, §4)<br/>`electron/` target module | `docs/PhaseDocs/lucia-phase7-UI_refractoring/` | Math derivations in `docs/ARCHITECTURE.md`<br/>BPTT consolidation details |
 | **Architecture / ADR Gate** | `docs/L1_INVARIANTS.md`<br/>`AGENTS.md` (§7)<br/>`docs/ARCHITECTURE.md` (§8 ADR ledger) | `docs/00_PROJECT_OVERVIEW.md` (§3) | Historical phase 1–6 scratch specs<br/>UI assets |
 | **Governance / Documentation** | `AGENTS.md` (§3)<br/>`docs/DOCUMENTATION_INDEX.md`<br/>`docs/CONTEXT_INDEX.md` | Target documentation file | Unrelated Python test suites |
 
@@ -84,8 +84,8 @@ When answering questions or designing changes, look up the canonical source of t
 
 When retrieving context in Lucia, agents must actively avoid:
 
-1. **Massive Context Ingestion**: Reading all of `docs/specs/**` or full evaluation reports into context for simple bug fixes or local refactors.
-2. **Consulting Historical Specs as Active Truth**: Historical specifications in `docs/specs/` document milestone progress at the time of development. They do **NOT** override `docs/ARCHITECTURE.md` or `docs/00_PROJECT_OVERVIEW.md`.
+1. **Massive Context Ingestion**: Reading all of `docs/PhaseDocs/**` or full evaluation reports into context for simple bug fixes or local refactors.
+2. **Consulting Historical Specs as Active Truth**: Historical specifications in `docs/PhaseDocs/` document milestone progress at the time of development. They do **NOT** override `docs/ARCHITECTURE.md` or `docs/00_PROJECT_OVERVIEW.md`.
 3. **Recreating Stale / Merged Documents**: Never recreate `docs/CURRENT_STATUS.md`, `docs/MECHANISM.md`, or `docs/DESIGN_DECISIONS.md`. Their contents live in canonical files.
 4. **Inventing Directory Layers**: Do not create filesystem directories named `L0/`, `L1/`, etc. Layers are conceptual and map directly to repository paths outlined in Section 1.
 5. **Treating Pre-P23-I Governance Audit (`bed9299`) as Technical Evidence**: Commit `bed9299` established repository documentation and knowledge architecture. It is pre-P23-I governance context and must never be cited as empirical technical evidence validating P23-I research claims.

@@ -11,9 +11,9 @@ Executes all 5 Required Evaluation Tracks:
   - Track E5: Peripheral Authority Contention
 
 Emits:
-  - evaluation_artifacts/phase25/raw_telemetry.json
-  - evaluation_artifacts/phase25/summary.csv
-  - evaluation_artifacts/phase25/evaluation_report.md
+  - docs/PhaseDocs/Lucia-phase25-Temporal_Embodiment/evaluation_artifacts/phase25/raw_telemetry.json
+  - docs/PhaseDocs/Lucia-phase25-Temporal_Embodiment/evaluation_artifacts/phase25/summary.csv
+  - docs/PhaseDocs/Lucia-phase25-Temporal_Embodiment/evaluation_artifacts/phase25/evaluation_report.md
 
 MANDATORY SCIENTIFIC & ARCHITECTURAL DISCIPLINE:
   - Preserves Genesis ({"is_onboarded": false}).
@@ -48,7 +48,7 @@ from tests.evaluation.phase25.e5_peripheral_authority import E5PeripheralAuthori
 from tests.evaluation.phase25.exp_p25_discrim import DiscrimConfig, P25DiscrimEvaluator
 
 # Output directory for persistent artifacts
-ARTIFACT_DIR = PROJECT_ROOT / "evaluation_artifacts" / "phase25"
+ARTIFACT_DIR = PROJECT_ROOT / "docs" / "PhaseDocs" / "Lucia-phase25-Temporal_Embodiment" / "evaluation_artifacts" / "phase25"
 ARTIFACT_DIR.mkdir(parents=True, exist_ok=True)
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -350,7 +350,7 @@ def generate_markdown_report(telemetry: Dict[str, Any]) -> str:
         "- **Implementation Gate**: LOCKED\n"
         "- **Production Diff**: 0\n"
         "- **Genesis Invariant**: UNCHANGED AND LOCKED (`{\"is_onboarded\": false}`)\n\n"
-        "> Refer to authoritative research artifact: `evaluation_artifacts/phase25/P25_Q1_FINAL_RESEARCH_REPORT.md`.\n\n"
+        "> Refer to authoritative research artifact: `docs/PhaseDocs/Lucia-phase25-Temporal_Embodiment/P25_Q1_FINAL_RESEARCH_REPORT.md`.\n\n"
         "---\n\n"
         "## 4. Production Changes & Invariant Verification\n\n"
         "| Invariant / Check | Status | Verification Note |\n"

@@ -49,6 +49,7 @@ If the requested work is exploratory, the default outcome is **research artifact
 - Do not violate anti-branching (Topic 6). Lucia must never silently become multiple independent continuations (split-brain). Recognize anti-branching as a strict architectural requirement while preserving its concrete mechanism as an unresolved research question.
 - Preserve `POST /lifecycle/end` strictly as catastrophic individual decommissioning / Genesis reset (Topic 7). Do not reinterpret it as a normal relationship transition, and do not implement or assume unratified concepts like Covenant Release.
 - Distinguish individual identity continuity from architectural evolution and implementation lineage (Topic 1). Upgrades, model replacements, or refactors do not create a new individual.
+- Do not scatter phase documentation or evaluation artifacts loosely in root or arbitrary directories. When starting a new phase, agents MUST create a dedicated subfolder `Lucia-phase<X>-<Topic>` inside `docs/PhaseDocs/`. All documentation, research specs, evaluation protocols, reports, and raw telemetry/artifacts related to that phase MUST be contained within that phase folder (with artifacts in `evaluation_artifacts/` inside that folder). External root-level artifact folders (like `evaluation_artifacts/`) are permanently eliminated.
 
 ### Research Deliverable Standard
 
@@ -143,7 +144,7 @@ README.md (Public Front Door) [L0]
     │
     ├── docs/DOCUMENTATION_INDEX.md (Complete Catalog & Spec Navigation) [L4]
     │
-    └── Historical Evidence (docs/specs/**, evaluation_artifacts/**, tests/evaluation/**) [L5]
+    └── Historical Evidence (docs/PhaseDocs/**, tests/evaluation/**) [L5]
 ```
 
 | Document | Authority Tier | Role & Content Scope | Agent Operating Rules |
@@ -159,7 +160,7 @@ README.md (Public Front Door) [L0]
 | [`docs/CONTEXT_ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/CONTEXT_ARCHITECTURE.md) | **Context Projection Spec [L4]** | Multi-agent projection architecture: Ciah $\le 5$-file reviewer pack, Gemini deep research corpus, Antigravity L0–L6 routing. | Authoritative rules for creating or updating derived context files. |
 | [`docs/CONTEXT_INDEX.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/CONTEXT_INDEX.md) | **Context Routing Map [L4]** | Logical context layers (L0–L6), minimal sufficient context loading rules by task type, anti-patterns. | Consult first to identify minimal sufficient context layers before ingesting files. |
 | [`docs/DOCUMENTATION_INDEX.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/DOCUMENTATION_INDEX.md) | **Navigation Map [L4]** | Complete catalog of active and historical documentation, authority hierarchy, and reading paths. | Use strictly to navigate documents. **Do NOT turn the index into another source of technical truth.** |
-| **Phase / Research / Acceptance Docs** (`docs/specs/**`, `evaluation_artifacts/**`) | **Historical Evidence & Records [L5]** | Phase specifications, research hypotheses (H1–Hn), evaluation harness reports, mathematical proposals, and formal acceptance reports. | Preserved as evidence and historical records. They must **never** silently override the active canonical architecture in `docs/ARCHITECTURE.md`. |
+| **Phase / Research / Acceptance Docs** (`docs/PhaseDocs/**`) | **Historical Evidence & Records [L5]** | Phase specifications, research hypotheses (H1–Hn), evaluation harness reports, mathematical proposals, formal acceptance reports, and phase-level evaluation artifacts (`docs/PhaseDocs/Lucia-phase<X>-<Topic>/evaluation_artifacts/**`). | Preserved as evidence and historical records. They must **never** silently override the active canonical architecture in `docs/ARCHITECTURE.md`. |
 
 ### 3.2 Deleted Canonical Files Notice
 
@@ -174,11 +175,12 @@ Agents must **NEVER** recreate these files, create compatibility wrappers, or in
 
 When behavior, mechanisms, architecture, or phase status changes:
 1. Update the canonical owner; do not create duplicate sources of truth.
-2. Put genuine research specs/evaluations/phase records in `docs/specs/` (or `docs/research/` during active research).
-3. Put **executable phase evaluation harnesses and test suites** in `tests/evaluation/phaseXX/`, and **persistent markdown evaluation reports & raw JSON telemetry** in `evaluation_artifacts/`.
-4. Update `DOCUMENTATION_INDEX.md` and `DOCUMENT_REGISTRY.md` for added/moved/removed docs.
-5. Update `README.md` only for public-facing changes.
-6. Search for and fix stale references to renamed/deleted files.
+2. **Phase Folder Invariant**: Whenever starting a new phase, agents MUST create a dedicated subdirectory named `Lucia-phase<X>-<Topic>` inside `docs/PhaseDocs/` (e.g. `docs/PhaseDocs/Lucia-phase25-Temporal_Embodiment/`).
+3. **Phase Containment Rule**: ALL documentation, research specifications, evaluation protocols, final reports, and raw telemetry/evaluation artifacts related to that phase MUST be stored inside that phase's subfolder (`docs/PhaseDocs/Lucia-phase<X>-<Topic>/`, with telemetry/benchmarks in `docs/PhaseDocs/Lucia-phase<X>-<Topic>/evaluation_artifacts/`). Agents are STRICTLY PROHIBITED from saving docs or artifacts loosely outside (e.g. in a root-level `evaluation_artifacts/` or root `docs/`).
+4. Put **executable phase evaluation harnesses and test suites** in `tests/evaluation/phaseXX/`, and persistent markdown evaluation reports & raw JSON telemetry inside `docs/PhaseDocs/Lucia-phase<X>-<Topic>/evaluation_artifacts/`.
+5. Update `DOCUMENTATION_INDEX.md` and `DOCUMENT_REGISTRY.md` for added/moved/removed docs.
+6. Update `README.md` only for public-facing changes.
+7. Search for and fix stale references to renamed/deleted files.
 
 
 ## 4. Codebase Architecture & Ownership Map
@@ -489,7 +491,7 @@ Before finishing a task, verify that:
 - Milestone tables and subsystem health in `docs/00_PROJECT_OVERVIEW.md` match current reality.
 - Navigation links in `README.md` and `docs/DOCUMENTATION_INDEX.md` are valid.
 - No references point to deleted files (`CURRENT_STATUS.md`, `MECHANISM.md`, `DESIGN_DECISIONS.md`).
-- Historical phase specifications in `.kiro/specs/` and `docs/specs/` are preserved.
+- Historical phase specifications in `.kiro/specs/` and `docs/PhaseDocs/` are preserved.
 
 ---
 

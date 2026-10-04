@@ -8,7 +8,7 @@
 
 ## 1. Executive Summary & Purpose
 
-Over 23 phases of development, Lucia's documentation and evaluation evidence have expanded across multiple disjoint directories: `docs/`, `docs/specs/`, `docs/research/`, `evaluation_artifacts/`, and `tests/evaluation/`. 
+Over 23 phases of development, Lucia's documentation and evaluation evidence have expanded across multiple disjoint directories: `docs/`, `docs/PhaseDocs/`, `docs/research/`, `evaluation_artifacts/`, and `tests/evaluation/`. 
 
 This document defines the **Safe, Phased Migration Strategy** to transition the repository from its current fragmented topology into the durable, scalable information architecture defined in [`docs/DOCUMENTATION_ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/DOCUMENTATION_ARCHITECTURE.md).
 
@@ -119,7 +119,7 @@ Lucia/
 ### Stage 2: Safe Deduplication, Header Fixes & Reference Validation (Next Immediate Step)
 *Actions requiring zero physical directory relocation:*
 1. **Fix Header Discrepancies**:
-   - Update line 4 of `docs/specs/Lucia-phase22-Epistemic_Foraging/PHASE_22_FINAL_REPORTS.md` to declare its true canonical path (`docs/specs/...`).
+   - Update line 4 of `docs/PhaseDocs/Lucia-phase22-Epistemic_Foraging/PHASE_22_FINAL_REPORTS.md` to declare its true canonical path (`docs/PhaseDocs/...`).
 2. **Deduplicate Point-to-Point Copies**:
    - Verify that test runners in `tests/evaluation/phase23/` can reference the authoritative documents in `evaluation_artifacts/phase23/` rather than maintaining duplicate copies of `PHASE23_C_RAW_INPUT_CONCEPT_FORMATION_v0.1.md`, `PHASE23_EMPIRICAL_SYNTHESIS_v0.1.md`, and `PHASE23_SEMANTIC_ARCHITECTURE_v0.1.md`.
 3. **Formalize ADR-031 through ADR-034**:
@@ -128,11 +128,11 @@ Lucia/
 ### Stage 3: Phased Relocation & Topographical Harmonization (Scheduled Post-Review)
 *Physical file moves executed exclusively via `git mv` to preserve git history:*
 1. **Establish Phase 23 Specification Root**:
-   - Create `docs/specs/lucia-phase23-Semantic_Architecture/`.
+   - Create `docs/PhaseDocs/lucia-phase23-Semantic_Architecture/`.
    - Relocate Phase 23 research specifications, monographs, and acceptance designs from `docs/research/` and `evaluation_artifacts/` into this canonical folder.
    - Maintain `docs/research/` strictly for active research (`active/`) and AI context reviewer packs (`P23_REVIEW_*.md`).
 2. **Harmonize Specification Directory Naming**:
-   - Normalize directory names under `docs/specs/`:
+   - Normalize directory names under `docs/PhaseDocs/`:
      - `lucia-phase7-UI_refractoring` $\to$ `lucia-phase7-ui_refactoring` (fix typo and lowercase).
      - `lucia-phase8-ISOLATION` $\to$ `lucia-phase8-isolation`.
      - `Lucia-phase19-Multi_Timescale_Affective_Life` $\to$ `lucia-phase19-multi_timescale_affective_life`.
@@ -159,9 +159,9 @@ To protect ongoing development and avoid breaking test runners, all proposed mov
 |---|---|---|---|
 | **Authoring new architecture & registries in `docs/`** | `SAFE` | Non-destructive; creates new canonical truth without mutating existing files. | Authorized & Completed. |
 | **Updating metadata headers (e.g. CF-002)** | `SAFE` | In-place text fix; zero link breakage. | Authorized for Stage 2. |
-| **Creating `docs/specs/lucia-phase23-Semantic_Architecture/`** | `SAFE` | Fills an obvious structural void; consolidates Phase 23 specs. | Execute via `git mv` in Stage 3. |
+| **Creating `docs/PhaseDocs/lucia-phase23-Semantic_Architecture/`** | `SAFE` | Fills an obvious structural void; consolidates Phase 23 specs. | Execute via `git mv` in Stage 3. |
 | **Deduplicating Markdown files in `tests/evaluation/phase23/`** | `LOW RISK` | Must verify test runners do not open these markdown files at runtime. | Verify with pytest before removal. |
-| **Renaming `docs/specs/` directories (casing & typo fixes)** | `MODERATE RISK`| Renaming folders breaks relative markdown links across dozens of files. | Requires automated link update script. |
+| **Renaming `docs/PhaseDocs/` directories (casing & typo fixes)** | `MODERATE RISK`| Renaming folders breaks relative markdown links across dozens of files. | Requires automated link update script. |
 | **Renaming or moving folders inside `tests/evaluation/`** | `HIGH RISK` | Python test runners, import statements, and fixtures depend on exact paths. | **DO NOT MOVE** without complete test suite audit. |
 | **Deleting historical scratch files or negative reports** | `UNSAFE / FORBIDDEN` | Violates core invariant: negative evidence and historical provenance must never be deleted. | **STRICTLY PROHIBITED**. |
 
@@ -179,7 +179,7 @@ Lucia's scientific value rests heavily on its documented negative results and fa
    - Phase 23-D V-UMR memory degradation and grounding failure ledger.
    - These files will **never** be deleted, merged away, or softened.
 2. **Archival Integrity**:
-   - Historical milestone specifications in `docs/specs/lucia-phase1-core` through `phase6-refinement` represent immutable records of past engineering stages. They will not be rewritten to match modern Phase 23 idioms.
+   - Historical milestone specifications in `docs/PhaseDocs/lucia-phase1-core` through `phase6-refinement` represent immutable records of past engineering stages. They will not be rewritten to match modern Phase 23 idioms.
    - Where a historical spec contains an obsolete statement (e.g. 64-bit SDM address), the canonical owner is updated in `docs/ARCHITECTURE.md` §8.1, and the historical spec remains tagged `HISTORICAL`.
 
 ---

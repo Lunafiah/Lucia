@@ -1,7 +1,7 @@
 # Phase 22 Research Corpus — Master Synthesis & Final Reports
 
 > **Authoritative Master Research Corpus Document for Phase 22**  
-> **Permanent Location:** `evaluation_artifacts/PHASE_22_FINAL_REPORTS.md`  
+> **Permanent Location:** `docs/PhaseDocs/Lucia-phase22-Epistemic_Foraging/PHASE_22_FINAL_REPORTS.md`  
 > **Target Audience:** AI Systems (Gemini, NotebookLM, Claude) & Human Research Governance  
 > **Status:** `[RESEARCH VALIDATED / NOT PROMOTED]`  
 > **Production Code Status:** 100% Untouched (`src/core/**`, `electron/**`, `config/**`, `data/**` unchanged)  

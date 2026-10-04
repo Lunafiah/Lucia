@@ -65,8 +65,8 @@ class Phase18MasterRunner:
     def __init__(
         self,
         workspace_root: Path = Path("."),
-        artifacts_dir: Path = Path("evaluation_artifacts/phase18"),
-        results_dir: Path = Path("docs/specs/lucia-phase18-Human_Longitudinal_Validation/results"),
+        artifacts_dir: Path = Path("docs/PhaseDocs/lucia-phase18-Human_Longitudinal_Validation/evaluation_artifacts/phase18"),
+        results_dir: Path = Path("docs/PhaseDocs/lucia-phase18-Human_Longitudinal_Validation/results"),
     ) -> None:
         self.workspace_root = workspace_root
         self.artifacts_dir = artifacts_dir

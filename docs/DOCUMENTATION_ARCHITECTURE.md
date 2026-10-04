@@ -14,7 +14,7 @@ Across its developmental progression from Phase 1 (Core Affective Foundation) to
 
 As the complexity accelerated during Phase 22 (20 sub-study branches) and Phase 23 (sub-phases A through I, each spanning distinct research, contract, implementation, audit, fix, and regression cycles), the documentation topography fragmented across multiple disjoint roots:
 - `docs/` (living canon, system overviews, and active ADR ledgers);
-- `docs/specs/` (historical phase specifications, evaluation reports, and research monographs);
+- `docs/PhaseDocs/` (historical phase specifications, evaluation reports, and research monographs);
 - `docs/research/` (recently consolidated Phase 23 history, reviewer packs, and source maps);
 - `evaluation_artifacts/` (186 markdown reports and diagnostic JSON dumps across 21 sub-phase folders);
 - `tests/evaluation/` (40 markdown scaffolds and 300+ pytest experimental suites);
@@ -99,7 +99,7 @@ To establish clear ownership, every document and artifact in the repository belo
 - **Mandatory Invariant**: **Preserve Uncertainty and Negative Evidence.**
   - Failed hypotheses (e.g., HDC pure dense vector superposition crosstalk in 22-SC, V-UMR memory degradation in 23-D, sentence embedding semantic loss in 23-C) are essential scientific evidence. They must **never** be deleted or rewritten to create a synthetic linear narrative.
 - **Primary Locations**:
-  - `docs/specs/` (historical research specs Phase 1–22)
+  - `docs/PhaseDocs/` (historical research specs Phase 1–22)
   - `docs/research/` (Phase 23 research specs, history consolidation)
 
 ### 2.3 Class 3: Evaluation Evidence
@@ -115,9 +115,9 @@ To establish clear ownership, every document and artifact in the repository belo
 - **Core Question**: *What was actually built?*
 - **Scope**: Production realization designs, implementation plans, task checklists, post-implementation audit reports, verification sign-offs, and commit ledgers.
 - **Primary Locations**:
-  - `docs/specs/*/Phase_*_tasks.md`
-  - `docs/specs/*/*_PRODUCTION_REALIZATION_DESIGN.md`
-  - `docs/specs/*/*_ACCEPTANCE_REPORT.md`
+  - `docs/PhaseDocs/*/Phase_*_tasks.md`
+  - `docs/PhaseDocs/*/*_PRODUCTION_REALIZATION_DESIGN.md`
+  - `docs/PhaseDocs/*/*_ACCEPTANCE_REPORT.md`
   - Git commit history with SHA-256 commit hashes.
 
 ### 2.5 Class 5: Architectural Decisions
@@ -190,7 +190,7 @@ The documentation architecture natively supports four distinct phase organizatio
 ### Pattern A: Simple Linear Milestones (Phases 1–7, 10–15)
 Phases that advanced directly from requirements to implementation:
 ```text
-docs/specs/lucia-phaseXX/
+docs/PhaseDocs/lucia-phaseXX/
 ├── Phase_XX_requirements.md
 ├── Phase_XX_design.md
 └── Phase_XX_tasks.md
@@ -199,7 +199,7 @@ docs/specs/lucia-phaseXX/
 ### Pattern B: Multi-Artifact Integrated Milestones (Phases 8, 9, 16–21)
 Phases featuring formal architecture decision gates, multi-stage integration, and rigorous promotion matrices:
 ```text
-docs/specs/lucia-phaseXX/
+docs/PhaseDocs/lucia-phaseXX/
 ├── PHASE_XX_SPECIFICATION.md
 ├── PHASE_XX_EXPERIMENT_PLAN.md
 ├── PHASE_XX_RESULTS.md
@@ -212,7 +212,7 @@ A major research horizon encompassing 20 distinct sub-study tracks, parallel can
 - Master Synthesis: Single consolidated monograph (`PHASE_22_FINAL_REPORTS.md`).
 - Sub-study Branches: Standardized sub-directories with uniform naming:
   ```text
-  evaluation_artifacts/phase22_<track>/
+  docs/PhaseDocs/Lucia-phase22-Epistemic_Foraging/evaluation_artifacts/phase22_<track>/
   ├── <track>_report.md
   ├── failure_analysis.md
   ├── language_report.md
@@ -287,7 +287,7 @@ To eliminate ambiguous labels such as *"done"*, *"finished"*, *"final"*, and *"r
 | `EVIDENCE` | Direct empirical data, benchmark measurements, and falsification reports. | `P23H_CORE_REASONING_EVALUATION_REPORT.md` |
 | `IMPLEMENTATION`| Detailed implementation designs and verification checklists. | `PHASE_21_PRODUCTION_REALIZATION_DESIGN.md` |
 | `CONTEXT` | Derived retrieval artifacts and reviewer projection packs. | `docs/research/P23_REVIEW_*.md`, `CONTEXT_INDEX.md` |
-| `HISTORICAL` | Preserved records of past milestones and legacy designs. | `docs/specs/lucia-phase1-core/Phase_1_design.md` |
+| `HISTORICAL` | Preserved records of past milestones and legacy designs. | `docs/PhaseDocs/lucia-phase1-core/Phase_1_design.md` |
 
 ---
 
@@ -320,7 +320,7 @@ Ciah operates as the architectural auditor, reasoning challenger, and invariant 
 ### 6.2 Gemini & NotebookLM (Deep Research Corpus)
 Gemini and NotebookLM possess massive context windows capable of synthesizing thousands of pages. For these models:
 - Provide the complete unflattened research corpus.
-- Expose all sub-study final reports (`PHASE_22_FINAL_REPORTS.md`, `evaluation_artifacts/**`).
+- Expose all sub-study final reports (`PHASE_22_FINAL_REPORTS.md`, `docs/PhaseDocs/**/evaluation_artifacts/**`).
 - Retain complete raw benchmark JSON outputs, negative results, and multi-turn parameter sweeps.
 - Preserve explicit links between hypotheses, experiment code, and empirical measurements.
 
@@ -338,11 +338,11 @@ New concepts and mechanisms in Lucia must advance through a strictly gated, 8-st
 
 ```text
 Stage 1: Research Hypothesis & Proposal
-         (docs/research/ or docs/specs/ — Status: RESEARCH)
+         (docs/research/ or docs/PhaseDocs/ — Status: RESEARCH)
                      │
                      ▼
 Stage 2: Empirical Evaluation & Falsification
-         (tests/evaluation/ & evaluation_artifacts/ — Status: ACTIVE / EVIDENCE)
+         (tests/evaluation/ & docs/PhaseDocs/**/evaluation_artifacts/ — Status: ACTIVE / EVIDENCE)
                      │
                      ▼
 Stage 3: Evidence Synthesis & Candidate Disposition
