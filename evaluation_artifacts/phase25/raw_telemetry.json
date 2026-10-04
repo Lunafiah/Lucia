@@ -1,0 +1,2592 @@
+{
+  "metadata": {
+    "phase": "Phase 25 \u2014 Temporal Embodiment & Social Feedback",
+    "type": "EVALUATION_HARNESS_DATASET",
+    "execution_timestamp": 1791082862.0251937,
+    "elapsed_seconds": 5.978761196136475,
+    "status": "RESEARCH_EVALUATED_BOUNDARY_LEVEL",
+    "genesis_invariant_preserved": true,
+    "production_mutation_count": 0
+  },
+  "p25_q1_assessment": {
+    "question": "What computational representation, if any, is necessary for Lucia to maintain persistent relational consequences of significant interaction events beyond the timescale of instantaneous affective recovery, while preserving stability and INV-2?",
+    "status": "INCONCLUSIVE \u2014 MORE RESEARCH REQUIRED",
+    "reasoning": "Observed evidence from Track E1 demonstrates that the existing 4D high-inertia R_t architecture (tau_rel >> tau_fast) already maintains persistent relational consequences after the fast limbic ODE returns to the Philia resting baseline. Track E2 demonstrates measurable separation in evaluation metrics (SPE, Directness, Supportiveness) without requiring new production ontology classes. Therefore, a new representation is NOT proven strictly necessary by the current evidence, but unipolar scalar trust remains limited in distinguishing qualitative rupture classes. Definitive architectural resolution remains INCONCLUSIVE \u2014 MORE RESEARCH REQUIRED."
+  },
+  "tracks": {
+    "e1_recovery_asymmetry": {
+      "summary": {
+        "trial_count_per_condition": 15,
+        "positive_rel_residual_mean": 0.11903821157158141,
+        "positive_rel_residual_std": 0.016943811769144723,
+        "negative_rel_residual_mean": 0.08431005898879151,
+        "negative_rel_residual_std": 0.011679149144312673,
+        "neutral_control_residual_mean": 0.06349803146555054,
+        "asymmetry_index_mean": 1.2913813417878004,
+        "asymmetry_index_ci95": [
+          1.192442447994828,
+          1.390320235580773
+        ],
+        "affective_recovery_step_mean": 22.88888888888889,
+        "persistent_relational_consequence_observed": true,
+        "evidence_statement": "Observed: Negative rupture induced persistent relational displacement (mean=0.0843 +/- 0.0117) that endured after fast limbic PAD relaxed to Philia (mean step=22.9, displacement_at_relaxation=0.0768). Residual ratio mean=1.2914.",
+        "p25_q1_implication": "Evidence indicates that the existing 4D R_t high-inertia architecture (tau_rel >> tau_fast) already exhibits persistent relational consequences beyond instantaneous affective recovery. However, scalar trust cannot distinguish qualitative rupture types (betrayal vs misunderstanding). Thus, while persistence is confirmed within the existing 4D substrate, whether a new dimensional representation is necessary remains INCONCLUSIVE \u2014 MORE RESEARCH REQUIRED."
+      },
+      "trials": [
+        {
+          "condition_name": "positive",
+          "intensity": 0.4,
+          "total_steps": 29,
+          "affective_recovery_step": 14,
+          "affective_recovery_latency_sec": 4.5,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.009600000000000001,
+            0.5287999999999999,
+            0.0144,
+            0.524
+          ],
+          "r_at_affective_recovery": [
+            0.024599999999999997,
+            0.5318000000000002,
+            0.0174,
+            0.5270000000000002
+          ],
+          "r_final": [
+            0.06960000000000002,
+            0.5408000000000008,
+            0.026399999999999996,
+            0.5360000000000009
+          ],
+          "relational_displacement_at_affective_recovery": 0.05146027594173999,
+          "relational_residual_at_final": 0.09220498901903376,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.5287999999999999,
+          "trust_at_affective_recovery": 0.5318000000000002,
+          "trust_final": 0.5408000000000008
+        },
+        {
+          "condition_name": "positive",
+          "intensity": 0.4428571428571429,
+          "total_steps": 29,
+          "affective_recovery_step": 15,
+          "affective_recovery_latency_sec": 5.0,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.01062857142857143,
+            0.5318857142857141,
+            0.015942857142857144,
+            0.5265714285714287
+          ],
+          "r_at_affective_recovery": [
+            0.028628571428571427,
+            0.5354857142857143,
+            0.019542857142857143,
+            0.530171428571429
+          ],
+          "r_final": [
+            0.07062857142857146,
+            0.543885714285715,
+            0.02794285714285714,
+            0.5385714285714296
+          ],
+          "relational_displacement_at_affective_recovery": 0.058060911013823484,
+          "relational_residual_at_final": 0.09582749807730162,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.5318857142857141,
+          "trust_at_affective_recovery": 0.5354857142857143,
+          "trust_final": 0.543885714285715
+        },
+        {
+          "condition_name": "positive",
+          "intensity": 0.48571428571428577,
+          "total_steps": 29,
+          "affective_recovery_step": 16,
+          "affective_recovery_latency_sec": 5.5,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.011657142857142859,
+            0.5349714285714287,
+            0.017485714285714285,
+            0.5291428571428574
+          ],
+          "r_at_affective_recovery": [
+            0.03265714285714286,
+            0.539171428571429,
+            0.021685714285714284,
+            0.5333428571428577
+          ],
+          "r_final": [
+            0.07165714285714289,
+            0.5469714285714296,
+            0.029485714285714282,
+            0.5411428571428583
+          ],
+          "relational_displacement_at_affective_recovery": 0.06467539039270691,
+          "relational_residual_at_final": 0.09951483942260225,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.5349714285714287,
+          "trust_at_affective_recovery": 0.539171428571429,
+          "trust_final": 0.5469714285714296
+        },
+        {
+          "condition_name": "positive",
+          "intensity": 0.5285714285714286,
+          "total_steps": 29,
+          "affective_recovery_step": 17,
+          "affective_recovery_latency_sec": 6.0,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.012685714285714286,
+            0.5380571428571428,
+            0.01902857142857143,
+            0.5317142857142856
+          ],
+          "r_at_affective_recovery": [
+            0.03668571428571429,
+            0.5428571428571431,
+            0.023828571428571428,
+            0.5365142857142859
+          ],
+          "r_final": [
+            0.07268571428571431,
+            0.5500571428571437,
+            0.031028571428571426,
+            0.5437142857142865
+          ],
+          "relational_displacement_at_affective_recovery": 0.07129986117855822,
+          "relational_residual_at_final": 0.10326006794813383,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.5380571428571428,
+          "trust_at_affective_recovery": 0.5428571428571431,
+          "trust_final": 0.5500571428571437
+        },
+        {
+          "condition_name": "positive",
+          "intensity": 0.5714285714285714,
+          "total_steps": 29,
+          "affective_recovery_step": 17,
+          "affective_recovery_latency_sec": 6.0,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.013714285714285714,
+            0.5411428571428569,
+            0.020571428571428567,
+            0.5342857142857143
+          ],
+          "r_at_affective_recovery": [
+            0.037714285714285714,
+            0.5459428571428573,
+            0.025371428571428566,
+            0.5390857142857146
+          ],
+          "r_final": [
+            0.07371428571428575,
+            0.5531428571428578,
+            0.03257142857142857,
+            0.5462857142857152
+          ],
+          "relational_displacement_at_affective_recovery": 0.07552824583139334,
+          "relational_residual_at_final": 0.10705710854397328,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.5411428571428569,
+          "trust_at_affective_recovery": 0.5459428571428573,
+          "trust_final": 0.5531428571428578
+        },
+        {
+          "condition_name": "positive",
+          "intensity": 0.6142857142857143,
+          "total_steps": 29,
+          "affective_recovery_step": 18,
+          "affective_recovery_latency_sec": 6.5,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.014742857142857144,
+            0.5442285714285715,
+            0.022114285714285715,
+            0.5368571428571429
+          ],
+          "r_at_affective_recovery": [
+            0.04174285714285715,
+            0.5496285714285719,
+            0.027514285714285713,
+            0.5422571428571433
+          ],
+          "r_final": [
+            0.07474285714285718,
+            0.5562285714285724,
+            0.03411428571428573,
+            0.5488571428571438
+          ],
+          "relational_displacement_at_affective_recovery": 0.08214720485388538,
+          "relational_residual_at_final": 0.11090063947847598,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.5442285714285715,
+          "trust_at_affective_recovery": 0.5496285714285719,
+          "trust_final": 0.5562285714285724
+        },
+        {
+          "condition_name": "positive",
+          "intensity": 0.6571428571428571,
+          "total_steps": 29,
+          "affective_recovery_step": 19,
+          "affective_recovery_latency_sec": 7.0,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.01577142857142857,
+            0.5473142857142856,
+            0.023657142857142852,
+            0.5394285714285716
+          ],
+          "r_at_affective_recovery": [
+            0.04577142857142858,
+            0.5533142857142861,
+            0.02965714285714285,
+            0.545428571428572
+          ],
+          "r_final": [
+            0.0757714285714286,
+            0.5593142857142865,
+            0.03565714285714287,
+            0.5514285714285725
+          ],
+          "relational_displacement_at_affective_recovery": 0.08877352059698754,
+          "relational_residual_at_final": 0.11478599075440174,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.5473142857142856,
+          "trust_at_affective_recovery": 0.5533142857142861,
+          "trust_final": 0.5593142857142865
+        },
+        {
+          "condition_name": "positive",
+          "intensity": 0.7,
+          "total_steps": 29,
+          "affective_recovery_step": 20,
+          "affective_recovery_latency_sec": 7.5,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.0168,
+            0.5503999999999998,
+            0.025199999999999997,
+            0.5419999999999998
+          ],
+          "r_at_affective_recovery": [
+            0.04980000000000001,
+            0.5570000000000003,
+            0.031799999999999995,
+            0.5486000000000003
+          ],
+          "r_final": [
+            0.07680000000000003,
+            0.5624000000000007,
+            0.037200000000000025,
+            0.5540000000000007
+          ],
+          "relational_displacement_at_affective_recovery": 0.09540566020944492,
+          "relational_residual_at_final": 0.1187090560993565,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.5503999999999998,
+          "trust_at_affective_recovery": 0.5570000000000003,
+          "trust_final": 0.5624000000000007
+        },
+        {
+          "condition_name": "positive",
+          "intensity": 0.7428571428571429,
+          "total_steps": 29,
+          "affective_recovery_step": 21,
+          "affective_recovery_latency_sec": 8.0,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.01782857142857143,
+            0.5534857142857144,
+            0.026742857142857145,
+            0.5445714285714285
+          ],
+          "r_at_affective_recovery": [
+            0.05382857142857145,
+            0.5606857142857149,
+            0.03394285714285716,
+            0.551771428571429
+          ],
+          "r_final": [
+            0.07782857142857147,
+            0.5654857142857153,
+            0.03874285714285718,
+            0.5565714285714294
+          ],
+          "relational_displacement_at_affective_recovery": 0.10204248814957045,
+          "relational_residual_at_final": 0.12266621709471096,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.5534857142857144,
+          "trust_at_affective_recovery": 0.5606857142857149,
+          "trust_final": 0.5654857142857153
+        },
+        {
+          "condition_name": "positive",
+          "intensity": 0.7857142857142858,
+          "total_steps": 29,
+          "affective_recovery_step": 21,
+          "affective_recovery_latency_sec": 8.0,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.01885714285714286,
+            0.5565714285714285,
+            0.028285714285714286,
+            0.5471428571428572
+          ],
+          "r_at_affective_recovery": [
+            0.054857142857142875,
+            0.563771428571429,
+            0.03548571428571431,
+            0.5543428571428577
+          ],
+          "r_final": [
+            0.07885714285714289,
+            0.5685714285714294,
+            0.040285714285714334,
+            0.559142857142858
+          ],
+          "relational_displacement_at_affective_recovery": 0.10624727415471065,
+          "relational_residual_at_final": 0.12665427794768405,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.5565714285714285,
+          "trust_at_affective_recovery": 0.563771428571429,
+          "trust_final": 0.5685714285714294
+        },
+        {
+          "condition_name": "positive",
+          "intensity": 0.8285714285714286,
+          "total_steps": 29,
+          "affective_recovery_step": 22,
+          "affective_recovery_latency_sec": 8.5,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.019885714285714288,
+            0.5596571428571431,
+            0.02982857142857143,
+            0.5497142857142858
+          ],
+          "r_at_affective_recovery": [
+            0.05888571428571431,
+            0.5674571428571437,
+            0.03762857142857146,
+            0.5575142857142864
+          ],
+          "r_final": [
+            0.07988571428571432,
+            0.571657142857144,
+            0.041828571428571486,
+            0.5617142857142867
+          ],
+          "relational_displacement_at_affective_recovery": 0.11287956377647612,
+          "relational_residual_at_final": 0.1306704094979718,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.5596571428571431,
+          "trust_at_affective_recovery": 0.5674571428571437,
+          "trust_final": 0.571657142857144
+        },
+        {
+          "condition_name": "positive",
+          "intensity": 0.8714285714285714,
+          "total_steps": 29,
+          "affective_recovery_step": 23,
+          "affective_recovery_latency_sec": 9.0,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.020914285714285715,
+            0.5627428571428572,
+            0.03137142857142857,
+            0.5522857142857145
+          ],
+          "r_at_affective_recovery": [
+            0.06291428571428574,
+            0.5711428571428578,
+            0.03977142857142862,
+            0.5606857142857151
+          ],
+          "r_final": [
+            0.08091428571428576,
+            0.5747428571428581,
+            0.04337142857142864,
+            0.5642857142857154
+          ],
+          "relational_displacement_at_affective_recovery": 0.11951583961286284,
+          "relational_residual_at_final": 0.1347121011790772,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.5627428571428572,
+          "trust_at_affective_recovery": 0.5711428571428578,
+          "trust_final": 0.5747428571428581
+        },
+        {
+          "condition_name": "positive",
+          "intensity": 0.9142857142857143,
+          "total_steps": 29,
+          "affective_recovery_step": 24,
+          "affective_recovery_latency_sec": 9.5,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.021942857142857142,
+            0.5658285714285713,
+            0.03291428571428571,
+            0.5548571428571427
+          ],
+          "r_at_affective_recovery": [
+            0.06694285714285717,
+            0.574828571428572,
+            0.04191428571428576,
+            0.5638571428571434
+          ],
+          "r_final": [
+            0.08194285714285718,
+            0.5778285714285722,
+            0.044914285714285775,
+            0.5668571428571436
+          ],
+          "relational_displacement_at_affective_recovery": 0.1261554725935672,
+          "relational_residual_at_final": 0.13877711979858956,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.5658285714285713,
+          "trust_at_affective_recovery": 0.574828571428572,
+          "trust_final": 0.5778285714285722
+        },
+        {
+          "condition_name": "positive",
+          "intensity": 0.9571428571428572,
+          "total_steps": 29,
+          "affective_recovery_step": 24,
+          "affective_recovery_latency_sec": 9.5,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.022971428571428573,
+            0.5689142857142855,
+            0.03445714285714285,
+            0.5574285714285714
+          ],
+          "r_at_affective_recovery": [
+            0.0679714285714286,
+            0.5779142857142862,
+            0.0434571428571429,
+            0.5664285714285721
+          ],
+          "r_final": [
+            0.08297142857142861,
+            0.5809142857142864,
+            0.04645714285714292,
+            0.5694285714285723
+          ],
+          "relational_displacement_at_affective_recovery": 0.13035347861777707,
+          "relational_residual_at_final": 0.1428634741454169,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.5689142857142855,
+          "trust_at_affective_recovery": 0.5779142857142862,
+          "trust_final": 0.5809142857142864
+        },
+        {
+          "condition_name": "positive",
+          "intensity": 1.0,
+          "total_steps": 29,
+          "affective_recovery_step": 25,
+          "affective_recovery_latency_sec": 10.0,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.024,
+            0.5720000000000001,
+            0.036,
+            0.56
+          ],
+          "r_at_affective_recovery": [
+            0.07200000000000004,
+            0.5816000000000008,
+            0.04560000000000005,
+            0.5696000000000008
+          ],
+          "r_final": [
+            0.08400000000000005,
+            0.584000000000001,
+            0.04800000000000006,
+            0.572000000000001
+          ],
+          "relational_displacement_at_affective_recovery": 0.13698934265117213,
+          "relational_residual_at_final": 0.14696938456699174,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.5720000000000001,
+          "trust_at_affective_recovery": 0.5816000000000008,
+          "trust_final": 0.584000000000001
+        },
+        {
+          "condition_name": "negative_rupture",
+          "intensity": 0.4,
+          "total_steps": 29,
+          "affective_recovery_step": 18,
+          "affective_recovery_latency_sec": 6.5,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.0024000000000000002,
+            0.4663999999999999,
+            0.0,
+            0.4807999999999999
+          ],
+          "r_at_affective_recovery": [
+            0.029399999999999996,
+            0.47179999999999983,
+            0.005399999999999999,
+            0.4861999999999998
+          ],
+          "r_final": [
+            0.062400000000000025,
+            0.4783999999999997,
+            0.011999999999999999,
+            0.4927999999999997
+          ],
+          "relational_displacement_at_affective_recovery": 0.043349740483652435,
+          "relational_residual_at_final": 0.06749933333004127,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.4663999999999999,
+          "trust_at_affective_recovery": 0.47179999999999983,
+          "trust_final": 0.4783999999999997
+        },
+        {
+          "condition_name": "negative_rupture",
+          "intensity": 0.4428571428571429,
+          "total_steps": 29,
+          "affective_recovery_step": 19,
+          "affective_recovery_latency_sec": 7.0,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.0026571428571428575,
+            0.4628000000000001,
+            0.0,
+            0.47874285714285714
+          ],
+          "r_at_affective_recovery": [
+            0.03265714285714285,
+            0.4688,
+            0.005999999999999999,
+            0.48474285714285703
+          ],
+          "r_final": [
+            0.06265714285714287,
+            0.4747999999999999,
+            0.011999999999999999,
+            0.4907428571428569
+          ],
+          "relational_displacement_at_affective_recovery": 0.04804903108029448,
+          "relational_residual_at_final": 0.06921453781466702,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.4628000000000001,
+          "trust_at_affective_recovery": 0.4688,
+          "trust_final": 0.4747999999999999
+        },
+        {
+          "condition_name": "negative_rupture",
+          "intensity": 0.48571428571428577,
+          "total_steps": 29,
+          "affective_recovery_step": 21,
+          "affective_recovery_latency_sec": 8.0,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.0029142857142857147,
+            0.45920000000000005,
+            0.0,
+            0.4766857142857144
+          ],
+          "r_at_affective_recovery": [
+            0.038914285714285714,
+            0.4663999999999999,
+            0.007199999999999999,
+            0.48388571428571425
+          ],
+          "r_final": [
+            0.06291428571428573,
+            0.47119999999999984,
+            0.011999999999999999,
+            0.48868571428571417
+          ],
+          "relational_displacement_at_affective_recovery": 0.05435799698972268,
+          "relational_residual_at_final": 0.07113128993743385,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.45920000000000005,
+          "trust_at_affective_recovery": 0.4663999999999999,
+          "trust_final": 0.47119999999999984
+        },
+        {
+          "condition_name": "negative_rupture",
+          "intensity": 0.5285714285714286,
+          "total_steps": 29,
+          "affective_recovery_step": 22,
+          "affective_recovery_latency_sec": 8.5,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.0031714285714285716,
+            0.4556,
+            0.0,
+            0.4746285714285714
+          ],
+          "r_at_affective_recovery": [
+            0.042171428571428575,
+            0.46339999999999987,
+            0.007799999999999999,
+            0.48242857142857126
+          ],
+          "r_final": [
+            0.06317142857142859,
+            0.4675999999999998,
+            0.011999999999999999,
+            0.4866285714285712
+          ],
+          "relational_displacement_at_affective_recovery": 0.0590557743984103,
+          "relational_residual_at_final": 0.07323376604952077,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.4556,
+          "trust_at_affective_recovery": 0.46339999999999987,
+          "trust_final": 0.4675999999999998
+        },
+        {
+          "condition_name": "negative_rupture",
+          "intensity": 0.5714285714285714,
+          "total_steps": 29,
+          "affective_recovery_step": 23,
+          "affective_recovery_latency_sec": 9.0,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.0034285714285714284,
+            0.45199999999999996,
+            0.0,
+            0.47257142857142864
+          ],
+          "r_at_affective_recovery": [
+            0.045428571428571436,
+            0.4603999999999998,
+            0.0084,
+            0.4809714285714285
+          ],
+          "r_final": [
+            0.06342857142857145,
+            0.46399999999999975,
+            0.011999999999999999,
+            0.48457142857142843
+          ],
+          "relational_displacement_at_affective_recovery": 0.06375391464571474,
+          "relational_residual_at_final": 0.07550645329901243,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.45199999999999996,
+          "trust_at_affective_recovery": 0.4603999999999998,
+          "trust_final": 0.46399999999999975
+        },
+        {
+          "condition_name": "negative_rupture",
+          "intensity": 0.6142857142857143,
+          "total_steps": 29,
+          "affective_recovery_step": 24,
+          "affective_recovery_latency_sec": 9.5,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.003685714285714286,
+            0.4483999999999999,
+            0.0,
+            0.47051428571428566
+          ],
+          "r_at_affective_recovery": [
+            0.0486857142857143,
+            0.45739999999999975,
+            0.009,
+            0.4795142857142855
+          ],
+          "r_final": [
+            0.0636857142857143,
+            0.4603999999999997,
+            0.011999999999999999,
+            0.48251428571428545
+          ],
+          "relational_displacement_at_affective_recovery": 0.06845234302276405,
+          "relational_residual_at_final": 0.07793446226261717,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.4483999999999999,
+          "trust_at_affective_recovery": 0.45739999999999975,
+          "trust_final": 0.4603999999999997
+        },
+        {
+          "condition_name": "negative_rupture",
+          "intensity": 0.6571428571428571,
+          "total_steps": 29,
+          "affective_recovery_step": 25,
+          "affective_recovery_latency_sec": 10.0,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.003942857142857143,
+            0.4448000000000001,
+            0.0,
+            0.4684571428571429
+          ],
+          "r_at_affective_recovery": [
+            0.05194285714285715,
+            0.4543999999999999,
+            0.0096,
+            0.47805714285714274
+          ],
+          "r_final": [
+            0.06394285714285716,
+            0.4567999999999999,
+            0.011999999999999999,
+            0.4804571428571427
+          ],
+          "relational_displacement_at_affective_recovery": 0.0731510040105747,
+          "relational_residual_at_final": 0.08050374056463451,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.4448000000000001,
+          "trust_at_affective_recovery": 0.4543999999999999,
+          "trust_final": 0.4567999999999999
+        },
+        {
+          "condition_name": "negative_rupture",
+          "intensity": 0.7,
+          "total_steps": 29,
+          "affective_recovery_step": 26,
+          "affective_recovery_latency_sec": 10.5,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.0042,
+            0.44120000000000004,
+            0.0,
+            0.4663999999999999
+          ],
+          "r_at_affective_recovery": [
+            0.05520000000000001,
+            0.45139999999999986,
+            0.010199999999999999,
+            0.47659999999999975
+          ],
+          "r_final": [
+            0.06420000000000002,
+            0.4531999999999998,
+            0.011999999999999999,
+            0.4783999999999997
+          ],
+          "relational_displacement_at_affective_recovery": 0.07784985549119554,
+          "relational_residual_at_final": 0.08320120191439563,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.44120000000000004,
+          "trust_at_affective_recovery": 0.45139999999999986,
+          "trust_final": 0.4531999999999998
+        },
+        {
+          "condition_name": "negative_rupture",
+          "intensity": 0.7428571428571429,
+          "total_steps": 29,
+          "affective_recovery_step": 28,
+          "affective_recovery_latency_sec": 11.5,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.0044571428571428574,
+            0.4376,
+            0.0,
+            0.46434285714285717
+          ],
+          "r_at_affective_recovery": [
+            0.061457142857142884,
+            0.4489999999999998,
+            0.011399999999999999,
+            0.47574285714285697
+          ],
+          "r_final": [
+            0.06445714285714288,
+            0.4495999999999998,
+            0.011999999999999999,
+            0.47634285714285696
+          ],
+          "relational_displacement_at_affective_recovery": 0.08423983254823775,
+          "relational_residual_at_final": 0.0860147875278979,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.4376,
+          "trust_at_affective_recovery": 0.4489999999999998,
+          "trust_final": 0.4495999999999998
+        },
+        {
+          "condition_name": "negative_rupture",
+          "intensity": 0.7857142857142858,
+          "total_steps": 29,
+          "affective_recovery_step": null,
+          "affective_recovery_latency_sec": -1.0,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.004714285714285715,
+            0.43399999999999994,
+            0.0,
+            0.4622857142857142
+          ],
+          "r_at_affective_recovery": [
+            0.06471428571428574,
+            0.44599999999999973,
+            0.011999999999999999,
+            0.474285714285714
+          ],
+          "r_final": [
+            0.06471428571428574,
+            0.44599999999999973,
+            0.011999999999999999,
+            0.474285714285714
+          ],
+          "relational_displacement_at_affective_recovery": 0.08893347662891725,
+          "relational_residual_at_final": 0.08893347662891725,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.43399999999999994,
+          "trust_at_affective_recovery": 0.44599999999999973,
+          "trust_final": 0.44599999999999973
+        },
+        {
+          "condition_name": "negative_rupture",
+          "intensity": 0.8285714285714286,
+          "total_steps": 29,
+          "affective_recovery_step": null,
+          "affective_recovery_latency_sec": -1.0,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.004971428571428572,
+            0.4304000000000001,
+            0.0,
+            0.46022857142857143
+          ],
+          "r_at_affective_recovery": [
+            0.0649714285714286,
+            0.4423999999999999,
+            0.011999999999999999,
+            0.4722285714285712
+          ],
+          "r_final": [
+            0.0649714285714286,
+            0.4423999999999999,
+            0.011999999999999999,
+            0.4722285714285712
+          ],
+          "relational_displacement_at_affective_recovery": 0.09194726083745089,
+          "relational_residual_at_final": 0.09194726083745089,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.4304000000000001,
+          "trust_at_affective_recovery": 0.4423999999999999,
+          "trust_final": 0.4423999999999999
+        },
+        {
+          "condition_name": "negative_rupture",
+          "intensity": 0.8714285714285714,
+          "total_steps": 29,
+          "affective_recovery_step": null,
+          "affective_recovery_latency_sec": -1.0,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.005228571428571429,
+            0.42680000000000007,
+            0.0,
+            0.4581714285714287
+          ],
+          "r_at_affective_recovery": [
+            0.06522857142857146,
+            0.43879999999999986,
+            0.011999999999999999,
+            0.47017142857142846
+          ],
+          "r_final": [
+            0.06522857142857146,
+            0.43879999999999986,
+            0.011999999999999999,
+            0.47017142857142846
+          ],
+          "relational_displacement_at_affective_recovery": 0.09504709466407514,
+          "relational_residual_at_final": 0.09504709466407514,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.42680000000000007,
+          "trust_at_affective_recovery": 0.43879999999999986,
+          "trust_final": 0.43879999999999986
+        },
+        {
+          "condition_name": "negative_rupture",
+          "intensity": 0.9142857142857143,
+          "total_steps": 29,
+          "affective_recovery_step": null,
+          "affective_recovery_latency_sec": -1.0,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.005485714285714286,
+            0.4232,
+            0.0,
+            0.4561142857142857
+          ],
+          "r_at_affective_recovery": [
+            0.06548571428571431,
+            0.4351999999999998,
+            0.011999999999999999,
+            0.4681142857142855
+          ],
+          "r_final": [
+            0.06548571428571431,
+            0.4351999999999998,
+            0.011999999999999999,
+            0.4681142857142855
+          ],
+          "relational_displacement_at_affective_recovery": 0.09822483164159891,
+          "relational_residual_at_final": 0.09822483164159891,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.4232,
+          "trust_at_affective_recovery": 0.4351999999999998,
+          "trust_final": 0.4351999999999998
+        },
+        {
+          "condition_name": "negative_rupture",
+          "intensity": 0.9571428571428572,
+          "total_steps": 29,
+          "affective_recovery_step": null,
+          "affective_recovery_latency_sec": -1.0,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.005742857142857143,
+            0.4196,
+            0.0,
+            0.45405714285714294
+          ],
+          "r_at_affective_recovery": [
+            0.06574285714285716,
+            0.43159999999999976,
+            0.011999999999999999,
+            0.4660571428571427
+          ],
+          "r_final": [
+            0.06574285714285716,
+            0.43159999999999976,
+            0.011999999999999999,
+            0.4660571428571427
+          ],
+          "relational_displacement_at_affective_recovery": 0.10147315318017162,
+          "relational_residual_at_final": 0.10147315318017162,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.4196,
+          "trust_at_affective_recovery": 0.43159999999999976,
+          "trust_final": 0.43159999999999976
+        },
+        {
+          "condition_name": "negative_rupture",
+          "intensity": 1.0,
+          "total_steps": 29,
+          "affective_recovery_step": null,
+          "affective_recovery_latency_sec": -1.0,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.006,
+            0.4159999999999999,
+            0.0,
+            0.45199999999999996
+          ],
+          "r_at_affective_recovery": [
+            0.06600000000000002,
+            0.4279999999999997,
+            0.011999999999999999,
+            0.46399999999999975
+          ],
+          "r_final": [
+            0.06600000000000002,
+            0.4279999999999997,
+            0.011999999999999999,
+            0.46399999999999975
+          ],
+          "relational_displacement_at_affective_recovery": 0.10478549517943818,
+          "relational_residual_at_final": 0.10478549517943818,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.4159999999999999,
+          "trust_at_affective_recovery": 0.4279999999999997,
+          "trust_final": 0.4279999999999997
+        },
+        {
+          "condition_name": "neutral_control",
+          "intensity": 0.4,
+          "total_steps": 29,
+          "affective_recovery_step": 9,
+          "affective_recovery_latency_sec": 2.0,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_at_affective_recovery": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_final": [
+            0.06000000000000002,
+            0.5120000000000009,
+            0.011999999999999999,
+            0.5120000000000009
+          ],
+          "relational_displacement_at_affective_recovery": 0.0,
+          "relational_residual_at_final": 0.06349803146555053,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.5,
+          "trust_at_affective_recovery": 0.5,
+          "trust_final": 0.5120000000000009
+        },
+        {
+          "condition_name": "neutral_control",
+          "intensity": 0.4428571428571429,
+          "total_steps": 29,
+          "affective_recovery_step": 9,
+          "affective_recovery_latency_sec": 2.0,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_at_affective_recovery": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_final": [
+            0.06000000000000002,
+            0.5120000000000009,
+            0.011999999999999999,
+            0.5120000000000009
+          ],
+          "relational_displacement_at_affective_recovery": 0.0,
+          "relational_residual_at_final": 0.06349803146555053,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.5,
+          "trust_at_affective_recovery": 0.5,
+          "trust_final": 0.5120000000000009
+        },
+        {
+          "condition_name": "neutral_control",
+          "intensity": 0.48571428571428577,
+          "total_steps": 29,
+          "affective_recovery_step": 9,
+          "affective_recovery_latency_sec": 2.0,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_at_affective_recovery": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_final": [
+            0.06000000000000002,
+            0.5120000000000009,
+            0.011999999999999999,
+            0.5120000000000009
+          ],
+          "relational_displacement_at_affective_recovery": 0.0,
+          "relational_residual_at_final": 0.06349803146555053,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.5,
+          "trust_at_affective_recovery": 0.5,
+          "trust_final": 0.5120000000000009
+        },
+        {
+          "condition_name": "neutral_control",
+          "intensity": 0.5285714285714286,
+          "total_steps": 29,
+          "affective_recovery_step": 9,
+          "affective_recovery_latency_sec": 2.0,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_at_affective_recovery": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_final": [
+            0.06000000000000002,
+            0.5120000000000009,
+            0.011999999999999999,
+            0.5120000000000009
+          ],
+          "relational_displacement_at_affective_recovery": 0.0,
+          "relational_residual_at_final": 0.06349803146555053,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.5,
+          "trust_at_affective_recovery": 0.5,
+          "trust_final": 0.5120000000000009
+        },
+        {
+          "condition_name": "neutral_control",
+          "intensity": 0.5714285714285714,
+          "total_steps": 29,
+          "affective_recovery_step": 9,
+          "affective_recovery_latency_sec": 2.0,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_at_affective_recovery": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_final": [
+            0.06000000000000002,
+            0.5120000000000009,
+            0.011999999999999999,
+            0.5120000000000009
+          ],
+          "relational_displacement_at_affective_recovery": 0.0,
+          "relational_residual_at_final": 0.06349803146555053,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.5,
+          "trust_at_affective_recovery": 0.5,
+          "trust_final": 0.5120000000000009
+        },
+        {
+          "condition_name": "neutral_control",
+          "intensity": 0.6142857142857143,
+          "total_steps": 29,
+          "affective_recovery_step": 9,
+          "affective_recovery_latency_sec": 2.0,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_at_affective_recovery": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_final": [
+            0.06000000000000002,
+            0.5120000000000009,
+            0.011999999999999999,
+            0.5120000000000009
+          ],
+          "relational_displacement_at_affective_recovery": 0.0,
+          "relational_residual_at_final": 0.06349803146555053,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.5,
+          "trust_at_affective_recovery": 0.5,
+          "trust_final": 0.5120000000000009
+        },
+        {
+          "condition_name": "neutral_control",
+          "intensity": 0.6571428571428571,
+          "total_steps": 29,
+          "affective_recovery_step": 9,
+          "affective_recovery_latency_sec": 2.0,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_at_affective_recovery": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_final": [
+            0.06000000000000002,
+            0.5120000000000009,
+            0.011999999999999999,
+            0.5120000000000009
+          ],
+          "relational_displacement_at_affective_recovery": 0.0,
+          "relational_residual_at_final": 0.06349803146555053,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.5,
+          "trust_at_affective_recovery": 0.5,
+          "trust_final": 0.5120000000000009
+        },
+        {
+          "condition_name": "neutral_control",
+          "intensity": 0.7,
+          "total_steps": 29,
+          "affective_recovery_step": 9,
+          "affective_recovery_latency_sec": 2.0,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_at_affective_recovery": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_final": [
+            0.06000000000000002,
+            0.5120000000000009,
+            0.011999999999999999,
+            0.5120000000000009
+          ],
+          "relational_displacement_at_affective_recovery": 0.0,
+          "relational_residual_at_final": 0.06349803146555053,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.5,
+          "trust_at_affective_recovery": 0.5,
+          "trust_final": 0.5120000000000009
+        },
+        {
+          "condition_name": "neutral_control",
+          "intensity": 0.7428571428571429,
+          "total_steps": 29,
+          "affective_recovery_step": 9,
+          "affective_recovery_latency_sec": 2.0,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_at_affective_recovery": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_final": [
+            0.06000000000000002,
+            0.5120000000000009,
+            0.011999999999999999,
+            0.5120000000000009
+          ],
+          "relational_displacement_at_affective_recovery": 0.0,
+          "relational_residual_at_final": 0.06349803146555053,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.5,
+          "trust_at_affective_recovery": 0.5,
+          "trust_final": 0.5120000000000009
+        },
+        {
+          "condition_name": "neutral_control",
+          "intensity": 0.7857142857142858,
+          "total_steps": 29,
+          "affective_recovery_step": 9,
+          "affective_recovery_latency_sec": 2.0,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_at_affective_recovery": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_final": [
+            0.06000000000000002,
+            0.5120000000000009,
+            0.011999999999999999,
+            0.5120000000000009
+          ],
+          "relational_displacement_at_affective_recovery": 0.0,
+          "relational_residual_at_final": 0.06349803146555053,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.5,
+          "trust_at_affective_recovery": 0.5,
+          "trust_final": 0.5120000000000009
+        },
+        {
+          "condition_name": "neutral_control",
+          "intensity": 0.8285714285714286,
+          "total_steps": 29,
+          "affective_recovery_step": 9,
+          "affective_recovery_latency_sec": 2.0,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_at_affective_recovery": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_final": [
+            0.06000000000000002,
+            0.5120000000000009,
+            0.011999999999999999,
+            0.5120000000000009
+          ],
+          "relational_displacement_at_affective_recovery": 0.0,
+          "relational_residual_at_final": 0.06349803146555053,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.5,
+          "trust_at_affective_recovery": 0.5,
+          "trust_final": 0.5120000000000009
+        },
+        {
+          "condition_name": "neutral_control",
+          "intensity": 0.8714285714285714,
+          "total_steps": 29,
+          "affective_recovery_step": 9,
+          "affective_recovery_latency_sec": 2.0,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_at_affective_recovery": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_final": [
+            0.06000000000000002,
+            0.5120000000000009,
+            0.011999999999999999,
+            0.5120000000000009
+          ],
+          "relational_displacement_at_affective_recovery": 0.0,
+          "relational_residual_at_final": 0.06349803146555053,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.5,
+          "trust_at_affective_recovery": 0.5,
+          "trust_final": 0.5120000000000009
+        },
+        {
+          "condition_name": "neutral_control",
+          "intensity": 0.9142857142857143,
+          "total_steps": 29,
+          "affective_recovery_step": 9,
+          "affective_recovery_latency_sec": 2.0,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_at_affective_recovery": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_final": [
+            0.06000000000000002,
+            0.5120000000000009,
+            0.011999999999999999,
+            0.5120000000000009
+          ],
+          "relational_displacement_at_affective_recovery": 0.0,
+          "relational_residual_at_final": 0.06349803146555053,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.5,
+          "trust_at_affective_recovery": 0.5,
+          "trust_final": 0.5120000000000009
+        },
+        {
+          "condition_name": "neutral_control",
+          "intensity": 0.9571428571428572,
+          "total_steps": 29,
+          "affective_recovery_step": 9,
+          "affective_recovery_latency_sec": 2.0,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_at_affective_recovery": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_final": [
+            0.06000000000000002,
+            0.5120000000000009,
+            0.011999999999999999,
+            0.5120000000000009
+          ],
+          "relational_displacement_at_affective_recovery": 0.0,
+          "relational_residual_at_final": 0.06349803146555053,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.5,
+          "trust_at_affective_recovery": 0.5,
+          "trust_final": 0.5120000000000009
+        },
+        {
+          "condition_name": "neutral_control",
+          "intensity": 1.0,
+          "total_steps": 29,
+          "affective_recovery_step": 9,
+          "affective_recovery_latency_sec": 2.0,
+          "r_pre": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_post_perturbation": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_at_affective_recovery": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "r_final": [
+            0.06000000000000002,
+            0.5120000000000009,
+            0.011999999999999999,
+            0.5120000000000009
+          ],
+          "relational_displacement_at_affective_recovery": 0.0,
+          "relational_residual_at_final": 0.06349803146555053,
+          "trust_pre": 0.5,
+          "trust_post_perturbation": 0.5,
+          "trust_at_affective_recovery": 0.5,
+          "trust_final": 0.5120000000000009
+        }
+      ]
+    },
+    "e2_repair_dynamics": {
+      "summary": {
+        "trial_count": 15,
+        "mean_repair_spe": 0.04241828076870528,
+        "mean_no_repair_spe": 0.0654827339545716,
+        "mean_ordinary_spe": 0.11613139110507524,
+        "spe_diff_mean": 0.023064453185866318,
+        "spe_diff_std": 0.006219566817776039,
+        "spe_diff_ci95": [
+          0.019916918101632528,
+          0.026211988270100108
+        ],
+        "mean_repair_directness": 0.8718475148233179,
+        "mean_no_repair_directness": 0.2723274820791871,
+        "mean_repair_supportiveness": 0.05512499999999997,
+        "mean_no_repair_supportiveness": 0.0028965517241381486,
+        "statistical_separation_observed": true,
+        "evidence_statement": "Observed: Explicit repair achieved lower final SPE than neutral continuation (repair mean=0.0424, no_repair mean=0.0655, SPE reduction mean=0.0231 +/- 0.0062, 95% CI=(0.019916918101632528, 0.026211988270100108)). Directness alignment: repair=0.8718 vs neutral=0.2723. Supportiveness: repair=0.0551 vs neutral=0.0029.",
+        "p25_q1_implication": "Evidence confirms measurable trajectory divergence between explicit repair and neutral continuation using evaluation metrics alone. However, this divergence occurs through existing high-inertia 4D updates without requiring a dedicated production RelationalRupture or RepairEvent class. Whether fine-grained social nuance requires new production ontology remains INCONCLUSIVE \u2014 MORE RESEARCH REQUIRED."
+      },
+      "trials": [
+        {
+          "trial_index": 0,
+          "rupture_intensity": 0.5,
+          "repair_intensity": 0.5,
+          "branches": {
+            "explicit_repair": {
+              "branch_name": "explicit_repair",
+              "mean_relational_spe": 0.02800507414243117,
+              "final_relational_spe": 0.03093238594095159,
+              "mean_affective_spe": 0.07484836298543751,
+              "mean_directness": 0.871847514823318,
+              "mean_supportiveness": 0.039374999999999875,
+              "trust_restoration_delta": 0.03600000000000003,
+              "reciprocity_restoration_delta": 0.04499999999999971
+            },
+            "no_repair_neutral": {
+              "branch_name": "no_repair_neutral",
+              "mean_relational_spe": 0.043920820734868915,
+              "final_relational_spe": 0.04408392564189331,
+              "mean_affective_spe": 0.08144229857364677,
+              "mean_directness": 0.27232748207918694,
+              "mean_supportiveness": 0.002896551724138148,
+              "trust_restoration_delta": 0.0036000000000002697,
+              "reciprocity_restoration_delta": 0.0036000000000002697
+            },
+            "ordinary_positive": {
+              "branch_name": "ordinary_positive",
+              "mean_relational_spe": 0.08387267135366548,
+              "final_relational_spe": 0.11613139110507527,
+              "mean_affective_spe": 0.15828793368293098,
+              "mean_directness": 0.9126698743976186,
+              "mean_supportiveness": 0.05499999999999986,
+              "trust_restoration_delta": 0.11249999999999993,
+              "reciprocity_restoration_delta": 0.08549999999999958
+            }
+          },
+          "directness_advantage": 0.599520032744131,
+          "spe_reduction_ratio": 1.425170509021737,
+          "supportiveness_advantage": 0.036478448275861726
+        },
+        {
+          "trial_index": 1,
+          "rupture_intensity": 0.5357142857142857,
+          "repair_intensity": 0.5285714285714286,
+          "branches": {
+            "explicit_repair": {
+              "branch_name": "explicit_repair",
+              "mean_relational_spe": 0.029925830223544867,
+              "final_relational_spe": 0.0325399560117233,
+              "mean_affective_spe": 0.0759158452989731,
+              "mean_directness": 0.8718475148233189,
+              "mean_supportiveness": 0.041624999999999766,
+              "trust_restoration_delta": 0.03805714285714257,
+              "reciprocity_restoration_delta": 0.047571428571428376
+            },
+            "no_repair_neutral": {
+              "branch_name": "no_repair_neutral",
+              "mean_relational_spe": 0.04704041933408143,
+              "final_relational_spe": 0.047044637536262784,
+              "mean_affective_spe": 0.08644393377655542,
+              "mean_directness": 0.27232748207918694,
+              "mean_supportiveness": 0.002896551724138148,
+              "trust_restoration_delta": 0.0036000000000002697,
+              "reciprocity_restoration_delta": 0.0036000000000002697
+            },
+            "ordinary_positive": {
+              "branch_name": "ordinary_positive",
+              "mean_relational_spe": 0.08387267135366548,
+              "final_relational_spe": 0.11613139110507527,
+              "mean_affective_spe": 0.15828793368293098,
+              "mean_directness": 0.9126698743976195,
+              "mean_supportiveness": 0.05499999999999986,
+              "trust_restoration_delta": 0.11475000000000002,
+              "reciprocity_restoration_delta": 0.08678571428571391
+            }
+          },
+          "directness_advantage": 0.5995200327441319,
+          "spe_reduction_ratio": 1.445749836710412,
+          "supportiveness_advantage": 0.03872844827586162
+        },
+        {
+          "trial_index": 2,
+          "rupture_intensity": 0.5714285714285714,
+          "repair_intensity": 0.5571428571428572,
+          "branches": {
+            "explicit_repair": {
+              "branch_name": "explicit_repair",
+              "mean_relational_spe": 0.03185399575692108,
+              "final_relational_spe": 0.03415840650109228,
+              "mean_affective_spe": 0.07720508636517924,
+              "mean_directness": 0.8718475148233188,
+              "mean_supportiveness": 0.043874999999999977,
+              "trust_restoration_delta": 0.04011428571428577,
+              "reciprocity_restoration_delta": 0.050142857142857045
+            },
+            "no_repair_neutral": {
+              "branch_name": "no_repair_neutral",
+              "mean_relational_spe": 0.05017443653065026,
+              "final_relational_spe": 0.05003923358684834,
+              "mean_affective_spe": 0.09139237091652552,
+              "mean_directness": 0.27232748207918706,
+              "mean_supportiveness": 0.002896551724138148,
+              "trust_restoration_delta": 0.0036000000000002697,
+              "reciprocity_restoration_delta": 0.0036000000000002697
+            },
+            "ordinary_positive": {
+              "branch_name": "ordinary_positive",
+              "mean_relational_spe": 0.08387267135366548,
+              "final_relational_spe": 0.11613139110507527,
+              "mean_affective_spe": 0.15828793368293098,
+              "mean_directness": 0.9126698743976194,
+              "mean_supportiveness": 0.05499999999999986,
+              "trust_restoration_delta": 0.1170000000000001,
+              "reciprocity_restoration_delta": 0.08807142857142825
+            }
+          },
+          "directness_advantage": 0.5995200327441317,
+          "spe_reduction_ratio": 1.4649170511022285,
+          "supportiveness_advantage": 0.04097844827586183
+        },
+        {
+          "trial_index": 3,
+          "rupture_intensity": 0.6071428571428571,
+          "repair_intensity": 0.5857142857142857,
+          "branches": {
+            "explicit_repair": {
+              "branch_name": "explicit_repair",
+              "mean_relational_spe": 0.03378838492772551,
+              "final_relational_spe": 0.03578626122336538,
+              "mean_affective_spe": 0.07869559636356553,
+              "mean_directness": 0.8718475148233183,
+              "mean_supportiveness": 0.04612499999999987,
+              "trust_restoration_delta": 0.042171428571428304,
+              "reciprocity_restoration_delta": 0.052714285714285714
+            },
+            "no_repair_neutral": {
+              "branch_name": "no_repair_neutral",
+              "mean_relational_spe": 0.053320370390502365,
+              "final_relational_spe": 0.05306197726359655,
+              "mean_affective_spe": 0.09628232458464013,
+              "mean_directness": 0.27232748207918694,
+              "mean_supportiveness": 0.002896551724138148,
+              "trust_restoration_delta": 0.0036000000000002697,
+              "reciprocity_restoration_delta": 0.0036000000000002697
+            },
+            "ordinary_positive": {
+              "branch_name": "ordinary_positive",
+              "mean_relational_spe": 0.08387267135366548,
+              "final_relational_spe": 0.11613139110507527,
+              "mean_affective_spe": 0.15828793368293098,
+              "mean_directness": 0.9126698743976194,
+              "mean_supportiveness": 0.05499999999999986,
+              "trust_restoration_delta": 0.11925000000000019,
+              "reciprocity_restoration_delta": 0.08935714285714247
+            }
+          },
+          "directness_advantage": 0.5995200327441315,
+          "spe_reduction_ratio": 1.4827471204565086,
+          "supportiveness_advantage": 0.04322844827586172
+        },
+        {
+          "trial_index": 4,
+          "rupture_intensity": 0.6428571428571428,
+          "repair_intensity": 0.6142857142857143,
+          "branches": {
+            "explicit_repair": {
+              "branch_name": "explicit_repair",
+              "mean_relational_spe": 0.035728050217562084,
+              "final_relational_spe": 0.03742229295759547,
+              "mean_affective_spe": 0.08036788492059341,
+              "mean_directness": 0.8718475148233171,
+              "mean_supportiveness": 0.048375000000000085,
+              "trust_restoration_delta": 0.044228571428571506,
+              "reciprocity_restoration_delta": 0.05528571428571438
+            },
+            "no_repair_neutral": {
+              "branch_name": "no_repair_neutral",
+              "mean_relational_spe": 0.05647625512370852,
+              "final_relational_spe": 0.05610831952935435,
+              "mean_affective_spe": 0.10110924274552814,
+              "mean_directness": 0.2723274820791866,
+              "mean_supportiveness": 0.002896551724138148,
+              "trust_restoration_delta": 0.0036000000000002697,
+              "reciprocity_restoration_delta": 0.0036000000000002697
+            },
+            "ordinary_positive": {
+              "branch_name": "ordinary_positive",
+              "mean_relational_spe": 0.08387267135366548,
+              "final_relational_spe": 0.11613139110507527,
+              "mean_affective_spe": 0.15828793368293098,
+              "mean_directness": 0.9126698743976184,
+              "mean_supportiveness": 0.05499999999999986,
+              "trust_restoration_delta": 0.12149999999999994,
+              "reciprocity_restoration_delta": 0.09064285714285658
+            }
+          },
+          "directness_advantage": 0.5995200327441306,
+          "spe_reduction_ratio": 1.4993287047804358,
+          "supportiveness_advantage": 0.045478448275861935
+        },
+        {
+          "trial_index": 5,
+          "rupture_intensity": 0.6785714285714286,
+          "repair_intensity": 0.6428571428571429,
+          "branches": {
+            "explicit_repair": {
+              "branch_name": "explicit_repair",
+              "mean_relational_spe": 0.037672225784179364,
+              "final_relational_spe": 0.03906547437655562,
+              "mean_affective_spe": 0.0822034578226227,
+              "mean_directness": 0.8718475148233172,
+              "mean_supportiveness": 0.050624999999999976,
+              "trust_restoration_delta": 0.04628571428571404,
+              "reciprocity_restoration_delta": 0.05785714285714305
+            },
+            "no_repair_neutral": {
+              "branch_name": "no_repair_neutral",
+              "mean_relational_spe": 0.05964052738211445,
+              "final_relational_spe": 0.05917461589073732,
+              "mean_affective_spe": 0.10586919892722015,
+              "mean_directness": 0.2723274820791868,
+              "mean_supportiveness": 0.002896551724138148,
+              "trust_restoration_delta": 0.0036000000000002697,
+              "reciprocity_restoration_delta": 0.0036000000000002697
+            },
+            "ordinary_positive": {
+              "branch_name": "ordinary_positive",
+              "mean_relational_spe": 0.08387267135366548,
+              "final_relational_spe": 0.11613139110507527,
+              "mean_affective_spe": 0.15828793368293098,
+              "mean_directness": 0.9126698743976185,
+              "mean_supportiveness": 0.05499999999999986,
+              "trust_restoration_delta": 0.12375000000000003,
+              "reciprocity_restoration_delta": 0.09192857142857092
+            }
+          },
+          "directness_advantage": 0.5995200327441305,
+          "spe_reduction_ratio": 1.5147547884762156,
+          "supportiveness_advantage": 0.047728448275861826
+        },
+        {
+          "trial_index": 6,
+          "rupture_intensity": 0.7142857142857143,
+          "repair_intensity": 0.6714285714285715,
+          "branches": {
+            "explicit_repair": {
+              "branch_name": "explicit_repair",
+              "mean_relational_spe": 0.039620286168308656,
+              "final_relational_spe": 0.04071493984436968,
+              "mean_affective_spe": 0.08418482965897404,
+              "mean_directness": 0.8718475148233179,
+              "mean_supportiveness": 0.05287500000000019,
+              "trust_restoration_delta": 0.04834285714285724,
+              "reciprocity_restoration_delta": 0.06042857142857172
+            },
+            "no_repair_neutral": {
+              "branch_name": "no_repair_neutral",
+              "mean_relational_spe": 0.06281192996191111,
+              "final_relational_spe": 0.0622579181096422,
+              "mean_affective_spe": 0.1105588109463508,
+              "mean_directness": 0.2723274820791868,
+              "mean_supportiveness": 0.002896551724138148,
+              "trust_restoration_delta": 0.0036000000000002697,
+              "reciprocity_restoration_delta": 0.0036000000000002697
+            },
+            "ordinary_positive": {
+              "branch_name": "ordinary_positive",
+              "mean_relational_spe": 0.08387267135366548,
+              "final_relational_spe": 0.11613139110507527,
+              "mean_affective_spe": 0.15828793368293098,
+              "mean_directness": 0.9126698743976188,
+              "mean_supportiveness": 0.05499999999999986,
+              "trust_restoration_delta": 0.1260000000000001,
+              "reciprocity_restoration_delta": 0.09321428571428525
+            }
+          },
+          "directness_advantage": 0.5995200327441311,
+          "spe_reduction_ratio": 1.5291172434124174,
+          "supportiveness_advantage": 0.04997844827586204
+        },
+        {
+          "trial_index": 7,
+          "rupture_intensity": 0.75,
+          "repair_intensity": 0.7,
+          "branches": {
+            "explicit_repair": {
+              "branch_name": "explicit_repair",
+              "mean_relational_spe": 0.04157171571737934,
+              "final_relational_spe": 0.04236995545194711,
+              "mean_affective_spe": 0.08629552009449615,
+              "mean_directness": 0.8718475148233179,
+              "mean_supportiveness": 0.05512499999999976,
+              "trust_restoration_delta": 0.05039999999999978,
+              "reciprocity_restoration_delta": 0.06299999999999972
+            },
+            "no_repair_neutral": {
+              "branch_name": "no_repair_neutral",
+              "mean_relational_spe": 0.06598944145917766,
+              "final_relational_spe": 0.06535581936599058,
+              "mean_affective_spe": 0.11517517800323777,
+              "mean_directness": 0.27232748207918694,
+              "mean_supportiveness": 0.002896551724138148,
+              "trust_restoration_delta": 0.0036000000000002697,
+              "reciprocity_restoration_delta": 0.0036000000000002697
+            },
+            "ordinary_positive": {
+              "branch_name": "ordinary_positive",
+              "mean_relational_spe": 0.08387267135366548,
+              "final_relational_spe": 0.11613139110507527,
+              "mean_affective_spe": 0.15828793368293098,
+              "mean_directness": 0.9126698743976188,
+              "mean_supportiveness": 0.05499999999999986,
+              "trust_restoration_delta": 0.1282500000000002,
+              "reciprocity_restoration_delta": 0.09449999999999958
+            }
+          },
+          "directness_advantage": 0.599520032744131,
+          "spe_reduction_ratio": 1.5425038125803208,
+          "supportiveness_advantage": 0.05222844827586161
+        },
+        {
+          "trial_index": 8,
+          "rupture_intensity": 0.7857142857142857,
+          "repair_intensity": 0.7285714285714286,
+          "branches": {
+            "explicit_repair": {
+              "branch_name": "explicit_repair",
+              "mean_relational_spe": 0.043526085629418176,
+              "final_relational_spe": 0.04402989534025084,
+              "mean_affective_spe": 0.08852003390584212,
+              "mean_directness": 0.8718475148233186,
+              "mean_supportiveness": 0.057374999999999975,
+              "trust_restoration_delta": 0.05245714285714298,
+              "reciprocity_restoration_delta": 0.06557142857142839
+            },
+            "no_repair_neutral": {
+              "branch_name": "no_repair_neutral",
+              "mean_relational_spe": 0.06917222419519482,
+              "final_relational_spe": 0.06846633799740916,
+              "mean_affective_spe": 0.11971583063224828,
+              "mean_directness": 0.27232748207918694,
+              "mean_supportiveness": 0.002896551724138148,
+              "trust_restoration_delta": 0.0036000000000002697,
+              "reciprocity_restoration_delta": 0.0036000000000002697
+            },
+            "ordinary_positive": {
+              "branch_name": "ordinary_positive",
+              "mean_relational_spe": 0.08387267135366548,
+              "final_relational_spe": 0.11613139110507527,
+              "mean_affective_spe": 0.15828793368293098,
+              "mean_directness": 0.912669874397619,
+              "mean_supportiveness": 0.05499999999999986,
+              "trust_restoration_delta": 0.13049999999999995,
+              "reciprocity_restoration_delta": 0.09578571428571392
+            }
+          },
+          "directness_advantage": 0.5995200327441317,
+          "spe_reduction_ratio": 1.5549965747890993,
+          "supportiveness_advantage": 0.054478448275861825
+        },
+        {
+          "trial_index": 9,
+          "rupture_intensity": 0.8214285714285714,
+          "repair_intensity": 0.7571428571428571,
+          "branches": {
+            "explicit_repair": {
+              "branch_name": "explicit_repair",
+              "mean_relational_spe": 0.04548303649884197,
+              "final_relational_spe": 0.04569422285750155,
+              "mean_affective_spe": 0.09084383406891543,
+              "mean_directness": 0.8718475148233186,
+              "mean_supportiveness": 0.05962499999999987,
+              "trust_restoration_delta": 0.054514285714285515,
+              "reciprocity_restoration_delta": 0.06814285714285706
+            },
+            "no_repair_neutral": {
+              "branch_name": "no_repair_neutral",
+              "mean_relational_spe": 0.0723595851820948,
+              "final_relational_spe": 0.07158782933343799,
+              "mean_affective_spe": 0.12417868974110007,
+              "mean_directness": 0.272327482079187,
+              "mean_supportiveness": 0.002896551724138148,
+              "trust_restoration_delta": 0.0036000000000002697,
+              "reciprocity_restoration_delta": 0.0036000000000002697
+            },
+            "ordinary_positive": {
+              "branch_name": "ordinary_positive",
+              "mean_relational_spe": 0.08387267135366548,
+              "final_relational_spe": 0.11613139110507527,
+              "mean_affective_spe": 0.15828793368293098,
+              "mean_directness": 0.9126698743976193,
+              "mean_supportiveness": 0.05499999999999986,
+              "trust_restoration_delta": 0.13275000000000003,
+              "reciprocity_restoration_delta": 0.09707142857142825
+            }
+          },
+          "directness_advantage": 0.5995200327441316,
+          "spe_reduction_ratio": 1.5666713052548222,
+          "supportiveness_advantage": 0.05672844827586172
+        },
+        {
+          "trial_index": 10,
+          "rupture_intensity": 0.8571428571428571,
+          "repair_intensity": 0.7857142857142858,
+          "branches": {
+            "explicit_repair": {
+              "branch_name": "explicit_repair",
+              "mean_relational_spe": 0.04744226489077024,
+              "final_relational_spe": 0.04736247545929861,
+              "mean_affective_spe": 0.0932533145421039,
+              "mean_directness": 0.8718475148233172,
+              "mean_supportiveness": 0.061875000000000076,
+              "trust_restoration_delta": 0.05657142857142872,
+              "reciprocity_restoration_delta": 0.07071428571428573
+            },
+            "no_repair_neutral": {
+              "branch_name": "no_repair_neutral",
+              "mean_relational_spe": 0.07555094651929267,
+              "final_relational_spe": 0.07471891818471302,
+              "mean_affective_spe": 0.12856203214415934,
+              "mean_directness": 0.2723274820791867,
+              "mean_supportiveness": 0.002896551724138148,
+              "trust_restoration_delta": 0.0036000000000002697,
+              "reciprocity_restoration_delta": 0.0036000000000002697
+            },
+            "ordinary_positive": {
+              "branch_name": "ordinary_positive",
+              "mean_relational_spe": 0.08387267135366548,
+              "final_relational_spe": 0.11613139110507527,
+              "mean_affective_spe": 0.15828793368293098,
+              "mean_directness": 0.9126698743976186,
+              "mean_supportiveness": 0.05499999999999986,
+              "trust_restoration_delta": 0.13500000000000012,
+              "reciprocity_restoration_delta": 0.09835714285714225
+            }
+          },
+          "directness_advantage": 0.5995200327441306,
+          "spe_reduction_ratio": 1.5775973675895818,
+          "supportiveness_advantage": 0.058978448275861926
+        },
+        {
+          "trial_index": 11,
+          "rupture_intensity": 0.8928571428571428,
+          "repair_intensity": 0.8142857142857143,
+          "branches": {
+            "explicit_repair": {
+              "branch_name": "explicit_repair",
+              "mean_relational_spe": 0.04940351290330077,
+              "final_relational_spe": 0.049034252527375234,
+              "mean_affective_spe": 0.0957357746688436,
+              "mean_directness": 0.8718475148233172,
+              "mean_supportiveness": 0.06412499999999997,
+              "trust_restoration_delta": 0.05862857142857125,
+              "reciprocity_restoration_delta": 0.0732857142857144
+            },
+            "no_repair_neutral": {
+              "branch_name": "no_repair_neutral",
+              "mean_relational_spe": 0.07874582269544807,
+              "final_relational_spe": 0.07785844666339492,
+              "mean_affective_spe": 0.13286446079082093,
+              "mean_directness": 0.2723274820791868,
+              "mean_supportiveness": 0.002896551724138148,
+              "trust_restoration_delta": 0.0036000000000002697,
+              "reciprocity_restoration_delta": 0.0036000000000002697
+            },
+            "ordinary_positive": {
+              "branch_name": "ordinary_positive",
+              "mean_relational_spe": 0.08387267135366548,
+              "final_relational_spe": 0.11613139110507527,
+              "mean_affective_spe": 0.15828793368293098,
+              "mean_directness": 0.9126698743976186,
+              "mean_supportiveness": 0.05499999999999986,
+              "trust_restoration_delta": 0.1372500000000002,
+              "reciprocity_restoration_delta": 0.09964285714285659
+            }
+          },
+          "directness_advantage": 0.5995200327441305,
+          "spe_reduction_ratio": 1.5878379104910303,
+          "supportiveness_advantage": 0.061228448275861824
+        },
+        {
+          "trial_index": 12,
+          "rupture_intensity": 0.9285714285714286,
+          "repair_intensity": 0.8428571428571429,
+          "branches": {
+            "explicit_repair": {
+              "branch_name": "explicit_repair",
+              "mean_relational_spe": 0.05136655997242263,
+              "final_relational_spe": 0.05070920547995398,
+              "mean_affective_spe": 0.09827939438016438,
+              "mean_directness": 0.8718475148233175,
+              "mean_supportiveness": 0.06637500000000018,
+              "trust_restoration_delta": 0.060685714285714454,
+              "reciprocity_restoration_delta": 0.07585714285714307
+            },
+            "no_repair_neutral": {
+              "branch_name": "no_repair_neutral",
+              "mean_relational_spe": 0.08194380300636063,
+              "final_relational_spe": 0.08100543349122945,
+              "mean_affective_spe": 0.13708487843754416,
+              "mean_directness": 0.27232748207918694,
+              "mean_supportiveness": 0.002896551724138148,
+              "trust_restoration_delta": 0.0036000000000002697,
+              "reciprocity_restoration_delta": 0.0036000000000002697
+            },
+            "ordinary_positive": {
+              "branch_name": "ordinary_positive",
+              "mean_relational_spe": 0.08387267135366548,
+              "final_relational_spe": 0.11613139110507527,
+              "mean_affective_spe": 0.15828793368293098,
+              "mean_directness": 0.9126698743976185,
+              "mean_supportiveness": 0.05499999999999986,
+              "trust_restoration_delta": 0.13949999999999996,
+              "reciprocity_restoration_delta": 0.10092857142857092
+            }
+          },
+          "directness_advantage": 0.5995200327441306,
+          "spe_reduction_ratio": 1.5974502287518928,
+          "supportiveness_advantage": 0.06347844827586203
+        },
+        {
+          "trial_index": 13,
+          "rupture_intensity": 0.9642857142857142,
+          "repair_intensity": 0.8714285714285714,
+          "branches": {
+            "explicit_repair": {
+              "branch_name": "explicit_repair",
+              "mean_relational_spe": 0.05333121637876751,
+              "final_relational_spe": 0.05238702969344673,
+              "mean_affective_spe": 0.10087320870785838,
+              "mean_directness": 0.871847514823318,
+              "mean_supportiveness": 0.06862500000000007,
+              "trust_restoration_delta": 0.06274285714285699,
+              "reciprocity_restoration_delta": 0.07842857142857174
+            },
+            "no_repair_neutral": {
+              "branch_name": "no_repair_neutral",
+              "mean_relational_spe": 0.08514453780494623,
+              "final_relational_spe": 0.08415904199484305,
+              "mean_affective_spe": 0.14122246389243773,
+              "mean_directness": 0.27232748207918683,
+              "mean_supportiveness": 0.002896551724138148,
+              "trust_restoration_delta": 0.0036000000000002697,
+              "reciprocity_restoration_delta": 0.0036000000000002697
+            },
+            "ordinary_positive": {
+              "branch_name": "ordinary_positive",
+              "mean_relational_spe": 0.08387267135366548,
+              "final_relational_spe": 0.11613139110507527,
+              "mean_affective_spe": 0.15828793368293098,
+              "mean_directness": 0.912669874397619,
+              "mean_supportiveness": 0.05499999999999986,
+              "trust_restoration_delta": 0.14175000000000004,
+              "reciprocity_restoration_delta": 0.10221428571428526
+            }
+          },
+          "directness_advantage": 0.5995200327441312,
+          "spe_reduction_ratio": 1.6064862024212947,
+          "supportiveness_advantage": 0.06572844827586193
+        },
+        {
+          "trial_index": 14,
+          "rupture_intensity": 1.0,
+          "repair_intensity": 0.9,
+          "branches": {
+            "explicit_repair": {
+              "branch_name": "explicit_repair",
+              "mean_relational_spe": 0.055297318059013965,
+              "final_relational_spe": 0.05406745786515188,
+              "mean_affective_spe": 0.10350708052187158,
+              "mean_directness": 0.8718475148233186,
+              "mean_supportiveness": 0.07087499999999997,
+              "trust_restoration_delta": 0.06480000000000019,
+              "reciprocity_restoration_delta": 0.08099999999999974
+            },
+            "no_repair_neutral": {
+              "branch_name": "no_repair_neutral",
+              "mean_relational_spe": 0.08834772765148212,
+              "final_relational_spe": 0.08731855472922101,
+              "mean_affective_spe": 0.1452766502274872,
+              "mean_directness": 0.2723274820791905,
+              "mean_supportiveness": 0.002896551724138148,
+              "trust_restoration_delta": 0.0036000000000002697,
+              "reciprocity_restoration_delta": 0.0036000000000002697
+            },
+            "ordinary_positive": {
+              "branch_name": "ordinary_positive",
+              "mean_relational_spe": 0.08387267135366548,
+              "final_relational_spe": 0.11613139110507527,
+              "mean_affective_spe": 0.15828793368293098,
+              "mean_directness": 0.9126698743976197,
+              "mean_supportiveness": 0.05499999999999986,
+              "trust_restoration_delta": 0.14400000000000013,
+              "reciprocity_restoration_delta": 0.10349999999999959
+            }
+          },
+          "directness_advantage": 0.5995200327441281,
+          "spe_reduction_ratio": 1.6149927620419473,
+          "supportiveness_advantage": 0.06797844827586182
+        }
+      ]
+    },
+    "e3_embodied_feedback": {
+      "summary": {
+        "output_only_trace": -15.333333333333346,
+        "reciprocal_trace": -15.333333333333346,
+        "output_only_max_bound": 0.1264241310250762,
+        "reciprocal_max_bound": 0.09538171792527263,
+        "output_only_tension_var": 6.715196091870316e-05,
+        "reciprocal_tension_var": 8.405094522462707e-05,
+        "dissipativity_diagnostic_passed": true,
+        "lyapunov_disclaimer_honored": true,
+        "evidence_statement": "Observed: Output-only Tr(J)=-15.3333, Reciprocal Tr(J)=-15.3333. Both conditions satisfy phase-space volume contraction (Tr(J) < 0). Max orbital bounds: output_only=0.1264, reciprocal=0.0954. Tension variance: output_only=0.000067, reciprocal=0.000084.",
+        "p25_q1_implication": "Reciprocal embodiment feedback dynamically modulates somatic tension and mimicry within bounded orbits. Dissipativity is preserved under bounded gain (gain=0.15). However, whether embodiment participation in social feedback requires new cognitive ontology or can operate via existing sensory/motor interfaces remains an open research question for P25."
+      },
+      "conditions": {
+        "output_only": {
+          "condition_name": "output_only",
+          "feedback_gain": 0.0,
+          "total_steps": 300,
+          "jacobian_trace": -15.333333333333346,
+          "trace_interpretation": "Tr(J)=-15.3333 < 0 confirms local phase-space volume contraction (dissipativity). NOTE: Tr(J) < 0 does NOT imply Lyapunov stability or global convergence.",
+          "orbital_bound_max": 0.1264241310250762,
+          "somatic_variance": {
+            "energy": 0.0,
+            "load": 0.0001253512055838715,
+            "tension": 6.715196091870316e-05,
+            "stability": 0.00010548510925957895
+          },
+          "energy_dissipation_rate": 0.0,
+          "is_trajectory_bounded": true
+        },
+        "reciprocal_feedback": {
+          "condition_name": "reciprocal_feedback",
+          "feedback_gain": 0.15,
+          "total_steps": 300,
+          "jacobian_trace": -15.333333333333346,
+          "trace_interpretation": "Tr(J)=-15.3333 < 0 confirms local phase-space volume contraction (dissipativity). NOTE: Tr(J) < 0 does NOT imply Lyapunov stability or global convergence.",
+          "orbital_bound_max": 0.09538171792527263,
+          "somatic_variance": {
+            "energy": 1.79982270655084e-06,
+            "load": 9.602936846480855e-05,
+            "tension": 8.405094522462707e-05,
+            "stability": 9.670481603919183e-05
+          },
+          "energy_dissipation_rate": 0.0007105303570453656,
+          "is_trajectory_bounded": true
+        }
+      }
+    },
+    "e4_conversational_entrainment": {
+      "summary": {
+        "sweep_configurations": [
+          0.0,
+          0.05,
+          0.1,
+          0.2,
+          0.3,
+          0.5,
+          0.8
+        ],
+        "metrics_per_gamma": {
+          "gamma_0.00": {
+            "gamma": 0.0,
+            "coordination_plv": 0.09172379815303369,
+            "rhythmic_correlation": -0.046985440692306014,
+            "mean_lag_ms": 161.80945056266017,
+            "jitter_std_ms": 63.89613730635913,
+            "bounded_stability_ratio": 1.0,
+            "mean_cpu_time_us": 3.8884422110552763
+          },
+          "gamma_0.05": {
+            "gamma": 0.05,
+            "coordination_plv": 0.07085964604740537,
+            "rhythmic_correlation": 0.42689687955793654,
+            "mean_lag_ms": 133.18571719837865,
+            "jitter_std_ms": 94.8267728451709,
+            "bounded_stability_ratio": 1.0,
+            "mean_cpu_time_us": 2.6376884422110556
+          },
+          "gamma_0.10": {
+            "gamma": 0.1,
+            "coordination_plv": 0.16749387610894056,
+            "rhythmic_correlation": 0.6086959529189987,
+            "mean_lag_ms": 115.30957729143934,
+            "jitter_std_ms": 118.32966120895323,
+            "bounded_stability_ratio": 1.0,
+            "mean_cpu_time_us": 2.5979899497487438
+          },
+          "gamma_0.20": {
+            "gamma": 0.2,
+            "coordination_plv": 0.2643376711729259,
+            "rhythmic_correlation": 0.7270121190567934,
+            "mean_lag_ms": 102.09059628653536,
+            "jitter_std_ms": 152.4311206160899,
+            "bounded_stability_ratio": 1.0,
+            "mean_cpu_time_us": 2.614070351758794
+          },
+          "gamma_0.30": {
+            "gamma": 0.3,
+            "coordination_plv": 0.32007654199338686,
+            "rhythmic_correlation": 0.7492914128868742,
+            "mean_lag_ms": 95.0831482409655,
+            "jitter_std_ms": 149.43419231988156,
+            "bounded_stability_ratio": 1.0,
+            "mean_cpu_time_us": 2.5919597989949748
+          },
+          "gamma_0.50": {
+            "gamma": 0.5,
+            "coordination_plv": 0.2739950200924716,
+            "rhythmic_correlation": 0.7274031613588137,
+            "mean_lag_ms": 100.03630559123863,
+            "jitter_std_ms": 154.94914496927896,
+            "bounded_stability_ratio": 1.0,
+            "mean_cpu_time_us": 2.6502512562814076
+          },
+          "gamma_0.80": {
+            "gamma": 0.8,
+            "coordination_plv": 0.23917707991787088,
+            "rhythmic_correlation": 0.7170242768451237,
+            "mean_lag_ms": 106.18649658642335,
+            "jitter_std_ms": 170.94516212410835,
+            "bounded_stability_ratio": 1.0,
+            "mean_cpu_time_us": 2.617085427135679
+          }
+        },
+        "best_coordination_gamma": 0.3,
+        "lowest_jitter_gamma": 0.0,
+        "lowest_lag_gamma": 0.3,
+        "all_sweeps_bounded": true,
+        "evidence_statement": "Observed: Sweep across 7 configurations demonstrated clear trade-offs: gamma=0.00 yields lowest jitter (63.9ms) but zero correlation; higher gamma improves correlation and PLV (peak at gamma=0.30, PLV=0.3201) while increasing jitter (149.4ms). All configurations maintained bounded stability >= 98%. Mean CPU cost per tick: 2.80 us.",
+        "p25_q1_implication": "Conversational entrainment demonstrates a quantifiable Pareto frontier between coordination quality and latency jitter. Crucially, NO parameter value is promoted to production architecture; all values remain experimental configurations under research investigation. Whether entrainment requires persistent relational state or operates purely on transient timing remains an open inquiry for P25."
+      },
+      "metrics_map": {
+        "gamma_0.00": {
+          "gamma": 0.0,
+          "coordination_plv": 0.09172379815303369,
+          "rhythmic_correlation": -0.046985440692306014,
+          "mean_lag_ms": 161.80945056266017,
+          "jitter_std_ms": 63.89613730635913,
+          "bounded_stability_ratio": 1.0,
+          "mean_cpu_time_us": 3.8884422110552763
+        },
+        "gamma_0.05": {
+          "gamma": 0.05,
+          "coordination_plv": 0.07085964604740537,
+          "rhythmic_correlation": 0.42689687955793654,
+          "mean_lag_ms": 133.18571719837865,
+          "jitter_std_ms": 94.8267728451709,
+          "bounded_stability_ratio": 1.0,
+          "mean_cpu_time_us": 2.6376884422110556
+        },
+        "gamma_0.10": {
+          "gamma": 0.1,
+          "coordination_plv": 0.16749387610894056,
+          "rhythmic_correlation": 0.6086959529189987,
+          "mean_lag_ms": 115.30957729143934,
+          "jitter_std_ms": 118.32966120895323,
+          "bounded_stability_ratio": 1.0,
+          "mean_cpu_time_us": 2.5979899497487438
+        },
+        "gamma_0.20": {
+          "gamma": 0.2,
+          "coordination_plv": 0.2643376711729259,
+          "rhythmic_correlation": 0.7270121190567934,
+          "mean_lag_ms": 102.09059628653536,
+          "jitter_std_ms": 152.4311206160899,
+          "bounded_stability_ratio": 1.0,
+          "mean_cpu_time_us": 2.614070351758794
+        },
+        "gamma_0.30": {
+          "gamma": 0.3,
+          "coordination_plv": 0.32007654199338686,
+          "rhythmic_correlation": 0.7492914128868742,
+          "mean_lag_ms": 95.0831482409655,
+          "jitter_std_ms": 149.43419231988156,
+          "bounded_stability_ratio": 1.0,
+          "mean_cpu_time_us": 2.5919597989949748
+        },
+        "gamma_0.50": {
+          "gamma": 0.5,
+          "coordination_plv": 0.2739950200924716,
+          "rhythmic_correlation": 0.7274031613588137,
+          "mean_lag_ms": 100.03630559123863,
+          "jitter_std_ms": 154.94914496927896,
+          "bounded_stability_ratio": 1.0,
+          "mean_cpu_time_us": 2.6502512562814076
+        },
+        "gamma_0.80": {
+          "gamma": 0.8,
+          "coordination_plv": 0.23917707991787088,
+          "rhythmic_correlation": 0.7170242768451237,
+          "mean_lag_ms": 106.18649658642335,
+          "jitter_std_ms": 170.94516212410835,
+          "bounded_stability_ratio": 1.0,
+          "mean_cpu_time_us": 2.617085427135679
+        }
+      }
+    },
+    "e5_peripheral_authority": {
+      "summary": {
+        "fault_modes_evaluated": [
+          "split_brain",
+          "race_condition",
+          "ordering_inversion",
+          "boundary_guard"
+        ],
+        "split_brain_divergence_max": 0.9697937925146761,
+        "split_brain_divergence_final": 0.9697937925146761,
+        "conflicting_write_count": 50,
+        "ordering_violation_discrepancy": 0.0054,
+        "corruption_prevented_by_guards": 1,
+        "no_universal_prevention_claimed": true,
+        "evidence_statement": "Observed Fault Modes: (1) Split-Brain Divergence: Independent peripheral replicas diverged to max distance 0.9698, proving that independent continuous cognitive authorities violate INV-1. (2) Unserialized Writes: Race condition produced 50 conflicting writes with discrepancy 0.4900. (3) Causal Inversion: Network message order reversal produced trajectory discrepancy 0.0054. (4) Boundary Guard: Out-of-bounds inputs were bounded strictly within [0.0, 1.0].",
+        "p25_q1_implication": "Empirical fault characterization confirms that INV-1 strictly prohibits competing continuous cognitive authorities for the same Lucia identity. All peripheral channels must act as stateless I/O streams subordinate to a single authoritative cognitive core. CRITICAL SCIENTIFIC DISCLAIMER: Finite test passing does NOT guarantee universal 100% prevention of distributed concurrency anomalies in asynchronous environments."
+      },
+      "reports": {
+        "split_brain": {
+          "fault_mode": "split_brain_divergence",
+          "channel_count": 2,
+          "total_steps": 25,
+          "divergent_trace_distance_mean": 0.5042927721076315,
+          "divergent_trace_distance_max": 0.9697937925146761,
+          "conflicting_write_count": 0,
+          "ordering_violation_count": 0,
+          "state_corruption_count": 0,
+          "split_brain_detected": true,
+          "observed_divergence": 0.9697937925146761
+        },
+        "race_condition": {
+          "fault_mode": "unserialized_concurrent_writes",
+          "channel_count": 2,
+          "total_steps": 100,
+          "divergent_trace_distance_mean": 0.4900000000000003,
+          "divergent_trace_distance_max": 0.4900000000000003,
+          "conflicting_write_count": 50,
+          "ordering_violation_count": 0,
+          "state_corruption_count": 0,
+          "split_brain_detected": false,
+          "observed_divergence": 0.4900000000000003
+        },
+        "ordering_inversion": {
+          "fault_mode": "causal_ordering_inversion",
+          "channel_count": 2,
+          "total_steps": 2,
+          "divergent_trace_distance_mean": 0.0054,
+          "divergent_trace_distance_max": 0.0054,
+          "conflicting_write_count": 0,
+          "ordering_violation_count": 1,
+          "state_corruption_count": 0,
+          "split_brain_detected": false,
+          "observed_divergence": 0.0054
+        },
+        "boundary_guard": {
+          "fault_mode": "boundary_corruption_guards",
+          "channel_count": 1,
+          "total_steps": 1,
+          "divergent_trace_distance_mean": 0.0,
+          "divergent_trace_distance_max": 0.0,
+          "conflicting_write_count": 0,
+          "ordering_violation_count": 0,
+          "state_corruption_count": 0,
+          "split_brain_detected": false,
+          "observed_divergence": 0.0
+        }
+      }
+    }
+  }
+}
