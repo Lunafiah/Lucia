@@ -1,0 +1,173 @@
+{
+  "protocol": "EXP-P25-Q2.1",
+  "execution_timestamp": "2026-10-04 16:27:31 UTC",
+  "runtime_duration_seconds": 0.098,
+  "environment": {
+    "git_commit": "1ecea934446039c934b301c6912f8f005023501d",
+    "python_version": "3.12.10",
+    "platform": "Windows-11-10.0.22621-SP0",
+    "processor": "AMD64 Family 23 Model 96 Stepping 1, AuthenticAMD",
+    "gpu_visibility": "0 devices (100% CPU edge execution)",
+    "gpu_vram_usage_mb": 0.0,
+    "master_seeds": [
+      1001,
+      2002,
+      3003,
+      4004,
+      5005
+    ]
+  },
+  "tbd_governance": {
+    "tbd_q2_01": {
+      "item_id": "TBD-Q2-01",
+      "fixture_version": "FIXTURE-P25-Q2-SCRIPT-v0.1",
+      "total_turns": 40,
+      "phase1_turns": 15,
+      "phase2_turns": 10,
+      "phase3_turns": 15,
+      "lexical_neutrality_verified": true,
+      "status": "VALIDATED_AS_NEUTRAL_FIXTURE"
+    },
+    "tbd_q2_02": {
+      "item_id": "TBD-Q2-02",
+      "k_values_evaluated": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "stability_profile": {
+        "k_2": {
+          "mean_te": 0.0,
+          "std_te": 0.0
+        },
+        "k_3": {
+          "mean_te": 0.02174554402449993,
+          "std_te": 0.015547500666374895
+        },
+        "k_4": {
+          "mean_te": 0.07150638645487631,
+          "std_te": 0.010634332390586792
+        },
+        "k_5": {
+          "mean_te": 0.10103823345980126,
+          "std_te": 0.009681035825033562
+        }
+      },
+      "reference_k4_finite_sample_std": 0.010634332390586792,
+      "status": "CALIBRATION-ONLY / NOT SCIENTIFICALLY RATIFIED",
+      "notes": "k=4 showed observed stability behavior under tested procedure; no pre-ratified acceptance threshold established."
+    },
+    "tbd_q2_03": {
+      "item_id": "TBD-Q2-03",
+      "model_type": "Ornstein-Uhlenbeck Decoupled User Simulator",
+      "parameters": {
+        "theta": 0.3,
+        "mu_ms": 400.0,
+        "sigma_ms": 45.0
+      },
+      "sample_mean_ms": 399.45783297771425,
+      "sample_std_ms": 50.70503751441087,
+      "bounded_within_normative_limits": true,
+      "status": "CALIBRATED_AND_VALIDATED"
+    },
+    "tbd_q2_04": {
+      "item_id": "TBD-Q2-04",
+      "parameter": "w_fb (feedback gain vector for C2)",
+      "a_priori_scientific_basis_established": false,
+      "forbidden_actions": [
+        "Arbitrary default gain (0.1, 0.5, 1.0)",
+        "Tuning against C1/C2 outcomes",
+        "Post-hoc optimization to maximize synchrony"
+      ],
+      "status": "BLOCKED_TBD_Q2_04",
+      "justification": "No independent empirical calibration or architectural contract has established w_fb. Inventing an arbitrary gain would violate research governance and create an unscientific pseudo-result. C2 comparative execution is strictly BLOCKED."
+    }
+  },
+  "invariants_pre": {
+    "inv1_one_continuous_life": true,
+    "inv2_no_reflective_ego": true,
+    "inv8_genesis_bit_exact": true,
+    "production_diff_zero": true,
+    "no_direct_actuator_mutation": true
+  },
+  "invariants_post": {
+    "inv1_one_continuous_life": true,
+    "inv2_no_reflective_ego": true,
+    "inv8_genesis_bit_exact": true,
+    "production_diff_zero": true,
+    "no_direct_actuator_mutation": true
+  },
+  "surrogate_analysis": {
+    "n_surrogates": 20,
+    "theta_95_reference": 1540.3870295150564,
+    "surrogate_variances": [
+      1104.648430949347,
+      1560.8569380564036,
+      726.1432597125275,
+      1467.8161118462942,
+      1380.053519476344,
+      1524.0141397469872,
+      708.088420507081,
+      1437.5182120690135,
+      1405.8490539587747,
+      1085.6562139581097,
+      719.9734835141373,
+      1452.9132413340344,
+      1385.195881961275,
+      1066.6194086866255,
+      1521.0495979935397,
+      1432.17578491261,
+      1389.3836143526405,
+      1079.7097462246177,
+      1539.309665907617,
+      718.699366371751
+    ],
+    "interpretation": "theta_95 defines the empirical 95th-percentile reference under the pseudo-synchrony surrogate null. Exceeding it does not prove genuine attunement."
+  },
+  "conditions_summary": {
+    "C0_static_pacing": {
+      "mean_turn_gap_variance": 2576.626008785598,
+      "mean_recovery_turns": 1.4,
+      "status": "EXECUTED"
+    },
+    "C1_unilateral_adaptation": {
+      "mean_turn_gap_variance": 2566.2514573625167,
+      "mean_recovery_turns": 1.4,
+      "mean_te_user_to_lucia": 0.0,
+      "mean_te_lucia_to_user": 0.0,
+      "mean_delta_te_net": 0.0,
+      "improvement_over_c0": 0.004026409493541919,
+      "status": "EXECUTED"
+    },
+    "C2_bidirectional_adaptation": {
+      "status": "BLOCKED_TBD_Q2_04",
+      "reason": "Feedback gain w_fb unestablished from independent calibration."
+    }
+  },
+  "hypothesis_verdicts": {
+    "H_A_reactive_sufficiency": {
+      "status": "EVIDENCE_CONSISTENT_WITH_H_A_UNDER_TESTED_CONDITIONS",
+      "evidence": "Unilateral adaptation (C1) produced an observed 0.4% variance reduction over static pacing (C0; 2566.25 vs 2576.63 ms²). Universal sufficiency is not claimed."
+    },
+    "H_B_reciprocal_incrementality": {
+      "status": "BLOCKED / INCONCLUSIVE — TBD-Q2-04",
+      "evidence": "C2 comparative run was not executed because w_fb cannot be invented without independent calibration. No claim of incrementality or falsification is made."
+    },
+    "H_C_persistence": {
+      "status": "INCONCLUSIVE / NOT ESTABLISHED",
+      "evidence": "Within-episode P1/P2 tracking demonstrated; cross-session P3 persistence was not established by this experiment and remains untested pending a valid longitudinal protocol."
+    },
+    "H_D_substrate_sufficiency": {
+      "status": "RESERVED / NOT TESTED",
+      "evidence": "This experiment does not establish whether existing memory, semantic, or relational substrates are sufficient for P3 persistence. No new persistent relational representation is warranted."
+    }
+  },
+  "failure_modes": {
+    "S01_mechanical_mimicry": "NO EVIDENCE DETECTED UNDER TESTED CRITERIA (latencies >= 150ms)",
+    "S02_acoustic_runaway": "NO EVIDENCE DETECTED UNDER TESTED CRITERIA (tempo clamps within [-0.15, +0.15])",
+    "S03_phase_locking": "NO EVIDENCE DETECTED UNDER TESTED CRITERIA (gap variance > 0.0 across all trials)",
+    "S04_pseudo_synchrony": "SURROGATE ANALYSIS INVALID / RERUN REQUIRED (gap averaging artifact & inverted tail direction)",
+    "S05_relational_inflation": "NO EVIDENCE DETECTED UNDER TESTED CRITERIA (actuators never write to R_t)"
+  }
+}

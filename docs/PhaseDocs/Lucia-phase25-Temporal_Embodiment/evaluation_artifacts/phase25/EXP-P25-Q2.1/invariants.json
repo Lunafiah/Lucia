@@ -1,0 +1,16 @@
+{
+  "pre_execution": {
+    "inv1_one_continuous_life": true,
+    "inv2_no_reflective_ego": true,
+    "inv8_genesis_bit_exact": true,
+    "production_diff_zero": true,
+    "no_direct_actuator_mutation": true
+  },
+  "post_execution": {
+    "inv1_one_continuous_life": true,
+    "inv2_no_reflective_ego": true,
+    "inv8_genesis_bit_exact": true,
+    "production_diff_zero": true,
+    "no_direct_actuator_mutation": true
+  }
+}
