@@ -171,11 +171,17 @@ Where any link in the chain is incomplete or unverified, it is explicitly classi
 
 ---
 
-### 2.13 Phase 25 Temporal Embodiment & Social Feedback (P25-Q1 Inquiry)
-- **Architectural Status**: `P25-Q1 — RESEARCH COMPLETE / ARCHIVED AS EVIDENCE` (Architecture Gate & Implementation Gate remain LOCKED; Production Diff = 0).
-- **Canonical Document**: [`docs/PhaseDocs/Lucia-phase25-Temporal_Embodiment/P25_Q1_FINAL_RESEARCH_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PhaseDocs/Lucia-phase25-Temporal_Embodiment/P25_Q1_FINAL_RESEARCH_REPORT.md).
-- **Evaluation Evidence**: [`docs/PhaseDocs/Lucia-phase25-Temporal_Embodiment/evaluation_report.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PhaseDocs/Lucia-phase25-Temporal_Embodiment/evaluation_report.md); `docs/PhaseDocs/Lucia-phase25-Temporal_Embodiment/evaluation_artifacts/phase25/raw_telemetry.json`.
-- **Verification Suite**: `tests/evaluation/phase25/` (`test_p25_discrim.py`, `test_p25_evaluation_suite.py` — 22/22 PASS).
+### 2.13 Phase 25 Temporal Embodiment & Social Feedback
+- **Architectural Status**: `PLANNED` (Future Horizon / Not Implemented; Architecture Gate & Implementation Gate remain LOCKED; Production Diff = 0).
+- **Research Coverage Status**: `RESEARCH COVERAGE SUFFICIENT / FREEZE CANDIDATE` (Formal audit in [`docs/PhaseDocs/Lucia-phase25-Temporal_Embodiment/P25_COVERAGE_AND_RESEARCH_GAP_AUDIT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PhaseDocs/Lucia-phase25-Temporal_Embodiment/P25_COVERAGE_AND_RESEARCH_GAP_AUDIT.md), `DOC-P25-014`). All currently justified offline research questions within P25's present methodological boundary have been sufficiently investigated; remaining questions require live human interaction and are not actionable offline.
+- **Canonical Documents**:
+  - P25 Research Audit: [`docs/PhaseDocs/Lucia-phase25-Temporal_Embodiment/P25_COVERAGE_AND_RESEARCH_GAP_AUDIT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PhaseDocs/Lucia-phase25-Temporal_Embodiment/P25_COVERAGE_AND_RESEARCH_GAP_AUDIT.md) (`DOC-P25-014`).
+  - P25-Q1 Final Report: [`docs/PhaseDocs/Lucia-phase25-Temporal_Embodiment/P25_Q1_FINAL_RESEARCH_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PhaseDocs/Lucia-phase25-Temporal_Embodiment/P25_Q1_FINAL_RESEARCH_REPORT.md) (`DOC-P25-001`).
+  - P25-Q2 Specifications & Audits: [`DOC-P25-004`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PhaseDocs/Lucia-phase25-Temporal_Embodiment/EXP_P25_Q2_1_EVALUATION_SPECIFICATION.md) through [`DOC-P25-013`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PhaseDocs/Lucia-phase25-Temporal_Embodiment/P25_Q2_Q2-04_PROTOCOL_SPECIFICATION.md).
+- **Evaluation Evidence**:
+  - P25-Q1: [`docs/PhaseDocs/Lucia-phase25-Temporal_Embodiment/evaluation_report.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PhaseDocs/Lucia-phase25-Temporal_Embodiment/evaluation_report.md); `docs/PhaseDocs/Lucia-phase25-Temporal_Embodiment/evaluation_artifacts/phase25/raw_telemetry.json`.
+  - P25-Q2: [`docs/PhaseDocs/Lucia-phase25-Temporal_Embodiment/evaluation_artifacts/phase25/EXP-P25-Q2.1/FINAL_EVALUATION_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PhaseDocs/Lucia-phase25-Temporal_Embodiment/evaluation_artifacts/phase25/EXP-P25-Q2.1/FINAL_EVALUATION_REPORT.md); `docs/PhaseDocs/Lucia-phase25-Temporal_Embodiment/evaluation_artifacts/phase25/EXP-P25-Q2.1/results.json`.
+- **Verification Suites**: `tests/evaluation/phase25/` (`test_p25_discrim.py`, `test_p25_evaluation_suite.py`, `test_exp_p25_q2_1.py` — 32/32 PASS across suites).
 
 ---
 
