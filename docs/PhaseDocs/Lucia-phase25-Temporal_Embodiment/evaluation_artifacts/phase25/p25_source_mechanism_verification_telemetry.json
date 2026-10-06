@@ -1,0 +1,67 @@
+{
+  "audit_metadata": {
+    "audit_id": "DOC-P25-015",
+    "timestamp": "2026-10-06T14:04:00Z",
+    "status": "RATIFIED",
+    "verdict": "GATE_0_PREMATURE"
+  },
+  "r_t_verification": {
+    "source_of_truth_file": "src/core/relationship/state.py",
+    "canonical_dimensions": [
+      "familiarity",
+      "trust",
+      "closeness",
+      "reciprocity"
+    ],
+    "neutral_baseline": [0.0, 0.5, 0.0, 0.5],
+    "documentation_conflicts_detected": [
+      "docs/00_PROJECT_OVERVIEW.md:157",
+      "docs/ARCHITECTURE.md:383,429",
+      "docs/L1_INVARIANTS.md:83",
+      "docs/USER_MANUAL.md:180"
+    ]
+  },
+  "pathway_verification": {
+    "direct_output_to_emotion_core": {
+      "exists": false,
+      "governing_adr": "ADR-024",
+      "status": "FORBIDDEN"
+    },
+    "user_mediated_loop": {
+      "exists": true,
+      "mechanism": "Lucia output -> User perception -> User utterance -> S1 -> S3 ODE",
+      "status": "PERMITTED"
+    },
+    "internal_action_provenance": {
+      "exists": false,
+      "status": "ABSENT"
+    }
+  },
+  "s1_timing_features": {
+    "valence": "VADER compound [-1, 1]",
+    "arousal": "Punctuation + Caps + TPS [0, 1]",
+    "density": "Unique token ratio [-1, 1]",
+    "temporal_latency_features": null,
+    "p22_inf_status": "RESEARCH_ONLY_NOT_PROMOTED"
+  },
+  "p25_q1_verification": {
+    "h_a_status": "REJECTED",
+    "h_b_status": "PARTIALLY_GENERALIZES",
+    "h_c_status": "NOT_CURRENTLY_WARRANTED",
+    "rerun_authorized": false,
+    "architecture_implication": false
+  },
+  "p25_q2_verification": {
+    "track_e3_output_only_tr_j": -15.3333,
+    "track_e3_reciprocal_tr_j": -15.3333,
+    "tr_j_identity_cause": "Analytical off-diagonal coupling artifact",
+    "c2_status": "PROPOSED_UNRATIFIED_BLOCKED",
+    "h_b_status": "UNPROVEN_RESEARCH_HYPOTHESIS"
+  },
+  "p26_inherited_constraints": {
+    "yoked_control_lesson": "C3 non-identifiable due to missing internal action state variable",
+    "crn_required": true,
+    "snapshot_isolation_required": true
+  },
+  "gate_0_readiness": "GATE_0_PREMATURE"
+}
