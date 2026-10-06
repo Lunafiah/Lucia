@@ -1188,8 +1188,11 @@ def init_server(
             model_path=model_path,
             profile_name_or_tier=profile_name,
         )
-        # Phase 9: use composition-based CognitiveOrchestrator (ADR-014)
-        _orchestrator = build_cognitive_orchestrator(config)
+        # Phase 9: use composition-based CognitiveOrchestrator (ADR-014); F-02: reseed from persistent history
+        _orchestrator = build_cognitive_orchestrator(
+            config,
+            chat_history_path="data/chat_history.json",
+        )
     except Exception as exc:
         logger.exception("Failed to initialize Orchestrator: %s", exc)
         sys.stdout.write(f"LUCIA_BACKEND_ERROR: {exc}\n")

@@ -965,6 +965,35 @@ The Cognitive Core contracts accept semantic graphs formed from upstream raw mul
 
 ---
 
+### ADR-033: Persistent Continuous Life State & Long-Downtime Recovery (F-02)
+* **Status**: **ACCEPTED & PRODUCTION IMPLEMENTED** (F-02, Owner Decisions D-01, D-02, D-03)
+* **Governing Evidence & Audit**: [`docs/others/F-02_FINAL_RATIFICATION/`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/others/F-02_FINAL_RATIFICATION/), [`docs/others/F-02_IMPLEMENTATION/`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/others/F-02_IMPLEMENTATION/)
+* **Decision**: Establish Two-Tier Coherent Persistent Life State and Hybrid Short Numerical Replay + Long-Downtime Asymptotic Recovery architecture across process restarts:
+  1. *ADR-033.1 (Two-Tier State Partitioning)* `[OWNER-RATIFIED ARCHITECTURE]`:
+     - **Tier 1 (Authoritative Persistent)**: `data/profile.json` (Genesis onboarding state), `data/relationship.json` (4D vector $\mathbf{R}_t$, stage, interaction count), `data/chat_history.json` (archival/autobiographical history), `data/dynamical_state.json` ($h_{\text{fast}}$, $s_{\text{slow}}$, $E$, $C$, timestamps, epoch), and `data/epoch_manifest.json` (logical synchronization barrier).
+     - **Tier 2 (Reconstructible Runtime)**: Relationally conditioned attractor $s^*_{\text{eff}}(R_t)$, relaxed downtime states $(h_{\text{fast}}, s_{\text{slow}})$, homeostatic equilibrium ($E \to 1.0, C \to 0.0$), derived PAD vector $\mathbf{p} = \text{project}(h, s, E, C)$, and reseeded working context `_history`.
+     - **Volatile (Unpersisted)**: Ephemeral token buffers, surprise, tension, and inner-loop ODE derivatives.
+     - **Deferred**: Kanerva SDM associative memory matrix persistence remains deferred to Phase 25.
+  2. *ADR-033.2 (Startup Dependency Inversion Sequence)* `[VERIFIED FROM CODE]`:
+     Eliminates historical startup tear (E-01/E-02/E-03). In `build_cognitive_orchestrator()`:
+     $$\text{verify\_and\_reconcile\_stores}() \longrightarrow \text{Load } R_t \longrightarrow \text{Instantiate EmotionCore} \longrightarrow \text{Inject } R_t \longrightarrow \text{Restore Checkpoint \& Idle Recovery} \longrightarrow \text{Reseed } \_history$$
+     Guarantees that downtime recovery NEVER executes against the stranger baseline $R_0 = [0, 0.5, 0, 0.5]$.
+  3. *ADR-033.3 (Hybrid Downtime Recovery Dynamics)* `[MATHEMATICALLY DERIVED / VERIFIED NUMERICALLY]`:
+     Replaces naive unbounded Euler replay with a bounded, two-regime recovery dynamic:
+     - **Short Numerical Replay ($\Delta t \le \tau_{\text{candidate}}$)**: Forward Euler replay ($dt = 0.2\text{s}$) simulating complete limbic ODE and homeostatic dynamics. Configured via `recovery_short_replay_cutoff_s` (engineering candidate $\tau_{\text{candidate}} = 180.0\text{s}$, explicitly **NOT** a universal mathematical constant; CPU latency $\le 1.5\,\text{ms}$).
+     - **Intermediate Decay ($\tau_{\text{candidate}} < \Delta t < \tau_{\text{asymptotic}}$)**: $180\text{s}$ forward Euler replay followed by exponential decay toward $s^*_{\text{eff}}(R_t)$ and $\mathbf{0}$ ($\tau_{\text{asymptotic}} = 300.0\text{s}$).
+     - **Long-Downtime Asymptotic Recovery ($\Delta t \ge \tau_{\text{asymptotic}}$)**: Instantaneous $O(1)$ projection ($< 0.05\,\text{ms}$):
+       $$h_{\text{fast}} \to \mathbf{0}, \quad s_{\text{slow}} \to s^*_{\text{eff}}(R_t) = s^*_{\text{philia}} + \mathbf{W}_{\text{rel}}(R_t - R_0), \quad E \to 1.0, \quad C \to 0.0$$
+       Never defaults to absolute Philia $s^*_{\text{philia}}$ when an interpersonal bond exists.
+  4. *ADR-033.4 (Derived PAD Contract)* `[VERIFIED FROM CODE]`:
+     PAD is strictly derived from recovered $(h_{\text{fast}}, s_{\text{slow}}, E, C)$ via canonical projection $\mathbf{p} = \text{project}(h, s, E, C)$. Serialized PAD is non-authoritative and discarded upon restore.
+  5. *ADR-033.5 (Commit Barrier & Consistency Detection)* `[OWNER-RATIFIED ARCHITECTURE]`:
+     `data/epoch_manifest.json` functions as an explicit Commit Barrier and Consistency Detection mechanism (explicitly **NOT** an atomic multi-file database transaction). Stage 16 sequentially advances `relationship.json` (epoch $N+1$), `dynamical_state.json` (epoch $N+1$), and `epoch_manifest.json` (epoch $N+1$). On startup, `verify_and_reconcile_stores()` detects epoch divergence and deterministically rolls back skewed stores to matching `.json.bak` files, strictly preventing split-brain merges.
+  6. *ADR-033.6 (Working-Memory Reseeding)* `[VERIFIED FROM CODE]`:
+     On startup, `CognitiveOrchestrator._history` is reseeded with the tail $K$ turns from `data/chat_history.json`. $K$ is configured via `context_history_turns: int = 10` in `OrchestratorConfig` (configurable engineering parameter, **NOT** an invariant).
+
+---
+
 ### 8.1 Reconciliation of Outdated Specs & Conflicting Decisions
 
 | Dimension | Outdated / Preliminary Spec | Authoritative Implemented Reality | Resolution & Rationale |
@@ -1017,6 +1046,8 @@ The Cognitive Core contracts accept semantic graphs formed from upstream raw mul
 | **ARCH-030** | Language-dependent or unstructured cognitive core interface | Semantic Substrate → Cognitive Core Contract (P23-G) | Zero natural language strings in Core (strictly numeric IDs); Strong Kleene 3-valued logic; non-monotonic JTMS cascade invalidation; DisambiguationSubgoal for ambiguous branches; zero dynamic allocation in inner loop via static TermArena | Phase 23-G | Implementation Fact |
 | **ARCH-031** | Passive semantic substrate in Cognitive Core | Bounded Goal-Directed Reasoning Kernel & JTMS (P23-H) | Operationalizes numeric substrate into backward goal resolution; MAX_SEARCH_DEPTH=8, MAX_INFERENCE_STEPS=256; deterministic cycle breaking; static Horn rules with O(1) head-predicate index; preallocated BindingFrame with bitmask; Strong Kleene K3 evaluation with strict epistemic safety (FIX-23H-01: unproven goals remain UNKNOWN; denying antecedent never yields FALSE); multi-justification JTMS non-monotonic cascade invalidation; InformationSubgoal / DisambiguationSubgoal; 0 net persistent heap growth / 0 dynamic container growth in steady-state loop | Phase 23-H | Implementation Fact |
 | **ARCH-032** | Static voice pitch shift / severed client prosody forwarding | Bounded Adaptive Communication Control Contract (ADR-032) | `BoundarySegment` multi-lingual boundary abstraction, continuous dynamic F0 Hanning contouring ($S(t) \in [-4.0, +7.0]\text{ st}$, clip $\pm 12\text{ st}$, anti-chatter bounds), relational prosody conditioning (closeness $+1.5\text{ st}$, trust $\pm 2.5\%$, familiarity $-50\text{ ms}$; reciprocity strictly severed), bounded `/voice/synthesize` API surface, and IPC bridge forwarding | Phase 24 | Implementation Fact |
+| **ARCH-033** | Unbounded Euler replay / startup stranger baseline decay | Two-Tier Persistent Life State & Hybrid Downtime Recovery (ADR-033) | Eliminates startup ordering tear (E-01/E-02/E-03) via dependency inversion ($R_t$ injected before recovery); Two-Tier persistent state taxonomy; hybrid short numerical replay ($\Delta t \le 180\text{s}$, $dt=0.2\text{s}$) + intermediate decay + $O(1)$ long-downtime asymptotic recovery ($\Delta t \ge 300\text{s}$) converging to relationally conditioned attractor $s^*_{\text{eff}}(R_t)$; derived PAD contract; `epoch_manifest.json` Commit Barrier and crash-safe `.bak` consistency reconciliation; working memory reseeding from `chat_history.json` tail $K=10$ turns; bit-exact Genesis invariant preservation | F-02 | Implementation Fact |
+
 
 
 

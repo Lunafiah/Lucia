@@ -36,6 +36,7 @@ import numpy as np
 logger = logging.getLogger(__name__)
 
 DEFAULT_DYNAMICAL_STATE_PATH = Path("data/dynamical_state.json")
+DEFAULT_EPOCH_MANIFEST_PATH = Path("data/epoch_manifest.json")
 CURRENT_SCHEMA_VERSION = "1.0"
 EXPECTED_FAST_DIM = 32
 EXPECTED_SLOW_DIM = 16
@@ -53,6 +54,7 @@ class DynamicalStateSnapshot:
     m_homeo: Optional[np.ndarray] = None    # Homeostatic somatic markers in R^4
     pad: Optional[Dict[str, float]] = None  # Projection metadata: {pleasure, arousal, dominance}
     schema_version: str = CURRENT_SCHEMA_VERSION
+    epoch_id: Optional[int] = None          # Logical epoch sequence ID
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert snapshot to JSON-serializable dictionary."""
@@ -64,6 +66,8 @@ class DynamicalStateSnapshot:
                 "s_slow": [float(x) for x in self.s_slow],
             },
         }
+        if self.epoch_id is not None:
+            data["epoch_id"] = int(self.epoch_id)
         if self.m_homeo is not None:
             data["state"]["m_homeo"] = [float(x) for x in self.m_homeo]
         if self.pad is not None:
@@ -82,6 +86,7 @@ class DynamicalStateSnapshot:
         s_slow = np.array(state_data["s_slow"], dtype=np.float64)
         created_at = float(data["created_at"])
         schema_version = str(data.get("schema_version", CURRENT_SCHEMA_VERSION))
+        epoch_id = int(data["epoch_id"]) if "epoch_id" in data and data["epoch_id"] is not None else None
 
         m_homeo = None
         if "m_homeo" in state_data and state_data["m_homeo"] is not None:
@@ -102,6 +107,7 @@ class DynamicalStateSnapshot:
             m_homeo=m_homeo,
             pad=pad,
             schema_version=schema_version,
+            epoch_id=epoch_id,
         )
 
 
@@ -122,6 +128,12 @@ def validate_checkpoint_dict(data: Any) -> Tuple[bool, Optional[str]]:
     created_at = data.get("created_at")
     if not isinstance(created_at, (int, float)) or not np.isfinite(created_at) or created_at <= 0.0:
         return False, f"Invalid or non-positive created_at timestamp: {created_at}"
+
+    # Optional epoch_id
+    if "epoch_id" in data and data["epoch_id"] is not None:
+        epoch_id = data["epoch_id"]
+        if not isinstance(epoch_id, int) or epoch_id < 0:
+            return False, f"Invalid 'epoch_id' in checkpoint: {epoch_id}"
 
     # State payload
     state = data.get("state")
@@ -285,3 +297,192 @@ def load_dynamical_checkpoint(
         target,
     )
     return None
+
+
+# ---------------------------------------------------------------------------
+# Commit Barrier & Consistency Detection (Option D/F, F-02)
+# ---------------------------------------------------------------------------
+
+@dataclass
+class EpochManifest:
+    """
+    Commit barrier manifest recording synchronized logical epoch across persistent stores.
+    Provides consistency detection and crash-safe rollback boundaries (not atomic transactions).
+    """
+    epoch_id: int
+    t_checkpoint: float
+    stores: Dict[str, int]
+    schema_version: str = CURRENT_SCHEMA_VERSION
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "schema_version": self.schema_version,
+            "epoch_id": int(self.epoch_id),
+            "t_checkpoint": float(self.t_checkpoint),
+            "stores": {str(k): int(v) for k, v in self.stores.items()},
+        }
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> EpochManifest:
+        stores_data = data.get("stores", {})
+        stores = {str(k): int(v) for k, v in stores_data.items()} if isinstance(stores_data, dict) else {}
+        return cls(
+            epoch_id=int(data.get("epoch_id", 0)),
+            t_checkpoint=float(data.get("t_checkpoint", 0.0)),
+            stores=stores,
+            schema_version=str(data.get("schema_version", CURRENT_SCHEMA_VERSION)),
+        )
+
+
+def save_epoch_manifest(
+    manifest: EpochManifest,
+    filepath: Optional[Union[str, Path]] = None,
+    storage_policy: Optional[Any] = None,
+) -> Path:
+    """
+    Atomically persist EpochManifest as commit barrier.
+    """
+    target = Path(filepath) if filepath else DEFAULT_EPOCH_MANIFEST_PATH
+    if storage_policy is not None and hasattr(storage_policy, "assert_write_permitted"):
+        storage_policy.assert_write_permitted(target)
+
+    target.parent.mkdir(parents=True, exist_ok=True)
+    temp_fd, temp_path = tempfile.mkstemp(
+        dir=str(target.parent),
+        prefix="epoch_manifest_",
+        suffix=".tmp",
+    )
+    try:
+        with os.fdopen(temp_fd, "w", encoding="utf-8") as f:
+            json.dump(manifest.to_dict(), f, indent=2, ensure_ascii=False)
+        os.replace(temp_path, target)
+        logger.debug("Successfully committed epoch manifest %s with epoch=%d", target, manifest.epoch_id)
+    except Exception as e:
+        if os.path.exists(temp_path):
+            try:
+                os.remove(temp_path)
+            except OSError:
+                pass
+        logger.error("Failed to commit epoch manifest %s: %s", target, e)
+        raise
+
+    return target
+
+
+def load_epoch_manifest(
+    filepath: Optional[Union[str, Path]] = None,
+) -> Optional[EpochManifest]:
+    """
+    Load and parse EpochManifest from disk. Returns None if missing or corrupted.
+    """
+    target = Path(filepath) if filepath else DEFAULT_EPOCH_MANIFEST_PATH
+    if not target.exists():
+        return None
+    try:
+        with open(target, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        if not isinstance(data, dict):
+            return None
+        if "epoch_id" not in data or "t_checkpoint" not in data:
+            return None
+        return EpochManifest.from_dict(data)
+    except Exception as e:
+        logger.warning("Failed to load epoch manifest at %s: %s", target, e)
+        return None
+
+
+def read_epoch_from_file(filepath: Path) -> Optional[int]:
+    """
+    Safely extract epoch_id from a store JSON file if present and valid.
+    """
+    if not filepath.exists():
+        return None
+    try:
+        with open(filepath, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        if isinstance(data, dict):
+            val = data.get("epoch_id")
+            if val is not None and isinstance(val, (int, float)):
+                return int(val)
+    except Exception:
+        pass
+    return None
+
+
+def verify_and_reconcile_stores(
+    relationship_path: Optional[Union[str, Path]] = None,
+    dynamical_path: Optional[Union[str, Path]] = None,
+    manifest_path: Optional[Union[str, Path]] = None,
+) -> None:
+    """
+    Deterministic consistency verification and rollback reconciliation protocol (F-02).
+    
+    Guarantees:
+    1. If a crash occurred after updating a store but before the commit barrier (manifest)
+       was written, detects that the store's epoch > committed epoch, and rolls back the
+       uncommitted store using its .bak file.
+    2. If a store is corrupted (malformed JSON), automatically restores valid .bak.
+    3. If stores have divergent epochs without a manifest, restores .bak to find the
+       common coherent epoch, preventing silent merging of unrelated epochs.
+    """
+    rel_p = Path(relationship_path) if relationship_path else Path("data/relationship.json")
+    dyn_p = Path(dynamical_path) if dynamical_path else DEFAULT_DYNAMICAL_STATE_PATH
+    man_p = Path(manifest_path) if manifest_path else DEFAULT_EPOCH_MANIFEST_PATH
+
+    manifest = load_epoch_manifest(man_p)
+
+    def _is_valid_json(p: Path) -> bool:
+        if not p.exists():
+            return False
+        try:
+            with open(p, "r", encoding="utf-8") as f:
+                json.load(f)
+            return True
+        except Exception:
+            return False
+
+    # 1. Recover corrupted primaries from valid backups first
+    for target in (rel_p, dyn_p):
+        if target.exists() and not _is_valid_json(target):
+            bak = target.with_suffix(".json.bak")
+            if bak.exists() and _is_valid_json(bak):
+                logger.warning("Primary store %s is corrupted; restoring from backup %s", target, bak)
+                shutil.copy2(bak, target)
+
+    # 2. Check against manifest commit barrier if present
+    if manifest is not None:
+        committed_epoch = manifest.epoch_id
+        for target, store_key in ((rel_p, "relationship"), (dyn_p, "dynamical_state")):
+            if target.exists():
+                ep = read_epoch_from_file(target)
+                if ep is not None and ep > committed_epoch:
+                    # Uncommitted state written prior to crash
+                    bak = target.with_suffix(".json.bak")
+                    if bak.exists() and _is_valid_json(bak):
+                        bak_ep = read_epoch_from_file(bak)
+                        if bak_ep is None or bak_ep <= committed_epoch:
+                            logger.warning(
+                                "Store %s epoch %d exceeds committed epoch %d; rolling back to %s (epoch %s)",
+                                target, ep, committed_epoch, bak, bak_ep,
+                            )
+                            shutil.copy2(bak, target)
+    else:
+        # 3. No manifest present: check for epoch mismatch between primaries
+        if rel_p.exists() and dyn_p.exists():
+            rel_ep = read_epoch_from_file(rel_p)
+            dyn_ep = read_epoch_from_file(dyn_p)
+            if rel_ep is not None and dyn_ep is not None and rel_ep != dyn_ep:
+                logger.warning(
+                    "Detected epoch divergence without manifest: relationship epoch=%d, dynamical epoch=%d",
+                    rel_ep, dyn_ep,
+                )
+                if rel_ep > dyn_ep:
+                    rel_bak = rel_p.with_suffix(".json.bak")
+                    if rel_bak.exists() and read_epoch_from_file(rel_bak) == dyn_ep:
+                        logger.warning("Rolling back relationship store to match dynamical store epoch %d", dyn_ep)
+                        shutil.copy2(rel_bak, rel_p)
+                elif dyn_ep > rel_ep:
+                    dyn_bak = dyn_p.with_suffix(".json.bak")
+                    if dyn_bak.exists() and read_epoch_from_file(dyn_bak) == rel_ep:
+                        logger.warning("Rolling back dynamical store to match relationship store epoch %d", rel_ep)
+                        shutil.copy2(dyn_bak, dyn_p)

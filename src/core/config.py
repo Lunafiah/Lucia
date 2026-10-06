@@ -93,6 +93,9 @@ class EmotionConfig:
     consolidation_lambda_homeo: float = 0.05
     consolidation_lambda_philia: float = 0.10
     relationship_baseline: tuple = (0.0, 0.50, 0.0, 0.50)
+    # F-02: Persistent Continuous Life State Recovery knobs
+    recovery_short_replay_cutoff_s: float = 180.0
+    recovery_asymptotic_cutoff_s: float = 300.0
 
     def __post_init__(self) -> None:
         if not isinstance(self.loop_cadence_ms, int) or not (100 <= self.loop_cadence_ms <= 500):
@@ -200,6 +203,15 @@ class EmotionConfig:
                 raise ValueError(
                     f"EmotionConfig.relationship_baseline[{i}]={v} must be in [0.0, 1.0]"
                 )
+        if self.recovery_short_replay_cutoff_s <= 0.0:
+            raise ValueError(
+                f"EmotionConfig.recovery_short_replay_cutoff_s must be > 0, got {self.recovery_short_replay_cutoff_s!r}"
+            )
+        if self.recovery_asymptotic_cutoff_s < self.recovery_short_replay_cutoff_s:
+            raise ValueError(
+                f"EmotionConfig.recovery_asymptotic_cutoff_s ({self.recovery_asymptotic_cutoff_s}) "
+                f"must be >= recovery_short_replay_cutoff_s ({self.recovery_short_replay_cutoff_s})"
+            )
 
 
 # ---------------------------------------------------------------------------
@@ -352,6 +364,9 @@ class OrchestratorConfig:
     loop_cadence_ms: int = 200
     resting_baseline: tuple = (0.25, -0.05, 0.05)
     max_history_turns: int = 10
+    context_history_turns: int = 10
+    recovery_short_replay_cutoff_s: float = 180.0
+    recovery_asymptotic_cutoff_s: float = 300.0
     fallback_response: str = "[...]"
     llm_timeout_seconds: float = 30.0
     system_preamble: str = (
@@ -391,6 +406,19 @@ class OrchestratorConfig:
             raise ValueError(
                 f"OrchestratorConfig.max_history_turns must be >= 1, got {self.max_history_turns!r}"
             )
+        if not isinstance(self.context_history_turns, int) or self.context_history_turns < 1:
+            raise ValueError(
+                f"OrchestratorConfig.context_history_turns must be >= 1, got {self.context_history_turns!r}"
+            )
+        if self.recovery_short_replay_cutoff_s <= 0.0:
+            raise ValueError(
+                f"OrchestratorConfig.recovery_short_replay_cutoff_s must be > 0, got {self.recovery_short_replay_cutoff_s!r}"
+            )
+        if self.recovery_asymptotic_cutoff_s < self.recovery_short_replay_cutoff_s:
+            raise ValueError(
+                f"OrchestratorConfig.recovery_asymptotic_cutoff_s ({self.recovery_asymptotic_cutoff_s}) "
+                f"must be >= recovery_short_replay_cutoff_s ({self.recovery_short_replay_cutoff_s})"
+            )
         if self.llm_timeout_seconds < 1.0:
             raise ValueError(
                 f"OrchestratorConfig.llm_timeout_seconds must be >= 1.0, "
@@ -415,6 +443,8 @@ class OrchestratorConfig:
             hidden_dim=self.hidden_dim,
             resting_baseline=self.resting_baseline,
             ode_step_size=self.ode_step_size,
+            recovery_short_replay_cutoff_s=self.recovery_short_replay_cutoff_s,
+            recovery_asymptotic_cutoff_s=self.recovery_asymptotic_cutoff_s,
         )
 
     def to_llm_config(self) -> LLMConfig:

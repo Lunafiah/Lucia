@@ -86,6 +86,7 @@ class RelationshipUpdater:
         current_state: Optional[RelationshipState] = None,
         signal: Optional[RelationshipSignal] = None,
         dt_absence_hours: float = 0.0,
+        epoch_id: Optional[int] = None,
     ) -> Tuple[RelationshipState, RelationshipHistoryEntry]:
         """
         Execute single relationship update step (Stage 16 update):
@@ -131,8 +132,26 @@ class RelationshipUpdater:
                         state=new_state,
                         history=[h.to_dict() for h in self.history[-50:]],
                         filepath=self.storage_path,
+                        epoch_id=epoch_id,
                     )
                 except Exception as e:
                     logger.warning("Failed to persist relationship update: %s", e)
 
             return new_state, entry
+
+    def save(
+        self,
+        filepath: Optional[Union[str, Path]] = None,
+        epoch_id: Optional[int] = None,
+    ) -> Optional[Path]:
+        """Atomically persist current relationship state and history."""
+        target = Path(filepath) if filepath else self.storage_path
+        if not target:
+            return None
+        with self._lock:
+            return save_relationship(
+                state=self._current_state,
+                history=[h.to_dict() for h in self.history[-50:]],
+                filepath=target,
+                epoch_id=epoch_id,
+            )

@@ -273,7 +273,7 @@ class EmotionCore:
     # F-02: Persistent Dynamical State Checkpoint & Recovery
     # ------------------------------------------------------------------
 
-    def snapshot_dynamical_state(self) -> DynamicalStateSnapshot:
+    def snapshot_dynamical_state(self, epoch_id: Optional[int] = None) -> DynamicalStateSnapshot:
         """
         Snapshot canonical dynamical state under strict descending lock discipline.
         Acquires _step_lock -> _state_lock, copies arrays within <= 1ms, and releases
@@ -296,9 +296,14 @@ class EmotionCore:
                 "arousal": pad_snap.arousal,
                 "dominance": pad_snap.dominance,
             },
+            epoch_id=epoch_id,
         )
 
-    def checkpoint(self, filepath: Optional[Union[str, Path]] = None) -> Optional[Path]:
+    def checkpoint(
+        self,
+        filepath: Optional[Union[str, Path]] = None,
+        epoch_id: Optional[int] = None,
+    ) -> Optional[Path]:
         """
         Atomically persist a coherent dynamical state snapshot to disk.
         Zero disk I/O under locks: snapshot is created under locks and serialized after release.
@@ -306,7 +311,7 @@ class EmotionCore:
         target = Path(filepath) if filepath else self._storage_path
         if target is None:
             return None
-        snapshot = self.snapshot_dynamical_state()
+        snapshot = self.snapshot_dynamical_state(epoch_id=epoch_id)
         return save_dynamical_checkpoint(snapshot, filepath=target)
 
     def apply_dynamical_snapshot(
@@ -1102,9 +1107,17 @@ class EmotionCore:
         """
         Integrate system through an unforced rest / idle interval (x = 0).
         Evaluates dynamic homeostatic settling and slow-field relaxation.
+
+        F-02 Ratified Hybrid Model (D-02):
+        - Short downtime (duration_s <= tau_candidate): exact numerical forward Euler.
+        - Long downtime (duration_s >= tau_asymptotic): direct equilibrium projection O(1)
+          to relationally conditioned attractor s*_eff(R_t), h_fast -> 0, E -> 1.0, C -> 0.0.
+        - Intermediate (tau_candidate < duration_s < tau_asymptotic): forward Euler up to
+          tau_candidate, followed by asymptotic exponential decay toward s*_eff(R_t).
         """
-        n_steps = int(duration_s / dt)
-        stim_zero = np.zeros(self.U_f.shape[1], dtype=np.float64)
+        tau_candidate = float(getattr(self._config, "recovery_short_replay_cutoff_s", 180.0))
+        tau_asymptotic = float(getattr(self._config, "recovery_asymptotic_cutoff_s", 300.0))
+        duration_s = max(0.0, float(duration_s))
 
         traj_times: List[float] = []
         traj_energies: List[float] = []
@@ -1114,13 +1127,52 @@ class EmotionCore:
         pad_history: List[np.ndarray] = []
         slow_history: List[np.ndarray] = []
 
+        # Relationally conditioned attractor target
+        s_eff = self.get_effective_slow_attractor()
+
+        # ── Case 1: Long-downtime Direct Equilibrium Projection (Delta t >= tau_asymptotic) ──
+        if duration_s >= tau_asymptotic:
+            with self._step_lock:
+                self._h = np.zeros(self._config.hidden_dim, dtype=np.float64)
+                self._s_slow = s_eff.copy()
+                self._m_homeo = np.array([1.0, 0.0, 0.0, 1.0], dtype=np.float64)
+                with self._state_lock:
+                    pad_snap = self._project_to_pad(self._h, self._s_slow)
+                    self._pad_snapshot = pad_snap
+
+            if record_trajectory:
+                traj_times.append(duration_s)
+                traj_energies.append(1.0)
+                traj_loads.append(0.0)
+                traj_tensions.append(0.0)
+                traj_stabilities.append(1.0)
+                pad_history.append(np.array([pad_snap.pleasure, pad_snap.arousal, pad_snap.dominance]))
+                slow_history.append(self._s_slow.copy())
+
+            ht = HomeostaticTrajectory(
+                timestamps=traj_times,
+                energies=traj_energies,
+                tensions=traj_tensions,
+                cognitive_loads=traj_loads,
+                stabilities=traj_stabilities,
+            )
+            return (
+                np.array(pad_history) if pad_history else np.zeros((0, 3)),
+                np.array(slow_history) if slow_history else np.zeros((0, self._config.hidden_slow_dim)),
+                ht,
+            )
+
+        # ── Numerical Replay (Euler) for min(duration_s, tau_candidate) ──
+        euler_duration = min(duration_s, tau_candidate)
+        n_steps = int(euler_duration / dt) if dt > 0 else 0
+        stim_zero = np.zeros(self.U_f.shape[1], dtype=np.float64)
+
         gamma_E = 0.05
         gamma_T = 0.10
         gamma_C = 0.08
         curr_t = 0.0
 
         for _ in range(n_steps):
-            # Dynamic homeostatic settling
             e_curr = self._m_homeo[0]
             c_curr = self._m_homeo[1]
             t_curr = self._m_homeo[2]
@@ -1150,6 +1202,30 @@ class EmotionCore:
                 traj_stabilities.append(float(self._m_homeo[3]))
                 pad_history.append(np.array([pad_snap.pleasure, pad_snap.arousal, pad_snap.dominance]))
                 slow_history.append(s_step.copy())
+
+        # ── Case 2: Intermediate Relaxation (tau_candidate < duration_s < tau_asymptotic) ──
+        if duration_s > tau_candidate:
+            rem_time = duration_s - tau_candidate
+            tau_decay = self._config.tau_slow_decay
+            decay_factor = np.exp(-rem_time / tau_decay) if tau_decay > 0 else 0.0
+            with self._step_lock:
+                s_cur = self._s_slow.copy()
+                s_rec = s_eff + (s_cur - s_eff) * decay_factor
+                self._h = np.zeros(self._config.hidden_dim, dtype=np.float64)
+                self._s_slow = np.clip(s_rec, -1.0, 1.0)
+                self._m_homeo = np.array([1.0, 0.0, 0.0, 1.0], dtype=np.float64)
+                with self._state_lock:
+                    pad_snap = self._project_to_pad(self._h, self._s_slow)
+                    self._pad_snapshot = pad_snap
+
+            if record_trajectory:
+                traj_times.append(duration_s)
+                traj_energies.append(1.0)
+                traj_loads.append(0.0)
+                traj_tensions.append(0.0)
+                traj_stabilities.append(1.0)
+                pad_history.append(np.array([pad_snap.pleasure, pad_snap.arousal, pad_snap.dominance]))
+                slow_history.append(self._s_slow.copy())
 
         ht = HomeostaticTrajectory(
             timestamps=traj_times,

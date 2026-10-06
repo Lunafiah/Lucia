@@ -79,13 +79,21 @@ from src.core.orchestrator.policies import (
     PlasticityPolicy,
     SurpriseModulationPolicy,
 )
-from src.core.emotion.persistence import DEFAULT_DYNAMICAL_STATE_PATH
+from src.core.emotion.persistence import (
+    DEFAULT_DYNAMICAL_STATE_PATH,
+    DEFAULT_EPOCH_MANIFEST_PATH,
+    EpochManifest,
+    load_epoch_manifest,
+    save_epoch_manifest,
+    verify_and_reconcile_stores,
+)
 from src.core.orchestrator.prompt_assembler import PromptAssembler
 from src.core.relationship.persistence import DEFAULT_RELATIONSHIP_PATH
 from src.core.relationship.signals import RelationshipSignal, RelationshipSignalType
 from src.core.relationship.state import RelationshipState
 from src.core.relationship.updater import RelationshipUpdater
 from src.core.safety.boundary_layer import BoundaryLayer
+from src.core.storage.history_store import ChatHistoryStore
 
 logger = logging.getLogger(__name__)
 
@@ -147,6 +155,8 @@ class CognitiveOrchestrator:
         n_ctx: int = 2048,
         max_history_turns: int = 20,
         fallback_response: str = "...",
+        epoch_manifest_path: Optional[Union[str, Path]] = None,
+        initial_history: Optional[List[Tuple[str, str]]] = None,
     ) -> None:
         # Subsystems
         self._stimulus_processor = stimulus_processor
@@ -186,9 +196,15 @@ class CognitiveOrchestrator:
         self._n_ctx = n_ctx
         self._max_history_turns = max_history_turns
         self._fallback_response = fallback_response
+        self._epoch_manifest_path = Path(epoch_manifest_path) if epoch_manifest_path else None
+        self._current_epoch = 0
+        if self._epoch_manifest_path is not None and self._epoch_manifest_path.exists():
+            man = load_epoch_manifest(self._epoch_manifest_path)
+            if man is not None:
+                self._current_epoch = man.epoch_id
 
         # Mutable orchestrator state (only these — no subsystem state copies)
-        self._history: List[Tuple[str, str]] = []
+        self._history: List[Tuple[str, str]] = list(initial_history) if initial_history else []
         self._degraded: bool = False
         self._shutdown: bool = False
 
@@ -648,6 +664,7 @@ class CognitiveOrchestrator:
             logger.warning("CognitiveOrchestrator: Phase 21 consolidation experience recording failed", exc_info=True)
 
         # 16.3 Structured Relationship Update (Points 1 & 3)
+        next_epoch = self._current_epoch + 1
         rel_state_updated = rel_state
         if self._relationship_updater is not None:
             try:
@@ -655,7 +672,7 @@ class CognitiveOrchestrator:
                 if prediction_error < 0.30 and markers.tension < 0.40:
                     signal_type = RelationshipSignalType.COLLABORATIVE_SUCCESS
                 sig = RelationshipSignal.create(signal_type, intensity=0.5)
-                rel_state_updated, _ = self._relationship_updater.step(signal=sig)
+                rel_state_updated, _ = self._relationship_updater.step(signal=sig, epoch_id=next_epoch)
             except Exception:
                 logger.error(
                     "CognitiveOrchestrator: relationship update step failed; continuing",
@@ -679,13 +696,28 @@ class CognitiveOrchestrator:
         if len(self._history) > max_pairs:
             self._history = self._history[-max_pairs:]
 
-        # 16.5 F-02: Checkpoint persistent dynamical state
+        # 16.5 F-02: Checkpoint persistent dynamical state & Epoch Commit Barrier
         if hasattr(self._emotion_core, "checkpoint"):
             try:
-                self._emotion_core.checkpoint()
+                self._emotion_core.checkpoint(epoch_id=next_epoch)
             except Exception:
                 logger.warning(
                     "CognitiveOrchestrator: dynamical state checkpointing failed; continuing",
+                    exc_info=True,
+                )
+
+        if self._epoch_manifest_path is not None:
+            try:
+                manifest = EpochManifest(
+                    epoch_id=next_epoch,
+                    t_checkpoint=time.time(),
+                    stores={"relationship": next_epoch, "dynamical_state": next_epoch},
+                )
+                save_epoch_manifest(manifest, filepath=self._epoch_manifest_path)
+                self._current_epoch = next_epoch
+            except Exception:
+                logger.warning(
+                    "CognitiveOrchestrator: epoch manifest commit failed; continuing",
                     exc_info=True,
                 )
 
@@ -792,19 +824,66 @@ def build_cognitive_orchestrator(
     llm_backend: Optional[LLMBackend] = None,
     relationship_storage_path: Optional[Union[str, Path]] = DEFAULT_RELATIONSHIP_PATH,
     dynamical_storage_path: Optional[Union[str, Path]] = DEFAULT_DYNAMICAL_STATE_PATH,
+    epoch_manifest_path: Optional[Union[str, Path]] = None,
+    chat_history_path: Optional[Union[str, Path]] = None,
 ) -> CognitiveOrchestrator:
     """
     Construct a fully wired CognitiveOrchestrator from a MemoryOrchestratorConfig.
 
-    This factory replicates the wiring that was previously scattered across the
-    inheritance chain (Orchestrator, MemoryAugmentedOrchestrator,
-    InstrumentedOrchestrator) and consolidates it in one place.
+    Implements the Ratified F-02 Inverted Startup Sequence:
+    1. Read and reconcile commit barrier (epoch_manifest.json) across stores.
+    2. Construct/load RelationshipUpdater first to obtain authoritative R_t.
+    3. Construct EmotionCore with auto_restore=False.
+    4. Inject R_t into EmotionCore before recovery (critical invariant: no stranger R_0 recovery).
+    5. Restore dynamical checkpoint and apply two-stage physical downtime recovery.
+    6. Reconstruct working context _history from trailing K turns of chat_history.json.
     """
+    rel_path = Path(relationship_storage_path) if relationship_storage_path else DEFAULT_RELATIONSHIP_PATH
+    dyn_path = Path(dynamical_storage_path) if dynamical_storage_path else DEFAULT_DYNAMICAL_STATE_PATH
+    man_path = Path(epoch_manifest_path) if epoch_manifest_path else (dyn_path.parent / "epoch_manifest.json")
+
+    # 1. Commit Barrier & Consistency Detection reconciliation
+    verify_and_reconcile_stores(
+        relationship_path=rel_path,
+        dynamical_path=dyn_path,
+        manifest_path=man_path,
+    )
+
+    # 2. Authoritative Tier 1 Relational Invariants loaded FIRST
+    if relationship_updater is None:
+        relationship_updater = RelationshipUpdater(
+            storage_path=rel_path
+        )
+    R_t = relationship_updater.get_state().to_array()
+
+    # 3. Instantiate EmotionCore without auto-restore
     stimulus_processor = StimulusProcessor(config.to_stimulus_config())
     emotion_core = EmotionCore(
         config.to_emotion_config(),
-        storage_path=dynamical_storage_path,
+        storage_path=dyn_path,
+        auto_restore=False,
     )
+
+    # 4. Inject authoritative relational context BEFORE downtime recovery
+    emotion_core.update_relationship_context(R_t)
+
+    # 5. Restore dynamical checkpoint & apply two-stage hybrid recovery
+    emotion_core.restore_from_checkpoint(apply_elapsed_time=True)
+
+    # 6. Reconstruct working memory context from chat_history.json
+    initial_history: List[Tuple[str, str]] = []
+    if chat_history_path is not None:
+        c_path = Path(chat_history_path)
+        if c_path.exists():
+            try:
+                c_store = ChatHistoryStore(file_path=str(c_path))
+                k_turns = getattr(config, "context_history_turns", 10)
+                recent = c_store.get_history(limit=k_turns * 2)
+                for t in recent:
+                    initial_history.append((str(t.get("role", "user")), str(t.get("content", ""))))
+            except Exception as e:
+                logger.warning("CognitiveOrchestrator: failed to reseed working history: %s", e)
+
     homeostatic_engine = HomeostaticEngine(HomeostaticConfig())
     active_inference = ActiveInferenceEngine(ActiveInferenceConfig())
     affective_memory = AffectiveMemory(config.to_affective_memory_config())
@@ -829,11 +908,6 @@ def build_cognitive_orchestrator(
             exc_info=True,
         )
 
-    if relationship_updater is None:
-        relationship_updater = RelationshipUpdater(
-            storage_path=relationship_storage_path
-        )
-
     return CognitiveOrchestrator(
         stimulus_processor=stimulus_processor,
         emotion_core=emotion_core,
@@ -856,4 +930,6 @@ def build_cognitive_orchestrator(
         n_ctx=config.n_ctx,
         max_history_turns=config.max_history_turns,
         fallback_response=config.fallback_response,
+        epoch_manifest_path=man_path,
+        initial_history=initial_history,
     )
