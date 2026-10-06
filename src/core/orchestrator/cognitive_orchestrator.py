@@ -38,7 +38,8 @@ import logging
 import threading
 import time
 import uuid
-from typing import List, Optional, Tuple
+from pathlib import Path
+from typing import List, Optional, Tuple, Union
 
 import numpy as np
 
@@ -79,6 +80,7 @@ from src.core.orchestrator.policies import (
     SurpriseModulationPolicy,
 )
 from src.core.orchestrator.prompt_assembler import PromptAssembler
+from src.core.relationship.persistence import DEFAULT_RELATIONSHIP_PATH
 from src.core.relationship.signals import RelationshipSignal, RelationshipSignalType
 from src.core.relationship.state import RelationshipState
 from src.core.relationship.updater import RelationshipUpdater
@@ -772,6 +774,7 @@ def build_cognitive_orchestrator(
     comm_policy: Optional[CommunicationPolicy] = None,
     expression_policy: Optional[ExpressionPolicy] = None,
     llm_backend: Optional[LLMBackend] = None,
+    relationship_storage_path: Optional[Union[str, Path]] = DEFAULT_RELATIONSHIP_PATH,
 ) -> CognitiveOrchestrator:
     """
     Construct a fully wired CognitiveOrchestrator from a MemoryOrchestratorConfig.
@@ -804,6 +807,11 @@ def build_cognitive_orchestrator(
             "CognitiveOrchestrator: LNNTrainer unavailable (torch/torchdiffeq "
             "not installed); plasticity disabled.",
             exc_info=True,
+        )
+
+    if relationship_updater is None:
+        relationship_updater = RelationshipUpdater(
+            storage_path=relationship_storage_path
         )
 
     return CognitiveOrchestrator(
