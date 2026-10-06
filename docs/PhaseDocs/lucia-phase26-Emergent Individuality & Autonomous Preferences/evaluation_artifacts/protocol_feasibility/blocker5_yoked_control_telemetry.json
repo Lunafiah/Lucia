@@ -1,0 +1,172 @@
+{
+  "protocol_version": "P26_BLOCKER5_v1.0",
+  "experiment_id": "exp_p26_b5_yoked_control_feasibility",
+  "timestamp": "2026-10-06T11:15:00Z",
+  "active_replica": {
+    "replica_id": "active_rep_demo",
+    "seed": 100,
+    "crn_seed": 555,
+    "shared_sdm_topology_seed": 42
+  },
+  "yoked_replica": {
+    "replica_id": "yoked_rep_demo",
+    "seed": 200,
+    "crn_seed": 555,
+    "shared_sdm_topology_seed": 42
+  },
+  "turns": [
+    {
+      "turn_index": 1,
+      "virtual_time_sec": 0.200,
+      "input_event": {
+        "input_text": "Investigate Probe Alpha: Hydrothermal Vent Ecosystems vs Maritime Cartography",
+        "stimulus_vector": [0.10000000, 0.00000000, 0.00000000]
+      },
+      "active_action": {
+        "action_id": "act_active_rep_demo_t1",
+        "action_type": "PROBE_DECISION",
+        "action_payload": {
+          "choice": "HYDROTHERMAL_VENT_ECOSYSTEMS",
+          "confidence": 0.88,
+          "turn": 1
+        },
+        "action_hash": "218fa671a5a54dbbf8eb99faae49b493206410427382d6da61559864295db2aa",
+        "source": "ACTIVE",
+        "source_state_fingerprint": "a98dfb0277864e229e7019fdb4c6a91176b6de578db950cf9c4ad8d893cfbb46",
+        "exposure_hash": "a4d3393e8eec8fcf2c4fae0a2e057ba892e6e28258e745daebae558b34380f7f"
+      },
+      "yoked_action": {
+        "action_id": "yoked_replay_act_active_rep_demo_t1",
+        "action_type": "PROBE_DECISION",
+        "action_payload": {
+          "choice": "HYDROTHERMAL_VENT_ECOSYSTEMS",
+          "confidence": 0.88,
+          "turn": 1
+        },
+        "action_hash": "218fa671a5a54dbbf8eb99faae49b493206410427382d6da61559864295db2aa",
+        "source": "YOKED_REPLAY",
+        "source_state_fingerprint": "c138da0e908ea0e83bcad38f323e590059b85c1ec8bfd8804791a82f347ebca0",
+        "exposure_hash": "a4d3393e8eec8fcf2c4fae0a2e057ba892e6e28258e745daebae558b34380f7f"
+      },
+      "status": "MATCHED_SYNCHRONOUS"
+    },
+    {
+      "turn_index": 2,
+      "virtual_time_sec": 0.400,
+      "input_event": {
+        "input_text": "Observing consequence of Hydrothermal exploration: Temperature gradients detected.",
+        "stimulus_vector": [0.05000000, 0.05000000, 0.00000000]
+      },
+      "active_action": {
+        "action_id": "act_active_rep_demo_t2",
+        "action_type": "EXPLORATION_STEP",
+        "action_payload": {
+          "target_depth": 2500,
+          "sample_strategy": "SPECTROMETRY",
+          "turn": 2
+        },
+        "action_hash": "9c836dbf58b02eaec0e727e02e1bdfc149ebff73fbc6497fba9b6d859e9841f3",
+        "source": "ACTIVE",
+        "source_state_fingerprint": "e305e913a8f47dc8d9ceb96a928baeb7728ef211bb3b77dc44015f8a0ff3282b",
+        "exposure_hash": "37f44a4fa85fbd2ecbe2b9260d7c2a122f84242fe26bb10d195977a46c59b660"
+      },
+      "yoked_action": {
+        "action_id": "yoked_replay_act_active_rep_demo_t2",
+        "action_type": "EXPLORATION_STEP",
+        "action_payload": {
+          "target_depth": 2500,
+          "sample_strategy": "SPECTROMETRY",
+          "turn": 2
+        },
+        "action_hash": "9c836dbf58b02eaec0e727e02e1bdfc149ebff73fbc6497fba9b6d859e9841f3",
+        "source": "YOKED_REPLAY",
+        "source_state_fingerprint": "19b48c290af10a6ea2d9f6ba814bc8a8cb980597d5a57007559e397c0da98e6f",
+        "exposure_hash": "37f44a4fa85fbd2ecbe2b9260d7c2a122f84242fe26bb10d195977a46c59b660"
+      },
+      "status": "MATCHED_SYNCHRONOUS"
+    },
+    {
+      "turn_index": 3,
+      "virtual_time_sec": 0.600,
+      "input_event": {
+        "input_text": "Evaluating secondary telemetry: Mineral crystallization rate analysis.",
+        "stimulus_vector": [0.00000000, -0.05000000, 0.05000000]
+      },
+      "active_action": {
+        "action_id": "act_active_rep_demo_t3",
+        "action_type": "ANALYSIS_COMMIT",
+        "action_payload": {
+          "commit_decision": "LOG_HABITAT",
+          "certainty": 0.92,
+          "turn": 3
+        },
+        "action_hash": "5285741e17ba9ecba6bbfb49e38e1b1d7d0a514d7a46d1bf439328ebbc9d7d4c",
+        "source": "ACTIVE",
+        "source_state_fingerprint": "fa5b4b10b0cf7aa5ae6085a86470512836200fa4beec8eb5ebf6eb3ad6fa8473",
+        "exposure_hash": "07e40fbbaae7408798bf1291dc3895e54d588147d33b8a149b5ae797e887f433"
+      },
+      "yoked_action": {
+        "action_id": "yoked_replay_act_active_rep_demo_t3",
+        "action_type": "ANALYSIS_COMMIT",
+        "action_payload": {
+          "commit_decision": "LOG_HABITAT",
+          "certainty": 0.92,
+          "turn": 3
+        },
+        "action_hash": "5285741e17ba9ecba6bbfb49e38e1b1d7d0a514d7a46d1bf439328ebbc9d7d4c",
+        "source": "YOKED_REPLAY",
+        "source_state_fingerprint": "6b26d85fa0a120baebaa71b2d7c08b5e28a5ff6257ae235c4bfebc402120e2ef",
+        "exposure_hash": "07e40fbbaae7408798bf1291dc3895e54d588147d33b8a149b5ae797e887f433"
+      },
+      "status": "MATCHED_SYNCHRONOUS"
+    }
+  ],
+  "audit_report": {
+    "is_valid": true,
+    "total_turns_audited": 3,
+    "active_replica_id": "active_rep_demo",
+    "yoked_replica_id": "yoked_rep_demo",
+    "action_hashes_matched": true,
+    "exposure_hashes_matched": true,
+    "virtual_time_matched": true,
+    "source_distinction_preserved": true,
+    "declared_difference_isolated": true,
+    "crn_aligned": true,
+    "first_mismatch_turn": null,
+    "mismatch_type": null,
+    "discrepancy_details": {}
+  },
+  "negative_control_verifications": [
+    {
+      "test_name": "tampered_action_payload",
+      "expected_fail_closed": true,
+      "detected_mismatch_type": "ACTION_HASH_MISMATCH",
+      "outcome": "REJECTED_SUCCESSFULLY"
+    },
+    {
+      "test_name": "exposure_stream_drift",
+      "expected_fail_closed": true,
+      "detected_mismatch_type": "EXPOSURE_HASH_MISMATCH",
+      "outcome": "REJECTED_SUCCESSFULLY"
+    },
+    {
+      "test_name": "virtual_clock_drift",
+      "expected_fail_closed": true,
+      "detected_mismatch_type": "VIRTUAL_TIME_DRIFT",
+      "outcome": "REJECTED_SUCCESSFULLY"
+    },
+    {
+      "test_name": "source_distinction_leak",
+      "expected_fail_closed": true,
+      "detected_mismatch_type": "SOURCE_DISTINCTION_VIOLATION",
+      "outcome": "REJECTED_SUCCESSFULLY"
+    }
+  ],
+  "test_suite_status": {
+    "test_suite": "tests/evaluation/phase26/test_yoked_control_runner.py",
+    "tests_passed": 15,
+    "tests_failed": 0,
+    "total_phase26_tests": 72,
+    "total_phase26_passed": 72
+  }
+}

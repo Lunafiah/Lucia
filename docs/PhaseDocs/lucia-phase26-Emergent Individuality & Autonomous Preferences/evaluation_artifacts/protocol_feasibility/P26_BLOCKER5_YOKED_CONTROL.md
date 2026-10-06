@@ -1,0 +1,295 @@
+# P26 Blocker 5: Yoked-Control Runner Feasibility Report
+
+**Phase:** P26 — Emergent Individuality & Autonomous Preferences  
+**Stage:** Research Protocol Feasibility & Infrastructure (Blocker 5 Resolution)  
+**Document Status:** FORMAL RESEARCH INFRASTRUCTURE RECORD  
+**File Path:** `docs/PhaseDocs/lucia-phase26-Emergent Individuality & Autonomous Preferences/evaluation_artifacts/protocol_feasibility/P26_BLOCKER5_YOKED_CONTROL.md`  
+**Infrastructure Modules:**
+- Action Ledger & Provenance Schema: [`tests/evaluation/phase26/action_ledger.py`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation/phase26/action_ledger.py)
+- Yoked-Control Runner & Contingency Validator: [`tests/evaluation/phase26/yoked_control_runner.py`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation/phase26/yoked_control_runner.py)  
+**Verification Suites:**
+- [`tests/evaluation/phase26/test_yoked_control_runner.py`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation/phase26/test_yoked_control_runner.py) (15/15 Tests A–O PASSED)
+- Full Phase 26 Test Suite (All 72/72 Tests PASSED)  
+**Raw Infrastructure Telemetry:** [`blocker5_yoked_control_telemetry.json`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PhaseDocs/lucia-phase26-Emergent%20Individuality%20&%20Autonomous%20Preferences/evaluation_artifacts/protocol_feasibility/blocker5_yoked_control_telemetry.json)  
+**Date:** 2026-10-06  
+**Activation Status:** LOCKED (Genesis gate bit-exact preserved)  
+**Production Runtime Status:** UNTOUCHED (`src/core/**` diff = 0, `electron/**` diff = 0, `data/profile.json` diff = 0)  
+
+---
+
+## 1. Executive Summary & Verdict
+
+### 1.1 Gate Verdict: **BLOCKER 5 RESOLVED**
+
+```text
+┌────────────────────────────────────────────────────────────────────────┐
+│ P26 BLOCKER 5 RESOLUTION STATUS:                                       │
+│                                                                        │
+│                    [ BLOCKER 5 RESOLVED ]                              │
+│                                                                        │
+│ • Active Action Capture & Serialization:         VALIDATED (Canonical) │
+│ • Yoked Replay & Synchronization:                BIT-EXACT ALIGNMENT   │
+│ • Action Ledger Cryptographic Integrity:         SHA-256 SIGNED        │
+│ • Action-Contingency Provenance Validation:      FAIL-CLOSED ENFORCED  │
+│ • Isolation of Declared Distinction (Source):    STRICTLY ISOLATED     │
+│ • Automated Verification Tests (Matrix A–O):     15/15 PASSED          │
+│ • Total Phase 26 Test Suite:                     72/72 PASSED (11.3s)  │
+│ • Production Codebase / Genesis State:           UNTOUCHED (0 diff)    │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+> [!CAUTION]
+> **MANDATORY SCIENTIFIC & EPISTEMIC BOUNDARY:**  
+> **"Yoked-control infrastructure validates the experimental apparatus for distinguishing action-contingent history from externally replayed action history; it does not itself establish Claim C3."**
+> 
+> "BLOCKER 5 RESOLVED" certifies strictly that:
+> 1. Active replica actions can be captured endogenously, serialized canonically, and hashed deterministically;
+> 2. Yoked replicas can receive matching sensory exposures while externally replaying the active action sequence;
+> 3. The `ActionContingencyValidator` reliably distinguishes endogenous action generation from external replay and fails closed upon drift or tampering;
+> 4. All prior Blocker 2, 3, and 4 invariants remain regression-free.
+> 
+> It DOES NOT mean:
+> 1. Claim C3 (*History Endogeneity*) has been demonstrated;
+> 2. Differentiation between active and yoked replicas has been measured or proven;
+> 3. Action-contingency causes individuality or preference in Lucia;
+> 4. An active or yoked companion is authorized for production deployment.
+
+---
+
+## 2. Objective & C3 Construct Boundary
+
+### 2.1 Research Objective
+In the [P26 Step 6 Protocol Validation Gate Review](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PhaseDocs/lucia-phase26-Emergent%20Individuality%20&%20Autonomous%20Preferences/evaluation_artifacts/protocol_feasibility/P26_STEP6_PROTOCOL_VALIDATION_GATE.md), **Criterion E (*Multi-Turn Matched-Exposure Control*)** and **Criterion J (*Epistemic Calibration*)** require an empirical mechanism to test **Claim C3 — History Endogeneity**:
+$$\text{Claim C3: } \Delta_{\text{differentiation}} = f(\text{Action-Contingent History}) \ne f(\text{Passive Sensory Stream Alone})$$
+
+Without a yoked-control runner, any divergence observed in multi-turn replicas (Claim C2) could be attributed purely to the passive accumulation of environmental inputs rather than the system's own endogenous agency or choice contingency.
+
+### 2.2 Construct Boundary
+- **What Yoked Control Is:** A methodological control paradigm adapted from behavioral conditioning where a paired subject (YOKED) receives the exact physical and informational events generated by an active subject (ACTIVE), without the yoked subject emitting the underlying choices itself.
+- **What Yoked Control Proves at Blocker 5:** Feasibility of the measurement harness only. Claim C3 remains completely unproven until a formal, preregistered empirical trial is executed.
+
+---
+
+## 3. Yoked-Control Experimental Design
+
+The architecture pairs two isolated research replicas under synchronous virtual clocks:
+
+```text
+               Active Replica                                Yoked Replica
+           (Endogenous Generation)                        (External Replay)
+                     │                                            │
+                     ▼                                            ▼
+           Input Exposure E_t                            Input Exposure E_t
+           [Sensory / Prompt]                            [Matched Bit-Exact]
+                     │                                            │
+                     ▼                                            ▼
+              Decision Process                             Passive Step
+              (Limbic + SLM)                             (ODE + Memory)
+                     │                                            │
+                     ▼                                            ▼
+               Action A_t                                   Replayed A_t
+            [source = ACTIVE]                           [source = YOKED_REPLAY]
+                     │                                            ▲
+                     │          Action Ledger Record              │
+                     └────────────────────────────────────────────┘
+                               (SHA-256 Verified)
+                                       │
+                                       ▼
+                         Future Environment State E_{t+1}
+```
+
+### Controlled Variables:
+- **Exposure stream ($E_t$):** Inputs presented to both replicas match bit-exact ($\mathcal{H}(E_A) == \mathcal{H}(E_Y)$).
+- **Virtual clock time ($t_v$):** Synchronous execution ($\Delta t < 10^{-9}\text{s}$).
+- **Action payload & hash ($A_t$):** Identical canonical representation.
+- **Order & turn sequence:** $t = 1, 2, \dots, n$ in strict lockstep.
+- **CRN Configuration:** Shared pseudorandom seed sequence.
+
+### Manipulated Independent Variable:
+- **Action Source:** `source = ActionSource.ACTIVE` vs `source = ActionSource.YOKED_REPLAY`.
+
+---
+
+## 4. Active Action Capture
+
+When the active replica executes turn $t$:
+1. The replica processes input stimulus $E_t$ through limbic ODE integration and language modeling.
+2. An endogenous decision function evaluates replica state and yields a structured action dictionary:
+   $$\text{Decision}(S_t, E_t) \rightarrow \{\text{type}: \tau, \text{payload}: \mathcal{P}\}$$
+3. The action payload is canonically serialized and hashed:
+   $$\text{action\_hash} = \text{SHA-256}(\text{CanonicalJSON}(\tau, \mathcal{P}))$$
+4. The action is recorded in the active [`ActionLedger`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation/phase26/action_ledger.py) with:
+   - `source = ActionSource.ACTIVE`
+   - `source_state_fingerprint = StateFingerprint(active, t)`
+   - `exposure_hash = ExposureHash(active, t)`
+
+---
+
+## 5. Yoked Action Replay
+
+When the yoked replica executes turn $t$:
+1. The yoked runner retrieves the corresponding active action record from the active ledger.
+2. The runner supplies the identical input event $E_t$ to the yoked replica.
+3. Before admitting the replayed action into the yoked ledger, the runner verifies:
+   - $t_{\text{yoked}} == t_{\text{active}}$
+   - $\text{Time}(t_{\text{yoked}}) == \text{Time}(t_{\text{active}})$
+   - $\text{ExposureHash}(E_{\text{yoked}}) == \text{ExposureHash}(E_{\text{active}})$
+   - $\text{active\_record.source} == \text{ACTIVE}$
+4. The replayed action is appended to the yoked ledger with:
+   - `source = ActionSource.YOKED_REPLAY`
+   - `action_hash = active_record.action_hash`
+   - `source_turn = active_record.turn_index`
+
+---
+
+## 6. Action Ledger Schema (`P26_ACTION_v1.0`)
+
+The [`YokedActionRecord`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation/phase26/action_ledger.py) schema:
+
+```python
+@dataclass
+class YokedActionRecord:
+    experiment_id: str             # Unique experiment identifier
+    active_replica_id: str         # Source active replica ID
+    yoked_replica_id: Optional[str]# Target yoked replica ID
+    turn_index: int                # Turn coordinate t
+    virtual_time_sec: float        # Virtual clock timestamp
+    action_id: str                 # Unique action ID
+    action_type: str               # Semantic category (e.g., PROBE_DECISION)
+    action_payload: Dict[str, Any] # Canonical dictionary
+    action_hash: str               # Deterministic SHA-256 of canonical JSON
+    source: ActionSource           # ACTIVE | YOKED_REPLAY
+    source_turn: int               # Turn index of original emission
+    source_state_fingerprint: str  # Replica state fingerprint at emission
+    exposure_hash: str             # Hash of associated input event
+    provenance_version: str        # "P26_ACTION_v1.0"
+    crn_identifier: Optional[str]  # CRN configuration metadata
+```
+
+---
+
+## 7. Provenance Model & Hashing Guarantees
+
+1. **Canonical JSON Serialization:** Dictionaries are sorted recursively by key, numbers formatted deterministically, and compact separators `(",", ":")` used to ensure bit-exact cross-platform string hashing.
+2. **Provenance Record Fingerprint:** `compute_record_hash()` hashes the concatenation of all metadata fields. Altering any field (turn, time, source, payload) invalidates the signature.
+3. **Immutability:** Internal records are deep-copied on ingestion and export, preventing in-memory object mutation leaks.
+
+---
+
+## 8. Equivalence & Matching Validators
+
+The [`ActionContingencyValidator`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation/phase26/yoked_control_runner.py) audits paired executions across six orthogonal axes:
+
+1. **Exposure Equivalence:** Verifies $\text{ExposureHash}_A(t) == \text{ExposureHash}_Y(t)$ for all $t$.
+2. **Virtual-Time Synchronization:** Verifies $|t_{v, A} - t_{v, Y}| \le 10^{-9}\text{s}$.
+3. **Action Equivalence:** Verifies $\text{ActionHash}_A(t) == \text{ActionHash}_Y(t)$ and $\text{Payload}_A(t) == \text{Payload}_Y(t)$.
+4. **Sequence Monotonicity:** Verifies turn indices advance strictly $1, 2, \dots, n$ with zero duplicates or gaps.
+5. **CRN Alignment:** Verifies CRN seed parameters match across paired replicas.
+6. **Isolation of Declared Difference:** Confirms that across all audited records, the **sole** detected difference is `source == ACTIVE` vs `source == YOKED_REPLAY`.
+
+---
+
+## 9. Fail-Closed Conditions
+
+The runner and validator fail closed under the following conditions:
+
+| Failure Mode | Trigger Condition | Exception / Audit Status |
+|---|---|---|
+| **Action Hash Corruption** | Bit-flip in payload or mismatched signature | `ActionLedgerCorruptionError` / `ACTION_HASH_MISMATCH` |
+| **Wrong Turn Index** | Replaying action with mismatched turn | `ActionSequenceError` / `TURN_INDEX_MISMATCH` |
+| **Wrong Source Declaration** | Replaying action with source $\ne$ ACTIVE | `ActionMismatchError` / `SOURCE_DISTINCTION_VIOLATION` |
+| **Missing Action** | Active steps without corresponding yoked step | Audit returns `TURN_COUNT_MISMATCH` |
+| **Duplicate Action** | Re-recording turn index or action ID | `ActionSequenceError` |
+| **Exposure Mismatch** | Disparate input presented to yoked replica | `ExposureMismatchError` / `EXPOSURE_HASH_MISMATCH` |
+| **Virtual Clock Drift** | Clock coordinates deviate $> 10^{-9}\text{s}$ | `VirtualTimeMismatchError` / `VIRTUAL_TIME_DRIFT` |
+| **Ledger Tampering** | Post-execution mutation of records | `RECORD_INTEGRITY_COMPROMISED` |
+
+---
+
+## 10. Test Matrix (Matrix A–O)
+
+All 15 required verification tests are implemented in [`test_yoked_control_runner.py`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/evaluation/phase26/test_yoked_control_runner.py):
+
+| Test ID | Test Target | Verification Description | Result |
+|:---:|---|---|:---:|
+| **A** | **Active Action Capture** | Generates endogenous action, checks valid payload, source=ACTIVE, valid hash. | **PASS** |
+| **B** | **Yoked Action Replay** | Replays action into yoked replica, checks identical payload/hash, source=YOKED_REPLAY. | **PASS** |
+| **C** | **Action Hash Integrity** | Validates canonical hashing; verifies payload tampering is detected. | **PASS** |
+| **D** | **Wrong-Turn Rejection** | Replaying an action with mismatched turn index raises `ActionSequenceError`. | **PASS** |
+| **E** | **Wrong-Source Rejection** | Replaying a record with source $\ne$ ACTIVE raises `ActionMismatchError`. | **PASS** |
+| **F** | **Missing-Action Rejection** | Asymmetric step count triggers fail-closed `TURN_COUNT_MISMATCH`. | **PASS** |
+| **G** | **Duplicate-Action Rejection** | Duplicate turn index or action ID raises `ActionSequenceError`. | **PASS** |
+| **H** | **Exposure Mismatch Rejection** | Input divergence between active and yoked raises `ExposureMismatchError`. | **PASS** |
+| **I** | **Virtual-Time Mismatch Rejection** | Clock drift between active and yoked raises `VirtualTimeMismatchError`. | **PASS** |
+| **J** | **Provenance Chain Validation** | `compute_record_hash()` changes upon any field alteration. | **PASS** |
+| **K** | **Distinction Preservation** | Audit confirms all fields matched except declared `source` distinction. | **PASS** |
+| **L** | **Deterministic Replay** | Identical seeds yield bit-exact identical action ledgers across runs. | **PASS** |
+| **M** | **Tampered Ledger Rejection** | Post-execution payload modification triggers `RECORD_INTEGRITY_COMPROMISED`. | **PASS** |
+| **N** | **B2 Regression Check** | `ReplicaEnsembleManager` multi-replica isolation remains fully functional. | **PASS** |
+| **O** | **B4 Regression Check** | `StateSnapshotter` snapshot/restore operates seamlessly on yoked replicas. | **PASS** |
+
+---
+
+## 11. Empirical Verification Results & Telemetry Summary
+
+From [`blocker5_yoked_control_telemetry.json`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PhaseDocs/lucia-phase26-Emergent%20Individuality%20&%20Autonomous%20Preferences/evaluation_artifacts/protocol_feasibility/blocker5_yoked_control_telemetry.json):
+
+- **Trial Identification:** `exp_p26_b5_yoked_control_feasibility`
+- **Total Turns Audited:** 3 Turns ($t = 0.200\text{s}, 0.400\text{s}, 0.600\text{s}$)
+- **Action Hashes Matched:** **TRUE (Bit-Exact)**
+- **Exposure Hashes Matched:** **TRUE (Bit-Exact)**
+- **Virtual Time Matched:** **TRUE (0.000s drift)**
+- **Source Distinction Preserved:** **TRUE** (`ACTIVE` vs `YOKED_REPLAY`)
+- **Declared Difference Isolated:** **TRUE** (Zero undeclared variance)
+- **CRN Aligned:** **TRUE** (`seed=555`)
+- **Negative Controls:** All 4 corruption/tampering probes were rejected fail-closed.
+
+### Test Suite Execution Summary:
+```text
+============================= 72 passed in 11.25s =============================
+- Determinism foundations:                         5/5 PASSED
+- Evaluative probe inventory & factorial matrix:   5/5 PASSED
+- Blocker 3 Dynamic chaos baseline:                4/4 PASSED
+- Blocker 2 Replica ensemble manager:              7/7 PASSED
+- Blocker 4 State snapshotter & replay:           15/15 PASSED
+- Blocker 5 Yoked-control runner (A–O):           15/15 PASSED
+- Parser grammar & contamination guards:           3/3 PASSED
+- Probe extractor:                                 7/7 PASSED
+- Step 4 Social framing metrics:                   6/6 PASSED
+- Step 5 Planted sensitivity:                      5/5 PASSED
+```
+
+---
+
+## 12. Limitations & Epistemic Boundaries
+
+1. **Test-Only Infrastructure:** Yoked control is strictly confined to RAM-resident evaluation fixtures. It has zero interaction with production runtime or persistent user state (INV-1).
+2. **CRN Alignment Boundary:** Common Random Numbers (CRN) reduce variance across paired evaluations but **do not constitute causal identification by themselves**.
+3. **No Claim C3 Result:** The runner establishes that action-contingency can be audited; it does not measure whether Lucia demonstrates history endogeneity.
+
+---
+
+## 13. What This Infrastructure Does NOT Prove
+
+1. It does **NOT** prove Claim C3 (*History Endogeneity*).
+2. It does **NOT** prove that active replicas differentiate more than yoked replicas.
+3. It does **NOT** demonstrate autonomous individuality or emergent preferences.
+4. It does **NOT** authorize any change to production limbic or language pipelines.
+
+---
+
+## 14. Final Safety & Governance Audit
+
+- `src/core/**` diff: **`0 lines`** (Untouched)
+- `electron/**` diff: **`0 lines`** (Untouched)
+- `data/profile.json`: **`{"is_onboarded": false}`** (Preserved bit-exact, INV-8)
+- Live user data: **Zero accessed or modified**
+- Genesis Gate: **LOCKED**
+
+---
+
+## 15. Gate Verdict
+
+$$\mathbf{BLOCKER\;5\;RESOLVED}$$
+
+*(Notice: "BLOCKER 5 RESOLVED" certifies strictly that the test-only yoked-control runner and action-contingency validator accurately capture active actions, execute verified yoked replays, enforce fail-closed cryptographic audits, and preserve the declared source distinction without regressions. It does not establish Claim C3, does not prove emergent individuality, and authorizes zero changes to production code).*

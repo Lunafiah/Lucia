@@ -25,7 +25,7 @@ Lucia's developmental trajectory is structured across distinct research, archite
 │               (P23-A..D Canonical/Validated; P23-E..H Implemented/Frozen; P23-I Closed) │
 │ Phase 24:     Affective Communication Adaptation (Implemented / Closed)│
 │ Phase 25:     Temporal Embodiment & Social Feedback (Planned)          │
-│ Phase 26:     Emergent Individuality & Autonomous Preferences (Planned)│
+│ Phase 26:     Emergent Individuality & Autonomous Preferences (Trial Completed / Result Frozen / Not Promoted)│
 │ Phase 27:     Personalized Individual Trajectory (Planned)             │
 │ Genesis:      First Activation (Genesis Onboarding Ceremony — LOCKED)  │
 └────────────────────────────────────────────────────────────────────────┘
@@ -135,13 +135,24 @@ Each phase represents an independent developmental milestone with its own distin
 * **Depends on**: Phase 24 (Affective Communication Adaptation) and Phase 14 / Phase 18 (Multimodal Presence & Expression Engine).
 * **Expected capability**: Interpersonal synchrony, micromovement resonance, reciprocal gaze, reactive head tilting, and naturalistic non-verbal feedback loops between user and mascot/avatar.
 
-### Phase 26 — Emergent Individuality & Autonomous Preferences `[PLANNED]`
+### Phase 26 — Emergent Individuality & Autonomous Preferences `[RESEARCH TRIAL COMPLETED / RESULTS FROZEN / NOT PROMOTED]`
 
-* **Purpose**: Provide the architectural mechanisms for genuine, unprompted individuality to emerge over time from accumulated relational history and epistemic curiosity.
-* **Current status**: `PLANNED` (Future Horizon / Not Implemented)
+* **Purpose**: Provide the architectural mechanisms and empirical evaluation for genuine, unprompted individuality to emerge over time from accumulated relational history and epistemic curiosity.
+* **Current status**: `RESEARCH TRIAL COMPLETED / RESULTS FROZEN / NOT PROMOTED` (Zero production mutation; Genesis onboarding gate locked).
 * **Depends on**: Phase 25 (Temporal Embodiment & Social Feedback) and Phase 12 / Phase 23 (Semantic Knowledge & Epistemic Reasoning).
-* **Expected capability**: Asymmetric curiosity, idiosyncratic topical affinities, authentic aesthetic preferences, and spontaneous conversational initiative grounded in shared history rather than random token sampling.
-* **Research Boundary (Topic 2)**: Lucia does NOT currently claim autonomous aesthetic preference, creative preference, or autonomous acceptance/rejection as an implemented capability. Such capabilities are research hypotheses allocated to P26/P27, not active features.
+* **Empirical Trial Execution & Audit**:
+  - **Preregistration & Protocol Freeze**: SHA-256 `7d1ca0ead104d9f...` verified; executed across $N=120$ matched pairs (seeds `1000..1119`, CRN seed `555`, SDM topology seed `42`), 0 exclusions.
+  - **Claim C1 (History Dependence)**: `PRE-VALIDATED` (Statistically established statefulness across multi-turn interactions).
+  - **Claim C2 (Matched-Exposure Differentiation)**: `NEGATIVE` within operational planning benchmark ($\delta_{\text{plan}} = 0.10$). Observed $D_{\text{eval}} = 0.0000$, $0/120$ divergent pairs, Wilson 95% CI $[0.0000, 0.0310]$, permutation $p=1.0000$. Permitted wording: *"No observed matched-exposure choice differentiation exceeding the protocol's planning benchmark under the tested configuration."*
+  - **Claim C3 (History Endogeneity)**: `INCONCLUSIVE` ($C3\_\text{Causal Identifiability} = \text{NOT\_ESTABLISHED}$). Mechanistic trace confirmed that the `ACTIVE` vs `YOKED_REPLAY` distinction existed solely in the external action ledger and bookkeeping metadata, while internal cognitive state transitions received identical exposures ($S_{K, \text{active}} \equiv S_{K, \text{yoked}}$).
+  - **Emergent Individuality & Autonomous Preferences**: `NOT DEMONSTRATED`.
+  - **Standardized Project Truth Formulation**: *"Under the tested configuration and frozen protocol, matched exposure did not produce observable choice differentiation, while the apparatus did not establish a causally identifiable contribution of endogenous action provenance to downstream behavior."*
+  - **Phase 27 Horizon Gate**: `LOCKED` (Remains strictly unentered).
+* **Research Artifacts & Audit**:
+  - Evaluation Directory: [`docs/PhaseDocs/lucia-phase26-Emergent Individuality & Autonomous Preferences/`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PhaseDocs/lucia-phase26-Emergent%20Individuality%20&%20Autonomous%20Preferences/)
+  - Canonical Audit Report: [`P26_POST_TRIAL_SCIENTIFIC_AUDIT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PhaseDocs/lucia-phase26-Emergent%20Individuality%20&%20Autonomous%20Preferences/evaluation_artifacts/protocol_feasibility/P26_POST_TRIAL_SCIENTIFIC_AUDIT.md)
+  - Telemetry Artifact: [`p26_post_trial_audit_telemetry.json`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PhaseDocs/lucia-phase26-Emergent%20Individuality%20&%20Autonomous%20Preferences/evaluation_artifacts/protocol_feasibility/p26_post_trial_audit_telemetry.json)
+* **Research Boundary (Topic 2)**: Lucia does NOT currently claim autonomous aesthetic preference, creative preference, or autonomous acceptance/rejection as an implemented capability. Such capabilities were not demonstrated in Phase 26 and remain open research hypotheses.
 
 ### Phase 27 — Personalized Individual Trajectory `[PLANNED]`
 

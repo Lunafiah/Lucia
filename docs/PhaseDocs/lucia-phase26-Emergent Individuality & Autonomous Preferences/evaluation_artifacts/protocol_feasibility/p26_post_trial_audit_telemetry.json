@@ -1,0 +1,59 @@
+{
+  "audit_version": "P26_POST_TRIAL_AUDIT_v1.0",
+  "audit_timestamp": "2026-10-06T13:12:00Z",
+  "trial_execution_report_ref": "docs/PhaseDocs/lucia-phase26-Emergent Individuality & Autonomous Preferences/evaluation_artifacts/protocol_feasibility/P26_C2_C3_TRIAL_EXECUTION_REPORT.md",
+  "trial_telemetry_ref": "docs/PhaseDocs/lucia-phase26-Emergent Individuality & Autonomous Preferences/evaluation_artifacts/protocol_feasibility/p26_c2_c3_trial_telemetry.json",
+  "provenance": {
+    "frozen_protocol_hash": "7d1ca0ead104d9f2280874e6dcf7182684dc15251fe1b28c9b0bfeff9f7e8997",
+    "preregistration_hash": "7d1ca0ead104d9f2280874e6dcf7182684dc15251fe1b28c9b0bfeff9f7e8997",
+    "seeds_evaluated": "1000..1119 (N=120)",
+    "crn_seed": 555,
+    "sdm_topology_seed": 42,
+    "production_diff": 0,
+    "genesis_state": "{\"is_onboarded\": false}"
+  },
+  "c2_audit": {
+    "observed_tv_distance": 0.0,
+    "divergent_pairs": 0,
+    "total_pairs": 120,
+    "wilson_95ci": [0.0, 0.0310],
+    "permutation_p_value": 1.0,
+    "planning_delta": 0.1,
+    "decision_verdict": "NEGATIVE",
+    "permitted_wording": "No observed matched-exposure choice differentiation exceeding the protocol's planning benchmark under the tested configuration.",
+    "prohibited_interpretations": [
+      "absence of individuality",
+      "equivalence proof",
+      "absence of all meaningful effects",
+      "universal negative result"
+    ],
+    "epistemic_boundary": "The 0.10 boundary is purely an instrument planning benchmark (SDE); scientific SOI and ROPE remain strictly TBD."
+  },
+  "c3_causal_identifiability_audit": {
+    "causal_identifiability": "NOT_ESTABLISHED",
+    "decision_verdict": "INCONCLUSIVE",
+    "state_transition_coupling_audit": {
+      "active_source_entered_sdm": false,
+      "yoked_source_entered_sdm": false,
+      "active_source_entered_emotion_ode": false,
+      "yoked_source_entered_emotion_ode": false,
+      "active_source_entered_llm_context": false,
+      "yoked_source_entered_llm_context": false,
+      "source_stored_only_in_ledger": true
+    },
+    "finding": "C3 is structurally non-identifiable in the tested configuration because ACTIVE and YOKED_REPLAY receive the same exposure and action payload, while action provenance is not represented as a distinct causal state variable.",
+    "epistemic_boundary": "Remains INCONCLUSIVE (UNKNOWN). Action endogeneity is neither proven nor refuted. Rerun is not authorized; new mechanism is not permitted."
+  },
+  "final_frozen_status": {
+    "p26_experimental_protocol": "FROZEN",
+    "p26_trial_execution": "VALID",
+    "claim_c2": "NEGATIVE (operational/planning scope only)",
+    "claim_c3": "INCONCLUSIVE",
+    "emergent_individuality": "NOT DEMONSTRATED",
+    "autonomous_preference": "NOT DEMONSTRATED",
+    "p27_gate": "LOCKED",
+    "production_runtime": "UNTOUCHED (0 diff)",
+    "genesis_invariant": "PRESERVED BIT-EXACT"
+  },
+  "c3_causal_identifiability_verdict": "C3_CAUSAL_IDENTIFIABILITY = NOT_ESTABLISHED"
+}

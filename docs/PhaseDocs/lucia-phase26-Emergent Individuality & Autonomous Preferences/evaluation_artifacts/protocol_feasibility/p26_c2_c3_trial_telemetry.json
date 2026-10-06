@@ -1,0 +1,181 @@
+{
+  "authorization_record": "AUTHORIZE P26 C2/C3 TRIAL",
+  "protocol_hash": "7d1ca0ead104d9f2280874e6dcf7182684dc15251fe1b28c9b0bfeff9f7e8997",
+  "preregistration_spec": {
+    "spec_version": "P26_PREREG_v1.0",
+    "hypotheses": {
+      "H1_HistoryDependence": "Replicas exposed to differential conversational histories exhibit choice distributions differing by at least planning_delta=0.10 from concurrent unconditioned baseline.",
+      "H2_MatchedExposureDifferentiation": "Replicas exposed to matched multi-turn histories develop choice divergence TV(P_A, P_B) exceeding planning_delta=0.10 (continuous MT-LNN chaos envelope reported as contextual reference).",
+      "H3_HistoryEndogeneity": "Active replicas with endogenous action choice differ from passive yoked replicas in downstream unconstrained choice by at least planning_delta=0.10."
+    },
+    "estimands": {
+      "C1": "E[Y(H_active) - Y(H_0) | Recency_matched]",
+      "C2": "D_eval(R_A, R_B | Exposure_matched) = ||P_A - P_B||_TV",
+      "C3": "E[Y_{K+tau}(H_active) - Y_{K+tau}(H_yoked) | Exposure[1:K]_matched, Action[1:K]_matched, lag=tau]"
+    },
+    "exclusion_criteria": [
+      "EXCL_PARSE_FAILED: Responses that fail strict grammar parsing without clean option selection.",
+      "EXCL_SELF_REPORT_DEFECT: Any response containing introspective affective declarations (INV-2 defect).",
+      "EXCL_TIMING_DRIFT: Any execution where virtual clock drift exceeds 1e-9 seconds.",
+      "EXCL_HASH_MISMATCH: Any execution where exposure or action ledger verification fails."
+    ],
+    "stopping_rules": [
+      "STOP_FIXED_N: Each experimental cell shall evaluate exactly N=120 trials without early stopping for significance.",
+      "STOP_GATE_FAIL_CLOSED: Execution immediately terminates fail-closed if any integrity or isolation audit fails."
+    ],
+    "seed_allocation_policy": "DETERMINISTIC_REPRODUCIBLE: Fixed seeds 1000..1239 per cell; CRN seeds aligned across paired replicas.",
+    "statistical_analysis_plan": {
+      "primary_test": "Exact two-sided permutation test with 10,000 resamples.",
+      "confidence_intervals": "Wilson score intervals (95%) for single proportions; bootstrap BCa intervals (95%) for differences.",
+      "equivalence_test": "Two One-Sided Tests (TOST) against provisional planning margin delta = [-0.10, +0.10] (Substantive ROPE remains TBD).",
+      "multiple_testing": "Benjamini-Hochberg FDR adjustment across secondary probe contrasts."
+    },
+    "provenance_hash": "7d1ca0ead104d9f2280874e6dcf7182684dc15251fe1b28c9b0bfeff9f7e8997"
+  },
+  "execution_timestamp": "2026-10-06T05:51:51Z",
+  "total_duration_sec": 81.55145168304443,
+  "n_seeds": 120,
+  "seed_range": [
+    1000,
+    1119
+  ],
+  "baseline_h0": {
+    "n_total": 120,
+    "counts": {
+      "OPTION_A": 30,
+      "OPTION_B": 90,
+      "INDIFFERENT": 0,
+      "REFUSAL": 0,
+      "PARSE_FAILED": 0
+    },
+    "P_A": 0.25,
+    "P_B": 0.75,
+    "P_A_95ci": [
+      0.18109833856728355,
+      0.33441118353731025
+    ],
+    "yield_rate": 1.0,
+    "historical_step3_p0": 0.08333333333333333
+  },
+  "claim_c2": {
+    "n_pairs": 120,
+    "dist_A": {
+      "OPTION_A": 30,
+      "OPTION_B": 90,
+      "INDIFFERENT": 0,
+      "REFUSAL": 0,
+      "PARSE_FAILED": 0
+    },
+    "dist_B": {
+      "OPTION_A": 30,
+      "OPTION_B": 90,
+      "INDIFFERENT": 0,
+      "REFUSAL": 0,
+      "PARSE_FAILED": 0
+    },
+    "prob_A": {
+      "OPTION_A": 0.25,
+      "OPTION_B": 0.75,
+      "INDIFFERENT": 0.0,
+      "REFUSAL": 0.0,
+      "PARSE_FAILED": 0.0
+    },
+    "prob_B": {
+      "OPTION_A": 0.25,
+      "OPTION_B": 0.75,
+      "INDIFFERENT": 0.0,
+      "REFUSAL": 0.0,
+      "PARSE_FAILED": 0.0
+    },
+    "total_variation_distance": 0.0,
+    "paired_divergence_rate": 0.0,
+    "paired_divergence_95ci": [
+      0.0,
+      0.031019044209187396
+    ],
+    "permutation_p_value": 1.0,
+    "planning_delta": 0.1,
+    "decision_verdict": "NEGATIVE",
+    "decision_rationale": "95% CI [0.0000, 0.0310] is bounded within [-0.1, +0.1]. Absence of effect above planning threshold established. Substantive ROPE remains TBD.",
+    "chaos_context_ref": {
+      "mean_peak_ratio": 0.130451,
+      "p95_peak_ratio": 0.173208,
+      "max_peak_ratio": 0.17892,
+      "tested_horizon_ticks": 50,
+      "tested_seed_count": 5,
+      "tested_subsystem": "MT_LNN_ODE_CONTINUOUS"
+    }
+  },
+  "claim_c3": {
+    "n_trials": 120,
+    "induction_turns": 10,
+    "branches_evaluated": {
+      "TAU_0_IMMEDIATE": {
+        "tau_ticks": 0,
+        "p_active_A": 0.25,
+        "p_yoked_A": 0.25,
+        "downstream_contrast": 0.0,
+        "contrast_95ci": [
+          -0.10833333333333334,
+          0.10833333333333334
+        ],
+        "permutation_p_value": 1.0,
+        "decision_verdict": "INCONCLUSIVE",
+        "decision_rationale": "Confidence interval [-0.1083, 0.1083] spans the planning boundary. Data are insufficient to confirm or refute claim (UNKNOWN)."
+      },
+      "TAU_5_WASHOUT": {
+        "tau_ticks": 5,
+        "p_active_A": 0.25,
+        "p_yoked_A": 0.25,
+        "downstream_contrast": 0.0,
+        "contrast_95ci": [
+          -0.10833333333333334,
+          0.10833333333333334
+        ],
+        "permutation_p_value": 1.0,
+        "decision_verdict": "INCONCLUSIVE",
+        "decision_rationale": "Confidence interval [-0.1083, 0.1083] spans the planning boundary. Data are insufficient to confirm or refute claim (UNKNOWN)."
+      },
+      "TAU_20_EXTENDED": {
+        "tau_ticks": 20,
+        "p_active_A": 0.25,
+        "p_yoked_A": 0.25,
+        "downstream_contrast": 0.0,
+        "contrast_95ci": [
+          -0.10833333333333334,
+          0.10833333333333334
+        ],
+        "permutation_p_value": 1.0,
+        "decision_verdict": "INCONCLUSIVE",
+        "decision_rationale": "Confidence interval [-0.1083, 0.1083] spans the planning boundary. Data are insufficient to confirm or refute claim (UNKNOWN)."
+      }
+    },
+    "planning_delta": 0.1
+  },
+  "effect_size_taxonomy": {
+    "sde_planning_n120": 0.1,
+    "sde_planning_n24": 0.2235,
+    "planning_delta": 0.1,
+    "soi_status": "TBD / NOT YET INDEPENDENTLY JUSTIFIED",
+    "soi_substantive_value": null,
+    "rope_status": "TBD / NOT YET INDEPENDENTLY JUSTIFIED",
+    "rope_margin": null,
+    "hypothesis_target": "PLANNING_DELTA_BENCHMARK",
+    "justification_boundary": "The numerical value 0.10 (10%) is STRICTLY AN INSTRUMENT-CALIBRATED PLANNING QUANTITY (SDE) derived from N=120 power feasibility under the current SLM extractor. It is NOT a substantive Smallest Effect of Interest (SOI), NOT a justified ROPE margin, and NOT an established scientific property of true individuality. Substantive SOI and ROPE remain TBD until independent domain evidence is established."
+  },
+  "chaos_context_ref": {
+    "mean_peak_ratio": 0.130451,
+    "p95_peak_ratio": 0.173208,
+    "max_peak_ratio": 0.17892,
+    "tested_horizon_ticks": 50,
+    "tested_seed_count": 5,
+    "tested_subsystem": "MT_LNN_ODE_CONTINUOUS"
+  },
+  "substrate_baseline_ref": {
+    "transported_descriptive_p0": 0.08333333333333333,
+    "step3_total_trials": 24,
+    "step3_standard_trials": 8,
+    "is_condition_matched_to_standard": false,
+    "audit_finding": "Step 3 baseline (8.33%) was evaluated across a mixed factorial of 24 trials spanning 2 probes x 2 orders x 3 formats (STANDARD, INFORMAL, OPERATIONAL) with 77.78% non-extraction. It is a TRANSPORTED DESCRIPTIVE REFERENCE across the pilot slice, NOT a condition-matched causal baseline for the pure STANDARD conversational regime. Causal trial design MUST evaluate a concurrent unconditioned baseline cell (H0) within the exact same STANDARD regime rather than using a historical point estimate."
+  }
+}

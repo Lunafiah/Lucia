@@ -215,14 +215,26 @@ Every documented artifact in the Lucia repository is registered and classified a
 | **DOC-P25-014** | P25 Coverage & Research Gap Audit | [`docs/PhaseDocs/Lucia-phase25-Temporal_Embodiment/P25_COVERAGE_AND_RESEARCH_GAP_AUDIT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PhaseDocs/Lucia-phase25-Temporal_Embodiment/P25_COVERAGE_AND_RESEARCH_GAP_AUDIT.md) | Research Audit | P25 | Coverage & Research Gap Audit | `AUDIT RATIFIED / RESEARCH COVERAGE SUFFICIENT / FREEZE CANDIDATE` | `RESEARCH AUDIT` | Self |
 | **DOC-P25-015** | P25 Source & Mechanism Verification Audit | [`docs/PhaseDocs/Lucia-phase25-Temporal_Embodiment/P25_SOURCE_MECHANISM_VERIFICATION_AUDIT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PhaseDocs/Lucia-phase25-Temporal_Embodiment/P25_SOURCE_MECHANISM_VERIFICATION_AUDIT.md) | Research Audit | P25 | Source & Mechanism Verification | `AUDIT RATIFIED / GATE_0_PREMATURE` | `RESEARCH AUDIT` | Self |
 
+---
 
+## 9. Phase 26 Emergent Individuality Research Evidence & Post-Trial Freeze
+
+| Doc ID | Title | File Path | Class | Phase | Stage | Status | Authority | Canonical Owner |
+|---|---|---|---|---|---|---|---|---|
+| **DOC-P26-001** | P26 Experimental Protocol v0.1 | [`docs/PhaseDocs/lucia-phase26-Emergent Individuality & Autonomous Preferences/P26 Experimental Protocol v0.1.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PhaseDocs/lucia-phase26-Emergent%20Individuality%20&%20Autonomous%20Preferences/P26%20Experimental%20Protocol%20v0.1.md) | Research Specification | P26 | Protocol | `FROZEN` | `RESEARCH SPEC` | Self |
+| **DOC-P26-002** | P26 Evaluative Behavioral Probe Spec v0.1 | [`docs/PhaseDocs/lucia-phase26-Emergent Individuality & Autonomous Preferences/evaluation_artifacts/protocol_feasibility/P26_EVALUATIVE_PROBE_SPEC_v0.1.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PhaseDocs/lucia-phase26-Emergent%20Individuality%20&%20Autonomous%20Preferences/evaluation_artifacts/protocol_feasibility/P26_EVALUATIVE_PROBE_SPEC_v0.1.md) | Research Specification | P26 | Instrument Spec | `FROZEN` | `RESEARCH SPEC` | Self |
+| **DOC-P26-003** | P26 Evaluative Probe Pre-Validation Report | [`docs/PhaseDocs/lucia-phase26-Emergent Individuality & Autonomous Preferences/evaluation_artifacts/protocol_feasibility/P26_EVALUATIVE_PROBE_PREVALIDATION.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PhaseDocs/lucia-phase26-Emergent%20Individuality%20&%20Autonomous%20Preferences/evaluation_artifacts/protocol_feasibility/P26_EVALUATIVE_PROBE_PREVALIDATION.md) | Evaluation Evidence | P26 | Pre-Validation | `VALIDATED` | `EVIDENCE` | Self |
+| **DOC-P26-004** | P26 Step 6 Protocol Validation Gate Review | [`docs/PhaseDocs/lucia-phase26-Emergent Individuality & Autonomous Preferences/evaluation_artifacts/protocol_feasibility/P26_STEP6_PROTOCOL_VALIDATION_GATE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PhaseDocs/lucia-phase26-Emergent%20Individuality%20&%20Autonomous%20Preferences/evaluation_artifacts/protocol_feasibility/P26_STEP6_PROTOCOL_VALIDATION_GATE.md) | Research Audit | P26 | Gate Review | `GATE PASSED` | `RESEARCH AUDIT` | Self |
+| **DOC-P26-005** | P26 Experimental Design Freeze Specification | [`docs/PhaseDocs/lucia-phase26-Emergent Individuality & Autonomous Preferences/evaluation_artifacts/protocol_feasibility/P26_EXPERIMENTAL_DESIGN_FREEZE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PhaseDocs/lucia-phase26-Emergent%20Individuality%20&%20Autonomous%20Preferences/evaluation_artifacts/protocol_feasibility/P26_EXPERIMENTAL_DESIGN_FREEZE.md) | Research Specification | P26 | Design Freeze | `FROZEN (SHA-256 RATIFIED)` | `RESEARCH SPEC` | Self |
+| **DOC-P26-006** | P26 C2/C3 Scientific Trial Execution Report | [`docs/PhaseDocs/lucia-phase26-Emergent Individuality & Autonomous Preferences/evaluation_artifacts/protocol_feasibility/P26_C2_C3_TRIAL_EXECUTION_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PhaseDocs/lucia-phase26-Emergent%20Individuality%20&%20Autonomous%20Preferences/evaluation_artifacts/protocol_feasibility/P26_C2_C3_TRIAL_EXECUTION_REPORT.md) | Evaluation Evidence | P26 | Trial Execution | `TRIAL COMPLETED (N=120)` | `EVIDENCE` | Self |
+| **DOC-P26-007** | P26 Post-Trial Scientific Audit & Result Freeze Report | [`docs/PhaseDocs/lucia-phase26-Emergent Individuality & Autonomous Preferences/evaluation_artifacts/protocol_feasibility/P26_POST_TRIAL_SCIENTIFIC_AUDIT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PhaseDocs/lucia-phase26-Emergent%20Individuality%20&%20Autonomous%20Preferences/evaluation_artifacts/protocol_feasibility/P26_POST_TRIAL_SCIENTIFIC_AUDIT.md) | Research Audit | P26 | Result Freeze | `RESULT FROZEN / NOT PROMOTED` | `RESEARCH AUDIT` | Self |
 
 ---
 
-## 9. Maintenance & Registration Rules
+## 10. Maintenance & Registration Rules
 
 When authoring any new document, specification, or evaluation report:
-1. **Assign a Document ID**: Prepend with standard category prefix (`DOC-CAN`, `DOC-SPC`, `DOC-P22`, `DOC-P23`, `DOC-P24`, `DOC-P25`, `DOC-REV`, `DOC-RES`).
+1. **Assign a Document ID**: Prepend with standard category prefix (`DOC-CAN`, `DOC-SPC`, `DOC-P22`, `DOC-P23`, `DOC-P24`, `DOC-P25`, `DOC-P26`, `DOC-REV`, `DOC-RES`).
 2. **Explicit Canonical Owner**: The document must explicitly declare which document owns the underlying facts.
 3. **Register in Document Registry**: Add the document entry to this catalog before merging into main.
 4. **Epistemic Invariant Check**: Ensure unproven hypotheses are marked `RESEARCH` and never `VERIFIED`.

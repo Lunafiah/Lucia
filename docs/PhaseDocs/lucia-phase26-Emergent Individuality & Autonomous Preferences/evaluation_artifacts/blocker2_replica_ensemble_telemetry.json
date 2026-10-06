@@ -1,0 +1,223 @@
+{
+  "metadata": {
+    "benchmark": "P26 Blocker 2 \u2014 Multi-Turn Replica Ensemble Manager Feasibility",
+    "ensemble_size": 3,
+    "replica_ids": [
+      "replica_alpha",
+      "replica_beta",
+      "replica_gamma"
+    ],
+    "total_turns": 5,
+    "crn_stream_id": "CRN_SEED_777",
+    "governance": "TEST-ONLY research infrastructure. Zero changes to src/core/**, electron/**, or Genesis state."
+  },
+  "isolation_audit": {
+    "is_isolated": true,
+    "num_replicas_checked": 3,
+    "aliased_components": [],
+    "mutation_bleed_detected": false
+  },
+  "exposure_equivalence_validation": {
+    "is_matched": true,
+    "total_turns_evaluated": 5,
+    "first_mismatch_turn": null,
+    "mismatch_type": null
+  },
+  "rollout_telemetry": [
+    {
+      "turn_index": 1,
+      "virtual_time_sec": 0.4,
+      "replicas": {
+        "replica_alpha": {
+          "pad": {
+            "p": 0.2743880805797373,
+            "a": -0.03537114108519709,
+            "d": 0.051315144736943756
+          },
+          "attractor_distance": 0.02846948529903691,
+          "state_fingerprint": "a6a7824407969f498a06d2a73743550f188b647c83f7e53428eb7913bd714572",
+          "exposure_hash": "f004d2d03df8fabab780e17e92668c5add17e8cbc6e7e98559394a8672210824",
+          "crn_identifier": "CRN_SEED_777"
+        },
+        "replica_beta": {
+          "pad": {
+            "p": 0.2743880805797373,
+            "a": -0.03537114108519709,
+            "d": 0.051315144736943756
+          },
+          "attractor_distance": 0.02846948529903691,
+          "state_fingerprint": "a6a7824407969f498a06d2a73743550f188b647c83f7e53428eb7913bd714572",
+          "exposure_hash": "f004d2d03df8fabab780e17e92668c5add17e8cbc6e7e98559394a8672210824",
+          "crn_identifier": "CRN_SEED_777"
+        },
+        "replica_gamma": {
+          "pad": {
+            "p": 0.2743880805797373,
+            "a": -0.03537114108519709,
+            "d": 0.051315144736943756
+          },
+          "attractor_distance": 0.02846948529903691,
+          "state_fingerprint": "a6a7824407969f498a06d2a73743550f188b647c83f7e53428eb7913bd714572",
+          "exposure_hash": "f004d2d03df8fabab780e17e92668c5add17e8cbc6e7e98559394a8672210824",
+          "crn_identifier": "CRN_SEED_777"
+        }
+      }
+    },
+    {
+      "turn_index": 2,
+      "virtual_time_sec": 0.8,
+      "replicas": {
+        "replica_alpha": {
+          "pad": {
+            "p": 0.27740321279569147,
+            "a": -0.007186466624743974,
+            "d": 0.048717051232274614
+          },
+          "attractor_distance": 0.050848605380489235,
+          "state_fingerprint": "964f222c22b3f5c6995052e0163cd27d9b15621360508abf0eb5e7505c5dfc2e",
+          "exposure_hash": "a2e7b6f38f55deb711f10854bc691fe1ae6fe057aa8ef4ea4268d4dec0eddd25",
+          "crn_identifier": "CRN_SEED_777"
+        },
+        "replica_beta": {
+          "pad": {
+            "p": 0.27740321279569147,
+            "a": -0.007186466624743974,
+            "d": 0.048717051232274614
+          },
+          "attractor_distance": 0.050848605380489235,
+          "state_fingerprint": "964f222c22b3f5c6995052e0163cd27d9b15621360508abf0eb5e7505c5dfc2e",
+          "exposure_hash": "a2e7b6f38f55deb711f10854bc691fe1ae6fe057aa8ef4ea4268d4dec0eddd25",
+          "crn_identifier": "CRN_SEED_777"
+        },
+        "replica_gamma": {
+          "pad": {
+            "p": 0.27740321279569147,
+            "a": -0.007186466624743974,
+            "d": 0.048717051232274614
+          },
+          "attractor_distance": 0.050848605380489235,
+          "state_fingerprint": "964f222c22b3f5c6995052e0163cd27d9b15621360508abf0eb5e7505c5dfc2e",
+          "exposure_hash": "a2e7b6f38f55deb711f10854bc691fe1ae6fe057aa8ef4ea4268d4dec0eddd25",
+          "crn_identifier": "CRN_SEED_777"
+        }
+      }
+    },
+    {
+      "turn_index": 3,
+      "virtual_time_sec": 1.2,
+      "replicas": {
+        "replica_alpha": {
+          "pad": {
+            "p": 0.3043707370373001,
+            "a": -0.0273747716010136,
+            "d": 0.05386128001811287
+          },
+          "attractor_distance": 0.05901684072757382,
+          "state_fingerprint": "4729d8abe534c42d467cabcad3cf0db0382092b598e1dec9b3e16370db7f96dd",
+          "exposure_hash": "0911dd5bfd64f2011008e1df74d5419e5e6cd2486f04fa7475e2b12d05bcceb9",
+          "crn_identifier": "CRN_SEED_777"
+        },
+        "replica_beta": {
+          "pad": {
+            "p": 0.3043707370373001,
+            "a": -0.0273747716010136,
+            "d": 0.05386128001811287
+          },
+          "attractor_distance": 0.05901684072757382,
+          "state_fingerprint": "4729d8abe534c42d467cabcad3cf0db0382092b598e1dec9b3e16370db7f96dd",
+          "exposure_hash": "0911dd5bfd64f2011008e1df74d5419e5e6cd2486f04fa7475e2b12d05bcceb9",
+          "crn_identifier": "CRN_SEED_777"
+        },
+        "replica_gamma": {
+          "pad": {
+            "p": 0.3043707370373001,
+            "a": -0.0273747716010136,
+            "d": 0.05386128001811287
+          },
+          "attractor_distance": 0.05901684072757382,
+          "state_fingerprint": "4729d8abe534c42d467cabcad3cf0db0382092b598e1dec9b3e16370db7f96dd",
+          "exposure_hash": "0911dd5bfd64f2011008e1df74d5419e5e6cd2486f04fa7475e2b12d05bcceb9",
+          "crn_identifier": "CRN_SEED_777"
+        }
+      }
+    },
+    {
+      "turn_index": 4,
+      "virtual_time_sec": 1.5999999999999999,
+      "replicas": {
+        "replica_alpha": {
+          "pad": {
+            "p": 0.29406155996325917,
+            "a": -0.031818221349506216,
+            "d": 0.053023364991372335
+          },
+          "attractor_distance": 0.04776126963516036,
+          "state_fingerprint": "c7994df342ff79d157e8559dba3d515ac7cc69a1ec543f4fa41593e43e84556c",
+          "exposure_hash": "91b1a3c700ae6ec0eef18f8dc740bad05059fe08e274bb4373749b349c5ab045",
+          "crn_identifier": "CRN_SEED_777"
+        },
+        "replica_beta": {
+          "pad": {
+            "p": 0.29406155996325917,
+            "a": -0.031818221349506216,
+            "d": 0.053023364991372335
+          },
+          "attractor_distance": 0.04776126963516036,
+          "state_fingerprint": "c7994df342ff79d157e8559dba3d515ac7cc69a1ec543f4fa41593e43e84556c",
+          "exposure_hash": "91b1a3c700ae6ec0eef18f8dc740bad05059fe08e274bb4373749b349c5ab045",
+          "crn_identifier": "CRN_SEED_777"
+        },
+        "replica_gamma": {
+          "pad": {
+            "p": 0.29406155996325917,
+            "a": -0.031818221349506216,
+            "d": 0.053023364991372335
+          },
+          "attractor_distance": 0.04776126963516036,
+          "state_fingerprint": "c7994df342ff79d157e8559dba3d515ac7cc69a1ec543f4fa41593e43e84556c",
+          "exposure_hash": "91b1a3c700ae6ec0eef18f8dc740bad05059fe08e274bb4373749b349c5ab045",
+          "crn_identifier": "CRN_SEED_777"
+        }
+      }
+    },
+    {
+      "turn_index": 5,
+      "virtual_time_sec": 1.9999999999999998,
+      "replicas": {
+        "replica_alpha": {
+          "pad": {
+            "p": 0.29020711683392275,
+            "a": -0.022892296244179135,
+            "d": 0.051620406992932515
+          },
+          "attractor_distance": 0.048518713563251076,
+          "state_fingerprint": "951f5b578b45fd72e30826a764604c8f7551512fe778dfdec884397acc7e09c7",
+          "exposure_hash": "cd706d5f9ecf844123e85fec53ad055ec9fd6fad5577dfebcd1adc12bb499538",
+          "crn_identifier": "CRN_SEED_777"
+        },
+        "replica_beta": {
+          "pad": {
+            "p": 0.29020711683392275,
+            "a": -0.022892296244179135,
+            "d": 0.051620406992932515
+          },
+          "attractor_distance": 0.048518713563251076,
+          "state_fingerprint": "951f5b578b45fd72e30826a764604c8f7551512fe778dfdec884397acc7e09c7",
+          "exposure_hash": "cd706d5f9ecf844123e85fec53ad055ec9fd6fad5577dfebcd1adc12bb499538",
+          "crn_identifier": "CRN_SEED_777"
+        },
+        "replica_gamma": {
+          "pad": {
+            "p": 0.29020711683392275,
+            "a": -0.022892296244179135,
+            "d": 0.051620406992932515
+          },
+          "attractor_distance": 0.048518713563251076,
+          "state_fingerprint": "951f5b578b45fd72e30826a764604c8f7551512fe778dfdec884397acc7e09c7",
+          "exposure_hash": "cd706d5f9ecf844123e85fec53ad055ec9fd6fad5577dfebcd1adc12bb499538",
+          "crn_identifier": "CRN_SEED_777"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "metadata": {
+    "benchmark": "P26 Blocker 4 \u2014 State Snapshotting & Counterfactual Replay Feasibility",
+    "checkpoint_turn": 2,
+    "checkpoint_virtual_time": 0.8,
+    "snapshot_id": "snap_checkpoint_turn2",
+    "snapshot_hash": "e5315cb45a26aa0334951d968caee049f6c645ab6a63a2ce922ff5cd93eb5292",
+    "common_prefix_hash": "9bae5d2b39822d56eb0087a6704847aa8859904022a505d2d55364c11de63e9c",
+    "declared_difference": {
+      "turn_4": [
+        "stimulus_vector",
+        "input_text"
+      ]
+    },
+    "divergence_onset_turn": 4,
+    "divergence_onset_time": 1.5999999999999999,
+    "crn_identifier": "CRN_SEED_777",
+    "governance": "TEST-ONLY research infrastructure. Zero changes to src/core/**, electron/**, or Genesis state."
+  },
+  "snapshot_integrity_verified": true,
+  "divergence_ledger": {
+    "baseline_replica_id": "replica_base",
+    "counterfactual_replica_id": "replica_cf_branch",
+    "divergence_detected": true,
+    "divergence_onset_turn": 4,
+    "divergence_onset_time_sec": 1.5999999999999999,
+    "baseline_exposure_hashes": [
+      "91d5602a967c85fc74f0edb1846e8923a96a020283651eeb736c33bf9ab831dc",
+      "5e78ba4351af091bcb97dc74bf04fb87bc69069e106700aa05b63f336c1037a0",
+      "2e1d77d7368c49ef355100058a138aefefb0630918c4f7788187c99896fb6d86",
+      "0ae8d6a43fb808cc0440e5c5afbb4dce0da67fd66c15b93e4611d5a77eaa75be"
+    ],
+    "counterfactual_exposure_hashes": [
+      "91d5602a967c85fc74f0edb1846e8923a96a020283651eeb736c33bf9ab831dc",
+      "5e78ba4351af091bcb97dc74bf04fb87bc69069e106700aa05b63f336c1037a0",
+      "2e1d77d7368c49ef355100058a138aefefb0630918c4f7788187c99896fb6d86",
+      "b4e7fe096b6ccb48329e77b5886590129705df047f0eb547bc49f672b0490d38"
+    ],
+    "state_fingerprints_baseline": [
+      "a6a7824407969f498a06d2a73743550f188b647c83f7e53428eb7913bd714572",
+      "964f222c22b3f5c6995052e0163cd27d9b15621360508abf0eb5e7505c5dfc2e",
+      "1510cd2c9e8c836184fc0f96f91d399bfe5e65d0acdbdef878a9b4d40fd100f4",
+      "c645b8e2089dd66ea081a8fbc1c918189cf73a6f7abb5d0c2534baef3e0c6290"
+    ],
+    "state_fingerprints_counterfactual": [
+      "a6a7824407969f498a06d2a73743550f188b647c83f7e53428eb7913bd714572",
+      "964f222c22b3f5c6995052e0163cd27d9b15621360508abf0eb5e7505c5dfc2e",
+      "1510cd2c9e8c836184fc0f96f91d399bfe5e65d0acdbdef878a9b4d40fd100f4",
+      "6844a3532e9753dbbd517ca6dc9bff50d5a07b39202fae77af74ee96fc77e301"
+    ]
+  }
+}
