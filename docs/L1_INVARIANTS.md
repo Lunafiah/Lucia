@@ -174,4 +174,13 @@ Every invariant in this document is traced directly to canonical project documen
 7. **Phase Documentation Containment Invariant**:
    - Whenever starting a new phase, agents MUST create a dedicated subfolder `Lucia-phase<X>-<Topic>` inside `docs/PhaseDocs/` (e.g. `docs/PhaseDocs/Lucia-phase25-Temporal_Embodiment/`).
    - ALL documentation, research specifications, evaluation protocols, reports, and raw telemetry/artifacts related to that phase must be strictly contained within that phase folder (with artifacts stored in `evaluation_artifacts/` within that phase directory).
-   - Root-level evaluation artifact folders (like `evaluation_artifacts/`) are permanently eliminated and forbidden.
+   - Root-level evaluation artifact folders (like `evaluation_artifacts/` or `evaluation/`) are permanently eliminated and forbidden.
+8. **Non-Phase Topic Documentation Containment Invariant**:
+   - Whenever authoring markdown documentation (`.md`) for investigations, audits, reviews, tools, or content that falls outside numbered phases, agents MUST create a dedicated topic subfolder inside the parent directory [`docs/others/`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/others) (i.e. `docs/others/<topic_name>/`).
+   - ALL `.md` files, reports, and working documents for that topic MUST be stored within that dedicated topic folder.
+   - Saving loose `.md` files in the repository root, directly in `docs/`, or directly at the root of `docs/others/` without a dedicated topic subfolder is strictly prohibited.
+9. **Elimination of Root-Level `evaluation/` & `evaluation_artifacts/`**:
+   - Top-level `evaluation/` and `evaluation_artifacts/` directories in the repository root are permanently eliminated and strictly forbidden.
+   - Agents must NEVER create or output files into a root-level `evaluation/` or `evaluation_artifacts/` folder under any circumstances. All evaluation artifacts belong strictly in `docs/PhaseDocs/Lucia-phase<X>-<Topic>/evaluation_artifacts/` (for phases), `tests/evaluation/` (for executable code), or `docs/others/<topic_name>/` (for non-phase topics and ratification packages).
+
+

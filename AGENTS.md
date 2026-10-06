@@ -49,7 +49,9 @@ If the requested work is exploratory, the default outcome is **research artifact
 - Do not violate anti-branching (Topic 6). Lucia must never silently become multiple independent continuations (split-brain). Recognize anti-branching as a strict architectural requirement while preserving its concrete mechanism as an unresolved research question.
 - Preserve `POST /lifecycle/end` strictly as catastrophic individual decommissioning / Genesis reset (Topic 7). Do not reinterpret it as a normal relationship transition, and do not implement or assume unratified concepts like Covenant Release.
 - Distinguish individual identity continuity from architectural evolution and implementation lineage (Topic 1). Upgrades, model replacements, or refactors do not create a new individual.
-- Do not scatter phase documentation or evaluation artifacts loosely in root or arbitrary directories. When starting a new phase, agents MUST create a dedicated subfolder `Lucia-phase<X>-<Topic>` inside `docs/PhaseDocs/`. All documentation, research specs, evaluation protocols, reports, and raw telemetry/artifacts related to that phase MUST be contained within that phase folder (with artifacts in `evaluation_artifacts/` inside that folder). External root-level artifact folders (like `evaluation_artifacts/`) are permanently eliminated.
+- Do not scatter phase documentation or evaluation artifacts loosely in root or arbitrary directories. When starting a new phase, agents MUST create a dedicated subfolder `Lucia-phase<X>-<Topic>` inside `docs/PhaseDocs/`. All documentation, research specs, evaluation protocols, reports, and raw telemetry/artifacts related to that phase MUST be contained within that phase folder (with artifacts in `evaluation_artifacts/` inside that folder). External root-level artifact folders (like `evaluation_artifacts/` or `evaluation/`) are permanently eliminated.
+- Do not create or scatter markdown (`.md`) documentation files for content or topics outside numbered phases loosely in the workspace root, directly under `docs/`, or unorganized. Any documentation file (`.md`) for content or topics outside the phases MUST be stored in a dedicated subfolder for that specific topic/content (e.g., `docs/others/<topic_name>/`) located inside the parent directory [`docs/others/`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/others).
+- **Prohibition Against Root-Level `evaluation/` or `evaluation_artifacts/`**: Agents are STRICTLY FORBIDDEN from creating, writing to, or populating a top-level directory named `evaluation/` or `evaluation_artifacts/` in the workspace root. All evaluation reports for phases belong exclusively in `docs/PhaseDocs/Lucia-phase<X>-<Topic>/evaluation_artifacts/`, executable test suites in `tests/evaluation/`, and non-phase evaluation/ratification/audit packages in `docs/others/<topic_name>/`. Creating a root-level `evaluation/` directory is an immediate architectural violation.
 
 ### Research Deliverable Standard
 
@@ -144,6 +146,8 @@ README.md (Public Front Door) [L0]
     │
     ├── docs/DOCUMENTATION_INDEX.md (Complete Catalog & Spec Navigation) [L4]
     │
+    ├── Non-Phase Topics & Audits (docs/others/<Topic>/**) [L5]
+    │
     └── Historical Evidence (docs/PhaseDocs/**, tests/evaluation/**) [L5]
 ```
 
@@ -160,6 +164,7 @@ README.md (Public Front Door) [L0]
 | [`docs/CONTEXT_ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/CONTEXT_ARCHITECTURE.md) | **Context Projection Spec [L4]** | Multi-agent projection architecture: Ciah $\le 5$-file reviewer pack, Gemini deep research corpus, Antigravity L0–L6 routing. | Authoritative rules for creating or updating derived context files. |
 | [`docs/CONTEXT_INDEX.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/CONTEXT_INDEX.md) | **Context Routing Map [L4]** | Logical context layers (L0–L6), minimal sufficient context loading rules by task type, anti-patterns. | Consult first to identify minimal sufficient context layers before ingesting files. |
 | [`docs/DOCUMENTATION_INDEX.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/DOCUMENTATION_INDEX.md) | **Navigation Map [L4]** | Complete catalog of active and historical documentation, authority hierarchy, and reading paths. | Use strictly to navigate documents. **Do NOT turn the index into another source of technical truth.** |
+| **Non-Phase Topics & Audits** ([`docs/others/<Topic>/**`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/others/)) | **Specialized / Non-Phase Records [L5]** | Cross-cutting audits, ad-hoc investigations, specialized reviews, and offline topic analyses outside numbered phases. | Must be strictly organized in dedicated topic subdirectories under `docs/others/<Topic>/`. Must not be scattered loosely in root, `docs/`, or directly in `docs/others/`. |
 | **Phase / Research / Acceptance Docs** (`docs/PhaseDocs/**`) | **Historical Evidence & Records [L5]** | Phase specifications, research hypotheses (H1–Hn), evaluation harness reports, mathematical proposals, formal acceptance reports, and phase-level evaluation artifacts (`docs/PhaseDocs/Lucia-phase<X>-<Topic>/evaluation_artifacts/**`). | Preserved as evidence and historical records. They must **never** silently override the active canonical architecture in `docs/ARCHITECTURE.md`. |
 
 ### 3.2 Deleted Canonical Files Notice
@@ -176,11 +181,13 @@ Agents must **NEVER** recreate these files, create compatibility wrappers, or in
 When behavior, mechanisms, architecture, or phase status changes:
 1. Update the canonical owner; do not create duplicate sources of truth.
 2. **Phase Folder Invariant**: Whenever starting a new phase, agents MUST create a dedicated subdirectory named `Lucia-phase<X>-<Topic>` inside `docs/PhaseDocs/` (e.g. `docs/PhaseDocs/Lucia-phase25-Temporal_Embodiment/`).
-3. **Phase Containment Rule**: ALL documentation, research specifications, evaluation protocols, final reports, and raw telemetry/evaluation artifacts related to that phase MUST be stored inside that phase's subfolder (`docs/PhaseDocs/Lucia-phase<X>-<Topic>/`, with telemetry/benchmarks in `docs/PhaseDocs/Lucia-phase<X>-<Topic>/evaluation_artifacts/`). Agents are STRICTLY PROHIBITED from saving docs or artifacts loosely outside (e.g. in a root-level `evaluation_artifacts/` or root `docs/`).
-4. Put **executable phase evaluation harnesses and test suites** in `tests/evaluation/phaseXX/`, and persistent markdown evaluation reports & raw JSON telemetry inside `docs/PhaseDocs/Lucia-phase<X>-<Topic>/evaluation_artifacts/`.
-5. Update `DOCUMENTATION_INDEX.md` and `DOCUMENT_REGISTRY.md` for added/moved/removed docs.
-6. Update `README.md` only for public-facing changes.
-7. Search for and fix stale references to renamed/deleted files.
+3. **Phase Containment Rule**: ALL documentation, research specifications, evaluation protocols, final reports, and raw telemetry/evaluation artifacts related to that phase MUST be stored inside that phase's subfolder (`docs/PhaseDocs/Lucia-phase<X>-<Topic>/`, with telemetry/benchmarks in `docs/PhaseDocs/Lucia-phase<X>-<Topic>/evaluation_artifacts/`). Agents are STRICTLY PROHIBITED from saving docs or artifacts loosely outside (e.g. in a root-level `evaluation_artifacts/`, root-level `evaluation/`, or root `docs/`).
+4. **Root `evaluation/` & `evaluation_artifacts/` Elimination Invariant**: Top-level `evaluation/` and `evaluation_artifacts/` directories in the workspace root are permanently eliminated and strictly forbidden. Agents must NEVER create or output files into a root-level `evaluation/` or `evaluation_artifacts/` folder under any circumstances.
+5. **Non-Phase Topic Containment Rule**: Whenever creating markdown documentation (`.md`) files for content, research, audits, or topics outside numbered phases (non-phase topics, such as architectural ratification packages or persistence audits), agents MUST create a dedicated topic subfolder inside the parent directory [`docs/others/`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/others) (i.e. `docs/others/<topic_name>/`) and store all associated `.md` documents, specifications, and reports within that specific topic subfolder. Agents are STRICTLY FORBIDDEN from creating loose `.md` files directly in the repository root, directly in `docs/`, or directly at the top level of `docs/others/` without a dedicated topic directory.
+6. Put **executable phase evaluation harnesses and test suites** in `tests/evaluation/phaseXX/`, and persistent markdown evaluation reports & raw JSON telemetry inside `docs/PhaseDocs/Lucia-phase<X>-<Topic>/evaluation_artifacts/`.
+7. Update `DOCUMENTATION_INDEX.md` and `DOCUMENT_REGISTRY.md` for added/moved/removed docs.
+8. Update `README.md` only for public-facing changes.
+9. Search for and fix stale references to renamed/deleted files.
 
 
 ## 4. Codebase Architecture & Ownership Map

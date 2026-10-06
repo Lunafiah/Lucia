@@ -108,7 +108,8 @@ To establish clear ownership, every document and artifact in the repository belo
 - **Mandatory Invariant**: **Evidence Must Not Be Flattened.**
   - A summary sentence (*"Candidate C4 was chosen"*) is not evidence. The underlying protocol, metrics, test fixtures, seeds, and quantitative tables must remain preserved and directly linkable.
 - **Primary Locations**:
-  - `evaluation_artifacts/` (formal evaluation reports, JSON benchmark manifests)
+  - `docs/PhaseDocs/Lucia-phase<X>-<Topic>/evaluation_artifacts/` (formal phase evaluation reports, JSON benchmark manifests; root `evaluation/` and `evaluation_artifacts/` are permanently eliminated)
+  - `docs/others/<topic_name>/` (non-phase evaluation, audit, and ratification packages)
   - `tests/evaluation/` (executable evaluation scripts, experiment scaffolds, dataset fixtures)
 
 ### 2.4 Class 4: Implementation History
@@ -255,6 +256,16 @@ Ciah Epistemic & Architectural Review
 Implementation Authorization (User Gate)
 ```
 A preliminary research recommendation such as "Contract Transition Ready" represents an **attributed research proposal (now superseded in P23-I by evidence closure)**, never an automatic authorization for production implementation or canonical freeze.
+
+### Pattern E: Non-Phase Specialized Topics & Audits (`docs/others/<Topic>/`)
+For cross-cutting audits, ad-hoc investigations, reviews, tool analyses, and specialized topics outside numbered phases:
+```text
+docs/others/<Topic_Name>/
+├── <topic_spec_or_report>.md
+├── <audit_results>.md
+└── ...
+```
+- **Containment Invariant**: All documentation files (`.md`), audit packages, and ratification artifacts addressing non-phase topics must be stored within a dedicated topic subdirectory under parent directory [`docs/others/`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/others) (e.g. `docs/others/F-02_FINAL_RATIFICATION/`). Storing loose `.md` files in the repository root, directly in `docs/`, directly at `docs/others/`, or creating root-level `evaluation/` / `evaluation_artifacts/` directories is strictly prohibited.
 
 ---
 
