@@ -231,10 +231,19 @@ Every documented artifact in the Lucia repository is registered and classified a
 
 ---
 
-## 10. Maintenance & Registration Rules
+## 10. Phase 27 Personalized Individual Trajectory Research Closure
+
+| Doc ID | Title | File Path | Class | Phase | Stage | Status | Authority | Canonical Owner |
+|---|---|---|---|---|---|---|---|---|
+| **DOC-P27-001** | P27 Scientific Boundary Audit & Research Closure Report | [`docs/PhaseDocs/Lucia-phase27-Personalized_Individual_Trajectory/P27_SCIENTIFIC_CLOSURE_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PhaseDocs/Lucia-phase27-Personalized_Individual_Trajectory/P27_SCIENTIFIC_CLOSURE_REPORT.md) | Research History | P27 | Scientific Closure | `CLOSED / NO NEW SCIENTIFIC GAP` | `CANONICAL CLOSURE` | `docs/PHASE_REGISTRY.md` |
+
+---
+
+## 11. Maintenance & Registration Rules
 
 When authoring any new document, specification, or evaluation report:
-1. **Assign a Document ID**: Prepend with standard category prefix (`DOC-CAN`, `DOC-SPC`, `DOC-P22`, `DOC-P23`, `DOC-P24`, `DOC-P25`, `DOC-P26`, `DOC-REV`, `DOC-RES`).
+1. **Assign a Document ID**: Prepend with standard category prefix (`DOC-CAN`, `DOC-SPC`, `DOC-P22`, `DOC-P23`, `DOC-P24`, `DOC-P25`, `DOC-P26`, `DOC-P27`, `DOC-REV`, `DOC-RES`).
 2. **Explicit Canonical Owner**: The document must explicitly declare which document owns the underlying facts.
 3. **Register in Document Registry**: Add the document entry to this catalog before merging into main.
 4. **Epistemic Invariant Check**: Ensure unproven hypotheses are marked `RESEARCH` and never `VERIFIED`.
+

@@ -323,12 +323,13 @@ flowchart LR
   - Investigating candidate offline recombination processes (analogy discovery, conceptual compression, hypothesis formation) adhering to epistemic provenance.
 - *Note*: Abductive search and analogy discovery are candidate mechanisms requiring empirical research, not decided engines.
 
-### Phase 27 — Personalized Individual Trajectory (`PLANNED`)
-- **Potential Research Areas**:
+### Phase 27 — Personalized Individual Trajectory (`CLOSED / NO NEW SCIENTIFIC GAP`)
+- **Status & Verdict**: Formally closed via scientific boundary audit ([`DOC-P27-001`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PhaseDocs/Lucia-phase27-Personalized_Individual_Trajectory/P27_SCIENTIFIC_CLOSURE_REPORT.md)). No currently identifiable Level-C trajectory-level phenomenon remains that provides a distinct, testable scientific gap beyond P21–P26 ($H_{0, \text{non-developmental}}$ holds). Remaining higher-order trajectory hypotheses are retained as `BLOCKED_BY_IDENTIFIABILITY` (not disproven). Some higher-order trajectory hypotheses remain epistemically blocked by causal identifiability.
+- **Potential Research Areas (Historical Context)**:
   - Empirical evaluation of longitudinal identity coherence and causal individuality across multi-month interaction trajectories.
   - Investigating whether negative relational dynamics require dimensional expansion of $\mathbf{R}_t$ or emerge from episodic/semantic structures.
   - Multi-chapter and post-release relationship models if authorized by governance.
-- *Note*: Phase 27 serves as the formal empirical validation point for causal individuality.
+- *Note*: Phase 27 closed at research stage without experimental protocol design, architecture promotion, or production implementation (`production diff = 0`).
 
 ### Genesis / Identity Authority (`EXISTING GOVERNANCE BOUNDARY — LOCKED`)
 - **Constitutional Concerns**:

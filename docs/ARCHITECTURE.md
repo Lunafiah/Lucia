@@ -36,10 +36,10 @@ The human brain operates on approximately 20 watts of power through massive temp
 │   implemented, verified, and frozen in the codebase (Phases 1–21,      │
 │   Phase 23-C..H, Phase 24). Every component corresponds to verified    │
 │   Python/Node code and automated test suites.                          │
-│ • ROADMAP (Future Horizons): Future development (Phase 25, Phase 26,   │
-│   Phase 27) is strictly [PLANNED / NOT IMPLEMENTED] and is excluded    │
-│   from active system architecture diagrams. First Activation           │
-│   (Genesis Onboarding Ceremony) is a [🔒 LOCKED FUTURE GATE].          │
+│ • ROADMAP (Future Horizons): Future research horizons (Phase 25        │
+│   [Freeze Candidate], Phase 26 [Trial Frozen], Phase 27 [Closed/No Gap])│
+│   are NOT IMPLEMENTED and are excluded from active system architecture │
+│   diagrams. First Activation (Genesis) is a [🔒 LOCKED FUTURE GATE].   │
 │ • FUTURE PHASE GOVERNANCE: Unresolved research questions remain        │
 │   research questions until evidence establishes a validated            │
 │   requirement. If an unresolved capability cannot be coherently        │
