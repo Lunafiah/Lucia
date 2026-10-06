@@ -85,17 +85,17 @@ E6: Document Provenance          ── Cross-referencing canonical ADRs, regist
 ### Automated Test Coverage (E2)
 ```text
 Python Backend (.venv):
-  tests/unit:        678 passed in 10.42s
-  tests/property:     38 passed in 8.15s
-  tests/integration:  46 passed, 7 skipped in 8.86s
-  Total Python:      762 passed, 7 skipped, 0 failed
+  tests/unit:        678 passed
+  tests/property:     38 passed
+  tests/integration:  60 passed, 7 skipped
+  Total Python:      776 passed, 7 skipped, 0 failed
 
 Electron Desktop:
   Test Suites:        11 passed, 11 total
-  Tests:             119 passed, 119 total in 20.33s
+  Tests:             119 passed, 119 total
   Total Electron:    119 passed, 0 failed
 
-Consolidated:        881 passed, 7 skipped, 0 failed
+Consolidated:        895 passed, 7 skipped, 0 failed
 ```
 
 ---
@@ -163,14 +163,12 @@ Consolidated:        881 passed, 7 skipped, 0 failed
      - Category A (Persistent dynamical state in memory; SDM in persistent store), Category B (Accumulated physiological state), and Category C (Instantaneous derived signals) operate strictly according to canonical transition equations.
 * **Findings**:
   - **F-01**: **`RESOLVED / VERIFIED`**. Wired and verified.
-  - **F-02**: Retained strictly as **`UNKNOWN / UNRESOLVED SPECIFICATION GAP`**.
-* **Epistemic Justification on G3 = PASS in Presence of F-02**:
+  - **F-02**: **`RESOLVED / VERIFIED (IMPLEMENTED)`**. Checkpoint serialization, schema validation, and recovery across cold restart implemented and verified.
+* **Epistemic Justification on G3 = PASS**:
   - Under Criteria v0.2 §13, a gate evaluates to `PASS` iff $\text{Count}(\text{BLOCKER}) = 0$, $\text{Count}(\text{HIGH}) = 0$, and traced invariants (INV-1, INV-2) are verified.
-  - Following R-01 remediation of F-01, there are 0 BLOCKER and 0 HIGH findings in Gate 3.
-  - Canonical documentation ([`Phase_10_AFFECTIVE_DYNAMICS_SPEC.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PhaseDocs/lucia-phase10-Affective_Dynamics/Phase_10_AFFECTIVE_DYNAMICS_SPEC.md) §3.1) defines Category A dynamical tensors ($\mathbf{h}_{\text{fast}}, \mathbf{s}_{\text{slow}}$) as persisting continuously *in memory*, decaying to Philia. No canonical ADR mandates disk checkpointing of continuous ODE tensors across cold reboots.
-  - Furthermore, dissipative ODE dynamics ($\text{Tr}(J) \approx -46.46 < 0$) contract to the Philia resting baseline $\mathbf{s}^*_{\text{eff}}(\mathbf{R}_t)$ within tens of seconds of idle time; warm-start re-anchoring at the relationship-grounded attractor is physically congruent with an inter-session dormancy interval.
-  - Criteria v0.2 §12 (Rule 4 & Rule 5) explicitly forbids converting unestablished specifications into false BLOCKERs.
-  - Therefore, at the engineering substrate level, G3 formally evaluates to **`PASS`**, while F-02 is preserved transparently as an open specification question for Human Owner governance.
+  - With R-01 (F-01) and F-02 implemented and verified, Gate 3 has 0 BLOCKER and 0 HIGH findings.
+  - Both discrete relational memory ($\mathbf{R}_t$, SDM) and continuous limbic dynamical state ($\mathbf{h}_{\text{fast}}, \mathbf{s}_{\text{slow}}$) persist across cold restarts with crash safety and elapsed physical time recovery.
+  - Gate 3 formally evaluates to **`PASS`**.
 
 ---
 
@@ -234,20 +232,33 @@ Consolidated:        881 passed, 7 skipped, 0 failed
 
 ---
 
-## 7. Deep Investigation: Status of F-02 (Warm-Start Limbic Recovery)
+## 7. Resolution & Implementation: F-02 (Persistent Dynamical State Across Cold Restart)
 
-In accordance with mandatory governance rules, **F-02 is retained strictly as `UNKNOWN / UNRESOLVED SPECIFICATION GAP`**:
+Following formal authorization, **F-02 has been implemented and verified as a crash-resilient cold-restart persistence mechanism for Category A Persistent Dynamical State**:
 
-1. **Cold Restart Requirement**: Canonical documentation ([`Phase_10_AFFECTIVE_DYNAMICS_SPEC.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PhaseDocs/lucia-phase10-Affective_Dynamics/Phase_10_AFFECTIVE_DYNAMICS_SPEC.md) §3.1) defines Category A persistence as:
-   > *"Persistence: Persists continuously in memory. Evolves with physical time or virtual clock."*  
-   No canonical document mandates disk checkpointing of continuous ODE tensors ($\mathbf{h}_{\text{fast}}, \mathbf{s}_{\text{slow}}$) across cold process reboots.
-2. **Warm-Start Philia Attractor**: Asymptotic contraction ($\text{Tr}(J) \approx -46.46 < 0$) guarantees that the limbic system relaxes toward the Philia resting attractor ($[+0.25, -0.05, +0.05]$) during an idle period. Re-initializing at the relationship-grounded resting attractor $\mathbf{s}^*_{\text{eff}}(\mathbf{R}_t)$ after system shutdown is physically consistent with an idle period, but intra-turn transient momentum from an interrupted turn is not restored.
-3. **No Unratified Promotion**: Because canonical documentation has not explicitly ratified this behavior as an authorized compromise ("Accepted Limitation"), nor mandated deep checkpointing, it remains an **open specification boundary** for Human Owner governance.
-4. **Epistemic Justification on Gate 3 Readiness**:
-   - Criteria v0.2 §13 defines gate passage by $\text{Count}(\text{BLOCKER}) = 0$ and $\text{Count}(\text{HIGH}) = 0$.
-   - F-02 is an epistemic specification gap (`UNKNOWN`), not a violation of an established canonical invariant. The implemented runtime satisfies 100% of canonical specifications as written (Phase 10 §3.1: in-memory continuous; SDM & Relational state: persistent).
-   - Under Criteria v0.2 §12 (Rule 4 & Rule 5), an undefined specification must never be converted into a synthetic blocker.
-   - Therefore, F-02 permits **Gate 3 = PASS** at the engineering substrate readiness level, with F-02 recorded in the Gap Ledger for Human Owner ratification prior to Genesis Onboarding.
+1. **Implemented Mechanism (`src/core/emotion/persistence.py`, `EmotionCore`)**:
+   - *Target Checkpoint Path*: `data/dynamical_state.json` (backup: `data/dynamical_state.json.bak`).
+   - *Exact Persisted Fields*:
+     - `schema_version`: `"1.0"` (strict schema validation).
+     - `created_at`: POSIX UTC float (temporal anchor for elapsed physical time).
+     - `state.h_fast`: 32 floats in $[-1.0, 1.0]$ ($\mathbf{h}_{\text{fast}} \in \mathbb{R}^{32}$).
+     - `state.s_slow`: 16 floats in $[-1.0, 1.0]$ ($\mathbf{s}_{\text{slow}} \in \mathbb{R}^{16}$).
+     - `state.m_homeo`: 4 floats in $[0.0, 1.0]$ (somatic markers).
+     - `state.pad`: Projected $\{P, A, D\}$ coordinates.
+2. **Lock Hierarchy & Concurrency Discipline**:
+   - Zero disk I/O under locks: State is snapshotted under `_step_lock -> _state_lock` ($\le 1\text{ms}$ memory copy), locks are released immediately, and serialization/disk I/O occurs outside critical sections.
+3. **Crash Safety & Fallback Ladder**:
+   - Writes are atomic via `tempfile` and `os.replace` on the same filesystem.
+   - Durably retains previous valid checkpoint in `.json.bak`.
+   - Complete pre-validation: rejects corrupted JSON, incomplete fields, dimension mismatches, and unsupported schema versions.
+   - Fallback ladder: Primary $\to$ Backup (`.json.bak`) $\to$ Canonical Philia baseline.
+4. **Elapsed Physical Time Recovery**:
+   - On cold restart, calculates $\Delta t = t_{\text{recovery}} - t_{\text{checkpoint}}$.
+   - Advances limbic state through canonical unforced idle relaxation using `EmotionCore.integrate_unforced_idle(duration_s=Δt, dt=0.20)` (forward Euler with canonical ODE parameters).
+5. **Explicitly Unresolved Semantics (Preserved Specification Gap)**:
+   - *Canonical Baseline Requirement*: Category A was canonically defined as in-memory continuous (`Phase_10_AFFECTIVE_DYNAMICS_SPEC.md` §3.1).
+   - *Implemented F-02 Behavior*: Extends Category A across cold process restart via atomic disk checkpointing and unforced idle relaxation.
+   - *Remaining Specification Gap*: The canonical architecture does not specify a maximum downtime integration ceiling (e.g., when the host machine is turned off for weeks). To avoid inventing an unratified numerical cutoff or analytical shortcut, the runtime executes canonical `integrate_unforced_idle`. Setting a governance-approved downtime ceiling remains an open specification item for Human Owner ratification.
 
 ---
 
@@ -323,7 +334,7 @@ The table below catalogs all findings following R-01 remediation:
 | Finding ID | Primary Gate | Criterion ID | Severity | Finding Summary | Exact Path & Symbol | Genesis Impact | Action / Remediation Status |
 |---|---|---|---|---|---|---|---|
 | **F-01** | **G3** | **G3.1** | **HIGH (RESOLVED)** | Default `build_cognitive_orchestrator()` constructs `RelationshipUpdater` with `storage_path=DEFAULT_RELATIONSHIP_PATH`, persisting multi-turn updates to `data/relationship.json`. | [`src/core/orchestrator/cognitive_orchestrator.py:806-810`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/src/core/orchestrator/cognitive_orchestrator.py#L806-L810) (`build_cognitive_orchestrator`) | None. Cold restart now reloads accumulated relationship state. | **RESOLVED & VERIFIED**: Implemented in R-01; verified by `tests/integration/test_r01_relationship_persistence.py`. |
-| **F-02** | **G3** | **G3.1** | **UNKNOWN** | Cold-restart persistence contract for continuous ODE tensors ($\mathbf{h}_{\text{fast}}, \mathbf{s}_{\text{slow}}$) is undefined in canonical documentation. Current runtime uses warm-start Philia relaxation. | [`src/core/emotion/emotion_core.py:48-95`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/src/core/emotion/emotion_core.py#L48-L95) (`EmotionCore.__init__`) | Structural continuity is preserved via Philia relaxation; however, exact continuous ODE phase across crash is not reconstructed. | **Architecture Clarification**: Awaiting Human Owner ratification on whether warm-start relaxation satisfies the continuous-life contract or deep checkpointing is required. |
+| **F-02** | **G3** | **G3.1** | **HIGH (RESOLVED)** | Cold-restart checkpoint serialization, schema validation, and unforced idle recovery for continuous ODE tensors ($\mathbf{h}_{\text{fast}}, \mathbf{s}_{\text{slow}}$) implemented in `src/core/emotion/persistence.py`. | [`src/core/emotion/persistence.py`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/src/core/emotion/persistence.py); [`src/core/emotion/emotion_core.py`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/src/core/emotion/emotion_core.py) | Full limbic continuity across cold restarts. | **RESOLVED & VERIFIED**: Implemented in F-02; verified by `tests/integration/test_f02_dynamical_persistence.py` (14/14 passed). |
 | **F-03** | **G7** | **G7.4** | **INFO** | Multi-machine anti-branching protocol is unratified; system persistence is bound to local filesystem `data/`. | [`docs/L1_INVARIANTS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/L1_INVARIANTS.md) (INV-1); Gap Review Topic 6. | Genesis execution must be confined to a single physical machine to prevent split-brain continuations. | **Research/Governance Issue**: Acknowledged as `OPEN GOVERNANCE BOUNDARY`. |
 | **F-04** | **G5** | **G5.2** | **INFO** | Long-duration soak memory growth (<50 MB over 6h) and physical 20W power dissipation lack canonical test harness. | [`src/core/telemetry/`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/src/core/telemetry/) | None; background dynamics strictly execute on CPU with 0.0 MB GPU VRAM. | **Documentation Clarification**: Marked as `NOT DEFINED BY CURRENT CANONICAL SOURCES`. |
 | **F-05** | **G5** | **G5.1** | **MEDIUM** | Dynamic in-flight hardware tier switching without process restart requires server restart in live mode. | [`src/api/server.py`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/src/api/server.py); [`config/ui.json`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/config/ui.json) | Hardware profile changes require server process restart to take effect. | **Operational Hardening**: Support hot reload of hardware profile or require explicit restart. |
@@ -333,7 +344,7 @@ The table below catalogs all findings following R-01 remediation:
 
 ## 11. Remediation Candidates & Backlog
 
-The remediation candidates status post-R-01:
+The remediation candidates status post-F-02:
 
 ### Candidate R-01: Wire `RelationshipUpdater` Storage Path (P1 / HIGH) — **`COMPLETED & VERIFIED`**
 * **Category**: Code Fix
@@ -341,10 +352,11 @@ The remediation candidates status post-R-01:
 * **Implemented Action**: In `build_cognitive_orchestrator()`, added `relationship_storage_path: Optional[Union[str, Path]] = DEFAULT_RELATIONSHIP_PATH` and instantiated `RelationshipUpdater(storage_path=relationship_storage_path)`.
 * **Verification**: Verified via [`tests/integration/test_r01_relationship_persistence.py`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/integration/test_r01_relationship_persistence.py) (3/3 passed).
 
-### Candidate R-02: Formally Ratify Cold-Restart Limbic Contract (P3 / LOW) — **`BACKLOG`**
-* **Category**: Architecture Clarification
-* **Target File**: [`docs/ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/ARCHITECTURE.md)
-* **Proposed Action**: Add explicit note in §5.2 stating that intra-turn continuous ODE tensors ($\mathbf{h}_{\text{fast}}, \mathbf{s}_{\text{slow}}$) recover via warm-start Philia relaxation on process restart, while relational bonds and chat history persist to disk.
+### Candidate R-02: Implement Cold-Restart Persistent Dynamical State (P1 / HIGH) — **`COMPLETED & VERIFIED`**
+* **Category**: Architecture Implementation
+* **Target Files**: [`src/core/emotion/persistence.py`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/src/core/emotion/persistence.py), [`src/core/emotion/emotion_core.py`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/src/core/emotion/emotion_core.py), [`src/core/orchestrator/cognitive_orchestrator.py`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/src/core/orchestrator/cognitive_orchestrator.py)
+* **Implemented Action**: Implemented atomic checkpointing of $\mathbf{h}_{\text{fast}}$, $\mathbf{s}_{\text{slow}}$, created_at timestamp to `data/dynamical_state.json`; crash safety with `.json.bak` fallback; unforced idle recovery via `integrate_unforced_idle`. Documented contract in `docs/ARCHITECTURE.md` §5.2.
+* **Verification**: Verified via [`tests/integration/test_f02_dynamical_persistence.py`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/tests/integration/test_f02_dynamical_persistence.py) (14/14 passed).
 
 ### Candidate R-03: Single-Machine Genesis Governance Policy (P2 / MEDIUM) — **`BACKLOG`**
 * **Category**: Operational Hardening / Governance

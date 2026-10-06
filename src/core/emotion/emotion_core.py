@@ -29,7 +29,8 @@ import logging
 import threading
 import time
 from collections import deque
-from typing import Optional, Tuple
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 from scipy.integrate import solve_ivp
@@ -42,6 +43,12 @@ from src.core.emotion.consolidation import (
     ConsolidationExperience,
     HomeostaticTrajectory,
     SynapticParameterState,
+)
+from src.core.emotion.persistence import (
+    DEFAULT_DYNAMICAL_STATE_PATH,
+    DynamicalStateSnapshot,
+    load_dynamical_checkpoint,
+    save_dynamical_checkpoint,
 )
 
 logger = logging.getLogger(__name__)
@@ -70,7 +77,12 @@ class EmotionCore:
         core.stop()
     """
 
-    def __init__(self, config: Optional[EmotionConfig] = None) -> None:
+    def __init__(
+        self,
+        config: Optional[EmotionConfig] = None,
+        storage_path: Optional[Union[str, Path]] = None,
+        auto_restore: bool = True,
+    ) -> None:
         if config is None:
             config = EmotionConfig()
         self._config = config
@@ -200,6 +212,11 @@ class EmotionCore:
         self._thread: Optional[threading.Thread] = None
         self._tick_counter: int = 0
 
+        # F-02: Persistent Dynamical State Storage & Cold Restart Recovery
+        self._storage_path: Optional[Path] = Path(storage_path) if storage_path is not None else None
+        if self._storage_path is not None and auto_restore:
+            self.restore_from_checkpoint(self._storage_path)
+
     # ------------------------------------------------------------------
     # Property Aliases for MT-LNN & LNNTrainer Compatibility
     # ------------------------------------------------------------------
@@ -251,6 +268,101 @@ class EmotionCore:
     @_h_fast.setter
     def _h_fast(self, val: np.ndarray) -> None:
         self._h = val
+
+    # ------------------------------------------------------------------
+    # F-02: Persistent Dynamical State Checkpoint & Recovery
+    # ------------------------------------------------------------------
+
+    def snapshot_dynamical_state(self) -> DynamicalStateSnapshot:
+        """
+        Snapshot canonical dynamical state under strict descending lock discipline.
+        Acquires _step_lock -> _state_lock, copies arrays within <= 1ms, and releases
+        locks before returning to ensure zero disk I/O under locks.
+        """
+        with self._step_lock:
+            with self._state_lock:
+                h_copy = self._h.copy()
+                s_copy = self._s_slow.copy()
+                m_copy = self._m_homeo.copy()
+                pad_snap = self._pad_snapshot
+
+        return DynamicalStateSnapshot(
+            h_fast=h_copy,
+            s_slow=s_copy,
+            created_at=time.time(),
+            m_homeo=m_copy,
+            pad={
+                "pleasure": pad_snap.pleasure,
+                "arousal": pad_snap.arousal,
+                "dominance": pad_snap.dominance,
+            },
+        )
+
+    def checkpoint(self, filepath: Optional[Union[str, Path]] = None) -> Optional[Path]:
+        """
+        Atomically persist a coherent dynamical state snapshot to disk.
+        Zero disk I/O under locks: snapshot is created under locks and serialized after release.
+        """
+        target = Path(filepath) if filepath else self._storage_path
+        if target is None:
+            return None
+        snapshot = self.snapshot_dynamical_state()
+        return save_dynamical_checkpoint(snapshot, filepath=target)
+
+    def apply_dynamical_snapshot(
+        self,
+        snapshot: DynamicalStateSnapshot,
+        apply_elapsed_time: bool = True,
+        current_time: Optional[float] = None,
+    ) -> None:
+        """
+        Restore dynamical vectors into live runtime state.
+        Under _step_lock -> _state_lock, sets _h, _s_slow, and updates PAD.
+        If apply_elapsed_time is True and elapsed physical time > 0, integrates
+        system through unforced rest interval using canonical integrate_unforced_idle().
+        """
+        with self._step_lock:
+            with self._state_lock:
+                self._h = np.clip(snapshot.h_fast.copy(), -1.0, 1.0)
+                self._s_slow = np.clip(snapshot.s_slow.copy(), -1.0, 1.0)
+                if snapshot.m_homeo is not None:
+                    self._m_homeo = np.clip(snapshot.m_homeo.copy(), 0.0, 1.0)
+                self._pad_snapshot = self._project_to_pad(self._h, self._s_slow)
+
+        if apply_elapsed_time:
+            now = time.time() if current_time is None else current_time
+            elapsed_s = max(0.0, now - snapshot.created_at)
+            if elapsed_s > 0.0:
+                self.integrate_unforced_idle(
+                    duration_s=elapsed_s,
+                    dt=self._config.ode_step_size,
+                    record_trajectory=False,
+                )
+
+    def restore_from_checkpoint(
+        self,
+        filepath: Optional[Union[str, Path]] = None,
+        apply_elapsed_time: bool = True,
+        current_time: Optional[float] = None,
+    ) -> bool:
+        """
+        Attempt to restore dynamical state from the latest valid checkpoint.
+        Falls back to previous valid checkpoint if primary is corrupted, or
+        returns False (retaining existing initial Philia baseline) if no valid
+        checkpoint exists.
+        """
+        target = Path(filepath) if filepath else self._storage_path
+        if target is None:
+            return False
+        snapshot = load_dynamical_checkpoint(target)
+        if snapshot is None:
+            return False
+        self.apply_dynamical_snapshot(
+            snapshot,
+            apply_elapsed_time=apply_elapsed_time,
+            current_time=current_time,
+        )
+        return True
 
     # ------------------------------------------------------------------
     # Lifecycle

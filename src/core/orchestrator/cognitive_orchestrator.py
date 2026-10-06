@@ -79,6 +79,7 @@ from src.core.orchestrator.policies import (
     PlasticityPolicy,
     SurpriseModulationPolicy,
 )
+from src.core.emotion.persistence import DEFAULT_DYNAMICAL_STATE_PATH
 from src.core.orchestrator.prompt_assembler import PromptAssembler
 from src.core.relationship.persistence import DEFAULT_RELATIONSHIP_PATH
 from src.core.relationship.signals import RelationshipSignal, RelationshipSignalType
@@ -281,6 +282,11 @@ class CognitiveOrchestrator:
     def shutdown(self) -> None:
         """Stop all background daemons and release the LLM model."""
         self._shutdown = True
+        if hasattr(self._emotion_core, "checkpoint"):
+            try:
+                self._emotion_core.checkpoint()
+            except Exception:
+                pass
         self._emotion_core.stop()
         if self._emotion_core._thread is not None:
             self._emotion_core._thread.join(timeout=2.0)
@@ -673,6 +679,16 @@ class CognitiveOrchestrator:
         if len(self._history) > max_pairs:
             self._history = self._history[-max_pairs:]
 
+        # 16.5 F-02: Checkpoint persistent dynamical state
+        if hasattr(self._emotion_core, "checkpoint"):
+            try:
+                self._emotion_core.checkpoint()
+            except Exception:
+                logger.warning(
+                    "CognitiveOrchestrator: dynamical state checkpointing failed; continuing",
+                    exc_info=True,
+                )
+
         execution_time_s = max(0.0001, time.perf_counter() - t_start)
 
         logger.info(
@@ -775,6 +791,7 @@ def build_cognitive_orchestrator(
     expression_policy: Optional[ExpressionPolicy] = None,
     llm_backend: Optional[LLMBackend] = None,
     relationship_storage_path: Optional[Union[str, Path]] = DEFAULT_RELATIONSHIP_PATH,
+    dynamical_storage_path: Optional[Union[str, Path]] = DEFAULT_DYNAMICAL_STATE_PATH,
 ) -> CognitiveOrchestrator:
     """
     Construct a fully wired CognitiveOrchestrator from a MemoryOrchestratorConfig.
@@ -784,7 +801,10 @@ def build_cognitive_orchestrator(
     InstrumentedOrchestrator) and consolidates it in one place.
     """
     stimulus_processor = StimulusProcessor(config.to_stimulus_config())
-    emotion_core = EmotionCore(config.to_emotion_config())
+    emotion_core = EmotionCore(
+        config.to_emotion_config(),
+        storage_path=dynamical_storage_path,
+    )
     homeostatic_engine = HomeostaticEngine(HomeostaticConfig())
     active_inference = ActiveInferenceEngine(ActiveInferenceConfig())
     affective_memory = AffectiveMemory(config.to_affective_memory_config())

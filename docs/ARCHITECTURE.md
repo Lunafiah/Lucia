@@ -580,6 +580,22 @@ $$\text{Orchestrator } \_turn\_lock \longrightarrow \_step\_lock \longrightarrow
 
 ### 5.2 Taxonomy of Three Temporal State Categories
 1. **Persistent Dynamical State**: Coupled MT-LNN states ($\mathbf{h}_{\text{fast}} \in \mathbb{R}^{32}, \mathbf{s}_{\text{slow}} \in \mathbb{R}^{16}$), committed PAD, and SDM traces. Continuous and permanent across turns, decaying smoothly toward Philia resting baseline under background ODE relaxation.
+   - **Cold-Restart Checkpoint Contract (F-02 Implementation)**:
+     - *Storage Target*: `data/dynamical_state.json` (backup: `data/dynamical_state.json.bak`).
+     - *Exact Persisted Fields*:
+       - `schema_version`: `"1.0"` (strict schema validation).
+       - `created_at`: POSIX UTC float (temporal anchor for elapsed physical time).
+       - `state.h_fast`: 32 floats in $[-1.0, 1.0]$.
+       - `state.s_slow`: 16 floats in $[-1.0, 1.0]$.
+       - `state.m_homeo`: 4 floats in $[0.0, 1.0]$ (optional somatic context).
+       - `state.pad`: Projected $\{P, A, D\}$ coordinates (optional inspection metadata).
+     - *Lock Discipline*: Zero disk I/O under locks. Snapshot is taken in memory under $\_step\_lock \to \_state\_lock$ ($\le 1\text{ms}$), locks are released immediately, and atomic file serialization occurs outside critical sections.
+     - *Crash-Safe Fallback Ladder*:
+       1. Atomically commits via temporary file (`os.replace`), preserving previous valid state in `.json.bak`.
+       2. If primary file is corrupted, incomplete, or incompatible, automatically falls back to `.json.bak`.
+       3. If neither primary nor backup is valid, cleanly falls back to canonical initial baseline ($\mathbf{h}=0, \mathbf{s}=\mathbf{s}^*_{\text{philia}}$, Philia PAD) without mutating live state.
+     - *Elapsed Physical Time Recovery*: On cold restart, calculates $\Delta t = t_{\text{recovery}} - t_{\text{checkpoint}}$. Advances state through canonical unforced idle relaxation using `EmotionCore.integrate_unforced_idle(duration_s=Δt, dt=0.20)` (forward Euler with canonical ODE parameters).
+     - *Unresolved Specification Gap*: The canonical architecture does not currently define a maximum downtime integration ceiling (e.g., when a host is powered off for weeks/months). Until human governance ratifies a saturation cutoff or early-convergence threshold, the system executes canonical `integrate_unforced_idle`.
 2. **Accumulated Physiological State**: Energy $\mathcal{E}$, Cognitive Load $\mathcal{C}$, and input frequency window. Depletes with turns ($\Delta\mathcal{E} = -0.05$) and compounds with rapid conversational frequency, throttling token budgets ($350 \to 150 \to 80$).
 3. **Instantaneous Derived Affect**: Free Energy Surprise $\mathcal{S}$ and per-turn Somatic Tension $\mathcal{T}$. Zero inter-turn persistence; evaluated strictly on the current transition $(p_{before} \to p_{after})$ and cleared each turn. Triggers $k=2$ deliberative reasoning depth when $\mathcal{S} \ge 0.60$ or $\mathcal{T} \ge 0.70$.
 
