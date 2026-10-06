@@ -41,7 +41,7 @@ Every invariant in this document is traced directly to canonical project documen
 3. **Continuity Invariants vs. Empirical Demonstration of Individuality (Topic 4)**:
    - `INV-1 One Continuous Life` and existing continuity/memory invariants protect the structural conditions for continuous existence.
    - **Continuity protection is NOT equivalent to empirical demonstration of emergent individuality.**
-   - The repository must not claim that longitudinal individuality has already been empirically demonstrated merely because continuity invariants exist. Longitudinal individuality remains an open research question allocated to future horizons (P26/P27).
+   - The repository must not claim that longitudinal individuality has already been empirically demonstrated merely because continuity invariants exist. Longitudinal individuality and autonomous preferences were evaluated under Phase 26 (trial completed; preferences not demonstrated) and Phase 27 (closed with no new scientific gap at Level C; higher-order trajectory hypotheses remain epistemically blocked by causal identifiability). Invariants protect structural continuity; they do not constitute empirical demonstration of emergent individuality.
 4. **Lifecycle Semantics & Catastrophic Decommissioning (Topic 7)**:
    - `POST /lifecycle/end` is canonically implemented and documented strictly as **catastrophic individual decommissioning / complete memory reset**.
    - It must never be reinterpreted as a normal relationship transition.
@@ -170,7 +170,7 @@ Every invariant in this document is traced directly to canonical project documen
    - Historical research conclusions must never be rewritten to create an artificial linear progression.
 6. **Emergent Aesthetic & Creative Autonomy Boundary (Topic 2)**:
    - Lucia does not currently claim autonomous aesthetic preference, creative preference, or autonomous creative acceptance/rejection as an implemented capability.
-   - Such capabilities remain future research concerning emergent individuality, preference formation, and autonomous behavior, primarily allocated to future developmental horizons P26/P27. Speculative preference engines or creative networks must NOT be promoted to architecture without empirical validation.
+   - Such capabilities were evaluated under Phase 26 (where emergent individuality and autonomous preferences were not demonstrated) and Phase 27 (closed with no new scientific gap at Level C; higher-order trajectory hypotheses remain epistemically blocked by causal identifiability). Speculative preference engines or creative networks remain unratified and must NOT be promoted to architecture without empirical validation.
 7. **Phase Documentation Containment Invariant**:
    - Whenever starting a new phase, agents MUST create a dedicated subfolder `Lucia-phase<X>-<Topic>` inside `docs/PhaseDocs/` (e.g. `docs/PhaseDocs/Lucia-phase25-Temporal_Embodiment/`).
    - ALL documentation, research specifications, evaluation protocols, reports, and raw telemetry/artifacts related to that phase must be strictly contained within that phase folder (with artifacts stored in `evaluation_artifacts/` within that phase directory).
