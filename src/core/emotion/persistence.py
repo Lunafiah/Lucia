@@ -409,13 +409,32 @@ def read_epoch_from_file(filepath: Path) -> Optional[int]:
     return None
 
 
+@dataclass
+class StoreReconciliationReport:
+    """
+    Detailed audit and telemetry report produced by verify_and_reconcile_stores().
+    Records consistency status and any rollback actions taken across persistent stores.
+    """
+    manifest_loaded: bool
+    manifest_corrupted_or_truncated: bool
+    committed_epoch: Optional[int]
+    corrupted_stores_restored: List[str]
+    uncommitted_stores_rolled_back: List[str]
+    divergent_stores_reconciled: List[str]
+    inconsistencies_detected: List[str]
+
+    @property
+    def is_consistent(self) -> bool:
+        return len(self.inconsistencies_detected) == 0
+
+
 def verify_and_reconcile_stores(
     relationship_path: Optional[Union[str, Path]] = None,
     dynamical_path: Optional[Union[str, Path]] = None,
     manifest_path: Optional[Union[str, Path]] = None,
-) -> None:
+) -> StoreReconciliationReport:
     """
-    Deterministic consistency verification and rollback reconciliation protocol (F-02).
+    Deterministic consistency verification and rollback reconciliation protocol (F-02 / ADR-033 / WP-04).
     
     Guarantees:
     1. If a crash occurred after updating a store but before the commit barrier (manifest)
@@ -424,10 +443,19 @@ def verify_and_reconcile_stores(
     2. If a store is corrupted (malformed JSON), automatically restores valid .bak.
     3. If stores have divergent epochs without a manifest, restores .bak to find the
        common coherent epoch, preventing silent merging of unrelated epochs.
+    4. Detects truncated, corrupted, or stale manifests and records inconsistency warnings.
+    5. Leaves identity anchor and profile state strictly untouched (.bak recovery is
+       confined to emotional/relationship dynamic stores).
     """
     rel_p = Path(relationship_path) if relationship_path else Path("data/relationship.json")
     dyn_p = Path(dynamical_path) if dynamical_path else DEFAULT_DYNAMICAL_STATE_PATH
     man_p = Path(manifest_path) if manifest_path else DEFAULT_EPOCH_MANIFEST_PATH
+
+    corrupted_stores_restored: List[str] = []
+    uncommitted_stores_rolled_back: List[str] = []
+    divergent_stores_reconciled: List[str] = []
+    inconsistencies_detected: List[str] = []
+    manifest_corrupted_or_truncated: bool = False
 
     manifest = load_epoch_manifest(man_p)
 
@@ -448,6 +476,17 @@ def verify_and_reconcile_stores(
             if bak.exists() and _is_valid_json(bak):
                 logger.warning("Primary store %s is corrupted; restoring from backup %s", target, bak)
                 shutil.copy2(bak, target)
+                corrupted_stores_restored.append(target.name)
+            else:
+                inconsistencies_detected.append(
+                    f"Primary store {target.name} is corrupted and no valid backup exists"
+                )
+
+    if man_p.exists() and manifest is None:
+        manifest_corrupted_or_truncated = True
+        msg = f"Epoch manifest at {man_p} exists but is truncated, corrupted, or invalid"
+        logger.warning(msg)
+        inconsistencies_detected.append(msg)
 
     # 2. Check against manifest commit barrier if present
     if manifest is not None:
@@ -466,8 +505,24 @@ def verify_and_reconcile_stores(
                                 target, ep, committed_epoch, bak, bak_ep,
                             )
                             shutil.copy2(bak, target)
+                            uncommitted_stores_rolled_back.append(target.name)
+                        else:
+                            inconsistencies_detected.append(
+                                f"Store {target.name} uncommitted epoch {ep} exceeds committed {committed_epoch}, "
+                                f"and backup {bak.name} epoch {bak_ep} also exceeds committed epoch"
+                            )
+                    else:
+                        inconsistencies_detected.append(
+                            f"Store {target.name} uncommitted epoch {ep} exceeds committed {committed_epoch}, "
+                            f"but no valid backup exists to roll back"
+                        )
+                elif ep is not None and ep < committed_epoch:
+                    msg = f"Store {target.name} epoch {ep} is behind committed epoch {committed_epoch}"
+                    logger.warning(msg)
+                    inconsistencies_detected.append(msg)
     else:
         # 3. No manifest present: check for epoch mismatch between primaries
+        committed_epoch = None
         if rel_p.exists() and dyn_p.exists():
             rel_ep = read_epoch_from_file(rel_p)
             dyn_ep = read_epoch_from_file(dyn_p)
@@ -481,8 +536,28 @@ def verify_and_reconcile_stores(
                     if rel_bak.exists() and read_epoch_from_file(rel_bak) == dyn_ep:
                         logger.warning("Rolling back relationship store to match dynamical store epoch %d", dyn_ep)
                         shutil.copy2(rel_bak, rel_p)
+                        divergent_stores_reconciled.append("relationship")
+                    else:
+                        inconsistencies_detected.append(
+                            f"Cannot reconcile relationship epoch {rel_ep} to dynamical epoch {dyn_ep} without matching backup"
+                        )
                 elif dyn_ep > rel_ep:
                     dyn_bak = dyn_p.with_suffix(".json.bak")
                     if dyn_bak.exists() and read_epoch_from_file(dyn_bak) == rel_ep:
                         logger.warning("Rolling back dynamical store to match relationship store epoch %d", rel_ep)
                         shutil.copy2(dyn_bak, dyn_p)
+                        divergent_stores_reconciled.append("dynamical_state")
+                    else:
+                        inconsistencies_detected.append(
+                            f"Cannot reconcile dynamical epoch {dyn_ep} to relationship epoch {rel_ep} without matching backup"
+                        )
+
+    return StoreReconciliationReport(
+        manifest_loaded=(manifest is not None),
+        manifest_corrupted_or_truncated=manifest_corrupted_or_truncated,
+        committed_epoch=committed_epoch,
+        corrupted_stores_restored=corrupted_stores_restored,
+        uncommitted_stores_rolled_back=uncommitted_stores_rolled_back,
+        divergent_stores_reconciled=divergent_stores_reconciled,
+        inconsistencies_detected=inconsistencies_detected,
+    )

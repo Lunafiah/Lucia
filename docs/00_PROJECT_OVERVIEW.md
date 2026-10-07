@@ -34,6 +34,7 @@ Lucia has a single, unbroken existence. She has no character preset pickers, pro
 * **Anti-Branching Invariant**: `INV-1` mandates that Lucia cannot silently become multiple independent continuations (split-brain). Any future migration requires an explicit authority mechanism.
 * **Continuity Protection $\ne$ Empirical Individuality**: Invariant protections enforce the conditions for continuous identity, but do NOT constitute empirical demonstration of emergent individuality. Longitudinal individuality and authentic aesthetic/creative preferences remain open research targets for future developmental horizons (P26/P27).
 * **Affective State vs. Relational State Decoupling**: Fast-loop emotional dynamics (PAD ODE decaying to Philia) are strictly decoupled from slow-loop relationship state $\mathbf{R}_t$. Affective recovery does not imply relational resolution, and negative relational dynamics remain open research.
+* **Tripartite Ontology (Owner-Ratified Ontology B — REQ-GEN-03)**: Identity is unique and absolute; Relationship and Covenant are relative, contextual, and mutable ($\text{Identity State} \neq \text{Relationship State} \neq \text{Covenant State}$). Identity is continuous across Lucia's entire life (`INV-1`) and is not redefined by relationship changes. Relationship or covenant transitions do NOT create a new Lucia nor terminate identity ($\text{Release} \neq \text{Termination}$). `/lifecycle/end` strictly remains catastrophic decommissioning. Concrete covenant state machines and multi-chapter policies remain future governance work.
 
 ---
 

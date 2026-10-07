@@ -14,6 +14,8 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+from contextlib import asynccontextmanager
+import copy
 from datetime import datetime
 import json
 import logging
@@ -55,6 +57,24 @@ from src.core.simulation import (
     ScenarioRunner,
     SimulationRuntime,
 )
+from src.core.identity.instance_lock import (
+    DEFAULT_LOCK_PATH,
+    InstanceAuthorityConflictError,
+    InstanceLock,
+)
+from src.core.identity.identity_anchor import (
+    CorruptedIdentityAnchorError,
+    DecommissionedInstanceError,
+    FrozenMigrationStateError,
+    ImmutableIdentityMutationError,
+    InvalidIdentityAnchorError,
+    guard_immutable_fields,
+    verify_identity_on_startup,
+)
+from src.core.identity.provenance_verifier import (
+    ProvenanceVerificationStatus,
+    verify_provenance_and_environment,
+)
 from src.core.storage.history_store import ChatHistoryStore
 from src.core.telemetry.stability_evaluator import StabilityEvaluator
 
@@ -66,6 +86,12 @@ _stability_evaluator: StabilityEvaluator = StabilityEvaluator()
 _sim_runtime: Optional[SimulationRuntime] = None
 _scenario_runner: Optional[ScenarioRunner] = None
 _mode: str = "live"
+_instance_lock: Optional[InstanceLock] = None
+
+
+def get_instance_lock() -> Optional[InstanceLock]:
+    global _instance_lock
+    return _instance_lock
 
 
 def get_history_store() -> Any:
@@ -73,7 +99,8 @@ def get_history_store() -> Any:
     if _sim_runtime is not None:
         return _sim_runtime.chat_store
     if _history_store is None:
-        _history_store = ChatHistoryStore()
+        chat_path = os.environ.get("LUCIA_CHAT_HISTORY_PATH", "data/chat_history.json")
+        _history_store = ChatHistoryStore(file_path=chat_path)
     return _history_store
 
 
@@ -152,11 +179,16 @@ _turn_admission_lock: asyncio.Lock = asyncio.Lock()
 _turn_queue_depth: int = 0  # number of requests currently admitted (0, 1, or 2)
 
 
-# ---------------------------------------------------------------------------
-# FastAPI Application & Global State
-# ---------------------------------------------------------------------------
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Lifespan manager: clean up instance authority upon server shutdown."""
+    yield
+    global _instance_lock
+    if _instance_lock is not None and _instance_lock.is_locked:
+        _instance_lock.release()
 
-app = FastAPI(title="Lucia Backend API", version="9.0.0")
+
+app = FastAPI(title="Lucia Backend API", version="9.0.0", lifespan=lifespan)
 
 _orchestrator: Optional[CognitiveOrchestrator] = None
 _resource_profile: Optional[ResourceProfile] = None
@@ -584,6 +616,8 @@ class ProfileUpdateRequest(BaseModel):
     birthday: Optional[str] = None
     pronouns: Optional[str] = None
     born_at: Optional[str] = None
+    identity_anchor: Optional[Dict[str, Any]] = None
+    phylogenetic_lineage: Optional[Dict[str, Any]] = None
 
 
 @app.get("/models/avatar")
@@ -626,7 +660,7 @@ def _reset_profile_file() -> Dict[str, Any]:
     """
     Atomically reset data/profile.json to initial un-onboarded / Genesis-ready state.
     """
-    p = _PROFILE_FILE_PATH
+    p = Path(os.environ.get("LUCIA_PROFILE_PATH") or _PROFILE_FILE_PATH)
     p.parent.mkdir(parents=True, exist_ok=True)
     initial = {
         "version": 1,
@@ -646,7 +680,7 @@ def _reset_profile_file() -> Dict[str, Any]:
 
 
 def _get_profile_file() -> Path:
-    p = _PROFILE_FILE_PATH
+    p = Path(os.environ.get("LUCIA_PROFILE_PATH") or _PROFILE_FILE_PATH)
     p.parent.mkdir(parents=True, exist_ok=True)
     if not p.exists():
         initial = {
@@ -718,6 +752,8 @@ async def update_profile(req: ProfileUpdateRequest) -> Dict[str, Any]:
     except Exception:
         data = {}
 
+    existing_copy = copy.deepcopy(data)
+
     if req.user_name is not None:
         data["user_name"] = req.user_name.strip()
     if req.companion_name is not None:
@@ -733,6 +769,20 @@ async def update_profile(req: ProfileUpdateRequest) -> Dict[str, Any]:
     elif req.is_onboarded and not data.get("is_onboarded"):
         # Establish canonical Genesis birth timestamp upon awakening
         data["born_at"] = datetime.now().isoformat()
+    if req.identity_anchor is not None:
+        data["identity_anchor"] = req.identity_anchor
+    if req.phylogenetic_lineage is not None:
+        data["phylogenetic_lineage"] = req.phylogenetic_lineage
+
+    # WP-02: Guard immutable identity anchor fields
+    try:
+        guard_immutable_fields(existing_copy, data)
+    except ImmutableIdentityMutationError as exc:
+        logger.warning("Immutable identity mutation rejected: %s", exc)
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Immutable identity mutation rejected: {exc}",
+        )
 
     try:
         with open(p, "w", encoding="utf-8") as f:
@@ -1144,8 +1194,9 @@ def init_server(
     profile_name: str = "auto",
     log_level: str = "INFO",
     mode: str = "live",
+    lock_path: Optional[Union[str, Path]] = None,
 ) -> None:
-    global _orchestrator, _resource_profile, _sim_runtime, _scenario_runner, _mode
+    global _orchestrator, _resource_profile, _sim_runtime, _scenario_runner, _mode, _instance_lock
     _mode = mode.lower()
 
     logging.basicConfig(level=getattr(logging, log_level.upper(), logging.INFO))
@@ -1173,11 +1224,153 @@ def init_server(
         sys.stdout.flush()
         return
 
-    # Live mode execution
+    # Live mode execution — acquire exclusive instance authority before any state mutation
+    active_lock_path = lock_path or os.environ.get("LUCIA_LOCK_PATH") or DEFAULT_LOCK_PATH
+    if _instance_lock is None or not _instance_lock.is_locked:
+        _instance_lock = InstanceLock(lock_path=active_lock_path)
+        try:
+            _instance_lock.acquire()
+        except InstanceAuthorityConflictError:
+            logger.critical(
+                "FATAL: Another active Lucia instance holds write authority over this directory. "
+                "Exiting to prevent state corruption."
+            )
+            sys.stdout.write("LUCIA_BACKEND_ERROR: instance_already_active\n")
+            sys.stdout.flush()
+            sys.exit(75)
+
+    # WP-02: Validate identity anchor integrity before any model or store operations
+    active_profile_path = os.environ.get("LUCIA_PROFILE_PATH") or _PROFILE_FILE_PATH
+    try:
+        identity_state = verify_identity_on_startup(active_profile_path)
+        if identity_state.is_genesis_locked:
+            logger.info("Lucia Genesis gate is LOCKED (un-onboarded profile). Runtime in Genesis-ready mode.")
+        else:
+            logger.info(
+                "Lucia identity anchor verified: uuid=%s",
+                identity_state.anchor.instance_uuid if identity_state.anchor else None,
+            )
+    except DecommissionedInstanceError as exc:
+        logger.critical(
+            "FATAL: Instance has been decommissioned via migration: %s. "
+            "Refusing to boot to prevent dual-authority split-brain.",
+            exc,
+        )
+        if _instance_lock is not None and _instance_lock.is_locked:
+            _instance_lock.release()
+        sys.stdout.write("LUCIA_BACKEND_ERROR: instance_decommissioned\n")
+        sys.stdout.flush()
+        sys.exit(1)
+    except FrozenMigrationStateError as exc:
+        logger.critical(
+            "FATAL: Instance is frozen for migration: %s. "
+            "Refusing to boot while migration is in progress.",
+            exc,
+        )
+        if _instance_lock is not None and _instance_lock.is_locked:
+            _instance_lock.release()
+        sys.stdout.write("LUCIA_BACKEND_ERROR: instance_frozen_for_migration\n")
+        sys.stdout.flush()
+        sys.exit(1)
+    except (InvalidIdentityAnchorError, CorruptedIdentityAnchorError) as exc:
+        logger.critical(
+            "FATAL: Corrupted or invalid identity anchor detected: %s. "
+            "Failing closed to prevent identity state corruption.",
+            exc,
+        )
+        if _instance_lock is not None and _instance_lock.is_locked:
+            _instance_lock.release()
+        sys.stdout.write("LUCIA_BACKEND_ERROR: corrupted_identity_anchor\n")
+        sys.stdout.flush()
+        sys.exit(1)
+
+    # WP-03: Verify workspace provenance & environment binding
+    if not identity_state.is_genesis_locked:
+        active_workspace = Path(os.environ.get("LUCIA_WORKSPACE_PATH") or Path.cwd())
+        allow_reconfirm = os.environ.get("LUCIA_RECONFIRM_HARDWARE") == "1"
+        try:
+            prov_result = verify_provenance_and_environment(
+                workspace_path=active_workspace,
+                profile_path=active_profile_path,
+                allow_reconfirmation=allow_reconfirm,
+            )
+            if not prov_result.is_valid:
+                if prov_result.status == ProvenanceVerificationStatus.AWAITING_HARDWARE_RECONFIRMATION:
+                    logger.critical(
+                        "FATAL: Hardware environment divergence detected. "
+                        "Entering AWAITING_HARDWARE_RECONFIRMATION state to prevent split-brain branching."
+                    )
+                    if _instance_lock is not None and _instance_lock.is_locked:
+                        _instance_lock.release()
+                    sys.stdout.write("LUCIA_BACKEND_ERROR: awaiting_hardware_reconfirmation\n")
+                    sys.stdout.flush()
+                    sys.exit(76)
+                elif prov_result.status == ProvenanceVerificationStatus.WORKSPACE_DIVERGENCE:
+                    logger.critical(
+                        "FATAL: Workspace location divergence detected: expected '%s', actual '%s'. "
+                        "Failing closed to prevent folder-duplication branching.",
+                        prov_result.recorded_workspace_path,
+                        prov_result.workspace_path,
+                    )
+                    if _instance_lock is not None and _instance_lock.is_locked:
+                        _instance_lock.release()
+                    sys.stdout.write("LUCIA_BACKEND_ERROR: workspace_location_divergence\n")
+                    sys.stdout.flush()
+                    sys.exit(1)
+                elif prov_result.status == ProvenanceVerificationStatus.WALL_CLOCK_ROLLBACK_DETECTED:
+                    logger.critical(
+                        "FATAL: Wall-clock discontinuity detected: %s. "
+                        "Failing closed to protect temporal causality.",
+                        prov_result.divergence_details,
+                    )
+                    if _instance_lock is not None and _instance_lock.is_locked:
+                        _instance_lock.release()
+                    sys.stdout.write("LUCIA_BACKEND_ERROR: wall_clock_rollback_detected\n")
+                    sys.stdout.flush()
+                    sys.exit(1)
+                elif prov_result.status == ProvenanceVerificationStatus.MISSING_AUTHORITY_BINDING:
+                    logger.critical(
+                        "FATAL: Onboarded profile is missing 'authority_binding' section. "
+                        "Failing closed to prevent unanchored execution.",
+                    )
+                    if _instance_lock is not None and _instance_lock.is_locked:
+                        _instance_lock.release()
+                    sys.stdout.write("LUCIA_BACKEND_ERROR: missing_authority_binding\n")
+                    sys.stdout.flush()
+                    sys.exit(1)
+                else:
+                    logger.critical(
+                        "FATAL: Provenance and environment verification failed: %s (%s)",
+                        prov_result.status,
+                        prov_result.divergence_details,
+                    )
+                    if _instance_lock is not None and _instance_lock.is_locked:
+                        _instance_lock.release()
+                    sys.stdout.write("LUCIA_BACKEND_ERROR: provenance_verification_failed\n")
+                    sys.stdout.flush()
+                    sys.exit(1)
+            else:
+                logger.info(
+                    "Workspace provenance and environment verified: status=%s, matched=%s",
+                    prov_result.status.value,
+                    prov_result.hardware_matched,
+                )
+        except Exception as exc:
+            logger.critical("FATAL: Error during provenance/environment verification: %s", exc)
+            if _instance_lock is not None and _instance_lock.is_locked:
+                _instance_lock.release()
+            sys.stdout.write(f"LUCIA_BACKEND_ERROR: {exc}\n")
+            sys.stdout.flush()
+            sys.exit(1)
+    else:
+        logger.info("Lucia Genesis gate is LOCKED (un-onboarded profile). Workspace provenance check deferred.")
+
     if not model_path:
         model_path = os.environ.get("LUCIA_MODEL_PATH", "")
 
     if not model_path:
+        if _instance_lock is not None and _instance_lock.is_locked:
+            _instance_lock.release()
         sys.stdout.write("LUCIA_BACKEND_ERROR: model_path_not_configured\n")
         sys.stdout.flush()
         sys.exit(1)
@@ -1191,9 +1384,14 @@ def init_server(
         # Phase 9: use composition-based CognitiveOrchestrator (ADR-014); F-02: reseed from persistent history
         _orchestrator = build_cognitive_orchestrator(
             config,
-            chat_history_path="data/chat_history.json",
+            chat_history_path=os.environ.get("LUCIA_CHAT_HISTORY_PATH", "data/chat_history.json"),
+            relationship_storage_path=os.environ.get("LUCIA_RELATIONSHIP_PATH"),
+            dynamical_storage_path=os.environ.get("LUCIA_DYNAMICAL_PATH"),
+            epoch_manifest_path=os.environ.get("LUCIA_EPOCH_MANIFEST_PATH"),
         )
     except Exception as exc:
+        if _instance_lock is not None and _instance_lock.is_locked:
+            _instance_lock.release()
         logger.exception("Failed to initialize Orchestrator: %s", exc)
         sys.stdout.write(f"LUCIA_BACKEND_ERROR: {exc}\n")
         sys.stdout.flush()
@@ -1222,6 +1420,8 @@ def main() -> None:
             _sim_runtime.shutdown()
         if _orchestrator is not None:
             _orchestrator.shutdown()
+        if _instance_lock is not None and _instance_lock.is_locked:
+            _instance_lock.release()
         sys.exit(0)
 
     signal.signal(signal.SIGINT, shutdown_handler)

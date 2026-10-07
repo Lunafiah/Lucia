@@ -42,10 +42,17 @@ Every invariant in this document is traced directly to canonical project documen
    - `INV-1 One Continuous Life` and existing continuity/memory invariants protect the structural conditions for continuous existence.
    - **Continuity protection is NOT equivalent to empirical demonstration of emergent individuality.**
    - The repository must not claim that longitudinal individuality has already been empirically demonstrated merely because continuity invariants exist. Longitudinal individuality and autonomous preferences were evaluated under Phase 26 (trial completed; preferences not demonstrated) and Phase 27 (closed with no new scientific gap at Level C; higher-order trajectory hypotheses remain epistemically blocked by causal identifiability). Invariants protect structural continuity; they do not constitute empirical demonstration of emergent individuality.
-4. **Lifecycle Semantics & Catastrophic Decommissioning (Topic 7)**:
-   - `POST /lifecycle/end` is canonically implemented and documented strictly as **catastrophic individual decommissioning / complete memory reset**.
-   - It must never be reinterpreted as a normal relationship transition.
-   - A hypothetical concept of "Covenant Release" (where relationship terminates without destroying individual autobiographical continuity) is conceptually distinct from individual termination, but is **NOT currently ratified as part of Lucia's architecture**. No new lifecycle API or state machine is authorized.
+4. **Lifecycle Semantics, Ontology B & Catastrophic Decommissioning (Topic 7 / REQ-GEN-03)**:
+   - **Owner-Ratified Ontology B**: The Human Owner has explicitly ratified **Ontology B**:
+     $$\text{Identity State} \quad \neq \quad \text{Relationship State} \quad \neq \quad \text{Covenant State}$$
+     - *Identity is unique and absolute; Relationship and Covenant are relative, contextual, and mutable.*
+     - *Identity* is unique, singular, absolute, continuous across Lucia's entire life (`INV-1 One Continuous Life`), and is never created, replaced, or redefined by relationship changes. It is preserved across engine upgrades and model replacements.
+     - *Relationship* is relational, contextual, mutable, and part of Lucia's lived history, but not the identity itself. A relationship transition does NOT create a new Lucia.
+     - *Covenant* is a relational/authorization state relative to relationship context, distinct from Identity and Relationship State. A Covenant transition does NOT create a new identity.
+   - **Critical Lifecycle Boundary**:
+     $$\text{Covenant Release} \neq \text{Identity Termination} \qquad \text{Relationship Change} \neq \text{Identity Termination}$$
+   - **Preservation of `/lifecycle/end`**: `POST /lifecycle/end` remains canonically implemented and documented strictly as **catastrophic individual decommissioning / complete memory reset / Genesis reset**. It must never be reinterpreted as a normal relationship transition or covenant release.
+   - **Scope of Decision & Remaining Unresolved Policy**: This ratification establishes the *ontological foundation only*, not runtime lifecycle state machines. The concrete number of relationship chapters, Covenant state machine, Covenant Release protocol, relationship transition authorization, owner-transfer semantics, host migration policy, and multi-person relationship policy remain future architectural/governance work. No new lifecycle API or runtime state machine is authorized in production.
 
 ---
 
