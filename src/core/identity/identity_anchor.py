@@ -638,15 +638,44 @@ def verify_identity_on_startup(
 
 def compute_genesis_root_hash(*args: Any, **kwargs: Any) -> str:
     """
-    Placeholder for Genesis Creation Ceremony root hash computation.
+    Deterministic Genesis Root computation (G1–G4 §5).
 
-    DEFERRED: Under ADR-034 and Identity Authority Spec v0.1, the exact
-    set of foundational state files, canonical serialization, and file order
-    for the Genesis root hash are deferred to the controlled Genesis Onboarding Ceremony.
-
-    Status: DEFERRED — GENESIS CREATION CEREMONY REQUIRED.
+    The Genesis Root is an immutable commitment to the Genesis Record.
+    When called without arguments, signals deferral under INV-8.
+    When called with parameters, computes the deterministic SHA-256 digest
+    over the canonical Genesis Record preimage.
     """
-    raise NotImplementedError(
-        f"Genesis root hash generation is a Genesis-bound ceremony operation. "
-        f"Status: {GENESIS_ROOT_HASH_STATUS}. Genesis remains LOCKED under INV-8."
+    if not args and not kwargs:
+        raise NotImplementedError(
+            f"Genesis root hash generation is a Genesis-bound ceremony operation. "
+            f"Status: {GENESIS_ROOT_HASH_STATUS}. Genesis remains LOCKED under INV-8."
+        )
+
+    # If first arg is a dict or object with fields
+    from src.core.identity.genesis import compute_genesis_root
+
+    if args and isinstance(args[0], dict):
+        d = args[0]
+        anchor = d.get("identity_anchor", d)
+        prov = d.get("genesis_provenance", {})
+        return compute_genesis_root(
+            instance_uuid=str(anchor.get("instance_uuid", "")),
+            born_at=str(anchor.get("born_at", "")),
+            genesis_commit=str(anchor.get("genesis_commit", "")),
+            protocol_version=str(prov.get("protocol_version", "G1-G4")),
+            schema_version=str(prov.get("schema_version", "2.0")),
+        )
+
+    instance_uuid = kwargs.get("instance_uuid") or (args[0] if len(args) > 0 else "")
+    born_at = kwargs.get("born_at") or (args[1] if len(args) > 1 else "")
+    genesis_commit = kwargs.get("genesis_commit") or (args[2] if len(args) > 2 else "")
+    protocol_version = kwargs.get("protocol_version", "G1-G4")
+    schema_version = kwargs.get("schema_version", "2.0")
+
+    return compute_genesis_root(
+        instance_uuid=str(instance_uuid),
+        born_at=str(born_at),
+        genesis_commit=str(genesis_commit),
+        protocol_version=str(protocol_version),
+        schema_version=str(schema_version),
     )

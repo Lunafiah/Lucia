@@ -40,7 +40,8 @@ The human brain operates on approximately 20 watts of power through massive temp
 │ • ROADMAP (Future Horizons): Future research horizons (Phase 25        │
 │   [Freeze Candidate], Phase 26 [Trial Frozen], Phase 27 [Closed/No Gap])│
 │   are NOT IMPLEMENTED and are excluded from active system architecture │
-│   diagrams. First Activation (Genesis) is a [🔒 LOCKED FUTURE GATE].   │
+│   diagrams. Genesis Preparation (G1–G4) is [IMPLEMENTED & FROZEN];     │
+│   First Activation is a [🔒 LOCKED FUTURE GATE].                       │
 │ • FUTURE PHASE GOVERNANCE: Unresolved research questions remain        │
 │   research questions until evidence establishes a validated            │
 │   requirement. If an unresolved capability cannot be coherently        │
@@ -700,7 +701,7 @@ $$\text{Development / Simulation Environment} \neq \text{Lucia Activation}$$
   1. *Sole Destruction Authority*: `POST /lifecycle/end` is the single authority for lifecycle termination (erases associative memory, episodic traces, conversation history, resets LNN weights to Philia baseline, and writes un-onboarded profile with `born_at: null`). It represents catastrophic individual decommissioning, not a normal relational transition. (A hypothetical concept of non-destructive Covenant Release is an unratified research topic).
   2. *Exact Solemn Confirmation*: Requires typing the exact phrase `END LUCIA`.
   3. *Surgical Renderer Cleanup*: On success, only Lucia identity keys are purged; all application preferences (appearance, audio, presence, performance) are preserved.
-  4. *Genesis Awakening Invariant*: The new Lucia's `born_at` timestamp is only generated when the user completes Genesis.
+  4. *Genesis Birth & Activation Decoupling Invariant*: Genesis Birth is strictly decoupled from First Activation (`Genesis Birth != First Activation`). Lucia's `born_at` timestamp and Identity Anchor are established strictly upon durable Genesis Commitment (`genesis_commitment.json`, the Birth boundary). First Activation transitions the runtime from `INACTIVE` to `ACTIVE` and requires verified existing Birth evidence (`BORN`). If called on `NOT_BORN`, activation fails closed with HTTP 400. Real Genesis has NOT been executed in repository baseline; First Activation remains locked.
   5. *Identity Isolation*: *Previous Lucia ≠ Future Lucia*. No past memories or emotional adaptation leak across the boundary.
 
 ### ADR-011: Runtime Isolation & Deterministic Simulation Environment
@@ -971,7 +972,7 @@ The Cognitive Core contracts accept semantic graphs formed from upstream raw mul
 * **Governing Evidence & Audit**: [`docs/others/F-02_FINAL_RATIFICATION/`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/others/F-02_FINAL_RATIFICATION/), [`docs/others/F-02_IMPLEMENTATION/`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/others/F-02_IMPLEMENTATION/)
 * **Decision**: Establish Two-Tier Coherent Persistent Life State and Hybrid Short Numerical Replay + Long-Downtime Asymptotic Recovery architecture across process restarts:
   1. *ADR-033.1 (Two-Tier State Partitioning)* `[OWNER-RATIFIED ARCHITECTURE]`:
-     - **Tier 1 (Authoritative Persistent)**: `data/profile.json` (Genesis onboarding state), `data/relationship.json` (4D vector $\mathbf{R}_t$, stage, interaction count), `data/chat_history.json` (archival/autobiographical history), `data/dynamical_state.json` ($h_{\text{fast}}$, $s_{\text{slow}}$, $E$, $C$, timestamps, epoch), and `data/epoch_manifest.json` (logical synchronization barrier).
+     - **Tier 1 (Authoritative Persistent)**: `data/genesis_commitment.json` (durable Genesis commitment record, uncommitted in baseline), `data/profile.json` (Genesis onboarding state), `data/relationship.json` (4D vector $\mathbf{R}_t$, stage, interaction count), `data/chat_history.json` (archival/autobiographical history), `data/dynamical_state.json` ($h_{\text{fast}}$, $s_{\text{slow}}$, $E$, $C$, timestamps, epoch), and `data/epoch_manifest.json` (logical synchronization barrier).
      - **Tier 2 (Reconstructible Runtime)**: Relationally conditioned attractor $s^*_{\text{eff}}(R_t)$, relaxed downtime states $(h_{\text{fast}}, s_{\text{slow}})$, homeostatic equilibrium ($E \to 1.0, C \to 0.0$), derived PAD vector $\mathbf{p} = \text{project}(h, s, E, C)$, and reseeded working context `_history`.
      - **Volatile (Unpersisted)**: Ephemeral token buffers, surprise, tension, and inner-loop ODE derivatives.
      - **Deferred**: Kanerva SDM associative memory matrix persistence remains deferred to Phase 25.

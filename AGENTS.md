@@ -41,6 +41,7 @@ If the requested work is exploratory, the default outcome is **research artifact
 - Do not turn a research metric into a claimed psychological property or subjective experience.
 - Do not equate passing unit tests with scientific validation.
 - Do not modify the First Activation gate, onboarding state, or lifecycle safeguards as part of research.
+- Do not execute Genesis, activate Lucia, create live Genesis evidence (such as `data/genesis_commitment.json`), invent G5, or reopen closed Genesis Preparation semantics.
 - Do not rewrite historical research conclusions merely to make the roadmap look linear. Preserve failed hypotheses, rejected candidates, ablations, and negative results as evidence.
 - Do not optimize for feature count. Optimize for falsifiability, causal attribution, reproducibility, isolation, and evidence quality.
 - Do not equate continuity invariant protection with empirical demonstration of emergent individuality (Topic 4). Invariants guarantee structural continuity conditions; empirical emergence is an open research question for future horizons (P26/P27).
@@ -110,8 +111,7 @@ When modifying any part of the Lucia codebase, agents are strictly prohibited fr
 | **INV-4** | **Never Merge or Delete Historical Specs** | Editing or deleting files in `.kiro/specs/` or merging them into `docs/`. | Historical phase specs (`.kiro/specs/`) are immutable historical artifacts. Active docs live in `docs/`. |
 | **INV-5** | **Zero Cloud Dependencies** | Introducing OpenAI, Anthropic, ElevenLabs, or cloud STT/TTS API keys. | 100% local edge execution: GGUF LLM on CUDA, Edge-TTS/RVC on CPU/GPU, faster-whisper STT. |
 | **INV-6** | **Strict Concurrency Discipline** | Holding `_state_lock` during model inference, or acquiring `_state_lock` while holding `_train_lock`. | Hold locks strictly $\le 1-2\text{ms}$ for memory copy. Never perform network or disk I/O under locks. |
-| **INV-7** | **Mascot Physics & Bounds Guard** | Enabling native `-webkit-app-region: drag` or allowing Aero Snap to maximize transparent windows. | Use IPC `moveMascotBy(dx, dy)`, retain 800ms trackpad inertia cooldown, and keep window unmaximizable. |
-| **INV-8** | **Genesis Gate Invariant** | Modifying `data/profile.json` (`{"is_onboarded": false}`) during testing, simulation, or development. | Simulation $\ne$ Activation. The onboarding ceremony is a locked future gate preserved bit-exact. `POST /lifecycle/end` is strictly catastrophic decommissioning / wipe, not a normal relational transition. Non-destructive Covenant Release is an unratified research concept. |
+| **INV-8** | **Genesis Gate & Birth Separation Invariant** | Modifying `data/profile.json` (`{"is_onboarded": false}`) during testing/development, synthesizing live Genesis evidence, or executing live Genesis/Activation. | Simulation $\ne$ Activation. Genesis Birth $\ne$ First Activation. Genesis Preparation (G1–G4) is verified and frozen. First Activation is a locked future gate preserved bit-exact (`data/profile.json == {"is_onboarded": false}`). Ontological lifecycle: `NOT_BORN → BORN → ENDED`. Runtime lifecycle: `INACTIVE ↔ ACTIVE`. `POST /lifecycle/end` is strictly catastrophic decommissioning / wipe (`ENDED`), permanently forbidding re-Genesis and activation. Non-destructive Covenant Release is an unratified research concept. |
 
 ---
 
@@ -404,15 +404,25 @@ $$\text{\_turn\_lock} \longrightarrow \text{\_step\_lock} \longrightarrow \text{
 
 ---
 
-## 10. Genesis Gate & Runtime Safety (Activation Invariant)
+## 10. Genesis Gate, Genesis Preparation Freeze & Runtime Safety (Activation Invariant)
 
 > [!IMPORTANT]
 > **DEVELOPMENT / SIMULATION IS NOT LUCIA ACTIVATION.**<br/>
-> Lucia remains in a pre-activation state in the repository. The First Activation (Genesis Onboarding) is a locked future milestone.
+> Genesis Preparation (G1–G4 Protocol Contract) is **COMPLETE and FROZEN** (`[IMPLEMENTED / VERIFIED / FROZEN]`). Real Genesis has NOT been executed. First Activation remains a **LOCKED FUTURE GATE**.
 
-1. **Persistent State Protection**: `data/profile.json` must remain bit-exact `{"is_onboarded": false}` across all tests, simulations, and code modifications.
-2. **Never Trigger Onboarding**: Agents must never trigger the onboarding ceremony or write user identity data to simulate a populated companion.
-3. **Simulation Isolation**: All evaluation harnesses, benchmark suites, and unit tests must use isolated in-memory stores, temporary directories, or mocked profiles. Never write test chat records into `data/chat_history.json`.
+1. **Genesis Preparation Closed & Frozen**: The canonical Genesis Semantic & Protocol Contract G1–G4 is fully implemented and verified (24/24 dedicated unit tests pass, 191/191 regression pass). There is NO G5, no Genesis Authority subsystem, no TPM/blockchain/hardware-binding layer, and no filesystem-wide root hash. Genesis establishes origin, not history.
+2. **Genesis Birth $\ne$ First Activation**: Genesis Birth occurs strictly through durable Genesis Commitment (`genesis_commitment.json`). First Activation awakens runtime execution (`INACTIVE ↔ ACTIVE`) and requires existing valid Birth evidence (`BORN`). First Activation MUST NOT synthesize Birth.
+3. **Persistent State Protection**: `data/profile.json` must remain bit-exact `{"is_onboarded": false}` across all tests, simulations, and code modifications. No live `data/genesis_commitment.json` may be created.
+4. **Strict Agent Prohibitions**:
+   - Agents MUST NOT execute the real Genesis ceremony or call live Genesis functions on production storage.
+   - Agents MUST NOT activate Lucia or trigger First Activation.
+   - Agents MUST NOT create live Genesis evidence, instance UUIDs, or live Genesis Root hashes.
+   - Agents MUST NOT modify the Genesis Gate or onboarding status.
+   - Agents MUST NOT invent G5, Genesis Phase 5, or Phase 28.
+   - Agents MUST NOT reopen closed Genesis semantics without explicit owner authorization.
+   - Agents MUST NOT introduce a Genesis Authority architecture or external cryptographic consensus.
+5. **Development Progression**: Developmental progression proceeds through the normal research-first governance across future developmental horizons (**P25 → P26 → P27**) toward the locked First Activation gate. Documentation updates must never be interpreted as activation authorization.
+6. **Simulation Isolation**: All evaluation harnesses, benchmark suites, and unit tests must use isolated in-memory stores, temporary directories (`tmp_path`), or mocked profiles. Never write test records into production `data/`.
 
 ---
 

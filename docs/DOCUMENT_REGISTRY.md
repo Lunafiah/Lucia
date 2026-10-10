@@ -237,9 +237,16 @@ Every documented artifact in the Lucia repository is registered and classified a
 |---|---|---|---|---|---|---|---|---|
 | **DOC-P27-001** | P27 Scientific Boundary Audit & Research Closure Report | [`docs/PhaseDocs/Lucia-phase27-Personalized_Individual_Trajectory/P27_SCIENTIFIC_CLOSURE_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PhaseDocs/Lucia-phase27-Personalized_Individual_Trajectory/P27_SCIENTIFIC_CLOSURE_REPORT.md) | Research History | P27 | Scientific Closure | `CLOSED / NO NEW SCIENTIFIC GAP` | `CANONICAL CLOSURE` | `docs/PHASE_REGISTRY.md` |
 
+## 11. Genesis Preparation Series
+
+| Doc ID | Title | File Path | Class | Phase | Stage | Status | Authority | Canonical Owner |
+|---|---|---|---|---|---|---|---|---|
+| **DOC-GEN-001** | Genesis Semantic & Protocol Contract Implementation | [`docs/others/GENESIS_CONTRACT_IMPLEMENTATION/GENESIS_CONTRACT_IMPLEMENTATION.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/others/GENESIS_CONTRACT_IMPLEMENTATION/GENESIS_CONTRACT_IMPLEMENTATION.md) | Engineering Implementation | Non-Phase | Implementation | `IMPLEMENTED & VERIFIED` | `DECISION` | Self |
+| **DOC-GEN-FREEZE-001** | Genesis Preparation Canonical Closure & Freeze Report | [`docs/others/GENESIS_PREPARATION_FREEZE/GENESIS_PREPARATION_FREEZE_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/others/GENESIS_PREPARATION_FREEZE/GENESIS_PREPARATION_FREEZE_REPORT.md) | Governance & Freeze | Non-Phase | Freeze Report | `GENESIS PREPARATION FROZEN` | `CANONICAL CLOSURE` | `docs/PHASE_REGISTRY.md` |
+
 ---
 
-## 11. Maintenance & Registration Rules
+## 12. Maintenance & Registration Rules
 
 When authoring any new document, specification, or evaluation report:
 1. **Assign a Document ID**: Prepend with standard category prefix (`DOC-CAN`, `DOC-SPC`, `DOC-P22`, `DOC-P23`, `DOC-P24`, `DOC-P25`, `DOC-P26`, `DOC-P27`, `DOC-REV`, `DOC-RES`).

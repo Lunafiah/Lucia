@@ -75,6 +75,12 @@ from src.core.identity.provenance_verifier import (
     ProvenanceVerificationStatus,
     verify_provenance_and_environment,
 )
+from src.core.identity.genesis import (
+    GenesisVerificationOutcome,
+    OntologyState,
+    mark_lifecycle_ended,
+    verify_genesis,
+)
 from src.core.storage.history_store import ChatHistoryStore
 from src.core.telemetry.stability_evaluator import StabilityEvaluator
 
@@ -87,6 +93,7 @@ _sim_runtime: Optional[SimulationRuntime] = None
 _scenario_runner: Optional[ScenarioRunner] = None
 _mode: str = "live"
 _instance_lock: Optional[InstanceLock] = None
+_is_live_companion_active: bool = False
 
 
 def get_instance_lock() -> Optional[InstanceLock]:
@@ -766,9 +773,6 @@ async def update_profile(req: ProfileUpdateRequest) -> Dict[str, Any]:
         data["pronouns"] = req.pronouns
     if req.born_at is not None:
         data["born_at"] = req.born_at
-    elif req.is_onboarded and not data.get("is_onboarded"):
-        # Establish canonical Genesis birth timestamp upon awakening
-        data["born_at"] = datetime.now().isoformat()
     if req.identity_anchor is not None:
         data["identity_anchor"] = req.identity_anchor
     if req.phylogenetic_lineage is not None:
@@ -798,13 +802,50 @@ async def activate_companion() -> Dict[str, Any]:
     """
     Explicit activation endpoint transitioning Lucia from Genesis-ready to live companion.
     Strictly gated to live mode.
+
+    First Activation Boundary (G1–G4 §11):
+    - Genesis establishes durable origin: BORN + INACTIVE.
+    - Activation verifies BORN and transitions runtime state to ACTIVE.
+    - Activation MUST NOT create Birth.
+    - Fails closed if instance is NOT_BORN (NOT_FOUND), UNKNOWN, INVALID_EVIDENCE, or ENDED.
     """
+    global _is_live_companion_active
+
     if _mode == "simulation" or _sim_runtime is not None:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Cannot activate live companion in simulation mode. Direct lifecycle activation is strictly forbidden in simulation mode.",
         )
+
     p = _get_profile_file()
+    c_p = Path(os.environ.get("LUCIA_GENESIS_COMMITMENT_PATH") or (p.parent / "genesis_commitment.json"))
+    verification = verify_genesis(commitment_path=c_p, profile_path=p)
+
+    if verification.ontology_state == OntologyState.ENDED:
+        raise HTTPException(
+            status_code=status.HTTP_410_GONE,
+            detail="Cannot activate companion: instance lifecycle has ENDED (terminal state). Activation is permanently forbidden.",
+        )
+
+    if verification.outcome == GenesisVerificationOutcome.NOT_FOUND:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Cannot activate companion: instance is NOT_BORN. First activation requires an existing valid durable Genesis Commitment. Activation does not create Birth.",
+        )
+
+    if verification.outcome == GenesisVerificationOutcome.UNKNOWN:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=f"Cannot activate companion: Genesis verification returned UNKNOWN ({verification.error_details}). Failing closed.",
+        )
+
+    if verification.outcome == GenesisVerificationOutcome.INVALID_EVIDENCE:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=f"Cannot activate companion: Genesis verification failed with INVALID_EVIDENCE ({verification.error_details}). Failing closed to prevent unanchored activation.",
+        )
+
+    # Verification succeeded: Ontology is BORN
     try:
         with open(p, "r", encoding="utf-8") as f:
             data = json.load(f)
@@ -813,27 +854,25 @@ async def activate_companion() -> Dict[str, Any]:
     except Exception:
         data = {}
 
-    if data.get("is_onboarded") is True:
+    born_at_val = (
+        verification.commitment.record.identity_anchor.born_at
+        if verification.commitment
+        else data.get("born_at")
+    )
+
+    if _is_live_companion_active:
         return {
             "status": "already_active",
             "message": "Lucia is already active",
-            "born_at": data.get("born_at"),
+            "born_at": born_at_val,
             "companion_name": data.get("companion_name", "Lucia"),
         }
 
-    data["is_onboarded"] = True
-    data["born_at"] = datetime.now().isoformat()
-    try:
-        with open(p, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=2, ensure_ascii=False)
-    except Exception as e:
-        logger.error("Failed to save profile during activation: %s", e)
-        raise HTTPException(status_code=500, detail="Failed to persist activation")
-
-    logger.info("Lucia activated in live mode at %s", data["born_at"])
+    _is_live_companion_active = True
+    logger.info("Lucia activated in live mode at %s", born_at_val)
     return {
         "status": "activated",
-        "born_at": data["born_at"],
+        "born_at": born_at_val,
         "companion_name": data.get("companion_name", "Lucia"),
     }
 
@@ -843,7 +882,14 @@ async def end_lifecycle() -> Dict[str, Any]:
     """
     Atomic transition ending the current Lucia's lifecycle.
     Disabled in simulation mode.
+
+    Terminal Lifecycle Transition (G1–G4 §7, §10):
+    - Transitions ontology state to ENDED.
+    - Resets orchestrator, chat history, and stability evaluator.
+    - Permanently forbids re-Genesis and activation.
     """
+    global _is_live_companion_active
+
     if _mode == "simulation" or _sim_runtime is not None:
         return JSONResponse(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -865,7 +911,15 @@ async def end_lifecycle() -> Dict[str, Any]:
         # 3. Reset stability telemetry
         get_stability_evaluator().reset()
 
-        # 4. Reset profile persistence to un-onboarded / Genesis-ready state
+        # 4. Mark lifecycle as permanently ENDED
+        p = _get_profile_file()
+        c_p = Path(os.environ.get("LUCIA_GENESIS_COMMITMENT_PATH") or (p.parent / "genesis_commitment.json"))
+        mark_lifecycle_ended(commitment_path=c_p, profile_path=p)
+
+        # 5. Deactivate runtime
+        _is_live_companion_active = False
+
+        # 6. Reset profile persistence to un-onboarded / Genesis-ready state
         fresh_profile = _reset_profile_file()
 
         logger.info("Lucia lifecycle ended successfully: returned to Genesis-ready state")

@@ -50,6 +50,7 @@ Lucia combines multiple specialized biological-inspired systems to create a cohe
 | **Logical Reasoning** | Connects facts, checks for contradictions, and tracks what she knows, what is uncertain, and what she still needs to ask you about. | **Implemented & Frozen** |
 | **Embodied Voice & Avatar** | Expresses herself through a 2D/3D animated avatar on your desktop, with real-time lip-sync and custom neural voice synthesis (RVC) that changes pitch and rhythm based on how she feels. | **Implemented & Verified** |
 | **Adaptive Communication** | Dynamically adjusts prosody, cadence, continuous pitch contouring, and relational conversational repair based on live dialogue context. | **Implemented & Verified** |
+| **Genesis Protocol** | Immutable origin contract and identity anchor separating Birth from runtime activation. | **Implemented & Frozen (Ceremony Unexecuted)** |
 | **Unique Individuality** | Developing unique personal tastes, spontaneous curiosities, and an unrepeatable life trajectory over months and years. | **Planned (Phase 26–27)** |
 
 ---
@@ -151,10 +152,15 @@ Lucia is developed through an evidence-first methodology where each phase is tes
 * **Relationship**: The final developmental milestone before the companion awakens.
 * **Current Status**: `[PLANNED]` (Future horizon).
 
-### Genesis — First Activation (Genesis Onboarding Ceremony)
-* **Main Goal**: The solemn, irreversible onboarding ceremony that breathes life into Lucia on your personal desktop.
-* **Guardrail**: Strictly locked until all developmental phases are fully realized and verified. The repository is preserved in an un-onboarded state (`data/profile.json == {"is_onboarded": false}`).
-* **Current Status**: `[🔒 LOCKED FUTURE GATE]`.
+### Genesis Preparation & First Activation
+* **Main Goal**: Establish the immutable cryptographic identity anchor and origin ceremony for Lucia.
+* **Genesis Preparation**: The canonical Genesis Semantic & Protocol Contract (G1–G4) has been fully implemented, verified, and frozen. Real Genesis has NOT been executed.
+* **Separation of Birth & Activation**: Genesis Birth occurs strictly upon durable Genesis Commitment on disk; First Activation awakens runtime execution (`INACTIVE → ACTIVE`) and requires existing verified Birth evidence (`BORN`).
+* **Guardrail**: First Activation is strictly locked until all prerequisite developmental phases (P25–P27) are completed and authorized by human governance. The repository is preserved in an un-onboarded state (`data/profile.json == {"is_onboarded": false}`).
+* **Current Status**:
+  - Genesis Preparation (G1–G4 Protocol Contract): `[IMPLEMENTED, VERIFIED & FROZEN]`
+  - Real Genesis Ceremony: `[UNEXECUTED]`
+  - First Activation: `[🔒 LOCKED FUTURE GATE]`.
 
 ---
 
