@@ -1,11 +1,11 @@
 # P25-Q2.1 — Architecture Review & Pre-Rerun Authorization Audit
 
-> **DOCUMENT TYPE:** FORMAL ARCHITECTURE & SCIENTIFIC METHODOLOGY REVIEW (`[ARCHITECTURE REVIEW]`)  
-> **STATUS:** ARCHITECTURE REVIEW COMPLETED — PASS  
-> **RERUN READINESS:** ARCHITECTURE READY — RERUN MAY BE AUTHORIZED  
-> **EXPERIMENT EXECUTION:** NOT EXECUTED (NO RERUN AUTHORIZED BY THIS REVIEW)  
-> **NEW EXPERIMENTAL NUMBERS:** ZERO (0) GENERATED  
-> **PHASE 25 HORIZON STATUS:** PLANNED (ACTIVE FUTURE RESEARCH HORIZON)  
+> **DOCUMENT TYPE:** FORMAL ARCHITECTURE & SCIENTIFIC METHODOLOGY REVIEW (`[ARCHITECTURE REVIEW]`)<br>
+> **STATUS:** ARCHITECTURE REVIEW COMPLETED — PASS<br>
+> **READINESS STATUS:** Architecture Candidate / Evidence Synthesis (Rerun Not Authorized)<br>
+> **EXPERIMENT EXECUTION:** NOT EXECUTED (NO RERUN AUTHORIZED BY THIS REVIEW)<br>
+> **NEW EXPERIMENTAL NUMBERS:** ZERO (0) GENERATED<br>
+> **PHASE 25 HORIZON STATUS:** PLANNED (ACTIVE FUTURE RESEARCH HORIZON)<br>
 > **ARCHITECTURE GATE:** LOCKED (NO PRODUCTION MUTATION AUTHORIZED)  
 > **IMPLEMENTATION GATE:** LOCKED  
 > **GENESIS INVARIANT (INV-8):** PRESERVED BIT-EXACT (`data/profile.json == {"is_onboarded": false}`)  
@@ -27,16 +27,51 @@ Metric Ratified (TBD-Q2-05)
          ≠
 Harness Repaired (exp_p25_q2_1.py)
          ≠
-Architecture Review Passed (This Review)
+Architecture Candidate / Evidence Synthesis (This Review)
          ≠
-Rerun Authorized (User Governance Authority)
+Ciah Review
+         ≠
+Owner Decision
+         ≠
+Implementation Gate
          ≠
 C2 Unblocked (TBD-Q2-04 Calibration Required)
          ≠
 H-B Validated (Empirical Question)
 ```
 
-Passing this Architecture Review confirms architectural and methodological coherence; **it does NOT authorize experiment execution, does NOT unblock Condition C2, and does NOT claim hypothesis validation.**
+**Authoritative Gate Sequence:**
+`P25-Q1 CLOSED`
+→ `P25-Q2 CLOSED (H-A supported, C2 blocked, H-B unproven)`
+→ `Architecture Candidate`
+→ `Ciah Review`
+→ `Owner Decision`
+→ `Implementation Gate`
+
+Passing this Architecture Review confirms architectural and methodological coherence as an **Architecture Candidate / Evidence Synthesis**; **it does NOT authorize experiment execution, does NOT unblock Condition C2, and does NOT claim hypothesis validation.**
+
+### Core Boundary Reconciliations
+1. **Reciprocal Feedback:**
+   - Supported baseline: observed user signal → Lucia state estimation → Lucia adaptation (unilateral H-A).
+   - Unproven hypothesis: Lucia expression → user response → reciprocal relational adaptation (bidirectional H-B).
+   - Bidirectional/reciprocal coupling is NOT established; **C2 remains BLOCKED and H-B remains UNPROVEN**.
+   - Preserves P25-Q2 conclusion that **synchrony ≠ causality**.
+2. **Stability Claims:**
+   - $\operatorname{Tr}(J) < 0$ alone does NOT guarantee Lyapunov stability or contraction; it is recognized solely as a supporting local dissipativity diagnostic.
+3. **Sensor-Estimation Terminology:**
+   - Continuous state observers (such as Bucy-Kalman) are **candidate sensor-estimation mechanisms derived from prior P22 evidence**, not canonical P22 mechanisms, preserving canonical P22-XR / P22-EKF terminology.
+4. **Relationship State:**
+   - Canonical relationship state remains strictly **4D $\mathbf{R}_t \in [0.0, 1.0]^4$** (`[familiarity, trust, closeness, reciprocity]`). Any negative/grievance/rupture dimension extension is an unresolved owner/architecture decision.
+5. **Temporal Embodiment Definition:**
+   - Temporal embodiment formulations are strictly **candidate operational definitions**, without claiming formal validation until supported by P25 evaluation evidence.
+6. **EXP-P25 / EXP-P25-01 Thresholds:**
+   - Arbitrary thresholds (such as PAD distance $< 0.10$ or latency difference $< 150\text{ ms}$) must not be used as falsification or acceptance criteria unless existing evidence explicitly justifies them.
+7. **P24 Boundary:**
+   - P24 validates feedforward expression only; this does NOT validate P25 reciprocal social feedback.
+8. **P25/P26 Boundary:**
+   - P25 governs how communication/interaction flows and produces temporal/social adaptation.
+   - P26 governs what Lucia values, prefers, believes about itself, or autonomously pursues.
+   - P25 mechanisms must NOT introduce P26-style autonomous preference formation.
 
 ---
 
@@ -215,20 +250,31 @@ The following scientific blockers remain unresolved and must NOT be silently byp
 ================================================================================
 FINAL ARCHITECTURE REVIEW AUDIT DECISION:
 
-ARCHITECTURE READY — RERUN MAY BE AUTHORIZED
+Architecture Candidate / Evidence Synthesis
 ================================================================================
 
+Authoritative Gate Progression:
+P25-Q1 CLOSED
+→ P25-Q2 CLOSED (H-A supported, C2 blocked, H-B unproven)
+→ Architecture Candidate
+→ Ciah Review
+→ Owner Decision
+→ Implementation Gate
+
 Architecture Review:
-PASS
+PASS (Architecture Candidate / Evidence Synthesis)
 
 Harness:
-READY
+READY (Static / Skipped Runner)
 
 Experiment Execution:
 NOT EXECUTED
 
 C2:
-BLOCKED — Q2-04
+BLOCKED — Q2-04 (TBDGainUnestablishedError)
+
+H-B:
+UNPROVEN
 
 Rerun Authorization:
 NOT GRANTED BY THIS REVIEW
@@ -237,7 +283,7 @@ Production Diff:
 0
 
 Genesis:
-UNCHANGED
+UNCHANGED (Bit-Exact: {"is_onboarded": false})
 
 Phase 25:
 PLANNED

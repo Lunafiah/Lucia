@@ -18,6 +18,7 @@ from typing import List, Optional
 import numpy as np
 
 from src.core.communication.communication_state import CommunicationState
+from src.core.embodiment.contract import EstimatedTemporalState, TemporalModulation
 from src.core.expression.expression_state import ExpressionState
 from src.core.knowledge.proposition import Proposition
 from src.core.memory.ecphory import RecollectionResult
@@ -323,6 +324,10 @@ class CognitiveTurnResult:
 
     # Phase 20: Affective recollection result emitted by EcphoryEngine at Stage 6
     recollection: Optional[RecollectionResult] = None
+
+    # Phase 25: Unilateral temporal embodiment and social modulation
+    temporal_state: Optional[EstimatedTemporalState] = None
+    temporal_modulation: Optional[TemporalModulation] = None
 
     class Config:
         # numpy arrays are not hashable — frozen dataclass still works at runtime

@@ -57,7 +57,7 @@ All concrete mechanisms remain **UNRATIFIED**. No production files in `src/core/
 ### EXP-P25-DISCRIM — Empirical Discrimination Experiment (H-A vs H-B vs H-C)
 - **Objective**: Empirically evaluate whether 4D R_t alone is sufficient (H-A), R_t + existing memory/semantic substrates are sufficient (H-B), or a new computational representation is necessary (H-C) to produce history-sensitive responses when R_t converges to identical values.
 - **Methodological Pre-Conditions**:
-  1. Canonical R_t = [Trust, Familiarity, Attunement, Shared Experience] represented as 4D unipolar state in [0, 1]^4.
+  1. Canonical R_t = [familiarity, trust, closeness, reciprocity] represented as 4D unipolar state in [0, 1]^4 (note: historical conceptual documentation intermittently wrote `[Trust, Familiarity, Attunement, Shared Experience]`; production ground truth in `src/core/relationship/state.py` is `[familiarity, trust, closeness, reciprocity]`). Canonical relationship state remains strictly 4D `R_t ∈ R⁴`; do NOT add negative/grievance/rupture dimensions (any such extension is an unresolved owner/architecture decision).
   2. Decoupled from PAD: Both histories relaxed to Philia resting baseline (leakage <= 1e-4) prior to probe.
   3. Non-circular, non-encoding neutral probe: 'Let's review the project_deadline commitments for the next milestone.'
 - **Measured Telemetry (N=10)**:
@@ -68,8 +68,8 @@ All concrete mechanisms remain **UNRATIFIED**. No production files in `src/core/
 - **Hypothesis Assessment**:
   - H-A (R_t alone sufficient): REJECTED (Condition A Delta S < 0.05 across all trials)
   - H-B (R_t + existing substrates sufficient): SUPPORTED FOR TESTED CONFIGURATION (Condition B Delta S >= 0.15 across all trials)
-  - H-C (New representation necessary): NOT INDICATED FOR TESTED CONFIGURATION (H-B succeeded without new state)
-- **Epistemic Limitation**: `1. Tested single conversational probe domain ('project_deadline'). 2. Explored discrete conflict/reconciliation scenario; does not test complex multi-agent relational webs. 3. Demonstrates feasibility of existing memory substrate for differentiation, but does not settle whether dimensional expansion of R_t is necessary for deeper affective attachment or rupture severity classes.`
+  - H-C (New representation necessary): NOT INDICATED FOR TESTED CONFIGURATION (H-B succeeded without new state; dimensional expansion with negative/grievance/rupture remains strictly unratified and an unresolved owner/architecture decision)
+- **Epistemic Limitation**: `1. Tested single conversational probe domain ('project_deadline'). 2. Explored discrete conflict/reconciliation scenario; does not test complex multi-agent relational webs. 3. Demonstrates feasibility of existing memory substrate for differentiation, but does not settle whether dimensional expansion of R_t is necessary for deeper affective attachment or rupture severity classes (any such extension remains an unresolved owner/architecture decision; canonical representation is strictly 4D).`
 
 ---
 

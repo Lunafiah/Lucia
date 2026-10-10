@@ -185,6 +185,11 @@ In [`src/core/gating/stimulus_processor.py:5-13, 99-119`](file:///c:/Users/Lunaf
 | Inter-Turn Interval | **`ABSENT`** | `RESEARCH_ONLY` (Phase 22-INF) |
 | Temporal Delta Gating | **`ABSENT`** | `NOT_IMPLEMENTED` |
 
+### 5.3 Continuous Observers & Sensor-Estimation Verification (P22 Lineage)
+
+- Continuous state observers (such as Bucy-Kalman filters) evaluated in exploratory research are strictly **candidate sensor-estimation mechanisms derived from prior P22 evidence**, not canonical P22 mechanisms, preserving canonical P22-XR and P22-EKF designations.
+- Neither was promoted to production runtime (`src/core/**` diff = 0).
+
 ---
 
 ## 6. P25-Q1 Verification
@@ -324,9 +329,12 @@ Verification telemetry generated during this audit is formally recorded in:
 
 ---
 
-## 14. Gate-0 Readiness
+## 14. Gate-0 Readiness & Authoritative Gate Progression
 
-### Final Governance Determination: **`GATE_0_PREMATURE`**
+### Authoritative Gate Sequence:
+$$\text{P25-Q1 CLOSED} \longrightarrow \text{P25-Q2 CLOSED (H-A supported, C2 blocked, H-B unproven)} \longrightarrow \text{Architecture Candidate / Evidence Synthesis} \longrightarrow \text{Ciah Review} \longrightarrow \text{Owner Decision} \longrightarrow \text{Implementation Gate}$$
+
+### Final Governance Determination: **`GATE_0_PREMATURE / ARCHITECTURE CANDIDATE EVIDENCE SYNTHESIS`**
 
 ### Rationale & Minimum Remaining Evidence Required:
 

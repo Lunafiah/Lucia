@@ -1,10 +1,11 @@
 # EXP-P25-Q2.1: Reciprocal Embodied Synchrony & Social Feedback Dynamics — Formal Evaluation Specification
 
-> **DOCUMENT TYPE:** RESEARCH-ONLY EVALUATION SPECIFICATION  
-> **STATUS:** HISTORICAL EVALUATION SPECIFICATION / HARNESS EXECUTED (C2 BLOCKED UNDER TBD-Q2-04) / SEC 10 SUPERSEDED BY DOC-P25-006 & DOC-P25-007  
-> **PREREQUISITE RATIFIED SPECIFICATION:** [`P25_Q2_SCIENTIFIC_CALIBRATION.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PhaseDocs/Lucia-phase25-Temporal_Embodiment/P25_Q2_SCIENTIFIC_CALIBRATION.md)  
-> **PHASE 25 HORIZON STATUS:** PLANNED (ACTIVE FUTURE RESEARCH HORIZON)  
-> **ARCHITECTURE GATE:** LOCKED (NO PRODUCTION MUTATION AUTHORIZED)  
+> **DOCUMENT TYPE:** RESEARCH-ONLY EVALUATION SPECIFICATION<br>
+> **STATUS:** HISTORICAL EVALUATION SPECIFICATION / HARNESS EXECUTED (C2 BLOCKED UNDER TBD-Q2-04, H-B UNPROVEN) / SEC 10 SUPERSEDED BY DOC-P25-006 & DOC-P25-007<br>
+> **PREREQUISITE RATIFIED SPECIFICATION:** [`P25_Q2_SCIENTIFIC_CALIBRATION.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PhaseDocs/Lucia-phase25-Temporal_Embodiment/P25_Q2_SCIENTIFIC_CALIBRATION.md)<br>
+> **PHASE 25 HORIZON STATUS:** PLANNED (ACTIVE FUTURE RESEARCH HORIZON)<br>
+> **GATE PROGRESSION:** `P25-Q1 CLOSED` → `P25-Q2 CLOSED (H-A supported, C2 blocked, H-B unproven)` → `Architecture Candidate / Evidence Synthesis` → `Ciah Review` → `Owner Decision` → `Implementation Gate`<br>
+> **ARCHITECTURE GATE:** LOCKED (NO PRODUCTION MUTATION AUTHORIZED)<br>
 > **IMPLEMENTATION GATE:** LOCKED  
 > **GENESIS INVARIANT (INV-8):** PRESERVED BIT-EXACT (`data/profile.json == {"is_onboarded": false}`)  
 > **CANONICAL INVARIANTS:** INV-1 (ONE CONTINUOUS LIFE), INV-2 (NO REFLECTIVE EGO) STRICTLY PRESERVED  
@@ -29,8 +30,12 @@ The evaluation protocol strictly distinguishes between four separate phenomena:
 3. **Persistence:** The empirical retention of state adjustments or behavioral biases across conversational turns, episodic boundaries, or subsequent sessions.
 4. **Relational Change:** Macro-level evolution of interpersonal stance ($\mathbf{R}_t$).
 
-> **EPISTEMIC GUARDRAIL:**  
-> The protocol does **NOT** assume that immediate synchrony implies reciprocal adaptation, nor that reciprocal adaptation automatically causes relational change. Each link must be empirically and independently tested.
+> **EPISTEMIC GUARDRAIL & SCIENTIFIC BOUNDARIES:**<br>
+> - **Unilateral Baseline vs Reciprocal Hypothesis:** The supported baseline is unilateral adaptation (`observed user signal → Lucia state estimation → Lucia adaptation`). Bidirectional/reciprocal coupling (`Lucia expression → user response → reciprocal relational adaptation`) is an **unproven research hypothesis**. C2 remains **BLOCKED** and H-B remains **UNPROVEN**.
+> - **Synchrony ≠ Causality:** P25-Q2 established that statistical synchrony or correlation does not imply causality or reciprocal attunement.
+> - **Candidate Operational Definition:** Formulations of temporal embodiment are strictly **candidate operational definitions**; no formal validation is claimed until supported by P25 evaluation evidence.
+> - **P24 Feedforward Boundary:** Phase 24 validated the feedforward affective expression path; this does **NOT** validate the P25 reciprocal social-feedback loop.
+> - **P25/P26 Boundary:** Phase 25 addresses how interaction flows and produces temporal/social adaptation; Phase 26 governs what Lucia values, prefers, or autonomously pursues. P25 mechanisms must not introduce autonomous preference formation.
 
 ---
 
@@ -118,7 +123,7 @@ The interaction stream is discretized into turn-level and frame-level events:
 - $U(t + \Delta)$: The measured user behavioral feature at lag $\Delta$.
 
 ### 4.2 Causal Ordering & Lag Window
-- **Lag Window ($\Delta$):** The response window is constrained to $\Delta \in [150, 800]\text{ ms}$ following Lucia's output. Any user event occurring $< 150\text{ ms}$ is discarded as pre-programmed or overlapping execution; events occurring $> 800\text{ ms}$ are classified as uncoupled baseline user actions.
+- **Lag Window ($\Delta$):** The response window is defined as a candidate operational range $\Delta \in [150, 800]\text{ ms}$ following Lucia's output. Any user event occurring $< 150\text{ ms}$ is treated as candidate overlapping execution, and events occurring $> 800\text{ ms}$ are treated as candidate uncoupled actions for the evaluation harness. These thresholds are exploratory candidate parameters, not biological constants or ungrounded falsification criteria.
 - **Causal Sequence:**
   $$\text{Lucia Actuation } B_L(t) \xrightarrow{\Delta} \text{User Event } U(t+\Delta) \xrightarrow{\Delta} \text{Lucia Adaptation } \mathbf{s}_{t+2\Delta}$$
 
@@ -327,12 +332,13 @@ The evaluation specification strictly adheres to repository governance regarding
 ### 14.1 Canonical Runtime Authority
 All evaluation harnesses, test fixtures, and mock observers must reference the canonical production contract defined in [`src/core/relationship/state.py`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/src/core/relationship/state.py):
 $$\mathbf{R}_t = [\text{familiarity}, \text{trust}, \text{closeness}, \text{reciprocity}] \in [0.0, 1.0]^4$$
+The canonical relationship representation remains strictly 4-dimensional ($\mathbf{R}_t \in \mathbb{R}^4$). Do **NOT** add a negative, grievance, or rupture dimension. Any such extension remains an unresolved owner/architecture decision.
 
 ### 14.2 Documentation Drift Isolation
 In [`docs/ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/ARCHITECTURE.md), an older conceptual vector appears:
 $$\mathbf{R}_t = [\text{Trust}, \text{Familiarity}, \text{Attunement}, \text{Shared Experience}]$$
 - This discrepancy is formally documented as historical **documentation drift**.
-- The evaluation specification does **not** reconcile, alter, or patch either representation.
+- The evaluation specification does **not** reconcile, alter, or patch either representation in production code.
 - Production code must **not** be modified.
 
 ---
@@ -404,6 +410,8 @@ The following parameters are deliberately held as **TBD (To Be Determined)** for
 ## 20. Governance Ledger & Gate Status
 
 - **Evaluation Specification EXP-P25-Q2.1:** **RATIFIED AS SPECIFICATION**
+- **Authoritative Gate Progression:** `P25-Q1 CLOSED` → `P25-Q2 CLOSED (H-A supported, C2 blocked, H-B unproven)` → `Architecture Candidate / Evidence Synthesis` → `Ciah Review` → `Owner Decision` → `Implementation Gate`
+- **Condition C2 & Hypothesis H-B:** **C2 BLOCKED (under TBD-Q2-04), H-B UNPROVEN** (synchrony ≠ causality)
 - **Evaluation Harness Implementation:** **STRICTLY BLOCKED / NOT STARTED**
 - **Architecture Gate:** **LOCKED** (No ADR authorized)
 - **Implementation Gate:** **LOCKED** (Zero production code mutations)

@@ -55,11 +55,12 @@ from src.core.config import (
     OrchestratorConfig,
     StimulusConfig,
 )
+from src.core.embodiment.coordinator import TemporalEmbodimentCoordinator
 from src.core.emotion.emotion_core import EmotionCore
 from src.core.emotion.homeostatic_engine import HomeostaticEngine
 from src.core.errors import AssemblyError
 from src.core.expression.expression_policy import ExpressionPolicy
-from src.core.expression.expression_state import ExpressionState
+from src.core.expression.expression_state import ExpressionState, VoiceProsody
 from src.core.expression.semantic_consistency_guard import (
     SemanticConsistencyGuard as ExprSemanticGuard,
 )
@@ -150,6 +151,8 @@ class CognitiveOrchestrator:
         relationship_updater: Optional[RelationshipUpdater] = None,
         comm_policy: Optional[CommunicationPolicy] = None,
         expression_policy: Optional[ExpressionPolicy] = None,
+        # --- Phase 25 Subsystem (Optional) ---
+        temporal_coordinator: Optional[TemporalEmbodimentCoordinator] = None,
         # --- Configuration knobs ---
         system_preamble: str = "",
         n_ctx: int = 2048,
@@ -186,6 +189,11 @@ class CognitiveOrchestrator:
         self._expr_semantic_guard = ExprSemanticGuard()
         self._latest_comm_state: Optional[CommunicationState] = None
         self._latest_expr_state: Optional[ExpressionState] = None
+        self._temporal_coordinator = (
+            temporal_coordinator
+            if temporal_coordinator is not None
+            else TemporalEmbodimentCoordinator()
+        )
 
         # Policy defaults
         self._surprise_policy = surprise_policy or SurpriseModulationPolicy()
@@ -193,6 +201,7 @@ class CognitiveOrchestrator:
 
         # Configuration
         self._system_preamble = system_preamble
+        n_ctx = n_ctx
         self._n_ctx = n_ctx
         self._max_history_turns = max_history_turns
         self._fallback_response = fallback_response
@@ -240,6 +249,10 @@ class CognitiveOrchestrator:
     @property
     def relationship_updater(self) -> RelationshipUpdater:
         return self._relationship_updater
+
+    @property
+    def temporal_coordinator(self) -> TemporalEmbodimentCoordinator:
+        return self._temporal_coordinator
 
     @property
     def latest_communication(self) -> Optional[CommunicationState]:
@@ -333,6 +346,7 @@ class CognitiveOrchestrator:
             self._emotion_core.reset_to_resting()
             self._affective_memory.clear()
             self._active_inference.reset()
+            self._temporal_coordinator.reset()
             self._latest_result = None
             self._latest_comm_state = None
             self._latest_expr_state = None
@@ -349,6 +363,17 @@ class CognitiveOrchestrator:
         Execute all 16 cognitive pipeline stages in strict causal order.
         All exceptions propagate to process(), which enters Degraded_State.
         """
+
+        # ── Stage 0: Temporal Embodiment & Social Observation (P25) ──────
+        t_now = time.time()
+        cur_pad = self._emotion_core.get_pad_state()
+        cur_energy = getattr(self._homeostatic_engine, "_energy", 1.0)
+        temp_obs, temp_est, idle_res = self._temporal_coordinator.process_turn_start(
+            current_timestamp=t_now,
+            user_text=input_text,
+            current_pad=cur_pad,
+            current_energy=cur_energy,
+        )
 
         # ── Stage 1: Sensory Encoding ────────────────────────────────────
         stimulus: np.ndarray = self._stimulus_processor.encode(input_text)
@@ -509,6 +534,12 @@ class CognitiveOrchestrator:
         prompt: str = prompt_or_err
 
         # ── Stage 12: Conversational Pacing ──────────────────────────────
+        temp_mod = self._temporal_coordinator.compute_attunement_modulation(
+            rel_state=rel_state,
+            somatic=markers,
+            base_constraints=constraints,
+        )
+
         delta_tau_pace = 0
         if (
             recollection_result is not None
@@ -526,7 +557,8 @@ class CognitiveOrchestrator:
         pacing_delay_ms = min(
             constraints.latency_ms
             + comm_state.injected_pacing_latency_ms
-            + delta_tau_pace,
+            + delta_tau_pace
+            + temp_mod.injected_pacing_delay_ms,
             _MAX_LATENCY_MS,
         )
         if pacing_delay_ms > 0:
@@ -578,6 +610,18 @@ class CognitiveOrchestrator:
                 relationship=rel_state.to_dict(),
                 prev_state=self._latest_expr_state,
             )
+            # P25: Apply bounded unilateral prosodic modulation to expression
+            if expr_state is not None and expr_state.voice is not None and temp_mod is not None:
+                v_curr = expr_state.voice
+                v_curr.speech_rate_pct = float(
+                    np.clip(v_curr.speech_rate_pct + temp_mod.speech_rate_pct_delta, -20.0, 20.0)
+                )
+                v_curr.pause_duration_ms = float(
+                    np.clip(v_curr.pause_duration_ms + temp_mod.pause_duration_ms_delta, 100.0, 1000.0)
+                )
+                v_curr.pitch_shift_semitones = float(
+                    np.clip(v_curr.pitch_shift_semitones + temp_mod.pitch_shift_st_delta, -2.0, 4.0)
+                )
             self._latest_expr_state = expr_state
         except Exception:
             logger.error(
@@ -754,6 +798,8 @@ class CognitiveOrchestrator:
             expression=expr_state,
             known_facts=known_propositions,
             recollection=recollection_result,
+            temporal_state=temp_est,
+            temporal_modulation=temp_mod,
         )
 
     # ------------------------------------------------------------------
@@ -821,6 +867,7 @@ def build_cognitive_orchestrator(
     relationship_updater: Optional[RelationshipUpdater] = None,
     comm_policy: Optional[CommunicationPolicy] = None,
     expression_policy: Optional[ExpressionPolicy] = None,
+    temporal_coordinator: Optional[TemporalEmbodimentCoordinator] = None,
     llm_backend: Optional[LLMBackend] = None,
     relationship_storage_path: Optional[Union[str, Path]] = DEFAULT_RELATIONSHIP_PATH,
     dynamical_storage_path: Optional[Union[str, Path]] = DEFAULT_DYNAMICAL_STATE_PATH,
@@ -926,6 +973,7 @@ def build_cognitive_orchestrator(
         relationship_updater=relationship_updater,
         comm_policy=comm_policy,
         expression_policy=expression_policy,
+        temporal_coordinator=temporal_coordinator,
         system_preamble=config.system_preamble,
         n_ctx=config.n_ctx,
         max_history_turns=config.max_history_turns,
