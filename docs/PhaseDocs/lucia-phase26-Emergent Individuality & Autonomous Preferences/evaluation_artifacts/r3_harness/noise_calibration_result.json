@@ -1,0 +1,9 @@
+{
+  "calibration_seed": 9999,
+  "sample_count": 200,
+  "frozen_delta_noise": 1.603095669458685,
+  "mean_jitter": 24.157762840714113,
+  "p95_jitter": 24.411399147855896,
+  "calibration_fixture_version": "NOISE_CALIB_FIXTURE_v1.0",
+  "timestamp": "2026-10-10T18:13:05Z"
+}

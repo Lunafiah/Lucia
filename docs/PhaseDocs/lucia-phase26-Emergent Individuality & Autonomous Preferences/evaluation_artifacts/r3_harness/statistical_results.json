@@ -1,0 +1,18 @@
+{
+  "n_twin_pairs": 40,
+  "mean_delta_tau_behavior_us": -0.4032111892538956,
+  "std_delta_tau_behavior_us": 1.55065156712261,
+  "cohens_d": -0.26002694467467924,
+  "permutation_test_p_value": 0.0,
+  "num_permutations": 10000,
+  "bootstrap_95ci_bca": [
+    -0.9305036341017057,
+    -0.10424416728610751
+  ],
+  "frozen_delta_noise_us": 1.603095669458685,
+  "is_equivalent_to_noise": true,
+  "destruction_control_mean_us": -0.40195319570922655,
+  "destruction_attenuation_us": 0.001257993544669045,
+  "epistemic_verdict": "INCONCLUSIVE",
+  "verdict_rationale": "Candidate behavioral asymmetry (mean = -0.4032 us, 95% CI: [-0.9305, -0.1042]) is statistically indistinguishable from pre-frozen baseline noise (delta_noise = 1.6031 us, p = 0.0000). Evidence for memory-independent evaluative asymmetry (Claim C) was not established."
+}

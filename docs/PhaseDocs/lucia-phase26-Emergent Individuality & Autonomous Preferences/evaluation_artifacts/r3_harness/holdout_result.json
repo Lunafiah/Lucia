@@ -1,0 +1,8 @@
+{
+  "h1_structural_recurrence": "STRUCTURAL_RECURRENCE_FAIL",
+  "h2_directional_recurrence": "DIRECTIONAL_RECURRENCE_PASS",
+  "overall_holdout_status": "HOLDOUT_STRUCTURAL_FAILURE",
+  "holdout_raw_score": 0.0,
+  "candidate_locked_R_star": "CAND_G_A",
+  "candidate_locked_R_alt": "CAND_G_B"
+}

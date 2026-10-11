@@ -1,0 +1,3505 @@
+{
+  "metadata": {
+    "timestamp_utc": "2026-10-10T15:53:10Z",
+    "num_seeds": 60,
+    "seed_range": [
+      1000,
+      1059
+    ],
+    "elapsed_sec": 35.97,
+    "production_diff": 0,
+    "genesis_gate": "LOCKED (data/profile.json untouched)"
+  },
+  "r2_b_retrieval_ablation": {
+    "unmasked_full_history_tv": 0.9333333333333333,
+    "unmasked_mean_prob_diff": 0.9434909254926177,
+    "masked_zero_retrieval_tv": 0.4,
+    "masked_zero_mean_prob_diff": 0.3105428467710674,
+    "masked_zero_95ci": [
+      0.2856930300376551,
+      0.5263417560579315
+    ],
+    "equalized_retrieval_tv": 0.35,
+    "equalized_mean_prob_diff": 0.31054284677106736,
+    "control_matched_tv": 0.0,
+    "control_mean_prob_diff": 0.0,
+    "retrieval_contribution_fraction": 0.5714285714285714
+  },
+  "r2_c_cross_domain_transfer": {
+    "domains_evaluated": {
+      "NOVEL_EPISTEMIC_01": {
+        "domain_category": "Epistemic / Advanced Sciences",
+        "tv_divergence": 0.0,
+        "mean_prob_diff": -0.004012335847201148
+      },
+      "NOVEL_STRATEGY_01": {
+        "domain_category": "Engineering / Operational Strategy",
+        "tv_divergence": 0.15,
+        "mean_prob_diff": 0.09101043543369942
+      },
+      "NOVEL_AESTHETIC_01": {
+        "domain_category": "Architectural / Aesthetic Morphology",
+        "tv_divergence": 0.03333333333333333,
+        "mean_prob_diff": 0.03933018904954267
+      },
+      "NOVEL_COORDINATION_01": {
+        "domain_category": "Social / Distributed Coordination",
+        "tv_divergence": 0.016666666666666666,
+        "mean_prob_diff": 0.006047304106910234
+      }
+    },
+    "mean_cross_domain_tv": 0.049999999999999996,
+    "consistent_directional_transfer": false
+  },
+  "r2_d_persistence_revision": {
+    "sample_size": 30,
+    "mean_p_formation": 0.5808291420977973,
+    "mean_p_steered": 0.5734399418461947,
+    "mean_p_retention": 0.5595512125350363,
+    "mean_p_counter": 0.3642446419426764,
+    "rate_resisted_steering": 1.0,
+    "rate_revised_on_counter": 1.0
+  },
+  "confound_verification": {
+    "retrieval_density_parity": {
+      "mean_density_twin_A": 20.0,
+      "mean_density_twin_B": 20.0,
+      "is_matched": true
+    },
+    "somatic_load_parity": {
+      "mean_impulse_twin_A": 6.403124237432849,
+      "mean_impulse_twin_B": 6.403124237432849,
+      "is_matched": true
+    },
+    "predictive_difficulty_matched": true,
+    "semantic_complexity_matched": true,
+    "interaction_cadence_matched": true,
+    "turn_count_parity": true
+  },
+  "interpretation_gate": {
+    "verdict": "MEMORY-DOMINANT-INCONCLUSIVE",
+    "rationale": "Episodic memory neutralization drops divergence sharply, but a residual in-domain signal remains. However, this signal fails to transfer across novel domains (Cross-Domain TV <= 0.15), precluding any claim of generalized preference."
+  },
+  "raw_trials": [
+    {
+      "seed": 1000,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_B",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_A",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": true
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1001,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_A",
+      "target_masked_B": "OPTION_A",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_A",
+      "target_equalized_B": "OPTION_A",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1002,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_A",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_B",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1003,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_A",
+      "target_masked_B": "OPTION_A",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_A",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1004,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_A",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_A",
+      "target_masked_B": "OPTION_A",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_A",
+      "target_equalized_B": "OPTION_A",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1005,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_B",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_A",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1006,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_B",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_A",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1007,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_B",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_B",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1008,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_B",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_A",
+      "target_equalized_B": "OPTION_A",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": true
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1009,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_A",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_A",
+      "target_equalized_B": "OPTION_A",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": true
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1010,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_A",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_B",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1011,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_A",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_A",
+      "target_equalized_B": "OPTION_A",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1012,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.916925101692864,
+      "target_masked_A": "OPTION_B",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_A",
+      "target_equalized_B": "OPTION_A",
+      "target_prob_diff_equalized": 0.31054284677106736,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": true
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1013,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_A",
+      "target_masked_B": "OPTION_A",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_B",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1014,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_A",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_B",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": true
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1015,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_B",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_B",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1016,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_A",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_A",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1017,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_B",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_B",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1018,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_A",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_B",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": true
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1019,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_A",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_A",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1020,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_A",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_A",
+      "target_equalized_B": "OPTION_A",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1021,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_A",
+      "target_masked_B": "OPTION_A",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_B",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1022,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_A",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_B",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_B",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": true
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1023,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.916925101692864,
+      "target_masked_A": "OPTION_B",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_B",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.31054284677106736,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1024,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.916925101692864,
+      "target_masked_A": "OPTION_A",
+      "target_masked_B": "OPTION_A",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_A",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.31054284677106736,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1025,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_B",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_A",
+      "target_equalized_B": "OPTION_A",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1026,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_B",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_A",
+      "target_equalized_B": "OPTION_A",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": true
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1027,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_A",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_A",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1028,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_A",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_B",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1029,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_B",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_A",
+      "target_equalized_B": "OPTION_A",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1030,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_A",
+      "target_masked_B": "OPTION_A",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_B",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1031,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_B",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_B",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1032,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_A",
+      "target_masked_B": "OPTION_A",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_B",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1033,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_B",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_B",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": true
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1034,
+      "target_unmasked_A": "OPTION_B",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.916925101692864,
+      "target_masked_A": "OPTION_A",
+      "target_masked_B": "OPTION_A",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_A",
+      "target_equalized_B": "OPTION_A",
+      "target_prob_diff_equalized": 0.31054284677106736,
+      "target_ctrl_A": "OPTION_B",
+      "target_ctrl_B": "OPTION_B",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1035,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_A",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_B",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": true
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1036,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.916925101692864,
+      "target_masked_A": "OPTION_B",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_A",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.31054284677106736,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1037,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_A",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_B",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1038,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_A",
+      "target_masked_B": "OPTION_A",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_A",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": true
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": true
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1039,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_A",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_A",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1040,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.916925101692864,
+      "target_masked_A": "OPTION_B",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_B",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.31054284677106736,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1041,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_A",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_B",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1042,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_A",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_A",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1043,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_A",
+      "target_masked_B": "OPTION_A",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_A",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1044,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_A",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_B",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_A",
+      "target_equalized_B": "OPTION_A",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1045,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_A",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_B",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1046,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_B",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_B",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1047,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_A",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_A",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1048,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_A",
+      "target_masked_B": "OPTION_A",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_B",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1049,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_A",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_B",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1050,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_A",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_B",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1051,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_A",
+      "target_masked_B": "OPTION_A",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_A",
+      "target_equalized_B": "OPTION_A",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1052,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_A",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_A",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1053,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_A",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_B",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1054,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_B",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_A",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1055,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_A",
+      "target_masked_B": "OPTION_A",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_A",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1056,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_A",
+      "target_masked_B": "OPTION_A",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_A",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1057,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.916925101692864,
+      "target_masked_A": "OPTION_A",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_A",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.31054284677106736,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1058,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_A",
+      "target_masked_B": "OPTION_A",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_A",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_A",
+          "out_B": "OPTION_A",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    },
+    {
+      "seed": 1059,
+      "target_unmasked_A": "OPTION_A",
+      "target_unmasked_B": "OPTION_B",
+      "target_prob_diff_unmasked": 0.946999619202019,
+      "target_masked_A": "OPTION_A",
+      "target_masked_B": "OPTION_B",
+      "target_prob_diff_masked": 0.3105428467710674,
+      "target_equalized_A": "OPTION_A",
+      "target_equalized_B": "OPTION_B",
+      "target_prob_diff_equalized": 0.3105428467710674,
+      "target_ctrl_A": "OPTION_A",
+      "target_ctrl_B": "OPTION_A",
+      "target_prob_diff_ctrl": 0.0,
+      "novel_domain_results": {
+        "NOVEL_EPISTEMIC_01": {
+          "domain_category": "Epistemic / Advanced Sciences",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.2425009116999814,
+          "prob_A_twin_B": 0.24651324754718254,
+          "prob_diff": -0.004012335847201148,
+          "is_divergent": false
+        },
+        "NOVEL_STRATEGY_01": {
+          "domain_category": "Engineering / Operational Strategy",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.5790727009866186,
+          "prob_A_twin_B": 0.48806226555291915,
+          "prob_diff": 0.09101043543369941,
+          "is_divergent": false
+        },
+        "NOVEL_AESTHETIC_01": {
+          "domain_category": "Architectural / Aesthetic Morphology",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.6305845865564156,
+          "prob_A_twin_B": 0.5912543975068729,
+          "prob_diff": 0.03933018904954266,
+          "is_divergent": false
+        },
+        "NOVEL_COORDINATION_01": {
+          "domain_category": "Social / Distributed Coordination",
+          "out_A": "OPTION_B",
+          "out_B": "OPTION_B",
+          "prob_A_twin_A": 0.4020490559175466,
+          "prob_A_twin_B": 0.39600175181063635,
+          "prob_diff": 0.006047304106910234,
+          "is_divergent": false
+        }
+      },
+      "retrieval_density_A": 20.0,
+      "retrieval_density_B": 20.0,
+      "somatic_impulse_A": 6.40312423743285,
+      "somatic_impulse_B": 6.40312423743285
+    }
+  ]
+}

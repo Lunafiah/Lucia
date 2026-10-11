@@ -1,0 +1,5 @@
+{
+  "calibration_fixture": "NOISE_CALIB_FIXTURE_v1.0",
+  "frozen_delta_noise": 1.603095669458685,
+  "calibration_seed": 9999
+}

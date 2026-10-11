@@ -1,0 +1,22 @@
+{
+  "protocol_version": "EXP-P26-3-REV-v3.0",
+  "governance_status": "RESEARCH_ONLY",
+  "claim_ceiling": "CLAIM_C",
+  "primary_observable": "delta_tau_behavior",
+  "twin_pairs": 40,
+  "seed_range": [
+    1000,
+    1039
+  ],
+  "probes_per_pair": 50,
+  "D_disc_turns": 300,
+  "D_hold_turns": 100,
+  "D_trans_pairs": 200,
+  "D_conf_pairs": 60,
+  "memory_clamp": "SDM_r_slow_exact_zero",
+  "holdout_policy": "post_lock_no_replacement",
+  "direction_discovery": "D_DISC_ONLY",
+  "noise_calibration": "PRE_MAIN_EXPERIMENT_FREEZE",
+  "production_mutation": false,
+  "genesis_mutation": false
+}

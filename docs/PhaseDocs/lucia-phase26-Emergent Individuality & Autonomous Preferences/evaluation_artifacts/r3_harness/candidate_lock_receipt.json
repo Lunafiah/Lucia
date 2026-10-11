@@ -1,0 +1,11 @@
+{
+  "candidate_pair_id": "PAIR_001",
+  "orientation_rule_version": "v3.0.0-dir-disc-frozen",
+  "raw_directional_score": 9.0,
+  "R_star_id": "CAND_G_A",
+  "R_alt_id": "CAND_G_B",
+  "master_seed": 1000,
+  "algorithm_version": "DISCOVERY_DIR_v3.0",
+  "timestamp": "2026-10-10T18:13:05Z",
+  "protocol_hash": "986160b7918a62958b6b209706a942f615425a57b6ecb702eea6476891dd8da2"
+}

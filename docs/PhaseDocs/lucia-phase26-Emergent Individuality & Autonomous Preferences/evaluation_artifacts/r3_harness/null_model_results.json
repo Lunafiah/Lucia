@@ -1,0 +1,8 @@
+{
+  "node_count_parity": true,
+  "edge_count_parity": true,
+  "density_parity": true,
+  "degree_profile_matched": true,
+  "null_model_distinguishable": true,
+  "inductive_bias_controlled": true
+}
