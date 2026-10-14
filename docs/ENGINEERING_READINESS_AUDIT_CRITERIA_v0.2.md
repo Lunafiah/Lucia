@@ -2,8 +2,8 @@
 
 > **Authoritative Specification for Pre-Activation Engineering Substrate Audit**  
 > **Status:** `[CANONICAL AUDIT SPECIFICATION — v0.2 NORMALIZED]`  
-> **Baseline Authority:** Canonical Post-Phase 24 Operational Baseline (`P21`, `P22-SC`, `P23-C..H`, `P24` / ADR-032)  
-> **Research Horizons:** Phase 25 (Freeze Candidate), Phase 26 (Trial Frozen), Phase 27 (Closed / No New Scientific Gap)  
+> **Baseline Authority:** Canonical Post-P27 Operational Baseline (`P21`, `P22-SC`, `P23-C..H`, `P24`, `P25 Unilateral Baseline` / ADR-033, ADR-035)  
+> **Evaluated Horizons:** Phase 25 (Unilateral Baseline Frozen), Phase 26 (Trial Frozen / Not Promoted), Phase 27 (Closed / No New Scientific Gap)  
 > **First Activation Gate:** `[🔒 LOCKED FUTURE GATE]` (`data/profile.json` Bit-Exact: `{"is_onboarded": false}`)  
 > **Epistemic Invariant:** UNKNOWN MUST NEVER SILENTLY BECOME CERTAINTY
 

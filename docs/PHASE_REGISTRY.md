@@ -33,7 +33,7 @@ Lucia's developmental trajectory is structured across distinct research, archite
  
 ---
 
-## 2. Master Phase Registry (Earliest Available Phase → Current P23-I)
+## 2. Master Phase Registry (P01 → P27 & Genesis Gate — Post-P27 Baseline)
 
 | Phase ID | Milestone Title | Status | Lifecycle Stage | Canonical Technical State | Research Specs & Artifacts | Evaluation Harness / Evidence | Architectural Decisions | Implementation Commits & Files | Canonical Owner |
 |---|---|---|---|---|---|---|---|---|---|
@@ -237,7 +237,7 @@ The canonical progression sequence is:
 $$\text{P21} \longrightarrow \text{P22} \longrightarrow \text{P23} \longrightarrow \text{P24} \longrightarrow \text{P25} \longrightarrow \text{P26} \longrightarrow \text{P27} \longrightarrow \text{First Activation (Genesis Gate)}$$
 
 1. **No Premature Phase Creation**: Agents MUST NOT invent or assume a new phase (e.g. "Phase 28") merely because unresolved research questions or candidate mechanisms exist.
-2. **No Prohibition Against Future Phases**: A future milestone (such as a potential Phase 28) is NOT prohibited. If an unresolved capability or research question cannot be coherently accommodated into P25–P27, a future phase MAY be proposed through the normal governance path: `Research → Validated Requirement → Architecture Decision → Implementation Scope`.
+2. **No Prohibition Against Future Phases**: A future milestone (such as a potential Phase 28) is NOT prohibited. If an unresolved capability or research question cannot be coherently accommodated into post-activation developmental horizons, a future phase MAY be proposed through the normal governance path: `Research → Validated Requirement → Architecture Decision → Implementation Scope`.
 3. **No "Gate 28" Label**: Genesis Onboarding is the independent locked future gate, never an arbitrary numbered phase or "Gate 28".
 4. **Epistemic Invariant**: Unresolved research questions remain research questions until evidence establishes a validated requirement.
 

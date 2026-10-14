@@ -1,7 +1,7 @@
 # Lucia — Documentation Index & Hierarchy System
 
 > **A Comprehensive Navigation System and Document Authority Hierarchy for Lucia**<br/>
-> *Consolidated Documentation Hierarchy — Post-Phase 24 Baseline*
+> *Consolidated Documentation Hierarchy — Post-P27 Baseline*
 
 ---
 
@@ -44,8 +44,8 @@ To prevent confusion across development phases, Lucia maintains a strict documen
 | **Authoritative Context Map** | [`docs/CONTEXT_INDEX.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/CONTEXT_INDEX.md) | **Active Truth** | Context Architecture retrieval map: logical context tiers (L0–L6), minimal sufficient context routing by task type, anti-patterns. |
 | **Authoritative Living Canon** | [`docs/00_PROJECT_OVERVIEW.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/00_PROJECT_OVERVIEW.md) | **Active Truth** | Canonical project overview: Executive summary, *Philia* philosophy, current subsystem health matrix, test statistics, and roadmap. |
 | **Authoritative Living Canon** | [`docs/DOCUMENTATION_ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/DOCUMENTATION_ARCHITECTURE.md) | **Active Truth** | Authoritative Knowledge Architecture: 7 knowledge classes, single-ownership model, evidence preservation, and taxonomies. |
-| **Authoritative Phase Registry** | [`docs/PHASE_REGISTRY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PHASE_REGISTRY.md) | **Active Truth** | Canonical Milestone Registry: Exhaustive status and lifecycle ledger covering P01 through P24 (operational baseline), future horizons P25–P27, and Genesis gate. |
-| **Authoritative Living Canon** | [`docs/ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/ARCHITECTURE.md) | **Active Truth** | Canonical technical architecture: Two-layer architecture (Layer A Overall Architecture, Layer B Subsystem Details), mathematical mechanisms (MT-LNN ODE, SDM, Lip-sync, prosody adaptation), concurrency locks, and ADR Ledger (ADR-001 to ADR-032). |
+| **Authoritative Phase Registry** | [`docs/PHASE_REGISTRY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PHASE_REGISTRY.md) | **Active Truth** | Canonical Milestone Registry: Exhaustive status and lifecycle ledger covering P01 through P27, ADR-035, and Genesis gate. |
+| **Authoritative Living Canon** | [`docs/ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/ARCHITECTURE.md) | **Active Truth** | Canonical technical architecture: Two-layer architecture (Layer A Overall Architecture, Layer B Subsystem Details), mathematical mechanisms (MT-LNN ODE, SDM, Lip-sync, prosody adaptation), concurrency locks, and ADR Ledger (ADR-001 to ADR-035). |
 | **Authoritative Document Registry** | [`docs/DOCUMENT_REGISTRY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/DOCUMENT_REGISTRY.md) | **Active Truth** | Master Document Classification Catalog: 15-attribute classification of all active, research, and historical documents. |
 | **Authoritative Source Map** | [`docs/SOURCE_MAP.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/SOURCE_MAP.md) | **Active Truth** | Repository-wide claim-to-evidence provenance ledger tracing cognitive mechanisms to raw measurements and commits. |
 | **Authoritative Context Spec** | [`docs/CONTEXT_ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/CONTEXT_ARCHITECTURE.md) | **Active Truth** | Agent Context Projection Architecture: Ciah $\le 5$-file reviewer pack, Gemini deep research corpus, Antigravity routing. |
@@ -390,4 +390,4 @@ Lucia/
 | **Verified Lock Hierarchy Discipline** | `docs/ARCHITECTURE.md` §5.1 | `docs/ARCHITECTURE.md` §8 (ADR-018, ADR-028) |
 | **Adaptive Communication Control Surface (ADR-032)** | `docs/ARCHITECTURE.md` §3.6.5, §8 | `tests/evaluation/phase24/` |
 | **Temporal Embodiment & Social Feedback (ADR-033)** | `src/core/embodiment/` | `docs/PhaseDocs/Lucia-phase25-Temporal_Embodiment/P25_FINALIZATION_AND_FREEZE_REPORT.md` |
-| **Full ADR Ledger (ADR-001 to ADR-033; ARCH-001 to ARCH-033)** | `docs/ARCHITECTURE.md` §8 | `docs/ARCHITECTURE.md` §8.2 (Changelog) |
+| **Full ADR Ledger (ADR-001 to ADR-035; ARCH-001 to ARCH-035)** | `docs/ARCHITECTURE.md` §8 | `docs/ARCHITECTURE.md` §8.2 (Changelog) |

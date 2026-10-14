@@ -45,10 +45,10 @@ The human brain operates on approximately 20 watts of power through massive temp
 │ • FUTURE PHASE GOVERNANCE: Unresolved research questions remain        │
 │   research questions until evidence establishes a validated            │
 │   requirement. If an unresolved capability cannot be coherently        │
-│   accommodated into P25–P27, a future phase such as P28 MAY be         │
-│   proposed later through the normal research → requirement →           │
-│   architecture decision process (neither prematurely created nor       │
-│   prohibited). No "Gate 28" label is used.                             │
+│   accommodated into post-activation developmental horizons, a future   │
+│   phase such as P28 MAY be proposed later through the normal research  │
+│   → requirement → architecture decision process (neither prematurely   │
+│   created nor prohibited). No "Gate 28" label is used.                 │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 

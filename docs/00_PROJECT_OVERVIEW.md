@@ -322,6 +322,6 @@ The canonical progression sequence is:
 $$\text{P21} \longrightarrow \text{P22} \longrightarrow \text{P23} \longrightarrow \text{P24} \longrightarrow \text{P25} \longrightarrow \text{P26} \longrightarrow \text{P27} \longrightarrow \text{First Activation (Genesis Gate)}$$
 
 - **No Premature Phase Creation**: Agents MUST NOT invent or assume a new phase (e.g. "Phase 28") merely because unresolved research questions or candidate mechanisms exist.
-- **No Prohibition Against Future Phases**: A future milestone (such as a potential Phase 28) is NOT prohibited. If an unresolved capability or research question cannot be coherently accommodated into P25–P27, a future phase MAY be proposed later through the normal governance path: `Research → Validated Requirement → Architecture Decision → Implementation Scope`.
+- **No Prohibition Against Future Phases**: A future milestone (such as a potential Phase 28) is NOT prohibited. If an unresolved capability or research question cannot be coherently accommodated into post-activation developmental horizons, a future phase MAY be proposed later through the normal governance path: `Research → Validated Requirement → Architecture Decision → Implementation Scope`.
 - **No "Gate 28" Label**: Genesis Onboarding is the independent locked future gate, never an arbitrary numbered phase or "Gate 28".
 - **Epistemic Invariant**: Unresolved research questions remain research questions until evidence establishes a validated requirement.
