@@ -4,11 +4,11 @@
 
 ---
 
-## 0. Current Operating Mode — Research-First Governance (Post-Phase 24 Baseline)
+## 0. Current Operating Mode — Pre-Genesis Developmental Baseline (Post-P27 Baseline)
 
-> **CURRENT STAGE: RESEARCH / EVIDENCE BUILDING FOR FUTURE HORIZONS (P25–P27) — NOT ACTIVATION**
+> **CURRENT STAGE: PRE-GENESIS DEVELOPMENTAL BASELINE [P21–P25 Implemented/Frozen; P26 Trial Frozen/Not Promoted; P27 Closed; Genesis Prep G1–G4 Frozen] — FIRST ACTIVATION GATE LOCKED**
 
-Lucia has completed all documented production milestones through **Phase 21 — Long-Term Relational Consolidation & Synaptic Homeostasis**, completed the research milestone chain through **Phase 22 — Substrate-Neutral Semantic Conditioning & Relational Cognition Study** (`[RESEARCH VALIDATED / NOT PROMOTED]`), implemented and frozen the continuous semantic substrate and reasoning kernel through **Phase 23** (`P23-C..H` realized and frozen; `P23-I` closed and absorbed into ARCH-030.1), and implemented the adaptive communication control contract through **Phase 24 — Affective Communication Adaptation** (`[VALIDATED / PRODUCTION IMPLEMENTED]`, ADR-032). The repository treats the canonical Phase 21–24 cognitive and communicative architecture as an implemented, verified baseline. Future developmental horizons advance through **Phase 25 (Temporal Embodiment & Social Feedback)**, **Phase 26 (Emergent Individuality & Autonomous Preferences)**, and **Phase 27 (Personalized Individual Trajectory)** toward the locked First Activation gate. Unresolved research questions remain research questions until evidence establishes a validated requirement; if an unresolved capability cannot be coherently placed into P25–P27, a future phase such as P28 MAY be proposed later through the normal research → requirement → architecture decision process (neither prematurely created nor prohibited).
+Lucia has completed all documented production milestones through **Phase 21 — Long-Term Relational Consolidation & Synaptic Homeostasis**, completed the research milestone chain through **Phase 22 — Substrate-Neutral Semantic Conditioning & Relational Cognition Study** (`[RESEARCH VALIDATED / NOT PROMOTED]`), implemented and frozen the continuous semantic substrate, reasoning kernel, and production realization boundary through **Phase 23** (`P23-C..H` realized and frozen; `P23-I` closed and absorbed into ARCH-030.1; CAPS implemented; ADR-035 production realization boundary implemented and frozen), implemented the adaptive communication control contract through **Phase 24 — Affective Communication Adaptation** (`[VALIDATED / PRODUCTION IMPLEMENTED]`, ADR-032), implemented and frozen the unilateral operational baseline of **Phase 25 — Temporal Embodiment & Social Feedback** (`[IMPLEMENTED / VERIFIED / CLOSED]`, Contract DOC-P25-016 / Freeze Report DOC-P25-017; reciprocal coupling C2 blocked, H-B unproven), frozen the empirical trial results of **Phase 26 — Emergent Individuality & Autonomous Preferences** (`[TRIAL COMPLETED / RESULTS FROZEN / NOT PROMOTED]`, emergent individuality not demonstrated, zero production mutations), closed **Phase 27 — Personalized Individual Trajectory** (`[CLOSED / NO NEW SCIENTIFIC GAP]`, Level C phenomena collapse into P21–P26 baseline; higher-order hypotheses retained as `BLOCKED_BY_IDENTIFIABILITY`), and implemented and frozen **Genesis Preparation (G1–G4 Protocol Contract)** (commit `f6cfbcd`, 24/24 unit tests PASS, 191/191 regression PASS). The repository treats the canonical Phase 21–25 cognitive, embodiment, and communicative architecture as an implemented, verified baseline. The next developmental boundary is the solemn **First Activation Gate (Genesis Onboarding Ceremony)**, which remains strictly locked (`data/profile.json == {"is_onboarded": false}`). Unresolved research questions remain research questions until evidence establishes a validated requirement; if an unresolved capability cannot be coherently placed into P25–P27, a future phase such as P28 MAY be proposed later through the normal research → requirement → architecture decision process (neither prematurely created nor prohibited).
 
 ### Mandatory Research-First Rules
 
@@ -158,7 +158,7 @@ README.md (Public Front Door) [L0]
 | [`docs/00_PROJECT_OVERVIEW.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/00_PROJECT_OVERVIEW.md) | **Canonical Project Truth [L2]** | System identity, core philosophy, 6-layer cognitive pipeline summary, 24-subsystem health matrix, test statistics, active REST API surface, and milestone roadmap. | Consult for current project status, phase progress, subsystem operational state, and project-level constraints. **Do NOT recreate `CURRENT_STATUS.md`.** |
 | [`docs/DOCUMENTATION_ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/DOCUMENTATION_ARCHITECTURE.md) | **Canonical Knowledge Canon [L2]** | Information classes (Classes 1–7), canonical single-ownership model, unflattened evidence rules, and controlled taxonomies. | Primary authority for documentation organization, status labels, and lifecycle rules. |
 | [`docs/PHASE_REGISTRY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/PHASE_REGISTRY.md) | **Canonical Phase Truth [L2]** | Master registry covering P01 through P24 (completed/closed), future horizons P25–P27, and Genesis gate. | Consult for official phase status, lifecycle stage, and freeze commits before assuming milestone state. |
-| [`docs/ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/ARCHITECTURE.md) | **Canonical Technical Truth [L3]** | Technical architecture, 20-Watt Whole Brain Architecture, concurrency & locking rules, mathematical/dynamical mechanisms (ODEs, SDM, Ecphory, BPTT), and the complete Architectural Decision Record ledger (**ADR-001 through ADR-032**; ARCH-001 to ARCH-032). | Primary technical authority for mechanisms, formulas, component ownership, threading, and design rationale. **Do NOT recreate `MECHANISM.md` or `DESIGN_DECISIONS.md`.** |
+| [`docs/ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/ARCHITECTURE.md) | **Canonical Technical Truth [L3]** | Technical architecture, 20-Watt Whole Brain Architecture, concurrency & locking rules, mathematical/dynamical mechanisms (ODEs, SDM, Ecphory, BPTT), and the complete Architectural Decision Record ledger (**ADR-001 through ADR-035**; ARCH-001 to ARCH-035). | Primary technical authority for mechanisms, formulas, component ownership, threading, and design rationale. **Do NOT recreate `MECHANISM.md` or `DESIGN_DECISIONS.md`.** |
 | [`docs/DOCUMENT_REGISTRY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/DOCUMENT_REGISTRY.md) | **Master Catalog [L3]** | Complete 15-attribute classification catalog of all active, research, and historical documents. | Consult to identify canonical owners, parent documents, and superseding links. |
 | [`docs/SOURCE_MAP.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/SOURCE_MAP.md) | **Provenance Authority [L3]** | Repository-wide claim-to-evidence provenance map tracing architectural mechanisms to raw measurements and commits. | Trace core architectural claims to their verifying evidence before proposing modifications. |
 | [`docs/CONTEXT_ARCHITECTURE.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/CONTEXT_ARCHITECTURE.md) | **Context Projection Spec [L4]** | Multi-agent projection architecture: Ciah $\le 5$-file reviewer pack, Gemini deep research corpus, Antigravity L0–L6 routing. | Authoritative rules for creating or updating derived context files. |
@@ -202,12 +202,19 @@ Lucia/
 │       ├── emotion/                            # Layers 2–3: Coupled MT-LNN, Philia attractor & ConsolidationEngine
 │       ├── inference/                          # Layer 4: Active Inference & CPU LNNTrainer
 │       ├── memory/                             # Layer 5: Kanerva SDM, DecayEngine, Ecphory
-│       ├── orchestrator/                       # Canonical S1–S16 CognitiveOrchestrator pipeline
-│       ├── language/                           # Layer 6: Local GGUF Small Language Model
+│       ├── knowledge/                          # Conceptual knowledge, KnowledgeStore & Fortification (P23-E)
+│       ├── relationship/                       # Evolving 4D RelationshipState & Philia grounding
+│       ├── communication/                      # Communication policy, pacing & CAPS engine (P23)
+│       ├── cognition/                          # TermArena contract (P23-G) & Reasoning Kernel (P23-H)
+│       ├── embodiment/                         # Temporal embodiment & unilateral social adaptation (P25)
+│       ├── orchestrator/                       # Canonical S1–S16 CognitiveOrchestrator pipeline & discourse cache
+│       ├── language/                           # Layer 6: SLM backend, adapter boundary (P23-F), realization gate (ADR-035)
 │       ├── safety/                             # Layer 6: BoundaryLayer regex validator
-│       ├── voice/                              # Layer 6: Direct RVC synthesis & faster-whisper STT
+│       ├── voice/                              # Layer 6: Direct RVC synthesis, faster-whisper STT & prosody cadence (P24)
+│       ├── identity/                           # Genesis protocol contract (G1–G4) & identity anchor (ADR-034)
 │       ├── telemetry/                          # StabilityEvaluator (LSI, Jitter, Watchdog)
-│       └── presence/                           # PresenceOrchestrator integrating all layers
+│       ├── presence/                           # PresenceOrchestrator integrating all layers
+│       └── simulation/                         # SimulationRuntime, SimClock, StoragePolicy
 ├── electron/                                   # DESKTOP USER INTERFACE
 │   ├── main/                                   # Main Process (ProcessManager, Tray, MascotWindow)
 │   ├── preload/                                # ContextBridge security boundary
@@ -221,6 +228,9 @@ Lucia/
 │   └── ui.json                                 # Port, default model, voice, hardware profile
 ├── data/                                       # RUNTIME PERSISTENCE
 │   ├── chat_history.json                       # Conversation turns & session records
+│   ├── dynamical_state.json                    # Persistent limbic dynamical state
+│   ├── relationship.json                       # Persistent 4D relationship state
+│   ├── epoch_manifest.json                     # Persistence barrier & synchronization manifest
 │   └── profile.json                            # Genesis onboarding profile (is_onboarded: false)
 └── models/                                     # LOCAL ASSETS & WEIGHTS
     ├── avatar/                                 # 2D Sprites, Live2D models, 3D VRM files

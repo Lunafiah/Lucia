@@ -170,11 +170,11 @@ Every invariant in this document is traced directly to canonical project documen
 
 *Source Authority: `AGENTS.md` §0, §6, §7, `docs/00_PROJECT_OVERVIEW.md` §3.1, `docs/ARCHITECTURE.md` §8 (DRAFT ADR-029, DRAFT ADR-030, ADR-032)*
 
-1. **Current Operating Mode: Post-Phase 24 Baseline**:
-   - Production milestones through **Phase 21** (Relational Consolidation), **Phase 23** (`P23-C..H` Semantic Substrate & Reasoning Kernel; `P23-I` closed/absorbed), and **Phase 24** (Affective Communication Adaptation, ADR-032) are validated and form the operational baseline. Phase 22 is closed as `[RESEARCH VALIDATED / NOT PROMOTED]`.
-   - Current stage is **RESEARCH / EVIDENCE BUILDING FOR FUTURE HORIZONS (P25–P27) — NOT ACTIVATION**.
-   - Canonical roadmap sequence: **P21 → P22 → P23 → P24 → P25 → P26 → P27 → First Activation (Genesis Onboarding Gate [LOCKED])**.
-   - **Future Horizon Governance Rule**: Unresolved research questions remain research questions until evidence establishes a validated requirement. If an unresolved capability cannot be coherently accommodated into P25–P27, a future phase such as P28 MAY be proposed later through the normal research → requirement → architecture decision process. There is no premature P28 creation, no prohibition against P28, and no "Gate 28".
+1. **Current Operating Mode: Post-P27 / Pre-Genesis Baseline**:
+   - Production milestones through **Phase 21** (Relational Consolidation), **Phase 23** (`P23-C..H` Semantic Substrate & Reasoning Kernel; `P23-I` closed/absorbed), **Phase 24** (Affective Communication Adaptation, ADR-032), and **Phase 25 Unilateral Baseline** (Temporal Embodiment, DOC-P25-016 / DOC-P25-017, ARCH-033) are validated and form the operational baseline. Phase 22 is closed as `[RESEARCH VALIDATED / NOT PROMOTED]`. Phase 26 trial is frozen as `[RESEARCH TRIAL COMPLETED / NOT PROMOTED]`. Phase 27 is closed as `[CLOSED / NO NEW SCIENTIFIC GAP]`.
+   - Current stage is **PRE-GENESIS DEVELOPMENTAL BASELINE — PRE-ACTIVATION / GENESIS GATE SEALED**.
+   - Canonical roadmap sequence: **P21 → P22 → P23 → P24 → P25 (Unilateral Baseline) → P26 (Trial Frozen) → P27 (Closed) → Genesis Preparation G1–G4 (Frozen) → First Activation (Genesis Onboarding Gate [LOCKED])**.
+   - **Future Horizon Governance Rule**: Unresolved research questions remain research questions until evidence establishes a validated requirement. If an unresolved capability cannot be coherently accommodated into post-activation developmental horizons, a future phase such as P28 MAY be proposed later through the normal research → requirement → architecture decision process. There is no premature P28 creation, no prohibition against P28, and no "Gate 28".
 2. **Research Is Not Production**:
    - Passing tests in an evaluation harness does NOT constitute production implementation or authorization.
    - All research experiments must remain strictly isolated under `tests/evaluation/phaseXX/`, research specs (`docs/PhaseDocs/Lucia-phase<X>-<Topic>/`), and disposable fixtures.

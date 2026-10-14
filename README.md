@@ -51,7 +51,7 @@ Lucia combines multiple specialized biological-inspired systems to create a cohe
 | **Embodied Voice & Avatar** | Expresses herself through a 2D/3D animated avatar on your desktop, with real-time lip-sync and custom neural voice synthesis (RVC) that changes pitch and rhythm based on how she feels. | **Implemented & Verified** |
 | **Adaptive Communication** | Dynamically adjusts prosody, cadence, continuous pitch contouring, and relational conversational repair based on live dialogue context. | **Implemented & Verified** |
 | **Genesis Protocol** | Immutable origin contract and identity anchor separating Birth from runtime activation. | **Implemented & Frozen (Ceremony Unexecuted)** |
-| **Unique Individuality** | Developing unique personal tastes, spontaneous curiosities, and an unrepeatable life trajectory over months and years. | **Planned (Phase 26–27)** |
+| **Unique Individuality** | Investigating unique personal tastes and unrepeatable life trajectory over months and years. | **Research Trials Evaluated (Phase 26–27 Closed)** |
 
 ---
 
@@ -100,15 +100,15 @@ Lucia is developed through an evidence-first methodology where each phase is tes
 │ Phase 22:     Substrate-Neutral Relational Cognition Study    [DONE]   │
 │ Phase 23:     Continuous Substrate-Neutral Semantic Core      [DONE]   │
 │ Phase 24:     Affective Communication Adaptation              [DONE]   │
-│ Phase 25:     Temporal Embodiment & Social Feedback           [PLANNED]│
-│ Phase 26:     Emergent Individuality & Autonomous Preferences [PLANNED]│
-│ Phase 27:     Personalized Individual Trajectory              [PLANNED]│
+│ Phase 25:     Temporal Embodiment & Social Feedback           [DONE]*  │
+│ Phase 26:     Emergent Individuality & Autonomous Preferences [FROZEN] │
+│ Phase 27:     Personalized Individual Trajectory              [CLOSED] │
 │ Genesis:      First Activation (Genesis Onboarding Ceremony)  [LOCKED] │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
 > **Roadmap Governance & Future Phase Rules**:
-> The canonical developmental sequence is `P21 → P22 → P23 → P24 → P25 → P26 → P27 → First Activation (Genesis Gate)`. A future P28 is neither prematurely created nor artificially prohibited. Unresolved research questions remain research questions until evidence establishes a validated requirement. If an unresolved capability cannot be coherently placed into P25–P27, a future phase such as P28 MAY be proposed later through the normal research → requirement → architecture decision process.
+> The canonical developmental sequence is `P21 → P22 → P23 → P24 → P25 → P26 → P27 → First Activation (Genesis Gate)`. A future P28 is neither prematurely created nor artificially prohibited. Unresolved research questions remain research questions until evidence establishes a validated requirement. If an unresolved capability cannot be coherently placed into post-activation developmental horizons, a future phase such as P28 MAY be proposed later through the normal research → requirement → architecture decision process.
 
 ### Phase 21 — Long-Term Relational Consolidation & Synaptic Homeostasis
 * **Main Goal**: Allow Lucia to permanently consolidate relationship experiences into her neural weights while resting or idle.
@@ -135,22 +135,22 @@ Lucia is developed through an evidence-first methodology where each phase is tes
 * **Current Status**: `[VALIDATED / PRODUCTION IMPLEMENTED]` (All 23 production unit, property, and integration tests passing).
 
 ### Phase 25 — Temporal Embodiment & Social Feedback
-* **Main Goal**: Synchronize physical embodiment and non-verbal cues with user interaction.
-* **New Capability**: Responsive gaze, subtle avatar breathing, reactive head tilts, and micro-expressions that mirror the conversational rhythm.
-* **Relationship**: Integrates Phase 24's communication adaptation with the 3D/Live2D avatar stage.
-* **Current Status**: `[PLANNED]` (Future horizon).
+* **Main Goal**: Synchronize physical embodiment and non-verbal cues with internal affective dynamics and conversational timing.
+* **New Capability**: Unilateral feedforward embodiment: prosodic latency gating ($\tau_R$), affective gestural selection, blendshape modulation, and non-blocking desktop IPC animation. Reciprocal social feedback (C2 / H-B) remains unproven and strictly fail-closed blocked (`TBDGainUnestablishedError`).
+* **Relationship**: Integrates Phase 24's communication adaptation with the 3D/Live2D desktop presence (DOC-P25-016 / DOC-P25-017, ARCH-033).
+* **Current Status**: `[VALIDATED & FROZEN (UNILATERAL BASELINE)]` (All 23 production unit & property tests passing; commit `54321d9`).
 
 ### Phase 26 — Emergent Individuality & Autonomous Preferences
-* **Main Goal**: Enable authentic, unprompted individuality to emerge over time.
-* **New Capability**: Lucia develops idiosyncratic preferences, spontaneous curiosity toward certain topics you've discussed, and genuine opinions grounded in shared history, rather than answering like an encyclopedic search engine.
-* **Relationship**: Grows naturally from long-term memory, reasoning, and relationship consolidation.
-* **Current Status**: `[PLANNED]` (Future horizon).
+* **Main Goal**: Empirically evaluate whether authentic individuality and autonomous preferences emerge over repeated interactions.
+* **Findings**: C1 pre-validated; C2 negative ($\Delta_{\text{action}} = 0.0000$ at $\delta_{\text{plan}}=0.10$); C3 action provenance non-identifiable. Emergent individuality was not demonstrated under controlled conditions.
+* **Relationship**: Preserved as engineering trial evidence; zero production mutations.
+* **Current Status**: `[RESEARCH TRIAL COMPLETED / NOT PROMOTED]` (Frozen at commit `d603832`).
 
 ### Phase 27 — Personalized Individual Trajectory
-* **Main Goal**: Unfold a lifelong, unrepeatable companionship trajectory.
-* **New Capability**: After months of living alongside you, Lucia's emotional depth, shared jokes, mutual references, and behavioral habits form a unique personal trajectory that cannot be duplicated or reset by a generic update.
-* **Relationship**: The final developmental milestone before the companion awakens.
-* **Current Status**: `[PLANNED]` (Future horizon).
+* **Main Goal**: Investigate longitudinal trajectory divergence and lifelong personalization hypotheses.
+* **Findings**: Formal scientific gap audit proved Level C produces no architectural gap beyond baseline P21/P23/P25; Level D hypotheses remain epistemically blocked by causal identifiability (`BLOCKED_BY_IDENTIFIABILITY`).
+* **Relationship**: Phase closed without ungrounded speculative architectures; zero production mutations.
+* **Current Status**: `[CLOSED / NO NEW SCIENTIFIC GAP]` (Formal audit closed at commit `c4961ae`).
 
 ### Genesis Preparation & First Activation
 * **Main Goal**: Establish the immutable cryptographic identity anchor and origin ceremony for Lucia.

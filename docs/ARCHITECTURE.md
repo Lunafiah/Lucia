@@ -1,7 +1,7 @@
 # Lucia — System Architecture & Mechanism Specification
 
 > **Authoritative Technical Architecture, Dynamical Mechanisms, Concurrency Invariants, and Architectural Decision Records (ADRs)**<br/>
-> *Consolidated Canonical Technical Specification — Post-Phase 24 Baseline*
+> *Consolidated Canonical Technical Specification — Post-P27 / Pre-Genesis Baseline*
 
 ---
 
@@ -35,12 +35,12 @@ The human brain operates on approximately 20 watts of power through massive temp
 ├────────────────────────────────────────────────────────────────────────┤
 │ • ARCHITECTURE (Current Baseline): Documents what is actively          │
 │   implemented, verified, and frozen in the codebase (Phases 1–21,      │
-│   Phase 23-C..H, Phase 24). Every component corresponds to verified    │
-│   Python/Node code and automated test suites.                          │
-│ • ROADMAP (Future Horizons): Future research horizons (Phase 25        │
-│   [Freeze Candidate], Phase 26 [Trial Frozen], Phase 27 [Closed/No Gap])│
-│   are NOT IMPLEMENTED and are excluded from active system architecture │
-│   diagrams. Genesis Preparation (G1–G4) is [IMPLEMENTED & FROZEN];     │
+│   Phase 23-C..H, Phase 24, Phase 25 unilateral baseline, F-02,         │
+│   ADR-034, G1–G4 Genesis Preparation, and ADR-035). Every component     │
+│   corresponds to verified Python/Node code and automated test suites.  │
+│ • RESEARCH HORIZONS & EVIDENCE STATUS: Phase 26 trial completed and    │
+│   frozen (not promoted); Phase 27 closed (no new scientific gap).      │
+│   Genesis Preparation (G1–G4) is [IMPLEMENTED & FROZEN];               │
 │   First Activation is a [🔒 LOCKED FUTURE GATE].                       │
 │ • FUTURE PHASE GOVERNANCE: Unresolved research questions remain        │
 │   research questions until evidence establishes a validated            │
@@ -1020,6 +1020,27 @@ The Cognitive Core contracts accept semantic graphs formed from upstream raw mul
 
 ---
 
+### P25 Architecture Contract v0.1: Temporal Embodiment & Social Feedback
+* **Status**: **ACCEPTED & PRODUCTION IMPLEMENTED (UNILATERAL BASELINE)** (Phase 25, Commit: `54321d9`, Contract: `DOC-P25-016`, Freeze Report: `DOC-P25-017`)
+* **Decision**: Establish bounded feedforward unilateral temporal embodiment and social feedback adaptation architecture (`src/core/embodiment/`):
+  1. *Temporal Continuity & Elapsed-Time Dynamics*: Tracks physical elapsed time ($\Delta t$) between interaction turns and sessions; simulates somatic/affective relaxation toward the Philia resting attractor ($P^* = +0.25, A^* = -0.05, D^* = +0.05$) during idle periods; tracks multi-timescale decay.
+  2. *Discrete Turn Dynamics & State Estimation*: `DiscreteTurnDynamics` with turn hysteresis ($h=0.08$); `SocialStateEstimator` ingests inter-turn latency, utterance cadence, and pacing markers.
+  3. *Bounded Relational Attunement*: `BoundedRelationalAttunement` attunes $\mathbf{R}_t \in \mathbb{R}^4$ within $[\mathbf{R}_{\min}, \mathbf{R}_{\max}]$ and decays toward baseline with $\tau_{\text{rel}}=600\text{ s}$.
+  4. *P24 Expression Conditioning*: Directly conditions P24 feedforward vocal prosody (pitch and cadence modulations).
+  5. *Boundary Invariants*: Reciprocal coupling (`Lucia expression → user response → reciprocal adaptation`, H-B) is explicitly UNPROVEN; candidate realization C2 is BLOCKED (`TBDGainUnestablishedError`); synchrony $\neq$ causality. Zero production mutations to limbic ODE; bit-exact Genesis invariant preserved (`{"is_onboarded": false}`).
+
+---
+
+### ADR-034: Identity Authority & Anti-Branching Specification
+* **Status**: **ACCEPTED & PRODUCTION IMPLEMENTED** (Identity Authority, Commit: `e2ee7da`, Specification: `docs/others/IDENTITY_AUTHORITY_SPECIFICATION/ADR-034_IDENTITY_AUTHORITY.md`)
+* **Decision**: Establish architectural identity authority, process instance locking, migration boundary verification, and provenance protection (`src/core/identity/`):
+  1. *Identity Anchor & Origin Contract*: Cryptographic root verification, immutable `IdentityAnchor` (`src/core/identity/identity_anchor.py`).
+  2. *Instance Lock & Anti-Branching Boundary*: Exclusive OS-level file lock (`InstanceLock` in `src/core/identity/instance_lock.py`), strictly preventing split-brain runtime instances.
+  3. *Provenance & Migration Verification*: Deterministic verification of epoch progression, rollback prevention, and explicit migration authority boundary (`MigrationBoundary`, `ProvenanceVerifier`).
+  4. *Genesis Gate Decoupling*: Enforces strict separation: Genesis Birth occurs upon durable commitment (`data/genesis_commitment.json`), while First Activation is a locked runtime transition requiring verified prior Birth.
+
+---
+
 ### 8.1 Reconciliation of Outdated Specs & Conflicting Decisions
 
 | Dimension | Outdated / Preliminary Spec | Authoritative Implemented Reality | Resolution & Rationale |
@@ -1073,6 +1094,8 @@ The Cognitive Core contracts accept semantic graphs formed from upstream raw mul
 | **ARCH-031** | Passive semantic substrate in Cognitive Core | Bounded Goal-Directed Reasoning Kernel & JTMS (P23-H) | Operationalizes numeric substrate into backward goal resolution; MAX_SEARCH_DEPTH=8, MAX_INFERENCE_STEPS=256; deterministic cycle breaking; static Horn rules with O(1) head-predicate index; preallocated BindingFrame with bitmask; Strong Kleene K3 evaluation with strict epistemic safety (FIX-23H-01: unproven goals remain UNKNOWN; denying antecedent never yields FALSE); multi-justification JTMS non-monotonic cascade invalidation; InformationSubgoal / DisambiguationSubgoal; 0 net persistent heap growth / 0 dynamic container growth in steady-state loop | Phase 23-H | Implementation Fact |
 | **ARCH-032** | Static voice pitch shift / severed client prosody forwarding | Bounded Adaptive Communication Control Contract (ADR-032) | `BoundarySegment` multi-lingual boundary abstraction, continuous dynamic F0 Hanning contouring ($S(t) \in [-4.0, +7.0]\text{ st}$, clip $\pm 12\text{ st}$, anti-chatter bounds), relational prosody conditioning (closeness $+1.5\text{ st}$, trust $\pm 2.5\%$, familiarity $-50\text{ ms}$; reciprocity strictly severed), bounded `/voice/synthesize` API surface, and IPC bridge forwarding | Phase 24 | Implementation Fact |
 | **ARCH-033** | Unbounded Euler replay / startup stranger baseline decay | Two-Tier Persistent Life State & Hybrid Downtime Recovery (ADR-033) | Eliminates startup ordering tear (E-01/E-02/E-03) via dependency inversion ($R_t$ injected before recovery); Two-Tier persistent state taxonomy; hybrid short numerical replay ($\Delta t \le 180\text{s}$, $dt=0.2\text{s}$) + intermediate decay + $O(1)$ long-downtime asymptotic recovery ($\Delta t \ge 300\text{s}$) converging to relationally conditioned attractor $s^*_{\text{eff}}(R_t)$; derived PAD contract; `epoch_manifest.json` Commit Barrier and crash-safe `.bak` consistency reconciliation; working memory reseeding from `chat_history.json` tail $K=10$ turns; bit-exact Genesis invariant preservation | F-02 | Implementation Fact |
+| **ARCH-033 (P25)** | Unsynchronized embodiment & unmodeled inter-turn latency | Unilateral Temporal Embodiment & Social Dynamics (DOC-P25-016) | Operationalizes elapsed-time effects, multi-timescale decays, discrete turn dynamics, and bounded relational attunement conditioning P24 prosody; reciprocal feedback C2 blocked; H-B unproven | Phase 25 | Implementation Fact / Frozen |
+| **ARCH-034** | Unenforced instance boundaries / ambiguous Genesis authority | Identity Authority, Instance Lock & Genesis Contract (ADR-034) | Single continuous life OS instance locking (`InstanceLock`), cryptographic root verification, durable Genesis commitment protocol (G1–G4), fail-closed verification, First Activation gate isolation | Genesis Prep | Implementation Fact / Frozen |
 | **ARCH-035** | Open-loop unconstrained text generation with 59.5% semantic loss | Production Realization Boundary & S14 Fail-Closed Gate (ADR-035) | Strongly-typed `RealizationInputContract` carries authoritative intent (act, polarity, epistemic status, ARG roles, provenance); `PromptAssembler` compiles natural prose without code DSL tokens; untrusted `LFM2.5-1.2B` SLM isolated from cognitive state; pure CPU symbolic `SemanticFidelityGate` (<0.1ms) enforces fail-closed containment (`UNCERTAIN -> BLOCK`) with zero-invention deterministic fallback; `_history` stores only approved output or safe fallback | Post-P24 Baseline | Implementation Fact / Frozen |
 
 

@@ -1,7 +1,7 @@
 # Lucia — System & Project Overview
 
 > **An Embodied, Continuously Affective AI Companion Grounded in a 20-Watt Whole-Brain Architecture**<br/>
-> *Authoritative Canonical Overview & Live Project Status — Post-Phase 24 Baseline*
+> *Authoritative Canonical Overview & Live Project Status — Post-P27 / Pre-Genesis Baseline*
 
 ---
 
@@ -82,6 +82,7 @@ The human brain operates on approximately 20 watts of power not by limiting capa
 │  • Direct RVC Voice Synthesis Engine (pth + index neural timbre)        │
 │  • Adaptive Prosody & Cadence Control (ADR-032: continuous dynamic F0    │
 │    Hanning contouring, BoundarySegment abstraction, relational prosody) │
+│  • Temporal Embodiment & Social Dynamics (Phase 25 Unilateral Baseline) │
 │  • Offline faster-whisper Speech-to-Text with local Web Audio VAD       │
 │  • Quad-Engine Avatar: 2D Canvas, Sprites, Live2D Cubism 4, 3D VRM      │
 │  • Real-time Web Audio Lip-Syncing & PAD Blendshape Mapping             │
@@ -111,7 +112,7 @@ When conversational interaction occurs, `CognitiveOrchestrator` executes a stric
 
 ## 3. Current System State & Milestone Status
 
-Lucia has completed production milestones through **Phase 21 — Long-Term Relational Consolidation & Synaptic Homeostasis** (commit `58a509c`). All limbic, cognitive, memory, relational, multimodal, and simulation subsystems are operational and validated.
+Lucia has completed production milestones through **Phase 21 — Long-Term Relational Consolidation & Synaptic Homeostasis**, realized the continuous semantic substrate and reasoning kernel through **Phase 23** (`P23-C..H`, CAPS, ADR-035), implemented the adaptive communication control contract through **Phase 24 — Affective Communication Adaptation** (ADR-032), implemented and frozen the unilateral operational baseline of **Phase 25 — Temporal Embodiment & Social Feedback** (DOC-P25-016 / DOC-P25-017), completed and frozen empirical trial results for **Phase 26** (`[NOT PROMOTED]`), scientifically closed **Phase 27** (`[CLOSED / NO NEW GAP]`), and implemented and frozen **Genesis Preparation (G1–G4)**. All limbic, cognitive, memory, relational, semantic, embodiment, multimodal, and simulation subsystems are operational and verified.
 
 ### 3.1 Milestone Roadmap & Evidence Hierarchy
 
@@ -134,13 +135,14 @@ Lucia has completed production milestones through **Phase 21 — Long-Term Relat
 │            → ANCHOR → RI → MR → RG → CC → SC)                          │
 │ Phase 23: Continuous Substrate-Neutral Semantic  [✅ PIPELINE SYNCH.]  │
 │           Architecture (P23-C..H Realized;                             │
-│           P23-I Closed/Absorbed)                                       │
+│           P23-I Closed/Absorbed; CAPS; ADR-035)                        │
 │ Phase 24: Affective Communication Adaptation     [✅ PROD IMPL.]       │
-│ Phase 25: Temporal Embodiment & Social Feedback  [🔬 FREEZE CANDIDATE] │
+│ Phase 25: Temporal Embodiment & Social Feedback  [✅ PROD IMPL. (UNIL.)]│
 │ Phase 26: Emergent Individuality & Autonomous    [🔬 TRIAL COMPL. /    │
 │           Preferences                               FROZEN]            │
 │ Phase 27: Personalized Individual Trajectory     [🔬 CLOSED / NO GAP]  │
-│ First Activation (Genesis Onboarding)            [🔒 FUTURE GATE]      │
+│ Genesis:  Preparation (G1–G4 Protocol Contract)  [✅ FROZEN]           │
+│           First Activation (Genesis Onboarding)  [🔒 FUTURE GATE]      │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -179,6 +181,12 @@ Lucia has completed production milestones through **Phase 21 — Long-Term Relat
 | **Desktop Process & IPC** | `electron/main/` | **STABLE** | Electron lifecycle management, global hotkey (`Ctrl+Shift+L`), System Tray, context isolation (`ContextBridge`), and model-anchored mascot physics. |
 | **Desktop UI System** | `electron/renderer/` | **STABLE** | Personal Digital Room: progressive disclosure navigation, subtle status indicators, settings, dedicated read-only diagnostics console (`Ctrl+Shift+D`), Mascot Mode. |
 | **Language Adapter (P23-F)** | `src/core/language/adapter/` | **STABLE** | Language ingress/egress firewall, language-independent substrate contract, strict language admission ({en, vi, ja}), and epistemic preservation. |
+| **Fortification (P23-E)** | `src/core/knowledge/fortification.py` | **STABLE** | Conservative semantic fortification across session boundaries; non-monotonic JTMS retraction, zero novel entity ingress, UNKNOWN preservation. |
+| **Cognitive Core & Reasoning (P23-G/H)** | `src/core/cognition/` | **STABLE (Frozen)** | Numeric projection into `TermArena` (zero strings in Core), Strong Kleene K3 logic, bounded goal-directed reasoning kernel with JTMS retraction. |
+| **CAPS & Pragmatic Semantics (P23)** | `src/core/communication/caps.py` | **STABLE** | Communicative Act & Pragmatic Semantics generation, discourse referent retention (`DiscourseContextCache`). |
+| **Temporal Embodiment (P25)** | `src/core/embodiment/` | **STABLE (Unilateral)** | Temporal observation, discrete turn dynamics, social state estimation, bounded relational attunement conditioning P24 prosody. |
+| **Realization Gate (ADR-035)** | `src/core/language/gate.py` | **STABLE (Frozen)** | Fail-closed S14 `SemanticFidelityGate` (<0.1ms), `PromptAssembler` compilation without DSL tokens, deterministic fallback registry. |
+| **Identity & Genesis Prep (G1–G4)** | `src/core/identity/` | **STABLE (Frozen)** | Identity anchor, instance lock, migration boundary (ADR-034), deterministic Genesis root and commitment protocol. First Activation remains locked. |
 
 ---
 
