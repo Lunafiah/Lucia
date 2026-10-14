@@ -74,8 +74,10 @@ The human brain operates on approximately 20 watts of power not by limiting capa
 ├─────────────────────────────────────────────────────────────────────────┤
 │  LAYER 6: MULTIMODAL EMBODIMENT & EXPRESSION                            │
 │  • Local GGUF Small Language Model (Downstream Realization Substrate)    │
-│    (Note: SLM/LLM is an optional downstream realization substrate;      │
+│    (Note: SLM/LLM is an untrusted downstream text renderer;             │
 │     relational semantic state operates substrate-neutrally)             │
+│  • Production Realization Boundary (ADR-035: Typed Realization Contract, │
+│    fail-closed S14 SemanticFidelityGate, deterministic fallback registry)│
 │  • Boundary Safety Layer (regex & pattern blocking of meta-selfhood)    │
 │  • Direct RVC Voice Synthesis Engine (pth + index neural timbre)        │
 │  • Adaptive Prosody & Cadence Control (ADR-032: continuous dynamic F0    │

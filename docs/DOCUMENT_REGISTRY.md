@@ -248,6 +248,18 @@ Every documented artifact in the Lucia repository is registered and classified a
 
 ---
 
+## 11.1 Production Realization Boundary Series (ADR-035)
+
+| Doc ID | Title | File Path | Class | Phase | Stage | Status | Authority | Canonical Owner |
+|---|---|---|---|---|---|---|---|---|
+| **DOC-PRB-001** | ADR-035: Production Realization Boundary & Fail-Closed Semantic Verification | [`docs/others/PRODUCTION_REALIZATION_BOUNDARY_ADR/ADR_035_PRODUCTION_REALIZATION_BOUNDARY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/others/PRODUCTION_REALIZATION_BOUNDARY_ADR/ADR_035_PRODUCTION_REALIZATION_BOUNDARY.md) | Architectural Decision | Post-P24 Baseline | Architectural Decision | `IMPLEMENTED / FROZEN` | `DECISION` | Self |
+| **DOC-PRB-002** | Typed Realization Contract Specification | [`docs/others/PRODUCTION_REALIZATION_BOUNDARY_ADR/TYPED_REALIZATION_CONTRACT_SPEC.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/others/PRODUCTION_REALIZATION_BOUNDARY_ADR/TYPED_REALIZATION_CONTRACT_SPEC.md) | Technical Specification | Post-P24 Baseline | Contract Spec | `FROZEN` | `SPEC` | Self |
+| **DOC-PRB-003** | S14 Fail-Closed Gate Specification | [`docs/others/PRODUCTION_REALIZATION_BOUNDARY_ADR/S14_FAIL_CLOSED_GATE_SPEC.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/others/PRODUCTION_REALIZATION_BOUNDARY_ADR/S14_FAIL_CLOSED_GATE_SPEC.md) | Technical Specification | Post-P24 Baseline | Gate Spec | `FROZEN` | `SPEC` | Self |
+| **DOC-PRB-004** | Stage 5 Implementation Report | [`docs/others/PRODUCTION_REALIZATION_BOUNDARY_ADR/STAGE_5_IMPLEMENTATION_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/others/PRODUCTION_REALIZATION_BOUNDARY_ADR/STAGE_5_IMPLEMENTATION_REPORT.md) | Implementation Evidence | Post-P24 Baseline | Verification Report | `IMPLEMENTED / PASS` | `EVIDENCE` | Self |
+| **DOC-PRB-005** | Migration Sequence Stage 5 | [`docs/others/PRODUCTION_REALIZATION_BOUNDARY_ADR/MIGRATION_SEQUENCE_STAGE_5.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/others/PRODUCTION_REALIZATION_BOUNDARY_ADR/MIGRATION_SEQUENCE_STAGE_5.md) | Implementation Plan | Post-P24 Baseline | Migration Plan | `FROZEN` | `IMPLEMENTATION` | Self |
+
+---
+
 ## 12. Maintenance & Registration Rules
 
 When authoring any new document, specification, or evaluation report:

@@ -445,14 +445,30 @@ flowchart TD
         ActuatorState["Canonical 15-Dim Actuator Vector E_t\n[Text 3, Prosody 4, Facial 5, Posture 2, Latency 1]"]
     end
 
-    subgraph Language_Substrate ["Language Realization & Safety"]
-        PromptAssembler["Pre-Reflective Context Assembler\n(Zero Introspective Ego Prompts)"]
-        LocalSLM["Local GGUF Small Language Model\n(LFM2.5-1.2B / Qwen2.5-3B via CUDA sm_86)"]
-        BoundaryFilter["BoundaryLayer Regex Validator\n(Strips Self-Reported Affect & Meta-Ego Loops)"]
+    subgraph Language_Substrate ["Language Realization & Fail-Closed Safety Boundary (ADR-035)"]
+        direction TB
+        CAPS_Intent["CAPS / SemanticGraph (Stage S10b)\n[Authoritative Communicative Intent]"]
+        RealContract["Typed RealizationInputContract\n[Authoritative Realization Contract]"]
+        PromptAssembler["PromptAssembler (Stage S11)\n[Natural-Language Prose Directives]"]
+        LocalSLM["LFM2.5-1.2B SLM Realizer (Stage S13)\n[Untrusted Text Renderer Candidate]"]
+        FidelityGate["S14 SemanticFidelityGate (Stage S14)\n[Deterministic Pure-CPU Symbolic Arbiter]"]
+        GateDecision{"Gate Decision"}
+        FallbackRegistry["Deterministic Fallback Registry\n[Zero-Invention Safe Templates]"]
+        BoundaryFilter["BoundaryLayer Regex Validator\n[INV-2 Secondary Filter]"]
+        ApprovedOut["Approved Natural Language Text"]
+        HistoryBuf["_history Conversational Buffer\n[Derived Record — Never Epistemic Truth]"]
         
-        TurnOutput --> PromptAssembler
+        CAPS_Intent --> RealContract
+        RealContract --> PromptAssembler
         PromptAssembler --> LocalSLM
-        LocalSLM --> BoundaryFilter
+        LocalSLM -->|"Candidate Draft"| FidelityGate
+        RealContract -->|"Authoritative Oracle"| FidelityGate
+        FidelityGate --> GateDecision
+        GateDecision -->|"PASS"| BoundaryFilter
+        GateDecision -->|"BLOCK / UNCERTAIN"| FallbackRegistry
+        FallbackRegistry --> ApprovedOut
+        BoundaryFilter --> ApprovedOut
+        ApprovedOut --> HistoryBuf
     end
 
     subgraph Voice_Pipeline ["Offline Neural Audio Pipeline"]
@@ -461,7 +477,7 @@ flowchart TD
         PhraseCache["In-Memory Short Phrase Cache"]
         AudioPlayback["Desktop Audio Output & Echo Guard"]
         
-        BoundaryFilter --> VoiceService
+        ApprovedOut --> VoiceService
         VoiceService --> PhraseCache
         PhraseCache -->|"Cache Miss"| RVC
         PhraseCache -->|"Cache Hit"| AudioPlayback
@@ -494,15 +510,23 @@ flowchart TD
     end
 ```
 
-#### 1. Core Components
-* **`BoundaryLayer` (`src/core/safety/`)**: Deterministic regex safety validator operating downstream of the language model to intercept and drop self-reported affective declarations (*"I feel"*, *"As an AI"*).
-* **Local GGUF Small Language Model (`src/core/language/`)**: Edge-native SLM (LFM2.5-1.2B or Qwen2.5-3B) accelerated on consumer CUDA GPUs (`sm_86`), acting as an optional downstream language realization substrate.
-* **Direct RVC Voice Engine (`src/core/voice/`)**: On-device RVC v2 neural voice inference (`ja-JP-NanamiNeural` base + `VaresaGIJP` target timbre) with in-memory short-phrase caching.
-* **`AvatarRenderer` (`electron/renderer/avatar/`)**: Polymorphic avatar engine driving 2D Procedural Canvas, 2D Expression Sprites, Live2D Cubism 4, and 3D Humanoid VRM.
-* **Mascot Window Manager (`electron/main/mascot.js`)**: Manages the transparent, click-through, always-on-top desktop mascot window.
+#### 1. Core Components & Epistemic Authority Hierarchy
+The realization boundary strictly enforces the repository-wide authority model:
+* **Cognitive State (`KnowledgeStore`, MT-LNN, SDM)**: **Authoritative Semantic Source**. Permanent homeostatic and epistemic ground truth.
+* **CAPS & `SemanticGraph` (Stage S10b)**: **Authoritative Communicative Intent**. Defines *what* to communicate (act, concepts, epistemic certainty, polarity).
+* **`RealizationInputContract` (`src/core/language/contract.py`)**: **Authoritative Realization Contract**. Strongly-typed, immutable dataclass carrying semantic obligations (roles, scope, polarity, provenance, forbidden additions) across the S10 $\rightarrow$ S11 $\rightarrow$ S14 boundary.
+* **`PromptAssembler` (`src/core/orchestrator/prompt_assembler.py`)**: Compiles the contract into natural conversational prose directives for EN, VI, and JA without emitting DSL or code tokens (`ARG0:`, `EVENT:`), which empirically degrade 1.2B SLM fidelity.
+* **Local GGUF SLM Candidate (`src/core/language/llm_backend.py`)**: **Untrusted Text Renderer**. Realizes surface syntax and lexical variety; has zero access to cognitive internals and cannot mutate internal state.
+* **`SemanticFidelityGate` (`src/core/language/gate.py` - Stage S14)**: **Authoritative Fidelity Arbiter**. Pure-CPU deterministic symbolic gate ($<0.1\,\text{ms}$) verifying candidate text against the contract. Evaluates INV-2 affect, act compliance, polarity/negation, epistemic modality, argument/entity preservation (with pro-drop support), and forbidden additions.
+* **Fallback Registry**: Serves deterministic, zero-invention fallback templates on `BLOCK` or `UNCERTAIN` (`UNCERTAIN -> BLOCK`).
+* **`BoundaryLayer` (`src/core/safety/`)**: Secondary regex filter ensuring no introspective affect bypasses passing realizations.
+* **`_history` Buffer**: **Derived Conversational Buffer**. Contains *only* verified `PASS` responses or deterministic safe fallbacks. Never queried as an authoritative epistemic premise.
+
+> **Operational Boundary Clarification**:  
+> S14 provides fail-closed containment within the tested contracts and failure modes; it does not constitute universal semantic-safety proof or realization-quality remediation.
 
 #### 2. Substrate Neutrality & Downstream Realization Principle
-Phase 22 research (22-RG, 22-CC, 22-SC) established that **relational cognition does not depend on an SLM, LLM, or natural language prompt**. Relational state and evidence are fully captured by a compact semantic contract (~90–120 bytes). The language model serves as an optional rendering engine for dialogue, operating alongside non-verbal controllers (voice timbre, avatar blendshapes, conversational latency) with complete modular decoupling.
+Phase 22 research (22-RG, 22-CC, 22-SC) and ADR-035 established that **relational cognition does not depend on an SLM, LLM, or natural language prompt**. Relational state and evidence are fully captured by a compact semantic contract (~90–120 bytes). The language model serves as an untrusted rendering engine for dialogue, operating alongside non-verbal controllers (voice timbre, avatar blendshapes, conversational latency) with complete modular decoupling.
 
 #### 3. Embodiment Mechanics & Kinematics
 1. **Canonical 15-Dimensional Actuator Vector ($\mathbf{E}_t \in [0, 1]^{15}$)**:
@@ -1049,6 +1073,7 @@ The Cognitive Core contracts accept semantic graphs formed from upstream raw mul
 | **ARCH-031** | Passive semantic substrate in Cognitive Core | Bounded Goal-Directed Reasoning Kernel & JTMS (P23-H) | Operationalizes numeric substrate into backward goal resolution; MAX_SEARCH_DEPTH=8, MAX_INFERENCE_STEPS=256; deterministic cycle breaking; static Horn rules with O(1) head-predicate index; preallocated BindingFrame with bitmask; Strong Kleene K3 evaluation with strict epistemic safety (FIX-23H-01: unproven goals remain UNKNOWN; denying antecedent never yields FALSE); multi-justification JTMS non-monotonic cascade invalidation; InformationSubgoal / DisambiguationSubgoal; 0 net persistent heap growth / 0 dynamic container growth in steady-state loop | Phase 23-H | Implementation Fact |
 | **ARCH-032** | Static voice pitch shift / severed client prosody forwarding | Bounded Adaptive Communication Control Contract (ADR-032) | `BoundarySegment` multi-lingual boundary abstraction, continuous dynamic F0 Hanning contouring ($S(t) \in [-4.0, +7.0]\text{ st}$, clip $\pm 12\text{ st}$, anti-chatter bounds), relational prosody conditioning (closeness $+1.5\text{ st}$, trust $\pm 2.5\%$, familiarity $-50\text{ ms}$; reciprocity strictly severed), bounded `/voice/synthesize` API surface, and IPC bridge forwarding | Phase 24 | Implementation Fact |
 | **ARCH-033** | Unbounded Euler replay / startup stranger baseline decay | Two-Tier Persistent Life State & Hybrid Downtime Recovery (ADR-033) | Eliminates startup ordering tear (E-01/E-02/E-03) via dependency inversion ($R_t$ injected before recovery); Two-Tier persistent state taxonomy; hybrid short numerical replay ($\Delta t \le 180\text{s}$, $dt=0.2\text{s}$) + intermediate decay + $O(1)$ long-downtime asymptotic recovery ($\Delta t \ge 300\text{s}$) converging to relationally conditioned attractor $s^*_{\text{eff}}(R_t)$; derived PAD contract; `epoch_manifest.json` Commit Barrier and crash-safe `.bak` consistency reconciliation; working memory reseeding from `chat_history.json` tail $K=10$ turns; bit-exact Genesis invariant preservation | F-02 | Implementation Fact |
+| **ARCH-035** | Open-loop unconstrained text generation with 59.5% semantic loss | Production Realization Boundary & S14 Fail-Closed Gate (ADR-035) | Strongly-typed `RealizationInputContract` carries authoritative intent (act, polarity, epistemic status, ARG roles, provenance); `PromptAssembler` compiles natural prose without code DSL tokens; untrusted `LFM2.5-1.2B` SLM isolated from cognitive state; pure CPU symbolic `SemanticFidelityGate` (<0.1ms) enforces fail-closed containment (`UNCERTAIN -> BLOCK`) with zero-invention deterministic fallback; `_history` stores only approved output or safe fallback | Post-P24 Baseline | Implementation Fact / Frozen |
 
 
 

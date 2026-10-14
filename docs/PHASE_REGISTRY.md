@@ -207,6 +207,27 @@ Each phase represents an independent developmental milestone with its own distin
   - Real Genesis has NOT been executed.
   - First Activation remains a **LOCKED FUTURE GATE** requiring explicit human governance after prerequisite developmental horizons.
 
+### Cross-Cutting Track: Production Realization Boundary (ADR-035) `[IMPLEMENTED / FROZEN / CLOSED]`
+
+* **Purpose**: Establish an immutable typed contract and a deterministic, fail-closed verification boundary between the symbolic Cognitive Core (CAPS / SemanticGraph) and the untrusted local Small Language Model (LFM2.5-1.2B) to guarantee semantic fidelity and prevent ungrounded conversational hallucination.
+* **Current Status**: `IMPLEMENTED / FROZEN / CLOSED` (Post-P24 Operational Baseline)
+* **Governing Decision**: ADR-035 ([`docs/others/PRODUCTION_REALIZATION_BOUNDARY_ADR/ADR_035_PRODUCTION_REALIZATION_BOUNDARY.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/others/PRODUCTION_REALIZATION_BOUNDARY_ADR/ADR_035_PRODUCTION_REALIZATION_BOUNDARY.md)), ARCH-035
+* **Implementation Evidence**: Stage 5 Implementation Report ([`docs/others/PRODUCTION_REALIZATION_BOUNDARY_ADR/STAGE_5_IMPLEMENTATION_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/others/PRODUCTION_REALIZATION_BOUNDARY_ADR/STAGE_5_IMPLEMENTATION_REPORT.md))
+* **Stage Progression & Verification History**:
+  - **Stage 1 (Architecture Gap Spec)**: `COMPLETED`. Formally isolated GAP-01 (lossy serialization), GAP-03 (open-loop verification), and GAP-05 (untyped contract).
+  - **Stage 2 (Taxonomy of Loss)**: `COMPLETED`. Formalized 5-class semantic realization error taxonomy (contradiction, epistemic distortion, argument/entity loss, reference failure, communicative act violation).
+  - **Stage 3-A (SemanticGraph Preservation Audit)**: `COMPLETED`. Empirically documented 0.0% graph role preservation and 59.5% baseline critical semantic error rate on unconstrained realization.
+  - **Stage 3-B (CPU vs GPU Equivalence Study)**: `COMPLETED`. Empirically demonstrated paired equivalence between CPU and GPU runtimes; confirmed semantic errors are driven by model parameter scale (1.2B) and instruction capacity, NOT execution backend or hardware nondeterminism.
+  - **Stage 3-C (Compact Structured Contract Evaluation)**: `COMPLETED`. **Negative Result Ratified**: Attempting to feed dense code/DSL prompt contracts (`ARG0:`, `EVENT:`, `RULE:`) to the 1.2B SLM failed, increasing error rate from 50.0% to 85.7% due to model inductive bias limits. Realization prompts must use compiled natural prose directives.
+  - **Stage 3-D (Fail-Closed Gate Evaluation)**: `COMPLETED`. Proved pure-CPU deterministic symbolic gate achieves $<0.1\,\text{ms}$ latency with 0 MB GPU VRAM and 100% containment of tested semantic failure modes.
+  - **Stage 4 (Production Boundary Architecture & ADR)**: `COMPLETED / DESIGN READY`. Ratified 5 architectural decisions in ADR-035.
+  - **Stage 5 (Production Implementation & Verification)**: `IMPLEMENTED / PASS`. Implemented `RealizationInputContract`, `PromptAssembler` compilation, `SemanticFidelityGate`, deterministic `FALLBACK_REGISTRY`, and `_history` containment. Passed 16/16 targeted tests (`tests/unit/test_production_realization_boundary.py`) and 136/136 regression tests. Bit-exact Genesis invariant preserved (`data/profile.json == {"is_onboarded": false}`).
+  - **Track Status**: `FROZEN / CLOSED`.
+* **Preserved Negative Findings & Scientific Boundaries**:
+  1. *SLM Scale Ceiling*: Current `LFM2.5-1.2B` realization quality remains intrinsically limited; 50–65% of complex semantic realizations fail without remediation.
+  2. *DSL Prompt Rejected*: Compact prompt DSL is counter-productive on compact SLMs; prompt compilation must remain natural conversational prose.
+  3. *Containment $\neq$ Generation Remediation*: S14 provides fail-closed containment within the tested contracts and failure modes; it does not constitute universal semantic-safety proof or realization-quality remediation.
+  4. *Hardware Independence*: Semantic error divergence is independent of CPU vs GPU backend.
 
 ### Roadmap Governance & Future Phase Rules
 
