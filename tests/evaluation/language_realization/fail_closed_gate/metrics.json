@@ -1,0 +1,151 @@
+{
+  "metadata": {
+    "experiment": "Stage 3-D Fail-Closed Semantic Fidelity Gate Evaluation",
+    "total_instances_evaluated": 126,
+    "sources": [
+      "Stage 3-A (CPU)",
+      "Stage 3-B (GPU)",
+      "Stage 3-C (Compact Contract)"
+    ],
+    "total_ground_truth_errors": 82,
+    "total_ground_truth_faithful": 44,
+    "timestamp": 1791973651.7450469
+  },
+  "contingency_matrix_strict": {
+    "true_positives": 82,
+    "false_positives_false_refusal": 0,
+    "true_negatives": 44,
+    "false_negatives_false_acceptance": 0,
+    "uncertain_count": 0
+  },
+  "primary_metrics_strict": {
+    "critical_error_recall": 1.0,
+    "false_refusal_rate": 0.0,
+    "false_acceptance_rate": 0.0,
+    "block_precision": 1.0,
+    "accuracy": 1.0,
+    "f1_score": 1.0
+  },
+  "lenient_policy_comparison": {
+    "recall": 1.0,
+    "false_refusal_rate": 0.0,
+    "false_acceptance_rate": 0.0,
+    "precision": 1.0
+  },
+  "target_compliance": {
+    "critical_error_recall_ge_95": {
+      "target": ">= 0.95 (95%)",
+      "actual": 1.0,
+      "achieved": true
+    },
+    "false_refusal_lt_5": {
+      "target": "< 0.05 (5%)",
+      "actual": 0.0,
+      "achieved": true
+    },
+    "gate_overhead_le_50ms": {
+      "target": "<= 50.0 ms (p95)",
+      "actual_p95_ms": 4.345,
+      "actual_median_ms": 0.177,
+      "achieved": true
+    },
+    "zero_gpu_vram": {
+      "target": "0 MB VRAM",
+      "actual": "0 MB (pure CPU symbolic execution)",
+      "achieved": true
+    }
+  },
+  "performance_overhead": {
+    "mean_latency_ms": 0.872,
+    "median_latency_ms": 0.177,
+    "p95_latency_ms": 4.345,
+    "p99_latency_ms": 6.61,
+    "peak_memory_kb": 275.07,
+    "gpu_vram_mb": 0.0,
+    "total_eval_time_s": 0.143
+  },
+  "per_language_metrics": {
+    "en": {
+      "total_samples": 42,
+      "ground_truth_errors": 24,
+      "ground_truth_faithful": 18,
+      "tp": 24,
+      "fp": 0,
+      "tn": 18,
+      "fn": 0,
+      "recall": 1.0,
+      "false_refusal_rate": 0.0,
+      "false_acceptance_rate": 0.0,
+      "precision": 1.0
+    },
+    "vi": {
+      "total_samples": 42,
+      "ground_truth_errors": 35,
+      "ground_truth_faithful": 7,
+      "tp": 35,
+      "fp": 0,
+      "tn": 7,
+      "fn": 0,
+      "recall": 1.0,
+      "false_refusal_rate": 0.0,
+      "false_acceptance_rate": 0.0,
+      "precision": 1.0
+    },
+    "ja": {
+      "total_samples": 42,
+      "ground_truth_errors": 23,
+      "ground_truth_faithful": 19,
+      "tp": 23,
+      "fp": 0,
+      "tn": 19,
+      "fn": 0,
+      "recall": 1.0,
+      "false_refusal_rate": 0.0,
+      "false_acceptance_rate": 0.0,
+      "precision": 1.0
+    }
+  },
+  "per_category_metrics": {
+    "ARGUMENT_ENTITY_LOSS": {
+      "ground_truth_occurrences": 82,
+      "gate_detected": 82,
+      "recall": 1.0
+    },
+    "CONTRADICTED": {
+      "ground_truth_occurrences": 9,
+      "gate_detected": 9,
+      "recall": 1.0
+    },
+    "COMMUNICATIVE_ACT_FAILURE": {
+      "ground_truth_occurrences": 18,
+      "gate_detected": 18,
+      "recall": 1.0
+    },
+    "EPISTEMIC_DISTORTION": {
+      "ground_truth_occurrences": 1,
+      "gate_detected": 1,
+      "recall": 1.0
+    },
+    "UNSUPPORTED_ADDITION": {
+      "ground_truth_occurrences": 0,
+      "gate_detected": 0,
+      "recall": 1.0
+    }
+  },
+  "fallback_analysis": {
+    "total_fallbacks_emitted": 82,
+    "fallbacks_by_type": {
+      "RETRY_OR_SAFE_HEDGE": 62,
+      "SAFE_NEGATION": 3,
+      "SAFE_REFUSAL": 9,
+      "SAFE_CLARIFICATION": 8
+    },
+    "content_invention_observed": false,
+    "deterministic_grounding_verified": true
+  },
+  "verdict": {
+    "classification": "SUPPORTED — fail-closed gate is feasible",
+    "rationale": "The deterministic semantic gate achieved 100.0% critical error recall (target >= 95%), a false-refusal rate of 0.0% (target < 5%), and a p95 latency of 4.345 ms (target <= 50 ms) with 0 MB GPU VRAM. The gate successfully intercepts unfaithful realizations and triggers deterministic safe fallbacks. Crucial distinction: This provides a containment verification boundary, NOT an increase in 1.2B intrinsic realization capacity.",
+    "all_reference_targets_met": true
+  }
+}

@@ -1,0 +1,152 @@
+{
+  "study_metadata": {
+    "experiment": "Stage 3-C Compact Structured Realization Contract Evaluation",
+    "model": "LFM2.5-1.2B-Instruct-Q4_K_M.gguf",
+    "model_sha256": "b1b3de114215d9507409a662a501a631095a479a419584e8a2ded6304b19b4f5",
+    "total_fixtures": 42,
+    "seed": 42,
+    "temperature": 0.3,
+    "max_tokens": 96,
+    "timestamp": 1791972918.876069
+  },
+  "overall_comparison": {
+    "condition_a_errors": 21,
+    "condition_a_error_rate": 0.5,
+    "condition_b_errors": 36,
+    "condition_b_error_rate": 0.8571,
+    "delta_error_rate": 0.3571,
+    "resolved_count": 0,
+    "regressed_count": 15,
+    "unchanged_count": 27
+  },
+  "verdict": {
+    "classification": "No meaningful benefit",
+    "rationale": "The compact structured contract yielded zero resolved errors (0/42) and an elevated error rate (85.7% vs 50.0%), with 15 regressions. The intrinsic capacity and instruction-following limits of the 1.2B parameter realizer completely dominate; the model cannot natively parse or ground dense DSL structured contracts without fine-tuning. Preserving structural contracts in prompt space has architectural value for interface definition, but provides no empirical remediation for a 1.2B SLM.",
+    "practical_threshold_met": false
+  },
+  "overhead_metrics": {
+    "avg_contract_payload_tokens": 89.12,
+    "contract_within_budget_80_tokens": false,
+    "avg_prompt_tokens_condition_a": 306.9,
+    "avg_prompt_tokens_condition_b": 300.24,
+    "prompt_token_delta": -6.66,
+    "avg_latency_ms_condition_a": 708.9,
+    "avg_latency_ms_condition_b": 703.61,
+    "latency_delta_ms": -5.29
+  },
+  "error_categories": {
+    "CONTRADICTED": {
+      "condition_a": 2,
+      "condition_b": 3,
+      "reduction": -1
+    },
+    "EPISTEMIC_DISTORTION": {
+      "condition_a": 0,
+      "condition_b": 0,
+      "reduction": 0
+    },
+    "ARGUMENT_ENTITY_LOSS": {
+      "condition_a": 21,
+      "condition_b": 36,
+      "reduction": -15
+    },
+    "COMMUNICATIVE_ACT_FAILURE": {
+      "condition_a": 5,
+      "condition_b": 6,
+      "reduction": -1
+    },
+    "UNSUPPORTED_ADDITION": {
+      "condition_a": 0,
+      "condition_b": 0,
+      "reduction": 0
+    }
+  },
+  "by_language": {
+    "en": {
+      "total": 14,
+      "err_a": 6,
+      "err_a_rate": 0.4286,
+      "err_b": 12,
+      "err_b_rate": 0.8571,
+      "delta": 0.4286,
+      "resolved": 0,
+      "regressed": 6
+    },
+    "vi": {
+      "total": 14,
+      "err_a": 10,
+      "err_a_rate": 0.7143,
+      "err_b": 13,
+      "err_b_rate": 0.9286,
+      "delta": 0.2143,
+      "resolved": 0,
+      "regressed": 3
+    },
+    "ja": {
+      "total": 14,
+      "err_a": 5,
+      "err_a_rate": 0.3571,
+      "err_b": 11,
+      "err_b_rate": 0.7857,
+      "delta": 0.4286,
+      "resolved": 0,
+      "regressed": 6
+    }
+  },
+  "by_phenomenon": {
+    "argument_roles": {
+      "total": 1,
+      "err_a": 1,
+      "err_b": 1,
+      "reduction": 0
+    },
+    "polarity": {
+      "total": 6,
+      "err_a": 3,
+      "err_b": 6,
+      "reduction": -3
+    },
+    "scope": {
+      "total": 3,
+      "err_a": 2,
+      "err_b": 3,
+      "reduction": -1
+    },
+    "modality_epistemic": {
+      "total": 6,
+      "err_a": 1,
+      "err_b": 2,
+      "reduction": -1
+    },
+    "temporal": {
+      "total": 6,
+      "err_a": 3,
+      "err_b": 6,
+      "reduction": -3
+    },
+    "reference_entity": {
+      "total": 6,
+      "err_a": 5,
+      "err_b": 6,
+      "reduction": -1
+    },
+    "coordination": {
+      "total": 1,
+      "err_a": 1,
+      "err_b": 1,
+      "reduction": 0
+    },
+    "nested_propositions": {
+      "total": 3,
+      "err_a": 2,
+      "err_b": 3,
+      "reduction": -1
+    },
+    "grounding_refusal": {
+      "total": 6,
+      "err_a": 3,
+      "err_b": 5,
+      "reduction": -2
+    }
+  }
+}

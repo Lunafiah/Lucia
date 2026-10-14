@@ -335,6 +335,10 @@ class CognitiveTurnResult:
     # Phase 23: Discourse referents snapshot
     discourse_referents: Optional[List[Any]] = None
 
+    # ADR-035: Realization contract & Stage S14 verification gate decision
+    realization_contract: Optional[Any] = None
+    gate_decision: Optional[Any] = None
+
     class Config:
         # numpy arrays are not hashable — frozen dataclass still works at runtime
         arbitrary_types_allowed = True

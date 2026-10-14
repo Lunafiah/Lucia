@@ -25,6 +25,7 @@ if TYPE_CHECKING:
     from src.core.communication.caps import CAPSResult
     from src.core.communication.communication_state import CommunicationState
     from src.core.knowledge.proposition import Proposition
+    from src.core.language.contract import RealizationInputContract
 
 # Section separator (Requirement 5.1)
 _SEP = "\n\n---\n\n"
@@ -67,6 +68,7 @@ class PromptAssembler:
         comm_state: Optional[CommunicationState] = None,
         knowledge_propositions: Optional[List[Proposition]] = None,
         caps_result: Optional[CAPSResult] = None,
+        contract: Optional[RealizationInputContract] = None,
     ) -> Union[str, AssemblyError]:
         """
         Build the Conditioned_Prompt string.
@@ -91,6 +93,8 @@ class PromptAssembler:
             Structured knowledge facts retrieved for grounding (Phase 16).
         caps_result : CAPSResult | None, optional
             Communicative Act & Proposition Selection result (Phase 23 / S11 transition).
+        contract : RealizationInputContract | None, optional
+            Typed Realization Input Contract (ADR-035 / Phase 24 S11 boundary).
 
         Returns
         -------
@@ -138,9 +142,76 @@ class PromptAssembler:
                 f"supportiveness: {comm_state.supportiveness:.2f}"
             )
 
-        # --- Section 5b: communicative intent & proposition (Phase 23 CAPS / S11) ---
+        # --- Section 5b: communicative directives (ADR-035 / Phase 23 CAPS / S11) ---
         caps_section = ""
-        if caps_result is not None:
+        if contract is not None:
+            contract_lines = ["[COMMUNICATIVE DIRECTIVES]"]
+            lang = contract.target_language or "en"
+            act_str = contract.act.value if hasattr(contract.act, "value") else str(contract.act)
+
+            # Communicative act guidance
+            if act_str == "REFUSE":
+                if lang == "vi":
+                    contract_lines.append("- Nói rõ một cách lịch sự rằng bạn chưa có thông tin xác thực để trả lời câu hỏi này.")
+                elif lang == "ja":
+                    contract_lines.append("- この質問に答えるための確認済み情報がないことを丁寧に伝えてください。")
+                else:
+                    contract_lines.append("- State politely that you do not have verified information to answer this question.")
+            elif act_str == "CLARIFY":
+                if lang == "vi":
+                    contract_lines.append("- Đặt câu hỏi làm rõ để biết cụ thể người dùng đang đề cập đến nội dung nào.")
+                elif lang == "ja":
+                    contract_lines.append("- ユーザーが具体的にどの項目を指しているかを尋ねる質問をしてください。")
+                else:
+                    contract_lines.append("- Ask a clarifying question to find out which specific item the user is referring to.")
+            elif act_str == "INQUIRE":
+                if lang == "vi":
+                    contract_lines.append("- Đặt câu hỏi tự nhiên để tìm hiểu thêm thông tin cần thiết.")
+                elif lang == "ja":
+                    contract_lines.append("- 必要な情報を確認するための質問をしてください。")
+                else:
+                    contract_lines.append("- Ask a natural question to gather necessary information.")
+
+            # Polarity guidance
+            if not contract.polarity:
+                if lang == "vi":
+                    contract_lines.append("- Nêu rõ sự việc CHƯA diễn ra hoặc CHƯA hoàn thành. Không khẳng định đã xong.")
+                elif lang == "ja":
+                    contract_lines.append("- この出来事がまだ完了していない・発生していないことを明確に述べてください。")
+                else:
+                    contract_lines.append("- State clearly that this event has NOT occurred or completed. Do not affirm.")
+
+            # Epistemic guidance
+            epistemic_str = contract.epistemic_status.value if hasattr(contract.epistemic_status, "value") else str(contract.epistemic_status)
+            if epistemic_str == "INFERRED":
+                if lang == "vi":
+                    contract_lines.append("- Diễn đạt như một phỏng đoán hoặc ghi nhận ban đầu (dường như/có vẻ), không khẳng định chắc chắn 100%.")
+                elif lang == "ja":
+                    contract_lines.append("- 確定した事実ではなく、見受けられる様子として慎重に述べてください。")
+                else:
+                    contract_lines.append("- Express this as a tentative observation (seems/appears), not an established fact.")
+
+            # Role bindings guidance
+            if contract.role_bindings:
+                arg0 = contract.get_role(":ARG0")
+                arg1 = contract.get_role(":ARG1")
+                if arg0 and arg1:
+                    if lang == "vi":
+                        contract_lines.append(f"- Tập trung vào {arg0.canonical_lemma} liên quan đến {arg1.canonical_lemma}.")
+                    elif lang == "ja":
+                        contract_lines.append(f"- {arg0.canonical_lemma}が{arg1.canonical_lemma}に関することに焦点を当ててください。")
+                    else:
+                        contract_lines.append(f"- Focus the response on {arg0.canonical_lemma} regarding {arg1.canonical_lemma}.")
+                elif arg1:
+                    if lang == "vi":
+                        contract_lines.append(f"- Tập trung nội dung vào {arg1.canonical_lemma}.")
+                    elif lang == "ja":
+                        contract_lines.append(f"- {arg1.canonical_lemma}に焦点を当ててください。")
+                    else:
+                        contract_lines.append(f"- Focus the response on {arg1.canonical_lemma}.")
+
+            caps_section = "\n".join(contract_lines)
+        elif caps_result is not None:
             caps_lines = [
                 "[COMMUNICATIVE INTENT & PROPOSITION]",
                 f"act: {caps_result.act.value}",

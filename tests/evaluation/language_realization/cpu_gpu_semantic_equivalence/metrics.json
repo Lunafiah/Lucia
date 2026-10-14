@@ -1,0 +1,117 @@
+{
+  "study_metadata": {
+    "experiment": "Stage 3-B CPU vs GPU Semantic Equivalence Study",
+    "model": "LFM2.5-1.2B-Instruct-Q4_K_M.gguf",
+    "model_sha256": "b1b3de114215d9507409a662a501a631095a479a419584e8a2ded6304b19b4f5",
+    "llama_cpp_version": "0.3.20",
+    "cpu": "AMD64 Family 23 Model 96 Stepping 1, AuthenticAMD",
+    "gpu": {
+      "gpu_name": "NVIDIA GeForce RTX 3050 Ti Laptop GPU",
+      "driver_version": "581.15",
+      "cuda_version": "13.0",
+      "total_vram_mb": 4096.0
+    },
+    "total_fixtures": 42,
+    "seed": 42,
+    "temperature": 0.3,
+    "max_tokens": 96,
+    "timestamp": 1791972095.6144996
+  },
+  "paired_semantic_metrics": {
+    "total_fixtures": 42,
+    "cpu_critical_errors": 25,
+    "cpu_critical_error_rate": 0.5952,
+    "gpu_critical_errors": 21,
+    "gpu_critical_error_rate": 0.5,
+    "delta_error_rate": -0.0952,
+    "standard_error": 0.0564,
+    "ci_90": [
+      -0.1881,
+      -0.0024
+    ],
+    "ci_95": [
+      -0.2059,
+      0.0154
+    ]
+  },
+  "mcnemar_contingency": {
+    "both_pass_n00": 16,
+    "cpu_pass_gpu_fail_n01": 1,
+    "cpu_fail_gpu_pass_n10": 5,
+    "both_fail_n11": 20,
+    "discordant_pairs": 6,
+    "discordance_rate": 0.1429,
+    "mcnemar_statistic": 1.5,
+    "mcnemar_p_value": 0.2207
+  },
+  "practical_equivalence_analysis": {
+    "margin_tight": 0.05,
+    "tost_tight_pass": false,
+    "margin_wide": 0.075,
+    "tost_wide_pass": false,
+    "verdict": "Both inadequate — backend-neutral realizer limitation",
+    "rationale": "Both CPU (59.5%) and GPU (50.0%) exhibit severe semantic error rates with high paired semantic agreement (85.7%). The failure is not a hardware-specific floating point artifact or GPU degradation; it is an intrinsic limitation of the LFM2.5-1.2B realizer model operating under ungrounded prompt directives."
+  },
+  "text_divergence_metrics": {
+    "exact_matches": 0,
+    "exact_match_rate": 0.0,
+    "avg_string_similarity": 0.3417,
+    "semantic_agreement_rate": 0.8571
+  },
+  "by_language": {
+    "en": {
+      "total": 14,
+      "cpu_errors": 6,
+      "cpu_error_rate": 0.4286,
+      "gpu_errors": 6,
+      "gpu_error_rate": 0.4286,
+      "exact_match_rate": 0.0,
+      "avg_similarity": 0.2225
+    },
+    "vi": {
+      "total": 14,
+      "cpu_errors": 12,
+      "cpu_error_rate": 0.8571,
+      "gpu_errors": 10,
+      "gpu_error_rate": 0.7143,
+      "exact_match_rate": 0.0,
+      "avg_similarity": 0.4124
+    },
+    "ja": {
+      "total": 14,
+      "cpu_errors": 7,
+      "cpu_error_rate": 0.5,
+      "gpu_errors": 5,
+      "gpu_error_rate": 0.3571,
+      "exact_match_rate": 0.0,
+      "avg_similarity": 0.3902
+    }
+  },
+  "error_categories_comparison": {
+    "CONTRADICTED": {
+      "cpu_count": 4,
+      "gpu_count": 2,
+      "difference": -2
+    },
+    "EPISTEMIC_DISTORTION": {
+      "cpu_count": 1,
+      "gpu_count": 0,
+      "difference": -1
+    },
+    "ARGUMENT_ENTITY_LOSS": {
+      "cpu_count": 25,
+      "gpu_count": 21,
+      "difference": -4
+    },
+    "COMMUNICATIVE_ACT_FAILURE": {
+      "cpu_count": 7,
+      "gpu_count": 5,
+      "difference": -2
+    },
+    "UNSUPPORTED_ADDITION": {
+      "cpu_count": 0,
+      "gpu_count": 0,
+      "difference": 0
+    }
+  }
+}

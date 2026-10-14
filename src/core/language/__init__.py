@@ -28,10 +28,32 @@ from src.core.language.adapter import (
     UnsupportedLanguageError,
     VietnameseLanguageDriver,
 )
+from src.core.language.contract import (
+    CommunicativeAct,
+    EpistemicStatus,
+    ProvenanceOrigin,
+    ProvenanceRecord,
+    RealizationInputContract,
+    SemanticRoleBinding,
+    SemanticScopeType,
+)
+from src.core.language.gate import (
+    GateDecision,
+    SemanticFidelityGate,
+)
 from src.core.language.llm_backend import LLMBackend
 
 __all__ = [
     "LLMBackend",
+    "RealizationInputContract",
+    "SemanticRoleBinding",
+    "ProvenanceRecord",
+    "CommunicativeAct",
+    "EpistemicStatus",
+    "SemanticScopeType",
+    "ProvenanceOrigin",
+    "SemanticFidelityGate",
+    "GateDecision",
     "SUPPORTED_LANGUAGES",
     "SupportedLanguage",
     "ParseResult",

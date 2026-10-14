@@ -102,6 +102,8 @@ from src.core.emotion.persistence import (
     verify_and_reconcile_stores,
 )
 from src.core.orchestrator.prompt_assembler import PromptAssembler
+from src.core.language.contract import RealizationInputContract
+from src.core.language.gate import GateDecision, SemanticFidelityGate
 from src.core.relationship.persistence import DEFAULT_RELATIONSHIP_PATH
 from src.core.relationship.signals import RelationshipSignal, RelationshipSignalType
 from src.core.relationship.state import RelationshipState
@@ -166,6 +168,8 @@ class CognitiveOrchestrator:
         expression_policy: Optional[ExpressionPolicy] = None,
         # --- Phase 25 Subsystem (Optional) ---
         temporal_coordinator: Optional[TemporalEmbodimentCoordinator] = None,
+        # --- Stage S14 Verification Subsystem (ADR-035) ---
+        semantic_gate: Optional[SemanticFidelityGate] = None,
         # --- Configuration knobs ---
         system_preamble: str = "",
         n_ctx: int = 2048,
@@ -207,6 +211,9 @@ class CognitiveOrchestrator:
             if temporal_coordinator is not None
             else TemporalEmbodimentCoordinator()
         )
+        # ADR-035: Stage S14 Fail-Closed Semantic Fidelity Gate
+        self._semantic_gate = semantic_gate if semantic_gate is not None else SemanticFidelityGate()
+        self._latest_gate_decision: Optional[GateDecision] = None
 
         # Policy defaults
         self._surprise_policy = surprise_policy or SurpriseModulationPolicy()
@@ -255,6 +262,11 @@ class CognitiveOrchestrator:
     def latest_result(self) -> Optional[CognitiveTurnResult]:
         """Most recent completed turn result (thread-safe atomic read)."""
         return self._latest_result
+
+    @property
+    def latest_gate_decision(self) -> Optional[GateDecision]:
+        """Most recent Stage S14 verification gate decision."""
+        return self._latest_gate_decision
 
     @property
     def knowledge_store(self) -> KnowledgeStore:
@@ -374,6 +386,7 @@ class CognitiveOrchestrator:
             self._latest_result = None
             self._latest_comm_state = None
             self._latest_expr_state = None
+            self._latest_gate_decision = None
         logger.info("CognitiveOrchestrator: lifecycle reset.")
 
     # ------------------------------------------------------------------
@@ -582,6 +595,17 @@ class CognitiveOrchestrator:
                 exc_info=True,
             )
 
+        # ADR-035: Construct typed RealizationInputContract from CAPS decision
+        realization_contract: RealizationInputContract
+        if caps_result is not None:
+            realization_contract = RealizationInputContract.from_caps(
+                caps_result,
+                target_language="en",
+                known_propositions=known_propositions,
+            )
+        else:
+            realization_contract = RealizationInputContract.create_default(target_language="en")
+
         # ── Stage 11: Contextual Prompt Assembly (formerly Stage 7: Prompt Assembly) ──
         prompt_or_err = self._prompt_assembler.assemble(
             somatic=markers,
@@ -593,6 +617,7 @@ class CognitiveOrchestrator:
             comm_state=comm_state,
             knowledge_propositions=known_propositions,
             caps_result=caps_result,
+            contract=realization_contract,
         )
         if isinstance(prompt_or_err, AssemblyError):
             logger.warning(
@@ -647,11 +672,23 @@ class CognitiveOrchestrator:
                 input_text, "llm_none", max(0.0001, time.perf_counter() - t_start)
             )
 
-        safe_response: str = self._boundary_layer.validate(raw_response)
-        if safe_response.strip() == "[...]":
-            safe_response = self._fallback_response
+        # ── Stage 14: Fail-Closed Semantic Fidelity Gate (ADR-035) ──────────────
+        gate_decision = self._semantic_gate.verify(realization_contract, raw_response)
+        self._latest_gate_decision = gate_decision
+        if gate_decision.status in ("BLOCK", "UNCERTAIN"):
+            logger.warning(
+                "CognitiveOrchestrator: Stage S14 SemanticFidelityGate BLOCKED realization "
+                "(status=%s, violations=%s, latency=%.3fms) -> Triggering deterministic fallback",
+                gate_decision.status,
+                gate_decision.violation_reasons,
+                gate_decision.latency_ms,
+            )
+            safe_response = gate_decision.fallback_text or self._fallback_response
+        else:
+            safe_response = self._boundary_layer.validate(raw_response)
+            if safe_response.strip() == "[...]":
+                safe_response = self._fallback_response
 
-        # ── Stage 14: Semantic Consistency Guard ─────────────────────────
         # Point 4: Evaluates consistency without claiming universal truth verification
         try:
             if known_propositions:
@@ -897,6 +934,8 @@ class CognitiveOrchestrator:
             temporal_modulation=temp_mod,
             caps_result=caps_result,
             discourse_referents=self._discourse_cache.get_all_referents(),
+            realization_contract=realization_contract,
+            gate_decision=gate_decision,
         )
 
     # ------------------------------------------------------------------
@@ -970,6 +1009,7 @@ def build_cognitive_orchestrator(
     dynamical_storage_path: Optional[Union[str, Path]] = DEFAULT_DYNAMICAL_STATE_PATH,
     epoch_manifest_path: Optional[Union[str, Path]] = None,
     chat_history_path: Optional[Union[str, Path]] = None,
+    semantic_gate: Optional[SemanticFidelityGate] = None,
 ) -> CognitiveOrchestrator:
     """
     Construct a fully wired CognitiveOrchestrator from a MemoryOrchestratorConfig.
@@ -1077,4 +1117,5 @@ def build_cognitive_orchestrator(
         fallback_response=config.fallback_response,
         epoch_manifest_path=man_path,
         initial_history=initial_history,
+        semantic_gate=semantic_gate,
     )

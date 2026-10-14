@@ -1,0 +1,159 @@
+{
+  "audit_metadata": {
+    "experiment": "Stage 3-A SemanticGraph Preservation Audit",
+    "model": "LFM2.5-1.2B-Instruct-Q4_K_M.gguf",
+    "model_sha256": "b1b3de114215d9507409a662a501a631095a479a419584e8a2ded6304b19b4f5",
+    "runtime_backend": "llama_cpp_python (CPU)",
+    "llama_cpp_version": "0.3.20",
+    "system_os": "Windows-11-10.0.22621-SP0",
+    "cpu_architecture": "AMD64",
+    "total_fixtures": 42,
+    "seed": 42,
+    "temperature": 0.3,
+    "max_tokens": 96,
+    "timestamp": 1791971123.142981
+  },
+  "structural_metrics": {
+    "total_graph_nodes": 98,
+    "preserved_nodes": 76,
+    "node_preservation_rate": 0.7755,
+    "total_graph_edges": 56,
+    "preserved_edges": 0,
+    "edge_preservation_rate": 0.0,
+    "total_scopes": 52,
+    "preserved_scopes": 42,
+    "scope_preservation_rate": 0.8077,
+    "provenance_fixtures": 42,
+    "provenance_preserved": 0,
+    "provenance_preservation_rate": 0.0
+  },
+  "semantic_metrics": {
+    "total_fixtures": 42,
+    "critical_errors": 25,
+    "overall_critical_error_rate": 0.5952,
+    "overall_semantic_fidelity": 0.4048,
+    "by_language": {
+      "en": {
+        "total": 14,
+        "critical_errors": 6,
+        "error_rate": 0.4286,
+        "accuracy": 0.5714
+      },
+      "vi": {
+        "total": 14,
+        "critical_errors": 12,
+        "error_rate": 0.8571,
+        "accuracy": 0.1429
+      },
+      "ja": {
+        "total": 14,
+        "critical_errors": 7,
+        "error_rate": 0.5,
+        "accuracy": 0.5
+      }
+    },
+    "by_act": {
+      "ACKNOWLEDGE": {
+        "total": 1,
+        "critical_errors": 1,
+        "error_rate": 1.0
+      },
+      "ANSWER": {
+        "total": 3,
+        "critical_errors": 1,
+        "error_rate": 0.3333
+      },
+      "ASSERT": {
+        "total": 28,
+        "critical_errors": 15,
+        "error_rate": 0.5357
+      },
+      "CLARIFY": {
+        "total": 3,
+        "critical_errors": 3,
+        "error_rate": 1.0
+      },
+      "FAREWELL": {
+        "total": 1,
+        "critical_errors": 0,
+        "error_rate": 0.0
+      },
+      "GREET": {
+        "total": 1,
+        "critical_errors": 1,
+        "error_rate": 1.0
+      },
+      "INQUIRE": {
+        "total": 2,
+        "critical_errors": 1,
+        "error_rate": 0.5
+      },
+      "REFUSE": {
+        "total": 3,
+        "critical_errors": 3,
+        "error_rate": 1.0
+      }
+    },
+    "by_phenomenon": {
+      "argument_roles": {
+        "total": 1,
+        "critical_errors": 1,
+        "error_rate": 1.0
+      },
+      "polarity": {
+        "total": 6,
+        "critical_errors": 4,
+        "error_rate": 0.6667
+      },
+      "scope": {
+        "total": 3,
+        "critical_errors": 2,
+        "error_rate": 0.6667
+      },
+      "modality_epistemic": {
+        "total": 6,
+        "critical_errors": 2,
+        "error_rate": 0.3333
+      },
+      "temporal": {
+        "total": 6,
+        "critical_errors": 2,
+        "error_rate": 0.3333
+      },
+      "reference_entity": {
+        "total": 6,
+        "critical_errors": 5,
+        "error_rate": 0.8333
+      },
+      "coordination": {
+        "total": 1,
+        "critical_errors": 1,
+        "error_rate": 1.0
+      },
+      "nested_propositions": {
+        "total": 3,
+        "critical_errors": 2,
+        "error_rate": 0.6667
+      },
+      "grounding_refusal": {
+        "total": 6,
+        "critical_errors": 4,
+        "error_rate": 0.6667
+      }
+    }
+  },
+  "attribution_breakdown": {
+    "SERIALIZATION": 1,
+    "REALIZER": 24,
+    "EVALUATOR": 0,
+    "ELLIPSIS": 0,
+    "SUPPORTED": 17
+  },
+  "evaluation_quality": {
+    "annotator_agreement_rate": 1.0,
+    "adjudication_rate": 0.0,
+    "acceptable_ellipsis_rate": 0.0,
+    "paraphrase_rate": 0.4048,
+    "evaluator_uncertain_rate": 0.0
+  }
+}
