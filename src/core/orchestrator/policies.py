@@ -329,6 +329,12 @@ class CognitiveTurnResult:
     temporal_state: Optional[EstimatedTemporalState] = None
     temporal_modulation: Optional[TemporalModulation] = None
 
+    # Phase 23: Communicative Act & Proposition Selection (CAPS) result
+    caps_result: Optional[Any] = None
+
+    # Phase 23: Discourse referents snapshot
+    discourse_referents: Optional[List[Any]] = None
+
     class Config:
         # numpy arrays are not hashable — frozen dataclass still works at runtime
         arbitrary_types_allowed = True

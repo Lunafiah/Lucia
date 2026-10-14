@@ -43,10 +43,23 @@ from typing import List, Optional, Tuple, Union
 
 import numpy as np
 
+from src.core.communication.caps import (
+    AdmissibleEvidencePool,
+    CAPSResult,
+    CognitiveStateSnapshot,
+    CommunicationPolicySnapshot,
+    DialogueContextSnapshot,
+    evaluate_caps,
+)
 from src.core.communication.communication_policy import CommunicationPolicy
 from src.core.communication.communication_state import CommIntent, CommunicationState
 from src.core.communication.semantic_consistency_guard import (
     SemanticConsistencyGuard as CommSemanticGuard,
+)
+from src.core.orchestrator.discourse_cache import (
+    DiscourseContextCache,
+    DiscourseReferent,
+    ResolutionStatus,
 )
 from src.core.config import (
     BoundaryConfig,
@@ -214,6 +227,7 @@ class CognitiveOrchestrator:
 
         # Mutable orchestrator state (only these — no subsystem state copies)
         self._history: List[Tuple[str, str]] = list(initial_history) if initial_history else []
+        self._discourse_cache = DiscourseContextCache()
         self._degraded: bool = False
         self._shutdown: bool = False
 
@@ -261,6 +275,16 @@ class CognitiveOrchestrator:
     @property
     def latest_expression(self) -> Optional[ExpressionState]:
         return self._latest_expr_state
+
+    @property
+    def discourse_cache(self) -> DiscourseContextCache:
+        return self._discourse_cache
+
+    def clear_history(self) -> None:
+        """Clear ephemeral dialogue history and active discourse referents."""
+        with self._turn_lock:
+            self._history.clear()
+            self._discourse_cache.clear()
 
     def process(self, input_text: str) -> CognitiveTurnResult:
         """
@@ -510,6 +534,54 @@ class CognitiveOrchestrator:
             )
             comm_state = self._comm_policy.get_neutral_actuator_baseline()
 
+        # ── Stage 10b: Communicative Act & Proposition Selection (CAPS, Phase 23) ──
+        caps_result: Optional[CAPSResult] = None
+        try:
+            active_refs = tuple(self._discourse_cache.get_all_referents())
+            res_status, resolved_id, cand_ids = self._discourse_cache.resolve_reference()
+
+            cand_pred = known_propositions[0].predicate if known_propositions else None
+            cand_subj = known_propositions[0].subject if known_propositions else None
+            cand_obj = known_propositions[0].object if known_propositions else None
+
+            dialogue_snap = DialogueContextSnapshot(
+                turn_id=self._current_epoch,
+                input_text=input_text,
+                active_referents=active_refs,
+                resolution_status=res_status,
+                resolved_entity_id=resolved_id,
+                candidate_referent_ids=tuple(cand_ids),
+            )
+            cog_snap = CognitiveStateSnapshot(
+                candidate_predicate=cand_pred,
+                candidate_subject=cand_subj,
+                candidate_object=cand_obj,
+                polarity=True,
+            )
+            evidence_pool = AdmissibleEvidencePool(
+                verified_propositions=tuple(known_propositions) if known_propositions else (),
+                user_claims=(),
+            )
+            policy_snap = CommunicationPolicySnapshot(
+                strategy=comm_state.strategy.value if comm_state else "balanced",
+                directness=comm_state.directness if comm_state else 1.0,
+                formality=comm_state.formality_score if comm_state else 0.5,
+                elaboration=comm_state.elaboration_depth if comm_state else 0.5,
+                supportiveness=comm_state.supportiveness if comm_state else 0.5,
+            )
+            caps_result = evaluate_caps(
+                dialogue_ctx=dialogue_snap,
+                cognitive_state=cog_snap,
+                evidence_pool=evidence_pool,
+                comm_policy=policy_snap,
+                session_id=call_id,
+            )
+        except Exception:
+            logger.warning(
+                "CognitiveOrchestrator: CAPS evaluation failed; continuing without CAPS conditioning",
+                exc_info=True,
+            )
+
         # ── Stage 11: Contextual Prompt Assembly (formerly Stage 7: Prompt Assembly) ──
         prompt_or_err = self._prompt_assembler.assemble(
             somatic=markers,
@@ -520,6 +592,7 @@ class CognitiveOrchestrator:
             echo_vector=echo_vector,
             comm_state=comm_state,
             knowledge_propositions=known_propositions,
+            caps_result=caps_result,
         )
         if isinstance(prompt_or_err, AssemblyError):
             logger.warning(
@@ -740,6 +813,28 @@ class CognitiveOrchestrator:
         if len(self._history) > max_pairs:
             self._history = self._history[-max_pairs:]
 
+        # 16.4b Update Discourse Context Cache (Phase 23)
+        try:
+            mentioned = []
+            if known_propositions:
+                for kp in known_propositions[:2]:
+                    mentioned.append(
+                        DiscourseReferent(
+                            entity_id=kp.subject,
+                            concept_id=f"c:{kp.subject.replace('ent:', '')}",
+                            salience=1.0,
+                            turn_introduced=self._current_epoch,
+                            last_referenced_turn=self._current_epoch,
+                            grammatical_role=":ARG0",
+                        )
+                    )
+            self._discourse_cache.update_turn(
+                turn_id=self._current_epoch,
+                mentioned_referents=mentioned,
+            )
+        except Exception:
+            logger.warning("CognitiveOrchestrator: discourse cache update failed; continuing", exc_info=True)
+
         # 16.5 F-02: Checkpoint persistent dynamical state & Epoch Commit Barrier
         if hasattr(self._emotion_core, "checkpoint"):
             try:
@@ -800,6 +895,8 @@ class CognitiveOrchestrator:
             recollection=recollection_result,
             temporal_state=temp_est,
             temporal_modulation=temp_mod,
+            caps_result=caps_result,
+            discourse_referents=self._discourse_cache.get_all_referents(),
         )
 
     # ------------------------------------------------------------------

@@ -1,0 +1,43 @@
+{
+  "benchmark_name": "Lucia CPU vs GPU SLM Language Realization Benchmark",
+  "version": "1.0.0",
+  "timestamp": 1776140000,
+  "hardware": {
+    "gpu_name": "NVIDIA GeForce RTX 3050 Ti Laptop GPU",
+    "driver_version": "581.15",
+    "cuda_version": "13.0",
+    "vram_total_mb": 4096.0
+  },
+  "os": {
+    "system": "Windows",
+    "release": "11",
+    "version": "10.0.22621",
+    "architecture": "AMD64"
+  },
+  "python": {
+    "version": "3.12.10",
+    "executable": "C:\\Users\\Lunafiah\\Desktop\\My_project\\Lucia\\.venv\\Scripts\\python.exe"
+  },
+  "model": {
+    "artifact_name": "LFM2.5-1.2B-Instruct-Q4_K_M.gguf",
+    "sha256": "b1b3de114215d9507409a662a501a631095a479a419584e8a2ded6304b19b4f5",
+    "quantization": "Q4_K_M",
+    "architecture": "lfm2 (Liquid Foundation Model 2.5 1.2B)",
+    "runtime": "llama-cpp-python v0.3.20 (llama.cpp CUDA)",
+    "context_window_benchmark": 1024,
+    "context_window_production": 4096
+  },
+  "configurations": {
+    "cpu": {
+      "device": "cpu",
+      "n_gpu_layers": 0,
+      "simd": "AVX2, FMA, LLAMAFILE"
+    },
+    "gpu": {
+      "device": "gpu",
+      "n_gpu_layers": 32,
+      "cuda_version": "13.0",
+      "driver_version": "581.15"
+    }
+  }
+}

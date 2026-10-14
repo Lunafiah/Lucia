@@ -1,0 +1,48 @@
+{
+  "timestamp": "2026-10-14T11:17:50+07:00",
+  "execution_environment": "Isolated Research Prototype (Windows, Python 3.12, AMD Ryzen 7 5800H)",
+  "benchmark_script": "tests/evaluation/phase23_caps/run_caps_readiness_benchmark.py",
+  "elapsed_ms": 2.02,
+  "gates": {
+    "R1": {
+      "verdict": "PASS",
+      "act_emitted": "INQUIRE",
+      "nodes_generated": 2,
+      "edges_generated": 1,
+      "ambiguous_case_act": "CLARIFY",
+      "evidence": "InformationSubgoal successfully compiled to INQUIRE with 2 nodes and query edge; ambiguous reason_code routes to CLARIFY"
+    },
+    "R2": {
+      "verdict": "PARTIAL",
+      "prototype_verdict": "PASS",
+      "grounded_act": "ANSWER",
+      "grounded_nodes": 3,
+      "ungrounded_refused_assertion": true,
+      "ungrounded_fallback_act": "INQUIRE",
+      "evidence": "Grounded selection + relation binding verified without LLM; Grounding Invariant strictly prevents ungrounded assertions. Autonomous open-domain novel proposition generation remains unproven."
+    },
+    "R3": {
+      "verdict": "PARTIAL",
+      "production_audit_verdict": "FAIL",
+      "prototype_cache_verdict": "PASS",
+      "turn_1_retained": true,
+      "turn_2_retained": true,
+      "turn_3_decay_eviction": true,
+      "evidence": "CognitiveOrchestrator currently only retains raw string history. Zero discourse entity tracker exists across conversational turns. Blocking gap for implementation."
+    },
+    "R4": {
+      "verdict": "PASS",
+      "conflict_prevented_silent_overwrite": true,
+      "conflict_action": "CLARIFY",
+      "nonconflict_fact_promotion_prevented": true,
+      "nonconflict_epistemic_status": "INFERRED",
+      "evidence": "USER_STATED is tracked as provenance source distinct from EpistemicState. Contradictions trigger CLARIFY and preserve alternative claims without silent overwrite."
+    },
+    "Determinism": {
+      "identical": true,
+      "hash_1": "65605b865829f40d3e1bd7d068a29398549227166e87d8dcb3b4dbaaa034d60c",
+      "hash_2": "65605b865829f40d3e1bd7d068a29398549227166e87d8dcb3b4dbaaa034d60c",
+      "evidence": "Identical canonical serialization hashes across two independent executions on identical input snapshots."
+    }
+  }
+}

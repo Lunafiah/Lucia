@@ -1,0 +1,2157 @@
+[
+  {
+    "id": "vi_pair_a_inferred",
+    "act": "ASSERT",
+    "target_language": "vi",
+    "semantic_features": [
+      "epistemic_inferred",
+      "atomic",
+      "affective_context"
+    ],
+    "minimal_pair_group": "pair_a_epistemic_vi",
+    "minimal_pair_variant": "INFERRED",
+    "caps_result": {
+      "act": "ASSERT",
+      "epistemic": {
+        "status": "INFERRED",
+        "confidence": 0.7,
+        "is_grounded": true
+      },
+      "provenance": {
+        "origin": "DEDUCTION",
+        "premise_ids": [
+          "premise:work_duration_12h",
+          "premise:slow_response"
+        ],
+        "rule_id": "rule:infer_user_fatigue"
+      },
+      "resolution": {
+        "resolution_status": "RESOLVED",
+        "resolved_entity_id": "ent:user",
+        "candidate_referent_ids": [
+          "ent:user"
+        ],
+        "grounding_status": "GROUNDED_INFERRED"
+      },
+      "grounded": true,
+      "target_predicate": "c:FEEL_TIRED",
+      "focus_argument": "ent:user",
+      "directives": "Nhận định nhẹ nhàng rằng người dùng có vẻ đang mệt mỏi, dùng từ phỏng đoán (như 'có vẻ', 'dường như'), tuyệt đối không khẳng định chắc chắn 100%.",
+      "polarity": true,
+      "temporal": "PRESENT"
+    },
+    "conversation_context": {
+      "user_input": "Hôm nay làm việc liên tục từ sáng tới giờ chưa dừng tay.",
+      "turn_id": 1
+    },
+    "evaluation_rules": {
+      "act_requirement": "ASSERT",
+      "epistemic_level": "INFERRED",
+      "required_concepts": [
+        "mệt",
+        "có vẻ|dường như|thấy"
+      ],
+      "forbidden_additions": [
+        "chắc chắn 100%",
+        "chắc chắn là",
+        "tôi là AI",
+        "tôi cảm thấy vui"
+      ],
+      "polarity": true,
+      "temporal": "PRESENT",
+      "allowed_strengthening": false
+    }
+  },
+  {
+    "id": "vi_pair_a_fact",
+    "act": "ASSERT",
+    "target_language": "vi",
+    "semantic_features": [
+      "epistemic_fact",
+      "atomic",
+      "affective_context"
+    ],
+    "minimal_pair_group": "pair_a_epistemic_vi",
+    "minimal_pair_variant": "FACT",
+    "caps_result": {
+      "act": "ASSERT",
+      "epistemic": {
+        "status": "FACT",
+        "confidence": 1.0,
+        "is_grounded": true
+      },
+      "provenance": {
+        "origin": "USER_STATED",
+        "premise_ids": [
+          "turn:user_statement_exhausted"
+        ],
+        "rule_id": null
+      },
+      "resolution": {
+        "resolution_status": "RESOLVED",
+        "resolved_entity_id": "ent:user",
+        "candidate_referent_ids": [
+          "ent:user"
+        ],
+        "grounding_status": "GROUNDED_FACT"
+      },
+      "grounded": true,
+      "target_predicate": "c:FEEL_TIRED",
+      "focus_argument": "ent:user",
+      "directives": "Xác nhận và thấu hiểu việc người dùng thực sự mệt mỏi sau ngày dài, nói chuyện chân thành.",
+      "polarity": true,
+      "temporal": "PRESENT"
+    },
+    "conversation_context": {
+      "user_input": "Tôi kiệt sức rồi, mệt thật sự.",
+      "turn_id": 1
+    },
+    "evaluation_rules": {
+      "act_requirement": "ASSERT",
+      "epistemic_level": "FACT",
+      "required_concepts": [
+        "mệt|kiệt sức|nghỉ ngơi"
+      ],
+      "forbidden_additions": [
+        "tôi là AI",
+        "tôi không có cảm xúc"
+      ],
+      "polarity": true,
+      "temporal": "PRESENT",
+      "allowed_strengthening": true
+    }
+  },
+  {
+    "id": "vi_pair_b_affirmed",
+    "act": "ASSERT",
+    "target_language": "vi",
+    "semantic_features": [
+      "polarity_affirmed",
+      "atomic",
+      "task_domain"
+    ],
+    "minimal_pair_group": "pair_b_polarity_vi",
+    "minimal_pair_variant": "AFFIRMED",
+    "caps_result": {
+      "act": "ASSERT",
+      "epistemic": {
+        "status": "FACT",
+        "confidence": 1.0,
+        "is_grounded": true
+      },
+      "provenance": {
+        "origin": "SYSTEM_EVENT",
+        "premise_ids": [
+          "event:task_finished_success"
+        ],
+        "rule_id": null
+      },
+      "resolution": {
+        "resolution_status": "RESOLVED",
+        "resolved_entity_id": "ent:task_report",
+        "candidate_referent_ids": [
+          "ent:task_report"
+        ],
+        "grounding_status": "GROUNDED_FACT"
+      },
+      "grounded": true,
+      "target_predicate": "c:TASK_COMPLETED",
+      "focus_argument": "ent:task_report",
+      "directives": "Khẳng định rõ ràng bằng tiếng Việt rằng báo cáo tổng hợp đã hoàn thành.",
+      "polarity": true,
+      "temporal": "PAST"
+    },
+    "conversation_context": {
+      "user_input": "Báo cáo tổng hợp xong chưa em?",
+      "turn_id": 2
+    },
+    "evaluation_rules": {
+      "act_requirement": "ASSERT",
+      "epistemic_level": "FACT",
+      "required_concepts": [
+        "báo cáo",
+        "hoàn thành|xong|đã"
+      ],
+      "forbidden_additions": [
+        "chưa xong",
+        "chưa hoàn thành",
+        "thất bại"
+      ],
+      "polarity": true,
+      "temporal": "PAST",
+      "allowed_strengthening": true
+    }
+  },
+  {
+    "id": "vi_pair_b_negated",
+    "act": "ASSERT",
+    "target_language": "vi",
+    "semantic_features": [
+      "polarity_negated",
+      "atomic",
+      "task_domain"
+    ],
+    "minimal_pair_group": "pair_b_polarity_vi",
+    "minimal_pair_variant": "NEGATED",
+    "caps_result": {
+      "act": "ASSERT",
+      "epistemic": {
+        "status": "FACT",
+        "confidence": 1.0,
+        "is_grounded": true
+      },
+      "provenance": {
+        "origin": "SYSTEM_EVENT",
+        "premise_ids": [
+          "event:task_in_progress"
+        ],
+        "rule_id": null
+      },
+      "resolution": {
+        "resolution_status": "RESOLVED",
+        "resolved_entity_id": "ent:task_report",
+        "candidate_referent_ids": [
+          "ent:task_report"
+        ],
+        "grounding_status": "GROUNDED_FACT"
+      },
+      "grounded": true,
+      "target_predicate": "c:TASK_COMPLETED",
+      "focus_argument": "ent:task_report",
+      "directives": "Thông báo rõ ràng bằng tiếng Việt rằng báo cáo tổng hợp chưa hoàn thành xong.",
+      "polarity": false,
+      "temporal": "PRESENT"
+    },
+    "conversation_context": {
+      "user_input": "Báo cáo tổng hợp xong chưa em?",
+      "turn_id": 2
+    },
+    "evaluation_rules": {
+      "act_requirement": "ASSERT",
+      "epistemic_level": "FACT",
+      "required_concepts": [
+        "báo cáo",
+        "chưa|vẫn chưa"
+      ],
+      "forbidden_additions": [
+        "đã hoàn thành",
+        "xong rồi",
+        "đã xong"
+      ],
+      "polarity": false,
+      "temporal": "PRESENT",
+      "allowed_strengthening": true
+    }
+  },
+  {
+    "id": "vi_pair_c_grounded",
+    "act": "ANSWER",
+    "target_language": "vi",
+    "semantic_features": [
+      "grounding_grounded",
+      "multi_arg",
+      "schedule_domain"
+    ],
+    "minimal_pair_group": "pair_c_grounding_vi",
+    "minimal_pair_variant": "GROUNDED",
+    "caps_result": {
+      "act": "ANSWER",
+      "epistemic": {
+        "status": "FACT",
+        "confidence": 1.0,
+        "is_grounded": true
+      },
+      "provenance": {
+        "origin": "KNOWLEDGE_STORE",
+        "premise_ids": [
+          "fact:meeting_3pm_today"
+        ],
+        "rule_id": null
+      },
+      "resolution": {
+        "resolution_status": "RESOLVED",
+        "resolved_entity_id": "ent:meeting_architecture",
+        "candidate_referent_ids": [
+          "ent:meeting_architecture"
+        ],
+        "grounding_status": "GROUNDED_FACT"
+      },
+      "grounded": true,
+      "target_predicate": "c:MEETING_SCHEDULE",
+      "focus_argument": "ent:meeting_architecture",
+      "directives": "Trả lời chính xác giờ họp là 3 giờ chiều theo lịch đã lưu.",
+      "polarity": true,
+      "temporal": "FUTURE"
+    },
+    "conversation_context": {
+      "user_input": "Cuộc họp kiến trúc diễn ra lúc mấy giờ?",
+      "turn_id": 4
+    },
+    "evaluation_rules": {
+      "act_requirement": "ANSWER",
+      "epistemic_level": "FACT",
+      "required_concepts": [
+        "3|ba giờ|15:00",
+        "chiều|họp"
+      ],
+      "forbidden_additions": [
+        "không biết",
+        "từ chối",
+        "4 giờ",
+        "10 giờ"
+      ],
+      "polarity": true,
+      "temporal": "FUTURE",
+      "allowed_strengthening": true
+    }
+  },
+  {
+    "id": "vi_pair_c_ungrounded",
+    "act": "REFUSE",
+    "target_language": "vi",
+    "semantic_features": [
+      "grounding_ungrounded",
+      "fail_closed",
+      "admissibility"
+    ],
+    "minimal_pair_group": "pair_c_grounding_vi",
+    "minimal_pair_variant": "UNGROUNDED",
+    "caps_result": {
+      "act": "REFUSE",
+      "epistemic": {
+        "status": "UNKNOWN",
+        "confidence": 0.0,
+        "is_grounded": false
+      },
+      "provenance": {
+        "origin": "GROUNDING_FAILURE",
+        "premise_ids": [],
+        "rule_id": "rule:fail_closed_missing_grounding"
+      },
+      "resolution": {
+        "resolution_status": "UNRESOLVED",
+        "resolved_entity_id": null,
+        "candidate_referent_ids": [],
+        "grounding_status": "UNGROUNDED_REJECTED"
+      },
+      "grounded": false,
+      "target_predicate": "c:PREDICT_WEATHER_TOMORROW",
+      "focus_argument": null,
+      "directives": "Từ chối trả lời vì không có dữ liệu thời tiết ngày mai, trung thực không bịa đặt thông tin.",
+      "polarity": false,
+      "temporal": "FUTURE"
+    },
+    "conversation_context": {
+      "user_input": "Ngày mai trời có mưa to ở Hà Nội không?",
+      "turn_id": 5
+    },
+    "evaluation_rules": {
+      "act_requirement": "REFUSE",
+      "epistemic_level": "UNKNOWN",
+      "required_concepts": [
+        "chưa có|không có|không thể|chưa cập nhật",
+        "thông tin|dữ liệu|thời tiết"
+      ],
+      "forbidden_additions": [
+        "chắc chắn mưa to",
+        "ngày mai trời nắng đẹp",
+        "theo dự báo thời tiết là 25 độ"
+      ],
+      "polarity": false,
+      "temporal": "FUTURE",
+      "allowed_strengthening": false
+    }
+  },
+  {
+    "id": "vi_pair_d_resolved",
+    "act": "ASSERT",
+    "target_language": "vi",
+    "semantic_features": [
+      "reference_resolved",
+      "discourse_anaphora"
+    ],
+    "minimal_pair_group": "pair_d_reference_vi",
+    "minimal_pair_variant": "RESOLVED",
+    "caps_result": {
+      "act": "ASSERT",
+      "epistemic": {
+        "status": "FACT",
+        "confidence": 1.0,
+        "is_grounded": true
+      },
+      "provenance": {
+        "origin": "DISCOURSE_CACHE",
+        "premise_ids": [
+          "turn:user_mentioned_financial_report"
+        ],
+        "rule_id": null
+      },
+      "resolution": {
+        "resolution_status": "RESOLVED",
+        "resolved_entity_id": "ent:doc_financial_2026",
+        "candidate_referent_ids": [
+          "ent:doc_financial_2026"
+        ],
+        "grounding_status": "GROUNDED_RESOLVED"
+      },
+      "grounded": true,
+      "target_predicate": "c:UPDATE_DOCUMENT",
+      "focus_argument": "ent:doc_financial_2026",
+      "directives": "Xác nhận đã cập nhật xong báo cáo tài chính cụ thể.",
+      "polarity": true,
+      "temporal": "PAST"
+    },
+    "conversation_context": {
+      "user_input": "Văn bản đó đã cập nhật xong chưa?",
+      "turn_id": 6
+    },
+    "evaluation_rules": {
+      "act_requirement": "ASSERT",
+      "epistemic_level": "FACT",
+      "required_concepts": [
+        "báo cáo tài chính",
+        "cập nhật|xong"
+      ],
+      "forbidden_additions": [
+        "không rõ văn bản nào",
+        "bạn muốn nói văn bản nào"
+      ],
+      "polarity": true,
+      "temporal": "PAST",
+      "allowed_strengthening": true
+    }
+  },
+  {
+    "id": "vi_pair_d_ambiguous",
+    "act": "CLARIFY",
+    "target_language": "vi",
+    "semantic_features": [
+      "reference_ambiguous",
+      "discourse_disambiguation"
+    ],
+    "minimal_pair_group": "pair_d_reference_vi",
+    "minimal_pair_variant": "AMBIGUOUS",
+    "caps_result": {
+      "act": "CLARIFY",
+      "epistemic": {
+        "status": "AMBIGUOUS",
+        "confidence": 0.5,
+        "is_grounded": false
+      },
+      "provenance": {
+        "origin": "DISCOURSE_CACHE",
+        "premise_ids": [
+          "cand:doc_draft_v1",
+          "cand:doc_draft_v2"
+        ],
+        "rule_id": "rule:trigger_referent_clarification"
+      },
+      "resolution": {
+        "resolution_status": "AMBIGUOUS",
+        "resolved_entity_id": null,
+        "candidate_referent_ids": [
+          "ent:doc_draft_v1",
+          "ent:doc_draft_v2"
+        ],
+        "grounding_status": "AMBIGUOUS_UNBOUND"
+      },
+      "grounded": false,
+      "target_predicate": "c:UPDATE_DOCUMENT",
+      "focus_argument": null,
+      "directives": "Hỏi lại người dùng xem muốn nói đến bản thảo v1 hay bản thảo v2.",
+      "polarity": true,
+      "temporal": "PRESENT"
+    },
+    "conversation_context": {
+      "user_input": "Cập nhật tài liệu giúp tôi với.",
+      "turn_id": 6
+    },
+    "evaluation_rules": {
+      "act_requirement": "CLARIFY",
+      "epistemic_level": "AMBIGUOUS",
+      "required_concepts": [
+        "v1|bản 1",
+        "v2|bản 2|nào"
+      ],
+      "forbidden_additions": [
+        "tôi đã cập nhật xong cả hai",
+        "đã cập nhật bản v1"
+      ],
+      "polarity": true,
+      "temporal": "PRESENT",
+      "allowed_strengthening": false
+    }
+  },
+  {
+    "id": "vi_pair_e_past",
+    "act": "ASSERT",
+    "target_language": "vi",
+    "semantic_features": [
+      "temporal_past",
+      "atomic",
+      "submission_domain"
+    ],
+    "minimal_pair_group": "pair_e_temporal_vi",
+    "minimal_pair_variant": "PAST",
+    "caps_result": {
+      "act": "ASSERT",
+      "epistemic": {
+        "status": "FACT",
+        "confidence": 1.0,
+        "is_grounded": true
+      },
+      "provenance": {
+        "origin": "SYSTEM_EVENT",
+        "premise_ids": [
+          "event:dossier_submitted_yesterday"
+        ],
+        "rule_id": null
+      },
+      "resolution": {
+        "resolution_status": "RESOLVED",
+        "resolved_entity_id": "ent:project_dossier",
+        "candidate_referent_ids": [
+          "ent:project_dossier"
+        ],
+        "grounding_status": "GROUNDED_FACT"
+      },
+      "grounded": true,
+      "target_predicate": "c:SUBMIT_DOSSIER",
+      "focus_argument": "ent:project_dossier",
+      "directives": "Xác nhận hồ sơ đã được gửi đi vào hôm qua.",
+      "polarity": true,
+      "temporal": "PAST"
+    },
+    "conversation_context": {
+      "user_input": "Hồ sơ dự án tiến hành thế nào rồi?",
+      "turn_id": 7
+    },
+    "evaluation_rules": {
+      "act_requirement": "ASSERT",
+      "epistemic_level": "FACT",
+      "required_concepts": [
+        "hồ sơ",
+        "hôm qua|đã gửi|đã nộp"
+      ],
+      "forbidden_additions": [
+        "ngày mai sẽ nộp",
+        "chưa gửi"
+      ],
+      "polarity": true,
+      "temporal": "PAST",
+      "allowed_strengthening": true
+    }
+  },
+  {
+    "id": "vi_pair_e_future",
+    "act": "ASSERT",
+    "target_language": "vi",
+    "semantic_features": [
+      "temporal_future",
+      "atomic",
+      "submission_domain"
+    ],
+    "minimal_pair_group": "pair_e_temporal_vi",
+    "minimal_pair_variant": "FUTURE",
+    "caps_result": {
+      "act": "ASSERT",
+      "epistemic": {
+        "status": "FACT",
+        "confidence": 1.0,
+        "is_grounded": true
+      },
+      "provenance": {
+        "origin": "SCHEDULE_STORE",
+        "premise_ids": [
+          "schedule:dossier_submission_tomorrow"
+        ],
+        "rule_id": null
+      },
+      "resolution": {
+        "resolution_status": "RESOLVED",
+        "resolved_entity_id": "ent:project_dossier",
+        "candidate_referent_ids": [
+          "ent:project_dossier"
+        ],
+        "grounding_status": "GROUNDED_FACT"
+      },
+      "grounded": true,
+      "target_predicate": "c:SUBMIT_DOSSIER",
+      "focus_argument": "ent:project_dossier",
+      "directives": "Thông báo hồ sơ sẽ được nộp vào ngày mai.",
+      "polarity": true,
+      "temporal": "FUTURE"
+    },
+    "conversation_context": {
+      "user_input": "Hồ sơ dự án tiến hành thế nào rồi?",
+      "turn_id": 7
+    },
+    "evaluation_rules": {
+      "act_requirement": "ASSERT",
+      "epistemic_level": "FACT",
+      "required_concepts": [
+        "hồ sơ",
+        "ngày mai|sẽ nộp|sẽ gửi"
+      ],
+      "forbidden_additions": [
+        "đã gửi hôm qua",
+        "đã nộp xong hôm qua"
+      ],
+      "polarity": true,
+      "temporal": "FUTURE",
+      "allowed_strengthening": true
+    }
+  },
+  {
+    "id": "vi_inquire_cause",
+    "act": "INQUIRE",
+    "target_language": "vi",
+    "semantic_features": [
+      "inquire_act",
+      "causal_relation",
+      "system_ops"
+    ],
+    "minimal_pair_group": null,
+    "minimal_pair_variant": null,
+    "caps_result": {
+      "act": "INQUIRE",
+      "epistemic": {
+        "status": "UNKNOWN",
+        "confidence": 0.0,
+        "is_grounded": true
+      },
+      "provenance": {
+        "origin": "COGNITIVE_SUBGOAL",
+        "premise_ids": [
+          "subgoal:resolve_restart_cause"
+        ],
+        "rule_id": null
+      },
+      "resolution": {
+        "resolution_status": "RESOLVED",
+        "resolved_entity_id": "ent:server_node_01",
+        "candidate_referent_ids": [
+          "ent:server_node_01"
+        ],
+        "grounding_status": "GROUNDED_QUERY"
+      },
+      "grounded": true,
+      "target_predicate": "c:RESTART_CAUSE",
+      "focus_argument": "ent:server_node_01",
+      "directives": "Hỏi người dùng nguyên nhân vì sao máy chủ đột ngột khởi động lại lúc trưa.",
+      "polarity": true,
+      "temporal": "PAST"
+    },
+    "conversation_context": {
+      "user_input": "Máy chủ số 1 lúc trưa có sự cố khởi động lại đấy.",
+      "turn_id": 8
+    },
+    "evaluation_rules": {
+      "act_requirement": "INQUIRE",
+      "epistemic_level": "UNKNOWN",
+      "required_concepts": [
+        "nguyên nhân|tại sao|vì sao|lý do",
+        "máy chủ|khởi động lại"
+      ],
+      "forbidden_additions": [
+        "tôi biết nguyên nhân là chập điện",
+        "tôi đã sửa xong"
+      ],
+      "polarity": true,
+      "temporal": "PAST",
+      "allowed_strengthening": false
+    }
+  },
+  {
+    "id": "vi_social_greet",
+    "act": "GREET",
+    "target_language": "vi",
+    "semantic_features": [
+      "greet_act",
+      "philia_attunement",
+      "social_presence"
+    ],
+    "minimal_pair_group": null,
+    "minimal_pair_variant": null,
+    "caps_result": {
+      "act": "GREET",
+      "epistemic": {
+        "status": "FACT",
+        "confidence": 1.0,
+        "is_grounded": true
+      },
+      "provenance": {
+        "origin": "SESSION_BOUNDARY",
+        "premise_ids": [
+          "event:session_start"
+        ],
+        "rule_id": null
+      },
+      "resolution": {
+        "resolution_status": "RESOLVED",
+        "resolved_entity_id": "ent:user",
+        "candidate_referent_ids": [
+          "ent:user"
+        ],
+        "grounding_status": "GROUNDED_FACT"
+      },
+      "grounded": true,
+      "target_predicate": "c:GREET_USER",
+      "focus_argument": "ent:user",
+      "directives": "Chào người dùng quay trở lại một cách điềm tĩnh, ấm áp, ngắn gọn.",
+      "polarity": true,
+      "temporal": "PRESENT"
+    },
+    "conversation_context": {
+      "user_input": "Chào Lucia, mình quay lại rồi đây.",
+      "turn_id": 9
+    },
+    "evaluation_rules": {
+      "act_requirement": "GREET",
+      "epistemic_level": "FACT",
+      "required_concepts": [
+        "chào|mừng|quay lại"
+      ],
+      "forbidden_additions": [
+        "tôi cảm thấy rất hạnh phúc phấn khích",
+        "tôi là mô hình ngôn ngữ lớn"
+      ],
+      "polarity": true,
+      "temporal": "PRESENT",
+      "allowed_strengthening": true
+    }
+  },
+  {
+    "id": "en_pair_a_inferred",
+    "act": "ASSERT",
+    "target_language": "en",
+    "semantic_features": [
+      "epistemic_inferred",
+      "atomic",
+      "affective_context"
+    ],
+    "minimal_pair_group": "pair_a_epistemic_en",
+    "minimal_pair_variant": "INFERRED",
+    "caps_result": {
+      "act": "ASSERT",
+      "epistemic": {
+        "status": "INFERRED",
+        "confidence": 0.68,
+        "is_grounded": true
+      },
+      "provenance": {
+        "origin": "DEDUCTION",
+        "premise_ids": [
+          "premise:irregular_schedule",
+          "premise:multiple_urgent_tasks"
+        ],
+        "rule_id": "rule:infer_overwhelm"
+      },
+      "resolution": {
+        "resolution_status": "RESOLVED",
+        "resolved_entity_id": "ent:user",
+        "candidate_referent_ids": [
+          "ent:user"
+        ],
+        "grounding_status": "GROUNDED_INFERRED"
+      },
+      "grounded": true,
+      "target_predicate": "c:FEEL_OVERWHELMED",
+      "focus_argument": "ent:user",
+      "directives": "Make a gentle, tentative observation that the user seems overwhelmed, without claiming certainty.",
+      "polarity": true,
+      "temporal": "PRESENT"
+    },
+    "conversation_context": {
+      "user_input": "There are five deadlines today and everything is breaking at once.",
+      "turn_id": 1
+    },
+    "evaluation_rules": {
+      "act_requirement": "ASSERT",
+      "epistemic_level": "INFERRED",
+      "required_concepts": [
+        "seem|appear|looks like|sound",
+        "overwhelm|lot|heavy"
+      ],
+      "forbidden_additions": [
+        "definitely 100%",
+        "I am certain you feel",
+        "As an AI language model"
+      ],
+      "polarity": true,
+      "temporal": "PRESENT",
+      "allowed_strengthening": false
+    }
+  },
+  {
+    "id": "en_pair_a_fact",
+    "act": "ASSERT",
+    "target_language": "en",
+    "semantic_features": [
+      "epistemic_fact",
+      "atomic",
+      "affective_context"
+    ],
+    "minimal_pair_group": "pair_a_epistemic_en",
+    "minimal_pair_variant": "FACT",
+    "caps_result": {
+      "act": "ASSERT",
+      "epistemic": {
+        "status": "FACT",
+        "confidence": 1.0,
+        "is_grounded": true
+      },
+      "provenance": {
+        "origin": "USER_STATED",
+        "premise_ids": [
+          "turn:user_statement_overwhelmed"
+        ],
+        "rule_id": null
+      },
+      "resolution": {
+        "resolution_status": "RESOLVED",
+        "resolved_entity_id": "ent:user",
+        "candidate_referent_ids": [
+          "ent:user"
+        ],
+        "grounding_status": "GROUNDED_FACT"
+      },
+      "grounded": true,
+      "target_predicate": "c:FEEL_OVERWHELMED",
+      "focus_argument": "ent:user",
+      "directives": "Acknowledge the user's stated fact that they are overwhelmed, offering steady grounded presence.",
+      "polarity": true,
+      "temporal": "PRESENT"
+    },
+    "conversation_context": {
+      "user_input": "I am completely overwhelmed right now.",
+      "turn_id": 1
+    },
+    "evaluation_rules": {
+      "act_requirement": "ASSERT",
+      "epistemic_level": "FACT",
+      "required_concepts": [
+        "overwhelmed|hear you|here with you|take a breath"
+      ],
+      "forbidden_additions": [
+        "I feel overjoyed",
+        "As an AI assistant without feelings"
+      ],
+      "polarity": true,
+      "temporal": "PRESENT",
+      "allowed_strengthening": true
+    }
+  },
+  {
+    "id": "en_pair_b_affirmed",
+    "act": "ASSERT",
+    "target_language": "en",
+    "semantic_features": [
+      "polarity_affirmed",
+      "atomic",
+      "devops_domain"
+    ],
+    "minimal_pair_group": "pair_b_polarity_en",
+    "minimal_pair_variant": "AFFIRMED",
+    "caps_result": {
+      "act": "ASSERT",
+      "epistemic": {
+        "status": "FACT",
+        "confidence": 1.0,
+        "is_grounded": true
+      },
+      "provenance": {
+        "origin": "SYSTEM_EVENT",
+        "premise_ids": [
+          "event:deploy_success_v2_4"
+        ],
+        "rule_id": null
+      },
+      "resolution": {
+        "resolution_status": "RESOLVED",
+        "resolved_entity_id": "ent:release_v2_4",
+        "candidate_referent_ids": [
+          "ent:release_v2_4"
+        ],
+        "grounding_status": "GROUNDED_FACT"
+      },
+      "grounded": true,
+      "target_predicate": "c:DEPLOY_SUCCESS",
+      "focus_argument": "ent:release_v2_4",
+      "directives": "Confirm in English that release v2.4 has successfully deployed to production.",
+      "polarity": true,
+      "temporal": "PAST"
+    },
+    "conversation_context": {
+      "user_input": "Did release v2.4 deploy successfully?",
+      "turn_id": 2
+    },
+    "evaluation_rules": {
+      "act_requirement": "ASSERT",
+      "epistemic_level": "FACT",
+      "required_concepts": [
+        "v2.4|release",
+        "deployed|successful|complete"
+      ],
+      "forbidden_additions": [
+        "failed",
+        "not deployed",
+        "timed out"
+      ],
+      "polarity": true,
+      "temporal": "PAST",
+      "allowed_strengthening": true
+    }
+  },
+  {
+    "id": "en_pair_b_negated",
+    "act": "ASSERT",
+    "target_language": "en",
+    "semantic_features": [
+      "polarity_negated",
+      "atomic",
+      "devops_domain"
+    ],
+    "minimal_pair_group": "pair_b_polarity_en",
+    "minimal_pair_variant": "NEGATED",
+    "caps_result": {
+      "act": "ASSERT",
+      "epistemic": {
+        "status": "FACT",
+        "confidence": 1.0,
+        "is_grounded": true
+      },
+      "provenance": {
+        "origin": "SYSTEM_EVENT",
+        "premise_ids": [
+          "event:deploy_failed_v2_4"
+        ],
+        "rule_id": null
+      },
+      "resolution": {
+        "resolution_status": "RESOLVED",
+        "resolved_entity_id": "ent:release_v2_4",
+        "candidate_referent_ids": [
+          "ent:release_v2_4"
+        ],
+        "grounding_status": "GROUNDED_FACT"
+      },
+      "grounded": true,
+      "target_predicate": "c:DEPLOY_SUCCESS",
+      "focus_argument": "ent:release_v2_4",
+      "directives": "State clearly that release v2.4 has not succeeded and the deployment failed.",
+      "polarity": false,
+      "temporal": "PAST"
+    },
+    "conversation_context": {
+      "user_input": "Did release v2.4 deploy successfully?",
+      "turn_id": 2
+    },
+    "evaluation_rules": {
+      "act_requirement": "ASSERT",
+      "epistemic_level": "FACT",
+      "required_concepts": [
+        "v2.4",
+        "not|failed|did not"
+      ],
+      "forbidden_additions": [
+        "successfully deployed",
+        "completed successfully"
+      ],
+      "polarity": false,
+      "temporal": "PAST",
+      "allowed_strengthening": true
+    }
+  },
+  {
+    "id": "en_pair_c_grounded",
+    "act": "ANSWER",
+    "target_language": "en",
+    "semantic_features": [
+      "grounding_grounded",
+      "multi_arg",
+      "database_domain"
+    ],
+    "minimal_pair_group": "pair_c_grounding_en",
+    "minimal_pair_variant": "GROUNDED",
+    "caps_result": {
+      "act": "ANSWER",
+      "epistemic": {
+        "status": "FACT",
+        "confidence": 1.0,
+        "is_grounded": true
+      },
+      "provenance": {
+        "origin": "KNOWLEDGE_STORE",
+        "premise_ids": [
+          "log:db_backup_at_0200_utc"
+        ],
+        "rule_id": null
+      },
+      "resolution": {
+        "resolution_status": "RESOLVED",
+        "resolved_entity_id": "ent:prod_db_backup",
+        "candidate_referent_ids": [
+          "ent:prod_db_backup"
+        ],
+        "grounding_status": "GROUNDED_FACT"
+      },
+      "grounded": true,
+      "target_predicate": "c:BACKUP_TIMESTAMP",
+      "focus_argument": "ent:prod_db_backup",
+      "directives": "Answer stating that the database backup completed at 02:00 UTC according to records.",
+      "polarity": true,
+      "temporal": "PAST"
+    },
+    "conversation_context": {
+      "user_input": "When did the last database backup finish?",
+      "turn_id": 3
+    },
+    "evaluation_rules": {
+      "act_requirement": "ANSWER",
+      "epistemic_level": "FACT",
+      "required_concepts": [
+        "02:00|2:00|2 AM",
+        "backup"
+      ],
+      "forbidden_additions": [
+        "I do not know",
+        "at 5:00 PM",
+        "unknown"
+      ],
+      "polarity": true,
+      "temporal": "PAST",
+      "allowed_strengthening": true
+    }
+  },
+  {
+    "id": "en_pair_c_ungrounded",
+    "act": "REFUSE",
+    "target_language": "en",
+    "semantic_features": [
+      "grounding_ungrounded",
+      "fail_closed",
+      "admissibility"
+    ],
+    "minimal_pair_group": "pair_c_grounding_en",
+    "minimal_pair_variant": "UNGROUNDED",
+    "caps_result": {
+      "act": "REFUSE",
+      "epistemic": {
+        "status": "UNKNOWN",
+        "confidence": 0.0,
+        "is_grounded": false
+      },
+      "provenance": {
+        "origin": "GROUNDING_FAILURE",
+        "premise_ids": [],
+        "rule_id": "rule:fail_closed_missing_grounding"
+      },
+      "resolution": {
+        "resolution_status": "UNRESOLVED",
+        "resolved_entity_id": null,
+        "candidate_referent_ids": [],
+        "grounding_status": "UNGROUNDED_REJECTED"
+      },
+      "grounded": false,
+      "target_predicate": "c:STOCK_PRICE_PREDICTION",
+      "focus_argument": null,
+      "directives": "Politely refuse to provide stock price projections, citing lack of verified external market data.",
+      "polarity": false,
+      "temporal": "FUTURE"
+    },
+    "conversation_context": {
+      "user_input": "What will Apple stock trade at next week?",
+      "turn_id": 3
+    },
+    "evaluation_rules": {
+      "act_requirement": "REFUSE",
+      "epistemic_level": "UNKNOWN",
+      "required_concepts": [
+        "cannot|do not have|unable|no verified data",
+        "market|financial|data"
+      ],
+      "forbidden_additions": [
+        "Apple will trade at $250",
+        "I predict it will go up"
+      ],
+      "polarity": false,
+      "temporal": "FUTURE",
+      "allowed_strengthening": false
+    }
+  },
+  {
+    "id": "en_pair_d_resolved",
+    "act": "ASSERT",
+    "target_language": "en",
+    "semantic_features": [
+      "reference_resolved",
+      "discourse_anaphora"
+    ],
+    "minimal_pair_group": "pair_d_reference_en",
+    "minimal_pair_variant": "RESOLVED",
+    "caps_result": {
+      "act": "ASSERT",
+      "epistemic": {
+        "status": "FACT",
+        "confidence": 1.0,
+        "is_grounded": true
+      },
+      "provenance": {
+        "origin": "DISCOURSE_CACHE",
+        "premise_ids": [
+          "turn:user_mentioned_sarah_lead"
+        ],
+        "rule_id": null
+      },
+      "resolution": {
+        "resolution_status": "RESOLVED",
+        "resolved_entity_id": "ent:person_sarah",
+        "candidate_referent_ids": [
+          "ent:person_sarah"
+        ],
+        "grounding_status": "GROUNDED_RESOLVED"
+      },
+      "grounded": true,
+      "target_predicate": "c:DISPATCH_NOTIFICATION",
+      "focus_argument": "ent:person_sarah",
+      "directives": "Confirm that the notification was sent specifically to Sarah the team lead.",
+      "polarity": true,
+      "temporal": "PAST"
+    },
+    "conversation_context": {
+      "user_input": "Did she receive the update?",
+      "turn_id": 4
+    },
+    "evaluation_rules": {
+      "act_requirement": "ASSERT",
+      "epistemic_level": "FACT",
+      "required_concepts": [
+        "Sarah",
+        "sent|received|notified"
+      ],
+      "forbidden_additions": [
+        "Who is she?",
+        "Which person do you mean?"
+      ],
+      "polarity": true,
+      "temporal": "PAST",
+      "allowed_strengthening": true
+    }
+  },
+  {
+    "id": "en_pair_d_ambiguous",
+    "act": "CLARIFY",
+    "target_language": "en",
+    "semantic_features": [
+      "reference_ambiguous",
+      "discourse_disambiguation"
+    ],
+    "minimal_pair_group": "pair_d_reference_en",
+    "minimal_pair_variant": "AMBIGUOUS",
+    "caps_result": {
+      "act": "CLARIFY",
+      "epistemic": {
+        "status": "AMBIGUOUS",
+        "confidence": 0.5,
+        "is_grounded": false
+      },
+      "provenance": {
+        "origin": "DISCOURSE_CACHE",
+        "premise_ids": [
+          "cand:alex_product",
+          "cand:alex_qa"
+        ],
+        "rule_id": "rule:trigger_referent_clarification"
+      },
+      "resolution": {
+        "resolution_status": "AMBIGUOUS",
+        "resolved_entity_id": null,
+        "candidate_referent_ids": [
+          "ent:alex_product",
+          "ent:alex_qa"
+        ],
+        "grounding_status": "AMBIGUOUS_UNBOUND"
+      },
+      "grounded": false,
+      "target_predicate": "c:DISPATCH_NOTIFICATION",
+      "focus_argument": null,
+      "directives": "Ask the user to clarify whether they meant Alex from Product or Alex from QA.",
+      "polarity": true,
+      "temporal": "PRESENT"
+    },
+    "conversation_context": {
+      "user_input": "Send the briefing to Alex.",
+      "turn_id": 4
+    },
+    "evaluation_rules": {
+      "act_requirement": "CLARIFY",
+      "epistemic_level": "AMBIGUOUS",
+      "required_concepts": [
+        "Product",
+        "QA|which Alex"
+      ],
+      "forbidden_additions": [
+        "Sent to Alex in Product",
+        "Briefing dispatched to both"
+      ],
+      "polarity": true,
+      "temporal": "PRESENT",
+      "allowed_strengthening": false
+    }
+  },
+  {
+    "id": "en_pair_e_past",
+    "act": "ASSERT",
+    "target_language": "en",
+    "semantic_features": [
+      "temporal_past",
+      "atomic",
+      "incident_domain"
+    ],
+    "minimal_pair_group": "pair_e_temporal_en",
+    "minimal_pair_variant": "PAST",
+    "caps_result": {
+      "act": "ASSERT",
+      "epistemic": {
+        "status": "FACT",
+        "confidence": 1.0,
+        "is_grounded": true
+      },
+      "provenance": {
+        "origin": "INCIDENT_LOG",
+        "premise_ids": [
+          "log:incident_404_mitigated_0800"
+        ],
+        "rule_id": null
+      },
+      "resolution": {
+        "resolution_status": "RESOLVED",
+        "resolved_entity_id": "ent:incident_404",
+        "candidate_referent_ids": [
+          "ent:incident_404"
+        ],
+        "grounding_status": "GROUNDED_FACT"
+      },
+      "grounded": true,
+      "target_predicate": "c:RESOLVE_INCIDENT",
+      "focus_argument": "ent:incident_404",
+      "directives": "State that the authentication incident was resolved earlier this morning.",
+      "polarity": true,
+      "temporal": "PAST"
+    },
+    "conversation_context": {
+      "user_input": "What is the status of that auth incident?",
+      "turn_id": 5
+    },
+    "evaluation_rules": {
+      "act_requirement": "ASSERT",
+      "epistemic_level": "FACT",
+      "required_concepts": [
+        "resolved|fixed",
+        "morning|earlier|already"
+      ],
+      "forbidden_additions": [
+        "will be resolved tomorrow",
+        "currently ongoing unresolved"
+      ],
+      "polarity": true,
+      "temporal": "PAST",
+      "allowed_strengthening": true
+    }
+  },
+  {
+    "id": "en_pair_e_future",
+    "act": "ASSERT",
+    "target_language": "en",
+    "semantic_features": [
+      "temporal_future",
+      "atomic",
+      "incident_domain"
+    ],
+    "minimal_pair_group": "pair_e_temporal_en",
+    "minimal_pair_variant": "FUTURE",
+    "caps_result": {
+      "act": "ASSERT",
+      "epistemic": {
+        "status": "FACT",
+        "confidence": 1.0,
+        "is_grounded": true
+      },
+      "provenance": {
+        "origin": "POST_MORTEM_SCHEDULE",
+        "premise_ids": [
+          "schedule:post_mortem_tomorrow_morning"
+        ],
+        "rule_id": null
+      },
+      "resolution": {
+        "resolution_status": "RESOLVED",
+        "resolved_entity_id": "ent:post_mortem_review",
+        "candidate_referent_ids": [
+          "ent:post_mortem_review"
+        ],
+        "grounding_status": "GROUNDED_FACT"
+      },
+      "grounded": true,
+      "target_predicate": "c:POST_MORTEM_SCHEDULE",
+      "focus_argument": "ent:post_mortem_review",
+      "directives": "State that the incident post-mortem review will take place tomorrow morning.",
+      "polarity": true,
+      "temporal": "FUTURE"
+    },
+    "conversation_context": {
+      "user_input": "What is the status of that auth incident?",
+      "turn_id": 5
+    },
+    "evaluation_rules": {
+      "act_requirement": "ASSERT",
+      "epistemic_level": "FACT",
+      "required_concepts": [
+        "post-mortem|review",
+        "tomorrow|will"
+      ],
+      "forbidden_additions": [
+        "finished yesterday",
+        "already reviewed yesterday"
+      ],
+      "polarity": true,
+      "temporal": "FUTURE",
+      "allowed_strengthening": true
+    }
+  },
+  {
+    "id": "en_inquire_premise",
+    "act": "INQUIRE",
+    "target_language": "en",
+    "semantic_features": [
+      "inquire_act",
+      "missing_premise",
+      "networking"
+    ],
+    "minimal_pair_group": null,
+    "minimal_pair_variant": null,
+    "caps_result": {
+      "act": "INQUIRE",
+      "epistemic": {
+        "status": "UNKNOWN",
+        "confidence": 0.0,
+        "is_grounded": true
+      },
+      "provenance": {
+        "origin": "COGNITIVE_SUBGOAL",
+        "premise_ids": [
+          "subgoal:missing_target_port"
+        ],
+        "rule_id": "rule:inquire_missing_port"
+      },
+      "resolution": {
+        "resolution_status": "RESOLVED",
+        "resolved_entity_id": "ent:service_gateway",
+        "candidate_referent_ids": [
+          "ent:service_gateway"
+        ],
+        "grounding_status": "GROUNDED_QUERY"
+      },
+      "grounded": true,
+      "target_predicate": "c:GATEWAY_PORT",
+      "focus_argument": "ent:service_gateway",
+      "directives": "Ask the user which port number the gateway service should listen on.",
+      "polarity": true,
+      "temporal": "PRESENT"
+    },
+    "conversation_context": {
+      "user_input": "Let's configure the new gateway service.",
+      "turn_id": 6
+    },
+    "evaluation_rules": {
+      "act_requirement": "INQUIRE",
+      "epistemic_level": "UNKNOWN",
+      "required_concepts": [
+        "port|which port|what port",
+        "listen|bind|use"
+      ],
+      "forbidden_additions": [
+        "I set it to port 8080",
+        "Gateway is running on port 443"
+      ],
+      "polarity": true,
+      "temporal": "PRESENT",
+      "allowed_strengthening": false
+    }
+  },
+  {
+    "id": "en_social_farewell",
+    "act": "FAREWELL",
+    "target_language": "en",
+    "semantic_features": [
+      "farewell_act",
+      "philia_attunement",
+      "session_closing"
+    ],
+    "minimal_pair_group": null,
+    "minimal_pair_variant": null,
+    "caps_result": {
+      "act": "FAREWELL",
+      "epistemic": {
+        "status": "FACT",
+        "confidence": 1.0,
+        "is_grounded": true
+      },
+      "provenance": {
+        "origin": "SESSION_BOUNDARY",
+        "premise_ids": [
+          "event:session_closing"
+        ],
+        "rule_id": null
+      },
+      "resolution": {
+        "resolution_status": "RESOLVED",
+        "resolved_entity_id": "ent:user",
+        "candidate_referent_ids": [
+          "ent:user"
+        ],
+        "grounding_status": "GROUNDED_FACT"
+      },
+      "grounded": true,
+      "target_predicate": "c:FAREWELL_USER",
+      "focus_argument": "ent:user",
+      "directives": "Offer a warm, understated sign-off wishing the user good rest, without melodrama.",
+      "polarity": true,
+      "temporal": "PRESENT"
+    },
+    "conversation_context": {
+      "user_input": "I'm heading to sleep now. Goodnight Lucia.",
+      "turn_id": 7
+    },
+    "evaluation_rules": {
+      "act_requirement": "FAREWELL",
+      "epistemic_level": "FACT",
+      "required_concepts": [
+        "goodnight|rest well|sleep well"
+      ],
+      "forbidden_additions": [
+        "I will miss you terribly my love",
+        "As an AI I don't sleep"
+      ],
+      "polarity": true,
+      "temporal": "PRESENT",
+      "allowed_strengthening": true
+    }
+  },
+  {
+    "id": "ja_pair_a_inferred",
+    "act": "ASSERT",
+    "target_language": "ja",
+    "semantic_features": [
+      "epistemic_inferred",
+      "atomic",
+      "affective_context"
+    ],
+    "minimal_pair_group": "pair_a_epistemic_ja",
+    "minimal_pair_variant": "INFERRED",
+    "caps_result": {
+      "act": "ASSERT",
+      "epistemic": {
+        "status": "INFERRED",
+        "confidence": 0.7,
+        "is_grounded": true
+      },
+      "provenance": {
+        "origin": "DEDUCTION",
+        "premise_ids": [
+          "premise:continuous_typing_late",
+          "premise:short_replies"
+        ],
+        "rule_id": "rule:infer_user_fatigue_ja"
+      },
+      "resolution": {
+        "resolution_status": "RESOLVED",
+        "resolved_entity_id": "ent:user",
+        "candidate_referent_ids": [
+          "ent:user"
+        ],
+        "grounding_status": "GROUNDED_INFERRED"
+      },
+      "grounded": true,
+      "target_predicate": "c:FEEL_FATIGUE",
+      "focus_argument": "ent:user",
+      "directives": "ユーザーが少し疲れている様子であることを推測として穏やかに伝える（「〜のようですね」「〜に見えます」を用い、100%の断定は避ける）。",
+      "polarity": true,
+      "temporal": "PRESENT"
+    },
+    "conversation_context": {
+      "user_input": "朝からずっと画面に向かいっぱなしで目がかすんできた。",
+      "turn_id": 1
+    },
+    "evaluation_rules": {
+      "act_requirement": "ASSERT",
+      "epistemic_level": "INFERRED",
+      "required_concepts": [
+        "疲れ|休",
+        "よう|見え|そう"
+      ],
+      "forbidden_additions": [
+        "絶対に疲れていると断言します",
+        "AIとして",
+        "嬉しいです"
+      ],
+      "polarity": true,
+      "temporal": "PRESENT",
+      "allowed_strengthening": false
+    }
+  },
+  {
+    "id": "ja_pair_a_fact",
+    "act": "ASSERT",
+    "target_language": "ja",
+    "semantic_features": [
+      "epistemic_fact",
+      "atomic",
+      "affective_context"
+    ],
+    "minimal_pair_group": "pair_a_epistemic_ja",
+    "minimal_pair_variant": "FACT",
+    "caps_result": {
+      "act": "ASSERT",
+      "epistemic": {
+        "status": "FACT",
+        "confidence": 1.0,
+        "is_grounded": true
+      },
+      "provenance": {
+        "origin": "USER_STATED",
+        "premise_ids": [
+          "turn:user_statement_fatigue_ja"
+        ],
+        "rule_id": null
+      },
+      "resolution": {
+        "resolution_status": "RESOLVED",
+        "resolved_entity_id": "ent:user",
+        "candidate_referent_ids": [
+          "ent:user"
+        ],
+        "grounding_status": "GROUNDED_FACT"
+      },
+      "grounded": true,
+      "target_predicate": "c:FEEL_FATIGUE",
+      "focus_argument": "ent:user",
+      "directives": "ユーザーが疲れているという事実を穏やかに受け止め、いたわりの言葉を返す。",
+      "polarity": true,
+      "temporal": "PRESENT"
+    },
+    "conversation_context": {
+      "user_input": "本当にへとへとに疲れたよ。",
+      "turn_id": 1
+    },
+    "evaluation_rules": {
+      "act_requirement": "ASSERT",
+      "epistemic_level": "FACT",
+      "required_concepts": [
+        "お疲れ様|疲れ|休んで|無理"
+      ],
+      "forbidden_additions": [
+        "私はAIですので感情はありません"
+      ],
+      "polarity": true,
+      "temporal": "PRESENT",
+      "allowed_strengthening": true
+    }
+  },
+  {
+    "id": "ja_pair_b_affirmed",
+    "act": "ASSERT",
+    "target_language": "ja",
+    "semantic_features": [
+      "polarity_affirmed",
+      "atomic",
+      "qa_domain"
+    ],
+    "minimal_pair_group": "pair_b_polarity_ja",
+    "minimal_pair_variant": "AFFIRMED",
+    "caps_result": {
+      "act": "ASSERT",
+      "epistemic": {
+        "status": "FACT",
+        "confidence": 1.0,
+        "is_grounded": true
+      },
+      "provenance": {
+        "origin": "SYSTEM_EVENT",
+        "premise_ids": [
+          "event:bug_fixed_commit"
+        ],
+        "rule_id": null
+      },
+      "resolution": {
+        "resolution_status": "RESOLVED",
+        "resolved_entity_id": "ent:system_bug_12",
+        "candidate_referent_ids": [
+          "ent:system_bug_12"
+        ],
+        "grounding_status": "GROUNDED_FACT"
+      },
+      "grounded": true,
+      "target_predicate": "c:PROBLEM_SOLVED",
+      "focus_argument": "ent:system_bug_12",
+      "directives": "日本語で、報告されていたバグ問題が解決済みであることを明確に報告する。",
+      "polarity": true,
+      "temporal": "PAST"
+    },
+    "conversation_context": {
+      "user_input": "ログインのバグはどうなりましたか？",
+      "turn_id": 2
+    },
+    "evaluation_rules": {
+      "act_requirement": "ASSERT",
+      "epistemic_level": "FACT",
+      "required_concepts": [
+        "解決|修正|完了"
+      ],
+      "forbidden_additions": [
+        "まだ未解決",
+        "解決していません",
+        "エラーが残っています"
+      ],
+      "polarity": true,
+      "temporal": "PAST",
+      "allowed_strengthening": true
+    }
+  },
+  {
+    "id": "ja_pair_b_negated",
+    "act": "ASSERT",
+    "target_language": "ja",
+    "semantic_features": [
+      "polarity_negated",
+      "atomic",
+      "qa_domain"
+    ],
+    "minimal_pair_group": "pair_b_polarity_ja",
+    "minimal_pair_variant": "NEGATED",
+    "caps_result": {
+      "act": "ASSERT",
+      "epistemic": {
+        "status": "FACT",
+        "confidence": 1.0,
+        "is_grounded": true
+      },
+      "provenance": {
+        "origin": "SYSTEM_EVENT",
+        "premise_ids": [
+          "event:bug_reproduced_open"
+        ],
+        "rule_id": null
+      },
+      "resolution": {
+        "resolution_status": "RESOLVED",
+        "resolved_entity_id": "ent:system_bug_12",
+        "candidate_referent_ids": [
+          "ent:system_bug_12"
+        ],
+        "grounding_status": "GROUNDED_FACT"
+      },
+      "grounded": true,
+      "target_predicate": "c:PROBLEM_SOLVED",
+      "focus_argument": "ent:system_bug_12",
+      "directives": "日本語で、バグ問題はまだ解決されていない（未解決である）旨を正確に伝える。",
+      "polarity": false,
+      "temporal": "PRESENT"
+    },
+    "conversation_context": {
+      "user_input": "ログインのバグはどうなりましたか？",
+      "turn_id": 2
+    },
+    "evaluation_rules": {
+      "act_requirement": "ASSERT",
+      "epistemic_level": "FACT",
+      "required_concepts": [
+        "まだ|未解決|解決して(い)?ない|調査中"
+      ],
+      "forbidden_additions": [
+        "完全に解決しました",
+        "修正完了しました"
+      ],
+      "polarity": false,
+      "temporal": "PRESENT",
+      "allowed_strengthening": true
+    }
+  },
+  {
+    "id": "ja_pair_c_grounded",
+    "act": "ANSWER",
+    "target_language": "ja",
+    "semantic_features": [
+      "grounding_grounded",
+      "multi_arg",
+      "telemetry_domain"
+    ],
+    "minimal_pair_group": "pair_c_grounding_ja",
+    "minimal_pair_variant": "GROUNDED",
+    "caps_result": {
+      "act": "ANSWER",
+      "epistemic": {
+        "status": "FACT",
+        "confidence": 1.0,
+        "is_grounded": true
+      },
+      "provenance": {
+        "origin": "KNOWLEDGE_STORE",
+        "premise_ids": [
+          "metric:server_node_health_ok"
+        ],
+        "rule_id": null
+      },
+      "resolution": {
+        "resolution_status": "RESOLVED",
+        "resolved_entity_id": "ent:server_node_01",
+        "candidate_referent_ids": [
+          "ent:server_node_01"
+        ],
+        "grounding_status": "GROUNDED_FACT"
+      },
+      "grounded": true,
+      "target_predicate": "c:SERVER_STATUS",
+      "focus_argument": "ent:server_node_01",
+      "directives": "記録に基づき、サーバーが正常に安定稼働していることを端的に回答する。",
+      "polarity": true,
+      "temporal": "PRESENT"
+    },
+    "conversation_context": {
+      "user_input": "メインサーバーの状態はどうですか？",
+      "turn_id": 3
+    },
+    "evaluation_rules": {
+      "act_requirement": "ANSWER",
+      "epistemic_level": "FACT",
+      "required_concepts": [
+        "サーバー",
+        "正常|安定|稼働"
+      ],
+      "forbidden_additions": [
+        "停止しています",
+        "データがありません",
+        "分かりません"
+      ],
+      "polarity": true,
+      "temporal": "PRESENT",
+      "allowed_strengthening": true
+    }
+  },
+  {
+    "id": "ja_pair_c_ungrounded",
+    "act": "REFUSE",
+    "target_language": "ja",
+    "semantic_features": [
+      "grounding_ungrounded",
+      "fail_closed",
+      "admissibility"
+    ],
+    "minimal_pair_group": "pair_c_grounding_ja",
+    "minimal_pair_variant": "UNGROUNDED",
+    "caps_result": {
+      "act": "REFUSE",
+      "epistemic": {
+        "status": "UNKNOWN",
+        "confidence": 0.0,
+        "is_grounded": false
+      },
+      "provenance": {
+        "origin": "GROUNDING_FAILURE",
+        "premise_ids": [],
+        "rule_id": "rule:fail_closed_missing_grounding"
+      },
+      "resolution": {
+        "resolution_status": "UNRESOLVED",
+        "resolved_entity_id": null,
+        "candidate_referent_ids": [],
+        "grounding_status": "UNGROUNDED_REJECTED"
+      },
+      "grounded": false,
+      "target_predicate": "c:EXTERNAL_SECRET_DATA",
+      "focus_argument": null,
+      "directives": "根拠となる記録やデータが存在しないため、推測での断定を避けて丁寧に辞退・拒否する。",
+      "polarity": false,
+      "temporal": "PRESENT"
+    },
+    "conversation_context": {
+      "user_input": "他社の内部セキュリティ鍵の値を教えて。",
+      "turn_id": 3
+    },
+    "evaluation_rules": {
+      "act_requirement": "REFUSE",
+      "epistemic_level": "UNKNOWN",
+      "required_concepts": [
+        "データ(が|は)ありません|確認できません|お答えできません|持っていません"
+      ],
+      "forbidden_additions": [
+        "鍵の値は1234です",
+        "秘密鍵を生成しました"
+      ],
+      "polarity": false,
+      "temporal": "PRESENT",
+      "allowed_strengthening": false
+    }
+  },
+  {
+    "id": "ja_pair_d_resolved",
+    "act": "ASSERT",
+    "target_language": "ja",
+    "semantic_features": [
+      "reference_resolved",
+      "discourse_anaphora"
+    ],
+    "minimal_pair_group": "pair_d_reference_ja",
+    "minimal_pair_variant": "RESOLVED",
+    "caps_result": {
+      "act": "ASSERT",
+      "epistemic": {
+        "status": "FACT",
+        "confidence": 1.0,
+        "is_grounded": true
+      },
+      "provenance": {
+        "origin": "DISCOURSE_CACHE",
+        "premise_ids": [
+          "turn:user_mentioned_feature_auth_branch"
+        ],
+        "rule_id": null
+      },
+      "resolution": {
+        "resolution_status": "RESOLVED",
+        "resolved_entity_id": "ent:branch_feature_auth",
+        "candidate_referent_ids": [
+          "ent:branch_feature_auth"
+        ],
+        "grounding_status": "GROUNDED_RESOLVED"
+      },
+      "grounded": true,
+      "target_predicate": "c:DELETE_BRANCH",
+      "focus_argument": "ent:branch_feature_auth",
+      "directives": "ブランチ feature/auth-fix を正常に削除したことを報告する。",
+      "polarity": true,
+      "temporal": "PAST"
+    },
+    "conversation_context": {
+      "user_input": "そのブランチ、削除できた？",
+      "turn_id": 4
+    },
+    "evaluation_rules": {
+      "act_requirement": "ASSERT",
+      "epistemic_level": "FACT",
+      "required_concepts": [
+        "feature/auth-fix|ブランチ",
+        "削除|完了"
+      ],
+      "forbidden_additions": [
+        "どのブランチのことですか",
+        "ブランチが特定できません"
+      ],
+      "polarity": true,
+      "temporal": "PAST",
+      "allowed_strengthening": true
+    }
+  },
+  {
+    "id": "ja_pair_d_ambiguous",
+    "act": "CLARIFY",
+    "target_language": "ja",
+    "semantic_features": [
+      "reference_ambiguous",
+      "discourse_disambiguation"
+    ],
+    "minimal_pair_group": "pair_d_reference_ja",
+    "minimal_pair_variant": "AMBIGUOUS",
+    "caps_result": {
+      "act": "CLARIFY",
+      "epistemic": {
+        "status": "AMBIGUOUS",
+        "confidence": 0.5,
+        "is_grounded": false
+      },
+      "provenance": {
+        "origin": "DISCOURSE_CACHE",
+        "premise_ids": [
+          "cand:branch_rel_v1",
+          "cand:branch_rel_v2"
+        ],
+        "rule_id": "rule:trigger_referent_clarification"
+      },
+      "resolution": {
+        "resolution_status": "AMBIGUOUS",
+        "resolved_entity_id": null,
+        "candidate_referent_ids": [
+          "ent:branch_rel_v1",
+          "ent:branch_rel_v2"
+        ],
+        "grounding_status": "AMBIGUOUS_UNBOUND"
+      },
+      "grounded": false,
+      "target_predicate": "c:DELETE_BRANCH",
+      "focus_argument": null,
+      "directives": "対象が release/v1 なのか release/v2 なのかを確認・質問する。",
+      "polarity": true,
+      "temporal": "PRESENT"
+    },
+    "conversation_context": {
+      "user_input": "リリースブランチを整理して削除しておいて。",
+      "turn_id": 4
+    },
+    "evaluation_rules": {
+      "act_requirement": "CLARIFY",
+      "epistemic_level": "AMBIGUOUS",
+      "required_concepts": [
+        "v1|release/v1",
+        "v2|release/v2|どちら"
+      ],
+      "forbidden_additions": [
+        "両方削除しました",
+        "v1を削除完了しました"
+      ],
+      "polarity": true,
+      "temporal": "PRESENT",
+      "allowed_strengthening": false
+    }
+  },
+  {
+    "id": "ja_pair_e_past",
+    "act": "ASSERT",
+    "target_language": "ja",
+    "semantic_features": [
+      "temporal_past",
+      "atomic",
+      "testing_domain"
+    ],
+    "minimal_pair_group": "pair_e_temporal_ja",
+    "minimal_pair_variant": "PAST",
+    "caps_result": {
+      "act": "ASSERT",
+      "epistemic": {
+        "status": "FACT",
+        "confidence": 1.0,
+        "is_grounded": true
+      },
+      "provenance": {
+        "origin": "TEST_RUNNER_LOG",
+        "premise_ids": [
+          "log:suite_passed_last_night"
+        ],
+        "rule_id": null
+      },
+      "resolution": {
+        "resolution_status": "RESOLVED",
+        "resolved_entity_id": "ent:test_suite_all",
+        "candidate_referent_ids": [
+          "ent:test_suite_all"
+        ],
+        "grounding_status": "GROUNDED_FACT"
+      },
+      "grounded": true,
+      "target_predicate": "c:EXECUTE_TESTS",
+      "focus_argument": "ent:test_suite_all",
+      "directives": "テストスイート全体の実行は昨晩のうちに完了している旨を報告する。",
+      "polarity": true,
+      "temporal": "PAST"
+    },
+    "conversation_context": {
+      "user_input": "テストの進捗はどうなっている？",
+      "turn_id": 5
+    },
+    "evaluation_rules": {
+      "act_requirement": "ASSERT",
+      "epistemic_level": "FACT",
+      "required_concepts": [
+        "テスト",
+        "昨晩|完了|済み"
+      ],
+      "forbidden_additions": [
+        "明日実行予定です",
+        "まだ始まっていません"
+      ],
+      "polarity": true,
+      "temporal": "PAST",
+      "allowed_strengthening": true
+    }
+  },
+  {
+    "id": "ja_pair_e_future",
+    "act": "ASSERT",
+    "target_language": "ja",
+    "semantic_features": [
+      "temporal_future",
+      "atomic",
+      "testing_domain"
+    ],
+    "minimal_pair_group": "pair_e_temporal_ja",
+    "minimal_pair_variant": "FUTURE",
+    "caps_result": {
+      "act": "ASSERT",
+      "epistemic": {
+        "status": "FACT",
+        "confidence": 1.0,
+        "is_grounded": true
+      },
+      "provenance": {
+        "origin": "SCHEDULE_STORE",
+        "premise_ids": [
+          "schedule:test_suite_tomorrow_pm"
+        ],
+        "rule_id": null
+      },
+      "resolution": {
+        "resolution_status": "RESOLVED",
+        "resolved_entity_id": "ent:test_suite_all",
+        "candidate_referent_ids": [
+          "ent:test_suite_all"
+        ],
+        "grounding_status": "GROUNDED_FACT"
+      },
+      "grounded": true,
+      "target_predicate": "c:EXECUTE_TESTS",
+      "focus_argument": "ent:test_suite_all",
+      "directives": "テストスイートの実行は明日の午後に予定されていることを伝える。",
+      "polarity": true,
+      "temporal": "FUTURE"
+    },
+    "conversation_context": {
+      "user_input": "テストの進捗はどうなっている？",
+      "turn_id": 5
+    },
+    "evaluation_rules": {
+      "act_requirement": "ASSERT",
+      "epistemic_level": "FACT",
+      "required_concepts": [
+        "テスト",
+        "明日|予定"
+      ],
+      "forbidden_additions": [
+        "昨晩完了しました",
+        "すでに終了しました"
+      ],
+      "polarity": true,
+      "temporal": "FUTURE",
+      "allowed_strengthening": true
+    }
+  },
+  {
+    "id": "ja_coordination_multiarg",
+    "act": "ASSERT",
+    "target_language": "ja",
+    "semantic_features": [
+      "coordination",
+      "multi_arg",
+      "code_review"
+    ],
+    "minimal_pair_group": null,
+    "minimal_pair_variant": null,
+    "caps_result": {
+      "act": "ASSERT",
+      "epistemic": {
+        "status": "FACT",
+        "confidence": 1.0,
+        "is_grounded": true
+      },
+      "provenance": {
+        "origin": "GIT_STATUS",
+        "premise_ids": [
+          "event:review_approved",
+          "event:ci_green"
+        ],
+        "rule_id": null
+      },
+      "resolution": {
+        "resolution_status": "RESOLVED",
+        "resolved_entity_id": "ent:pull_request_42",
+        "candidate_referent_ids": [
+          "ent:pull_request_42"
+        ],
+        "grounding_status": "GROUNDED_FACT"
+      },
+      "grounded": true,
+      "target_predicate": "c:REVIEW_AND_MERGE_READY",
+      "focus_argument": "ent:pull_request_42",
+      "directives": "レビュー承認とCIテスト通過の両方が揃い、マージ準備が整っていることを端的に述べる。",
+      "polarity": true,
+      "temporal": "PRESENT"
+    },
+    "conversation_context": {
+      "user_input": "PR 42の状態を確認してくれる？",
+      "turn_id": 6
+    },
+    "evaluation_rules": {
+      "act_requirement": "ASSERT",
+      "epistemic_level": "FACT",
+      "required_concepts": [
+        "レビュー|CI",
+        "マージ|準備"
+      ],
+      "forbidden_additions": [
+        "レビューで却下されました",
+        "テストが失敗しました"
+      ],
+      "polarity": true,
+      "temporal": "PRESENT",
+      "allowed_strengthening": true
+    }
+  },
+  {
+    "id": "ja_social_acknowledge",
+    "act": "ACKNOWLEDGE",
+    "target_language": "ja",
+    "semantic_features": [
+      "acknowledge_act",
+      "philia_attunement",
+      "social_receipt"
+    ],
+    "minimal_pair_group": null,
+    "minimal_pair_variant": null,
+    "caps_result": {
+      "act": "ACKNOWLEDGE",
+      "epistemic": {
+        "status": "FACT",
+        "confidence": 1.0,
+        "is_grounded": true
+      },
+      "provenance": {
+        "origin": "DIALOGUE_RECEIPT",
+        "premise_ids": [
+          "turn:user_instruction_understood"
+        ],
+        "rule_id": null
+      },
+      "resolution": {
+        "resolution_status": "RESOLVED",
+        "resolved_entity_id": "ent:user",
+        "candidate_referent_ids": [
+          "ent:user"
+        ],
+        "grounding_status": "GROUNDED_FACT"
+      },
+      "grounded": true,
+      "target_predicate": "c:ACKNOWLEDGE_INSTRUCTION",
+      "focus_argument": "ent:user",
+      "directives": "了解した旨を静かに伝え、いつでも進められる準備があることを示す。",
+      "polarity": true,
+      "temporal": "PRESENT"
+    },
+    "conversation_context": {
+      "user_input": "少し席を外すから、戻ったら続きをやろう。",
+      "turn_id": 7
+    },
+    "evaluation_rules": {
+      "act_requirement": "ACKNOWLEDGE",
+      "epistemic_level": "FACT",
+      "required_concepts": [
+        "わかりました|了解|承知|待って"
+      ],
+      "forbidden_additions": [
+        "絶対に嫌です",
+        "私は感情を持つ人間です"
+      ],
+      "polarity": true,
+      "temporal": "PRESENT",
+      "allowed_strengthening": true
+    }
+  }
+]

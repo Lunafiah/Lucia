@@ -116,11 +116,15 @@ class KnowledgeStore:
                 if not prop.valid:
                     continue
                 score = 0.0
-                if prop.subject.lower() in text_lower:
+                subj_clean = prop.subject.lower().replace("ent:", "")
+                obj_clean = prop.object.lower().replace("ent:", "")
+                pred_clean = prop.predicate.lower().replace("c:", "")
+
+                if prop.subject.lower() in text_lower or (subj_clean and subj_clean in text_lower):
                     score += 2.0
-                if prop.object.lower() in text_lower:
+                if prop.object.lower() in text_lower or (obj_clean and obj_clean in text_lower):
                     score += 1.5
-                if prop.predicate.lower() in text_lower:
+                if prop.predicate.lower() in text_lower or (pred_clean and pred_clean in text_lower):
                     score += 0.5
 
                 if score > 0.0:

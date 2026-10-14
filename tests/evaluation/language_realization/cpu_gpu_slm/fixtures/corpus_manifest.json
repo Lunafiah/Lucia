@@ -1,0 +1,62 @@
+{
+  "corpus_name": "Lucia CAPS Semantic Realization Benchmark Corpus",
+  "version": "1.0.0",
+  "total_fixtures": 36,
+  "languages": {
+    "vi": 12,
+    "en": 12,
+    "ja": 12
+  },
+  "communicative_acts_covered": [
+    "ACKNOWLEDGE",
+    "ANSWER",
+    "ASSERT",
+    "CLARIFY",
+    "FAREWELL",
+    "GREET",
+    "INQUIRE",
+    "REFUSE"
+  ],
+  "minimal_pair_groups": [
+    "pair_a_epistemic_en",
+    "pair_a_epistemic_ja",
+    "pair_a_epistemic_vi",
+    "pair_b_polarity_en",
+    "pair_b_polarity_ja",
+    "pair_b_polarity_vi",
+    "pair_c_grounding_en",
+    "pair_c_grounding_ja",
+    "pair_c_grounding_vi",
+    "pair_d_reference_en",
+    "pair_d_reference_ja",
+    "pair_d_reference_vi",
+    "pair_e_temporal_en",
+    "pair_e_temporal_ja",
+    "pair_e_temporal_vi"
+  ],
+  "semantic_distinctions_covered": [
+    "atomic_propositions",
+    "multiple_arguments",
+    "negation",
+    "modality_uncertainty",
+    "epistemic_status",
+    "grounded_vs_ungrounded",
+    "provenance_sensitive_distinctions",
+    "temporal_relations",
+    "causal_relations",
+    "coordination",
+    "discourse_reference_anaphora",
+    "controlled_entity_references"
+  ],
+  "schema_specification": {
+    "id": "Unique fixture string identifier",
+    "act": "CAPS CommunicativeAct category",
+    "target_language": "vi | en | ja",
+    "semantic_features": "List of tags indicating semantic distinctions",
+    "minimal_pair_group": "Identifier of the minimal pair group or null",
+    "minimal_pair_variant": "Specific variant within the pair (e.g. INFERRED, FACT, AFFIRMED, NEGATED, etc.)",
+    "caps_result": "Exact serialization corresponding to CAPSResult.to_dict()",
+    "conversation_context": "Discourse turn context containing user input",
+    "evaluation_rules": "Rule definitions for automated and manual semantic fidelity verification"
+  }
+}

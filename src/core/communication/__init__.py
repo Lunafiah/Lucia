@@ -4,6 +4,20 @@ src/core/communication/__init__.py
 Public domain exports for Lucia Phase 16 Communication Subsystem.
 """
 
+from src.core.communication.caps import (
+    AdmissibleEvidencePool,
+    CAPSResult,
+    CognitiveStateSnapshot,
+    CommunicativeAct,
+    CommunicationPolicySnapshot,
+    DialogueContextSnapshot,
+    EpistemicMetadata,
+    ProvenanceMetadata,
+    ResolutionAdmissibilityMetadata,
+    build_assertion_graph,
+    build_inquire_graph,
+    evaluate_caps,
+)
 from src.core.communication.communication_policy import CommunicationPolicy
 from src.core.communication.communication_state import (
     CommIntent,
@@ -22,4 +36,16 @@ __all__ = [
     "CommunicationPolicy",
     "CommSemanticValidationResult",
     "SemanticConsistencyGuard",
+    "CommunicativeAct",
+    "DialogueContextSnapshot",
+    "CognitiveStateSnapshot",
+    "AdmissibleEvidencePool",
+    "CommunicationPolicySnapshot",
+    "EpistemicMetadata",
+    "ProvenanceMetadata",
+    "ResolutionAdmissibilityMetadata",
+    "CAPSResult",
+    "build_inquire_graph",
+    "build_assertion_graph",
+    "evaluate_caps",
 ]

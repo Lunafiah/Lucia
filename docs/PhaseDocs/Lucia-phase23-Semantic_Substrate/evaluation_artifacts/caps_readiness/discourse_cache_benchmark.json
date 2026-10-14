@@ -1,0 +1,35 @@
+{
+  "timestamp": "2026-10-14T11:41:17+07:00",
+  "execution_environment": "Isolated Research Benchmark (Windows, Python 3.12, AMD Ryzen 7 5800H)",
+  "benchmark_script": "tests/evaluation/phase23_caps/test_discourse_retention_contract.py",
+  "elapsed_ms": 3.016,
+  "metrics": {
+    "boundedness": {
+      "turns_simulated": 100,
+      "max_capacity_limit": 16,
+      "max_observed_size": 8,
+      "final_size": 8,
+      "pass": true
+    },
+    "decay_and_eviction": {
+      "turn_1_salience": 1.0,
+      "turn_2_salience": 0.6,
+      "turn_3_salience": 0.36,
+      "turn_4_salience": 0.216,
+      "turn_5_evicted": true,
+      "pass": true
+    },
+    "failure_semantics": {
+      "role_resolved": true,
+      "type_mismatch": true,
+      "ambiguous_detected": true,
+      "unknown_detected": true,
+      "pass": true
+    },
+    "determinism": {
+      "identical": true,
+      "hash": "265a08e93304098531c11220a3fbc97eae680be676bee283ec0c4972a29b63a4",
+      "pass": true
+    }
+  }
+}

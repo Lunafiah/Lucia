@@ -22,6 +22,7 @@ from src.core.errors import AssemblyError
 from src.core.models import BehavioralConstraints, SomaticMarkers
 
 if TYPE_CHECKING:
+    from src.core.communication.caps import CAPSResult
     from src.core.communication.communication_state import CommunicationState
     from src.core.knowledge.proposition import Proposition
 
@@ -65,6 +66,7 @@ class PromptAssembler:
         echo_vector: Optional[np.ndarray] = None,
         comm_state: Optional[CommunicationState] = None,
         knowledge_propositions: Optional[List[Proposition]] = None,
+        caps_result: Optional[CAPSResult] = None,
     ) -> Union[str, AssemblyError]:
         """
         Build the Conditioned_Prompt string.
@@ -87,6 +89,8 @@ class PromptAssembler:
             Communication strategy and framing state (Phase 16).
         knowledge_propositions : list of Proposition | None, optional
             Structured knowledge facts retrieved for grounding (Phase 16).
+        caps_result : CAPSResult | None, optional
+            Communicative Act & Proposition Selection result (Phase 23 / S11 transition).
 
         Returns
         -------
@@ -134,10 +138,27 @@ class PromptAssembler:
                 f"supportiveness: {comm_state.supportiveness:.2f}"
             )
 
+        # --- Section 5b: communicative intent & proposition (Phase 23 CAPS / S11) ---
+        caps_section = ""
+        if caps_result is not None:
+            caps_lines = [
+                "[COMMUNICATIVE INTENT & PROPOSITION]",
+                f"act: {caps_result.act.value}",
+                f"epistemic_status: {caps_result.epistemic_metadata.status.value}",
+                f"grounded: {str(caps_result.grounded).lower()}",
+            ]
+            if caps_result.target_predicate:
+                caps_lines.append(f"target_predicate: {caps_result.target_predicate}")
+            if caps_result.focus_argument:
+                caps_lines.append(f"focus_argument: {caps_result.focus_argument}")
+            if caps_result.directives:
+                caps_lines.append(f"directive: {caps_result.directives}")
+            caps_section = "\n".join(caps_lines)
+
         # --- Section 6: reasoning trace (Requirement 5.4, 5.5) ---
         reasoning_section = self._build_reasoning_section(constraints.reasoning_depth)
 
-        # --- Check preamble + somatic + echo + knowledge + comm fits (Requirement 5.8) ---
+        # --- Check preamble + somatic + echo + knowledge + comm + caps fits (Requirement 5.8) ---
         base_parts = [preamble_section, somatic_section]
         if echo_section:
             base_parts.append(echo_section)
@@ -145,6 +166,8 @@ class PromptAssembler:
             base_parts.append(knowledge_section)
         if comm_section:
             base_parts.append(comm_section)
+        if caps_section:
+            base_parts.append(caps_section)
         if reasoning_section:
             base_parts.append(reasoning_section)
         base_prompt = _SEP.join(p for p in base_parts if p)
@@ -165,6 +188,8 @@ class PromptAssembler:
             all_sections.append(knowledge_section)
         if comm_section:
             all_sections.append(comm_section)
+        if caps_section:
+            all_sections.append(caps_section)
         if reasoning_section:
             all_sections.append(reasoning_section)
         all_sections.append(history_section)
