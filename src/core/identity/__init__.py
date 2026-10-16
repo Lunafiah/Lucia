@@ -119,6 +119,12 @@ from src.core.identity.genesis import (
     verify_genesis,
     verify_genesis_record_integrity,
 )
+from src.core.identity.operator_genesis import (
+    OperatorGenesisError,
+    OperatorPreconditionError,
+    perform_operator_genesis,
+    resolve_git_commit,
+)
 
 __all__ = [
     # WP-01
@@ -229,4 +235,9 @@ __all__ = [
     "recover_genesis",
     "verify_genesis",
     "verify_genesis_record_integrity",
+    # Operator Genesis
+    "OperatorGenesisError",
+    "OperatorPreconditionError",
+    "perform_operator_genesis",
+    "resolve_git_commit",
 ]

@@ -115,6 +115,14 @@ describe('Phase 7.7 Genesis Awakening Tests', () => {
       on: jest.fn(),
     };
 
+    let currentProfile = {
+      version: 1,
+      user_name: 'Friend',
+      companion_name: 'Lucia',
+      is_onboarded: true,
+      born_at: new Date().toISOString(),
+    };
+
     // Setup global fetch mock
     fetchMock = jest.fn().mockImplementation((url, opts = {}) => {
       const urlStr = typeof url === 'string' ? url : (url?.url || '');
@@ -127,32 +135,32 @@ describe('Phase 7.7 Genesis Awakening Tests', () => {
       if (urlStr.includes('/system/profile')) {
         return Promise.resolve({ ok: true, json: () => Promise.resolve({ tier: 'laptop' }) });
       }
+      if (urlStr.includes('/lifecycle/activate')) {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({
+            status: 'activated',
+            born_at: currentProfile.born_at || new Date().toISOString(),
+            companion_name: currentProfile.companion_name,
+          }),
+        });
+      }
       if (urlStr.includes('/profile')) {
         if (opts.method === 'POST') {
           const body = opts.body ? JSON.parse(opts.body) : {};
+          if (body.user_name) currentProfile.user_name = body.user_name;
+          if (body.companion_name) currentProfile.companion_name = body.companion_name;
           return Promise.resolve({
             ok: true,
             json: () => Promise.resolve({
               status: 'ok',
-              profile: {
-                version: 1,
-                user_name: body.user_name || 'Friend',
-                companion_name: body.companion_name || 'Lucia',
-                is_onboarded: body.is_onboarded ?? true,
-                born_at: body.born_at || new Date().toISOString(),
-              },
+              profile: { ...currentProfile },
             }),
           });
         }
         return Promise.resolve({
           ok: true,
-          json: () => Promise.resolve({
-            version: 1,
-            user_name: 'Friend',
-            companion_name: 'Lucia',
-            is_onboarded: true,
-            born_at: new Date().toISOString(),
-          }),
+          json: () => Promise.resolve({ ...currentProfile }),
         });
       }
       return Promise.resolve({ ok: true, json: () => Promise.resolve({}) });
@@ -216,7 +224,7 @@ describe('Phase 7.7 Genesis Awakening Tests', () => {
     expect(genesisModal.classList.contains('active')).toBe(false);
   });
 
-  test('Test 3: User name submission and POST /profile payload', async () => {
+  test('Test 3: User name submission and POST /profile preferences without direct onboarding', async () => {
     const genesisModal = document.getElementById('genesis-modal');
     genesisModal.classList.add('active');
 
@@ -228,7 +236,7 @@ describe('Phase 7.7 Genesis Awakening Tests', () => {
 
     await chat._completeGenesis();
 
-    // Verify fetch was called with POST /profile
+    // Verify fetch was called with POST /profile for preferences only
     expect(fetchMock).toHaveBeenCalledWith('http://127.0.0.1:8765/profile', expect.objectContaining({
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -240,23 +248,23 @@ describe('Phase 7.7 Genesis Awakening Tests', () => {
 
     expect(payload.user_name).toBe('Astrid');
     expect(payload.companion_name).toBe('Lucia');
-    expect(payload.is_onboarded).toBe(true);
-    expect(payload.born_at).toBeDefined();
-    expect(typeof payload.born_at).toBe('string');
+    // Invariant: /profile must NEVER directly receive is_onboarded=true or born_at
+    expect(payload.is_onboarded).toBeUndefined();
+    expect(payload.born_at).toBeUndefined();
+
+    // Verify canonical First Activation was called
+    const activateCall = fetchMock.mock.calls.find(call => call[0].includes('/lifecycle/activate') && call[1]?.method === 'POST');
+    expect(activateCall).toBeDefined();
   });
 
-  test('Test 4: born_at generated at Genesis completion is fresh timestamp', async () => {
-    const beforeTime = Date.now() - 1000;
+  test('Test 4: First Activation endpoint is called to activate companion', async () => {
+    const genesisModal = document.getElementById('genesis-modal');
+    genesisModal.classList.add('active');
 
     await chat._completeGenesis();
 
-    const profileCall = fetchMock.mock.calls.find(call => call[0].includes('/profile') && call[1]?.method === 'POST');
-    expect(profileCall).toBeDefined();
-    const payload = JSON.parse(profileCall[1].body);
-    const parsedBornAt = new Date(payload.born_at).getTime();
-
-    expect(parsedBornAt).toBeGreaterThanOrEqual(beforeTime);
-    expect(parsedBornAt).toBeLessThanOrEqual(Date.now() + 1000);
+    const activateCall = fetchMock.mock.calls.find(call => call[0].includes('/lifecycle/activate') && call[1]?.method === 'POST');
+    expect(activateCall).toBeDefined();
   });
 
   test('Test 5: Transition into normal companion UI upon completion', async () => {
@@ -383,6 +391,41 @@ describe('Phase 7.7 Genesis Awakening Tests', () => {
     expect(payload.companion_name).toBe('ABC');
 
     expect(localStorage.getItem('lucia_companion_name')).toBe('ABC');
+  });
+
+  test('Test 10: Rejection when /lifecycle/activate fails (NOT_BORN)', async () => {
+    fetchMock.mockImplementation((url, opts = {}) => {
+      const urlStr = typeof url === 'string' ? url : (url?.url || '');
+      if (urlStr.includes('/lifecycle/activate')) {
+        return Promise.resolve({
+          ok: false,
+          status: 400,
+          json: () => Promise.resolve({
+            detail: 'Cannot activate companion: instance is NOT_BORN.',
+          }),
+        });
+      }
+      if (urlStr.includes('/profile')) {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({ version: 1, user_name: 'Friend', companion_name: 'Lucia', is_onboarded: false }),
+        });
+      }
+      return Promise.resolve({ ok: true, json: () => Promise.resolve({}) });
+    });
+
+    const genesisModal = document.getElementById('genesis-modal');
+    genesisModal.classList.add('active');
+
+    await chat._completeGenesis();
+
+    // Modal must remain active because activation failed closed
+    expect(genesisModal.classList.contains('active')).toBe(true);
+    expect(genesisModal.classList.contains('fade-out')).toBe(false);
+
+    // Intro text warns operator
+    const introText = document.getElementById('genesis-intro-text');
+    expect(introText.textContent).toContain('Cannot activate companion: instance is NOT_BORN');
   });
 });
 

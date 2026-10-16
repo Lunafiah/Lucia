@@ -48,11 +48,13 @@ def integrated_server(tmp_path):
         # test_simulation_api uses scope=module and leaves _mode/_sim_runtime set globally.
         original_mode = api_module._mode
         original_sim_runtime = api_module._sim_runtime
+        original_active = api_module._is_live_companion_active
         original_history_path = api_module._history_store.file_path
         api_module._history_store.file_path = tmp_path / "chat_history.json"
         api_module._history_store._ensure_file_exists()
         api_module._mode = "live"
         api_module._sim_runtime = None
+        api_module._is_live_companion_active = True
         client = TestClient(api_module.app)
 
         yield client, orch
@@ -61,6 +63,7 @@ def integrated_server(tmp_path):
         api_module._orchestrator = None
         api_module._resource_profile = None
         api_module._history_store.file_path = original_history_path
+        api_module._is_live_companion_active = original_active
         api_module._mode = original_mode
         api_module._sim_runtime = original_sim_runtime
 

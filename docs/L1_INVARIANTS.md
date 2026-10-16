@@ -54,7 +54,19 @@ Every invariant in this document is traced directly to canonical project documen
    - **Preservation of `/lifecycle/end`**: `POST /lifecycle/end` remains canonically implemented and documented strictly as **catastrophic individual decommissioning / complete memory reset / Genesis reset**. It must never be reinterpreted as a normal relationship transition or covenant release.
    - **Scope of Decision & Remaining Unresolved Policy**: This ratification establishes the *ontological foundation only*, not runtime lifecycle state machines. The concrete number of relationship chapters, Covenant state machine, Covenant Release protocol, relationship transition authorization, owner-transfer semantics, host migration policy, and multi-person relationship policy remain future architectural/governance work. No new lifecycle API or runtime state machine is authorized in production.
 5. **Genesis Semantic & Protocol Contract (G1–G4 Protocol Invariant)**:
-   - **Genesis Birth $\ne$ First Activation**: Genesis establishes origin, not history. First Activation awakens runtime execution (`INACTIVE ↔ ACTIVE`) and strictly requires existing valid Birth evidence (`BORN`). First Activation MUST NOT synthesize Birth or create an Identity Anchor.
+   - **Canonical Lifecycle Progression**:
+     ```text
+     NOT_BORN
+         ↓  (Genesis Ceremony: Operator CLI `python scripts/run_genesis.py --confirm-genesis`)
+     BORN + INACTIVE
+         ↓  (First Activation: `POST /lifecycle/activate`)
+     BORN + ACTIVE
+         ↓  (Normal Live Conversational Inference)
+     normal /process
+     ```
+   - **Genesis Birth $\ne$ First Activation**: Genesis establishes origin, not history. Genesis Ceremony produces `BORN + INACTIVE`. First Activation awakens runtime execution (`INACTIVE ↔ ACTIVE`) and strictly requires existing valid Birth evidence (`BORN`). First Activation MUST NOT synthesize Birth or create an Identity Anchor.
+   - **Operator Genesis Entry Point**: The sole authorized interface for Genesis execution is the deterministic operator entry point (`src.core.identity.operator_genesis:perform_operator_genesis` / `scripts/run_genesis.py`). It requires explicit `--confirm-genesis`, verifies clean Pre-Genesis state, binds Git commit origin, and writes atomic durable commitment. It is never callable during backend startup, cannot be triggered via normal `/process`, and cannot be bypassed via UI `/profile` mutation.
+   - **Runtime `/process` Gate**: `POST /process` strictly enforces `_is_live_companion_active`. When the companion is `INACTIVE`, conversational inference fails closed (HTTP 403 `{"error": "runtime_inactive"}`). Genesis/Birth state alone does NOT imply an `ACTIVE` runtime.
    - **Ontological Lifecycle**: `NOT_BORN → BORN → ENDED`. Terminal decommissioning (`ENDED`) irreversibly forbids re-Genesis and activation.
    - **Durable Commitment Boundary**: Birth occurs strictly upon successful atomic durable Genesis Commitment on disk (`genesis_commitment.json`). There is no `PARTIALLY_BORN` state.
    - **Deterministic Verification Outcomes**:
@@ -163,6 +175,12 @@ Every invariant in this document is traced directly to canonical project documen
    - Continuous dynamic $F_0$ contouring uses smooth Hanning-window trajectories $S(t) \in [-4.0, +7.0]\text{ st}$ (clipped at $\pm 12.0\text{ st}$, anti-chatter frame jump $\le 1.0\text{ st}/10\text{ms}$).
    - Multi-language boundary abstraction: `BoundarySegment` supports EN/JP word boundaries and VI acoustic intensity pause fallback ($<45\text{ dB}$, $\ge 200\text{ ms}$). Vietnamese lexical tones must never be inverted or compressed.
    - Upstream punctuation cadence conditioning (`...`, `,`, `!`) drives neural breathing pauses without arbitrary token rewriting.
+8. **Cognitive Execution Observability & Diagnostic Invariant (Blocker 4, ARCH-036 / Post-P27 Baseline)**:
+   - *Execution & State Diagnostics Only*: Observability across the serialized S1–S16 cognitive pipeline (`Turn -> S1 -> S2 -> ... -> S16`) records execution timings, module contract checks, invariant checks, and scalar state summaries.
+   - *Strict Epistemic & Cognitive Privacy Boundary*: The execution trace is **NOT** a reasoning or thought trace. It explicitly **NEVER** captures or exposes chain-of-thought (CoT), internal monologue, unrestricted cognitive state, raw autobiographical memories, prompts, or completions.
+   - *Zero-Contention / Zero I/O Discipline*: The telemetry collection path performs 0 disk I/O, 0 network requests, and holds no state locks. Traces are stored in a bounded in-memory circular buffer (`TraceBuffer`, default 100 turns).
+   - *Fail-Open Resilience*: Any telemetry failure or exception is logged and suppressed, never aborting, disrupting, or delaying the cognitive turn.
+   - *Conservative Causal Attribution (DAG)*: Attribution evaluates against explicit directed acyclic graph dependencies (`STAGE_CAUSAL_DEPENDENCIES`). Distinguishes `first_causal_failure_candidate`, downstream propagated failures, and independent failures. First Causal Failure is an attribution under the declared causal model, not an absolute metaphysical root-cause claim.
 
 ---
 

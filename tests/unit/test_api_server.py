@@ -32,16 +32,19 @@ def mock_orchestrator():
 def client(mock_orchestrator, tmp_path):
     orig_mode = api_module._mode
     orig_sim = api_module._sim_runtime
+    orig_active = api_module._is_live_companion_active
     orig_history_path = getattr(api_module._history_store, "file_path", None)
     api_module._history_store.file_path = tmp_path / "chat_history.json"
     api_module._mode = "live"
     api_module._sim_runtime = None
+    api_module._is_live_companion_active = True
     api_module._orchestrator = mock_orchestrator
     api_module._resource_profile = get_resource_profile("laptop")
     test_client = TestClient(api_module.app)
     yield test_client
     api_module._orchestrator = None
     api_module._resource_profile = None
+    api_module._is_live_companion_active = orig_active
     api_module._mode = orig_mode
     api_module._sim_runtime = orig_sim
     if orig_history_path is not None:

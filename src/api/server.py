@@ -234,6 +234,17 @@ async def process_turn(req: ProcessRequest) -> Any:
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Live processing disabled in simulation mode. Use POST /sim/chat for simulated turns.",
         )
+
+    # First Activation Gate (ARCH-034 / G1-G4 §11)
+    if not _is_live_companion_active:
+        return JSONResponse(
+            status_code=status.HTTP_403_FORBIDDEN,
+            content={
+                "error": "runtime_inactive",
+                "detail": "Live companion is inactive. First activation via POST /lifecycle/activate is required before conversational processing.",
+            },
+        )
+
     orch = get_orchestrator()
     if orch._degraded or not orch.is_healthy():
         return JSONResponse(
@@ -766,14 +777,33 @@ async def update_profile(req: ProfileUpdateRequest) -> Dict[str, Any]:
     if req.companion_name is not None:
         data["companion_name"] = req.companion_name.strip()
     if req.is_onboarded is not None:
+        if req.is_onboarded is True and not existing_copy.get("is_onboarded", False):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Direct onboarding/birth activation via POST /profile is forbidden. "
+                       "Genesis/Birth requires the canonical operator Genesis ceremony, "
+                       "and activation requires POST /lifecycle/activate.",
+            )
         data["is_onboarded"] = req.is_onboarded
     if req.birthday is not None:
         data["birthday"] = req.birthday
     if req.pronouns is not None:
         data["pronouns"] = req.pronouns
     if req.born_at is not None:
+        if existing_copy.get("born_at") is None and not existing_copy.get("is_onboarded", False):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Direct 'born_at' mutation via POST /profile is forbidden. "
+                       "'born_at' is an immutable field established exclusively during Genesis.",
+            )
         data["born_at"] = req.born_at
     if req.identity_anchor is not None:
+        if existing_copy.get("identity_anchor") is None and not existing_copy.get("is_onboarded", False):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Direct 'identity_anchor' injection via POST /profile is forbidden. "
+                       "The Identity Anchor is established exclusively during Genesis.",
+            )
         data["identity_anchor"] = req.identity_anchor
     if req.phylogenetic_lineage is not None:
         data["phylogenetic_lineage"] = req.phylogenetic_lineage

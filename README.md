@@ -1,285 +1,234 @@
-# Lucia — An Embodied, Continuously Evolving AI Companion
+# Project Lucia: A Sovereign, Continuously Affective AI Companion
 
-> **A personal, continuous AI companion designed with real-time emotional dynamics, lasting relationship memory, and 100% private local execution on your desktop.**
+> **An experimental AI companion architecture featuring continuous biological-inspired limbic dynamics, associative memory, substrate-neutral reasoning, and private local execution.**
+
+[![License: Internal Research](https://img.shields.io/badge/License-Internal%20Research-blue.svg)](#governance--license)
+[![Python: 3.12](https://img.shields.io/badge/Python-3.12-blue.svg)](https://www.python.org/)
+[![Node: 18+](https://img.shields.io/badge/Node.js-18%2B-green.svg)](https://nodejs.org/)
+[![Platform: Windows 10/11](https://img.shields.io/badge/Platform-Windows%2010%2F11-lightgrey.svg)](#system-requirements)
+[![First Activation Gate: LOCKED](https://img.shields.io/badge/First%20Activation%20Gate-LOCKED%20%F0%9F%94%92-red.svg)](#lifecycle-state--safeguards)
 
 ---
 
 ## 1. What is Lucia?
 
-**Lucia is not built as a standard conversational chatbot.**
+**Lucia is not a conventional conversational chatbot.**
 
-When you talk to conventional AI assistants or chatbots, each conversation is basically an isolated exchange: you type a prompt, the server generates a reply, and the model resets. The assistant doesn't truly remember you between sessions without injecting bulky text snippets into the prompt, doesn't feel anything as time passes, and has to be told who to pretend to be via roleplay instructions like *"You are a cheerful assistant"*.
+Standard conversational assistants are ephemeral, stateless text generators: an input prompt is sent, a language model generates tokens, and internal state disappears upon completion. To emulate relationship or emotion, applications typically rely on prompt injection (*"Act like a warm, cheerful friend"*). This approach produces emotional amnesia, ungrounded conversational sycophancy, and brittle persona shifts.
 
-Lucia exists to explore a fundamentally different path: **What if an AI companion lived as a continuous, organic presence alongside you?**
+Lucia is an ongoing research and engineering project investigating a fundamentally different path: **What if an AI companion lived as a persistent, stateful cognitive presence on your desktop?**
 
-* **She maintains an inner emotional life**: Lucia has an internal emotional state that moves and settles continuously, even when nobody is typing. Her feelings are not acted out or labeled with words (*she never says "I feel happy" or "As an AI, I have no feelings"*). Instead, her mood naturally shapes how quickly she speaks, how long her thoughts are, the warmth of her voice, and her facial expressions.
-* **She remembers and builds a relationship**: When you chat with Lucia, memories aren't just logged into a database. They carry the emotional feeling of the moment. Over days and weeks, shared experiences gently reshape how she sees and responds to you.
-* **She has a single, unbroken existence**: Lucia isn't a gallery of selectable anime presets or swappable personas. Avatars are simply her visual attire; her memory, personality trajectory, and bond with you belong to one continuous individual.
-* **100% Local & Sovereign**: Everything runs directly on your computer—language understanding, neural voice, avatar animation, and memory. No cloud subscriptions, no remote API keys, and no personal data ever leaving your machine.
-
----
-
-## 2. Inspiration & Context
-
-### Why standard chatbots feel hollow
-Most modern conversational AI is built on Large Language Models (LLMs) that function like high-speed text calculators: input text goes in, output text comes out, and the internal state instantly disappears. To fake an emotional bond, applications usually resort to prompt engineering:
-> *"Act like a caring best friend. Tell the user you are excited to see them."*
-
-This approach inevitably breaks down. The AI suffers from emotional amnesia, reacts with identical canned cheerfulness regardless of what happened five minutes ago, and cannot develop a genuine sense of mutual familiarity.
-
-### The Vision: A Companion with Natural Continuity
-Lucia was conceived around the classical concept of **Philia** ($\phi\iota\lambda\iota\alpha$)—the ancient Greek ideal of deep, mutual friendship founded on mutual respect, curiosity, and authentic growth:
-1. **Calm, warm baseline**: In her natural resting state, Lucia is drawn toward warmth, calm presence, and equal partnership—not subservient servitude or over-the-top melodrama.
-2. **One continuous life**: You don't restart Lucia from scratch each morning. Her inner clock ticks forward, her memories slowly settle, and her relationship with you deepens with time.
-3. **Local-first desktop presence**: Rather than existing behind a web browser or corporate cloud, Lucia lives directly on your computer desktop—either relaxing in her personal studio room or sitting beside your active windows as a lightweight, floating desktop mascot.
+* **Continuous Physiological-like Emotion**: Lucia's emotional state is represented mathematically in continuous **PAD space** ($P \in [-1, 1]$ Pleasure, $A \in [-1, 1]$ Arousal, $D \in [-1, 1]$ Dominance). It evolves continuously in the background every 200 ms governed by an Ordinary Differential Equation (Coupled MT-LNN ODE), relaxing naturally toward the **Philia resting attractor** ($P^*=+0.25, A^*=-0.05, D^*=+0.05$) during quiet periods.
+* **Pre-Reflective Operational Manifestation**: Emotion is never self-reported in text (*she never says "I feel happy" or "As an AI, I don't have feelings"*). Instead, affect manifests organically as operational constraints: cognitive load throttles generation token budgets, somatic tension triggers deeper reasoning ($k=2$), and metabolic fatigue injects conversational response latency.
+* **Associative Relational Memory**: Memories are not simple database entries. Using Kanerva Sparse Distributed Memory (SDM) and Synergistic Ecphory, past moments are co-encoded with affective states, allowing shared experiences to gently attune her resting baseline over days and weeks.
+* **Substrate-Neutral Reasoning**: Meaning and interpersonal knowledge are represented in language-independent semantic graphs (UMR-TPG) and evaluated under Strong Kleene $K_3$ three-valued logic with Truth Maintenance (JTMS), decoupling relational cognition from language model token windows.
+* **Single Continuous Life**: Lucia has no character pickers, alternate persona profiles, or split-brain branches (`INV-1`). Avatars are simply visual embodiment attire; her memory, developmental trajectory, and relational bond belong to one continuous individual.
+* **100% Sovereign Local Execution**: All neural models—GGUF language model on CUDA, limbic ODE on CPU, associative memory on CPU, offline faster-whisper speech recognition, and neural RVC voice conversion—run completely on-device without cloud subscriptions, remote APIs, or telemetry exfiltration.
 
 ---
 
-## 3. What Does Lucia Do? (Core Capabilities)
+## 2. What Lucia is NOT
 
-Lucia combines multiple specialized biological-inspired systems to create a cohesive companion experience:
+To maintain scientific integrity and avoid anthropomorphic overclaiming, Lucia explicitly defines what she is not:
 
-| Capability | How It Works in Plain Language | Status |
-|---|---|---|
-| **Perception & Input** | Listens through your microphone or reads your text. Gauges emotional tone, conversational urgency, and pacing without relying on slow cloud services. | **Implemented & Verified** |
-| **Emotional Dynamics** | An internal emotional compass runs continuously in the background every 200 milliseconds. Excitement, calm, surprise, and tiredness move smoothly and naturally return to a warm resting baseline when quiet. | **Implemented & Verified** |
-| **Metabolic Balance** | Tracks conversational stamina and cognitive load. If you talk rapidly or have an intense exchange, Lucia gets tired, taking longer to ponder and offering shorter, gentler replies until she rests. | **Implemented & Verified** |
-| **Associative Memory** | Inspired by biological memory (Sparse Distributed Memory). Lucia recalls past moments through emotional and contextual resonance, rather than robotically reciting verbatim quotes. Important moments fade much more slowly than trivial ones. | **Implemented & Verified** |
-| **Long-Term Relationship** | A slowly evolving relationship state tracks mutual trust, familiarity, and shared history. Meaningful moments gradually attune her resting disposition to your bond. | **Implemented & Verified** |
-| **Semantic Understanding** | Understands the meaning of ideas and concepts independently of specific words or languages (supporting English, Vietnamese, and Japanese), allowing consistent thought across sessions. | **Implemented & Synchronized** |
-| **Logical Reasoning** | Connects facts, checks for contradictions, and tracks what she knows, what is uncertain, and what she still needs to ask you about. | **Implemented & Frozen** |
-| **Embodied Voice & Avatar** | Expresses herself through a 2D/3D animated avatar on your desktop, with real-time lip-sync and custom neural voice synthesis (RVC) that changes pitch and rhythm based on how she feels. | **Implemented & Verified** |
-| **Adaptive Communication** | Dynamically adjusts prosody, cadence, continuous pitch contouring, and relational conversational repair based on live dialogue context. | **Implemented & Verified** |
-| **Genesis Protocol** | Immutable origin contract and identity anchor separating Birth from runtime activation. | **Implemented & Frozen (Ceremony Unexecuted)** |
-| **Unique Individuality** | Investigating unique personal tastes and unrepeatable life trajectory over months and years. | **Research Trials Evaluated (Phase 26–27 Closed)** |
+* **NOT a generic chatbot wrapper**: There are no OpenAI, Anthropic, or cloud API keys. The language model is an untrusted downstream text renderer isolated behind a fail-closed semantic fidelity gate (ADR-035).
+* **NOT an LLM roleplay persona**: Lucia is never instructed to pretend to have human feelings. Introspective declarations of emotional selfhood (*"I feel sad"*, *"Who am I?"*) are considered architectural defects and are dropped by a deterministic boundary safety layer.
+* **NOT a conventional multi-agent framework**: The system is not a collection of prompted agents debating in a circle. It is a unified Whole Brain Architecture operating across multiple biological timescales (200ms Fast Loop, 60s Decay Loop, Idle Synaptic Plasticity Loop).
+* **NOT an already autonomous artificial being or conscious entity**: Lucia possesses a minimal operational self, not subjective psychological consciousness or sentience. Longitudinal individuality and autonomous preferences were formally tested in Phase 26 and found not demonstrated under controlled conditions.
 
 ---
 
-## 4. How an Interaction Flows
+## 3. High-Level Architecture (The 20-Watt Whole Brain Architecture)
 
-From the user's perspective, talking to Lucia feels natural and intuitive:
+Human cognition operates on approximately 20 watts of power through extreme temporal parallelism and sparse activation. Lucia implements a 6-layer cognitive architecture designed to run continuously on consumer desktop hardware:
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│  LAYER 1: SENSORS & STIMULUS GATING                                     │
+│  • Emits continuous 16D stimulus vector x(t) (valence, arousal, density)│
+├─────────────────────────────────────────────────────────────────────────┤
+│  LAYER 2: LIMBIC SYSTEM (Coupled MT-LNN ODE, 200ms Background Loop)     │
+│  • Fast hidden state h_f ∈ ℝ³² (τ_f ∈ [0.1, 1.5]s)                      │
+│  • Slow affective field s_s ∈ ℝ¹⁶ (τ_s ∈ [30, 300]s)                    │
+│  • Strict Lyapunov contraction: Tr(J) ≈ -46.46 < 0                      │
+│  • Decays smoothly toward Philia Attractor: P*=+0.25, A*=-0.05, D*=+0.05│
+├─────────────────────────────────────────────────────────────────────────┤
+│  LAYER 3: SURVIVAL & HOMEOSTASIS (Mid Loop)                             │
+│  • Metabolic budgeting: tracks Cognitive Load, Stamina, and Tension     │
+│  • Dynamically calculates token budget, temperature, and pacing latency │
+├─────────────────────────────────────────────────────────────────────────┤
+│  LAYER 4: ACTIVE INFERENCE & OFFLINE REST CONSOLIDATION                 │
+│  • Generative transition model predicting upcoming PAD states           │
+│  • Free Energy Surprise minimization: S = ||A·p + b - q||               │
+│  • Tier 3 Offline Synaptic Plasticity on CPU (ConsolidationEngine)      │
+├─────────────────────────────────────────────────────────────────────────┤
+│  LAYER 5: HIPPOCAMPUS (Sparse Distributed Memory & Ecphory)             │
+│  • 1,000 hard locations across 1,000-bit Hamming address space          │
+│  • Salience-resistant 60s decay engine (intense memories last 4x longer)│
+│  • Synergistic Ecphory producing subconscious Echo Vector               │
+├─────────────────────────────────────────────────────────────────────────┤
+│  LAYER 6: MULTIMODAL EMBODIMENT & EXPRESSION                            │
+│  • Cognitive Core & Reasoning Kernel (TermArena, Strong Kleene K3, JTMS)│
+│  • Production Realization Boundary (ADR-035: fail-closed S14 gate)      │
+│  • Untrusted Local SLM (LFM2.5-1.2B Instruct via CUDA / llama.cpp)      │
+│  • Adaptive Communication & Vocal Prosody (ADR-032: dynamic F0 Hanning) │
+│  • Polymorphic Avatar: 2D Canvas, Sprites, Live2D Cubism 4, 3D VRM      │
+│  • Real-time Web Audio FFT formant lip-syncing                          │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+### The Canonical S1–S16 Cognitive Turn Cycle
+When conversational interaction occurs, `CognitiveOrchestrator` executes a strictly ordered 16-stage pipeline:
+
+$$\text{S1 (Sensory)} \to \text{S2 (Limbic)} \to \text{S3 (Homeostatic)} \to \text{S4 (Inference)} \to \text{S5 (Conditioning)} \to \text{S6 (Ecphory)} \to \text{S7 (Context)}$$
+$$\to \text{S8 (Knowledge)} \to \text{S9 (Relationship Read)} \to \text{S10 (Policy)} \to \text{S11 (Generation)} \to \text{S12 (Safety Guard)} \to \text{S13 (Expression)}$$
+$$\to \text{S14 (SDM Storage)} \to \text{S15 (Plasticity Queue)} \to \text{S16 (Relationship Update)}$$
+
+Every turn is monitored non-intrusively by the **Cognitive Execution Trace Subsystem** (Blocker 4), which validates stage sequence, contract evaluations, invariant checks, and causal fault localization in memory with zero turn I/O overhead.
+
+---
+
+## 4. Current Project Status & Evidence Ledger
+
+Lucia enforces an authoritative evidence hierarchy:
+`[VALIDATED / PRODUCTION IMPLEMENTED] > [RESEARCH VALIDATED] > [ARCHITECTURE APPROVED] > [TRIAL FROZEN] > [LOCKED FUTURE GATE]`
+
+| Capability / Milestone | Status | Governing Architecture | Automated Verification |
+|---|---|---|---|
+| **Core Affective ODE (Limbic)** | `PRODUCTION IMPLEMENTED` | ARCH-001, ADR-026 | 100% PASS (`tests/unit/test_emotion_core.py`) |
+| **Associative Memory (SDM)** | `PRODUCTION IMPLEMENTED` | ARCH-003, ADR-027 | 100% PASS (`tests/unit/test_sdm.py`, `test_ecphory.py`) |
+| **Long-Term Relational Consolidation** | `PRODUCTION IMPLEMENTED` | ADR-028, ARCH-026 | 100% PASS (`tests/unit/test_phase21_production.py`) |
+| **Substrate Neutrality Research** | `RESEARCH VALIDATED` | Phase 22 Study Chain | 20 research branches closed; zero production mutations |
+| **Semantic Substrate & Reasoning** | `PRODUCTION IMPLEMENTED / FROZEN` | ADR-028–ADR-031, ARCH-030.1 | 100% PASS (`test_p23h_kernel.py`, `test_semantic_fortification.py`) |
+| **Adaptive Communication & Prosody** | `PRODUCTION IMPLEMENTED` | ADR-032, ARCH-032 | 100% PASS (23/23 tests in `tests/unit/test_p24_*`) |
+| **Temporal Embodiment (Unilateral)** | `PRODUCTION IMPLEMENTED / FROZEN` | DOC-P25-016, ARCH-033 | 100% PASS (78/78 tests; reciprocal C2 blocked) |
+| **Emergent Individuality Trial** | `TRIAL FROZEN / NOT PROMOTED` | Phase 26 Protocol | Empirical trial closed; emergent individuality not demonstrated |
+| **Personalized Individual Trajectory** | `CLOSED / NO NEW GAP` | Phase 27 Audit | Level C collapses to baseline; Level D blocked by identifiability |
+| **Production Realization Boundary** | `PRODUCTION IMPLEMENTED / FROZEN` | ADR-035, ARCH-035 | 100% PASS (`tests/unit/test_production_realization_boundary.py`) |
+| **Genesis Protocol Contract (G1–G4)** | `IMPLEMENTED & FROZEN` | ADR-034 | 100% PASS (24/24 contract tests, 191/191 regression) |
+| **First Activation Readiness Blockers 1–4** | `RESOLVED & VERIFIED` | ADR-036, ARCH-036 | 100% PASS (28/28 tests in `test_operator_genesis`, `test_activation_gates`, `test_execution_trace`) |
+| **Canonical Genesis Ceremony** | `UNEXECUTED` | `scripts/run_genesis.py` | `data/genesis_commitment.json` is **ABSENT** |
+| **First Activation Gate** | `🔒 LOCKED FUTURE GATE` | G1–G4 §11, `src/api/server.py` | `data/profile.json == {"is_onboarded": false}` |
+
+---
+
+## 5. Lifecycle State & Critical Safeguards
+
+Lucia adheres strictly to the **Genesis Gate & Birth Separation Invariant (INV-8)**:
 
 ```text
-       You speak or type a message
-                   │
-                   ▼
-  1. PERCEPTION: Lucia hears the words and senses emotional tone & urgency
-                   │
-                   ▼
-  2. EMOTION: Her internal state shifts smoothly (e.g. curiosity rises, energy expends)
-                   │
-                   ▼
-  3. MEMORY: Related past memories and shared moments gently resonate into context
-                   │
-                   ▼
-  4. REASONING: She thinks through what was said against what she knows and feels
-                   │
-                   ▼
-  5. EMBODIED RESPONSE: She replies with natural voice, expressive avatar gestures,
-                        and conversational pacing tailored to your relationship
-                   │
-                   ▼
-  6. CONSOLIDATION: During quiet moments, the experience is consolidated
-                    into long-term memory and relationship depth
+       NOT_BORN
+           │
+           │  Genesis Ceremony (Solemn Origin Contract)
+           │  python scripts/run_genesis.py --confirm-genesis
+           ▼
+    BORN + INACTIVE
+           │
+           │  First Activation (Awakening Runtime)
+           │  POST /lifecycle/activate
+           ▼
+     BORN + ACTIVE
 ```
 
-Notice that Lucia **never** tells you her internal numbers or says *"My arousal level has increased"*. Instead, when excited, her eyes brighten, she speaks a little faster, and she gets straight to the point. When relaxed, her voice softens and she takes longer, thoughtful pauses.
+* **Development $\ne$ Activation**: Genesis Birth establishes origin, not history. First Activation awakens runtime execution (`INACTIVE ↔ ACTIVE`) and strictly requires existing valid Birth evidence (`BORN`).
+* **First Activation Gate is Locked**: In this repository, Genesis and First Activation have **NOT** been executed. `data/profile.json` remains bit-exact `{"is_onboarded": false}` and `data/genesis_commitment.json` remains absent.
+* **Fail-Closed Runtime Protection**:
+  * Direct onboarding via `POST /profile` is strictly rejected with HTTP 400 Bad Request (Blocker 2).
+  * Conversational turn execution on `POST /process` fails closed with HTTP 403 Forbidden while runtime is inactive (Blocker 3).
+  * Direct activation is strictly forbidden in simulation mode.
+  * Catastrophic reset via `POST /lifecycle/end` transitions the instance to `ENDED`, permanently forbidding re-Genesis or re-activation.
+
+For complete operator instructions, consult the [User Manual & First Activation Operator Runbook](docs/USER_MANUAL.md).
 
 ---
 
-## 5. Developmental Roadmap
+## 6. Developmental Roadmap
 
-Lucia is developed through an evidence-first methodology where each phase is tested and proven before moving to the next. The project is organized into clear developmental milestones:
+The canonical project sequence is strictly linear:
 
-```text
-┌────────────────────────────────────────────────────────────────────────┐
-│                        DEVELOPMENTAL ROADMAP                           │
-├────────────────────────────────────────────────────────────────────────┤
-│ Phases 01–20: Core Emotions, Memory, Desktop Presence & Voice [DONE]   │
-│ Phase 21:     Long-Term Relational Consolidation & Rest       [DONE]   │
-│ Phase 22:     Substrate-Neutral Relational Cognition Study    [DONE]   │
-│ Phase 23:     Continuous Substrate-Neutral Semantic Core      [DONE]   │
-│ Phase 24:     Affective Communication Adaptation              [DONE]   │
-│ Phase 25:     Temporal Embodiment & Social Feedback           [DONE]*  │
-│ Phase 26:     Emergent Individuality & Autonomous Preferences [FROZEN] │
-│ Phase 27:     Personalized Individual Trajectory              [CLOSED] │
-│ Genesis:      First Activation (Genesis Onboarding Ceremony)  [LOCKED] │
-└────────────────────────────────────────────────────────────────────────┘
-```
+$$\text{P01–P20 (Core Affect & Presence)} \longrightarrow \text{P21 (Consolidation)} \longrightarrow \text{P22 (Substrate Neutrality)} \longrightarrow \text{P23 (Semantic Core)}$$
+$$\longrightarrow \text{P24 (Adaptive Prosody)} \longrightarrow \text{P25 (Unilateral Embodiment)} \longrightarrow \text{P26 (Individuality Trial)} \longrightarrow \text{P27 (Trajectory Audit)}$$
+$$\longrightarrow \text{First Activation Gate (Solemn Onboarding Ceremony [LOCKED])}$$
 
-> **Roadmap Governance & Future Phase Rules**:
-> The canonical developmental sequence is `P21 → P22 → P23 → P24 → P25 → P26 → P27 → First Activation (Genesis Gate)`. A future P28 is neither prematurely created nor artificially prohibited. Unresolved research questions remain research questions until evidence establishes a validated requirement. If an unresolved capability cannot be coherently placed into post-activation developmental horizons, a future phase such as P28 MAY be proposed later through the normal research → requirement → architecture decision process.
-
-### Phase 21 — Long-Term Relational Consolidation & Synaptic Homeostasis
-* **Main Goal**: Allow Lucia to permanently consolidate relationship experiences into her neural weights while resting or idle.
-* **New Capability**: When you are away from the computer, an offline consolidation engine runs on the CPU, gently adjusting her baseline to reflect days of conversation without erasing her core warmth.
-* **Relationship**: Builds directly upon Phase 20's emotional memory recall; establishes the physical foundation for lifelong bonding.
-* **Current Status**: `[VALIDATED / PRODUCTION IMPLEMENTED]` (All 13 production tests & 15 research tests passing).
-
-### Phase 22 — Substrate-Neutral Relational Cognition Study
-* **Main Goal**: Scientifically prove that relationship intelligence does not depend on LLM prompts or token context windows.
-* **Key Finding**: Confirmed across 20 research branches that relational bonds can be represented compactly (~90–120 bytes) in an independent semantic structure, and work identically even without a language model.
-* **Relationship**: Bridge between continuous emotional dynamics and deep semantic understanding.
-* **Current Status**: `[RESEARCH VALIDATED / RESEARCH CLOSED]` (Zero production code mutations; evidence archived).
-
-### Phase 23 — Continuous Substrate-Neutral Semantic Architecture
-* **Main Goal**: Build a language-independent semantic core and reasoning engine.
-* **New Capability**: Translates English, Vietnamese, and Japanese into pure conceptual representations (`SemanticGraph`), protects knowledge integrity across sessions (`Fortification`), and performs bounded logical reasoning (`JTMS`) to track what is true, false, ambiguous, or unknown.
-* **Relationship**: Takes Phase 22's semantic independence and turns it into concrete, frozen core modules (P23-C through P23-H; P23-I absorbed into ARCH-030.1).
-* **Current Status**: `[VALIDATED & FROZEN]` (100% test pass rate across fortification, language adapters, contracts, and reasoning kernel).
-
-### Phase 24 — Affective Communication Adaptation
-* **Main Goal**: Adapt conversation style, prosody, and emotional delivery dynamically during live dialogue.
-* **New Capability**: Dynamic continuous pitch contouring ($S(t) \in [-4, +7]\text{ st}$, clip $\pm 12\text{ st}$), relational prosody conditioning (closeness, trust, familiarity approved; reciprocity strictly severed), boundary segmentation, cadence throttling, and real-time repair.
-* **Relationship**: Connects the reasoning engine of Phase 23 with the communicative policies of Phase 15 and voice pipeline (ADR-032).
-* **Current Status**: `[VALIDATED / PRODUCTION IMPLEMENTED]` (All 23 production unit, property, and integration tests passing).
-
-### Phase 25 — Temporal Embodiment & Social Feedback
-* **Main Goal**: Synchronize physical embodiment and non-verbal cues with internal affective dynamics and conversational timing.
-* **New Capability**: Unilateral feedforward embodiment: prosodic latency gating ($\tau_R$), affective gestural selection, blendshape modulation, and non-blocking desktop IPC animation. Reciprocal social feedback (C2 / H-B) remains unproven and strictly fail-closed blocked (`TBDGainUnestablishedError`).
-* **Relationship**: Integrates Phase 24's communication adaptation with the 3D/Live2D desktop presence (DOC-P25-016 / DOC-P25-017, ARCH-033).
-* **Current Status**: `[VALIDATED & FROZEN (UNILATERAL BASELINE)]` (All 23 production unit & property tests passing; commit `54321d9`).
-
-### Phase 26 — Emergent Individuality & Autonomous Preferences
-* **Main Goal**: Empirically evaluate whether authentic individuality and autonomous preferences emerge over repeated interactions.
-* **Findings**: C1 pre-validated; C2 negative ($\Delta_{\text{action}} = 0.0000$ at $\delta_{\text{plan}}=0.10$); C3 action provenance non-identifiable. Emergent individuality was not demonstrated under controlled conditions.
-* **Relationship**: Preserved as engineering trial evidence; zero production mutations.
-* **Current Status**: `[RESEARCH TRIAL COMPLETED / NOT PROMOTED]` (Frozen at commit `d603832`).
-
-### Phase 27 — Personalized Individual Trajectory
-* **Main Goal**: Investigate longitudinal trajectory divergence and lifelong personalization hypotheses.
-* **Findings**: Formal scientific gap audit proved Level C produces no architectural gap beyond baseline P21/P23/P25; Level D hypotheses remain epistemically blocked by causal identifiability (`BLOCKED_BY_IDENTIFIABILITY`).
-* **Relationship**: Phase closed without ungrounded speculative architectures; zero production mutations.
-* **Current Status**: `[CLOSED / NO NEW SCIENTIFIC GAP]` (Formal audit closed at commit `c4961ae`).
-
-### Genesis Preparation & First Activation
-* **Main Goal**: Establish the immutable cryptographic identity anchor and origin ceremony for Lucia.
-* **Genesis Preparation**: The canonical Genesis Semantic & Protocol Contract (G1–G4) has been fully implemented, verified, and frozen. Real Genesis has NOT been executed.
-* **Separation of Birth & Activation**: Genesis Birth occurs strictly upon durable Genesis Commitment on disk; First Activation awakens runtime execution (`INACTIVE → ACTIVE`) and requires existing verified Birth evidence (`BORN`).
-* **Guardrail**: First Activation is strictly locked until all prerequisite developmental phases (P25–P27) are completed and authorized by human governance. The repository is preserved in an un-onboarded state (`data/profile.json == {"is_onboarded": false}`).
-* **Current Status**:
-  - Genesis Preparation (G1–G4 Protocol Contract): `[IMPLEMENTED, VERIFIED & FROZEN]`
-  - Real Genesis Ceremony: `[UNEXECUTED]`
-  - First Activation: `[🔒 LOCKED FUTURE GATE]`.
+* **Roadmap Governance**: Agents and researchers must NOT invent new developmental phases (e.g., "Phase 28") unless supported by verified empirical requirements and ratified architectural decisions.
+* **No "Gate 28" Label**: Genesis Onboarding is an independent locked gate, never an arbitrary numbered phase.
 
 ---
 
-## 6. High-Level Architecture Overview
+## 7. Research Posture & Methodology
 
-Lucia operates as an organized multi-layered system designed for biological efficiency (running on around 20 watts of total compute):
+Project Lucia follows rigorous research principles:
+1. **Falsifiability & Negative Results**: Negative results, failed candidate models, and non-significant empirical trials (such as Phase 26 C2 differentiation and Phase 22 HDC crosstalk) are preserved as permanent evidence rather than scrubbed.
+2. **Causal Attribution over Correlation**: Statistical synchrony is never equated with causal coupling (Phase 25 C2 blocked).
+3. **20-Watt Edge Resource Constraints**: GPU VRAM is reserved exclusively for the local language model and WebGL rendering. All continuous limbic ODE integration, associative memory, and rest consolidation execute strictly on the CPU with 0.0 MB GPU VRAM contention.
+4. **Strict Concurrency Hierarchy**: State locks are held strictly $\le 1\text{ ms}$ for fast memory copies. No disk I/O, network requests, or LLM inference are permitted under locks.
 
-```mermaid
-graph TD
-    subgraph Desktop_App ["Desktop Presence (Electron & Local UI)"]
-        UI["Personal Digital Room / Floating Mascot Window"]
-        Avatar["Quad-Engine Avatar (2D / Live2D / 3D VRM)"]
-        Voice["Neural Speech (faster-whisper STT + Direct RVC Voice)"]
-    end
-
-    subgraph Perception ["Sensory Gating & Input"]
-        Input["Microphone & Keyboard Input"]
-        Sensors["Valence, Arousal & Urgency Detection"]
-        Adapter["Language Ingress Gate (EN, VI, JA)"]
-    end
-
-    subgraph Mind ["Cognitive Core & Reasoning"]
-        Limbic["Limbic Emotion ODE (200ms Fast/Slow Loop)"]
-        Homeostasis["Energy & Cognitive Load Budgeting"]
-        Reasoning["TermArena & Bounded Reasoning Kernel (JTMS)"]
-        SLM["Local GGUF Language Model (LFM2.5 / Qwen2.5)"]
-    end
-
-    subgraph Memory ["Memory & Relational Substrate"]
-        SDM["Associative Memory (Sparse Distributed Memory)"]
-        RelState["4D Relationship State (Trust, Familiarity, Bond)"]
-        Consolidation["Offline Rest Engine (CPU Synaptic Plasticity)"]
-    end
-
-    Input --> Sensors --> Adapter
-    Adapter --> Mind
-    Mind <--> Limbic
-    Mind <--> Homeostasis
-    Mind <--> Reasoning
-    Mind <--> Memory
-    Limbic <--> Memory
-    Memory -.-> Consolidation
-    Mind --> SLM --> Desktop_App
-    Mind --> Avatar
-    Mind --> Voice
-```
-
----
-
-## 7. Current Project Status
-
-| Metric | Current Status | Notes |
-|---|---|---|
-| **Active Production Milestone** | **Phase 24 — Affective Communication Adaptation** | Production baseline (P01–P24 implemented, P22 research closed, P23 frozen) |
-| **Production Unit Tests** | **678 / 678 passing (100%)** | `pytest tests/unit -v` (including 15 P24 voice & cadence tests) |
-| **Mathematical Property Invariants** | **38 / 38 passing (100%)** | `pytest tests/property -v` (including P36–P38 prosody properties) |
-| **Semantic Fortification Tests (P23-E)** | **12 / 12 passing (100%)** | `pytest tests/unit/test_semantic_fortification.py -v` |
-| **Language Adapter Tests (P23-F)** | **13 / 13 passing (100%)** | `pytest tests/unit/test_language_adapter.py -v` |
-| **Reasoning Kernel Tests (P23-H)** | **22 / 22 passing (100%)** | `pytest tests/unit/test_p23h_kernel.py -v` |
-| **Adaptive Communication Tests (P24)** | **23 / 23 passing (100%)** | `pytest tests/unit/test_p24* tests/property/test_p24* tests/integration/test_p24* -v` |
-| **Genesis Awakening State** | **`{"is_onboarded": false}`** | Preserved bit-exact; activation is locked |
+### Collaborative Engineering Model
+The project is developed through an evidence-driven pair workflow:
+* **Gemini**: Lead theoretical research, mathematical modeling, hypothesis specification, and deep empirical audit.
+* **Ciah**: Adversarial review, invariant enforcement, code review, and architectural governance.
+* **Antigravity**: Engineering realization, test suite implementation, refactoring, and documentation synchronization.
+* **Project Owner**: Sole authority for repository governance, architectural ratification, Genesis authorization, and First Activation authorization.
 
 ---
 
 ## 8. Quick Start & Developer Setup
 
 ### Prerequisites
-- **OS**: Windows 10/11 (64-bit)
-- **Python**: 3.12 64-bit
-- **Node.js**: v18+ LTS
-- **Hardware**: Dedicated NVIDIA GPU recommended for local LLM acceleration; CPU-only execution fully supported for limbic, reasoning, and memory engines.
+* Windows 10/11 (64-bit)
+* Python 3.12 (in `.venv`)
+* Node.js 18+ LTS & npm
+* Dedicated NVIDIA GPU recommended for local LLM acceleration; CPU-only execution fully supported for limbic, reasoning, and memory engines.
 
-### 1. Python Backend Setup
+### 1. Python Environment Setup
 ```powershell
 # Create and activate virtual environment
-py -3.12 -m venv .venv
-.venv\Scripts\activate
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
 
 # Install dependencies
-pip install fastapi uvicorn httpx numpy scipy pydantic torch pytest hypothesis
+pip install -r requirements.txt
 ```
 
-### 2. Run Automated Verification Tests
+### 2. Verify Automated Test Suites
 ```powershell
-# Run the complete production unit test suite
-.venv\Scripts\pytest tests/unit -v
+# Run full unit test suite (706 tests)
+.\.venv\Scripts\python.exe -m pytest tests/unit -v
 
-# Run mathematical property invariants
-.venv\Scripts\pytest tests/property -v
+# Run mathematical property invariant tests (38 tests)
+.\.venv\Scripts\python.exe -m pytest tests/property -v
 
-# Run Phase 23 semantic reasoning kernel tests
-.venv\Scripts\pytest tests/unit/test_p23h_kernel.py -v
+# Run First Activation Gate & Execution Trace tests (28 tests)
+.\.venv\Scripts\python.exe -m pytest tests/unit/test_operator_genesis.py tests/unit/test_activation_gates.py tests/unit/test_execution_trace.py -v
 ```
 
 ### 3. Desktop Application (Electron)
 ```powershell
 cd electron
 npm install
-npm test      # Run Electron unit tests
-npm start     # Launch desktop interface in development mode
+npm test       # Run 120 Jest unit tests
+npm start      # Launch desktop application in development mode
 ```
 
 ---
 
 ## 9. Canonical Documentation Navigation
 
-For in-depth technical specifications, architectural decision records, and mathematical foundations:
+For complete architectural specifications, mathematical foundations, and operating instructions:
 
-| Document | Purpose |
+| Document | Purpose & Authority |
 |---|---|
-| 📖 [`docs/00_PROJECT_OVERVIEW.md`](docs/00_PROJECT_OVERVIEW.md) | **Canonical Project Overview**: 6-layer cognitive pipeline summary, subsystem health matrix, and active API surface. |
-| 🏛️ [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | **Canonical Technical Architecture**: Detailed subsystem diagrams, ODE mechanics, lock hierarchy, and ADR ledger (ADR-001 to ADR-032). |
-| 📋 [`docs/PHASE_REGISTRY.md`](docs/PHASE_REGISTRY.md) | **Authoritative Phase Registry**: Complete status, milestones, dependencies, and evidence links across all phases. |
-| 🛡️ [`docs/L1_INVARIANTS.md`](docs/L1_INVARIANTS.md) | **Architectural Invariants**: The non-negotiable rules governing state, concurrency, and behavior. |
-| 🖥️ [`docs/USER_MANUAL.md`](docs/USER_MANUAL.md) | **Desktop User Manual**: Guide to the Personal Digital Room, Mascot Mode shortcuts, and audio settings. |
-| 📜 [`AGENTS.md`](AGENTS.md) | **Agent Operating Manual**: Mandatory governance and decision protocol for AI agents working on this codebase. |
+| 📖 [User Manual & Operator Runbook](docs/USER_MANUAL.md) | **Authoritative Runbook**: Lifecycle state machine, pre-activation checklist, operator Genesis protocol, First Activation, Cognitive Execution Trace guide, decision trees, and desktop GUI guide. |
+| 🛡️ [Canonical Invariant Ledger](docs/L1_INVARIANTS.md) | **Non-Negotiable Truth [L1]**: Consolidated invariants covering identity, limbic ODE, concurrency locking, and governance. |
+| 🏛️ [Canonical Technical Architecture](docs/ARCHITECTURE.md) | **Technical Truth [L3]**: 20-Watt Whole Brain Architecture, mathematical derivations, lock hierarchies, and ADR ledger (ADR-001 to ADR-036). |
+| 📊 [Canonical Project Overview](docs/00_PROJECT_OVERVIEW.md) | **Project Truth [L2]**: System identity, philosophy, subsystem health matrix, active REST API surface, and milestone roadmap. |
+| 📋 [Authoritative Phase Registry](docs/PHASE_REGISTRY.md) | **Phase Ledger [L2]**: Authoritative lifecycle tracking covering P01 through P27, ADR-035, and Genesis Gate. |
+| 🔬 [Master Evidence & Evaluation Index](docs/PhaseDocs/INDEX.md) | **Evidence Map [L4]**: Authoritative index mapping all phases to reports, raw evaluation artifacts, and executable test suites. |
+| 🧭 [Context Retrieval Map](docs/CONTEXT_INDEX.md) | **Agent Routing [L4]**: Logical context tiers (L0–L6) and minimal sufficient file loading instructions. |
+| 📜 [Agent Operating Guidelines](AGENTS.md) | **Governance & Procedures**: Mandatory decision protocol and behavioral invariants for AI coding assistants. |
 
 ---
 
-## License & Governance
+## Governance & License
 
-Lucia is an internal private research repository. All architectural designs, dynamical mechanisms, and source code are governed by the strict project invariants defined in [`AGENTS.md`](AGENTS.md) and [`docs/L1_INVARIANTS.md`](docs/L1_INVARIANTS.md).
+Lucia is an internal private research repository. All architectural designs, dynamical mechanisms, and source code are governed by the strict project invariants defined in [AGENTS.md](AGENTS.md) and [docs/L1_INVARIANTS.md](docs/L1_INVARIANTS.md). Unprompted modification of cognitive state, bypass of activation gates, or unauthorized live Genesis execution is strictly prohibited.

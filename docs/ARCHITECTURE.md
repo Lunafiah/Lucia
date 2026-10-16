@@ -1041,6 +1041,30 @@ The Cognitive Core contracts accept semantic graphs formed from upstream raw mul
 
 ---
 
+### ADR-035: Production Realization Boundary & S14 Fail-Closed Gate
+* **Status**: **ACCEPTED & PRODUCTION IMPLEMENTED / FROZEN** (Post-P24 Baseline, Commit: `a5adbb0`, Specification: `docs/others/PRODUCTION_REALIZATION_BOUNDARY_ADR/ADR_035_PRODUCTION_REALIZATION_BOUNDARY.md`)
+* **Decision**: Establish an immutable typed contract and a deterministic, fail-closed verification boundary between the symbolic Cognitive Core (CAPS / SemanticGraph) and the untrusted local Small Language Model (LFM2.5-1.2B):
+  1. *Typed Realization Contract*: Strongly-typed `RealizationInputContract` carries authoritative intent (act, polarity, epistemic status, semantic roles, arguments, provenance).
+  2. *Natural Prose Compilation*: `PromptAssembler` compiles intent into conversational natural prose directives without injecting counter-productive code/DSL tokens (`ARG0:`, `RULE:`).
+  3. *Fail-Closed Semantic Fidelity Gate*: Pure CPU symbolic gate (`SemanticFidelityGate` at Stage S14, $<0.1\text{ ms}$, 0 MB GPU VRAM) intercepts ungrounded generation and falls back to deterministic registry (`FALLBACK_REGISTRY`).
+  4. *Ephemeral History Isolation*: Only verified outputs or safe fallbacks are admitted to working history.
+
+---
+
+### ADR-036: Cognitive Execution Observability & First Activation Gate Controls
+* **Status**: **ACCEPTED & PRODUCTION IMPLEMENTED / VERIFIED** (Post-P27 Baseline, Blockers 1–4 Resolved)
+* **Decision**: Establish robust execution observability across the S1–S16 cognitive pipeline and enforce strict first-activation gating:
+  1. *ADR-036.1 (Deterministic Operator Genesis Entry Point - Blocker 1)*: Implemented `perform_operator_genesis` and CLI `scripts/run_genesis.py` requiring explicit `--confirm-genesis`, clean pre-Genesis state, Git commit origin binding, and atomic commitment write (`data/genesis_commitment.json`).
+  2. *ADR-036.2 (Legacy Profile Bypass Prevention - Blocker 2)*: Enforced gate in `POST /profile` rejecting direct injection of `is_onboarded: true`, `born_at`, or `identity_anchor` (HTTP 400 Bad Request); migrated Electron UI to preferences-only submission followed by canonical `POST /lifecycle/activate`.
+  3. *ADR-036.3 (Runtime `/process` Gate - Blocker 3)*: Enforced `_is_live_companion_active` in `POST /process` (HTTP 403 `{"error": "runtime_inactive"}` when inactive); direct activation strictly forbidden in simulation mode.
+  4. *ADR-036.4 (Cognitive Execution Trace Subsystem - Blocker 4)*: Implemented in-memory, thread-safe, bounded `TraceBuffer` (default 100 turns) and `CognitiveExecutionTracer` in `src/core/telemetry/execution_trace.py`:
+     - Emits allowlisted scalar spans for all 16 stages (S1..S16) containing module ID, duration, contract results, invariant results, and scalar state summaries.
+     - Strictly diagnostic only: explicitly NEVER captures CoT, internal monologue, raw memories, prompts, or completions.
+     - Fail-open resilience: Telemetry errors never disrupt the cognitive turn.
+     - Declared DAG causal attribution (`STAGE_CAUSAL_DEPENDENCIES`), isolating `first_causal_failure_candidate`, downstream propagated failures, and independent failure loci.
+
+---
+
 ### 8.1 Reconciliation of Outdated Specs & Conflicting Decisions
 
 | Dimension | Outdated / Preliminary Spec | Authoritative Implemented Reality | Resolution & Rationale |
@@ -1097,6 +1121,8 @@ The Cognitive Core contracts accept semantic graphs formed from upstream raw mul
 | **ARCH-033 (P25)** | Unsynchronized embodiment & unmodeled inter-turn latency | Unilateral Temporal Embodiment & Social Dynamics (DOC-P25-016) | Operationalizes elapsed-time effects, multi-timescale decays, discrete turn dynamics, and bounded relational attunement conditioning P24 prosody; reciprocal feedback C2 blocked; H-B unproven | Phase 25 | Implementation Fact / Frozen |
 | **ARCH-034** | Unenforced instance boundaries / ambiguous Genesis authority | Identity Authority, Instance Lock & Genesis Contract (ADR-034) | Single continuous life OS instance locking (`InstanceLock`), cryptographic root verification, durable Genesis commitment protocol (G1–G4), fail-closed verification, First Activation gate isolation | Genesis Prep | Implementation Fact / Frozen |
 | **ARCH-035** | Open-loop unconstrained text generation with 59.5% semantic loss | Production Realization Boundary & S14 Fail-Closed Gate (ADR-035) | Strongly-typed `RealizationInputContract` carries authoritative intent (act, polarity, epistemic status, ARG roles, provenance); `PromptAssembler` compiles natural prose without code DSL tokens; untrusted `LFM2.5-1.2B` SLM isolated from cognitive state; pure CPU symbolic `SemanticFidelityGate` (<0.1ms) enforces fail-closed containment (`UNCERTAIN -> BLOCK`) with zero-invention deterministic fallback; `_history` stores only approved output or safe fallback | Post-P24 Baseline | Implementation Fact / Frozen |
+| **ARCH-036** | Unobservable cognitive turn execution & ungated startup execution | Cognitive Execution Observability & First Activation Gate Controls (ADR-036) | In-memory circular `TraceBuffer` & `CognitiveExecutionTracer` recording allowlisted S1–S16 spans; DAG causal attribution isolating `first_causal_failure_candidate`, downstream propagated, and independent failures; fail-open resilience; 0 turn I/O; deterministic operator CLI (`scripts/run_genesis.py`); gated `POST /profile`; and fail-closed `/process` runtime activation gate | Post-P27 Baseline | Implementation Fact / Verified |
+
 
 
 

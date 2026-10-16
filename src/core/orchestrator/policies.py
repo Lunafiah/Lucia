@@ -339,6 +339,9 @@ class CognitiveTurnResult:
     realization_contract: Optional[Any] = None
     gate_decision: Optional[Any] = None
 
+    # Blocker 4: Stage-level diagnostic Cognitive Execution Trace
+    execution_trace: Optional[Any] = None
+
     class Config:
         # numpy arrays are not hashable — frozen dataclass still works at runtime
         arbitrary_types_allowed = True

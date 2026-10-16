@@ -90,7 +90,7 @@ The human brain operates on approximately 20 watts of power not by limiting capa
 ```
 
 ### 2.1 The Canonical S1–S16 Cognitive Turn Cycle
-When conversational interaction occurs, `CognitiveOrchestrator` executes a strictly ordered 16-stage pipeline:
+When conversational interaction occurs, `CognitiveOrchestrator` executes a strictly ordered 16-stage pipeline, monitored non-intrusively by the in-memory `CognitiveExecutionTracer` (Blocker 4, zero turn I/O, fail-open):
 1. **S1 (Sensory Gating)**: Extracts lexical valence, punctuation arousal, and semantic density.
 2. **S2 (Limbic Integration)**: Ingests stimulus vector into MT-LNN ODE and commits PAD transition.
 3. **S3 (Homeostatic Assessment)**: Evaluates metabolic energy, cognitive load, and somatic tension.
@@ -112,7 +112,15 @@ When conversational interaction occurs, `CognitiveOrchestrator` executes a stric
 
 ## 3. Current System State & Milestone Status
 
-Lucia has completed production milestones through **Phase 21 — Long-Term Relational Consolidation & Synaptic Homeostasis**, realized the continuous semantic substrate and reasoning kernel through **Phase 23** (`P23-C..H`, CAPS, ADR-035), implemented the adaptive communication control contract through **Phase 24 — Affective Communication Adaptation** (ADR-032), implemented and frozen the unilateral operational baseline of **Phase 25 — Temporal Embodiment & Social Feedback** (DOC-P25-016 / DOC-P25-017), completed and frozen empirical trial results for **Phase 26** (`[NOT PROMOTED]`), scientifically closed **Phase 27** (`[CLOSED / NO NEW GAP]`), and implemented and frozen **Genesis Preparation (G1–G4)**. All limbic, cognitive, memory, relational, semantic, embodiment, multimodal, and simulation subsystems are operational and verified.
+Lucia has completed production milestones through **Phase 21 — Long-Term Relational Consolidation & Synaptic Homeostasis**, realized the continuous semantic substrate and reasoning kernel through **Phase 23** (`P23-C..H`, CAPS, ADR-035), implemented the adaptive communication control contract through **Phase 24 — Affective Communication Adaptation** (ADR-032), implemented and frozen the unilateral operational baseline of **Phase 25 — Temporal Embodiment & Social Feedback** (DOC-P25-016 / DOC-P25-017), completed and frozen empirical trial results for **Phase 26** (`[NOT PROMOTED]`), scientifically closed **Phase 27** (`[CLOSED / NO NEW GAP]`), and implemented and frozen **Genesis Preparation (G1–G4)**. 
+
+Furthermore, all four **First Activation Readiness Blockers** have been formally resolved and verified:
+* **Blocker 1 (Genesis Operator Entry Point)**: `RESOLVED` (`scripts/run_genesis.py`, `src/core/identity/operator_genesis.py`).
+* **Blocker 2 (Legacy Onboarding Bypass Rejection)**: `RESOLVED` (gated `POST /profile` in `src/api/server.py` and UI `chat.js`).
+* **Blocker 3 (`/process` Runtime Activation Gate)**: `RESOLVED` (`_is_live_companion_active` fail-closed 403 enforcement).
+* **Blocker 4 (Cognitive Execution Observability)**: `RESOLVED` (`src/core/telemetry/execution_trace.py`, S1–S16 DAG attribution).
+
+The Genesis origin ceremony has **NOT** been executed. The First Activation gate remains **LOCKED**.
 
 ### 3.1 Milestone Roadmap & Evidence Hierarchy
 
@@ -142,7 +150,8 @@ Lucia has completed production milestones through **Phase 21 — Long-Term Relat
 │           Preferences                               FROZEN]            │
 │ Phase 27: Personalized Individual Trajectory     [🔬 CLOSED / NO GAP]  │
 │ Genesis:  Preparation (G1–G4 Protocol Contract)  [✅ FROZEN]           │
-│           First Activation (Genesis Onboarding)  [🔒 FUTURE GATE]      │
+│           Readiness Blockers 1–4                 [✅ RESOLVED / PASS]  │
+│           First Activation Gate (Onboarding)     [🔒 LOCKED FUTURE GATE]│
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -186,7 +195,8 @@ Lucia has completed production milestones through **Phase 21 — Long-Term Relat
 | **CAPS & Pragmatic Semantics (P23)** | `src/core/communication/caps.py` | **STABLE** | Communicative Act & Pragmatic Semantics generation, discourse referent retention (`DiscourseContextCache`). |
 | **Temporal Embodiment (P25)** | `src/core/embodiment/` | **STABLE (Unilateral)** | Temporal observation, discrete turn dynamics, social state estimation, bounded relational attunement conditioning P24 prosody. |
 | **Realization Gate (ADR-035)** | `src/core/language/gate.py` | **STABLE (Frozen)** | Fail-closed S14 `SemanticFidelityGate` (<0.1ms), `PromptAssembler` compilation without DSL tokens, deterministic fallback registry. |
-| **Identity & Genesis Prep (G1–G4)** | `src/core/identity/` | **STABLE (Frozen)** | Identity anchor, instance lock, migration boundary (ADR-034), deterministic Genesis root and commitment protocol. First Activation remains locked. |
+| **Identity & Genesis Prep (G1–G4)** | `src/core/identity/` | **STABLE (Frozen)** | Identity anchor, instance lock, migration boundary (ADR-034), deterministic Genesis root, operator entry point (`scripts/run_genesis.py`), and gated profile. First Activation remains locked. |
+| **Cognitive Execution Trace (Blocker 4)** | `src/core/telemetry/execution_trace.py` | **STABLE** | Pure in-memory circular buffer (`TraceBuffer`, 100 turns), zero turn I/O, fail-open resilience, S1–S16 span sequence, DAG causal attribution, First Causal Failure localization. |
 
 ---
 
@@ -196,9 +206,10 @@ All mechanisms are verified by automated test suites executed against the reposi
 
 | Test Suite | Scope & Purpose | Total Tests | Passed | Verdict |
 |---|---|---|---|---|
-| **Unit Test Suite** (`tests/unit/`) | Subsystem correctness, component boundaries, and pipeline execution | 678 | **678** | **100% PASS** |
+| **Unit Test Suite** (`tests/unit/`) | Subsystem correctness, component boundaries, and pipeline execution | 706 | **706** | **100% PASS** |
 | **Property Test Suite** (`tests/property/`) | Hypothesis property invariants (P1–P35, P24 prosody bounds) | 38 | **38** | **100% PASS** |
-| **Total Unit + Property** | Combined automated test suite across all subsystems | 716 | **716** | **100% PASS** |
+| **Total Unit + Property** | Combined automated test suite across all subsystems | 744 | **744** | **100% PASS** |
+| **First Activation Readiness Blockers 1–4** (`tests/unit/test_operator_genesis.py`, `tests/unit/test_activation_gates.py`, `tests/unit/test_execution_trace.py`) | Operator Genesis entry point, profile bypass protection, /process activation gate, and cognitive execution trace observability | 28 | **28** | **100% PASS** |
 | **Phase 24 Adaptive Communication** (`tests/unit/test_p24_*`, `tests/property/test_p24_*`, `tests/integration/test_p24_*`) | ADR-032 vocal prosody, boundary segments, dynamic F0, cross-lingual tones, and IPC actuation bridge | 23 | **23** | **100% PASS** |
 | **Phase 23-F Language Adapter** (`tests/unit/test_language_adapter.py`) | Language adapter boundary, ingress/egress gating, EN/VI/JA driver contracts | 13 | **13** | **100% PASS** |
 | **Phase 23-F Falsification Gates** (`tests/evaluation/phase23f/test_p23f_falsification.py`) | 4 Preregistered falsification tests (gate leakage, substrate purity, epistemic, invariance) | 4 | **4** | **100% PASS** |
@@ -258,7 +269,9 @@ Lucia operates on multiple biological time horizons coordinated by non-blocking 
 
 ### 6.1 Active REST API Surface
 The Python backend binds to `127.0.0.1:8765` and strictly guards routes based on runtime mode:
-* `POST /process`: Dispatches user chat turn through 16-stage cognitive pipeline (Live mode only; 403 in simulation).
+* `POST /lifecycle/activate`: Official First Activation path transitioning companion runtime from `INACTIVE` to `ACTIVE`. Strictly gated to live mode and requires existing verified Genesis commitment (`BORN`). Blocked in simulation mode.
+* `POST /process`: Dispatches user chat turn through 16-stage cognitive pipeline. Strictly enforces `_is_live_companion_active` (returns HTTP 403 `{"error": "runtime_inactive"}` when inactive; 403 in simulation mode).
+* `POST /profile`: Updates user profile preferences (e.g. user name). Rejects direct injection of `is_onboarded: true`, `born_at`, or `identity_anchor` (HTTP 400 Bad Request; Blocker 2 guard).
 * `GET /state`: Universal non-blocking real-time state snapshot (PAD, somatic markers, expression, relationship). Responds $\le 10\text{ms}$.
 * `GET /telemetry/stability`: Universal endpoint returning Limbic Stability Index (LSI), tick jitter, and ODE variance.
 * `POST /system/profile`: Dynamically reconfigures hardware scalability tier (`CPU_ONLY`, `LAPTOP`, `DESKTOP`, `HIGH_END`).

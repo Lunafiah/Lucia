@@ -25,8 +25,10 @@ def mock_orch():
 def client(mock_orch, tmp_path):
     orig_mode = api_module._mode
     orig_sim = api_module._sim_runtime
+    orig_active = api_module._is_live_companion_active
     api_module._mode = "live"
     api_module._sim_runtime = None
+    api_module._is_live_companion_active = True
     api_module._orchestrator = mock_orch
     api_module._resource_profile = get_resource_profile("laptop")
     # Point history store to tmp_path
@@ -39,6 +41,7 @@ def client(mock_orch, tmp_path):
     api_module._orchestrator = None
     api_module._resource_profile = None
     api_module._history_store.file_path = orig_history_path
+    api_module._is_live_companion_active = orig_active
     api_module._mode = orig_mode
     api_module._sim_runtime = orig_sim
 

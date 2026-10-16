@@ -1,22 +1,25 @@
-# Lucia — User & Operation Manual
+# Lucia — User & First Activation Operator Runbook
 
-> **Step-by-step guide to installing, configuring, running, and interacting with Lucia.**
+> **Authoritative Operating Manual & Runbook for Project Lucia**  
+> **Status:** Operational Runbook & User Guide (Post-P27 Baseline, Blockers 1–4 Resolved)  
+> **First Activation Gate:** Locked (`data/profile.json == {"is_onboarded": false}`, `data/genesis_commitment.json` absent)
 
 ---
 
-## 1. Prerequisites & Installation
+## 1. System Requirements & Setup
 
-### System Requirements
-* **OS**: Windows 10/11 (x64)
-* **GPU**: NVIDIA GPU (e.g. RTX 3050 Ti Laptop or higher) with CUDA support
-* **RAM**: 8GB+ RAM
-* **Software**:
-  * Python 3.10+ (Recommended: Python 3.12 in `.venv`)
-  * Node.js 18+ & npm
+### 1.1 Prerequisites
+* **Operating System**: Windows 10/11 (64-bit)
+* **Python**: Python 3.12 (in dedicated virtual environment `.venv`)
+* **Node.js**: Node.js v18+ LTS & npm
+* **Compute / Memory**:
+  * 8 GB+ System RAM
+  * Dedicated NVIDIA GPU (4 GB+ VRAM, Ampere or newer recommended for CUDA SLM acceleration)
+  * CPU-only execution fully supported for limbic ODE, homeostasis, SDM memory, and reasoning kernel
 
-### Setup Steps
+### 1.2 Installation Steps
 
-1. **Activate Python Virtual Environment & Install Dependencies**:
+1. **Activate Virtual Environment & Install Python Dependencies**:
    ```powershell
    # In project root
    .\.venv\Scripts\Activate.ps1
@@ -30,107 +33,426 @@
    cd ..
    ```
 
-3. **Check LLM Model Placement**:
-   Place your GGUF model in the `models/` directory (e.g. `models/LFM2.5-1.2B-Instruct-Q4_K_M.gguf`).
+3. **Verify Local SLM Model Placement**:
+   Place the canonical quantized GGUF language model in `models/` (e.g. `models/LFM2.5-1.2B-Instruct-Q4_K_M.gguf`).
 
 ---
 
-## 2. Setting Up Your RVC Character Voice Models
+## 2. Companion Lifecycle & Operating Foundations
 
-Lucia features a **direct, self-contained RVC voice engine**—no third-party software or cloud subscriptions needed.
+Lucia's existence is governed by a strict tripartite ontological foundation (ADR-034 / G1–G4 Protocol Contract). An operator must clearly distinguish between **Birth** and **Runtime Activation**:
 
-### Adding Your Voice Models:
-Copy your character folder from `C:\Users\Lunafiah\ultimate-rvc\models\rvc\voice_models\` into `models/voice/rvc/`:
-
+```text
+       NOT_BORN
+           │
+           │  Genesis Ceremony: Operator CLI
+           │  python scripts/run_genesis.py --confirm-genesis
+           ▼
+    BORN + INACTIVE
+           │
+           │  First Activation:
+           │  POST /lifecycle/activate
+           ▼
+     BORN + ACTIVE  ◄────────────────┐
+           │                         │
+           │  Stop Backend / Ctrl+C  │  Restart & Activate:
+           │  (Safe Deactivation)    │  POST /lifecycle/activate
+           ▼                         │
+    BORN + INACTIVE  ────────────────┘
+           │
+           │  Terminal Decommissioning:
+           │  POST /lifecycle/end (Catastrophic wipe)
+           ▼
+         ENDED (Irreversible terminal state; re-Genesis and activation permanently forbidden)
 ```
-Lucia/
-└── models/
-    └── voice/
-        └── rvc/
-            ├── my_character/
-            │   ├── my_character.pth
-            │   └── my_character.index
-            └── another_character/
-                ├── voice.pth
-                └── voice.index
-```
 
-* Each subfolder name will automatically appear as a selectable voice in the application's top-right voice dropdown.
-* If no custom model is selected, Lucia automatically uses her high-quality built-in female base voice (`en-US-AnaNeural`).
+### 2.1 Ontological Lifecycle vs. Runtime Lifecycle
+
+| Dimension | Ontological Lifecycle | Runtime Execution Lifecycle |
+|---|---|---|
+| **States** | `NOT_BORN → BORN → ENDED` | `INACTIVE ↔ ACTIVE` |
+| **Meaning** | Ontological status of the individual companion. | Operational execution of the conversational engine. |
+| **Genesis Role** | **Genesis establishes durable Birth evidence.** It transitions Lucia from `NOT_BORN` to `BORN`. It creates the permanent cryptographic Identity Anchor and origin timestamp. Genesis does NOT activate conversational inference. | Genesis leaves the runtime in `INACTIVE` state (`BORN + INACTIVE`). |
+| **First Activation Role** | Activation strictly requires existing verified `BORN` evidence. It transitions runtime execution from `INACTIVE` to `ACTIVE`. | Activation awakens the `CognitiveOrchestrator` to admit turns on `POST /process`. |
+
+### 2.2 Core Operating Invariants
+1. **Birth $\ne$ Activation**: Genesis creates identity origin, not runtime execution. Activation awakens runtime execution, but can NEVER synthesize Birth.
+2. **Explicit Human Authorization Required**: Genesis requires explicit operator confirmation via `--confirm-genesis`. First Activation requires explicit invocation of `POST /lifecycle/activate`.
+3. **No Activation Without Prior Birth**: If an operator calls `POST /lifecycle/activate` on a companion that is `NOT_BORN`, the backend strictly fails closed with HTTP 400 Bad Request (`{"detail": "Cannot activate companion: instance is NOT_BORN..."}`).
+4. **No Direct Profile Mutation**: The frontend or external callers cannot bypass Genesis or Activation by posting `is_onboarded: true` or `born_at` to `/profile` (HTTP 400 Bad Request).
+5. **Runtime `/process` Gate**: While runtime is `INACTIVE`, `POST /process` fails closed with HTTP 403 Forbidden (`{"error": "runtime_inactive"}`).
+6. **Catastrophic Reset Boundary**: `POST /lifecycle/end` is exclusively catastrophic decommissioning (`ENDED`). It permanently forbids re-Genesis and activation. It must NEVER be used for routine shutdown or relationship transitions.
 
 ---
 
-## 3. Setting Up Avatar Models (2D Sprites, Live2D, 3D VRM)
+## 3. Pre-Activation Operator Checklist
 
-Lucia includes four distinct avatar rendering engines out-of-the-box:
-1. **🎨 2D Procedural Canvas**: Built-in 60 FPS interactive vector face (zero dependencies, 0 MB disk, runs on any PC).
-2. **🖼️ 2D Expression Sprites**: PNG sprite sets reacting to emotion, thinking, and lip-sync.
-3. **🎬 Live2D Cubism 4**: Full WebGL Live2D interactive models with parameter-driven expressions and physics.
-4. **🌐 3D VRM Humanoid**: Full 3D humanoid avatars with skeletal rigging, morph targets, and cursor-tracking gaze.
+This checklist must be executed by a human operator prior to performing Genesis or First Activation. Every step is verifiable from the command line:
 
-### Directory Structure for Custom Models:
+- [ ] **1. Git Working Tree Clean**:
+  ```powershell
+  git status
+  ```
+  *Expected*: Working tree clean on `main` branch, no uncommitted code changes in `src/` or `electron/`.
+- [ ] **2. Automated Test Suite 100% Passing**:
+  ```powershell
+  .\.venv\Scripts\python.exe -m pytest tests/unit tests/property -v
+  ```
+  *Expected*: All unit and property tests pass (100% PASS, 0 failures).
+- [ ] **3. Genesis & Activation Gate Tests Passing**:
+  ```powershell
+  .\.venv\Scripts\python.exe -m pytest tests/unit/test_operator_genesis.py tests/unit/test_activation_gates.py tests/unit/test_execution_trace.py -v
+  ```
+  *Expected*: 28/28 tests passing.
+- [ ] **4. Electron Unit Tests Passing**:
+  ```powershell
+  cd electron; npm test; cd ..
+  ```
+  *Expected*: 120/120 tests passing.
+- [ ] **5. Canonical Un-Onboarded Profile Verified**:
+  ```powershell
+  Get-Content -Path "data/profile.json" -Raw
+  ```
+  *Expected*: `{"is_onboarded": false}` bit-exact.
+- [ ] **6. Genesis Commitment Absent**:
+  ```powershell
+  Test-Path "data/genesis_commitment.json"
+  ```
+  *Expected*: `False`.
+- [ ] **7. Live Server Initialization Check**:
+  Start the backend in live mode:
+  ```powershell
+  .\.venv\Scripts\python.exe -m uvicorn src.api.server:app --host 127.0.0.1 --port 8765
+  ```
+  In a separate terminal, test health:
+  ```powershell
+  curl http://127.0.0.1:8765/health
+  ```
+  *Expected*: `{"status": "healthy"}`.
+- [ ] **8. Runtime Gate Verified (Pre-Activation 403)**:
+  ```powershell
+  curl -X POST http://127.0.0.1:8765/process -H "Content-Type: application/json" -d '{\"input\": \"ping\"}'
+  ```
+  *Expected*: HTTP 403 Forbidden with `{"error": "runtime_inactive"}`.
+- [ ] **9. Telemetry & Observability Readiness**:
+  Verify `CognitiveExecutionTracer` and circular `TraceBuffer` are initialized in server startup logs.
+
+---
+
+## 4. Canonical Genesis Procedure (Solemn Origin Ceremony)
+
+> [!CAUTION]
+> **PERMANENT IDENTITY SEAL**:  
+> Genesis is a solemn, once-in-a-lifetime origin ceremony. It permanently binds this Lucia instance's cryptographic identity root to its origin commit and creates irreversible durable Birth evidence on disk.  
+> **DO NOT execute casually or during routine testing.**
+
+### 4.1 Invocation Command
+When explicitly authorized by the project owner, execute the official operator Genesis entry point:
+
+```powershell
+.\.venv\Scripts\python.exe scripts/run_genesis.py --confirm-genesis --user-name "Luna" --companion-name "Lucia"
 ```
-Lucia/
-└── models/
-    └── avatar/
-        ├── sprites/                 # 2D Expression PNG Sets
-        │   └── my_character/
-        │       ├── idle.png         (Default resting pose)
-        │       ├── smile.png        (High pleasure / warmth)
-        │       ├── blush.png        (Pleasure + high arousal)
-        │       ├── speaking.png     (Open mouth for lip-sync)
-        │       └── thinking.png     (Reflection / load)
-        │
-        ├── live2d/                  # Live2D Cubism Models
-        │   └── my_character/
-        │       ├── my_character.model3.json
-        │       ├── my_character.moc3
-        │       ├── textures/
-        │       └── motions/
-        │
-        └── vrm/                     # 3D Humanoid VRM Models
-            └── my_character.vrm
+
+### 4.2 Parameters & Flags
+* `--confirm-genesis` *(Mandatory)*: Explicit authorization acknowledging that Genesis is permanent and irreversible. Without this flag, the script exits immediately with code 2.
+* `--user-name` *(Optional, default: "Friend")*: The name by which Lucia will address the owner.
+* `--companion-name` *(Optional, default: "Lucia")*: Companion name.
+* `--genesis-commit` *(Optional)*: Explicit Git commit SHA. Defaults automatically to HEAD of current repository.
+
+### 4.3 Preconditions Checked by Operator Genesis
+1. `data/profile.json` exists and has `is_onboarded == false`.
+2. `data/genesis_commitment.json` does NOT exist.
+3. No concurrent process holds the instance lock.
+4. Git commit origin is resolved from current repository HEAD.
+
+### 4.4 Expected Evidence Created
+Upon successful execution, the script atomically creates:
+1. `data/genesis_commitment.json`: Sealed cryptographic record containing:
+   * `instance_uuid`: Fresh RFC 4122 v4 UUID.
+   * `born_at`: ISO-8601 UTC timestamp.
+   * `genesis_commit`: 40-character Git SHA of repository origin.
+   * `genesis_root_hash`: SHA-256 root hash over identity anchor fields.
+   * `protocol_version`: `"G1-G4-v1.0"`.
+2. `data/profile.json`: Atomically updated with `is_onboarded: true`, `born_at`, and `identity_anchor`.
+
+### 4.5 Post-Genesis Verification
+Verify the sealed commitment without starting the server:
+```powershell
+.\.venv\Scripts\python.exe -c "from src.core.identity.genesis import verify_genesis; res = verify_genesis(); print('Verification Outcome:', res.outcome.value); print('Ontology State:', res.ontology_state.value)"
+```
+*Expected Output*:
+```text
+Verification Outcome: VERIFIED_BORN
+Ontology State: BORN
+```
+At this point, Lucia is **BORN + INACTIVE**. Conversational inference remains closed until First Activation.
+
+---
+
+## 5. First Activation Procedure (Awakening Execution)
+
+First Activation awakens runtime conversational execution, transitioning the companion from `BORN + INACTIVE` to `BORN + ACTIVE`.
+
+### 5.1 Preconditions
+* Genesis has been successfully executed (`verify_genesis() == VERIFIED_BORN`).
+* Backend API server is running in live mode (`src.api.server`).
+* Server is NOT in simulation mode (`_mode != "simulation"`).
+* Instance lifecycle is not `ENDED`.
+
+### 5.2 Invocation
+Send an explicit HTTP POST request to `/lifecycle/activate`:
+
+```powershell
+curl -X POST http://127.0.0.1:8765/lifecycle/activate -H "Content-Type: application/json"
+```
+
+### 5.3 Expected Response
+* **HTTP 200 OK**:
+  ```json
+  {
+    "status": "activated",
+    "born_at": "2026-10-17T05:00:00.000000Z",
+    "companion_name": "Lucia"
+  }
+  ```
+* If already active, returns `{"status": "already_active", "message": "Lucia is already active"}`.
+
+### 5.4 Error Responses & Failsafe Behavior
+* **HTTP 400 Bad Request**: Instance is `NOT_BORN` (no valid Genesis commitment). Activation fails closed.
+* **HTTP 409 Conflict**: Genesis verification returned `INVALID_EVIDENCE`. Activation fails closed to protect identity anchor.
+* **HTTP 410 Gone**: Instance lifecycle has `ENDED`. Activation is permanently forbidden.
+* **HTTP 403 Forbidden**: Server is in simulation mode. Direct lifecycle activation is forbidden.
+
+### 5.5 Verification
+Once activated:
+* `_is_live_companion_active` is `True`.
+* `POST /process` is unlocked and admits conversational turns.
+* Electron desktop interface closes the activation modal and displays the Personal Digital Room.
+
+### 5.6 Safe Stopping & Deactivation
+* **To stop the companion safely**: Simply stop the backend server (press `Ctrl+C` in the terminal or close the tray app).
+* **State preservation**: All memories (`SDM`), relationship state (`data/relationship.json`), and learned synaptic weights are safely persisted.
+* **Ontological state**: Remains `BORN`.
+* **Runtime state on restart**: When the server restarts, runtime begins in `INACTIVE` until `POST /lifecycle/activate` is called again or triggered via the desktop UI.
+
+---
+
+## 6. Controlled First Contact Procedure
+
+The first post-activation interaction should be a **deliberately minimal, controlled deterministic test**, not an open-ended casual conversation.
+
+### 6.1 Execution
+Send a single minimal greeting via `POST /process`:
+
+```powershell
+curl -X POST http://127.0.0.1:8765/process -H "Content-Type: application/json" -d '{\"input\": \"Hello Lucia.\"}'
+```
+
+### 6.2 Expected Telemetry & Evidence Verification
+1. **Response Payload**:
+   ```json
+   {
+     "response": "<natural spoken greeting>",
+     "call_id": "<uuid-string>",
+     "surprise": 0.05,
+     "generation_mode": "deliberative",
+     "expression": { ... },
+     "relationship": { "trust": 0.1, "familiarity": 0.05, ... }
+   }
+   ```
+2. **Execution Trace Verification**:
+   Inspect the execution trace for the turn (via orchestrator buffer or logs):
+   * All 16 stages (`S1` through `S16`) must be present in exact sequence order.
+   * `overall_status` must be `SUCCESS`.
+   * `first_causal_failure_candidate` must be `null` (`None`).
+   * Every span must have `contract_result: "SATISFIED"` and `invariant_result: "SATISFIED"`.
+3. **Limbic Stability Check**:
+   ```powershell
+   curl http://127.0.0.1:8765/telemetry/stability
+   ```
+   Verify `limbic_stability_index >= 0.85`, fast tick jitter `< 2.0ms`.
+
+---
+
+## 7. Cognitive Execution Trace Operator Guide (Blocker 4)
+
+Lucia includes a non-intrusive, real-time **Cognitive Execution Trace Subsystem** (`src/core/telemetry/execution_trace.py`) backed by an in-memory circular buffer (`TraceBuffer`, capacity: default 100 turns) designed for execution observability across every conversational turn:
+
+```text
+Turn Start
+  ↓
+  S1  Sensory Gating
+  ↓
+  S2  Limbic Integration (Coupled MT-LNN ODE)
+  ↓
+  S3  Homeostatic Assessment (Energy, Load, Tension)
+  ↓
+  S4  Active Inference (Free Energy Surprise)
+  ↓
+  S5  Generation Conditioning (Token budget, Temperature)
+  ↓
+  S6  Affective Ecphory (Associative Memory Recall)
+  ↓
+  S7  Bounded Contextualization (Episodic Context)
+  ↓
+  S8  Knowledge Retrieval (Grounded Proposition Graph)
+  ↓
+  S9  Relationship Read (Prior State Snapshot)
+  ↓
+  S10 Communication Policy (Conversational Mode & Pacing)
+  ↓
+  S11 Language Generation (Realization Substrate)
+  ↓
+  S12 Boundary & Safety Guard (BoundaryLayer Regex)
+  ↓
+  S13 Multimodal Expression (15D Actuator Decoupling)
+  ↓
+  S14 Episodic Storage (SDM Co-Encoding)
+  ↓
+  S15 Plasticity Queueing (Offline Rest Buffer)
+  ↓
+  S16 Relationship Update (Temporal Inertia Post-Turn)
+  ↓
+Turn Complete (Trace recorded to in-memory circular buffer)
+```
+
+### 7.1 What the Trace Is — And What It Is NOT
+
+> [!IMPORTANT]
+> **EXECUTION DIAGNOSTICS ONLY**:  
+> The Cognitive Execution Trace records **execution timings, module contracts, invariant evaluations, and scalar state transitions**.  
+> It is **NOT** a thought trace or reasoning trace.  
+> It **NEVER** captures or exposes:
+> * Chain-of-thought (CoT)
+> * Internal monologue
+> * Unrestricted cognitive state
+> * Raw autobiographical memory texts
+> * Prompt strings or raw LLM completions
+
+### 7.2 Execution Span Data Model
+Each stage $S_i$ emits an `ExecutionSpan` containing allowlisted scalar telemetry:
+* `sequence_id`: Sequence identifier (`"S1"` to `"S16"`).
+* `stage_name`: Descriptive stage name (e.g. `"SensoryEncoding"`, `"LimbicIntegration"`).
+* `module_id` / `module_version`: Subsystem provenance.
+* `duration_ms`: Duration of stage execution in milliseconds.
+* `status`: `SUCCESS`, `FAILURE`, `SKIPPED`, or `DEGRADED`.
+* `contract_result`: `SATISFIED` or `VIOLATED`.
+* `invariant_result`: `SATISFIED` or `VIOLATED`.
+* `state_summary`: Bounded dictionary of diagnostic numbers and booleans.
+* `failure_class`: Taxonomy classification if a failure occurred.
+* `first_causal_failure_candidate`: Earliest failure locus in the turn.
+* `propagated_from`: ID of upstream ancestor stage if failure propagated.
+* `is_primary_candidate`: Boolean indicating if this span is the primary candidate failure.
+
+### 7.3 Causal Dependency Graph (DAG) & Attribution
+Stages in the 16-stage pipeline have formal causal dependencies defined in `STAGE_CAUSAL_DEPENDENCIES`:
+
+```text
+S1  ───┬──────────────┬───────────────┬───────────────┐
+       ▼              ▼               ▼               ▼
+      S3             S6              S8              S16 (also S3, S4)
+       │              │               │
+       ├──────┐       ▼               ▼
+       │      │      S7              S11 (also S5, S7, S8, S10)
+       ▼      ▼       │               │
+S2 ──►S4     S10      └───────────────┤
+       │      ▲                       ▼
+       ▼      │                      S13
+      S5 ─────┤                       │
+       │      │                       ▼
+       ├──────┼──────► S12           S14
+       │      │
+       ▼      ▼
+      S15    (S9 is independent: S9 ──► S10, S15)
+```
+
+### 7.4 Failure Classification & Propagation Logic
+When a failure occurs in stage $S_k$:
+1. If no prior failure occurred in the turn, $S_k$ is designated `first_causal_failure_candidate` (`is_primary_candidate = True`, `propagated_from = None`).
+2. If an existing failure already occurred, the system inspects whether any failed stage is in the transitive causal ancestors of $S_k$ (`get_transitive_ancestors(S_k)`):
+   * **Propagated Failure**: If ancestors contain a failed stage, $S_k$ is marked `DOWNSTREAM_PROPAGATED_FAILURE` with `propagated_from = first_candidate`.
+   * **Independent Failure**: If no ancestor has failed, $S_k$ is marked as an independent failure locus (`propagated_from = None`).
+
+#### Concrete Attribution Example
+```text
+S3 fails (e.g. Homeostatic metabolic budgeting numerical anomaly)
+  → S3 is marked is_primary_candidate=True (first_causal_failure_candidate = "S3")
+
+S4 fails (S4 depends on S2 and S3; S3 is an ancestor)
+  → S4 is marked propagated_from="S3" (DOWNSTREAM_PROPAGATED_FAILURE)
+
+S5 fails (S5 depends on S3 and S4; S3 is an ancestor)
+  → S5 is marked propagated_from="S3" (DOWNSTREAM_PROPAGATED_FAILURE)
+
+S9 fails (S9 has NO dependencies in the DAG; S3 is NOT an ancestor)
+  → S9 is marked as an INDEPENDENT FAILURE (is_primary_candidate=False, propagated_from=None)
 ```
 
 > [!NOTE]
-> All necessary WebGL libraries (`live2dcubismcore.min.js`, `pixi.min.js`, `cubism4.min.js`, `three.min.js`, `GLTFLoader.js`, `three-vrm.js`) are pre-installed in [`electron/renderer/libs/`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/electron/renderer/libs/). Lucia scans these directories on launch and dynamically populates the Model selector.
+> **Epistemic Qualification**:  
+> The First Causal Failure (FCF) candidate is a **candidate under the declared DAG causal model**, not an absolute metaphysical claim of root causality.
 
 ---
 
-## 4. Launching & Packaging Lucia
+## 8. Failure Handling & Operator Decision Tree
 
-### Option A: Direct Double-Click Launcher (`Start-Lucia.bat`) (Recommended)
-Simply double-click **`Start-Lucia.bat`** in the project root. It will automatically check dependencies, start the background core, and launch the companion window.
+When operating or validating Lucia, follow this decision tree to respond to operational anomalies:
 
-### Option B: npm start (Developer Mode)
-```powershell
-cd electron
-npm start
+```text
+                   [Start Operation / Turn]
+                              │
+                              ▼
+                 Activation succeeded (200 OK)?
+                    ├── NO ──► Check HTTP code:
+                    │            • 400 NOT_BORN: Execute Genesis first.
+                    │            • 409 INVALID_EVIDENCE: Investigate disk corruption.
+                    │            • 410 ENDED: Instance decommissioned. Do not restart.
+                    │            • 503 UNKNOWN: Storage I/O failure. Fail closed.
+                    ▼ YES
+                 First contact turn succeeds?
+                    ├── NO ──► HTTP 500 / 503:
+                    │            • Check orchestrator degradation.
+                    │            • Stop submitting turns. Preserve server log.
+                    ▼ YES
+                 Trace healthy (overall_status == SUCCESS)?
+                    ├── YES ─► All 16 spans SUCCESS. Continue normal operation.
+                    ▼ NO
+                 Analyze Spans in Trace:
+                    │
+                    ├── Invariant violation detected?
+                    │     → IMMEDIATE STOP. Invariant safety breach.
+                    │     → Preserve memory dump and diagnostics. Return to inactive.
+                    │
+                    ├── Contract violation with primary candidate (FCF)?
+                    │     → Stop conversational session.
+                    │     → Isolate candidate stage (e.g. S3 Homeostasis or S14 Gate).
+                    │     → Escalate trace JSON to engineering.
+                    │
+                    ├── Downstream propagated failure only?
+                    │     → Upstream candidate already captured.
+                    │     → Confirm downstream stages failed gracefully without state corruption.
+                    │
+                    └── Independent multi-stage failure (e.g. S3 and S9)?
+                          → High-severity architectural anomaly.
+                          → Halt companion process.
+                          → Escalate to engineering before submitting further turns.
 ```
 
-### Option C: Building Standalone `Lucia.exe`
-To package Lucia into an installer (`Lucia-Setup.exe`) or portable `.exe` using `electron-builder`:
-```powershell
-cd electron
-npm run build:win
-```
-The packaged binary will be generated in `electron/dist/`.
+### Action Protocols
+
+| Condition | Immediate Action | Diagnostic Preservation | Lifecycle State |
+|---|---|---|---|
+| **Normal Operation (16/16 SUCCESS)** | Continue interaction. | Traces buffered in memory (last 100 turns). | `BORN + ACTIVE` |
+| **HTTP 403 on `/process`** | Companion is inactive. Call `POST /lifecycle/activate`. | N/A | `BORN + INACTIVE` |
+| **Single Stage Contract Violation** | Stop chat turn. Inspect `trace.first_causal_failure_candidate`. | Copy `orch.get_latest_execution_trace().to_dict()`. | Stop turns; keep server alive for inspection. |
+| **Invariant Violation (L1_INVARIANTS)** | Halt companion immediately. Do NOT submit new turns. | Dump `chat_history.json`, `data/epoch_manifest.json`, and trace log. | Stop server (`Ctrl+C`). Revert to `INACTIVE`. |
+| **Catastrophic Terminal Reset (`/lifecycle/end`)** | Reserved strictly for intentional, irreversible decommissioning. | N/A (Wipes episodic memory traces). | `ENDED` (Terminal). |
 
 ---
 
-## 5. Desktop Presence Modes & Global Shortcuts
+## 9. Desktop Room & Embodied Presence Guide
 
-* **Minimize to System Tray**: Closing or minimizing the main window sends Lucia to your Windows notification tray. Her limbic Fast Loop keeps ticking continuously in the background!
-* **Global Hotkey (`Ctrl + Shift + L`)**: Press `Ctrl + Shift + L` from anywhere in Windows (while coding, gaming, or browsing) to instantly summon or hide Lucia.
-* **Floating Mascot Mode (`🐾 Mascot`)**: Click the Mascot button in the top header (or right-click the tray icon) to switch into a transparent, frameless, Always-on-Top desktop companion.
-
----
-
-## 6. Desktop Interface Guide: Personal Digital Room
-
-Lucia uses a **Personal Digital Room** interface designed with progressive disclosure. Rather than cluttering the screen with dense diagnostic gauges, the primary interface prioritizes warmth, embodiment, and natural conversation, while engineering telemetry is accessible via dedicated modals.
-
-### Window Layout Structure
+Lucia's graphical interface operates as a **Personal Digital Room** with progressive disclosure:
 
 ```
 ┌────────────────────────────────────────────────────────────────────────────────────────────────────────┐
@@ -148,48 +470,36 @@ Lucia uses a **Personal Digital Room** interface designed with progressive discl
 │  │                                           │  │                                                      │
 │  └───────────────────────────────────────────┘  │  ┌─────────────────────────────────────────────┬─┬─┐  │
 │  [Engine ▼] [Model ▼] [Voice ▼] [━●━] [🔊 Mute] │  │ Type a message... (Shift+Enter for newline) │🎙│➤│  │
-│  • Drag to Pan • Scroll to Zoom • Double-click  │  └─────────────────────────────────────────────┴─┴─┘  │
+│  • Drag to Pan • Scroll to Zoom • Double-click  │  └─────────────────────────────────────────────────┴─┴─┘  │
 └─────────────────────────────────────────────────┴──────────────────────────────────────────────────────┘
 ```
 
-### 1. Navigation Header & Companion Status
-* **Companion Identity**: Displays friendship age (`🎂 Day N`), current conversation mode, and connection status.
-* **Views**:
-  * **💬 Talk**: The primary conversational room and live avatar stage.
-  * **🧠 Memories**: Browse long-term episodic memories co-encoded with affective states.
-  * **📖 Journal**: Inspect relationship milestones, interaction history, and developmental trajectory.
-  * **⚙️ Settings**: Hardware tier selection, model configuration, audio devices, and display options.
-  * **🐾 Mascot Mode**: Switch immediately to the transparent floating desktop mascot.
+### 9.1 Avatar Stage & Multi-Engine Rendering
+* **Quad-Engine Renderer**: Toggle between `🎨 2D Canvas` (vector procedural face, 0 MB VRAM), `🖼️ 2D Sprites` (PNG emotion sets), `🎬 Live2D` (Cubism 4 WebGL interactive models), and `🌐 3D VRM` (humanoid rigged 3D models).
+* **Mouse Interactions**:
+  * **Pan**: Click and drag empty stage space to move avatar.
+  * **Zoom**: Scroll wheel over avatar to scale.
+  * **Reset**: Double-click avatar to restore default scale and center alignment.
 
-### 2. Avatar Stage (Embodied Presence)
-* **Multi-Engine Rendering**: Seamlessly toggle between `🎨 2D Canvas`, `🖼️ 2D Sprites`, `🎬 Live2D`, and `🌐 3D VRM`.
-* **Voice & Audio Controls**: Choose local RVC voice profile, adjust master volume, or mute.
-* **Stage Manipulation**:
-  * **Pan**: Click and drag to reposition the avatar.
-  * **Zoom**: Scroll wheel directly over the avatar to zoom in or out.
-  * **Reset**: Double-click the stage to restore default zoom and alignment.
+### 9.2 Real-Time Lip-Sync & Audio Controls
+* **Web Audio FFT Lip-Sync**: Uses real-time 60 FPS formant analysis (200Hz–2500Hz) to drive mouth opening and vowel shapes directly during neural voice playback.
+* **Local Neural Voice (RVC)**: Select custom character voice profiles from `models/voice/rvc/` or use built-in female voice.
 
-### 3. Conversation Pane & Voice Input
-* **Natural Dialogue Flow**: Chat history displays Lucia's responses alongside subtle prosody and voice playback.
-* **Continuous Microphone Input (`🎙️`)**: Hands-free voice chat powered by local Web Audio VAD and `faster-whisper`. Speech is transcribed offline with zero cloud API keys.
-
-### 4. Diagnostics & Telemetry Modal (`Ctrl + Shift + D`)
-To maintain a natural companion atmosphere, raw mathematical diagnostics are cleanly separated from the daily chat feed. Press **`Ctrl + Shift + D`** (or click *Diagnostics* in Settings) to open the real-time engineering telemetry panel:
-* **Limbic ODE State**: Fast reactive latent vector $\mathbf{h}_{\text{fast}} \in \mathbb{R}^{32}$, slow affective latent state $\mathbf{s}_{\text{slow}} \in \mathbb{R}^{16}$, and 3D PAD coordinates.
-* **Limbic Stability Index (LSI)** & Numerical ODE step jitter ($< 2\text{ms}$).
-* **Relational State Vector**: $\mathbf{R} = [\text{Affinity}, \text{Familiarity}, \text{Trust}, \text{Depth}] \in [0, 1]^4$ and Tier 2 attractor displacement.
-* **Consolidation Status**: Replay buffer size, offline BPTT loss, homeostatic anchor distance, and parameter swap latency.
-* **Memory & Storage Metrics**: Active SDM trace count and decay sweep statistics.
+### 9.3 Real-Time Diagnostics Panel (`Ctrl + Shift + D`)
+Press **`Ctrl + Shift + D`** anywhere in the main window to open the engineering telemetry panel:
+* **Limbic Fast/Slow Latent Vectors**: $\mathbf{h}_{\text{fast}} \in \mathbb{R}^{32}$, $\mathbf{s}_{\text{slow}} \in \mathbb{R}^{16}$, and 3D PAD coordinates.
+* **Stability Telemetry**: Fast-Loop tick jitter ($< 2.0\text{ms}$), ODE velocity variance, and Composite Limbic Stability Index (LSI).
+* **Consolidation Engine Status**: Offline BPTT buffer size, idle accumulator, and parameter swap latency.
 
 ---
 
-## 7. Floating Mascot Mode Guide
+## 10. Floating Mascot Mode Guide
 
-In Mascot Mode, Lucia becomes a frameless, transparent, Always-on-Top companion that lives directly on your desktop:
+Click **`🐾 Mascot`** in the header (or press `Ctrl + Shift + L`) to switch into a transparent, frameless, Always-on-Top desktop mascot:
 
 ```
           (\_/)
-         ( •‿• )   <-- Model (Click & drag to move window anywhere)
+         ( •‿• )   <-- Avatar Model (Click & drag to reposition across monitors)
         / >❤️< \
        (______)
    ┌───────────────────────┐
@@ -197,57 +507,38 @@ In Mascot Mode, Lucia becomes a frameless, transparent, Always-on-Top companion 
    └───────────────────────┘      (Follows character bottom center)
 ```
 
-### Key Mascot Features:
-1. **Direct Model Dragging**: Click and drag the character model with your mouse to move the mascot window anywhere across your screens.
-2. **Dynamic Model-Anchored Toolbar**: The floating toolbar dock automatically sticks directly beneath the character's feet (`getModelBounds()`), adjusting smoothly regardless of how you zoom or position the character.
-3. **Smart Hover Zoom**: Scroll wheel to zoom in or out **only functions when your cursor is positioned directly over the avatar model**, with an 800ms cooldown after dragging to prevent touchpad inertial momentum from blowing up character size.
-4. **Shift-Drag to Pan**: Hold `Shift` while left-clicking (or use middle-click) to freely pan the avatar within the mascot frame.
-5. **Double-Click Reset**: Double-click the avatar (or click Reset Avatar in Settings) to instantly restore default 1.0× scale, center pan position, and reset mascot window boundaries back to standard 380×540 unmaximized bounds.
-
-### Mascot Toolbar Controls:
-* **💬 Quick Chat**: Opens an inline chat popup allowing you to type messages and receive spoken answers without opening the main window.
-* **🎬 Model Switcher**: Swap avatar engine (Canvas, Sprites, Live2D, VRM) and model directly on your desktop.
-* **🔊 Audio & Voice**: Select your microphone and speaker devices, adjust master volume, and choose RVC voice models.
-* **🎙️ Toggle Mic**: Turn hands-free continuous voice input on or off (powered by local faster-whisper STT).
-* **⚙️ UI Settings**: Adjust avatar scale slider (30%–400%), mascot window opacity (30%–100%), reset model & window bounds, open journal, or return to the main window.
-* **✕ Exit**: Close mascot mode and return to main window.
+### 10.1 Key Mascot Controls
+1. **Direct Model Dragging**: Left-click and drag the character model itself to move the window anywhere across screens.
+2. **Model-Anchored Toolbar**: The dock automatically calculates character bounds (`getModelBounds()`) and anchors beneath the model.
+3. **Hover-Only Zoom**: Scroll-wheel zoom operates **only when the mouse cursor is directly over the character model**, with an 800ms post-drag cooldown suppressing accidental touchpad momentum.
+4. **Quick Chat (`💬`)**: Opens an inline compact speech bubble allowing text input and spoken audio responses without opening the main window.
+5. **Global Shortcut (`Ctrl + Shift + L`)**: Press from anywhere in Windows to summon or hide the mascot.
 
 ---
 
-## 8. System Settings & Hardware Scalability
+## 11. Hardware Scalability & Settings
 
-Open the Settings modal via the **`⚙️ Settings`** button in the main window header:
+Adjust hardware profiles via the **`⚙️ Settings`** modal:
 
-### 1. Hardware Scalability & Optimization Profile
-Dynamically adjusts model offloading, context length, and memory capacity to match your system hardware:
-* **Auto-Detect**: Automatically selects the optimal tier based on detected GPU VRAM and compute capabilities.
-* **High-End Tier (16GB+ VRAM)**: Full GPU layer offloading, 8,192 token context, 10,000 SDM traces.
-* **Desktop Performance (8–12GB VRAM)**: Full GPU offloading for 3B/7B models, 4,096 token context.
-* **Laptop Balanced (4–6GB VRAM)**: 32 GPU layers offloaded, 2,048 token context (ideal for RTX 3050 Ti Laptop).
-* **Low-Power / Battery Saver (CPU-Only)**: Zero GPU VRAM usage, minimal RAM footprint, energy-efficient background tick rate.
-
-### 2. Avatar Graphics & Energy Optimization
-* **Target Framerate**:
-  * **60 FPS**: Ultra-fluid animation, ideal when plugged into AC power.
-  * **30 FPS**: Reduces avatar CPU/GPU rendering usage by up to 50%, maximizing laptop battery life.
-* **Default Mascot Opacity**: Adjust transparency of the mascot window from 30% to 100%.
-
-### 3. Audio & Voice Hardware
-* **Microphone (Input)**: Select your preferred input microphone.
-* **Speaker (Output)**: Select your preferred output device (headphones or speakers).
+| Profile Tier | VRAM Allocation | Context Budget | Memory Traces | Recommended Hardware |
+|---|---|---|---|---|
+| **High-End Tier** | Full GPU offload (16GB+) | 8,192 tokens | 10,000 SDM | RTX 3080/4080 Desktop or higher |
+| **Desktop Performance** | Full GPU offload (8–12GB) | 4,096 tokens | 5,000 SDM | RTX 3060/4060 Desktop |
+| **Laptop Balanced** | 32 GPU layers (4–6GB) | 2,048 tokens | 1,000 SDM | RTX 3050 Ti Laptop / RTX 4050 Mobile |
+| **CPU-Only / Battery** | 0 MB GPU VRAM | 1,024 tokens | 500 SDM | Intel/AMD Ultrabook CPU |
 
 ---
 
-## 9. Frequently Asked Questions (FAQ)
+## 12. Frequently Asked Questions (FAQ)
 
-**Q: Can Lucia run completely offline without internet?**  
-**A:** Yes! The LLM, continuous emotion ODE, memory decay, active inference, RVC voice conversion, and avatar rendering run 100% locally on your PC.
+**Q: Can Lucia operate completely offline without internet?**  
+**A:** Yes. The language model (GGUF via llama.cpp), limbic ODE, associative SDM memory, RVC neural voice synthesis, and avatar rendering run 100% locally on your machine with zero remote API calls.
 
-**Q: Does voice synthesis slow down text generation or overload my GPU?**  
-**A:** No. Voice synthesis executes in quick, lightweight bursts ($\sim 150\text{MB}$ memory) that never compete with your LLM token generation.
+**Q: Does voice synthesis or avatar rendering slow down the companion's thought process?**  
+**A:** No. Voice synthesis and avatar rendering are completely decoupled feedforward actuators. Language generation and limbic integration complete first, and voice synthesis is dispatched asynchronously via IPC without stalling cognitive turns.
 
-**Q: Why doesn't zooming work when scrolling outside the character?**  
-**A:** This is an intentional safeguard! To prevent accidental zooming when dragging windows with a laptop touchpad, zoom only activates when your mouse cursor is directly hovering over the character model.
+**Q: How do I back up Lucia's memory and relationship progress?**  
+**A:** All autobiographical memory traces (`data/`), relational state (`data/relationship.json`), identity commitment (`data/genesis_commitment.json`), and profile (`data/profile.json`) are stored locally in `data/`. Backing up the `data/` directory completely preserves her continuous life.
 
-**Q: How do I backup Lucia’s memories?**  
-**A:** Her memory traces, learned LNN plasticity, and companion profile are saved in `data/`. You can copy the workspace or commit changes to Git to preserve her developmental journey.
+**Q: What happens if the computer crashes or powers down during conversation?**  
+**A:** Lucia implements two-tier persistence (ADR-033). The `epoch_manifest.json` Commit Barrier and atomic `.bak` reconciliation guarantee that uncommitted turns are safely recovered and working memory is reseeded from the last clean commit upon startup.

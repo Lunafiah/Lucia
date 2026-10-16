@@ -730,7 +730,6 @@ class ChatController {
     const userName = this.genesisUserNameInput ? this.genesisUserNameInput.value.trim() : '';
     const companionName = this.genesisCompanionNameInput ? this.genesisCompanionNameInput.value.trim() : '';
     const finalCompanionName = companionName || 'Lucia';
-    const bornAt = new Date().toISOString();
 
     try {
       if (this.genesisAwakenBtn) {
@@ -738,42 +737,61 @@ class ChatController {
         this.genesisAwakenBtn.classList.add('awakening');
       }
 
-      let data = null;
+      // 1. Update user & companion preferences via /profile (never directly creates Birth)
+      const prefPayload = {
+        user_name: userName || 'Friend',
+        companion_name: finalCompanionName,
+      };
+
       if (window.lucia && window.lucia.system && window.lucia.system.setUserProfile) {
-        data = await window.lucia.system.setUserProfile({
-          user_name: userName || 'Friend',
-          companion_name: finalCompanionName,
-          is_onboarded: true,
-          born_at: bornAt,
-        });
+        await window.lucia.system.setUserProfile(prefPayload);
       } else {
-        const res = await fetch('http://127.0.0.1:8765/profile', {
+        await fetch('http://127.0.0.1:8765/profile', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            user_name: userName || 'Friend',
-            companion_name: finalCompanionName,
-            is_onboarded: true,
-            born_at: bornAt,
-          }),
+          body: JSON.stringify(prefPayload),
         });
-        if (res.ok) {
-          data = await res.json();
-        }
       }
 
-      if (data && data.status !== 'error') {
-        const profile = data.profile || {
+      // 2. Canonical First Activation via /lifecycle/activate (requires prior Birth)
+      let actRes = null;
+      let actData = {};
+      try {
+        actRes = await fetch('http://127.0.0.1:8765/lifecycle/activate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+        });
+        if (actRes.ok) {
+          actData = await actRes.json();
+        } else {
+          actData = await actRes.json().catch(() => ({}));
+        }
+      } catch (err) {
+        actData = { detail: err.message || 'Network error reaching backend' };
+      }
+
+      if (actRes && actRes.ok && (actData.status === 'activated' || actData.status === 'already_active')) {
+        let profile = null;
+        if (window.lucia && window.lucia.system && window.lucia.system.getUserProfile) {
+          profile = await window.lucia.system.getUserProfile();
+        } else {
+          const res = await fetch('http://127.0.0.1:8765/profile');
+          if (res.ok) profile = await res.json();
+        }
+
+        const finalProfile = profile || {
           user_name: userName || 'Friend',
           companion_name: finalCompanionName,
           is_onboarded: true,
-          born_at: bornAt,
+          born_at: actData.born_at || new Date().toISOString(),
         };
+
         try {
           localStorage.setItem('lucia_companion_name', finalCompanionName);
           localStorage.setItem('lucia_user_name', userName || 'Friend');
         } catch (e) {}
-        this._renderProfile(profile);
+
+        this._renderProfile(finalProfile);
 
         if (this.genesisModal) {
           this.genesisModal.classList.add('fade-out');
@@ -785,15 +803,21 @@ class ChatController {
             }
           }, 400);
         }
-        console.log(`[genesis] ${finalCompanionName} awakened successfully for`, userName || 'Friend');
+        console.log(`[genesis] ${finalCompanionName} activated successfully for`, userName || 'Friend');
       } else {
+        const errorDetail = actData.detail || 'Activation rejected. Ensure the operator Genesis ceremony has been completed.';
+        console.warn('[genesis] Activation failed:', errorDetail);
+        if (this.genesisIntroText) {
+          this.genesisIntroText.textContent = `Activation rejected: ${errorDetail}`;
+          this.genesisIntroText.style.color = '#ff6b6b';
+        }
         if (this.genesisAwakenBtn) {
           this.genesisAwakenBtn.disabled = false;
           this.genesisAwakenBtn.classList.remove('awakening');
         }
       }
     } catch (e) {
-      console.error('[genesis] Failed to complete awakening:', e);
+      console.error('[genesis] Failed to complete activation:', e);
       if (this.genesisAwakenBtn) {
         this.genesisAwakenBtn.disabled = false;
         this.genesisAwakenBtn.classList.remove('awakening');
