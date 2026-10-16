@@ -78,6 +78,7 @@ function createWindow() {
     y: state.y,
     minWidth: 850,
     minHeight: 550,
+    icon: path.join(__dirname, '../renderer/assets/icon.png'),
     backgroundColor: '#12121e',
     autoHideMenuBar: true,
     title: 'Lucia — AI Companion',

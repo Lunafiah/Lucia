@@ -185,6 +185,8 @@ function registerHandlers(port = 8765, isPreview = false, getMascotManager = nul
         response: `[UI Preview]: Lucia's brain is sleeping (0% GPU/CPU). You typed: "${input}".`,
         call_id: 'preview_call'
       };
+    }
+
     if (mode === 'simulation') {
       try {
         const response = await fetch(`${baseUrl}/sim/chat`, {
