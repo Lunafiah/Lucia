@@ -484,7 +484,7 @@ $$\mathbf{Does\; this\; remove\; the\; leakage,\; or\; merely\; hide\; it?}$$
   - Đạt được tính mù nhà nghiên cứu ở cấp độ vận hành (Researcher Blindness).
   - Tuy nhiên, các agent trong quần thể tự trị tương tác với Lucia như thế nào? Nếu chúng dùng ngôn ngữ tự nhiên, chúng lại kích hoạt các LLM khác, dẫn đến hiện tượng **khuếch đại thiên kiến chéo (cross-model bias amplification)** và hành vi phân kỳ không kiểm soát được.
   - Nếu chúng dùng tín hiệu số học, rơi vào Chân không Ngữ nghĩa.
-* **Đánh giá:** $\mathbf{Uncontrolled\; Variance\; &\; Cross-Model\; Leakage}$. Chuyển dịch thiên kiến từ nhà nghiên cứu sang thiên kiến của mô hình tác tử phụ.
+* **Đánh giá:** $\mathbf{Uncontrolled\; Variance\; \&\; Cross-Model\; Leakage}$. Chuyển dịch thiên kiến từ nhà nghiên cứu sang thiên kiến của mô hình tác tử phụ.
 
 ### 6.9 N09 — Adversarially Generated Hypothesis-Blind Environments
 * **Cơ chế:** Sử dụng một mạng đối nghịch (tương tự GAN) để sinh kích thích. Bộ sinh (Generator) được tối ưu hóa để tối đa hóa phương sai trạng thái nội sinh của Lucia nhưng bị phạt nặng nếu một bộ phân loại mù (Discriminator) có thể đoán được nhánh điều kiện hoặc phân loại hóa trị của văn bản.

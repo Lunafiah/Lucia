@@ -33,10 +33,40 @@
    cd ..
    ```
 
-3. **Verify Local SLM Model Placement**:
-   Place the canonical quantized GGUF language model in `models/` (e.g. `models/LFM2.5-1.2B-Instruct-Q4_K_M.gguf`).
+3. **Verify Directory Layout**:
+   Ensure `models/` and `data/` directories exist in the workspace root.
 
----
+### 1.3 Default Neural Model Assets & Placement
+
+Lucia utilizes lightweight, local neural models for language realization, base voice generation, and direct voice conversion. Model weights are excluded from Git to avoid large repository bloat. Place default model checkpoints in the following paths:
+
+```text
+models/
+├── LFM2.5-1.2B-Instruct-Q4_K_M.gguf            # 1.2B SLM (Q4_K_M, SHA-256: b1b3de11...)
+├── avatar/
+│   ├── live2d/                                 # Live2D Cubism 4 models (HoshinoAi, huohuo)
+│   └── sprites/                                # Emotive 2D sprite sheets (columbina)
+└── voice/
+    └── rvc/
+        └── VaresaGIJP/
+            ├── VaresaGIJP_300e_2100s.pth        # RVC v2 model checkpoint (40 kHz, 457 tensors)
+            └── added_VaresaGIJP_v2.index       # RVC retrieval index (IndexIVFFlat, 10,388 vectors)
+```
+
+* **Small Language Model (SLM)**:
+  * **Model**: `LFM2.5-1.2B-Instruct-Q4_K_M.gguf` (~730 MB)
+  * **Quantization**: 4-bit K-quant (`Q4_K_M`)
+  * **SHA-256**: `b1b3de114215d9507409a662a501a631095a479a419584e8a2ded6304b19b4f5`
+  * **Role**: Downstream natural language realization from `PromptAssembler` contracts.
+  * **Engine**: `llama-cpp-python` with CUDA offloading or pure CPU inference.
+* **Base Text-to-Speech (TTS)**:
+  * **Engine**: `edge-tts` (Microsoft Neural Voice streaming).
+  * **Default Voice**: `ja-JP-NanamiNeural` (Japanese), `en-US-JennyNeural` (English fallback).
+  * **Storage**: No local model weights required; dynamically streamed or cached.
+* **Voice Conversion (RVC)**:
+  * **Model**: `VaresaGIJP` (`VaresaGIJP_300e_2100s.pth` ~55 MB, `added_VaresaGIJP_v2.index` ~33 MB).
+  * **Architecture**: Direct RVC v2, 40 kHz NSF-HiFiGAN neural vocoder (`SynthesizerTrn`).
+  * **Discovery**: Automatically discovered by `VoiceEngine` on startup; query `GET /voice/models` to verify.
 
 ## 2. Companion Lifecycle & Operating Foundations
 

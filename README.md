@@ -146,9 +146,9 @@ For complete operator instructions, consult the [User Manual & First Activation 
 
 The canonical project sequence is strictly linear:
 
-$$\text{P01–P20 (Core Affect & Presence)} \longrightarrow \text{P21 (Consolidation)} \longrightarrow \text{P22 (Substrate Neutrality)} \longrightarrow \text{P23 (Semantic Core)}$$
+$$\text{P01–P20 (Core Affect \& Presence)} \longrightarrow \text{P21 (Consolidation)} \longrightarrow \text{P22 (Substrate Neutrality)} \longrightarrow \text{P23 (Semantic Core)}$$
 $$\longrightarrow \text{P24 (Adaptive Prosody)} \longrightarrow \text{P25 (Unilateral Embodiment)} \longrightarrow \text{P26 (Individuality Trial)} \longrightarrow \text{P27 (Trajectory Audit)}$$
-$$\longrightarrow \text{First Activation Gate (Solemn Onboarding Ceremony [LOCKED])}$$
+$$\longrightarrow \text{First Activation Gate (Solemn Onboarding Ceremony -- LOCKED)}$$
 
 * **Roadmap Governance**: Agents and researchers must NOT invent new developmental phases (e.g., "Phase 28") unless supported by verified empirical requirements and ratified architectural decisions.
 * **No "Gate 28" Label**: Genesis Onboarding is an independent locked gate, never an arbitrary numbered phase.
@@ -209,6 +209,17 @@ npm install
 npm test       # Run 120 Jest unit tests
 npm start      # Launch desktop application in development mode
 ```
+
+### 4. Default Neural Models & Voice Assets
+
+Large model binaries are excluded from Git (`.gitignore`) to maintain repository efficiency. The canonical system integrates the following default local neural models and assets:
+
+| Subsystem | Architecture / Framework | Default Model & Specification | Placement Path |
+|---|---|---|---|
+| **Small Language Model (SLM)** | Language realization realizer via `llama-cpp-python` (CUDA / CPU) | `LFM2.5-1.2B-Instruct-Q4_K_M.gguf`<br>• Scale: 1.2 Billion parameters<br>• Quantization: 4-bit K-quant (`Q4_K_M`)<br>• SHA-256: `b1b3de114215d9507409a662a501a631095a479a419584e8a2ded6304b19b4f5`<br>• File size: ~730 MB | `models/LFM2.5-1.2B-Instruct-Q4_K_M.gguf` |
+| **Neural Speech (TTS)** | Base acoustic phonetic speech synthesis | `edge-tts` streaming neural voice<br>• Default voice: `ja-JP-NanamiNeural`<br>• Multilingual fallbacks: `en-US-JennyNeural`, Vietnamese acoustic cadence (`vi-VN`) | Managed via package; zero local weights required |
+| **Voice Conversion (RVC)** | Direct RVC v2 neural voice conversion (`SynthesizerTrn` NSF-HiFiGAN 40 kHz) | `VaresaGIJP` Japanese Character Voice<br>• Weights: `VaresaGIJP_300e_2100s.pth` (~55 MB)<br>• Feature Index: `added_VaresaGIJP_v2.index` (`IndexIVFFlat`, ~33 MB) | `models/voice/rvc/VaresaGIJP/` |
+| **Polymorphic Avatars** | Live2D Cubism 4 & 2D Sprites | • Live2D: `huohuo`, `HoshinoAi`<br>• Emotive Sprites: `columbina` (10 expressions) | `models/avatar/live2d/`<br>`models/avatar/sprites/` |
 
 ---
 
