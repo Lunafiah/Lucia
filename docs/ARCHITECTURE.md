@@ -627,18 +627,15 @@ $$\text{Orchestrator } \_turn\_lock \longrightarrow \_step\_lock \longrightarrow
 
 ---
 
-## 6. Hardware Scalability & Dynamic Profiling
+## 6. Host Resource Profiling & CPU-First Execution Discipline
 
-Lucia features automated hardware detection (`HardwareTier`) with real-time runtime reconfiguration via `POST /system/profile`:
+Lucia provides automated host hardware detection (`HardwareTier`) and an advisory profiling surface via `GET /system/profile` and `POST /system/profile` to guide optional local SLM realizer offloading (`llama-cpp-python`).
 
-| Hardware Tier | Detected Specs | Model Offload | Context Size | SDM Capacity | Loop Cadence | Target VRAM |
-|---|---|---|---|---|---|---|
-| **`CPU_ONLY`** | No GPU / Battery Saver | 0 layers (CPU only) | 1,024 tokens | 250 traces | 500ms | $0\text{ MB}$ |
-| **`LAPTOP`** | $< 6\text{GB}$ VRAM (e.g. RTX 3050 Ti) | 32 GPU Layers (1.2B/3B) | 2,048 tokens | 500 traces | 200ms | $\approx 1.5\text{GB}$ |
-| **`DESKTOP`** | $6\text{GB} - 12\text{GB}$ VRAM (e.g. RTX 3060/4060) | Full GPU (3B/7B) | 4,096 tokens | 2,000 traces | 150ms | $\approx 4.0\text{GB}$ |
-| **`HIGH_END`** | $> 12\text{GB}$ VRAM (e.g. RTX 3090/4090) | Full GPU (7B/14B) | 8,192 tokens | 10,000 traces | 100ms | $\approx 8.0\text{GB}$ |
-
-Users can switch tiers on-the-fly from the `⚙️ Settings` UI modal, adjusting memory parameters, context windows, and compute cadence without restarting the backend process.
+Under the **20-Watt Whole Brain Architecture**, the cognitive core is strictly decoupled from host GPU tiers:
+1. **Mathematical Invariance of Cognitive Core**: Continuous limbic ODE integration (`EmotionCore`, $5\text{ Hz}$ / 200ms fixed $\Delta t$), homeostatic regulation, and affective dynamics execute exclusively on the CPU with 0.0 MB GPU VRAM contention. ODE step sizes are mathematically calibrated to the Philia attractor and are never dynamically accelerated or throttled by UI settings.
+2. **Associative Memory Invariance**: Sparse Distributed Memory (SDM) operates at a fixed architectural baseline of 1,000 hard locations (ARCH-003, P02/P20), independent of host GPU memory.
+3. **Substrate-Neutral Internal Representations**: Internal reasoning and relational memory representations (UMR-TPG `SemanticGraph`, numeric Concept IDs, Strong Kleene K3) are token-free and do not depend on context-window token budgets.
+4. **Boundary Realizer Offloading**: GPU VRAM is utilized strictly for optional acceleration of downstream natural language realization (`LFM2.5-1.2B Instruct` via `llama.cpp`) and WebGL avatar rendering. UI settings adjustments do not mutate internal cognitive substrates or memory capacity.
 
 ---
 

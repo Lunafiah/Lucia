@@ -274,7 +274,7 @@ The Python backend binds to `127.0.0.1:8765` and strictly guards routes based on
 * `POST /profile`: Updates user profile preferences (e.g. user name). Rejects direct injection of `is_onboarded: true`, `born_at`, or `identity_anchor` (HTTP 400 Bad Request; Blocker 2 guard).
 * `GET /state`: Universal non-blocking real-time state snapshot (PAD, somatic markers, expression, relationship). Responds $\le 10\text{ms}$.
 * `GET /telemetry/stability`: Universal endpoint returning Limbic Stability Index (LSI), tick jitter, and ODE variance.
-* `POST /system/profile`: Dynamically reconfigures hardware scalability tier (`CPU_ONLY`, `LAPTOP`, `DESKTOP`, `HIGH_END`).
+* `POST /system/profile`: Updates advisory host hardware profiling tier (`CPU_ONLY`, `LAPTOP`, `DESKTOP`, `HIGH_END`) for SLM offload guidance.
 * `POST /voice/transcribe`: Transcribes spoken audio bytes using local `faster-whisper`.
 * `POST /voice/synthesize`: Synthesizes character speech via local RVC neural voice model.
 * `POST /lifecycle/end`: Atomic existential reset / catastrophic decommissioning wiping episodic memories and resetting to un-onboarded Philia baseline (distinguished from unratified research concepts such as non-destructive Covenant Release).

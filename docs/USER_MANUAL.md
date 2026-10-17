@@ -546,20 +546,7 @@ Click **`🐾 Mascot`** in the header (or press `Ctrl + Shift + L`) to switch in
 
 ---
 
-## 11. Hardware Scalability & Settings
-
-Adjust hardware profiles via the **`⚙️ Settings`** modal:
-
-| Profile Tier | VRAM Allocation | Context Budget | Memory Traces | Recommended Hardware |
-|---|---|---|---|---|
-| **High-End Tier** | Full GPU offload (16GB+) | 8,192 tokens | 10,000 SDM | RTX 3080/4080 Desktop or higher |
-| **Desktop Performance** | Full GPU offload (8–12GB) | 4,096 tokens | 5,000 SDM | RTX 3060/4060 Desktop |
-| **Laptop Balanced** | 32 GPU layers (4–6GB) | 2,048 tokens | 1,000 SDM | RTX 3050 Ti Laptop / RTX 4050 Mobile |
-| **CPU-Only / Battery** | 0 MB GPU VRAM | 1,024 tokens | 500 SDM | Intel/AMD Ultrabook CPU |
-
----
-
-## 12. Frequently Asked Questions (FAQ)
+## 11. Frequently Asked Questions (FAQ)
 
 **Q: Can Lucia operate completely offline without internet?**  
 **A:** Yes. The language model (GGUF via llama.cpp), limbic ODE, associative SDM memory, RVC neural voice synthesis, and avatar rendering run 100% locally on your machine with zero remote API calls.
