@@ -11,7 +11,6 @@ from starlette.testclient import TestClient
 
 import src.api.server as api_module
 from src.core.models import BehavioralConstraints, PADState, SomaticMarkers
-from src.core.resource_manager import get_resource_profile
 
 
 @pytest.fixture
@@ -39,11 +38,9 @@ def client(mock_orchestrator, tmp_path):
     api_module._sim_runtime = None
     api_module._is_live_companion_active = True
     api_module._orchestrator = mock_orchestrator
-    api_module._resource_profile = get_resource_profile("laptop")
     test_client = TestClient(api_module.app)
     yield test_client
     api_module._orchestrator = None
-    api_module._resource_profile = None
     api_module._is_live_companion_active = orig_active
     api_module._mode = orig_mode
     api_module._sim_runtime = orig_sim
@@ -125,10 +122,12 @@ class TestAPIServerHealthAndProfileEndpoints:
         assert resp.status_code == 503
         assert resp.json() == {"status": "degraded"}
 
-    def test_get_system_profile(self, client):
-        resp = client.get("/system/profile")
+    def test_get_system_hardware(self, client):
+        resp = client.get("/system/hardware")
         assert resp.status_code == 200
         data = resp.json()
-        assert data["tier"] == "laptop"
-        assert data["n_gpu_layers"] == 32
-        assert data["n_ctx"] == 4096
+        assert "device_name" in data
+        assert "cuda_available" in data
+        assert "vram_mb" in data
+        assert "backend" in data
+        assert "cpu_threads" in data

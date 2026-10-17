@@ -1132,41 +1132,29 @@
           <section id="settings-pane-performance" class="settings-pane">
             <div class="settings-group">
               <div class="settings-group-title">
-                <span>System Resource & Hardware Allocation</span>
-                <span id="hardware-badge" class="hardware-badge">Auto</span>
+                <span>System Compute & Host Hardware</span>
+                <span id="hardware-badge" class="hardware-badge">Host</span>
               </div>
               <p class="settings-group-desc">
-                Configure compute offload tier, VRAM budget, context token length, and render loop cadence for this machine.
+                Detected hardware environment for local edge inference. Lucia runs on CPU by default with optional CUDA GPU acceleration when available.
               </p>
-              <div style="display: flex; gap: 10px; align-items: center;">
-                <select id="settings-profile-select" class="settings-select" style="flex: 1; padding: 8px 12px;">
-                  <option value="auto">Auto-Detect (Recommended based on GPU)</option>
-                  <option value="high_end">High-End Tier (16GB+ VRAM, Full GPU & Max Context)</option>
-                  <option value="desktop">Desktop Performance (8-12GB VRAM, 4K Context)</option>
-                  <option value="laptop">Laptop Balanced (4-6GB VRAM, Energy Efficient)</option>
-                  <option value="cpu_only">Low-Power / Battery Saver (CPU-Only, Minimal RAM)</option>
-                </select>
-                <button id="settings-autodetect-btn" class="journal-btn secondary" style="padding: 7px 14px;">
-                  Auto-Detect
-                </button>
-              </div>
 
               <div id="settings-hardware-specs" class="journal-stats-grid" style="margin-top: 10px;">
                 <div class="stat-box">
-                  <div class="stat-label">Active Tier</div>
-                  <div id="settings-active-tier" class="stat-value" style="font-size: 0.85rem; color: #a855f7;">Laptop</div>
+                  <div class="stat-label">Compute Device</div>
+                  <div id="settings-host-device" class="stat-value" style="font-size: 0.85rem; color: #a855f7;">Host CPU</div>
                 </div>
                 <div class="stat-box">
-                  <div class="stat-label">VRAM Budget</div>
-                  <div id="settings-vram-budget" class="stat-value" style="font-size: 0.85rem; color: #38bdf8;">~4096 MB</div>
+                  <div class="stat-label">CUDA Acceleration</div>
+                  <div id="settings-cuda-status" class="stat-value" style="font-size: 0.85rem; color: #38bdf8;">Disabled</div>
                 </div>
                 <div class="stat-box">
-                  <div class="stat-label">Context Length</div>
-                  <div id="settings-ctx-length" class="stat-value" style="font-size: 0.85rem; color: #34d399;">2,048 tokens</div>
+                  <div class="stat-label">VRAM Detected</div>
+                  <div id="settings-vram-detected" class="stat-value" style="font-size: 0.85rem; color: #34d399;">0 MB</div>
                 </div>
                 <div class="stat-box">
-                  <div class="stat-label">Loop Cadence</div>
-                  <div id="settings-loop-cadence" class="stat-value" style="font-size: 0.85rem; color: #f59e0b;">200 ms</div>
+                  <div class="stat-label">Backend / Threads</div>
+                  <div id="settings-cpu-backend" class="stat-value" style="font-size: 0.85rem; color: #f59e0b;">CPU</div>
                 </div>
               </div>
             </div>

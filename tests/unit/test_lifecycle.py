@@ -33,7 +33,6 @@ from src.core.memory.affective_memory import AffectiveMemory, AffectiveMemoryCon
 from src.core.memory.sdm import SDMConfig, SDMCore
 from src.core.models import BehavioralConstraints, PADState, SomaticMarkers
 from src.core.orchestrator.orchestrator import MemoryAugmentedOrchestrator
-from src.core.resource_manager import get_resource_profile
 from src.core.storage.history_store import ChatHistoryStore
 from src.core.telemetry.stability_evaluator import StabilityEvaluator
 
@@ -133,11 +132,9 @@ def client(isolated_env, mock_instrumented_orchestrator):
     api_module._mode = "live"
     api_module._sim_runtime = None
     api_module._orchestrator = mock_instrumented_orchestrator
-    api_module._resource_profile = get_resource_profile("laptop")
     test_client = TestClient(api_module.app)
     yield test_client
     api_module._orchestrator = None
-    api_module._resource_profile = None
     api_module._mode = orig_mode
     api_module._sim_runtime = orig_sim
 

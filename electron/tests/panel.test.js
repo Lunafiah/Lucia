@@ -213,21 +213,21 @@ describe('EmotionDebugPanel (Phase 7.6 Diagnostics Console)', () => {
   // --------------------------------------------------------------------------
   test('renders hardware profile with explicit VRAM Budget allocation', () => {
     panel.renderHardwareProfile({
-      tier: 'desktop_performance',
-      name: 'Desktop Performance (CUDA)',
-      n_gpu_layers: 28,
+      device_name: 'NVIDIA RTX 4060',
+      cuda_available: true,
       vram_mb: 8192,
-      n_ctx: 4096,
-      loop_cadence_ms: 200,
-      sdm_capacity: 2000
+      backend: 'cuda',
+      cpu_threads: 16,
+      cpu_architecture: 'AMD64',
+      sdm_capacity: 10000
     });
 
-    expect(document.getElementById('hw-tier-val').textContent).toBe('Desktop Performance (CUDA) (DESKTOP_PERFORMANCE)');
-    expect(document.getElementById('hw-gpu-layers-val').textContent).toBe('28 layers');
+    expect(document.getElementById('hw-tier-val').textContent).toBe('NVIDIA RTX 4060');
+    expect(document.getElementById('hw-gpu-layers-val').textContent).toBe('CUDA Accelerated');
     expect(document.getElementById('hw-vram-val').textContent).toBe('8,192 MB');
-    expect(document.getElementById('hw-ctx-val').textContent).toBe('4,096 tokens');
+    expect(document.getElementById('hw-ctx-val').textContent).toBe('16 CPU threads');
     expect(document.getElementById('hw-cadence-val').textContent).toBe('200 ms');
-    expect(document.getElementById('sdm-capacity-val').textContent).toBe('2,000');
+    expect(document.getElementById('sdm-capacity-val').textContent).toBe('10,000');
   });
 
   // --------------------------------------------------------------------------

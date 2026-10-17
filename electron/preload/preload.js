@@ -57,20 +57,13 @@ contextBridge.exposeInMainWorld('lucia', {
       ipcRenderer.invoke('voice:select-model', { modelName })
   },
   system: {
-    getProfile: () => ipcRenderer.invoke('profile:get'),
-    setProfile: (profile) => ipcRenderer.invoke('profile:set', { profile }),
     /**
-     * Return the current hardware scaling profile (tier, vram_mb, etc.)
+     * Return factual host hardware and compute capabilities (device, CUDA, VRAM, CPU threads).
      * @returns {Promise<object>}
      */
-    getHardwareProfile: () => ipcRenderer.invoke('system:get-hardware-profile'),
-    /**
-     * Update the active hardware tier.
-     * @param {string} tier  e.g. 'minimal', 'balanced', 'performance', 'auto'
-     * @returns {Promise<object>}
-     */
-    setHardwareProfile: (tier) =>
-      ipcRenderer.invoke('system:set-hardware-profile', { tier }),
+    getHardwareCapabilities: () => ipcRenderer.invoke('system:get-hardware'),
+    getHardwareProfile: () => ipcRenderer.invoke('system:get-hardware'),
+    getProfile: () => ipcRenderer.invoke('system:get-hardware'),
     /**
      * Fetch the user/companion profile (user_name, companion_name, etc.)
      * @returns {Promise<object>}

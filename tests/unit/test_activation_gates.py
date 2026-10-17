@@ -20,7 +20,6 @@ from src.core.identity.genesis import (
     execute_genesis,
 )
 from src.core.models import PADState
-from src.core.resource_manager import get_resource_profile
 
 SAMPLE_UUID = "d4e5f6a1-b2c3-4d5e-8f9a-0b1c2d3e4f5a"
 SAMPLE_BORN_AT = "2026-10-16T14:00:00.000000Z"
@@ -68,7 +67,6 @@ def gate_test_env(mock_orch, tmp_path: Path):
     api_module._history_store.file_path = history_file
     api_module._history_store._ensure_file_exists()
     api_module._orchestrator = mock_orch
-    api_module._resource_profile = get_resource_profile("laptop")
     api_module._mode = "live"
     api_module._sim_runtime = None
     api_module._is_live_companion_active = False
@@ -85,7 +83,6 @@ def gate_test_env(mock_orch, tmp_path: Path):
 
     # Teardown
     api_module._orchestrator = None
-    api_module._resource_profile = None
     api_module._is_live_companion_active = orig_active
     api_module._mode = orig_mode
     api_module._sim_runtime = orig_sim

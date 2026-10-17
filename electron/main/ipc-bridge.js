@@ -289,20 +289,21 @@ function registerHandlers(port = 8765, isPreview = false, getMascotManager = nul
     }
   });
 
-  // profile:get IPC handler
-  ipcMain.handle('profile:get', async () => {
+  // system:get-hardware / profile:get IPC handler — read factual host hardware capabilities
+  const handleGetHardware = async () => {
     if (isPreview) {
       return {
-        tier: 'preview',
-        name: 'UI Preview',
-        description: 'Stand-alone UI Design & Mock Preview Mode',
+        device_name: 'UI Preview Device',
+        cuda_available: false,
         vram_mb: 0,
-        n_gpu_layers: 0
+        backend: 'cpu',
+        cpu_threads: 4,
+        cpu_architecture: 'preview'
       };
     }
 
     try {
-      const response = await fetch(`${baseUrl}/system/profile`, {
+      const response = await fetch(`${baseUrl}/system/hardware`, {
         method: 'GET',
         signal: AbortSignal.timeout(2000)
       });
@@ -312,37 +313,18 @@ function registerHandlers(port = 8765, isPreview = false, getMascotManager = nul
     } catch (e) {
       // ignore
     }
-    return { tier: 'unknown' };
-  });
+    return {
+      device_name: 'Unknown Host',
+      cuda_available: false,
+      vram_mb: 0,
+      backend: 'cpu',
+      cpu_threads: 1,
+      cpu_architecture: 'unknown'
+    };
+  };
 
-  // profile:set IPC handler
-  ipcMain.handle('profile:set', async (_event, { profile }) => {
-    if (isPreview) {
-      return {
-        status: 'ok',
-        tier: profile,
-        name: `Preview (${profile})`,
-        description: 'Simulated Profile in UI Preview Mode',
-        vram_mb: 4096,
-        n_ctx: 2048
-      };
-    }
-
-    try {
-      const response = await fetch(`${baseUrl}/system/profile`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ profile }),
-        signal: AbortSignal.timeout(4000)
-      });
-      if (response.ok) {
-        return await response.json();
-      }
-    } catch (e) {
-      console.warn('[ipc-bridge] Failed to set profile:', e);
-    }
-    return { status: 'error' };
-  });
+  ipcMain.handle('system:get-hardware', handleGetHardware);
+  ipcMain.handle('profile:get', handleGetHardware);
 
   // ---------------------------------------------------------------------------
   // Phase 8: Runtime & Simulation IPC Handlers
@@ -605,40 +587,8 @@ function registerHandlers(port = 8765, isPreview = false, getMascotManager = nul
     }
   });
 
-  // system:get-hardware-profile — read current hardware scaling tier
-  ipcMain.handle('system:get-hardware-profile', async () => {
-    if (isPreview) {
-      return { tier: 'preview', name: 'UI Preview', vram_mb: 0, n_gpu_layers: 0 };
-    }
-    try {
-      const res = await fetch(`${baseUrl}/system/profile`, {
-        signal: AbortSignal.timeout(2000)
-      });
-      if (res.ok) return await res.json();
-    } catch (err) {
-      console.warn('[ipc-bridge] system:get-hardware-profile error:', err.message);
-    }
-    return { tier: 'unknown' };
-  });
-
-  // system:set-hardware-profile — update active hardware tier
-  ipcMain.handle('system:set-hardware-profile', async (_event, { tier }) => {
-    if (isPreview) {
-      return { status: 'ok', tier, name: `Preview (${tier})` };
-    }
-    try {
-      const res = await fetch(`${baseUrl}/system/profile`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ profile: tier }),
-        signal: AbortSignal.timeout(4000)
-      });
-      if (res.ok) return await res.json();
-    } catch (err) {
-      console.warn('[ipc-bridge] system:set-hardware-profile error:', err.message);
-    }
-    return { status: 'error' };
-  });
+  // system:get-hardware-profile — alias to system:get-hardware
+  ipcMain.handle('system:get-hardware-profile', handleGetHardware);
 
   // system:get-user-profile — fetch user/companion profile
   ipcMain.handle('system:get-user-profile', async () => {

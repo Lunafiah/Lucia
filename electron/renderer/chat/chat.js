@@ -964,7 +964,6 @@ class ChatController {
     // Save & Apply Settings Button
     if (this.saveSettingsBtn) {
       this.saveSettingsBtn.addEventListener('click', async () => {
-        const selectedProfile = this.settingsProfileSelect ? this.settingsProfileSelect.value : 'auto';
         const selectedFps = parseInt(this.settingsFpsSelect ? this.settingsFpsSelect.value : '60', 10);
 
         // Apply Framerate Limit
@@ -972,9 +971,6 @@ class ChatController {
         if (window.avatarRenderer && window.avatarRenderer.setTargetFps) {
           window.avatarRenderer.setTargetFps(selectedFps);
         }
-
-        // Apply Hardware Optimization Profile
-        await this._applySystemProfile(selectedProfile);
 
         // Feedback
         const origText = this.saveSettingsBtn.textContent;
@@ -992,77 +988,23 @@ class ChatController {
   async _loadSystemProfile() {
     try {
       let data = null;
-      if (window.lucia && window.lucia.system && window.lucia.system.getHardwareProfile) {
-        data = await window.lucia.system.getHardwareProfile();
+      if (window.lucia && window.lucia.system && window.lucia.system.getHardwareCapabilities) {
+        data = await window.lucia.system.getHardwareCapabilities();
       } else if (window.lucia && window.lucia.system && window.lucia.system.getProfile) {
         data = await window.lucia.system.getProfile();
       } else {
-        const res = await fetch('http://127.0.0.1:8765/system/profile');
-        if (res.ok) data = await res.json();
-      }
-
-      if (data && data.name) {
-        if (this.hardwareBadge) {
-          this.hardwareBadge.textContent = data.name;
-        }
-        if (this.settingsActiveTier) {
-          this.settingsActiveTier.textContent = data.name;
-        }
-        if (this.settingsVramBudget && data.vram_mb !== undefined) {
-          this.settingsVramBudget.textContent = data.vram_mb > 0 ? `~${data.vram_mb} MB` : 'CPU Only';
-        }
-        if (this.settingsCtxLength && data.n_ctx) {
-          this.settingsCtxLength.textContent = `${data.n_ctx.toLocaleString()} tokens`;
-        }
-      }
-
-      const savedProfile = localStorage.getItem('lucia_hardware_profile');
-      if (savedProfile && this.settingsProfileSelect) {
-        this.settingsProfileSelect.value = savedProfile;
-      } else if (data && data.tier && this.settingsProfileSelect) {
-        const matchingOpt = Array.from(this.settingsProfileSelect.options).find(o => o.value === data.tier);
-        if (matchingOpt) {
-          this.settingsProfileSelect.value = data.tier;
-        }
-      }
-    } catch (err) {
-      console.warn('[settings] Failed to load hardware profile:', err);
-    }
-  }
-
-  async _applySystemProfile(profileName) {
-    try {
-      localStorage.setItem('lucia_hardware_profile', profileName);
-      let data = null;
-      if (window.lucia && window.lucia.system && window.lucia.system.setHardwareProfile) {
-        data = await window.lucia.system.setHardwareProfile(profileName);
-      } else if (window.lucia && window.lucia.system && window.lucia.system.setProfile) {
-        data = await window.lucia.system.setProfile(profileName);
-      } else {
-        const res = await fetch('http://127.0.0.1:8765/system/profile', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ profile: profileName })
-        });
+        const res = await fetch('http://127.0.0.1:8765/system/hardware');
         if (res.ok) data = await res.json();
       }
 
       if (data) {
-        if (this.hardwareBadge && data.name) {
-          this.hardwareBadge.textContent = data.name;
-        }
-        if (this.settingsActiveTier && data.name) {
-          this.settingsActiveTier.textContent = data.name;
-        }
-        if (this.settingsVramBudget && data.vram_mb !== undefined) {
-          this.settingsVramBudget.textContent = data.vram_mb > 0 ? `~${data.vram_mb} MB` : 'CPU Only';
-        }
-        if (this.settingsCtxLength && data.n_ctx) {
-          this.settingsCtxLength.textContent = `${data.n_ctx.toLocaleString()} tokens`;
+        const label = data.device_name || (data.cuda_available ? 'CUDA' : 'Host CPU');
+        if (this.hardwareBadge) {
+          this.hardwareBadge.textContent = label;
         }
       }
     } catch (err) {
-      console.error('[settings] Failed to apply hardware profile:', err);
+      console.warn('[settings] Failed to load hardware info:', err);
     }
   }
 

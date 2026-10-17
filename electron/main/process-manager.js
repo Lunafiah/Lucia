@@ -45,7 +45,6 @@ class ProcessManager {
       const pythonPath = this._getPythonPath();
       const port = this.config.port || 8765;
       const modelPath = this.config.model_path || '';
-      const profile = this.config.profile || 'auto';
       const logLevel = this.config.log_level || 'INFO';
       const mode = this.config.mode || 'live';
 
@@ -53,7 +52,6 @@ class ProcessManager {
         '-m', 'src.api.server',
         '--port', String(port),
         '--model-path', modelPath,
-        '--profile', profile,
         '--log-level', logLevel,
         '--mode', mode
       ];

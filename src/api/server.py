@@ -5,7 +5,7 @@ Endpoints:
     POST /process  — serialized single-turn cognitive loop (asyncio.Lock, HTTP 429 guard)
     GET  /state    — non-blocking real-time emotional telemetry snapshot
     GET  /health   — orchestrator health check
-    GET  /system/profile — current hardware scaling profile
+    GET  /system/hardware — factual host hardware and compute capabilities
 
 Requirements: Phase 3 (1.1–1.8, 2.1–2.7, 3.1–3.7, 9.3); Phase 9 (ADR-014–ADR-020)
 """
@@ -51,7 +51,7 @@ from src.core.orchestrator.cognitive_orchestrator import (
 InstrumentedOrchestrator = CognitiveOrchestrator
 from src.core.orchestrator.policies import CognitiveTurnResult
 from src.core.plugins.hook_bus import HookBus
-from src.core.resource_manager import ResourceProfile, get_resource_profile
+from src.core.hardware import HostCapabilities, detect_host_capabilities
 from src.core.simulation import (
     ActivationSafetyError,
     ScenarioRunner,
@@ -198,7 +198,6 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="Lucia Backend API", version="9.0.0", lifespan=lifespan)
 
 _orchestrator: Optional[CognitiveOrchestrator] = None
-_resource_profile: Optional[ResourceProfile] = None
 
 
 def get_orchestrator() -> CognitiveOrchestrator:
@@ -434,7 +433,7 @@ async def get_state(response: Response) -> StateSnapshot:
         generation_mode = "reflexive"
 
     trace_count = orch._affective_memory.trace_count
-    profile_name = _resource_profile.name if _resource_profile else "auto"
+    profile_name = detect_host_capabilities().backend
 
     expr_dict = (
         latest.expression.to_dict()
@@ -1042,7 +1041,7 @@ async def get_runtime_descriptor() -> Dict[str, Any]:
         "is_live": True,
         "is_simulated": False,
         "state": "READY" if _orchestrator and _orchestrator.is_healthy() else "DEGRADED",
-        "active_profile": _resource_profile.name if _resource_profile else "auto",
+        "active_profile": detect_host_capabilities().backend,
         "capabilities": ["live_chat", "model_inference", "voice", "presence"],
     }
 
@@ -1206,49 +1205,13 @@ async def sim_chat(req: ProcessRequest) -> Dict[str, Any]:
     }
 
 
-@app.get("/system/profile")
-async def system_profile() -> Dict[str, Any]:
+@app.get("/system/hardware")
+async def system_hardware() -> Dict[str, Any]:
     """
-    Return information about the active hardware profile and resource allocation.
+    Return factual host hardware and compute capabilities (device, CUDA, VRAM, CPU threads).
     """
-    if _resource_profile is None:
-        return {"tier": "unknown"}
-    return {
-        "tier": _resource_profile.tier.value,
-        "name": _resource_profile.name,
-        "description": _resource_profile.description,
-        "vram_mb": _resource_profile.vram_mb,
-        "n_gpu_layers": _resource_profile.n_gpu_layers,
-        "n_ctx": _resource_profile.n_ctx,
-        "loop_cadence_ms": _resource_profile.loop_cadence_ms,
-        "sdm_capacity": _resource_profile.sdm_capacity,
-    }
-
-
-@app.post("/system/profile")
-async def update_system_profile(payload: Dict[str, Any]) -> Dict[str, Any]:
-    """
-    Dynamically update the active hardware scalability profile.
-    """
-    global _resource_profile
-    profile_name = payload.get("profile", "auto")
-    try:
-        _resource_profile = get_resource_profile(profile_name)
-        logger.info("Hardware scalability profile updated to: %s (%s)", _resource_profile.name, _resource_profile.tier.value)
-        return {
-            "status": "ok",
-            "tier": _resource_profile.tier.value,
-            "name": _resource_profile.name,
-            "description": _resource_profile.description,
-            "vram_mb": _resource_profile.vram_mb,
-            "n_gpu_layers": _resource_profile.n_gpu_layers,
-            "n_ctx": _resource_profile.n_ctx,
-            "loop_cadence_ms": _resource_profile.loop_cadence_ms,
-            "sdm_capacity": _resource_profile.sdm_capacity,
-        }
-    except Exception as exc:
-        logger.error("Failed to update hardware profile to %s: %s", profile_name, exc)
-        return {"status": "error", "message": str(exc)}
+    caps = detect_host_capabilities()
+    return caps.to_dict()
 
 
 
@@ -1280,7 +1243,7 @@ def init_server(
     mode: str = "live",
     lock_path: Optional[Union[str, Path]] = None,
 ) -> None:
-    global _orchestrator, _resource_profile, _sim_runtime, _scenario_runner, _mode, _instance_lock
+    global _orchestrator, _sim_runtime, _scenario_runner, _mode, _instance_lock
     _mode = mode.lower()
 
     logging.basicConfig(level=getattr(logging, log_level.upper(), logging.INFO))
@@ -1295,7 +1258,6 @@ def init_server(
         try:
             _sim_runtime = SimulationRuntime()
             _scenario_runner = ScenarioRunner(_sim_runtime)
-            _resource_profile = get_resource_profile("minimal")
             logger.info("Simulation runtime initialized successfully.")
         except Exception as exc:
             logger.exception("Failed to initialize SimulationRuntime: %s", exc)
@@ -1460,11 +1422,9 @@ def init_server(
         sys.exit(1)
 
     try:
-        _resource_profile = get_resource_profile(profile_name)
-        config = MemoryOrchestratorConfig.from_profile(
-            model_path=model_path,
-            profile_name_or_tier=profile_name,
-        )
+        host_caps = detect_host_capabilities()
+        n_gpu = 32 if host_caps.cuda_available else 0
+        config = MemoryOrchestratorConfig(model_path=model_path, n_gpu_layers=n_gpu)
         # Phase 9: use composition-based CognitiveOrchestrator (ADR-014); F-02: reseed from persistent history
         _orchestrator = build_cognitive_orchestrator(
             config,

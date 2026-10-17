@@ -627,15 +627,15 @@ $$\text{Orchestrator } \_turn\_lock \longrightarrow \_step\_lock \longrightarrow
 
 ---
 
-## 6. Host Resource Profiling & CPU-First Execution Discipline
+## 6. Host Hardware Capability Probing & CPU-First Execution Discipline
 
-Lucia provides automated host hardware detection (`HardwareTier`) and an advisory profiling surface via `GET /system/profile` and `POST /system/profile` to guide optional local SLM realizer offloading (`llama-cpp-python`).
+Lucia provides truthful host hardware capability probing (`detect_host_capabilities()`) and a factual inspection surface via `GET /system/hardware` to guide optional local SLM realizer execution (`llama-cpp-python`). Legacy selectable hardware tiers (`HardwareTier`, `ResourceProfile`, `/system/profile`) and fake hardware-dependent cognitive scaling have been completely eliminated.
 
-Under the **20-Watt Whole Brain Architecture**, the cognitive core is strictly decoupled from host GPU tiers:
+Under the **20-Watt Whole Brain Architecture**, the cognitive core is strictly decoupled from host GPU hardware:
 1. **Mathematical Invariance of Cognitive Core**: Continuous limbic ODE integration (`EmotionCore`, $5\text{ Hz}$ / 200ms fixed $\Delta t$), homeostatic regulation, and affective dynamics execute exclusively on the CPU with 0.0 MB GPU VRAM contention. ODE step sizes are mathematically calibrated to the Philia attractor and are never dynamically accelerated or throttled by UI settings.
 2. **Associative Memory Invariance**: Sparse Distributed Memory (SDM) operates at a fixed architectural baseline of 1,000 hard locations (ARCH-003, P02/P20), independent of host GPU memory.
 3. **Substrate-Neutral Internal Representations**: Internal reasoning and relational memory representations (UMR-TPG `SemanticGraph`, numeric Concept IDs, Strong Kleene K3) are token-free and do not depend on context-window token budgets.
-4. **Boundary Realizer Offloading**: GPU VRAM is utilized strictly for optional acceleration of downstream natural language realization (`LFM2.5-1.2B Instruct` via `llama.cpp`) and WebGL avatar rendering. UI settings adjustments do not mutate internal cognitive substrates or memory capacity.
+4. **Boundary Realizer Offloading**: GPU VRAM is utilized strictly for optional acceleration of downstream natural language realization (local SLM via `llama.cpp`) and WebGL avatar rendering. Host capability detection does not mutate internal cognitive substrates or memory capacity.
 
 ---
 

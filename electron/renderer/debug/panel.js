@@ -231,10 +231,12 @@ class EmotionDebugPanel {
   async fetchHardwareProfile() {
     try {
       let prof = null;
-      if (window.lucia && window.lucia.system && typeof window.lucia.system.getProfile === 'function') {
+      if (window.lucia && window.lucia.system && typeof window.lucia.system.getHardwareCapabilities === 'function') {
+        prof = await window.lucia.system.getHardwareCapabilities();
+      } else if (window.lucia && window.lucia.system && typeof window.lucia.system.getProfile === 'function') {
         prof = await window.lucia.system.getProfile();
       } else {
-        const res = await fetch('http://127.0.0.1:8765/system/profile');
+        const res = await fetch('http://127.0.0.1:8765/system/hardware');
         if (res.ok) prof = await res.json();
       }
       if (prof) {
@@ -245,14 +247,13 @@ class EmotionDebugPanel {
 
   renderHardwareProfile(prof) {
     if (!prof) return;
-    if (this.hwTier) this.hwTier.textContent = `${prof.name || prof.tier || 'Auto'} (${(prof.tier || 'auto').toUpperCase()})`;
+    if (this.hwTier) this.hwTier.textContent = prof.device_name || (prof.cuda_available ? 'CUDA' : 'Host CPU');
     if (this.hwGpuLayers) {
-      const layers = prof.n_gpu_layers ?? 0;
-      this.hwGpuLayers.textContent = layers > 0 ? `${layers} layers` : 'CPU (0 layers)';
+      this.hwGpuLayers.textContent = prof.cuda_available ? 'CUDA Accelerated' : 'CPU Execution';
     }
-    if (this.hwVram) this.hwVram.textContent = `${(prof.vram_mb || 4096).toLocaleString()} MB`;
-    if (this.hwCtx) this.hwCtx.textContent = `${(prof.n_ctx || 2048).toLocaleString()} tokens`;
-    if (this.hwCadence) this.hwCadence.textContent = `${prof.loop_cadence_ms || 200} ms`;
+    if (this.hwVram) this.hwVram.textContent = `${(prof.vram_mb || 0).toLocaleString()} MB`;
+    if (this.hwCtx) this.hwCtx.textContent = `${prof.cpu_threads || 1} CPU threads`;
+    if (this.hwCadence) this.hwCadence.textContent = '200 ms';
     if (this.sdmCapacity && prof.sdm_capacity) {
       this.sdmCapacity.textContent = (prof.sdm_capacity).toLocaleString();
     }

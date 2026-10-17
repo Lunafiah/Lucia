@@ -83,13 +83,11 @@ class CompanionSettings {
     this.endLifeDestroyBtn = document.getElementById('end-life-destroy-btn');
     this.endLifeCancelBtn = document.getElementById('end-life-cancel-btn');
 
-    // Performance Controls
-    this.autodetectBtn = document.getElementById('settings-autodetect-btn');
-    this.profileSelect = document.getElementById('settings-profile-select');
-    this.activeTierDisplay = document.getElementById('settings-active-tier');
-    this.vramBudgetDisplay = document.getElementById('settings-vram-budget');
-    this.ctxLengthDisplay = document.getElementById('settings-ctx-length');
-    this.loopCadenceDisplay = document.getElementById('settings-loop-cadence');
+    // Performance Controls (Factual Host Compute)
+    this.hostDeviceDisplay = document.getElementById('settings-host-device');
+    this.cudaStatusDisplay = document.getElementById('settings-cuda-status');
+    this.vramDetectedDisplay = document.getElementById('settings-vram-detected');
+    this.cpuBackendDisplay = document.getElementById('settings-cpu-backend');
     this.fpsSelect = document.getElementById('settings-fps-select');
     this.throttleBgToggle = document.getElementById('settings-throttle-bg-toggle');
 
@@ -597,19 +595,6 @@ class CompanionSettings {
     }
 
     // 5. Performance Events
-    if (this.profileSelect) {
-      this.profileSelect.addEventListener('change', async (e) => {
-        const tier = e.target.value;
-        await this._applySystemProfile(tier);
-      });
-    }
-
-    if (this.autodetectBtn) {
-      this.autodetectBtn.addEventListener('click', async () => {
-        if (this.profileSelect) this.profileSelect.value = 'auto';
-        await this._applySystemProfile('auto');
-      });
-    }
 
     if (this.fpsSelect) {
       this.fpsSelect.addEventListener('change', (e) => {
@@ -716,7 +701,7 @@ class CompanionSettings {
       this.loadAvatarAssets(),
       this.loadVoiceTimbres(),
       this.populateAudioDevices(),
-      this.loadSystemProfile(),
+      this.loadHostHardware(),
       this.checkApiStatus(),
     ]);
   }
@@ -843,67 +828,36 @@ class CompanionSettings {
     }
   }
 
-  async loadSystemProfile() {
+  async loadHostHardware() {
     try {
       let data = null;
-      if (window.lucia && window.lucia.system && window.lucia.system.getProfile) {
+      if (window.lucia && window.lucia.system && window.lucia.system.getHardwareCapabilities) {
+        data = await window.lucia.system.getHardwareCapabilities();
+      } else if (window.lucia && window.lucia.system && window.lucia.system.getProfile) {
         data = await window.lucia.system.getProfile();
       } else {
-        const res = await fetch('http://127.0.0.1:8765/system/profile');
+        const res = await fetch('http://127.0.0.1:8765/system/hardware');
         if (res.ok) data = await res.json();
       }
 
       if (data) {
-        if (this.activeTierDisplay && data.name) this.activeTierDisplay.textContent = data.name;
-        if (this.vramBudgetDisplay && data.vram_mb !== undefined) {
-          this.vramBudgetDisplay.textContent = data.vram_mb > 0 ? `~${data.vram_mb} MB` : 'CPU Only';
+        if (this.hostDeviceDisplay && data.device_name) {
+          this.hostDeviceDisplay.textContent = data.device_name;
         }
-        if (this.ctxLengthDisplay && data.n_ctx) {
-          this.ctxLengthDisplay.textContent = `${data.n_ctx.toLocaleString()} tokens`;
+        if (this.cudaStatusDisplay) {
+          this.cudaStatusDisplay.textContent = data.cuda_available ? 'CUDA (Enabled)' : 'Disabled';
         }
-        if (this.loopCadenceDisplay && data.loop_cadence_ms) {
-          this.loopCadenceDisplay.textContent = `${data.loop_cadence_ms} ms`;
+        if (this.vramDetectedDisplay && data.vram_mb !== undefined) {
+          this.vramDetectedDisplay.textContent = data.vram_mb > 0 ? `${data.vram_mb.toLocaleString()} MB` : 'N/A';
         }
-        if (this.profileSelect && data.tier) {
-          const match = Array.from(this.profileSelect.options).find((o) => o.value === data.tier);
-          if (match) match.selected = true;
+        if (this.cpuBackendDisplay) {
+          const threads = data.cpu_threads ? `${data.cpu_threads}T` : '';
+          const backend = (data.backend || 'cpu').toUpperCase();
+          this.cpuBackendDisplay.textContent = threads ? `${backend} (${threads})` : backend;
         }
       }
     } catch (err) {
-      console.warn('[settings] Failed to load system profile:', err);
-    }
-  }
-
-  async _applySystemProfile(tier) {
-    localStorage.setItem('lucia_hardware_profile', tier);
-    try {
-      let data = null;
-      if (window.lucia && window.lucia.system && window.lucia.system.setProfile) {
-        data = await window.lucia.system.setProfile(tier);
-      } else {
-        const res = await fetch('http://127.0.0.1:8765/system/profile', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ profile: tier }),
-        });
-        if (res.ok) data = await res.json();
-      }
-
-      if (data) {
-        if (this.activeTierDisplay && data.name) this.activeTierDisplay.textContent = data.name;
-        if (this.vramBudgetDisplay && data.vram_mb !== undefined) {
-          this.vramBudgetDisplay.textContent = data.vram_mb > 0 ? `~${data.vram_mb} MB` : 'CPU Only';
-        }
-        if (this.ctxLengthDisplay && data.n_ctx) {
-          this.ctxLengthDisplay.textContent = `${data.n_ctx.toLocaleString()} tokens`;
-        }
-        if (this.loopCadenceDisplay && data.loop_cadence_ms) {
-          this.loopCadenceDisplay.textContent = `${data.loop_cadence_ms} ms`;
-        }
-      }
-      this.notifySynchronized(`Profile applied: ${tier}`);
-    } catch (err) {
-      console.warn('[settings] Failed to apply profile:', err);
+      console.warn('[settings] Failed to load host hardware capabilities:', err);
     }
   }
 

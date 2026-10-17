@@ -605,13 +605,13 @@ To ensure integrated system stability across subsystem boundaries, the audit exe
   - Kanerva SDM traces, UMR-TPG semantic graph, and relational vector $\mathbf{R}_t$ remain fully populated and persistent.
   - Subsequent queries retrieve prior SDM memories through synergistic ecphory.
 
-### Scenario 4: Dynamic Hardware Tier Switching Under Active Load
+### Scenario 4: Host Hardware Capability Probing & CPU-First Execution Invariance
 * **Gates Tested**: G5, G6.
-* **Protocol**: Transition hardware tier from `LAPTOP` $\to$ `CPU_ONLY` $\to$ `DESKTOP` via `POST /system/profile` during active background ODE cycles.
+* **Protocol**: Query `GET /system/hardware` during active background ODE cycles under both CUDA and CPU fallback modes.
 * **Pass Criteria**:
-  - Backend reconfigures context window and loop cadence without crashing or restarting process.
-  - Under `CPU_ONLY`, target VRAM is $0\text{ MB}$ with 0 GPU layers offloaded.
-  - Background cognitive dynamics remain strictly on CPU throughout transitions.
+  - Endpoint returns factual host capabilities (`device_name`, `cuda_available`, `vram_mb`, `backend`, `cpu_threads`) without mutating internal cognitive state.
+  - Background cognitive dynamics (ODE integration, homeostasis, SDM memory) execute strictly on CPU with 0.0 MB GPU VRAM contention.
+  - Fixed mathematical defaults (`loop_cadence_ms=200`, `sdm_num_locations=1000`) remain invariant across all host hardware configurations.
 
 ### Scenario 5: Simulation vs. Live Boundary Violation Attempt
 * **Gates Tested**: G1, G7.

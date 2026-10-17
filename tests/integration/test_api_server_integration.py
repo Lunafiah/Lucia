@@ -17,7 +17,6 @@ from src.core.orchestrator.cognitive_orchestrator import (
     CognitiveOrchestrator,
     build_cognitive_orchestrator,
 )
-from src.core.resource_manager import get_resource_profile
 
 
 @pytest.fixture
@@ -43,7 +42,6 @@ def integrated_server(tmp_path):
 
         orch = build_cognitive_orchestrator(config)
         api_module._orchestrator = orch
-        api_module._resource_profile = get_resource_profile("laptop")
         # Phase 8: force live mode so /process and /lifecycle endpoints are not blocked.
         # test_simulation_api uses scope=module and leaves _mode/_sim_runtime set globally.
         original_mode = api_module._mode
@@ -61,7 +59,6 @@ def integrated_server(tmp_path):
 
         orch.shutdown()
         api_module._orchestrator = None
-        api_module._resource_profile = None
         api_module._history_store.file_path = original_history_path
         api_module._is_live_companion_active = original_active
         api_module._mode = original_mode

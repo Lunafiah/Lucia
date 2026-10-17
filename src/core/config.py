@@ -569,27 +569,3 @@ class MemoryOrchestratorConfig(OrchestratorConfig):
             viability_threshold=self.decay_viability_threshold,
         )
 
-    @classmethod
-    def from_profile(
-        cls,
-        model_path: str,
-        profile_name_or_tier: str = "auto",
-        **overrides,
-    ) -> MemoryOrchestratorConfig:
-        """
-        Create a MemoryOrchestratorConfig tuned automatically to the host hardware
-        or to a specified tier (laptop, desktop, high_end, cpu_only).
-        """
-        from src.core.resource_manager import get_resource_profile
-        profile = get_resource_profile(profile_name_or_tier)
-        kwargs = {
-            "model_path": model_path,
-            "n_gpu_layers": profile.n_gpu_layers,
-            "n_ctx": profile.n_ctx,
-            "loop_cadence_ms": profile.loop_cadence_ms,
-            "sdm_num_locations": profile.sdm_num_locations,
-            "sdm_capacity": profile.sdm_capacity,
-            "decay_loop_cadence_seconds": profile.decay_loop_cadence_seconds,
-        }
-        kwargs.update(overrides)
-        return cls(**kwargs)

@@ -132,8 +132,8 @@ describe('Phase 7.7 Genesis Awakening Tests', () => {
       if (urlStr.includes('/models/avatar')) {
         return Promise.resolve({ ok: true, json: () => Promise.resolve({ models: [] }) });
       }
-      if (urlStr.includes('/system/profile')) {
-        return Promise.resolve({ ok: true, json: () => Promise.resolve({ tier: 'laptop' }) });
+      if (urlStr.includes('/system/profile') || urlStr.includes('/system/hardware')) {
+        return Promise.resolve({ ok: true, json: () => Promise.resolve({ device_name: 'Host CPU', cuda_available: false, vram_mb: 0, backend: 'cpu' }) });
       }
       if (urlStr.includes('/lifecycle/activate')) {
         return Promise.resolve({

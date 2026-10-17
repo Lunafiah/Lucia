@@ -119,18 +119,10 @@ describe('CompanionSettings Controller (Phase 7.5)', () => {
 
               <!-- Performance -->
               <section id="settings-pane-performance" class="settings-pane">
-                <select id="settings-profile-select">
-                  <option value="auto">Auto-Detect</option>
-                  <option value="high_end">High-End Tier</option>
-                  <option value="desktop">Desktop Performance</option>
-                  <option value="laptop">Laptop Balanced</option>
-                  <option value="cpu_only">Low-Power</option>
-                </select>
-                <button id="settings-autodetect-btn"></button>
-                <div id="settings-active-tier">Laptop</div>
-                <div id="settings-vram-budget">~4096 MB</div>
-                <div id="settings-ctx-length">2,048 tokens</div>
-                <div id="settings-loop-cadence">200 ms</div>
+                <div id="settings-host-device">Host CPU</div>
+                <div id="settings-cuda-status">Disabled</div>
+                <div id="settings-vram-detected">0 MB</div>
+                <div id="settings-cpu-backend">CPU</div>
                 <select id="settings-fps-select">
                   <option value="60">60 FPS</option>
                   <option value="30">30 FPS</option>
@@ -192,22 +184,22 @@ describe('CompanionSettings Controller (Phase 7.5)', () => {
         toggleMascot: jest.fn(),
       },
       system: {
-        getProfile: jest.fn().mockResolvedValue({
-          tier: 'laptop',
-          name: 'Laptop Balanced',
-          vram_mb: 4096,
-          n_ctx: 2048,
-          loop_cadence_ms: 200,
+        getHardwareCapabilities: jest.fn().mockResolvedValue({
+          device_name: 'NVIDIA RTX 4060',
+          cuda_available: true,
+          vram_mb: 8192,
+          backend: 'cuda',
+          cpu_threads: 16,
+          cpu_architecture: 'AMD64',
         }),
-        setProfile: jest.fn().mockImplementation((tier) =>
-          Promise.resolve({
-            tier,
-            name: `${tier.toUpperCase()} Tier`,
-            vram_mb: tier === 'high_end' ? 16384 : 4096,
-            n_ctx: 4096,
-            loop_cadence_ms: 200,
-          })
-        ),
+        getProfile: jest.fn().mockResolvedValue({
+          device_name: 'NVIDIA RTX 4060',
+          cuda_available: true,
+          vram_mb: 8192,
+          backend: 'cuda',
+          cpu_threads: 16,
+          cpu_architecture: 'AMD64',
+        }),
       },
       models: {
         getAvatars: jest.fn().mockResolvedValue({
@@ -381,28 +373,19 @@ describe('CompanionSettings Controller (Phase 7.5)', () => {
     expect(mockLuciaAPI.window.toggleMascot).toHaveBeenCalled();
   });
 
-  test('Test 6: Performance Profile Dynamic Update & Auto-Detect', async () => {
+  test('Test 6: Host Hardware Capability Rendering & Framerate Configuration', async () => {
     settings.openSettings('performance');
 
-    const profileSelect = document.getElementById('settings-profile-select');
-    const autodetectBtn = document.getElementById('settings-autodetect-btn');
     const fpsSelect = document.getElementById('settings-fps-select');
 
-    // Change profile to high_end
-    profileSelect.value = 'high_end';
-    profileSelect.dispatchEvent(new Event('change'));
-
-    // Allow promise resolution
+    // Allow dynamic data resolution
     await new Promise((resolve) => setTimeout(resolve, 10));
 
-    expect(mockLuciaAPI.system.setProfile).toHaveBeenCalledWith('high_end');
-    expect(document.getElementById('settings-active-tier').textContent).toBe('HIGH_END Tier');
-    expect(document.getElementById('settings-vram-budget').textContent).toBe('~16384 MB');
-
-    // Auto-Detect button
-    autodetectBtn.click();
-    await new Promise((resolve) => setTimeout(resolve, 10));
-    expect(mockLuciaAPI.system.setProfile).toHaveBeenCalledWith('auto');
+    expect(mockLuciaAPI.system.getHardwareCapabilities).toHaveBeenCalled();
+    expect(document.getElementById('settings-host-device').textContent).toBe('NVIDIA RTX 4060');
+    expect(document.getElementById('settings-cuda-status').textContent).toBe('CUDA (Enabled)');
+    expect(document.getElementById('settings-vram-detected').textContent).toBe('8,192 MB');
+    expect(document.getElementById('settings-cpu-backend').textContent).toBe('CUDA (16T)');
 
     // Target FPS
     fpsSelect.value = '30';

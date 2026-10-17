@@ -54,11 +54,11 @@ models/
 ```
 
 * **Small Language Model (SLM)**:
-  * **Model**: `LFM2.5-1.2B-Instruct-Q4_K_M.gguf` (~730 MB)
+  * **Tested Default Checkpoint**: `LFM2.5-1.2B-Instruct-Q4_K_M.gguf` (~730 MB)
   * **Quantization**: 4-bit K-quant (`Q4_K_M`)
   * **SHA-256**: `b1b3de114215d9507409a662a501a631095a479a419584e8a2ded6304b19b4f5`
-  * **Role**: Downstream natural language realization from `PromptAssembler` contracts.
-  * **Engine**: `llama-cpp-python` with CUDA offloading or pure CPU inference.
+  * **Role**: Downstream natural language realization from `PromptAssembler` contracts. Host capabilities and the cognitive core are model-agnostic; any compatible GGUF model supported by `llama-cpp-python` can be targeted via `--model-path`.
+  * **Engine**: `llama-cpp-python` with automatic CUDA offloading (when detected) or pure CPU inference.
 * **Base Text-to-Speech (TTS)**:
   * **Engine**: `edge-tts` (Microsoft Neural Voice streaming).
   * **Default Voice**: `ja-JP-NanamiNeural` (Japanese), `en-US-JennyNeural` (English fallback).
@@ -544,9 +544,17 @@ Click **`🐾 Mascot`** in the header (or press `Ctrl + Shift + L`) to switch in
 4. **Quick Chat (`💬`)**: Opens an inline compact speech bubble allowing text input and spoken audio responses without opening the main window.
 5. **Global Shortcut (`Ctrl + Shift + L`)**: Press from anywhere in Windows to summon or hide the mascot.
 
+## 11. Host Compute Capabilities & Observability
+
+Lucia automatically detects host compute capabilities (`HostCapabilities` via `GET /system/hardware`) and reports them for runtime observability in the **`⚙️ Settings`** modal and developer diagnostics panel (`Ctrl + Shift + D`).
+
+Under the **20-Watt Whole Brain Architecture**, the cognitive architecture does not scale its core dynamics through selectable hardware tiers:
+* **Mathematical Invariance of Cognitive Core**: Continuous limbic ODE integration ($5\text{ Hz}$ / 200ms cadence), homeostatic regulation, associative SDM memory (fixed baseline of 1,000 hard locations; ARCH-003, P02/P20), and symbolic reasoning execute strictly CPU-first with mathematically invariant parameters.
+* **Boundary Realizer Acceleration**: Detected host GPU/CUDA capabilities are utilized exclusively for optional acceleration of downstream natural language realization (local SLM via `llama.cpp`) and WebGL avatar rendering. Compute acceleration does not alter internal cognitive representations, memory capacity, or emotional decay dynamics.
+
 ---
 
-## 11. Frequently Asked Questions (FAQ)
+## 12. Frequently Asked Questions (FAQ)
 
 **Q: Can Lucia operate completely offline without internet?**  
 **A:** Yes. The language model (GGUF via llama.cpp), limbic ODE, associative SDM memory, RVC neural voice synthesis, and avatar rendering run 100% locally on your machine with zero remote API calls.
