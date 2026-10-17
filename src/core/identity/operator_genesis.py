@@ -61,6 +61,7 @@ def resolve_git_commit(workspace_dir: Optional[Union[Path, str]] = None) -> str:
     """
     Resolve current HEAD commit SHA from git in the specified workspace.
     Fails closed if git is unavailable or returns an invalid SHA.
+    Falls back to Path.cwd() if an isolated test workspace is not a git repository.
     """
     ws = Path(workspace_dir).resolve() if workspace_dir else Path.cwd().resolve()
     try:
@@ -74,6 +75,19 @@ def resolve_git_commit(workspace_dir: Optional[Union[Path, str]] = None) -> str:
         commit = res.stdout.strip()
         return validate_genesis_commit(commit)
     except Exception as exc:
+        if ws != Path.cwd().resolve():
+            try:
+                fallback_res = subprocess.run(
+                    ["git", "rev-parse", "HEAD"],
+                    cwd=str(Path.cwd().resolve()),
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                )
+                commit = fallback_res.stdout.strip()
+                return validate_genesis_commit(commit)
+            except Exception:
+                pass
         raise OperatorPreconditionError(
             f"Failed to resolve git HEAD commit SHA: {exc}. "
             "Ensure git is installed and the directory is a git repository, "

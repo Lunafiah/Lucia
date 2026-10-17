@@ -125,6 +125,11 @@ from src.core.identity.operator_genesis import (
     perform_operator_genesis,
     resolve_git_commit,
 )
+from src.core.identity.awakening import (
+    AwakeningResult,
+    awaken_companion,
+    get_awakening_status,
+)
 
 __all__ = [
     # WP-01
@@ -240,4 +245,8 @@ __all__ = [
     "OperatorPreconditionError",
     "perform_operator_genesis",
     "resolve_git_commit",
+    # Awakening Ceremony
+    "AwakeningResult",
+    "awaken_companion",
+    "get_awakening_status",
 ]

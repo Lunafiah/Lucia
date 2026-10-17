@@ -135,6 +135,22 @@ describe('Phase 7.7 Genesis Awakening Tests', () => {
       if (urlStr.includes('/system/hardware')) {
         return Promise.resolve({ ok: true, json: () => Promise.resolve({ device_name: 'Host CPU', cuda_available: false, vram_mb: 0, backend: 'cpu' }) });
       }
+      if (urlStr.includes('/lifecycle/awaken')) {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({
+            status: 'awakened',
+            ontology_state: 'BORN',
+            runtime_state: 'ACTIVE',
+            message: 'Lucia successfully awakened',
+            born_at: currentProfile.born_at || new Date().toISOString(),
+            companion_name: currentProfile.companion_name,
+            user_name: currentProfile.user_name,
+            genesis_performed: true,
+            activation_performed: true,
+          }),
+        });
+      }
       if (urlStr.includes('/lifecycle/activate')) {
         return Promise.resolve({
           ok: true,
@@ -252,19 +268,25 @@ describe('Phase 7.7 Genesis Awakening Tests', () => {
     expect(payload.is_onboarded).toBeUndefined();
     expect(payload.born_at).toBeUndefined();
 
-    // Verify canonical First Activation was called
-    const activateCall = fetchMock.mock.calls.find(call => call[0].includes('/lifecycle/activate') && call[1]?.method === 'POST');
-    expect(activateCall).toBeDefined();
+    // Verify Awakening Ceremony orchestrator was called
+    const awakenCall = fetchMock.mock.calls.find(call => call[0].includes('/lifecycle/awaken') && call[1]?.method === 'POST');
+    expect(awakenCall).toBeDefined();
+
+    // Invariant: UI must NOT directly call raw /lifecycle/activate
+    const rawActivateCall = fetchMock.mock.calls.find(call => call[0].includes('/lifecycle/activate') && call[1]?.method === 'POST');
+    expect(rawActivateCall).toBeUndefined();
   });
 
-  test('Test 4: First Activation endpoint is called to activate companion', async () => {
+  test('Test 4: UI invokes Awakening ceremony orchestrator instead of raw First Activation', async () => {
     const genesisModal = document.getElementById('genesis-modal');
     genesisModal.classList.add('active');
 
     await chat._completeGenesis();
 
-    const activateCall = fetchMock.mock.calls.find(call => call[0].includes('/lifecycle/activate') && call[1]?.method === 'POST');
-    expect(activateCall).toBeDefined();
+    const awakenCall = fetchMock.mock.calls.find(call => call[0].includes('/lifecycle/awaken') && call[1]?.method === 'POST');
+    expect(awakenCall).toBeDefined();
+    const rawActivateCall = fetchMock.mock.calls.find(call => call[0].includes('/lifecycle/activate') && call[1]?.method === 'POST');
+    expect(rawActivateCall).toBeUndefined();
   });
 
   test('Test 5: Transition into normal companion UI upon completion', async () => {
@@ -393,15 +415,15 @@ describe('Phase 7.7 Genesis Awakening Tests', () => {
     expect(localStorage.getItem('lucia_companion_name')).toBe('ABC');
   });
 
-  test('Test 10: Rejection when /lifecycle/activate fails (NOT_BORN)', async () => {
+  test('Test 10: Rejection when Awakening ceremony fails displays meaningful error and preserves modal', async () => {
     fetchMock.mockImplementation((url, opts = {}) => {
       const urlStr = typeof url === 'string' ? url : (url?.url || '');
-      if (urlStr.includes('/lifecycle/activate')) {
+      if (urlStr.includes('/lifecycle/awaken')) {
         return Promise.resolve({
           ok: false,
           status: 400,
           json: () => Promise.resolve({
-            detail: 'Cannot activate companion: instance is NOT_BORN.',
+            detail: 'Awakening ceremony failed: Precondition defect.',
           }),
         });
       }
@@ -419,13 +441,80 @@ describe('Phase 7.7 Genesis Awakening Tests', () => {
 
     await chat._completeGenesis();
 
-    // Modal must remain active because activation failed closed
+    // Modal must remain active because awakening ceremony failed closed
     expect(genesisModal.classList.contains('active')).toBe(true);
     expect(genesisModal.classList.contains('fade-out')).toBe(false);
 
-    // Intro text warns operator
+    // Intro text warns operator with meaningful error rather than raw NOT_BORN crash
     const introText = document.getElementById('genesis-intro-text');
-    expect(introText.textContent).toContain('Cannot activate companion: instance is NOT_BORN');
+    expect(introText.textContent).toContain('Awakening rejected: Awakening ceremony failed: Precondition defect.');
+  });
+
+  test('Test 11: Progress stages presentation during successful Awakening ceremony', async () => {
+    const introText = document.getElementById('genesis-intro-text');
+    await chat._completeGenesis();
+
+    expect(introText.textContent).toContain('Awakening Lucia...');
+    expect(introText.textContent).toContain('→ Establishing Genesis...');
+    expect(introText.textContent).toContain('→ Lucia is Born');
+    expect(introText.textContent).toContain('→ Awakening runtime...');
+    expect(introText.textContent).toContain('→ Lucia is Active');
+  });
+
+  test('Test 12: Recovery/retry after Activation failure invokes Awakening again and completes', async () => {
+    let attempt = 0;
+    fetchMock.mockImplementation((url, opts = {}) => {
+      const urlStr = typeof url === 'string' ? url : (url?.url || '');
+      if (urlStr.includes('/lifecycle/awaken')) {
+        attempt++;
+        if (attempt === 1) {
+          // Attempt 1: Activation failed after Birth (leaves BORN + INACTIVE)
+          return Promise.resolve({
+            ok: false,
+            status: 500,
+            json: () => Promise.resolve({
+              detail: 'Runtime activation error after Birth. State preserved as BORN + INACTIVE.',
+            }),
+          });
+        }
+        // Attempt 2: Activation retry succeeds (BORN + INACTIVE -> ACTIVE)
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({
+            status: 'activated',
+            ontology_state: 'BORN',
+            runtime_state: 'ACTIVE',
+            message: 'Lucia runtime activated',
+            born_at: new Date().toISOString(),
+            companion_name: 'Lucia',
+            user_name: 'Friend',
+            genesis_performed: false,
+            activation_performed: true,
+          }),
+        });
+      }
+      if (urlStr.includes('/profile')) {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({ version: 1, user_name: 'Friend', companion_name: 'Lucia', is_onboarded: attempt > 1 }),
+        });
+      }
+      return Promise.resolve({ ok: true, json: () => Promise.resolve({}) });
+    });
+
+    const genesisModal = document.getElementById('genesis-modal');
+    genesisModal.classList.add('active');
+
+    // Attempt 1: Fails
+    await chat._completeGenesis();
+    expect(genesisModal.classList.contains('active')).toBe(true);
+    const introText = document.getElementById('genesis-intro-text');
+    expect(introText.textContent).toContain('Awakening rejected: Runtime activation error after Birth');
+
+    // Attempt 2: Retry succeeds
+    await chat._completeGenesis();
+    expect(introText.textContent).toContain('→ Awakening runtime...');
+    expect(introText.textContent).toContain('→ Lucia is Active');
   });
 });
 

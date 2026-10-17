@@ -737,40 +737,65 @@ class ChatController {
         this.genesisAwakenBtn.classList.add('awakening');
       }
 
+      // Present ceremony initiation progress
+      if (this.genesisIntroText) {
+        this.genesisIntroText.textContent = `Awakening ${finalCompanionName}...\n→ Establishing Genesis...`;
+        this.genesisIntroText.style.color = '#c4b5fd';
+      }
+
       // 1. Update user & companion preferences via /profile (never directly creates Birth)
       const prefPayload = {
         user_name: userName || 'Friend',
         companion_name: finalCompanionName,
       };
 
-      if (window.lucia && window.lucia.system && window.lucia.system.setUserProfile) {
-        await window.lucia.system.setUserProfile(prefPayload);
-      } else {
-        await fetch('http://127.0.0.1:8765/profile', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(prefPayload),
-        });
+      try {
+        if (window.lucia && window.lucia.system && window.lucia.system.setUserProfile) {
+          await window.lucia.system.setUserProfile(prefPayload);
+        } else {
+          await fetch('http://127.0.0.1:8765/profile', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(prefPayload),
+          });
+        }
+      } catch (e) {
+        // Preference pre-save non-fatal; /lifecycle/awaken also carries names
       }
 
-      // 2. Canonical First Activation via /lifecycle/activate (requires prior Birth)
-      let actRes = null;
-      let actData = {};
+      // 2. Canonical Awakening Ceremony Orchestration via /lifecycle/awaken
+      let awakenRes = null;
+      let awakenData = {};
       try {
-        actRes = await fetch('http://127.0.0.1:8765/lifecycle/activate', {
+        awakenRes = await fetch('http://127.0.0.1:8765/lifecycle/awaken', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            user_name: userName || 'Friend',
+            companion_name: finalCompanionName,
+            confirm_ceremony: true,
+          }),
         });
-        if (actRes.ok) {
-          actData = await actRes.json();
+        if (awakenRes.ok) {
+          awakenData = await awakenRes.json();
         } else {
-          actData = await actRes.json().catch(() => ({}));
+          awakenData = await awakenRes.json().catch(() => ({}));
         }
       } catch (err) {
-        actData = { detail: err.message || 'Network error reaching backend' };
+        awakenData = { detail: err.message || 'Network error reaching backend' };
       }
 
-      if (actRes && actRes.ok && (actData.status === 'activated' || actData.status === 'already_active')) {
+      if (awakenRes && awakenRes.ok && (awakenData.status === 'awakened' || awakenData.status === 'activated' || awakenData.status === 'already_active')) {
+        // Progress stage updates
+        if (this.genesisIntroText) {
+          if (awakenData.status === 'awakened') {
+            this.genesisIntroText.textContent = `Awakening ${finalCompanionName}...\n→ Establishing Genesis...\n→ ${finalCompanionName} is Born\n→ Awakening runtime...\n→ ${finalCompanionName} is Active`;
+          } else {
+            this.genesisIntroText.textContent = `Awakening ${finalCompanionName}...\n→ Awakening runtime...\n→ ${finalCompanionName} is Active`;
+          }
+          this.genesisIntroText.style.color = '#34d399';
+        }
+
         let profile = null;
         if (window.lucia && window.lucia.system && window.lucia.system.getUserProfile) {
           profile = await window.lucia.system.getUserProfile();
@@ -783,7 +808,7 @@ class ChatController {
           user_name: userName || 'Friend',
           companion_name: finalCompanionName,
           is_onboarded: true,
-          born_at: actData.born_at || new Date().toISOString(),
+          born_at: awakenData.born_at || new Date().toISOString(),
         };
 
         try {
@@ -803,12 +828,12 @@ class ChatController {
             }
           }, 400);
         }
-        console.log(`[genesis] ${finalCompanionName} activated successfully for`, userName || 'Friend');
+        console.log(`[genesis] ${finalCompanionName} awakened successfully for`, userName || 'Friend');
       } else {
-        const errorDetail = actData.detail || 'Activation rejected. Ensure the operator Genesis ceremony has been completed.';
-        console.warn('[genesis] Activation failed:', errorDetail);
+        const errorDetail = awakenData.detail || 'Awakening ceremony failed.';
+        console.warn('[genesis] Awakening failed:', errorDetail);
         if (this.genesisIntroText) {
-          this.genesisIntroText.textContent = `Activation rejected: ${errorDetail}`;
+          this.genesisIntroText.textContent = `Awakening rejected: ${errorDetail}`;
           this.genesisIntroText.style.color = '#ff6b6b';
         }
         if (this.genesisAwakenBtn) {
@@ -817,7 +842,7 @@ class ChatController {
         }
       }
     } catch (e) {
-      console.error('[genesis] Failed to complete activation:', e);
+      console.error('[genesis] Failed to complete awakening:', e);
       if (this.genesisAwakenBtn) {
         this.genesisAwakenBtn.disabled = false;
         this.genesisAwakenBtn.classList.remove('awakening');

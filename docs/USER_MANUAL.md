@@ -70,9 +70,31 @@ models/
 
 ## 2. Companion Lifecycle & Operating Foundations
 
-Lucia's existence is governed by a strict tripartite ontological foundation (ADR-034 / G1–G4 Protocol Contract). An operator must clearly distinguish between **Birth** and **Runtime Activation**:
+Lucia's existence is governed by a strict tripartite ontological foundation (ADR-034 / G1–G4 Protocol Contract) and canonical Awakening ceremony orchestration (ADR-037). An operator must clearly distinguish between **Birth**, **Runtime Activation**, and user-facing **Awakening Ceremony Orchestration**:
 
 ```text
+Human-Facing Action:
+    "Awaken Lucia" (Desktop UI)
+          │
+          ▼
+    AwakeningOrchestrator (POST /lifecycle/awaken)
+          │
+          ├── Case A: if NOT_BORN
+          │     ├── 1. Genesis Birth (perform_operator_genesis)
+          │     │      Creates durable Genesis Commitment (data/genesis_commitment.json)
+          │     ├── 2. Verify durable Genesis Commitment -> confirms BORN + INACTIVE
+          │     └── 3. First Activation -> BORN + ACTIVE
+          │
+          ├── Case B: if BORN + INACTIVE
+          │     └── First Activation only -> BORN + ACTIVE (Zero Re-Genesis)
+          │
+          ├── Case C: if BORN + ACTIVE
+          │     └── Idempotent return (Already active; no duplicate side effects)
+          │
+          └── Case D: if ENDED
+                └── Permanent rejection (HTTP 410 GONE; Re-Genesis strictly forbidden)
+
+Low-Level Boundaries (Engine-Level Primitives):
        NOT_BORN
            │
            │  Genesis Ceremony: Operator CLI
@@ -80,14 +102,14 @@ Lucia's existence is governed by a strict tripartite ontological foundation (ADR
            ▼
     BORN + INACTIVE
            │
-           │  First Activation:
-           │  POST /lifecycle/activate
+           │  Low-Level Activation Boundary:
+           │  POST /lifecycle/activate (requires prior BORN evidence)
            ▼
      BORN + ACTIVE  ◄────────────────┐
            │                         │
-           │  Stop Backend / Ctrl+C  │  Restart & Activate:
-           │  (Safe Deactivation)    │  POST /lifecycle/activate
-           ▼                         │
+           │  Stop Backend / Ctrl+C  │  Restart & Awaken:
+           │  (Safe Deactivation)    │  POST /lifecycle/awaken or
+           ▼                         │  POST /lifecycle/activate
     BORN + INACTIVE  ────────────────┘
            │
            │  Terminal Decommissioning:
@@ -104,14 +126,16 @@ Lucia's existence is governed by a strict tripartite ontological foundation (ADR
 | **Meaning** | Ontological status of the individual companion. | Operational execution of the conversational engine. |
 | **Genesis Role** | **Genesis establishes durable Birth evidence.** It transitions Lucia from `NOT_BORN` to `BORN`. It creates the permanent cryptographic Identity Anchor and origin timestamp. Genesis does NOT activate conversational inference. | Genesis leaves the runtime in `INACTIVE` state (`BORN + INACTIVE`). |
 | **First Activation Role** | Activation strictly requires existing verified `BORN` evidence. It transitions runtime execution from `INACTIVE` to `ACTIVE`. | Activation awakens the `CognitiveOrchestrator` to admit turns on `POST /process`. |
+| **Awakening Role** | User-facing orchestration boundary (`POST /lifecycle/awaken`, ADR-037). Safely coordinates Birth and Activation sequentially based on current state without collapsing them. | Exposes status via `GET /lifecycle/status` separating ontological from runtime state. |
 
 ### 2.2 Core Operating Invariants
 1. **Birth $\ne$ Activation**: Genesis creates identity origin, not runtime execution. Activation awakens runtime execution, but can NEVER synthesize Birth.
-2. **Explicit Human Authorization Required**: Genesis requires explicit operator confirmation via `--confirm-genesis`. First Activation requires explicit invocation of `POST /lifecycle/activate`.
-3. **No Activation Without Prior Birth**: If an operator calls `POST /lifecycle/activate` on a companion that is `NOT_BORN`, the backend strictly fails closed with HTTP 400 Bad Request (`{"detail": "Cannot activate companion: instance is NOT_BORN..."}`).
-4. **No Direct Profile Mutation**: The frontend or external callers cannot bypass Genesis or Activation by posting `is_onboarded: true` or `born_at` to `/profile` (HTTP 400 Bad Request).
-5. **Runtime `/process` Gate**: While runtime is `INACTIVE`, `POST /process` fails closed with HTTP 403 Forbidden (`{"error": "runtime_inactive"}`).
-6. **Catastrophic Reset Boundary**: `POST /lifecycle/end` is exclusively catastrophic decommissioning (`ENDED`). It permanently forbids re-Genesis and activation. It must NEVER be used for routine shutdown or relationship transitions.
+2. **User-Facing Awaken vs Low-Level Activation**: The UI calls `POST /lifecycle/awaken` to perform the complete awakening ceremony. `POST /lifecycle/activate` remains the low-level activation primitive that strictly verifies existing Birth evidence.
+3. **No Activation Without Prior Birth**: If an operator or caller directly invokes `POST /lifecycle/activate` on a companion that is `NOT_BORN`, the backend strictly fails closed with HTTP 400 Bad Request (`{"detail": "Cannot activate companion: instance is NOT_BORN..."}`).
+4. **Lifecycle Status Introspection (`GET /lifecycle/status`)**: Universal endpoint returning explicit separation of `ontology_state` (`NOT_BORN` / `BORN` / `ENDED`), `runtime_state` (`INACTIVE` / `ACTIVE`), `outcome` (`VERIFIED_BORN` / `NOT_FOUND` / `UNKNOWN` / `INVALID_EVIDENCE`), and `is_onboarded`.
+5. **No Direct Profile Mutation**: The frontend or external callers cannot bypass Genesis or Activation by posting `is_onboarded: true` or `born_at` to `/profile` (HTTP 400 Bad Request).
+6. **Runtime `/process` Gate**: While runtime is `INACTIVE`, `POST /process` fails closed with HTTP 403 Forbidden (`{"error": "runtime_inactive"}`).
+7. **Catastrophic Reset Boundary**: `POST /lifecycle/end` is exclusively catastrophic decommissioning (`ENDED`). It permanently forbids re-Genesis and activation. It must NEVER be used for routine shutdown or relationship transitions.
 
 ---
 

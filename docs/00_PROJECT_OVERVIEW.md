@@ -269,7 +269,13 @@ Lucia operates on multiple biological time horizons coordinated by non-blocking 
 
 ### 6.1 Active REST API Surface
 The Python backend binds to `127.0.0.1:8765` and strictly guards routes based on runtime mode:
-* `POST /lifecycle/activate`: Official First Activation path transitioning companion runtime from `INACTIVE` to `ACTIVE`. Strictly gated to live mode and requires existing verified Genesis commitment (`BORN`). Blocked in simulation mode.
+* `POST /lifecycle/awaken`: Official user-facing Genesis Awakening Ceremony orchestration boundary (`src.core.identity.awakening:awaken_companion`). Orchestrates the complete awakening flow across ontological and runtime states:
+  - **Case A (`NOT_BORN`)**: Genesis Birth (`perform_operator_genesis`) $\to$ verify durable Genesis Commitment (`BORN + INACTIVE`) $\to$ First Activation $\to$ `BORN + ACTIVE`.
+  - **Case B (`BORN + INACTIVE`)**: First Activation only $\to$ `BORN + ACTIVE` (Zero Re-Genesis).
+  - **Case C (`BORN + ACTIVE`)**: Idempotent confirmation.
+  - **Case D (`ENDED`)**: Terminal state; permanently rejected (HTTP 410 GONE).
+* `GET /lifecycle/status`: Universal lifecycle introspection endpoint returning explicit separation between Ontological State (`NOT_BORN` / `BORN` / `ENDED`), Runtime State (`INACTIVE` / `ACTIVE`), verification `outcome`, and `is_onboarded`.
+* `POST /lifecycle/activate`: Low-level First Activation primitive transitioning companion runtime from `INACTIVE` to `ACTIVE`. Strictly gated to live mode and requires existing verified Genesis commitment (`BORN`). Strictly fails closed on `NOT_BORN` (HTTP 400 Bad Request) and never synthesizes Birth. (UI invocations use `/lifecycle/awaken`, not raw `/lifecycle/activate`).
 * `POST /process`: Dispatches user chat turn through 16-stage cognitive pipeline. Strictly enforces `_is_live_companion_active` (returns HTTP 403 `{"error": "runtime_inactive"}` when inactive; 403 in simulation mode).
 * `POST /profile`: Updates user profile preferences (e.g. user name). Rejects direct injection of `is_onboarded: true`, `born_at`, or `identity_anchor` (HTTP 400 Bad Request; Blocker 2 guard).
 * `GET /state`: Universal non-blocking real-time state snapshot (PAD, somatic markers, expression, relationship). Responds $\le 10\text{ms}$.

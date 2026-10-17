@@ -1062,6 +1062,31 @@ The Cognitive Core contracts accept semantic graphs formed from upstream raw mul
 
 ---
 
+### ADR-037: Lifecycle Awakening Orchestration Boundary & Status Introspection
+* **Status**: **ACCEPTED & PRODUCTION IMPLEMENTED / VERIFIED** (Post-P27 Baseline, Commit: `f2c206d`)
+* **Context**: Under the tripartite ontological foundation (ADR-034 / G1–G4), `Genesis Birth != First Activation`. Low-level `POST /lifecycle/activate` strictly verifies that an instance is already `BORN` and fails closed on `NOT_BORN` (`HTTP 400 Bad Request`) to ensure that activation never synthesizes Birth. Direct UI invocation of raw `POST /lifecycle/activate` resulted in premature `NOT_BORN` rejection during first-time onboarding.
+* **Decision**: Establish the canonical user-facing Awakening ceremony orchestration layer above low-level Birth and Activation boundaries:
+  1. *Awakening Ceremony Orchestrator (`src.core.identity.awakening:awaken_companion` / `POST /lifecycle/awaken`)*: A single user-facing orchestration boundary that safely executes the appropriate lifecycle operation according to current ontological (`NOT_BORN` / `BORN` / `ENDED`) and runtime (`INACTIVE` / `ACTIVE`) state:
+     - **Case A (`NOT_BORN`)**: First-time Awakening:
+       1. Genesis Birth (`perform_operator_genesis`) creating durable Genesis Commitment (`data/genesis_commitment.json`) and synchronizing `profile.json`.
+       2. Verify durable Genesis Commitment immediately post-birth (`verify_genesis() == VERIFIED_BORN`).
+       3. Confirm ontological state is `BORN` (runtime `INACTIVE`).
+       4. First Activation transitioning runtime from `INACTIVE` to `ACTIVE`.
+       5. Result: `BORN + ACTIVE`.
+       *(Birth failure prevents Activation; Activation failure preserves `BORN + INACTIVE` and allows activation retry without re-Genesis).*
+     - **Case B (`BORN + INACTIVE`)**: Existing instance Awakening:
+       1. First Activation only (runtime `INACTIVE` $\to$ `ACTIVE`).
+       2. Result: `BORN + ACTIVE`.
+       *(Never performs Genesis Birth again; existing durable evidence is immutable).*
+     - **Case C (`BORN + ACTIVE`)**: Already active companion:
+       - Idempotent confirmation. Returns already-active status without duplicate Birth or duplicate Activation side effects.
+     - **Case D (`ENDED`)**: Terminal instance:
+       - Permanently rejected (`HTTP 410 GONE`). Decommissioning is catastrophic and irreversible; Re-Genesis and reactivation are strictly forbidden.
+  2. *Lifecycle Status Introspection (`GET /lifecycle/status`)*: Exposes `outcome`, `ontology_state` (`NOT_BORN` / `BORN` / `ENDED`), `runtime_state` (`INACTIVE` / `ACTIVE`), `is_onboarded`, and `born_at`. The canonical distinction between ontological existence and runtime activity remains strictly explicit without introducing a collapsed enum.
+  3. *Preservation of Low-Level Activation Boundary*: `POST /lifecycle/activate` is preserved without mutation as a low-level gate requiring prior Birth. It fails closed on `NOT_BORN` and never implicitly synthesizes Birth. The desktop UI invokes `POST /lifecycle/awaken`, never calling raw `POST /lifecycle/activate` directly.
+
+---
+
 ### 8.1 Reconciliation of Outdated Specs & Conflicting Decisions
 
 | Dimension | Outdated / Preliminary Spec | Authoritative Implemented Reality | Resolution & Rationale |

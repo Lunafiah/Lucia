@@ -76,10 +76,23 @@ from src.core.identity.provenance_verifier import (
     verify_provenance_and_environment,
 )
 from src.core.identity.genesis import (
+    GenesisCommitmentCorruptedError,
+    GenesisError,
+    GenesisVerificationError,
     GenesisVerificationOutcome,
     OntologyState,
+    TerminalLifecycleError,
     mark_lifecycle_ended,
     verify_genesis,
+)
+from src.core.identity.operator_genesis import (
+    OperatorGenesisError,
+    OperatorPreconditionError,
+)
+from src.core.identity.awakening import (
+    AwakeningResult,
+    awaken_companion,
+    get_awakening_status,
 )
 from src.core.storage.history_store import ChatHistoryStore
 from src.core.telemetry.stability_evaluator import StabilityEvaluator
@@ -637,6 +650,13 @@ class ProfileUpdateRequest(BaseModel):
     phylogenetic_lineage: Optional[Dict[str, Any]] = None
 
 
+class AwakenRequest(BaseModel):
+    user_name: Optional[str] = None
+    companion_name: Optional[str] = None
+    confirm_ceremony: bool = True
+    genesis_commit: Optional[str] = None
+
+
 @app.get("/models/avatar")
 async def get_avatar_models() -> Dict[str, Any]:
     """
@@ -904,6 +924,90 @@ async def activate_companion() -> Dict[str, Any]:
         "born_at": born_at_val,
         "companion_name": data.get("companion_name", "Lucia"),
     }
+
+
+@app.post("/lifecycle/awaken")
+async def awaken_companion_route(req: AwakenRequest) -> Dict[str, Any]:
+    """
+    User-facing Genesis Awakening Ceremony Orchestration Endpoint.
+
+    Governing Architecture:
+    - Orchestrates the complete Awakening Ceremony above low-level Birth and Activation boundaries.
+    - First-time Lucia:
+        NOT_BORN -> Genesis Birth -> verify durable Genesis Commitment -> BORN + INACTIVE -> First Activation -> BORN + ACTIVE.
+    - Existing Lucia:
+        BORN + INACTIVE -> First Activation -> BORN + ACTIVE. (Never repeats Genesis Birth).
+    - Already active:
+        BORN + ACTIVE -> idempotent confirmation.
+    - Ended:
+        ENDED -> permanently rejected (410 GONE).
+    - Strictly gated to live mode.
+    """
+    global _is_live_companion_active
+
+    if _mode == "simulation" or _sim_runtime is not None:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Cannot awaken live companion in simulation mode. Direct lifecycle awakening is strictly forbidden in simulation mode.",
+        )
+
+    p = _get_profile_file()
+    c_p = Path(os.environ.get("LUCIA_GENESIS_COMMITMENT_PATH") or (p.parent / "genesis_commitment.json"))
+    ws = Path(os.environ.get("LUCIA_WORKSPACE_PATH") or Path.cwd())
+
+    def _activate_runtime() -> None:
+        global _is_live_companion_active
+        _is_live_companion_active = True
+        logger.info("Lucia activated in live mode via Awakening ceremony")
+
+    try:
+        res = awaken_companion(
+            confirm_ceremony=req.confirm_ceremony,
+            user_name=req.user_name,
+            companion_name=req.companion_name,
+            genesis_commit=req.genesis_commit,
+            workspace_dir=ws,
+            commitment_path=c_p,
+            profile_path=p,
+            is_runtime_active=_is_live_companion_active,
+            activate_runtime_fn=_activate_runtime,
+        )
+        return res.to_dict()
+    except TerminalLifecycleError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_410_GONE,
+            detail=str(exc),
+        )
+    except OperatorPreconditionError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(exc),
+        )
+    except (GenesisVerificationError, GenesisCommitmentCorruptedError) as exc:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=str(exc),
+        )
+    except GenesisError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(exc),
+        )
+
+
+@app.get("/lifecycle/status")
+async def get_lifecycle_status_route() -> Dict[str, Any]:
+    """Query current ontological and runtime lifecycle status."""
+    p = _get_profile_file()
+    c_p = Path(os.environ.get("LUCIA_GENESIS_COMMITMENT_PATH") or (p.parent / "genesis_commitment.json"))
+    ws = Path(os.environ.get("LUCIA_WORKSPACE_PATH") or Path.cwd())
+
+    return get_awakening_status(
+        workspace_dir=ws,
+        commitment_path=c_p,
+        profile_path=p,
+        is_runtime_active=_is_live_companion_active,
+    )
 
 
 @app.post("/lifecycle/end")

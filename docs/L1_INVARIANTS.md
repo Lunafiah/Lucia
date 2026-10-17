@@ -54,17 +54,33 @@ Every invariant in this document is traced directly to canonical project documen
    - **Preservation of `/lifecycle/end`**: `POST /lifecycle/end` remains canonically implemented and documented strictly as **catastrophic individual decommissioning / complete memory reset / Genesis reset**. It must never be reinterpreted as a normal relationship transition or covenant release.
    - **Scope of Decision & Remaining Unresolved Policy**: This ratification establishes the *ontological foundation only*, not runtime lifecycle state machines. The concrete number of relationship chapters, Covenant state machine, Covenant Release protocol, relationship transition authorization, owner-transfer semantics, host migration policy, and multi-person relationship policy remain future architectural/governance work. No new lifecycle API or runtime state machine is authorized in production.
 5. **Genesis Semantic & Protocol Contract (G1–G4 Protocol Invariant)**:
-   - **Canonical Lifecycle Progression**:
+   - **Canonical Lifecycle Progression & Awakening Orchestration**:
      ```text
-     NOT_BORN
-         ↓  (Genesis Ceremony: Operator CLI `python scripts/run_genesis.py --confirm-genesis`)
-     BORN + INACTIVE
-         ↓  (First Activation: `POST /lifecycle/activate`)
-     BORN + ACTIVE
-         ↓  (Normal Live Conversational Inference)
-     normal /process
+     [User-Facing Action: "Awaken Lucia"]
+                     │
+                     ▼
+            AwakeningOrchestrator (POST /lifecycle/awaken)
+                     │
+                     ├── Case A: if NOT_BORN
+                     │     ├── 1. Genesis Birth (perform_operator_genesis)
+                     │     ├── 2. Verify durable Genesis Commitment -> BORN + INACTIVE
+                     │     └── 3. First Activation -> BORN + ACTIVE
+                     │
+                     ├── Case B: if BORN + INACTIVE
+                     │     └── First Activation only -> BORN + ACTIVE (Zero Re-Genesis)
+                     │
+                     ├── Case C: if BORN + ACTIVE
+                     │     └── Idempotent return (No duplicate Birth or Activation)
+                     │
+                     └── Case D: if ENDED
+                           └── Permanent rejection (HTTP 410 GONE; Re-Genesis strictly forbidden)
      ```
-   - **Genesis Birth $\ne$ First Activation**: Genesis establishes origin, not history. Genesis Ceremony produces `BORN + INACTIVE`. First Activation awakens runtime execution (`INACTIVE ↔ ACTIVE`) and strictly requires existing valid Birth evidence (`BORN`). First Activation MUST NOT synthesize Birth or create an Identity Anchor.
+   - **Genesis Birth $\ne$ First Activation**: Genesis establishes origin, not history. Genesis Ceremony produces `BORN + INACTIVE`. First Activation awakens runtime execution (`INACTIVE ↔ ACTIVE`) and strictly requires existing valid Birth evidence (`BORN`). First Activation MUST NOT synthesize Birth or create an Identity Anchor. The user-facing Awakening ceremony orchestrator (`POST /lifecycle/awaken`) coordinates Birth and Activation as separate sequential stages without collapsing them into a single primitive.
+   - **Preservation of Low-Level Activation Boundary**: `POST /lifecycle/activate` remains strictly a low-level activation gate. It requires existing valid Birth evidence and fails closed on `NOT_BORN` (HTTP 400 Bad Request). It must never implicitly synthesize Birth. The desktop UI invokes `POST /lifecycle/awaken` rather than directly calling raw `POST /lifecycle/activate`.
+   - **Lifecycle Status Introspection Contract (`GET /lifecycle/status`)**: Exposes current lifecycle state without obscuring the canonical boundary between:
+     - Ontological State: `NOT_BORN` / `BORN` / `ENDED`
+     - Runtime State: `INACTIVE` / `ACTIVE`
+     - Verification Outcome: `VERIFIED_BORN` / `NOT_FOUND` / `UNKNOWN` / `INVALID_EVIDENCE`
    - **Operator Genesis Entry Point**: The sole authorized interface for Genesis execution is the deterministic operator entry point (`src.core.identity.operator_genesis:perform_operator_genesis` / `scripts/run_genesis.py`). It requires explicit `--confirm-genesis`, verifies clean Pre-Genesis state, binds Git commit origin, and writes atomic durable commitment. It is never callable during backend startup, cannot be triggered via normal `/process`, and cannot be bypassed via UI `/profile` mutation.
    - **Runtime `/process` Gate**: `POST /process` strictly enforces `_is_live_companion_active`. When the companion is `INACTIVE`, conversational inference fails closed (HTTP 403 `{"error": "runtime_inactive"}`). Genesis/Birth state alone does NOT imply an `ACTIVE` runtime.
    - **Ontological Lifecycle**: `NOT_BORN → BORN → ENDED`. Terminal decommissioning (`ENDED`) irreversibly forbids re-Genesis and activation.
