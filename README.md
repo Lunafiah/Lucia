@@ -192,7 +192,7 @@ pip install -r requirements.txt
 
 ### 2. Verify Automated Test Suites
 ```powershell
-# Run full unit test suite (706 tests)
+# Run full unit test suite (867 tests)
 .\.venv\Scripts\python.exe -m pytest tests/unit -v
 
 # Run mathematical property invariant tests (38 tests)
