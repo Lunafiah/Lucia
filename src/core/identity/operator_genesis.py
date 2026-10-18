@@ -236,6 +236,13 @@ def perform_operator_genesis(
         except Exception as exc:
             logger.warning("Operator preferences sync warning: %s", exc)
 
+    # 6B. Ensure initial host authority binding is established
+    try:
+        from src.core.identity.provenance_verifier import reconfirm_hardware_environment
+        reconfirm_hardware_environment(profile_path=p_p, current_workspace_path=ws)
+    except Exception as exc:
+        logger.warning("Operator Genesis authority binding warning: %s", exc)
+
     # 7. Post-Genesis verification assertion
     post_check = verify_genesis(
         workspace_dir=ws,

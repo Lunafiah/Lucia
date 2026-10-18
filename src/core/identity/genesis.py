@@ -642,6 +642,16 @@ def commit_genesis(
         finally:
             os.close(p_fd)
         os.replace(p_tmp, p_path)
+
+        # Establish initial host authority binding for ADR-034
+        try:
+            from src.core.identity.provenance_verifier import reconfirm_hardware_environment
+            reconfirm_hardware_environment(
+                profile_path=p_path,
+                current_workspace_path=ws,
+            )
+        except Exception as p_exc:
+            logger.warning("Could not establish initial authority binding during Genesis: %s", p_exc)
     except Exception as exc:
         logger.warning("Could not synchronize profile during commitment: %s", exc)
 

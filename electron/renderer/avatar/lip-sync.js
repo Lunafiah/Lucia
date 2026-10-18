@@ -74,13 +74,21 @@ class LipSyncProcessor {
       if (onEnded) onEnded();
     };
 
-    audio.onerror = () => {
+    audio.onerror = (e) => {
+      console.warn('[lip-sync] Audio element error:', audio.error ? `code ${audio.error.code} (${audio.error.message || 'unknown'})` : e);
       this.isPlaying = false;
       this.mouthOpen = 0.0;
       if (onEnded) onEnded();
     };
 
-    await audio.play();
+    try {
+      await audio.play();
+    } catch (playErr) {
+      console.warn('[lip-sync] audio.play() rejected:', playErr.message || playErr);
+      this.isPlaying = false;
+      this.mouthOpen = 0.0;
+      if (onEnded) onEnded();
+    }
   }
 
   /**
