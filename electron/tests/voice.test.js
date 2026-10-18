@@ -168,4 +168,40 @@ describe('Voice Synthesis and Playback Lifecycle Tests', () => {
     );
     warnSpy.mockRestore();
   });
+
+  test('5. Realization decoupling: text is in user language while voice is Japanese with explicit language', async () => {
+    const fakeAudioBuffer = new Uint8Array([10, 20, 30]).buffer;
+    window.lucia.voice.synthesize.mockResolvedValue(fakeAudioBuffer);
+
+    window.lucia.chat.send.mockResolvedValue({
+      response: 'Hello Luna, I am here with you.',
+      realization: {
+        text: {
+          content: 'Hello Luna, I am here with you.',
+          language: 'en'
+        },
+        voice: {
+          content: 'こんにちは、ルナ。一緒にいます。',
+          language: 'ja'
+        }
+      },
+      expression: { voice: { speech_rate_pct: 0, volume_pct: 0, pitch_shift_hz: 0 } },
+    });
+
+    chat.inputArea.value = 'Hello';
+    await chat.sendMessage();
+
+    // Text message rendered in chat pane is user language (en)
+    const messages = chat.messagesContainer.querySelectorAll('.bubble-text');
+    expect(messages[messages.length - 1].textContent).toBe('Hello Luna, I am here with you.');
+
+    // Voice sent to synthesis is Japanese realization with explicit language = 'ja'
+    expect(window.lucia.voice.synthesize).toHaveBeenCalledWith(
+      'こんにちは、ルナ。一緒にいます。',
+      expect.objectContaining({ language: 'ja' })
+    );
+    expect(speakMock).toHaveBeenCalledTimes(1);
+    expect(chat.audioCache.has('Hello Luna, I am here with you.')).toBe(true);
+    expect(chat.audioCache.has('こんにちは、ルナ。一緒にいます。')).toBe(true);
+  });
 });

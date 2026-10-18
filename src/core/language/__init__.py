@@ -34,8 +34,16 @@ from src.core.language.contract import (
     ProvenanceOrigin,
     ProvenanceRecord,
     RealizationInputContract,
+    RealizationOutput,
     SemanticRoleBinding,
     SemanticScopeType,
+    TextRealization,
+    VoiceRealization,
+)
+from src.core.language.detection import detect_active_language
+from src.core.language.realization import (
+    construct_realization_output,
+    realize_japanese_voice_text,
 )
 from src.core.language.gate import (
     GateDecision,
@@ -46,6 +54,12 @@ from src.core.language.llm_backend import LLMBackend
 __all__ = [
     "LLMBackend",
     "RealizationInputContract",
+    "RealizationOutput",
+    "TextRealization",
+    "VoiceRealization",
+    "detect_active_language",
+    "realize_japanese_voice_text",
+    "construct_realization_output",
     "SemanticRoleBinding",
     "ProvenanceRecord",
     "CommunicativeAct",

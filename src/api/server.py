@@ -139,6 +139,7 @@ def get_stability_evaluator() -> StabilityEvaluator:
 
 class ProcessRequest(BaseModel):
     input: str = Field(..., min_length=1, max_length=4000)
+    language: Optional[str] = None
 
 
 class ProcessResponse(BaseModel):
@@ -149,6 +150,7 @@ class ProcessResponse(BaseModel):
     expression: Optional[Dict[str, Any]] = None
     relationship: Optional[Dict[str, Any]] = None
     communication: Optional[Dict[str, Any]] = None
+    realization: Optional[Dict[str, Any]] = None
 
 
 class PADSnapshot(BaseModel):
@@ -289,7 +291,7 @@ async def process_turn(req: ProcessRequest) -> Any:
         try:
             async with _turn_admission_lock:
                 result: CognitiveTurnResult = await loop.run_in_executor(
-                    None, orch.process, req.input
+                    None, orch.process, req.input, req.language
                 )
         except Exception as exc:
             logger.exception("Exception processing turn: %s", exc)
@@ -338,6 +340,11 @@ async def process_turn(req: ProcessRequest) -> Any:
             if isinstance(result, CognitiveTurnResult) and result.communication is not None
             else None
         )
+        realization_dict = (
+            result.realization.to_dict()
+            if isinstance(result, CognitiveTurnResult) and result.realization is not None
+            else None
+        )
 
         return {
             "response": resp_text,
@@ -347,6 +354,7 @@ async def process_turn(req: ProcessRequest) -> Any:
             "expression": expr_dict,
             "relationship": rel_dict,
             "communication": comm_dict,
+            "realization": realization_dict,
         }
     finally:
         _turn_queue_depth -= 1
@@ -487,6 +495,7 @@ _voice_engine: VoiceEngine = VoiceEngine()
 
 class SynthesizeRequest(BaseModel):
     text: str
+    language: Optional[str] = "ja"
     rate: Optional[str] = None
     volume: Optional[str] = None
     pitch: Optional[str] = None
@@ -516,6 +525,7 @@ async def synthesize_voice(req: SynthesizeRequest) -> Response:
 
         audio_data = await _voice_engine.synthesize_speech(
             clean_text,
+            language=req.language or "ja",
             rate=req.rate,
             volume=req.volume,
             pitch=req.pitch,

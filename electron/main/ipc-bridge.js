@@ -178,7 +178,9 @@ function registerHandlers(port = 8765, isPreview = false, getMascotManager = nul
   });
 
   // chat:send IPC handler (serialized queue)
-  ipcMain.handle('chat:send', async (_event, { input }) => {
+  ipcMain.handle('chat:send', async (_event, payload) => {
+    const input = typeof payload === 'string' ? payload : (payload && payload.input);
+    const language = (payload && payload.language) || null;
     if (isPreview) {
       // Mock response for UI Preview
       return {
@@ -216,10 +218,12 @@ function registerHandlers(port = 8765, isPreview = false, getMascotManager = nul
     // Chain onto pendingChat so only one chat request is in-flight at a time
     const execute = async () => {
       try {
+        const reqBody = { input };
+        if (language) reqBody.language = language;
         const response = await fetch(`${baseUrl}/process`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ input }),
+          body: JSON.stringify(reqBody),
           signal: AbortSignal.timeout(35000)
         });
 
@@ -240,6 +244,7 @@ function registerHandlers(port = 8765, isPreview = false, getMascotManager = nul
           expression: data.expression || null,
           relationship: data.relationship || null,
           communication: data.communication || null,
+          realization: data.realization || null,
         };
       } catch (err) {
         if (err.name === 'TimeoutError') {
@@ -501,11 +506,11 @@ function registerHandlers(port = 8765, isPreview = false, getMascotManager = nul
 
   // voice:synthesize — synthesize speech and return audio Buffer
   ipcMain.handle('voice:synthesize', async (_event, payload) => {
-    const { text, rate, volume, pitch, pitch_hz, closeness, focal_words } = payload || {};
+    const { text, language, rate, volume, pitch, pitch_hz, closeness, focal_words } = payload || {};
     if (!text || !text.trim()) {
       return Buffer.alloc(0);
     }
-    const body = { text };
+    const body = { text, language: language || 'ja' };
     if (rate) body.rate = rate;
     if (volume) body.volume = volume;
     if (pitch) body.pitch = pitch;

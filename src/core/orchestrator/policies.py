@@ -342,6 +342,9 @@ class CognitiveTurnResult:
     # Blocker 4: Stage-level diagnostic Cognitive Execution Trace
     execution_trace: Optional[Any] = None
 
+    # Phase 24 alignment: Explicit typed RealizationOutput (text language + Japanese voice language)
+    realization: Optional[Any] = None
+
     class Config:
         # numpy arrays are not hashable — frozen dataclass still works at runtime
         arbitrary_types_allowed = True

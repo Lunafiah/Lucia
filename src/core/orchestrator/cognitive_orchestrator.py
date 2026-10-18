@@ -102,7 +102,14 @@ from src.core.emotion.persistence import (
     verify_and_reconcile_stores,
 )
 from src.core.orchestrator.prompt_assembler import PromptAssembler
-from src.core.language.contract import RealizationInputContract
+from src.core.language.contract import (
+    RealizationInputContract,
+    RealizationOutput,
+    TextRealization,
+    VoiceRealization,
+)
+from src.core.language.detection import detect_active_language
+from src.core.language.realization import construct_realization_output
 from src.core.language.gate import GateDecision, SemanticFidelityGate
 from src.core.relationship.persistence import DEFAULT_RELATIONSHIP_PATH
 from src.core.relationship.signals import RelationshipSignal, RelationshipSignalType
@@ -354,9 +361,11 @@ class CognitiveOrchestrator:
             self._history.clear()
             self._discourse_cache.clear()
 
-    def process(self, input_text: str) -> CognitiveTurnResult:
+    def process(
+        self, input_text: str, user_language: Optional[str] = None
+    ) -> CognitiveTurnResult:
         """
-        Execute a full 10-stage cognitive turn and return an immutable result.
+        Execute a full 16-stage cognitive turn and return an immutable result.
 
         Returns the fallback result immediately for:
           - empty or oversized input
@@ -368,13 +377,13 @@ class CognitiveOrchestrator:
         # --- Input guard ---
         if len(input_text) == 0 or len(input_text) > _MAX_INPUT_LEN:
             return self._make_fallback_result(
-                input_text, "empty_or_oversized_input", 0.0
+                input_text, "empty_or_oversized_input", 0.0, user_language=user_language
             )
 
         # --- Degraded guard ---
         if self._degraded:
             return self._make_fallback_result(
-                input_text, "degraded_state", 0.0
+                input_text, "degraded_state", 0.0, user_language=user_language
             )
 
         call_id = uuid.uuid4().hex
@@ -389,7 +398,9 @@ class CognitiveOrchestrator:
         # Tier 3: non-reentrant turn serialization
         acquired = self._turn_lock.acquire(blocking=True)
         try:
-            result = self._execute_pipeline(input_text, call_id, t_start)
+            result = self._execute_pipeline(
+                input_text, call_id, t_start, user_language=user_language
+            )
         except Exception:
             logger.exception(
                 "CognitiveOrchestrator: unhandled exception (call_id=%s)", call_id
@@ -401,7 +412,11 @@ class CognitiveOrchestrator:
             except Exception:
                 pass
             result = self._make_fallback_result(
-                input_text, "pipeline_exception", max(0.0001, time.perf_counter() - t_start), trace=trace
+                input_text,
+                "pipeline_exception",
+                max(0.0001, time.perf_counter() - t_start),
+                trace=trace,
+                user_language=user_language,
             )
         finally:
             if acquired:
@@ -480,7 +495,11 @@ class CognitiveOrchestrator:
     # ------------------------------------------------------------------
 
     def _execute_pipeline(
-        self, input_text: str, call_id: str, t_start: float
+        self,
+        input_text: str,
+        call_id: str,
+        t_start: float,
+        user_language: Optional[str] = None,
     ) -> CognitiveTurnResult:
         """
         Execute all 16 cognitive pipeline stages in strict causal order.
@@ -774,15 +793,16 @@ class CognitiveOrchestrator:
                 )
 
             # ADR-035: Construct typed RealizationInputContract from CAPS decision
+            target_lang = user_language or detect_active_language(input_text)
             realization_contract: RealizationInputContract
             if caps_result is not None:
                 realization_contract = RealizationInputContract.from_caps(
                     caps_result,
-                    target_language="en",
+                    target_language=target_lang,
                     known_propositions=known_propositions,
                 )
             else:
-                realization_contract = RealizationInputContract.create_default(target_language="en")
+                realization_contract = RealizationInputContract.create_default(target_language=target_lang)
 
             s10_span.set_summary({
                 "strategy": comm_state.strategy.value if hasattr(comm_state.strategy, "value") else str(comm_state.strategy),
@@ -822,7 +842,11 @@ class CognitiveOrchestrator:
                 except Exception:
                     pass
                 return self._make_fallback_result(
-                    input_text, "assembly_error", max(0.0001, time.perf_counter() - t_start), trace=trace
+                    input_text,
+                    "assembly_error",
+                    max(0.0001, time.perf_counter() - t_start),
+                    trace=trace,
+                    user_language=user_language,
                 )
 
             prompt: str = prompt_or_err
@@ -882,7 +906,11 @@ class CognitiveOrchestrator:
                 except Exception:
                     pass
                 return self._make_fallback_result(
-                    input_text, "llm_none", max(0.0001, time.perf_counter() - t_start), trace=trace
+                    input_text,
+                    "llm_none",
+                    max(0.0001, time.perf_counter() - t_start),
+                    trace=trace,
+                    user_language=user_language,
                 )
             s13_span.set_summary({"raw_response_len": len(raw_response)})
 
@@ -1140,6 +1168,19 @@ class CognitiveOrchestrator:
 
         execution_time_s = max(0.0001, time.perf_counter() - t_start)
 
+        # Construct explicit RealizationOutput: text follows user language, voice is always Japanese
+        target_lang = (
+            realization_contract.target_language
+            if realization_contract
+            else (user_language or detect_active_language(input_text))
+        )
+        realization_output = construct_realization_output(
+            safe_response=safe_response,
+            user_language=target_lang,
+            contract=realization_contract,
+            known_propositions=known_propositions,
+        )
+
         trace = None
         try:
             trace = self._execution_tracer.end_turn()
@@ -1184,6 +1225,7 @@ class CognitiveOrchestrator:
             realization_contract=realization_contract,
             gate_decision=gate_decision,
             execution_trace=trace,
+            realization=realization_output,
         )
 
     # ------------------------------------------------------------------
@@ -1191,7 +1233,12 @@ class CognitiveOrchestrator:
     # ------------------------------------------------------------------
 
     def _make_fallback_result(
-        self, input_text: str, reason: str, elapsed: float, trace: Optional[Any] = None
+        self,
+        input_text: str,
+        reason: str,
+        elapsed: float,
+        trace: Optional[Any] = None,
+        user_language: Optional[str] = None,
     ) -> CognitiveTurnResult:
         """
         Construct a sentinel CognitiveTurnResult for degraded/guard paths.
@@ -1200,6 +1247,12 @@ class CognitiveOrchestrator:
         """
         resting = PADState.resting()
         from src.core.models import default_behavioral_constraints
+        fallback_lang = user_language or detect_active_language(input_text)
+        fallback_realization = construct_realization_output(
+            safe_response=self._fallback_response,
+            user_language=fallback_lang,
+            contract=None,
+        )
         return CognitiveTurnResult(
             call_id=uuid.uuid4().hex,
             response_text=self._fallback_response,
@@ -1215,6 +1268,7 @@ class CognitiveOrchestrator:
             experience_queued=False,
             execution_time_s=elapsed,
             execution_trace=trace,
+            realization=fallback_realization,
         )
 
     def _wait_for_fast_loop(self) -> None:

@@ -59,6 +59,13 @@ class VoiceEngineConfig:
     speech_volume: str = "+0%"
     index_rate: float = 0.25
 
+    def __post_init__(self) -> None:
+        # Restore canonical Phase 24 VaresaGIJP RVC model if present in models_dir
+        if self.active_rvc_model == "default":
+            canonical_dir = Path(self.models_dir) / "VaresaGIJP"
+            if canonical_dir.is_dir():
+                self.active_rvc_model = "VaresaGIJP"
+
 
 class VoiceEngine:
     """
@@ -147,6 +154,7 @@ class VoiceEngine:
         self,
         text: str,
         *,
+        language: str = "ja",
         rate: Optional[str] = None,
         volume: Optional[str] = None,
         pitch: Optional[str] = None,
@@ -161,12 +169,14 @@ class VoiceEngine:
         ----------
         text : str
             Text string to speak.
+        language : str
+            Explicit voice language metadata (always 'ja' for vocal actuation).
         rate : Optional[str]
             Override speech rate (clamped to [-20%, +20%]).
         volume : Optional[str]
             Override speech volume (clamped to [-20%, +20%]).
         pitch : Optional[str]
-            Override speech pitch string for Edge-TTS (baseline fixed at +60Hz).
+            Override speech pitch string for Edge-TTS.
         pitch_hz : Optional[float]
             Limbic affect pitch shift in Hz in [-30.0, +30.0].
         closeness : Optional[float]
@@ -209,14 +219,29 @@ class VoiceEngine:
         except (ValueError, TypeError):
             speech_volume = "+0%"
 
-        # Baseline pitch in Edge-TTS: fixed at +60Hz to provide a bright acoustic base below saturation ceiling
-        speech_pitch = pitch or "+60Hz"
+        # Determine whether RVC conversion will be applied
+        is_rvc_active = (
+            self._config.active_rvc_model != "default"
+            and self._config.active_rvc_model in self._available_models
+        )
+
+        # Baseline pitch in Edge-TTS:
+        # If pitch is explicitly passed, respect it.
+        # Otherwise:
+        #   - When RVC is active: use +60Hz to provide a bright acoustic base below saturation ceiling (ADR-032).
+        #   - When RVC is bypassed / inactive: do NOT use +60Hz (use +0Hz) to prevent chipmunk output.
+        if pitch is not None:
+            speech_pitch = pitch
+        elif is_rvc_active:
+            speech_pitch = "+60Hz"
+        else:
+            speech_pitch = "+0Hz"
 
         # Determine language telemetry support: vi-* rejects WordBoundary with NoAudioReceived
         is_vietnamese = self._config.base_voice.lower().startswith("vi-") or self._config.base_voice.lower().startswith("vi_")
         boundary_arg = "SentenceBoundary" if is_vietnamese else "WordBoundary"
 
-        cache_key = f"{clean_text.lower()}|{self._config.active_rvc_model}|{speech_rate}|{speech_volume}|{speech_pitch}|{pitch_hz}|{closeness}"
+        cache_key = f"{clean_text.lower()}|{language}|{self._config.active_rvc_model}|{speech_rate}|{speech_volume}|{speech_pitch}|{pitch_hz}|{closeness}"
         if cache_key in self._cache:
             self._last_rvc_result = self._rvc_result_cache.get(cache_key)
             return self._cache[cache_key]
@@ -239,6 +264,8 @@ class VoiceEngine:
                 telemetry_events.append(chunk)
 
         raw_audio = audio_buffer.getvalue()
+        if not raw_audio:
+            return b""
 
         # If an active RVC model is selected and available, apply voice conversion
         if (

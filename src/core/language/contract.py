@@ -294,3 +294,46 @@ class RealizationInputContract:
             directives=caps_directives,
             timestamp=time.time(),
         )
+
+
+@dataclass(frozen=True)
+class TextRealization:
+    """Natural language text output adhering to user's active language."""
+    content: str
+    language: str  # "en", "vi", "ja"
+
+
+@dataclass(frozen=True)
+class VoiceRealization:
+    """Japanese voice realization for neural TTS/RVC playback."""
+    content: str   # Japanese text to synthesize
+    language: str = "ja"  # Always "ja"
+
+
+@dataclass(frozen=True)
+class RealizationOutput:
+    """
+    Structured realization output separating textual response from vocal actuation.
+
+    RealizationOutput
+    ├── text
+    │   └── language = user_active_language
+    │
+    └── voice
+        └── language = "ja"
+    """
+    text: TextRealization
+    voice: VoiceRealization
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "text": {
+                "content": self.text.content,
+                "language": self.text.language,
+            },
+            "voice": {
+                "content": self.voice.content,
+                "language": self.voice.language,
+            },
+        }
+

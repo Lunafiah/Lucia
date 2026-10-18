@@ -1268,36 +1268,46 @@ class ChatController {
       this.removeTypingIndicator(typingIndicator);
 
       if (response && response.response) {
-        this.appendMessage('companion', response.response);
+        // Voice & Language Runtime Alignment:
+        // Text language follows active user language (response.response)
+        // Voice language is ALWAYS Japanese (response.realization.voice.content)
+        const voiceText = (response.realization && response.realization.voice && response.realization.voice.content)
+          ? response.realization.voice.content
+          : response.response;
+        const voiceLang = (response.realization && response.realization.voice && response.realization.voice.language)
+          ? response.realization.voice.language
+          : 'ja';
+
+        // Extract approved bounded voice actuator parameters (ADR-032.5)
+        const voiceExpr = response.expression && response.expression.voice ? response.expression.voice : null;
+        const voiceOpts = { language: voiceLang };
+        if (voiceExpr) {
+          if (typeof voiceExpr.speech_rate_pct === 'number') {
+            const r = Math.round(voiceExpr.speech_rate_pct);
+            voiceOpts.rate = `${r >= 0 ? '+' : ''}${r}%`;
+          }
+          if (typeof voiceExpr.volume_pct === 'number') {
+            const v = Math.round(voiceExpr.volume_pct);
+            voiceOpts.volume = `${v >= 0 ? '+' : ''}${v}%`;
+          }
+          if (typeof voiceExpr.pitch_shift_hz === 'number') {
+            voiceOpts.pitch_hz = voiceExpr.pitch_shift_hz;
+          }
+          if (typeof voiceExpr.closeness === 'number') {
+            voiceOpts.closeness = voiceExpr.closeness;
+          }
+        } else if (response.relationship && typeof response.relationship.closeness === 'number') {
+          voiceOpts.closeness = response.relationship.closeness;
+        }
+
+        this.appendMessage('companion', response.response, voiceText, voiceOpts);
 
         // Synthesize and play voice if not muted — via IPC (ADR-019 & ADR-032.5) with fetch fallback
         if (!this.isVoiceMuted && window.avatarRenderer) {
           try {
             let audioBlob = null;
-            // Extract approved bounded voice actuator parameters (ADR-032.5)
-            const voiceExpr = response.expression && response.expression.voice ? response.expression.voice : null;
-            const voiceOpts = {};
-            if (voiceExpr) {
-              if (typeof voiceExpr.speech_rate_pct === 'number') {
-                const r = Math.round(voiceExpr.speech_rate_pct);
-                voiceOpts.rate = `${r >= 0 ? '+' : ''}${r}%`;
-              }
-              if (typeof voiceExpr.volume_pct === 'number') {
-                const v = Math.round(voiceExpr.volume_pct);
-                voiceOpts.volume = `${v >= 0 ? '+' : ''}${v}%`;
-              }
-              if (typeof voiceExpr.pitch_shift_hz === 'number') {
-                voiceOpts.pitch_hz = voiceExpr.pitch_shift_hz;
-              }
-              if (typeof voiceExpr.closeness === 'number') {
-                voiceOpts.closeness = voiceExpr.closeness;
-              }
-            } else if (response.relationship && typeof response.relationship.closeness === 'number') {
-              voiceOpts.closeness = response.relationship.closeness;
-            }
-
             if (window.lucia && window.lucia.voice && window.lucia.voice.synthesize) {
-              const audioBuffer = await window.lucia.voice.synthesize(response.response, voiceOpts);
+              const audioBuffer = await window.lucia.voice.synthesize(voiceText, voiceOpts);
               if (audioBuffer && audioBuffer.byteLength > 0) {
                 audioBlob = new Blob([audioBuffer], { type: 'audio/mpeg' });
               }
@@ -1305,7 +1315,7 @@ class ChatController {
               const voiceRes = await fetch('http://127.0.0.1:8765/voice/synthesize', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ text: response.response, ...voiceOpts }),
+                body: JSON.stringify({ text: voiceText, ...voiceOpts }),
               });
               if (voiceRes.ok) {
                 audioBlob = await voiceRes.blob();
@@ -1315,6 +1325,9 @@ class ChatController {
             if (audioBlob) {
               if (!this.audioCache) this.audioCache = new Map();
               this.audioCache.set(response.response, audioBlob);
+              if (voiceText !== response.response) {
+                this.audioCache.set(voiceText, audioBlob);
+              }
               window.avatarRenderer.speak(audioBlob, () => {
                 // Audio ended callback: resume listening in Discord mode
                 this.isSpeakingOrProcessing = false;
@@ -1358,7 +1371,7 @@ class ChatController {
     }
   }
 
-  async _replayVoice(text, replayBtn) {
+  async _replayVoice(text, replayBtn, opts = null, contentKey = null) {
     if (!window.avatarRenderer) return;
     try {
       if (replayBtn) replayBtn.classList.add('playing');
@@ -1371,23 +1384,27 @@ class ChatController {
         this.updateOrganicStatus();
       };
 
-      const cachedBlob = this.audioCache && this.audioCache.get(text);
+      const cachedBlob = this.audioCache && (this.audioCache.get(text) || (contentKey && this.audioCache.get(contentKey)));
       if (cachedBlob) {
         window.avatarRenderer.speak(cachedBlob, onEnded);
         return;
       }
 
       let audioBlob = null;
+      const voiceOpts = opts ? { language: opts.language || 'ja', ...opts } : null;
       if (window.lucia && window.lucia.voice && window.lucia.voice.synthesize) {
-        const audioBuffer = await window.lucia.voice.synthesize(text);
+        const audioBuffer = voiceOpts
+          ? await window.lucia.voice.synthesize(text, voiceOpts)
+          : await window.lucia.voice.synthesize(text);
         if (audioBuffer && audioBuffer.byteLength > 0) {
           audioBlob = new Blob([audioBuffer], { type: 'audio/mpeg' });
         }
       } else {
+        const bodyObj = voiceOpts ? { text, ...voiceOpts } : { text };
         const voiceRes = await fetch('http://127.0.0.1:8765/voice/synthesize', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text }),
+          body: JSON.stringify(bodyObj),
         });
         if (voiceRes.ok) {
           audioBlob = await voiceRes.blob();
@@ -1397,6 +1414,7 @@ class ChatController {
       if (audioBlob) {
         if (!this.audioCache) this.audioCache = new Map();
         this.audioCache.set(text, audioBlob);
+        if (contentKey) this.audioCache.set(contentKey, audioBlob);
         window.avatarRenderer.speak(audioBlob, onEnded);
       } else {
         onEnded();
@@ -1409,7 +1427,7 @@ class ChatController {
     }
   }
 
-  appendMessage(type, content) {
+  appendMessage(type, content, voiceText = null, voiceOpts = null) {
     const row = document.createElement('div');
     row.className = `message-row ${type}`;
 
@@ -1434,9 +1452,14 @@ class ChatController {
       replayBtn.className = 'audio-replay-btn';
       replayBtn.innerHTML = '<span class="replay-icon">🔊</span> Replay';
       replayBtn.title = 'Replay voice';
+      const textToSpeak = voiceText || content;
       replayBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        this._replayVoice(content, replayBtn);
+        if (voiceOpts || textToSpeak !== content) {
+          this._replayVoice(textToSpeak, replayBtn, voiceOpts, content);
+        } else {
+          this._replayVoice(content, replayBtn);
+        }
       });
       footer.appendChild(replayBtn);
       bubble.appendChild(footer);
