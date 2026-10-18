@@ -7,6 +7,7 @@ Generates character voice audio for Lucia with support for direct RVC
 
 from __future__ import annotations
 
+import asyncio
 import io
 import logging
 import os
@@ -282,28 +283,31 @@ class VoiceEngine:
             else:
                 s_base = float(self._config.pitch_shift)
 
-            # Extract boundaries and build continuous F0 contour
-            try:
-                audio_16k = decode_audio_to_16k(raw_audio)
-                p_len = max(1, len(audio_16k) // 160)
-                segments = extract_boundaries(
-                    clean_text,
-                    self._config.base_voice,
-                    telemetry_events=telemetry_events,
-                    audio_16k=audio_16k,
-                    focal_words=focal_words,
-                )
-                f0_contour = compute_f0_contour(p_len, s_base, segments)
-            except Exception as b_err:
-                logger.warning("VoiceEngine: Boundary extraction failed (%s), falling back to static pitch", b_err)
-                f0_contour = None
+            def _do_rvc_transform() -> bytes:
+                # Extract boundaries and build continuous F0 contour
+                try:
+                    audio_16k = decode_audio_to_16k(raw_audio)
+                    p_len = max(1, len(audio_16k) // 160)
+                    segments = extract_boundaries(
+                        clean_text,
+                        self._config.base_voice,
+                        telemetry_events=telemetry_events,
+                        audio_16k=audio_16k,
+                        focal_words=focal_words,
+                    )
+                    f0_contour = compute_f0_contour(p_len, s_base, segments)
+                except Exception as b_err:
+                    logger.warning("VoiceEngine: Boundary extraction failed (%s), falling back to static pitch", b_err)
+                    f0_contour = None
 
-            raw_audio = self._apply_rvc_conversion(
-                raw_audio,
-                model_info,
-                pitch_shift=s_base,
-                f0_contour=f0_contour,
-            )
+                return self._apply_rvc_conversion(
+                    raw_audio,
+                    model_info,
+                    pitch_shift=s_base,
+                    f0_contour=f0_contour,
+                )
+
+            raw_audio = await asyncio.to_thread(_do_rvc_transform)
         else:
             self._last_rvc_result = None
 

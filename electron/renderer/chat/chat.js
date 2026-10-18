@@ -1300,7 +1300,8 @@ class ChatController {
           voiceOpts.closeness = response.relationship.closeness;
         }
 
-        this.appendMessage('companion', response.response, voiceText, voiceOpts);
+        const messageRow = this.appendMessage('companion', response.response, voiceText, voiceOpts);
+        const replayBtn = messageRow ? messageRow.querySelector('.audio-replay-btn') : null;
 
         // Synthesize and play voice if not muted — via IPC (ADR-019 & ADR-032.5) with fetch fallback
         if (!this.isVoiceMuted && window.avatarRenderer) {
@@ -1323,6 +1324,9 @@ class ChatController {
             }
 
             if (audioBlob) {
+              if (replayBtn) {
+                replayBtn._cachedBlob = audioBlob;
+              }
               if (!this.audioCache) this.audioCache = new Map();
               this.audioCache.set(response.response, audioBlob);
               if (voiceText !== response.response) {
@@ -1384,8 +1388,19 @@ class ChatController {
         this.updateOrganicStatus();
       };
 
-      const cachedBlob = this.audioCache && (this.audioCache.get(text) || (contentKey && this.audioCache.get(contentKey)));
+      // 1. Direct message button blob check (per-turn isolation)
+      if (replayBtn && replayBtn._cachedBlob) {
+        window.avatarRenderer.speak(replayBtn._cachedBlob, onEnded);
+        return;
+      }
+
+      // 2. Global cache: check unique contentKey first, then text
+      const cachedBlob = this.audioCache && (
+        (contentKey && this.audioCache.get(contentKey)) ||
+        this.audioCache.get(text)
+      );
       if (cachedBlob) {
+        if (replayBtn) replayBtn._cachedBlob = cachedBlob;
         window.avatarRenderer.speak(cachedBlob, onEnded);
         return;
       }
@@ -1412,6 +1427,7 @@ class ChatController {
       }
 
       if (audioBlob) {
+        if (replayBtn) replayBtn._cachedBlob = audioBlob;
         if (!this.audioCache) this.audioCache = new Map();
         this.audioCache.set(text, audioBlob);
         if (contentKey) this.audioCache.set(contentKey, audioBlob);

@@ -1174,11 +1174,22 @@ class CognitiveOrchestrator:
             if realization_contract
             else (user_language or detect_active_language(input_text))
         )
+        japanese_voice_text = None
+        if target_lang != "ja" and self._llm_backend is not None and hasattr(self._llm_backend, "translate_to_japanese"):
+            try:
+                japanese_voice_text = self._llm_backend.translate_to_japanese(safe_response)
+            except Exception:
+                logger.warning(
+                    "CognitiveOrchestrator: Japanese voice translation failed; falling back to deterministic template",
+                    exc_info=True,
+                )
+
         realization_output = construct_realization_output(
             safe_response=safe_response,
             user_language=target_lang,
             contract=realization_contract,
             known_propositions=known_propositions,
+            japanese_voice_text=japanese_voice_text,
         )
 
         trace = None

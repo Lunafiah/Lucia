@@ -196,6 +196,34 @@ class LLMBackend:
 
         return messages
 
+    def translate_to_japanese(self, text: str, max_tokens: int = 120) -> Optional[str]:
+        """
+        Translate conversational text to natural spoken Japanese for voice realization.
+        Bounded, safe, and deterministic. Returns None if translation fails or model not ready.
+        """
+        if not self._ready or self._llm is None or not text.strip():
+            return None
+        clean_text = text.strip()
+        prompt = (
+            f"<|im_start|>user\n"
+            f"Translate this spoken companion text to natural Japanese:\n"
+            f"{clean_text}<|im_end|>\n"
+            f"<|im_start|>assistant\n"
+        )
+        try:
+            res = self._llm(
+                prompt,
+                max_tokens=max_tokens,
+                temperature=0.2,
+                top_p=0.9,
+                stop=["<|im_end|>", "<|endoftext|>", "\n\n"],
+            )
+            out = res["choices"][0]["text"].strip()
+            return out if out else None
+        except Exception as e:
+            logger.warning("LLMBackend: translation to Japanese failed: %s", e)
+            return None
+
     def is_ready(self) -> bool:
         """Return True when the model is loaded and ready to generate."""
         return self._ready

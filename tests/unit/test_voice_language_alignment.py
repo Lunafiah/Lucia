@@ -288,3 +288,60 @@ class TestElectronPlaybackSafety:
         assert "audio.play()" in content
         assert "playPromise.catch" in content or "catch" in content
         assert "onEnded" in content
+
+    def test_construct_realization_with_turn_specific_japanese(self):
+        """10. construct_realization_output prioritizes turn-specific translated Japanese voice text."""
+        contract = RealizationInputContract(
+            contract_id="c_turn_spec",
+            target_language="en",
+            act=CommunicativeAct.ASSERT,
+            polarity=True,
+            epistemic_status=EpistemicStatus.FACT,
+        )
+        # Without specific Japanese text -> fallback template
+        out1 = construct_realization_output(
+            safe_response="Quantum entanglement is fascinating.",
+            user_language="en",
+            contract=contract,
+        )
+        assert out1.voice.language == "ja"
+
+        # With turn-specific Japanese translation -> uses translated text
+        out2 = construct_realization_output(
+            safe_response="Quantum entanglement is fascinating.",
+            user_language="en",
+            contract=contract,
+            japanese_voice_text="量子もつれは実に魅力的です。",
+        )
+        assert out2.voice.language == "ja"
+        assert out2.voice.content == "量子もつれは実に魅力的です。"
+
+    @pytest.mark.anyio
+    async def test_synthesize_speech_uses_to_thread_for_rvc(self):
+        """11. VoiceEngine.synthesize_speech dispatches RVC conversion to asyncio.to_thread."""
+        config = VoiceEngineConfig(active_rvc_model="VaresaGIJP")
+        engine = VoiceEngine(config)
+        engine._available_models["VaresaGIJP"] = MagicMock()
+
+        dummy_audio = b"dummy_mp3_stream"
+        dummy_res_audio = b"dummy_rvc_stream"
+
+        with patch("edge_tts.Communicate", DummyCommunicate), \
+             patch("src.core.voice.boundary.extract_boundaries", return_value=[]), \
+             patch("src.core.voice.boundary.compute_f0_contour", return_value=None), \
+             patch("src.core.voice.rvc_pipeline.decode_audio_to_16k", return_value=b"\x00" * 320), \
+             patch.object(engine, "_apply_rvc_conversion", return_value=dummy_res_audio) as mock_rvc, \
+             patch("asyncio.to_thread", side_effect=asyncio.to_thread) as mock_to_thread:
+
+            # Mock stream chunk
+            class MockCommWithData:
+                def __init__(self, *args, **kwargs):
+                    pass
+                async def stream(self):
+                    yield {"type": "audio", "data": dummy_audio}
+
+            with patch("edge_tts.Communicate", MockCommWithData):
+                result = await engine.synthesize_speech("こんにちは", language="ja")
+                assert result == dummy_res_audio
+                assert mock_to_thread.called
+                assert mock_rvc.called

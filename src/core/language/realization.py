@@ -96,6 +96,7 @@ def construct_realization_output(
     user_language: str,
     contract: Optional[RealizationInputContract] = None,
     known_propositions: Optional[Sequence[Any]] = None,
+    japanese_voice_text: Optional[str] = None,
 ) -> RealizationOutput:
     """
     Construct typed RealizationOutput adhering to the Language Contract:
@@ -112,6 +113,8 @@ def construct_realization_output(
         Authoritative realization contract.
     known_propositions : Sequence[Any] | None
         Grounded propositions.
+    japanese_voice_text : str | None
+        Optional translated/synthesized authentic Japanese text for this specific turn.
 
     Returns
     -------
@@ -127,8 +130,12 @@ def construct_realization_output(
         # When user text is Japanese, voice text directly uses the verified Japanese response
         voice_content = safe_response
     else:
-        # When user text is English or Vietnamese, voice text is realized as authentic Japanese
-        voice_content = realize_japanese_voice_text(contract, known_propositions)
+        # When user text is English or Vietnamese, use turn-specific Japanese voice text if available,
+        # otherwise deterministically fall back to authentic communicative act template.
+        if japanese_voice_text and japanese_voice_text.strip():
+            voice_content = japanese_voice_text.strip()
+        else:
+            voice_content = realize_japanese_voice_text(contract, known_propositions)
 
     voice_out = VoiceRealization(
         content=voice_content,

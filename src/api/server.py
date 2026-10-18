@@ -290,9 +290,14 @@ async def process_turn(req: ProcessRequest) -> Any:
         # Tier 2: offload blocking LLM inference to thread pool
         try:
             async with _turn_admission_lock:
-                result: CognitiveTurnResult = await loop.run_in_executor(
-                    None, orch.process, req.input, req.language
-                )
+                if req.language is not None:
+                    result: CognitiveTurnResult = await loop.run_in_executor(
+                        None, orch.process, req.input, req.language
+                    )
+                else:
+                    result: CognitiveTurnResult = await loop.run_in_executor(
+                        None, orch.process, req.input
+                    )
         except Exception as exc:
             logger.exception("Exception processing turn: %s", exc)
             return JSONResponse(

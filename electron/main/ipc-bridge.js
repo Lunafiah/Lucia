@@ -522,7 +522,7 @@ function registerHandlers(port = 8765, isPreview = false, getMascotManager = nul
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
-        signal: AbortSignal.timeout(30000)
+        signal: AbortSignal.timeout(60000)
       });
       if (!res.ok) {
         throw new Error(`Voice synthesis HTTP ${res.status}`);
