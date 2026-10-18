@@ -199,4 +199,71 @@ describe("AvatarRenderer", () => {
     // Far away coordinates should not be over the model
     expect(renderer.isCursorOverModel(1000, 1000)).toBe(false);
   });
+
+  test("Live2D getModelBounds does not double-scale rendered dimensions", () => {
+    const canvas = createMockCanvas();
+    const renderer = new AvatarRenderer(canvas);
+    renderer.live2dCanvas = canvas;
+    renderer.activeEngine = "live2d";
+    renderer.currentLive2DModel = {
+      x: 20,
+      y: 25,
+      width: 340,   // Already scaled rendered dimension
+      height: 480,  // Already scaled rendered dimension
+      scale: { x: 0.25, y: 0.25 }
+    };
+
+    const bounds = renderer.getModelBounds();
+    expect(bounds.left).toBe(20);
+    expect(bounds.right).toBe(20 + 340);
+    expect(bounds.top).toBe(25);
+    expect(bounds.bottom).toBe(25 + 480);
+    expect(bounds.bottomY).toBe(505);
+    expect(bounds.centerX).toBe(20 + 170);
+
+    // Hit testing works across the full rendered height
+    canvas.getBoundingClientRect = jest.fn().mockReturnValue({ left: 0, top: 0, width: 380, height: 540 });
+    expect(renderer.isCursorOverModel(190, 490)).toBe(true); // Near feet
+    expect(renderer.isCursorOverModel(190, 100)).toBe(true); // Chest
+    expect(renderer.isCursorOverModel(190, 530)).toBe(false); // Far below feet
+  });
+
+  test("Mascot toolbar positions below model across presets", () => {
+    const canvas = createMockCanvas();
+    const renderer = new AvatarRenderer(canvas);
+    renderer.activeEngine = "live2d";
+
+    // Setup mascot DOM
+    document.body.classList.add("mascot-mode");
+    const toolbar = document.createElement("div");
+    toolbar.id = "mascot-toolbar";
+    document.body.appendChild(toolbar);
+
+    try {
+      const presets = ["small", "normal", "comfort"];
+      for (const presetKey of presets) {
+        renderer.currentPreset = presetKey;
+        const preset = { small: { width: 285, height: 405 }, normal: { width: 380, height: 540 }, comfort: { width: 475, height: 675 } }[presetKey];
+        const modelH = preset.height * 0.85;
+        renderer.currentLive2DModel = {
+          x: 10,
+          y: preset.height - modelH,
+          width: preset.width - 20,
+          height: modelH,
+          scale: { x: 0.2, y: 0.2 }
+        };
+
+        renderer._updateToolbarPosition();
+        const expectedBottom = preset.height - modelH + modelH; // preset.height
+        const maxSafeY = preset.height - 52 - 6;
+        const expectedSafeY = Math.max(52, Math.min(maxSafeY, expectedBottom + 8));
+        expect(toolbar.style.top).toBe(`${expectedSafeY}px`);
+        expect(parseFloat(toolbar.style.top)).toBeGreaterThan(preset.height * 0.7);
+      }
+    } finally {
+      document.body.classList.remove("mascot-mode");
+      toolbar.remove();
+    }
+  });
 });
+

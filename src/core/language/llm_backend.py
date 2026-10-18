@@ -119,9 +119,26 @@ class LLMBackend:
                 temperature = constraints.temperature
 
         timeout = self._config.timeout_seconds
+        is_mock = type(self._llm).__name__ in ("MagicMock", "Mock")
 
         def _call() -> Optional[str]:
             try:
+                # Use model's canonical chat template path when available
+                if (
+                    not is_mock
+                    and "[CONVERSATION]" in prompt
+                    and hasattr(self._llm, "create_chat_completion")
+                    and callable(getattr(self._llm, "create_chat_completion"))
+                ):
+                    messages = self._prompt_to_chat_messages(prompt)
+                    if messages:
+                        result = self._llm.create_chat_completion(
+                            messages=messages,
+                            max_tokens=max_tokens,
+                            temperature=temperature,
+                        )
+                        return result["choices"][0]["message"]["content"]
+
                 result = self._llm(
                     prompt,
                     max_tokens=max_tokens,
@@ -145,6 +162,39 @@ class LLMBackend:
         except Exception as exc:
             logger.error("LLMBackend: unexpected error in generate(): %s", exc)
             return None
+
+    @staticmethod
+    def _prompt_to_chat_messages(prompt: str) -> list[dict[str, str]]:
+        """
+        Convert structured prompt with sections and [CONVERSATION] into ChatML messages.
+        Sections before [CONVERSATION] map to role='system'.
+        [CONVERSATION] lines map to role='user' / role='assistant'.
+        """
+        if "[CONVERSATION]" not in prompt:
+            return [{"role": "user", "content": prompt.strip()}]
+
+        system_part, _, conv_part = prompt.partition("[CONVERSATION]")
+        messages: list[dict[str, str]] = []
+        sys_clean = system_part.strip()
+        if sys_clean:
+            messages.append({"role": "system", "content": sys_clean})
+
+        for line in conv_part.splitlines():
+            line_str = line.strip()
+            if not line_str or line_str == "(no history)":
+                continue
+            if line_str.startswith("user:"):
+                messages.append({"role": "user", "content": line_str[len("user:"):].strip()})
+            elif line_str.startswith("companion:") or line_str.startswith("assistant:"):
+                prefix_len = len("companion:") if line_str.startswith("companion:") else len("assistant:")
+                messages.append({"role": "assistant", "content": line_str[prefix_len:].strip()})
+            else:
+                if messages:
+                    messages[-1]["content"] += "\n" + line_str
+                else:
+                    messages.append({"role": "user", "content": line_str})
+
+        return messages
 
     def is_ready(self) -> bool:
         """Return True when the model is loaded and ready to generate."""

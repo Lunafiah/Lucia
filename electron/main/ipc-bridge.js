@@ -526,7 +526,7 @@ function registerHandlers(port = 8765, isPreview = false, getMascotManager = nul
       return Buffer.from(arrayBuf);
     } catch (err) {
       console.warn('[ipc-bridge] voice:synthesize error:', err.message);
-      return Buffer.alloc(0);
+      throw err;
     }
   });
 

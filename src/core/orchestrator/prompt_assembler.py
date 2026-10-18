@@ -171,6 +171,46 @@ class PromptAssembler:
                     contract_lines.append("- 必要な情報を確認するための質問をしてください。")
                 else:
                     contract_lines.append("- Ask a natural question to gather necessary information.")
+            elif act_str == "ANSWER":
+                if lang == "vi":
+                    contract_lines.append("- Trả lời trực tiếp, chân thành và tự nhiên câu hỏi của người dùng.")
+                elif lang == "ja":
+                    contract_lines.append("- ユーザーの質問に直接、誠実に、自然に答えてください。")
+                else:
+                    contract_lines.append("- Answer the user's question directly, thoughtfully, and naturally.")
+            elif act_str == "GREET":
+                if lang == "vi":
+                    contract_lines.append("- Chào đón người dùng một cách ấm áp và tự nhiên.")
+                elif lang == "ja":
+                    contract_lines.append("- ユーザーを温かく自然に迎えてください。")
+                else:
+                    contract_lines.append("- Greet the user warmly and naturally.")
+            elif act_str == "ACKNOWLEDGE":
+                if lang == "vi":
+                    contract_lines.append("- Lắng nghe và tiếp nhận chia sẻ của người dùng với sự chú tâm trọn vẹn.")
+                elif lang == "ja":
+                    contract_lines.append("- ユーザーの話に静かに耳を傾け、受け止めてください。")
+                else:
+                    contract_lines.append("- Acknowledge the user attentively with empathic listening.")
+            elif act_str == "ASSERT":
+                if lang == "vi":
+                    contract_lines.append("- Trình bày thông tin một cách rõ ràng, chuẩn xác và đúng sự thật.")
+                elif lang == "ja":
+                    contract_lines.append("- 事実に基づいて明確かつ正確に述べてください。")
+                else:
+                    contract_lines.append("- State the grounded information clearly, directly, and accurately.")
+            elif act_str == "FAREWELL":
+                if lang == "vi":
+                    contract_lines.append("- Tạm biệt người dùng một cách nhẹ nhàng và ấm áp.")
+                elif lang == "ja":
+                    contract_lines.append("- 穏やかに会話を締めくくってください。")
+                else:
+                    contract_lines.append("- Conclude the interaction gently and warmly.")
+
+            # Communicative intent directive from contract if present
+            if getattr(contract, "directives", None):
+                contract_lines.append(f"- Intent: {contract.directives}")
+
 
             # Polarity guidance
             if not contract.polarity:

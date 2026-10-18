@@ -604,11 +604,37 @@ def evaluate_caps(
             directives=f"Express grounded claim ({subj_sym}, {pred_sym}, {obj_sym}) accurately without exceeding facts.",
         )
 
-    # ── Priority 5: Conversational Flow Defaults ───────────────────────────────────
+    # ── Priority 6: Conversational Flow Defaults ───────────────────────────────────
     input_lower = dialogue_ctx.input_text.lower().strip()
-    if any(greet in input_lower for greet in ("hello", "hi", "hey", "good morning", "chào")):
+
+    # Detect conversational inquiry/question
+    is_question = (
+        "?" in dialogue_ctx.input_text
+        or "？" in dialogue_ctx.input_text
+        or any(input_lower.startswith(w) for w in (
+            "what", "who", "where", "why", "how", "when", "can you", "could you",
+            "are you", "do you", "tell me", "bạn là", "em là", "bạn có", "em có"
+        ))
+        or any(w in input_lower for w in ("tell me about", "kể cho", "nói về"))
+    )
+
+    if is_question:
+        # Distinguish semantic role of conversational questions
+        if any(term in input_lower for term in ("yourself", "who are you", "bạn là ai", "em là ai", "bản thân")):
+            directive = "Answer the user's question about your identity and nature as a companion directly and warmly."
+        elif any(term in input_lower for term in ("doing", "làm gì", "đang làm")):
+            directive = "Answer the user's question about your current activity and presence with the user."
+        elif any(term in input_lower for term in ("what can you do", "có thể làm gì", "giúp được gì")):
+            directive = "Answer the user's question about your capabilities and ways you can engage together."
+        elif any(term in input_lower for term in ("where are you", "ở đâu")):
+            directive = "Answer the user's question regarding your presence in this companion space."
+        elif any(term in input_lower for term in ("listening", "nghe không", "đang nghe")):
+            directive = "Answer confirming your active presence and attentive listening to the user."
+        else:
+            directive = "Answer the user's question directly, thoughtfully, and honestly."
+
         return CAPSResult(
-            act=CommunicativeAct.GREET,
+            act=CommunicativeAct.ANSWER,
             semantic_graph=None,
             epistemic_metadata=EpistemicMetadata(status=EpistemicState.FACT, is_grounded=True),
             provenance_metadata=ProvenanceMetadata(origin="CONVERSATIONAL_FLOW", session_id=session_id),
@@ -617,24 +643,10 @@ def evaluate_caps(
                 grounding_status="NOT_REQUIRED",
             ),
             grounded=True,
-            directives="Acknowledge conversational opening warmly and attentively.",
+            directives=directive,
         )
 
-    if any(farewell in input_lower for farewell in ("bye", "goodbye", "see you", "tạm biệt")):
-        return CAPSResult(
-            act=CommunicativeAct.FAREWELL,
-            semantic_graph=None,
-            epistemic_metadata=EpistemicMetadata(status=EpistemicState.FACT, is_grounded=True),
-            provenance_metadata=ProvenanceMetadata(origin="CONVERSATIONAL_FLOW", session_id=session_id),
-            resolution_metadata=ResolutionAdmissibilityMetadata(
-                resolution_status=dialogue_ctx.resolution_status,
-                grounding_status="NOT_REQUIRED",
-            ),
-            grounded=True,
-            directives="Conclude conversation gently.",
-        )
-
-    # Default fallback: ACKNOWLEDGE
+    # Default fallback: ACKNOWLEDGE non-question conversational statements
     return CAPSResult(
         act=CommunicativeAct.ACKNOWLEDGE,
         semantic_graph=None,
@@ -647,3 +659,4 @@ def evaluate_caps(
         grounded=True,
         directives="Acknowledge user input attentively with empathic listening.",
     )
+

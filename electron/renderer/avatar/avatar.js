@@ -499,8 +499,8 @@ class AvatarRenderer {
       bottomY = bottom;
     } else if (this.activeEngine === "live2d" && this.currentLive2DModel) {
       const m = this.currentLive2DModel;
-      const mw = (m.width || 400) * (m.scale ? m.scale.x : 1);
-      const mh = (m.height || 600) * (m.scale ? m.scale.y : 1);
+      const mw = m.width || (m.internalModel ? m.internalModel.width * (m.scale ? m.scale.x : 1) : 400);
+      const mh = m.height || (m.internalModel ? m.internalModel.height * (m.scale ? m.scale.y : 1) : 600);
       left = m.x;
       right = m.x + mw;
       top = m.y;

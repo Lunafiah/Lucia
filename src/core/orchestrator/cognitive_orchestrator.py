@@ -796,7 +796,7 @@ class CognitiveOrchestrator:
             prompt_or_err = self._prompt_assembler.assemble(
                 somatic=markers,
                 constraints=constraints,
-                history=self._history,
+                history=self._history + [("user", input_text)],
                 system_preamble=self._system_preamble,
                 n_ctx=self._n_ctx,
                 echo_vector=echo_vector,

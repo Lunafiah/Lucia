@@ -97,6 +97,7 @@ class RealizationInputContract:
     provenance: Optional[ProvenanceRecord] = None
     forbidden_additions: Tuple[str, ...] = field(default_factory=tuple)
     somatic_modifiers: Dict[str, float] = field(default_factory=dict)
+    directives: Optional[str] = None
     timestamp: float = field(default_factory=time.time)
 
     def get_role(self, role_name: str) -> Optional[SemanticRoleBinding]:
@@ -119,6 +120,7 @@ class RealizationInputContract:
         cls,
         target_language: str = "en",
         act: CommunicativeAct = CommunicativeAct.ASSERT,
+        directives: Optional[str] = None,
     ) -> RealizationInputContract:
         """Creates a safe baseline contract when no explicit proposition is active."""
         return cls(
@@ -132,6 +134,7 @@ class RealizationInputContract:
             scope_type=SemanticScopeType.ROOT,
             provenance=ProvenanceRecord(origin=ProvenanceOrigin.OBSERVATION),
             forbidden_additions=(),
+            directives=directives,
             timestamp=time.time(),
         )
 
@@ -275,6 +278,7 @@ class RealizationInputContract:
             )
 
         forbidden_tuple = tuple(forbidden_additions) if forbidden_additions else ()
+        caps_directives = getattr(caps_result, "directives", None) or None
 
         return cls(
             contract_id=str(uuid.uuid4()),
@@ -287,5 +291,6 @@ class RealizationInputContract:
             scope_type=scope_type,
             provenance=prov_rec,
             forbidden_additions=forbidden_tuple,
+            directives=caps_directives,
             timestamp=time.time(),
         )
