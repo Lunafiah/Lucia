@@ -1,0 +1,669 @@
+{
+  "timestamp": "2026-10-19T11:50:02Z",
+  "base_voice": "ja-JP-NanamiNeural",
+  "rvc_model": "VaresaGIJP",
+  "device": "cpu",
+  "sample_rate": 24000,
+  "p24_reference": {
+    "file": "JP_combined_mechanisms.wav",
+    "base_semitones": 2.0,
+    "focal_boost": 2.0,
+    "mean_f0_target": 441.6,
+    "std_f0_target": 95.8,
+    "pitch_ceiling_target": 616.3,
+    "peak_headroom": 0.904
+  },
+  "sentences": [
+    {
+      "id": "sentence_01",
+      "category": "Greeting (挨拶)",
+      "text": "こんにちは、ルシアです。お会いできて嬉しいです。",
+      "cadence_text": "こんにちは…ルシアです。お会いできて、嬉しいです！",
+      "focal_words": [
+        "嬉しい",
+        "お会いできて",
+        "ルシア"
+      ],
+      "romaji": "Konnichiwa, Rushia desu. Oai dekite ureshii desu.",
+      "modes": {
+        "A": {
+          "name": "Pure TTS",
+          "file": "docs/others/voice_rendering_comparison/sentence_01/A_pure_tts.wav",
+          "timing_ms": {
+            "T_text_to_voice_text": 0.0,
+            "T_TTS": 707.39,
+            "T_pitch_formant": 0.0,
+            "T_RVC": 0.0,
+            "T_audio_finalize": 35.76,
+            "T_total": 743.18
+          },
+          "rtf": 0.145,
+          "audio_analysis": {
+            "channels": 1,
+            "sample_rate": 24000,
+            "bit_depth": 16,
+            "duration_s": 5.136,
+            "peak_amplitude": 0.674,
+            "peak_dbfs": -3.43,
+            "rms_dbfs": -17.9,
+            "f0_mean": 257.3,
+            "f0_std": 60.7,
+            "f0_min": 164.9,
+            "f0_max": 363.9,
+            "clipping_samples": 0,
+            "is_intact": true,
+            "file_size_bytes": 246572
+          }
+        },
+        "B": {
+          "name": "TTS + Pitch/Formant (P24 Acoustic Setting)",
+          "file": "docs/others/voice_rendering_comparison/sentence_01/B_tts_pitch_formant.wav",
+          "timing_ms": {
+            "T_text_to_voice_text": 0.0,
+            "T_TTS": 1325.79,
+            "T_pitch_formant": 0.0,
+            "T_RVC": 0.0,
+            "T_audio_finalize": 28.99,
+            "T_total": 1354.8
+          },
+          "rtf": 0.245,
+          "audio_analysis": {
+            "channels": 1,
+            "sample_rate": 24000,
+            "bit_depth": 16,
+            "duration_s": 5.52,
+            "peak_amplitude": 0.6746,
+            "peak_dbfs": -3.42,
+            "rms_dbfs": -18.11,
+            "f0_mean": 368.8,
+            "f0_std": 89.1,
+            "f0_min": 91.3,
+            "f0_max": 560.7,
+            "clipping_samples": 0,
+            "is_intact": true,
+            "file_size_bytes": 265004
+          }
+        },
+        "C": {
+          "name": "TTS -> RVC (Neutral Pitch)",
+          "file": "docs/others/voice_rendering_comparison/sentence_01/C_tts_rvc.wav",
+          "timing_ms": {
+            "T_text_to_voice_text": 0.0,
+            "T_TTS": 613.11,
+            "T_pitch_formant": 0.0,
+            "T_RVC": 7221.63,
+            "T_audio_finalize": 36.67,
+            "T_total": 7871.43
+          },
+          "rtf": 1.537,
+          "audio_analysis": {
+            "channels": 1,
+            "sample_rate": 24000,
+            "bit_depth": 16,
+            "duration_s": 5.12,
+            "peak_amplitude": 0.903,
+            "peak_dbfs": -0.89,
+            "rms_dbfs": -16.26,
+            "f0_mean": 255.4,
+            "f0_std": 61.3,
+            "f0_min": 165.5,
+            "f0_max": 383.8,
+            "clipping_samples": 0,
+            "is_intact": true,
+            "file_size_bytes": 245804
+          }
+        },
+        "D": {
+          "name": "TTS -> RVC -> Pitch/Formant (Full P24 Combined Standard)",
+          "file": "docs/others/voice_rendering_comparison/sentence_01/D_tts_rvc_pitch_formant.wav",
+          "timing_ms": {
+            "T_text_to_voice_text": 0.0,
+            "T_TTS": 882.68,
+            "T_pitch_formant": 25.56,
+            "T_RVC": 7787.18,
+            "T_audio_finalize": 37.28,
+            "T_total": 8732.73
+          },
+          "rtf": 1.588,
+          "audio_analysis": {
+            "channels": 1,
+            "sample_rate": 24000,
+            "bit_depth": 16,
+            "duration_s": 5.5,
+            "peak_amplitude": 0.8986,
+            "peak_dbfs": -0.93,
+            "rms_dbfs": -15.39,
+            "f0_mean": 416.3,
+            "f0_std": 96.7,
+            "f0_min": 277.6,
+            "f0_max": 628.0,
+            "clipping_samples": 0,
+            "is_intact": true,
+            "file_size_bytes": 264044
+          }
+        }
+      }
+    },
+    {
+      "id": "sentence_02",
+      "category": "Warm Relational (親愛・関係性)",
+      "text": "いつもそばにいてくれてありがとう。あなたと話す時間がとても大切です。",
+      "cadence_text": "いつもそばにいてくれて…ありがとう。あなたと話す時間が、とても大切です！",
+      "focal_words": [
+        "ありがとう",
+        "大切",
+        "そばに"
+      ],
+      "romaji": "Itsumo soba ni ite kurete arigatou. Anata to hanasu jikan ga totemo taisetsu desu.",
+      "modes": {
+        "A": {
+          "name": "Pure TTS",
+          "file": "docs/others/voice_rendering_comparison/sentence_02/A_pure_tts.wav",
+          "timing_ms": {
+            "T_text_to_voice_text": 0.0,
+            "T_TTS": 800.98,
+            "T_pitch_formant": 0.0,
+            "T_RVC": 0.0,
+            "T_audio_finalize": 28.71,
+            "T_total": 829.7
+          },
+          "rtf": 0.121,
+          "audio_analysis": {
+            "channels": 1,
+            "sample_rate": 24000,
+            "bit_depth": 16,
+            "duration_s": 6.864,
+            "peak_amplitude": 0.6685,
+            "peak_dbfs": -3.5,
+            "rms_dbfs": -18.21,
+            "f0_mean": 263.2,
+            "f0_std": 64.7,
+            "f0_min": 161.1,
+            "f0_max": 611.4,
+            "clipping_samples": 0,
+            "is_intact": true,
+            "file_size_bytes": 329516
+          }
+        },
+        "B": {
+          "name": "TTS + Pitch/Formant (P24 Acoustic Setting)",
+          "file": "docs/others/voice_rendering_comparison/sentence_02/B_tts_pitch_formant.wav",
+          "timing_ms": {
+            "T_text_to_voice_text": 0.0,
+            "T_TTS": 1428.79,
+            "T_pitch_formant": 0.0,
+            "T_RVC": 0.0,
+            "T_audio_finalize": 32.95,
+            "T_total": 1461.78
+          },
+          "rtf": 0.2,
+          "audio_analysis": {
+            "channels": 1,
+            "sample_rate": 24000,
+            "bit_depth": 16,
+            "duration_s": 7.32,
+            "peak_amplitude": 0.6785,
+            "peak_dbfs": -3.37,
+            "rms_dbfs": -18.55,
+            "f0_mean": 388.2,
+            "f0_std": 90.3,
+            "f0_min": 231.5,
+            "f0_max": 582.1,
+            "clipping_samples": 0,
+            "is_intact": true,
+            "file_size_bytes": 351404
+          }
+        },
+        "C": {
+          "name": "TTS -> RVC (Neutral Pitch)",
+          "file": "docs/others/voice_rendering_comparison/sentence_02/C_tts_rvc.wav",
+          "timing_ms": {
+            "T_text_to_voice_text": 0.0,
+            "T_TTS": 695.59,
+            "T_pitch_formant": 0.0,
+            "T_RVC": 8823.11,
+            "T_audio_finalize": 31.51,
+            "T_total": 9550.22
+          },
+          "rtf": 1.396,
+          "audio_analysis": {
+            "channels": 1,
+            "sample_rate": 24000,
+            "bit_depth": 16,
+            "duration_s": 6.84,
+            "peak_amplitude": 0.8952,
+            "peak_dbfs": -0.96,
+            "rms_dbfs": -15.87,
+            "f0_mean": 258.8,
+            "f0_std": 54.7,
+            "f0_min": 163.2,
+            "f0_max": 406.9,
+            "clipping_samples": 0,
+            "is_intact": true,
+            "file_size_bytes": 328364
+          }
+        },
+        "D": {
+          "name": "TTS -> RVC -> Pitch/Formant (Full P24 Combined Standard)",
+          "file": "docs/others/voice_rendering_comparison/sentence_02/D_tts_rvc_pitch_formant.wav",
+          "timing_ms": {
+            "T_text_to_voice_text": 0.0,
+            "T_TTS": 853.1,
+            "T_pitch_formant": 32.9,
+            "T_RVC": 9830.59,
+            "T_audio_finalize": 35.36,
+            "T_total": 10751.98
+          },
+          "rtf": 1.473,
+          "audio_analysis": {
+            "channels": 1,
+            "sample_rate": 24000,
+            "bit_depth": 16,
+            "duration_s": 7.3,
+            "peak_amplitude": 0.8909,
+            "peak_dbfs": -1.0,
+            "rms_dbfs": -15.98,
+            "f0_mean": 436.2,
+            "f0_std": 103.7,
+            "f0_min": 258.9,
+            "f0_max": 649.5,
+            "clipping_samples": 0,
+            "is_intact": true,
+            "file_size_bytes": 350444
+          }
+        }
+      }
+    },
+    {
+      "id": "sentence_03",
+      "category": "Neutral Informational (客観・境界)",
+      "text": "この件に関する確認済みの情報がないため、お答えできません。",
+      "cadence_text": "この件に関する確認済みの情報がないため、お答えできません。",
+      "focal_words": [
+        "確認済み",
+        "情報",
+        "お答えできません"
+      ],
+      "romaji": "Kono ken ni kansuru kakunin-zumi no jouhou ga nai tame, okotae dekimasen.",
+      "modes": {
+        "A": {
+          "name": "Pure TTS",
+          "file": "docs/others/voice_rendering_comparison/sentence_03/A_pure_tts.wav",
+          "timing_ms": {
+            "T_text_to_voice_text": 0.0,
+            "T_TTS": 671.31,
+            "T_pitch_formant": 0.0,
+            "T_RVC": 0.0,
+            "T_audio_finalize": 27.28,
+            "T_total": 698.61
+          },
+          "rtf": 0.123,
+          "audio_analysis": {
+            "channels": 1,
+            "sample_rate": 24000,
+            "bit_depth": 16,
+            "duration_s": 5.688,
+            "peak_amplitude": 0.6476,
+            "peak_dbfs": -3.77,
+            "rms_dbfs": -17.5,
+            "f0_mean": 251.3,
+            "f0_std": 49.3,
+            "f0_min": 164.6,
+            "f0_max": 384.3,
+            "clipping_samples": 0,
+            "is_intact": true,
+            "file_size_bytes": 273068
+          }
+        },
+        "B": {
+          "name": "TTS + Pitch/Formant (P24 Acoustic Setting)",
+          "file": "docs/others/voice_rendering_comparison/sentence_03/B_tts_pitch_formant.wav",
+          "timing_ms": {
+            "T_text_to_voice_text": 0.0,
+            "T_TTS": 815.66,
+            "T_pitch_formant": 0.0,
+            "T_RVC": 0.0,
+            "T_audio_finalize": 29.46,
+            "T_total": 845.14
+          },
+          "rtf": 0.149,
+          "audio_analysis": {
+            "channels": 1,
+            "sample_rate": 24000,
+            "bit_depth": 16,
+            "duration_s": 5.688,
+            "peak_amplitude": 0.6369,
+            "peak_dbfs": -3.92,
+            "rms_dbfs": -17.5,
+            "f0_mean": 350.5,
+            "f0_std": 69.6,
+            "f0_min": 183.2,
+            "f0_max": 538.2,
+            "clipping_samples": 0,
+            "is_intact": true,
+            "file_size_bytes": 273068
+          }
+        },
+        "C": {
+          "name": "TTS -> RVC (Neutral Pitch)",
+          "file": "docs/others/voice_rendering_comparison/sentence_03/C_tts_rvc.wav",
+          "timing_ms": {
+            "T_text_to_voice_text": 0.0,
+            "T_TTS": 754.91,
+            "T_pitch_formant": 0.0,
+            "T_RVC": 7227.98,
+            "T_audio_finalize": 32.1,
+            "T_total": 8015.01
+          },
+          "rtf": 1.411,
+          "audio_analysis": {
+            "channels": 1,
+            "sample_rate": 24000,
+            "bit_depth": 16,
+            "duration_s": 5.68,
+            "peak_amplitude": 0.8899,
+            "peak_dbfs": -1.01,
+            "rms_dbfs": -13.25,
+            "f0_mean": 251.2,
+            "f0_std": 49.8,
+            "f0_min": 166.3,
+            "f0_max": 399.9,
+            "clipping_samples": 0,
+            "is_intact": true,
+            "file_size_bytes": 272684
+          }
+        },
+        "D": {
+          "name": "TTS -> RVC -> Pitch/Formant (Full P24 Combined Standard)",
+          "file": "docs/others/voice_rendering_comparison/sentence_03/D_tts_rvc_pitch_formant.wav",
+          "timing_ms": {
+            "T_text_to_voice_text": 0.0,
+            "T_TTS": 731.96,
+            "T_pitch_formant": 25.93,
+            "T_RVC": 7080.79,
+            "T_audio_finalize": 31.95,
+            "T_total": 7870.66
+          },
+          "rtf": 1.386,
+          "audio_analysis": {
+            "channels": 1,
+            "sample_rate": 24000,
+            "bit_depth": 16,
+            "duration_s": 5.68,
+            "peak_amplitude": 0.904,
+            "peak_dbfs": -0.88,
+            "rms_dbfs": -15.74,
+            "f0_mean": 397.9,
+            "f0_std": 76.3,
+            "f0_min": 246.9,
+            "f0_max": 604.3,
+            "clipping_samples": 0,
+            "is_intact": true,
+            "file_size_bytes": 272684
+          }
+        }
+      }
+    },
+    {
+      "id": "sentence_04",
+      "category": "Slightly Emotional / Empathetic (感情・共感)",
+      "text": "少し疲れていませんか？無理をせず、ゆっくり休んでくださいね。",
+      "cadence_text": "少し疲れていませんか？…無理をせず、ゆっくり休んでくださいね。",
+      "focal_words": [
+        "ゆっくり",
+        "休んで",
+        "無理をせず"
+      ],
+      "romaji": "Sukoshi tsukarete imasen ka? Muri wo sezu, yukkuri yasunde kudasai ne.",
+      "modes": {
+        "A": {
+          "name": "Pure TTS",
+          "file": "docs/others/voice_rendering_comparison/sentence_04/A_pure_tts.wav",
+          "timing_ms": {
+            "T_text_to_voice_text": 0.0,
+            "T_TTS": 984.74,
+            "T_pitch_formant": 0.0,
+            "T_RVC": 0.0,
+            "T_audio_finalize": 29.08,
+            "T_total": 1013.85
+          },
+          "rtf": 0.161,
+          "audio_analysis": {
+            "channels": 1,
+            "sample_rate": 24000,
+            "bit_depth": 16,
+            "duration_s": 6.312,
+            "peak_amplitude": 0.6113,
+            "peak_dbfs": -4.27,
+            "rms_dbfs": -17.89,
+            "f0_mean": 248.8,
+            "f0_std": 59.4,
+            "f0_min": 164.0,
+            "f0_max": 384.6,
+            "clipping_samples": 0,
+            "is_intact": true,
+            "file_size_bytes": 303020
+          }
+        },
+        "B": {
+          "name": "TTS + Pitch/Formant (P24 Acoustic Setting)",
+          "file": "docs/others/voice_rendering_comparison/sentence_04/B_tts_pitch_formant.wav",
+          "timing_ms": {
+            "T_text_to_voice_text": 0.0,
+            "T_TTS": 1553.56,
+            "T_pitch_formant": 0.0,
+            "T_RVC": 0.0,
+            "T_audio_finalize": 29.77,
+            "T_total": 1583.34
+          },
+          "rtf": 0.251,
+          "audio_analysis": {
+            "channels": 1,
+            "sample_rate": 24000,
+            "bit_depth": 16,
+            "duration_s": 6.312,
+            "peak_amplitude": 0.6143,
+            "peak_dbfs": -4.23,
+            "rms_dbfs": -17.94,
+            "f0_mean": 347.3,
+            "f0_std": 82.7,
+            "f0_min": 229.0,
+            "f0_max": 537.8,
+            "clipping_samples": 0,
+            "is_intact": true,
+            "file_size_bytes": 303020
+          }
+        },
+        "C": {
+          "name": "TTS -> RVC (Neutral Pitch)",
+          "file": "docs/others/voice_rendering_comparison/sentence_04/C_tts_rvc.wav",
+          "timing_ms": {
+            "T_text_to_voice_text": 0.0,
+            "T_TTS": 761.62,
+            "T_pitch_formant": 0.0,
+            "T_RVC": 8216.99,
+            "T_audio_finalize": 29.38,
+            "T_total": 9008.0
+          },
+          "rtf": 1.43,
+          "audio_analysis": {
+            "channels": 1,
+            "sample_rate": 24000,
+            "bit_depth": 16,
+            "duration_s": 6.3,
+            "peak_amplitude": 0.901,
+            "peak_dbfs": -0.91,
+            "rms_dbfs": -15.06,
+            "f0_mean": 245.9,
+            "f0_std": 59.9,
+            "f0_min": 50.0,
+            "f0_max": 387.4,
+            "clipping_samples": 0,
+            "is_intact": true,
+            "file_size_bytes": 302444
+          }
+        },
+        "D": {
+          "name": "TTS -> RVC -> Pitch/Formant (Full P24 Combined Standard)",
+          "file": "docs/others/voice_rendering_comparison/sentence_04/D_tts_rvc_pitch_formant.wav",
+          "timing_ms": {
+            "T_text_to_voice_text": 0.0,
+            "T_TTS": 762.28,
+            "T_pitch_formant": 25.08,
+            "T_RVC": 8181.21,
+            "T_audio_finalize": 31.4,
+            "T_total": 9000.0
+          },
+          "rtf": 1.429,
+          "audio_analysis": {
+            "channels": 1,
+            "sample_rate": 24000,
+            "bit_depth": 16,
+            "duration_s": 6.3,
+            "peak_amplitude": 0.904,
+            "peak_dbfs": -0.88,
+            "rms_dbfs": -14.44,
+            "f0_mean": 385.1,
+            "f0_std": 94.6,
+            "f0_min": 50.0,
+            "f0_max": 602.4,
+            "clipping_samples": 0,
+            "is_intact": true,
+            "file_size_bytes": 302444
+          }
+        }
+      }
+    },
+    {
+      "id": "sentence_05",
+      "category": "Longer Conversational (長文会話)",
+      "text": "おはようございます。今日も一緒に楽しい一日にしていきましょうね！何かあればいつでも声をかけてください。",
+      "cadence_text": "おはようございます！今日も一緒に…楽しい一日にしていきましょうね！何かあれば、いつでも声をかけてください。",
+      "focal_words": [
+        "楽しい",
+        "おはようございます",
+        "一緒に",
+        "いつでも"
+      ],
+      "romaji": "Ohayou gozaimasu. Kyou mo issho ni tanoshii ichinichi ni shite ikimashou ne! Nanika areba itsudemo koe wo kakete kudasai.",
+      "modes": {
+        "A": {
+          "name": "Pure TTS",
+          "file": "docs/others/voice_rendering_comparison/sentence_05/A_pure_tts.wav",
+          "timing_ms": {
+            "T_text_to_voice_text": 0.0,
+            "T_TTS": 777.0,
+            "T_pitch_formant": 0.0,
+            "T_RVC": 0.0,
+            "T_audio_finalize": 41.64,
+            "T_total": 818.66
+          },
+          "rtf": 0.084,
+          "audio_analysis": {
+            "channels": 1,
+            "sample_rate": 24000,
+            "bit_depth": 16,
+            "duration_s": 9.72,
+            "peak_amplitude": 0.6757,
+            "peak_dbfs": -3.4,
+            "rms_dbfs": -17.91,
+            "f0_mean": 277.6,
+            "f0_std": 55.6,
+            "f0_min": 172.7,
+            "f0_max": 424.5,
+            "clipping_samples": 0,
+            "is_intact": true,
+            "file_size_bytes": 466604
+          }
+        },
+        "B": {
+          "name": "TTS + Pitch/Formant (P24 Acoustic Setting)",
+          "file": "docs/others/voice_rendering_comparison/sentence_05/B_tts_pitch_formant.wav",
+          "timing_ms": {
+            "T_text_to_voice_text": 0.0,
+            "T_TTS": 2778.46,
+            "T_pitch_formant": 0.0,
+            "T_RVC": 0.0,
+            "T_audio_finalize": 35.98,
+            "T_total": 2814.47
+          },
+          "rtf": 0.273,
+          "audio_analysis": {
+            "channels": 1,
+            "sample_rate": 24000,
+            "bit_depth": 16,
+            "duration_s": 10.296,
+            "peak_amplitude": 0.6738,
+            "peak_dbfs": -3.43,
+            "rms_dbfs": -18.41,
+            "f0_mean": 392.1,
+            "f0_std": 84.3,
+            "f0_min": 234.1,
+            "f0_max": 775.2,
+            "clipping_samples": 0,
+            "is_intact": true,
+            "file_size_bytes": 494252
+          }
+        },
+        "C": {
+          "name": "TTS -> RVC (Neutral Pitch)",
+          "file": "docs/others/voice_rendering_comparison/sentence_05/C_tts_rvc.wav",
+          "timing_ms": {
+            "T_text_to_voice_text": 0.0,
+            "T_TTS": 585.86,
+            "T_pitch_formant": 0.0,
+            "T_RVC": 13246.46,
+            "T_audio_finalize": 41.79,
+            "T_total": 13874.14
+          },
+          "rtf": 1.43,
+          "audio_analysis": {
+            "channels": 1,
+            "sample_rate": 24000,
+            "bit_depth": 16,
+            "duration_s": 9.7,
+            "peak_amplitude": 0.9007,
+            "peak_dbfs": -0.91,
+            "rms_dbfs": -14.3,
+            "f0_mean": 276.5,
+            "f0_std": 56.6,
+            "f0_min": 168.0,
+            "f0_max": 423.2,
+            "clipping_samples": 0,
+            "is_intact": true,
+            "file_size_bytes": 465644
+          }
+        },
+        "D": {
+          "name": "TTS -> RVC -> Pitch/Formant (Full P24 Combined Standard)",
+          "file": "docs/others/voice_rendering_comparison/sentence_05/D_tts_rvc_pitch_formant.wav",
+          "timing_ms": {
+            "T_text_to_voice_text": 0.0,
+            "T_TTS": 847.88,
+            "T_pitch_formant": 58.86,
+            "T_RVC": 13668.9,
+            "T_audio_finalize": 34.81,
+            "T_total": 14610.47
+          },
+          "rtf": 1.421,
+          "audio_analysis": {
+            "channels": 1,
+            "sample_rate": 24000,
+            "bit_depth": 16,
+            "duration_s": 10.28,
+            "peak_amplitude": 0.8522,
+            "peak_dbfs": -1.39,
+            "rms_dbfs": -15.54,
+            "f0_mean": 438.8,
+            "f0_std": 90.1,
+            "f0_min": 270.3,
+            "f0_max": 656.8,
+            "clipping_samples": 0,
+            "is_intact": true,
+            "file_size_bytes": 493484
+          }
+        }
+      }
+    }
+  ]
+}

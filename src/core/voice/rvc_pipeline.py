@@ -50,6 +50,7 @@ class RVCConversionResult:
     sample_rate: int
     duration_ms: float
     error_message: Optional[str] = None
+    device: str = "cpu"
 
 
 # ---------------------------------------------------------------------------
@@ -185,14 +186,49 @@ class RVCPipeline:
     Loads models on-demand, executes full speech feature conversion, and resamples to 24 kHz WAV.
     """
 
-    def __init__(self, device: str = "cpu") -> None:
-        self.device = torch.device(device)
+    def __init__(self, device: Optional[str] = None) -> None:
+        if device is None:
+            if torch.cuda.is_available():
+                chosen_device = "cuda:0"
+                logger.info(
+                    "RVCPipeline: CUDA detected (%s). Selected inference device: %s",
+                    torch.cuda.get_device_name(0),
+                    chosen_device,
+                )
+            else:
+                chosen_device = "cpu"
+                logger.info("RVCPipeline: CUDA not available. Selected inference device: cpu (fallback)")
+        else:
+            if device.startswith("cuda") and not torch.cuda.is_available():
+                logger.warning(
+                    "RVCPipeline: CUDA requested (%s) but not available. Falling back to cpu",
+                    device,
+                )
+                chosen_device = "cpu"
+            else:
+                chosen_device = device
+                if chosen_device.startswith("cuda"):
+                    logger.info("RVCPipeline: Explicit CUDA device selected: %s", chosen_device)
+                else:
+                    logger.info("RVCPipeline: Explicit CPU device selected: %s", chosen_device)
+
+        self.device = torch.device(chosen_device)
         self.active_net_g: Optional[SynthesizerTrn] = None
         self.active_index: Optional[Any] = None
         self.index_vectors: Optional[np.ndarray] = None
         self.active_hubert: Optional[Any] = None
         self.current_model_path: Optional[str] = None
         self.current_index_path: Optional[str] = None
+
+    @property
+    def device_str(self) -> str:
+        """Return the device string representation."""
+        return str(self.device)
+
+    @property
+    def is_cuda(self) -> bool:
+        """Return True if running on a CUDA device."""
+        return self.device.type == "cuda"
 
     def _get_or_load_hubert(self) -> Any:
         """Load ContentVec / HuBERT feature extractor from local HuggingFace cache."""
@@ -201,11 +237,13 @@ class RVCPipeline:
 
         try:
             from transformers import HubertModel
-            logger.info("RVCPipeline: Loading ContentVec / HuBERT feature extractor...")
+            logger.info("RVCPipeline: Loading ContentVec / HuBERT feature extractor on %s...", self.device)
             hubert = HubertModel.from_pretrained('lj1995/VoiceConversionWebUI', subfolder='hubert_base')
             hubert = hubert.float().to(self.device)
             hubert.eval()
             self.active_hubert = hubert
+            hubert_device = next(hubert.parameters()).device
+            logger.info("RVCPipeline: HuBERT device: %s", hubert_device)
             return hubert
         except Exception as exc:
             logger.error("RVCPipeline: Failed to load HubertModel: %s", exc)
@@ -219,7 +257,7 @@ class RVCPipeline:
             return False
 
         try:
-            logger.info("RVCPipeline: Loading RVC v2 checkpoint: %s", pth_path)
+            logger.info("RVCPipeline: Loading RVC v2 checkpoint: %s (target device: %s)", pth_path, self.device)
             ckpt = torch.load(pth_path, map_location=self.device)
             cfg = ckpt['config']
             net_g = SynthesizerTrn(
@@ -236,6 +274,9 @@ class RVCPipeline:
             net_g.to(self.device).eval()
             self.active_net_g = net_g
             self.current_model_path = pth_path
+            generator_device = next(net_g.parameters()).device
+            logger.info("RVCPipeline: Generator device: %s", generator_device)
+            logger.info("RVCPipeline: RVC device: %s", self.device)
 
             # Load Faiss index if provided and faiss is available
             if index_path and Path(index_path).exists():
@@ -284,6 +325,7 @@ class RVCPipeline:
                 sample_rate=24000,
                 duration_ms=0.0,
                 error_message=f"Model checkpoint not found: {pth_path}",
+                device=str(self.device),
             )
 
         try:
@@ -304,6 +346,7 @@ class RVCPipeline:
                     sample_rate=24000,
                     duration_ms=0.0,
                     error_message="Input audio bytes contained zero readable frames",
+                    device=str(self.device),
                 )
 
             # 4. Extract continuous F0 and coarse pitch
@@ -402,6 +445,10 @@ class RVCPipeline:
             converted_bytes = wav_buffer.getvalue()
             duration_ms = float(len(out_pcm_16) / 24000.0 * 1000.0)
 
+            # 14. VRAM Safety: Release transient intermediate activations if running on CUDA
+            if self.device.type == "cuda":
+                torch.cuda.empty_cache()
+
             return RVCConversionResult(
                 audio_bytes=converted_bytes,
                 rvc_applied=True,
@@ -410,10 +457,13 @@ class RVCPipeline:
                 sample_rate=24000,
                 duration_ms=duration_ms,
                 error_message=None,
+                device=str(self.device),
             )
 
         except Exception as exc:
             logger.error("RVCPipeline: Neural voice conversion failed with exception: %s", exc, exc_info=True)
+            if self.device.type == "cuda":
+                torch.cuda.empty_cache()
             return RVCConversionResult(
                 audio_bytes=base_audio,
                 rvc_applied=False,
@@ -422,4 +472,5 @@ class RVCPipeline:
                 sample_rate=24000,
                 duration_ms=0.0,
                 error_message=str(exc),
+                device=str(self.device),
             )

@@ -59,6 +59,7 @@ class VoiceEngineConfig:
     speech_rate: str = "+0%"
     speech_volume: str = "+0%"
     index_rate: float = 0.25
+    device: Optional[str] = None  # None: auto-detect (CUDA if available, else CPU fallback)
 
     def __post_init__(self) -> None:
         # Restore canonical Phase 24 VaresaGIJP RVC model if present in models_dir
@@ -86,6 +87,11 @@ class VoiceEngine:
         self._pipeline: Optional[Any] = None
         self._last_rvc_result: Optional[Any] = None
         self._scan_rvc_models()
+
+    @property
+    def rvc_device(self) -> Optional[str]:
+        """Return the active inference device of the underlying RVC pipeline, or None if uninitialized."""
+        return str(self._pipeline.device) if self._pipeline is not None else None
 
     def _scan_rvc_models(self) -> None:
         """
@@ -345,8 +351,16 @@ class VoiceEngine:
             return base_audio
 
         if self._pipeline is None:
+            import torch
+            req_device = self._config.device
+            if req_device is None:
+                target_device = "cuda:0" if torch.cuda.is_available() else "cpu"
+            else:
+                target_device = req_device if (not req_device.startswith("cuda") or torch.cuda.is_available()) else "cpu"
+
             try:
-                self._pipeline = RVCPipeline(device="cpu")
+                self._pipeline = RVCPipeline(device=target_device)
+                logger.info("VoiceEngine: RVCPipeline initialized with active device: %s", self._pipeline.device)
             except (ImportError, ModuleNotFoundError) as env_err:
                 logger.warning("VoiceEngine: RVCPipeline initialization limited by dependencies: %s", env_err)
                 self._last_rvc_result = RVCConversionResult(
@@ -357,20 +371,45 @@ class VoiceEngine:
                     sample_rate=24000,
                     duration_ms=0.0,
                     error_message=str(env_err),
+                    device="none",
                 )
                 return base_audio
             except Exception as init_err:
-                logger.error("VoiceEngine: Failed to initialize RVCPipeline: %s", init_err, exc_info=True)
-                self._last_rvc_result = RVCConversionResult(
-                    audio_bytes=base_audio,
-                    rvc_applied=False,
-                    execution_status="failed",
-                    model_name=model_info.name,
-                    sample_rate=24000,
-                    duration_ms=0.0,
-                    error_message=str(init_err),
-                )
-                return base_audio
+                if target_device != "cpu":
+                    logger.warning(
+                        "VoiceEngine: Failed to initialize RVCPipeline on %s (%s). Attempting CPU fallback...",
+                        target_device,
+                        init_err,
+                    )
+                    try:
+                        self._pipeline = RVCPipeline(device="cpu")
+                        logger.info("VoiceEngine: RVCPipeline initialized on CPU fallback")
+                    except Exception as cpu_err:
+                        logger.error("VoiceEngine: CPU fallback also failed: %s", cpu_err, exc_info=True)
+                        self._last_rvc_result = RVCConversionResult(
+                            audio_bytes=base_audio,
+                            rvc_applied=False,
+                            execution_status="failed",
+                            model_name=model_info.name,
+                            sample_rate=24000,
+                            duration_ms=0.0,
+                            error_message=f"CUDA init failed: {init_err}; CPU fallback failed: {cpu_err}",
+                            device="none",
+                        )
+                        return base_audio
+                else:
+                    logger.error("VoiceEngine: Failed to initialize RVCPipeline on CPU: %s", init_err, exc_info=True)
+                    self._last_rvc_result = RVCConversionResult(
+                        audio_bytes=base_audio,
+                        rvc_applied=False,
+                        execution_status="failed",
+                        model_name=model_info.name,
+                        sample_rate=24000,
+                        duration_ms=0.0,
+                        error_message=str(init_err),
+                        device="none",
+                    )
+                    return base_audio
 
         logger.info(
             "VoiceEngine: Applying RVC conversion with model=%s (pth=%s, pitch_shift=%.2f st)",
