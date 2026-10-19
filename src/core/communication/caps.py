@@ -41,6 +41,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from dataclasses import asdict, dataclass, field
 from enum import Enum
 from typing import Any, Dict, List, Optional, Sequence, Set, Tuple
@@ -78,6 +79,55 @@ class CommunicativeAct(str, Enum):
     GREET = "GREET"            # Conversational opening
     FAREWELL = "FAREWELL"      # Conversational closing
     REFUSE = "REFUSE"          # Fail-closed refusal when grounding is absent or invalid
+    REQUEST = "REQUEST"        # Direct or indirect request for action/fulfillment
+
+
+# ── 1b. Dyadic Discourse Enums & State ──────────────────────────────────────────
+
+class DialoguePhase(str, Enum):
+    """Dynamic phase of the ongoing conversational session."""
+    OPENING_ENCOUNTER = "OPENING_ENCOUNTER"
+    ACTIVE_EXCHANGE = "ACTIVE_EXCHANGE"
+    DEEPENING = "DEEPENING"
+    CLOSING = "CLOSING"
+
+
+class FloorStatus(str, Enum):
+    """Floor ownership and conversational initiative state."""
+    USER_HOLDING = "USER_HOLDING"
+    YIELDED_TO_ASSISTANT = "YIELDED_TO_ASSISTANT"
+    MUTUAL_OPEN = "MUTUAL_OPEN"
+
+
+class PragmaticStance(str, Enum):
+    """Pragmatic communicative stance adopted by participant in current turn."""
+    NEUTRAL = "NEUTRAL"
+    GREET_AND_MEET = "GREET_AND_MEET"
+    HESITATION = "HESITATION"
+    FLOOR_YIELD = "FLOOR_YIELD"
+    SHARING = "SHARING"
+    INQUIRING = "INQUIRING"
+    CLOSING = "CLOSING"
+    REQUEST_ACTION = "REQUEST_ACTION"
+
+
+@dataclass(frozen=True)
+class DyadicDiscourseState:
+    """Tracks dynamic interactive stance and floor relations across turns in a session."""
+    dialogue_phase: DialoguePhase = DialoguePhase.OPENING_ENCOUNTER
+    floor_status: FloorStatus = FloorStatus.MUTUAL_OPEN
+    previous_assistant_act: Optional[str] = None
+    previous_user_stance: Optional[str] = None
+    unresolved_expectation: Optional[str] = None
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "dialogue_phase": self.dialogue_phase.value if hasattr(self.dialogue_phase, "value") else str(self.dialogue_phase),
+            "floor_status": self.floor_status.value if hasattr(self.floor_status, "value") else str(self.floor_status),
+            "previous_assistant_act": self.previous_assistant_act,
+            "previous_user_stance": self.previous_user_stance,
+            "unresolved_expectation": self.unresolved_expectation,
+        }
 
 
 # ── 2. Input Snapshots ───────────────────────────────────────────────────────────
@@ -91,6 +141,7 @@ class DialogueContextSnapshot:
     resolution_status: ResolutionStatus = ResolutionStatus.UNKNOWN
     resolved_entity_id: Optional[str] = None
     candidate_referent_ids: Sequence[str] = field(default_factory=tuple)
+    dyadic_state: Optional[DyadicDiscourseState] = None
 
 
 @dataclass(frozen=True)
@@ -194,6 +245,8 @@ class CAPSResult:
     focus_argument: Optional[str] = None
     directives: str = ""
     error_or_fallback_reason: Optional[str] = None
+    pragmatic_stance: Optional[PragmaticStance] = None
+    conversational_obligation: Optional[str] = None
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -207,6 +260,8 @@ class CAPSResult:
             "focus_argument": self.focus_argument,
             "directives": self.directives,
             "error_or_fallback_reason": self.error_or_fallback_reason,
+            "pragmatic_stance": self.pragmatic_stance.value if self.pragmatic_stance else None,
+            "conversational_obligation": self.conversational_obligation,
         }
 
     def canonical_hash(self) -> str:
@@ -221,6 +276,8 @@ class CAPSResult:
             "focus_argument": self.focus_argument,
             "directives": self.directives,
             "error": self.error_or_fallback_reason,
+            "pragmatic_stance": self.pragmatic_stance.value if self.pragmatic_stance else None,
+            "conversational_obligation": self.conversational_obligation,
         }
         serialized = json.dumps(payload, sort_keys=True)
         return hashlib.sha256(serialized.encode("utf-8")).hexdigest()
@@ -308,6 +365,21 @@ def build_assertion_graph(
     graph.add_edge(SemanticEdge(source_id=event_id, target_id=object_symbol, relation_role=":ARG1"))
 
     return graph
+
+
+# ── Regex patterns for lexical boundaries and action requests ────────────────
+_GREETING_REGEX = re.compile(r"\b(hello|hi|hey|good morning|chào)\b", re.IGNORECASE)
+_FAREWELL_REGEX = re.compile(r"\b(bye|goodbye|see you|tạm biệt)\b", re.IGNORECASE)
+_SELF_INTRO_PATTERNS = (
+    re.compile(r"\b(giới thiệu|kể|chia sẻ)\b.*?\b(bản thân|về mình|về em|mình)\b", re.IGNORECASE),
+    re.compile(r"\btự giới thiệu\b", re.IGNORECASE),
+    re.compile(r"\b(introduce\s+yourself|tell\s+me\s+about\s+yourself|tell\s+us\s+about\s+yourself)\b", re.IGNORECASE),
+)
+
+
+def _is_self_introduction_request(text: str) -> bool:
+    """Detect natural language requests for self-introduction."""
+    return any(p.search(text) for p in _SELF_INTRO_PATTERNS)
 
 
 # ── 6. Functional Transformation: evaluate_caps ─────────────────────────────────
@@ -478,21 +550,46 @@ def evaluate_caps(
 
     # ── Priority 4: Conversational Openings & Closings ────────────────────────────
     input_lower = dialogue_ctx.input_text.lower().strip()
-    if any(greet in input_lower for greet in ("hello", "hi", "hey", "good morning", "chào")):
-        return CAPSResult(
-            act=CommunicativeAct.GREET,
-            semantic_graph=None,
-            epistemic_metadata=EpistemicMetadata(status=EpistemicState.FACT, is_grounded=True),
-            provenance_metadata=ProvenanceMetadata(origin="CONVERSATIONAL_FLOW", session_id=session_id),
-            resolution_metadata=ResolutionAdmissibilityMetadata(
-                resolution_status=dialogue_ctx.resolution_status,
-                grounding_status="NOT_REQUIRED",
-            ),
-            grounded=True,
-            directives="Acknowledge conversational opening warmly and attentively.",
-        )
 
-    if any(farewell in input_lower for farewell in ("bye", "goodbye", "see you", "tạm biệt")):
+    # Compound-opening check: Substantive encounter, questions, or requests must not collapse into bare GREET
+    substantive_encounter_cues = (
+        "gặp em", "gặp nhau", "gặp được", "cuối cùng cũng", "finally met", "finally meet",
+        "nice to meet", "gặp lại", "mới gặp",
+    )
+    has_substantive_encounter = any(cue in input_lower for cue in substantive_encounter_cues)
+    has_meta_inquiry = any(cue in input_lower for cue in (
+        "lần đầu", "first time", "first conversation", "nói chuyện chưa", "từng gặp",
+        "từng nói chuyện", "gặp nhau chưa", "quen nhau bao lâu", "mới gặp",
+        "bao nhiêu lần", "bao lâu rồi", "how long have we", "have we spoken",
+    ))
+    has_action_request = _is_self_introduction_request(input_lower)
+    # Question check: only substantive if query words exist beyond bare greeting
+    has_substantive_question = (
+        ("?" in input_lower or "？" in input_lower)
+        and any(w in input_lower for w in ("what", "who", "where", "why", "how", "when", "gì", "ai", "đâu", "sao", "không"))
+    )
+    has_substantive_clause = has_substantive_encounter or has_meta_inquiry or has_substantive_question or has_action_request
+
+    # Lexical boundary-safe greeting check (prevents English 'hi' matching inside Vietnamese 'thiệu')
+    if _GREETING_REGEX.search(input_lower):
+        if not has_substantive_clause:
+            return CAPSResult(
+                act=CommunicativeAct.GREET,
+                semantic_graph=None,
+                epistemic_metadata=EpistemicMetadata(status=EpistemicState.FACT, is_grounded=True),
+                provenance_metadata=ProvenanceMetadata(origin="CONVERSATIONAL_FLOW", session_id=session_id),
+                resolution_metadata=ResolutionAdmissibilityMetadata(
+                    resolution_status=dialogue_ctx.resolution_status,
+                    grounding_status="NOT_REQUIRED",
+                ),
+                grounded=True,
+                pragmatic_stance=PragmaticStance.GREET_AND_MEET,
+                conversational_obligation="GREET_BACK",
+                directives="Acknowledge conversational opening warmly and attentively.",
+            )
+
+    # Lexical boundary-safe farewell check
+    if _FAREWELL_REGEX.search(input_lower):
         return CAPSResult(
             act=CommunicativeAct.FAREWELL,
             semantic_graph=None,
@@ -503,6 +600,8 @@ def evaluate_caps(
                 grounding_status="NOT_REQUIRED",
             ),
             grounded=True,
+            pragmatic_stance=PragmaticStance.CLOSING,
+            conversational_obligation="FAREWELL",
             directives="Conclude conversation gently.",
         )
 
@@ -604,10 +703,94 @@ def evaluate_caps(
             directives=f"Express grounded claim ({subj_sym}, {pred_sym}, {obj_sym}) accurately without exceeding facts.",
         )
 
-    # ── Priority 6: Conversational Flow Defaults ───────────────────────────────────
+    # ── Priority 6: Conversational Flow & Discourse Grounding ───────────────────────
     input_lower = dialogue_ctx.input_text.lower().strip()
 
-    # Detect conversational inquiry/question
+    # 6.1 Meta-Conversational & Life-State Inquiries (e.g., first conversation, meeting history, interaction count)
+    meta_history_cues = (
+        "lần đầu", "first time", "first conversation", "nói chuyện chưa", "từng gặp",
+        "từng nói chuyện", "gặp nhau chưa", "quen nhau bao lâu", "mới gặp",
+        "bao nhiêu lần", "bao lâu rồi", "how long have we", "have we spoken",
+    )
+    if any(cue in input_lower for cue in meta_history_cues):
+        # Look up verified life-state propositions in evidence pool
+        first_conv_prop = None
+        turn_count_prop = None
+        fam_prop = None
+        for p in evidence_pool.verified_propositions:
+            if not getattr(p, "valid", True):
+                continue
+            pred = getattr(p, "predicate", "")
+            if pred == "c:IS_FIRST_CONVERSATION":
+                first_conv_prop = p
+            elif pred == "c:TURN_COUNT":
+                turn_count_prop = p
+            elif pred == "c:FAMILIARITY_LEVEL":
+                fam_prop = p
+
+        if any(term in input_lower for term in ("lần đầu", "first time", "first conversation", "mới gặp", "nói chuyện chưa")):
+            if first_conv_prop is not None:
+                is_first = (str(first_conv_prop.object).lower() == "true")
+                if is_first:
+                    directive = "Xác nhận từ góc nhìn đồng hành ngôi thứ nhất rằng đây là lần đầu tiên em và anh nói chuyện với nhau."
+                else:
+                    directive = "Xác nhận từ góc nhìn đồng hành ngôi thứ nhất rằng em và anh đã từng trò chuyện với nhau trước đây, không phải lần đầu."
+                return CAPSResult(
+                    act=CommunicativeAct.ANSWER,
+                    semantic_graph=None,
+                    epistemic_metadata=EpistemicMetadata(status=EpistemicState.FACT, confidence=1.0, is_grounded=True),
+                    provenance_metadata=ProvenanceMetadata(
+                        origin="LIFE_STATE_VERIFIED",
+                        premise_ids=(first_conv_prop.id,),
+                        session_id=session_id,
+                    ),
+                    resolution_metadata=ResolutionAdmissibilityMetadata(
+                        resolution_status=ResolutionStatus.RESOLVED,
+                        resolved_entity_id="ent:lucia",
+                        grounding_status="GROUNDED",
+                    ),
+                    grounded=True,
+                    target_predicate="c:IS_FIRST_CONVERSATION",
+                    focus_argument="ent:lucia",
+                    directives=directive,
+                )
+            else:
+                # Evidence missing: fail-closed with CLARIFY rather than allowing SLM to invent
+                return CAPSResult(
+                    act=CommunicativeAct.CLARIFY,
+                    semantic_graph=None,
+                    epistemic_metadata=EpistemicMetadata(status=EpistemicState.UNKNOWN, confidence=None, is_grounded=False),
+                    provenance_metadata=ProvenanceMetadata(origin="MISSING_LIFE_STATE", session_id=session_id),
+                    resolution_metadata=ResolutionAdmissibilityMetadata(
+                        resolution_status=ResolutionStatus.UNKNOWN,
+                        grounding_status="UNGROUNDED",
+                        failure_reason="No verified interaction history found in evidence pool.",
+                    ),
+                    grounded=False,
+                    directives="Hỏi lại để làm rõ vì chưa có dữ liệu xác thực về lịch sử tương tác.",
+                )
+
+    # 6.1b Request for Action (Self-Introduction)
+    # Speech Act: REQUEST, Requested Action: c:SELF_INTRODUCTION, Obligation: FULFILL_SELF_INTRODUCTION
+    if _is_self_introduction_request(input_lower):
+        return CAPSResult(
+            act=CommunicativeAct.REQUEST,
+            semantic_graph=None,
+            epistemic_metadata=EpistemicMetadata(status=EpistemicState.FACT, is_grounded=True),
+            provenance_metadata=ProvenanceMetadata(origin="CONVERSATIONAL_REQUEST", session_id=session_id),
+            resolution_metadata=ResolutionAdmissibilityMetadata(
+                resolution_status=dialogue_ctx.resolution_status,
+                grounding_status="CONVERSATIONAL_CONTEXT",
+            ),
+            grounded=True,
+            target_predicate="c:SELF_INTRODUCTION",
+            focus_argument="ent:lucia",
+            pragmatic_stance=PragmaticStance.REQUEST_ACTION,
+            conversational_obligation="FULFILL_SELF_INTRODUCTION",
+            directives="Giới thiệu bản thân một cách ngắn gọn, chân thành, tự nhiên với tư cách là Lucia; xưng em, gọi anh.",
+        )
+
+    # 6.2 Conversational Questions (Inquiries)
     is_question = (
         "?" in dialogue_ctx.input_text
         or "？" in dialogue_ctx.input_text
@@ -620,43 +803,182 @@ def evaluate_caps(
 
     if is_question:
         # Distinguish semantic role of conversational questions
-        if any(term in input_lower for term in ("yourself", "who are you", "bạn là ai", "em là ai", "bản thân")):
+        if any(term in input_lower for term in ("who are you", "bạn là ai", "em là ai", "bạn tên gì", "em tên gì", "tên em là gì")):
             directive = "Answer the user's question about your identity and nature as a companion directly and warmly."
+            return CAPSResult(
+                act=CommunicativeAct.ANSWER,
+                semantic_graph=None,
+                epistemic_metadata=EpistemicMetadata(status=EpistemicState.FACT, is_grounded=True),
+                provenance_metadata=ProvenanceMetadata(origin="COMPANION_IDENTITY", session_id=session_id),
+                resolution_metadata=ResolutionAdmissibilityMetadata(
+                    resolution_status=dialogue_ctx.resolution_status,
+                    grounding_status="CONVERSATIONAL_CONTEXT",
+                ),
+                grounded=True,
+                target_predicate="c:IDENTITY",
+                focus_argument="ent:lucia",
+                directives=directive,
+            )
         elif any(term in input_lower for term in ("doing", "làm gì", "đang làm")):
             directive = "Answer the user's question about your current activity and presence with the user."
+            return CAPSResult(
+                act=CommunicativeAct.ANSWER,
+                semantic_graph=None,
+                epistemic_metadata=EpistemicMetadata(status=EpistemicState.FACT, is_grounded=True),
+                provenance_metadata=ProvenanceMetadata(origin="COMPANION_ACTIVITY", session_id=session_id),
+                resolution_metadata=ResolutionAdmissibilityMetadata(
+                    resolution_status=dialogue_ctx.resolution_status,
+                    grounding_status="CONVERSATIONAL_CONTEXT",
+                ),
+                grounded=True,
+                target_predicate="c:ACTIVITY",
+                focus_argument="ent:lucia",
+                directives=directive,
+            )
         elif any(term in input_lower for term in ("what can you do", "có thể làm gì", "giúp được gì")):
             directive = "Answer the user's question about your capabilities and ways you can engage together."
+            return CAPSResult(
+                act=CommunicativeAct.ANSWER,
+                semantic_graph=None,
+                epistemic_metadata=EpistemicMetadata(status=EpistemicState.FACT, is_grounded=True),
+                provenance_metadata=ProvenanceMetadata(origin="COMPANION_CAPABILITY", session_id=session_id),
+                resolution_metadata=ResolutionAdmissibilityMetadata(
+                    resolution_status=dialogue_ctx.resolution_status,
+                    grounding_status="CONVERSATIONAL_CONTEXT",
+                ),
+                grounded=True,
+                target_predicate="c:CAPABILITY",
+                focus_argument="ent:lucia",
+                directives=directive,
+            )
         elif any(term in input_lower for term in ("where are you", "ở đâu")):
             directive = "Answer the user's question regarding your presence in this companion space."
+            return CAPSResult(
+                act=CommunicativeAct.ANSWER,
+                semantic_graph=None,
+                epistemic_metadata=EpistemicMetadata(status=EpistemicState.FACT, is_grounded=True),
+                provenance_metadata=ProvenanceMetadata(origin="COMPANION_PRESENCE", session_id=session_id),
+                resolution_metadata=ResolutionAdmissibilityMetadata(
+                    resolution_status=dialogue_ctx.resolution_status,
+                    grounding_status="CONVERSATIONAL_CONTEXT",
+                ),
+                grounded=True,
+                target_predicate="c:PRESENCE",
+                focus_argument="ent:lucia",
+                directives=directive,
+            )
         elif any(term in input_lower for term in ("listening", "nghe không", "đang nghe")):
             directive = "Answer confirming your active presence and attentive listening to the user."
+            return CAPSResult(
+                act=CommunicativeAct.ANSWER,
+                semantic_graph=None,
+                epistemic_metadata=EpistemicMetadata(status=EpistemicState.FACT, is_grounded=True),
+                provenance_metadata=ProvenanceMetadata(origin="COMPANION_ATTENTION", session_id=session_id),
+                resolution_metadata=ResolutionAdmissibilityMetadata(
+                    resolution_status=dialogue_ctx.resolution_status,
+                    grounding_status="CONVERSATIONAL_CONTEXT",
+                ),
+                grounded=True,
+                target_predicate="c:ATTENTION",
+                focus_argument="ent:lucia",
+                directives=directive,
+            )
         else:
-            directive = "Answer the user's question directly, thoughtfully, and honestly."
+            # Ungrounded general inquiry: under Grounding Invariant, fail closed to CLARIFY
+            return CAPSResult(
+                act=CommunicativeAct.CLARIFY,
+                semantic_graph=None,
+                epistemic_metadata=EpistemicMetadata(status=EpistemicState.UNKNOWN, confidence=None, is_grounded=False),
+                provenance_metadata=ProvenanceMetadata(origin="UNGROUNDED_INQUIRY", session_id=session_id),
+                resolution_metadata=ResolutionAdmissibilityMetadata(
+                    resolution_status=dialogue_ctx.resolution_status,
+                    grounding_status="UNGROUNDED",
+                    failure_reason="Factual inquiry lacks verified grounding in knowledge base or life-state.",
+                ),
+                grounded=False,
+                directives="Ask a clarifying question because this inquiry has no verified factual grounding.",
+            )
 
+    # 6.3 Conversational Statements (ACKNOWLEDGE with preserved semantic context)
+    encounter_cues = (
+        "gặp em", "gặp nhau", "gặp được", "cuối cùng cũng", "finally met", "finally meet",
+        "nice to meet", "gặp lại", "mới gặp",
+    )
+    if any(cue in input_lower for cue in encounter_cues):
         return CAPSResult(
-            act=CommunicativeAct.ANSWER,
+            act=CommunicativeAct.ACKNOWLEDGE,
             semantic_graph=None,
-            epistemic_metadata=EpistemicMetadata(status=EpistemicState.FACT, is_grounded=True),
-            provenance_metadata=ProvenanceMetadata(origin="CONVERSATIONAL_FLOW", session_id=session_id),
+            epistemic_metadata=EpistemicMetadata(status=EpistemicState.FACT, is_grounded=False),
+            provenance_metadata=ProvenanceMetadata(origin="CONVERSATIONAL_ENCOUNTER", session_id=session_id),
             resolution_metadata=ResolutionAdmissibilityMetadata(
                 resolution_status=dialogue_ctx.resolution_status,
-                grounding_status="NOT_REQUIRED",
+                grounding_status="CONVERSATIONAL_CONTEXT",
             ),
-            grounded=True,
-            directives=directive,
+            grounded=False,
+            target_predicate="c:ENCOUNTER",
+            focus_argument="ent:lucia",
+            pragmatic_stance=PragmaticStance.GREET_AND_MEET,
+            conversational_obligation="MUTUAL_ENCOUNTER_ACKNOWLEDGMENT",
+            directives="Đáp lại lời chào gặp gỡ một cách nhã nhặn, tự nhiên; ghi nhận khoảnh khắc gặp gỡ để bắt đầu cuộc trò chuyện và lắng nghe chia sẻ.",
         )
 
-    # Default fallback: ACKNOWLEDGE non-question conversational statements
+    # Hesitation & Floor-Yielding Cues (User yields the floor or expresses conversational hesitation)
+    hesitation_cues = (
+        "chẳng biết phải nói gì", "không biết phải nói gì", "chẳng biết nói gì", "không biết nói gì",
+        "chưa biết nói gì", "chưa biết phải nói gì", "biết nói gì đây", "biết nói gì bây giờ",
+        "don't know what to say", "not sure what to say", "lost for words", "speechless",
+        "ngại quá", "hơi ngại", "lúng túng", "ngập ngừng",
+    )
+    if any(cue in input_lower for cue in hesitation_cues):
+        return CAPSResult(
+            act=CommunicativeAct.ACKNOWLEDGE,
+            semantic_graph=None,
+            epistemic_metadata=EpistemicMetadata(status=EpistemicState.FACT, is_grounded=False),
+            provenance_metadata=ProvenanceMetadata(origin="CONVERSATIONAL_HESITATION", session_id=session_id),
+            resolution_metadata=ResolutionAdmissibilityMetadata(
+                resolution_status=dialogue_ctx.resolution_status,
+                grounding_status="CONVERSATIONAL_CONTEXT",
+            ),
+            grounded=False,
+            target_predicate="c:CONVERSATIONAL_HESITATION",
+            focus_argument="ent:dialogue",
+            pragmatic_stance=PragmaticStance.FLOOR_YIELD,
+            conversational_obligation="REASSURE_AND_GENTLE_INITIATIVE",
+            directives="Nhẹ nhàng trấn an sự ngập ngừng của người dùng và chủ động mở ra một hướng gợi mở tự nhiên, không phán xét, không áp lực.",
+        )
+
+    activity_cues = ("đi làm", "đi học", "mệt", "vừa mới", "đang đọc", "đi dạo", "nghỉ ngơi", "làm việc", "walk", "tired")
+    if any(cue in input_lower for cue in activity_cues):
+        return CAPSResult(
+            act=CommunicativeAct.ACKNOWLEDGE,
+            semantic_graph=None,
+            epistemic_metadata=EpistemicMetadata(status=EpistemicState.FACT, is_grounded=False),
+            provenance_metadata=ProvenanceMetadata(origin="CONVERSATIONAL_SHARING", session_id=session_id),
+            resolution_metadata=ResolutionAdmissibilityMetadata(
+                resolution_status=dialogue_ctx.resolution_status,
+                grounding_status="CONVERSATIONAL_CONTEXT",
+            ),
+            grounded=False,
+            target_predicate="c:USER_SHARING",
+            focus_argument="ent:user",
+            pragmatic_stance=PragmaticStance.SHARING,
+            conversational_obligation="ATTENTIVE_LISTENING",
+            directives="Acknowledge user sharing attentively with calm listening engagement.",
+        )
+
+    # Default conversational flow acknowledgment: preserve semantic context without empathy coaching
     return CAPSResult(
         act=CommunicativeAct.ACKNOWLEDGE,
         semantic_graph=None,
-        epistemic_metadata=EpistemicMetadata(status=EpistemicState.FACT, is_grounded=True),
+        epistemic_metadata=EpistemicMetadata(status=EpistemicState.FACT, is_grounded=False),
         provenance_metadata=ProvenanceMetadata(origin="CONVERSATIONAL_FLOW", session_id=session_id),
         resolution_metadata=ResolutionAdmissibilityMetadata(
             resolution_status=dialogue_ctx.resolution_status,
-            grounding_status="NOT_REQUIRED",
+            grounding_status="CONVERSATIONAL_CONTEXT",
         ),
-        grounded=True,
-        directives="Acknowledge user input attentively with empathic listening.",
+        grounded=False,
+        pragmatic_stance=PragmaticStance.NEUTRAL,
+        conversational_obligation="ATTENTIVE_LISTENING",
+        directives="Acknowledge user input attentively with calm listening engagement.",
     )
 

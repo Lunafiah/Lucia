@@ -35,8 +35,7 @@ To ensure absolute rigor, every architectural mechanism, boundary, and capabilit
 | **Goal Reasoning Kernel & JTMS (P23-H)** | **`IMPLEMENTED`** | Backward goal chaining, static Horn rules, non-monotonic cascade retraction. **FROZEN at `3eef803`**. |
 | **Dual-Stream Sensory Front-End (P23-C)** | **`RESEARCH-VALIDATED`** | eGeMAPS prosody (88D) + UD syntactic dependency parsing ($5.1\text{ ms}$ CPU). |
 | **UMR-TPG Semantic Substrate (P23-D)** | **`RESEARCH-VALIDATED`** | Temporal-Predicate Graph verified across 6 tracks (EXP-01–06); $189\text{ MB}$ @ 100k facts. |
-| **Substrate Neutrality for Relational Stance** | **`RESEARCH-VALIDATED`** | Phase 22-SC: $|D_0 - D_2| = 0.0000$ divergence between symbolic policy and embodiment. |
-| **Downstream SLM Surface Realization** | **`SUPPORTED`** | Language generation strictly downstream of formed semantic graphs. |
+| **Downstream SLM Surface Realization (ADR-035 / P23-D Freeze)** | **`IMPLEMENTED`** | Language generation strictly downstream of formed semantic graphs. P23-D Output Language Freeze establishes canonical production outputs: English text (`CANONICAL_TEXT_OUTPUT_LANGUAGE = 'en'`) and Japanese voice (`CANONICAL_VOICE_OUTPUT_LANGUAGE = 'ja'`) realizing in parallel via `RealizationOutput`. Dyadic companion perspective enforced. PASS WITH NOTES (89/89 PASS, 0 regression, No Category-C coupling). |
 | **Direct Token-Free Embodiment Driving** | **`SUPPORTED`** | Somatic blendshapes (`Smile_W`), pitch, and latency driven without LLM ($r=1.000$). |
 | **Dynamic Open-Domain Concept Induction** | **`PLAUSIBLE`** | Continuous clustering of sensory features into novel concept nodes. |
 | **Human-Level General Sentience / AGI** | **`SPECULATIVE`** | **NOT CLAIMED**. Lucia is strictly a bounded operational companion system. |
@@ -67,6 +66,16 @@ To ensure absolute rigor, every architectural mechanism, boundary, and capabilit
 - **Process:** Backward chaining with depth ($\le 8$) and step ($\le 256$) guards. Strong Kleene K3 truth evaluation. Multi-justification JTMS retraction.
 - **Output:** `GoalResult` (`TRUE`, `FALSE`, `UNKNOWN`), `InformationSubgoal` (missing premises/unbound variables), or `DisambiguationSubgoal` (competing ambiguous branches).
 - **Boundary Restriction:** Operates strictly on pre-compiled static Horn rules. Cannot synthesize dynamic rules or learn new predicates at runtime.
+
+### 3.4 P23-D Output Language Architecture & Realization Boundary
+- **Input:** Multilingual user utterance entering perception boundary (EN, JA, VI, etc.). Input language does not dictate output language ($\text{input language} \ne \text{output language}$).
+- **Cognitive / Semantic Substrate:** Retains strict language neutrality; zero surface language tokens or grammatical dependencies encoded into knowledge representations or limbic ODE.
+- **Output:** Decoupled parallel surface realization branches via `RealizationOutput`:
+  - English text (`CANONICAL_TEXT_OUTPUT_LANGUAGE = "en"`) compiled via natural prose directives and guarded fail-closed by Stage S14 `SemanticFidelityGate`.
+  - Japanese voice (`CANONICAL_VOICE_OUTPUT_LANGUAGE = "ja"`) realized directly from semantic/pragmatic state via `realize_japanese_voice_text()`. Neither branch acts as a semantic intermediary for the other.
+- **Perspective:** First-person dyadic companion perspective. Third-person narrator drift ("two people", "hai người", "二人") is strictly blocked.
+- **P23-D Audit Result:** Status `PASS WITH NOTES`, 89/89 relevant communication + realization tests PASS, 0 regression, No Category-C Production Architectural Coupling detected.
+- **Preserved Technical Notes:** Note A: helper `translate_to_japanese(safe_response)` is a surface-realization convenience path (direct semantic fallback exists; future multi-head renderer out of current scope); Note B: dead import `detect_active_language` is housekeeping technical debt.
 
 ---
 

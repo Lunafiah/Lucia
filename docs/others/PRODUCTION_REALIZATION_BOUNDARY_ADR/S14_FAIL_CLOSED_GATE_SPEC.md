@@ -25,7 +25,7 @@ The Stage S14 **Semantic Fidelity Gate** (`SemanticFidelityGate`) acts as an aut
 
 ## 2. Gate Verification Algorithm
 
-The verification pipeline executes 6 sequential deterministic checks against the candidate text:
+The verification pipeline executes 7 sequential deterministic checks against the candidate text:
 
 ```text
 Candidate Text + RealizationInputContract
@@ -45,14 +45,29 @@ Candidate Text + RealizationInputContract
         ├── [5. Argument & Entity Check] ────► Mandatory lemma/synonym presence (accounting for pro-drop)
         │                                      (Violation: ARGUMENT_ENTITY_LOSS)
         │
-        └── [6. Forbidden Additions Check] ──► Zero match on ungrounded forbidden concept regexes
-                                               (Violation: UNSUPPORTED_ADDITION)
+        ├── [6. Forbidden Additions Check] ──► Zero match on ungrounded forbidden concept regexes
+        │                                      (Violation: UNSUPPORTED_ADDITION)
+        │
+        └── [7. Dyadic Perspective Guard] ───► Rejection of 3rd-person narrator/external-observer framing
+                                               ("two people", "hai người", "二人")
+                                               (Violation: DYADIC_PERSPECTIVE_DRIFT)
         │
         ▼
    Any Violations?
    ├── YES ──► Emit Decision: BLOCK (Trigger Deterministic Fallback)
    └── NO  ──► Emit Decision: PASS  (Forward Candidate Text to Stage S15)
 ```
+
+> **Dyadic Companion Perspective Clarification**:  
+> Lucia communicates from a first-person dyadic companion perspective. The multi-tiered perspective architecture is:
+> ```text
+> Semantic / pragmatic grounding (Context & turn obligations)
+>         ↓
+> Realization guidance (Prompt directives)
+>         ↓
+> Lexical safety guard (Gate DYADIC_PERSPECTIVE_DRIFT check)
+> ```
+> The lexical check is strictly a **fail-closed safety net**, not the ontological or relational definition of dyadic companionship.
 
 ---
 

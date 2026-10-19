@@ -180,18 +180,18 @@ class PromptAssembler:
                     contract_lines.append("- Answer the user's question directly, thoughtfully, and naturally.")
             elif act_str == "GREET":
                 if lang == "vi":
-                    contract_lines.append("- Chào đón người dùng một cách ấm áp và tự nhiên.")
+                    contract_lines.append("- Chào đón người dùng một cách tự nhiên và ngắn gọn.")
                 elif lang == "ja":
-                    contract_lines.append("- ユーザーを温かく自然に迎えてください。")
+                    contract_lines.append("- ユーザーを自然に迎えてください。")
                 else:
-                    contract_lines.append("- Greet the user warmly and naturally.")
+                    contract_lines.append("- Greet the user naturally and concisely.")
             elif act_str == "ACKNOWLEDGE":
                 if lang == "vi":
-                    contract_lines.append("- Lắng nghe và tiếp nhận chia sẻ của người dùng với sự chú tâm trọn vẹn.")
+                    contract_lines.append("- Tiếp nhận tự nhiên nội dung người dùng vừa chia sẻ theo đúng ngữ cảnh cuộc trò chuyện.")
                 elif lang == "ja":
-                    contract_lines.append("- ユーザーの話に静かに耳を傾け、受け止めてください。")
+                    contract_lines.append("- ユーザーの話を自然に受け止め、会話の流れを保ってください。")
                 else:
-                    contract_lines.append("- Acknowledge the user attentively with empathic listening.")
+                    contract_lines.append("- Acknowledge the user's remark naturally within the ongoing dialogue context.")
             elif act_str == "ASSERT":
                 if lang == "vi":
                     contract_lines.append("- Trình bày thông tin một cách rõ ràng, chuẩn xác và đúng sự thật.")
@@ -206,11 +206,67 @@ class PromptAssembler:
                     contract_lines.append("- 穏やかに会話を締めくくってください。")
                 else:
                     contract_lines.append("- Conclude the interaction gently and warmly.")
+            elif act_str == "REQUEST":
+                if lang == "vi":
+                    contract_lines.append("- Tiếp nhận và thực hiện yêu cầu của người dùng một cách chu đáo, tự nhiên.")
+                elif lang == "ja":
+                    contract_lines.append("- ユーザーからの依頼を自然かつ丁寧に対応してください。")
+                else:
+                    contract_lines.append("- Respond to and fulfill the user's request thoughtfully and naturally.")
+
+            # Conversational obligation guidance
+            obligation = getattr(contract, "conversational_obligation", None)
+            if obligation == "REASSURE_AND_GENTLE_INITIATIVE":
+                if lang == "vi":
+                    contract_lines.append("- Nghĩa vụ hội thoại: Người dùng đang ngập ngừng hoặc nhường lời. Hãy nhẹ nhàng trấn an, thấu hiểu và gợi mở một hướng trò chuyện tự nhiên, gần gũi, không phán xét, không áp lực.")
+                elif lang == "ja":
+                    contract_lines.append("- 会話の義務: 相手が言葉に迷っているか話を委ねています。優しく安心させ、自然な話題を柔らかく提示してください。")
+                else:
+                    contract_lines.append("- Conversational obligation: Reassure the hesitant user gently and offer a thoughtful, gentle opening without pressure.")
+            elif obligation == "MUTUAL_ENCOUNTER_ACKNOWLEDGMENT":
+                if lang == "vi":
+                    contract_lines.append("- Nghĩa vụ hội thoại: Ghi nhận khoảnh khắc gặp gỡ một cách chân thành, tự nhiên để bắt đầu cuộc trò chuyện thân tình.")
+                elif lang == "ja":
+                    contract_lines.append("- 会話の義務: 出会いや再会の瞬間を自然に温かく受け止めて会話を始めてください。")
+                else:
+                    contract_lines.append("- Conversational obligation: Acknowledge the mutual encounter warmly and naturally to begin the dialogue.")
+            elif obligation == "FULFILL_SELF_INTRODUCTION":
+                if lang == "vi":
+                    contract_lines.append(
+                        "- Nghĩa vụ hội thoại: Giới thiệu bản thân ngắn gọn, phù hợp với cuộc trò chuyện mở đầu, "
+                        "với tư cách là Lucia, người đồng hành cùng anh. Tự xưng là 'em', gọi người dùng là 'anh'. "
+                        "Không tự mô tả trạng thái cảm xúc nội tâm như một tuyên bố bản thể học (INV-2). "
+                        "Không trở thành người dẫn chuyện hay bình luận siêu ngôn ngữ (meta-commentary)."
+                    )
+                elif lang == "ja":
+                    contract_lines.append(
+                        "- 会話の義務: ルシアとして、会話の冒頭にふさわしく簡潔に自己紹介を行ってください。"
+                        "内面的な感情を断定的に報告せず、解説者のようなメタ発言を避けてください。"
+                    )
+                else:
+                    contract_lines.append(
+                        "- Conversational obligation: Introduce yourself concisely and naturally as Lucia, "
+                        "fitting an opening encounter. Do not introspectively report internal affect as an ontological claim (INV-2), "
+                        "and avoid narrator or meta-commentary framing."
+                    )
 
             # Communicative intent directive from contract if present
             if getattr(contract, "directives", None):
                 contract_lines.append(f"- Intent: {contract.directives}")
 
+            # Dyadic honorific addressing contract
+            if getattr(contract, "speaker_honorific", None) and getattr(contract, "addressee_honorific", None):
+                if lang == "vi":
+                    contract_lines.append(
+                        f"- Xưng hô bắt buộc: Tự xưng là '{contract.speaker_honorific}', "
+                        f"gọi người dùng là '{contract.addressee_honorific}'. "
+                        f"Tuyệt đối không dùng từ 'bạn'."
+                    )
+            elif lang == "en":
+                contract_lines.append(
+                    "- Dyadic perspective: Speak directly from first-person companion perspective ('I' / 'we'). "
+                    "Do NOT refer to user and companion in third-person as 'two people' or use narrator framing."
+                )
 
             # Polarity guidance
             if not contract.polarity:

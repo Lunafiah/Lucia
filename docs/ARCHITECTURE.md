@@ -440,35 +440,57 @@ The Presentation, Multimodal Embodiment & Safety subsystem handles prompt assemb
 
 ```mermaid
 flowchart TD
-    subgraph Cognitive_Handoff ["Cognitive Turn Handoff"]
-        TurnOutput["CognitiveOrchestrator Output (Stage S11)"]
-        ActuatorState["Canonical 15-Dim Actuator Vector E_t\n[Text 3, Prosody 4, Facial 5, Posture 2, Latency 1]"]
+    subgraph Perception_Boundary ["Multilingual Perception Boundary"]
+        RawInput["Any-Language Input (Multilingual EN/VI/JA/...)\n[Input Language != Output Language]"]
     end
 
-    subgraph Language_Substrate ["Language Realization & Fail-Closed Safety Boundary (ADR-035)"]
-        direction TB
+    subgraph Cognitive_Core ["Language-Independent Cognitive & Semantic Substrate"]
+        CognitiveState["Cognitive State (KnowledgeStore, MT-LNN ODE, SDM)\n[Zero Surface Tokens • Substrate Neutral]"]
         CAPS_Intent["CAPS / SemanticGraph (Stage S10b)\n[Authoritative Communicative Intent]"]
         RealContract["Typed RealizationInputContract\n[Authoritative Realization Contract]"]
-        PromptAssembler["PromptAssembler (Stage S11)\n[Natural-Language Prose Directives]"]
-        LocalSLM["LFM2.5-1.2B SLM Realizer (Stage S13)\n[Untrusted Text Renderer Candidate]"]
-        FidelityGate["S14 SemanticFidelityGate (Stage S14)\n[Deterministic Pure-CPU Symbolic Arbiter]"]
-        GateDecision{"Gate Decision"}
-        FallbackRegistry["Deterministic Fallback Registry\n[Zero-Invention Safe Templates]"]
-        BoundaryFilter["BoundaryLayer Regex Validator\n[INV-2 Secondary Filter]"]
-        ApprovedOut["Approved Natural Language Text"]
-        HistoryBuf["_history Conversational Buffer\n[Derived Record — Never Epistemic Truth]"]
         
+        CognitiveState --> CAPS_Intent
         CAPS_Intent --> RealContract
-        RealContract --> PromptAssembler
-        PromptAssembler --> LocalSLM
-        LocalSLM -->|"Candidate Draft"| FidelityGate
+    end
+    
+    RawInput -.->|"Perception Ingress"| CognitiveState
+
+    subgraph Parallel_Realization ["Decoupled Parallel Surface Realization Boundary (ADR-035 / P23-D)"]
+        direction TB
+        
+        subgraph Text_Branch ["English Text Realization (CANONICAL_TEXT_OUTPUT_LANGUAGE = 'en')"]
+            PromptAssembler["PromptAssembler (Stage S11)\n[Natural-Language Prose Directives • Dyadic Guidance]"]
+            LocalSLM["LFM2.5-1.2B SLM Realizer (Stage S13)\n[Untrusted Text Renderer Candidate]"]
+            FidelityGate["S14 SemanticFidelityGate (Stage S14)\n[Pure-CPU Symbolic Arbiter • Dyadic Guard]"]
+            GateDecision{"Gate Decision"}
+            FallbackRegistry["Deterministic Fallback Registry\n[Zero-Invention Safe Templates]"]
+            BoundaryFilter["BoundaryLayer Regex Validator\n[INV-2 Secondary Filter]"]
+            ApprovedText["Approved English Text Output\n(TextRealization)"]
+            HistoryBuf["_history Conversational Buffer\n[Derived Record — Never Epistemic Truth]"]
+            
+            PromptAssembler --> LocalSLM
+            LocalSLM -->|"Candidate Draft"| FidelityGate
+            FidelityGate --> GateDecision
+            GateDecision -->|"PASS"| BoundaryFilter
+            GateDecision -->|"BLOCK / UNCERTAIN"| FallbackRegistry
+            FallbackRegistry --> ApprovedText
+            BoundaryFilter --> ApprovedText
+            ApprovedText --> HistoryBuf
+        end
+        
+        subgraph Voice_Branch ["Japanese Voice Realization (CANONICAL_VOICE_OUTPUT_LANGUAGE = 'ja')"]
+            DirectRealizer["realize_japanese_voice_text()\n[Direct Semantic/Pragmatic Realization]"]
+            SurfaceHelper["translate_to_japanese(safe_response)\n[Surface Convenience Path • Note A]"]
+            VoiceOutput["Approved Japanese Voice Text\n(VoiceRealization)"]
+            
+            DirectRealizer --> VoiceOutput
+            SurfaceHelper -.->|"Optional Convenience"| VoiceOutput
+        end
+        
+        RealContract -->|"Authoritative Oracle"| PromptAssembler
         RealContract -->|"Authoritative Oracle"| FidelityGate
-        FidelityGate --> GateDecision
-        GateDecision -->|"PASS"| BoundaryFilter
-        GateDecision -->|"BLOCK / UNCERTAIN"| FallbackRegistry
-        FallbackRegistry --> ApprovedOut
-        BoundaryFilter --> ApprovedOut
-        ApprovedOut --> HistoryBuf
+        RealContract -->|"Authoritative Intent"| DirectRealizer
+        ApprovedText -.->|"Surface Convenience Input"| SurfaceHelper
     end
 
     subgraph Voice_Pipeline ["Offline Neural Audio Pipeline"]
@@ -477,7 +499,7 @@ flowchart TD
         PhraseCache["In-Memory Short Phrase Cache"]
         AudioPlayback["Desktop Audio Output & Echo Guard"]
         
-        ApprovedOut --> VoiceService
+        VoiceOutput --> VoiceService
         VoiceService --> PhraseCache
         PhraseCache -->|"Cache Miss"| RVC
         PhraseCache -->|"Cache Hit"| AudioPlayback
@@ -492,7 +514,7 @@ flowchart TD
         VRM3D["3D Humanoid VRM Engine (Three.js)"]
         LipSync["60 FPS Web Audio Lip-Sync (FFT 200–2500Hz)"]
         
-        ActuatorState --> AvatarDispatcher
+        ActuatorState["Canonical 15-Dim Actuator Vector E_t\n[Text 3, Prosody 4, Facial 5, Posture 2, Latency 1]"] --> AvatarDispatcher
         AvatarDispatcher --> Canvas2D
         AvatarDispatcher --> Sprites2D
         AvatarDispatcher --> Live2D
@@ -505,6 +527,7 @@ flowchart TD
         StudioWin["Personal Digital Room (Studio Window)"]
         MascotWin["Floating Mascot Mode (Always-on-Top)\n• Dynamic Model Bounds Dock Anchoring\n• 800ms Trackpad Inertia Cooldown\n• IPC moveMascotBy(dx, dy)"]
         
+        ApprovedText --> StudioWin
         AvatarDispatcher --> StudioWin
         AvatarDispatcher --> MascotWin
     end
@@ -513,13 +536,14 @@ flowchart TD
 #### 1. Core Components & Epistemic Authority Hierarchy
 The realization boundary strictly enforces the repository-wide authority model:
 * **Cognitive State (`KnowledgeStore`, MT-LNN, SDM)**: **Authoritative Semantic Source**. Permanent homeostatic and epistemic ground truth.
-* **CAPS & `SemanticGraph` (Stage S10b)**: **Authoritative Communicative Intent**. Defines *what* to communicate (act, concepts, epistemic certainty, polarity).
-* **`RealizationInputContract` (`src/core/language/contract.py`)**: **Authoritative Realization Contract**. Strongly-typed, immutable dataclass carrying semantic obligations (roles, scope, polarity, provenance, forbidden additions) across the S10 $\rightarrow$ S11 $\rightarrow$ S14 boundary.
-* **`PromptAssembler` (`src/core/orchestrator/prompt_assembler.py`)**: Compiles the contract into natural conversational prose directives for EN, VI, and JA without emitting DSL or code tokens (`ARG0:`, `EVENT:`), which empirically degrade 1.2B SLM fidelity.
+* **CAPS & `SemanticGraph` (Stage S10b)**: **Authoritative Communicative Intent**. Defines *what* to communicate (act, concepts, epistemic certainty, polarity). Language-independent; encodes zero surface language syntax.
+* **`RealizationInputContract` (`src/core/language/contract.py`)**: **Authoritative Realization Contract**. Strongly-typed, immutable dataclass carrying semantic obligations (roles, scope, polarity, provenance, forbidden additions, honorifics, obligations) across the S10 $\rightarrow$ S11 $\rightarrow$ S14 boundary.
+* **`PromptAssembler` (`src/core/orchestrator/prompt_assembler.py`)**: Compiles the contract into natural conversational prose directives without emitting code DSL tokens (`ARG0:`, `EVENT:`), which empirically degrade 1.2B SLM fidelity. Enforces first-person dyadic companion perspective.
 * **Local GGUF SLM Candidate (`src/core/language/llm_backend.py`)**: **Untrusted Text Renderer**. Realizes surface syntax and lexical variety; has zero access to cognitive internals and cannot mutate internal state.
-* **`SemanticFidelityGate` (`src/core/language/gate.py` - Stage S14)**: **Authoritative Fidelity Arbiter**. Pure-CPU deterministic symbolic gate ($<0.1\,\text{ms}$) verifying candidate text against the contract. Evaluates INV-2 affect, act compliance, polarity/negation, epistemic modality, argument/entity preservation (with pro-drop support), and forbidden additions.
+* **`SemanticFidelityGate` (`src/core/language/gate.py` - Stage S14)**: **Authoritative Fidelity Arbiter**. Pure-CPU deterministic symbolic gate ($<0.1\,\text{ms}$) verifying candidate text against the contract. Evaluates INV-2 affect, act compliance, polarity/negation, epistemic modality, argument/entity preservation (with pro-drop support), forbidden additions, and dyadic perspective drift.
 * **Fallback Registry**: Serves deterministic, zero-invention fallback templates on `BLOCK` or `UNCERTAIN` (`UNCERTAIN -> BLOCK`).
 * **`BoundaryLayer` (`src/core/safety/`)**: Secondary regex filter ensuring no introspective affect bypasses passing realizations.
+* **`RealizationOutput` (`src/core/language/contract.py`)**: Structured, immutable output record separating `text` (`TextRealization`) from `voice` (`VoiceRealization`). Parallel realization branches from semantic/pragmatic state; neither branch is a semantic intermediate for the other.
 * **`_history` Buffer**: **Derived Conversational Buffer**. Contains *only* verified `PASS` responses or deterministic safe fallbacks. Never queried as an authoritative epistemic premise.
 
 > **Operational Boundary Clarification**:  
@@ -528,7 +552,63 @@ The realization boundary strictly enforces the repository-wide authority model:
 #### 2. Substrate Neutrality & Downstream Realization Principle
 Phase 22 research (22-RG, 22-CC, 22-SC) and ADR-035 established that **relational cognition does not depend on an SLM, LLM, or natural language prompt**. Relational state and evidence are fully captured by a compact semantic contract (~90–120 bytes). The language model serves as an untrusted rendering engine for dialogue, operating alongside non-verbal controllers (voice timbre, avatar blendshapes, conversational latency) with complete modular decoupling.
 
-#### 3. Embodiment Mechanics & Kinematics
+#### 3. Output Language Architecture & Decoupled Realization (P23-D Freeze)
+
+The P23-D Output Language Simplification established and froze the canonical output language contract for production runtime:
+
+```text
+Any-language input (multilingual perception)
+        ↓
+Language-independent semantic / cognitive substrate
+        ↓
+Communication / Pragmatic Policy
+        ↓
+Realization
+       ↙        ↘
+English Text   Japanese Voice
+```
+
+##### Production Output Contract Constants
+```python
+CANONICAL_TEXT_OUTPUT_LANGUAGE  = "en"
+CANONICAL_VOICE_OUTPUT_LANGUAGE = "ja"
+```
+
+##### Fundamental Architectural Distinctions:
+1. **Input Language vs Output Language**:
+   - Lucia receives any-language input at the perception boundary (English, Japanese, Vietnamese, etc.).
+   - Input language does NOT dictate output language:
+     $$\text{input language} \ne \text{output language}$$
+   - Multilingual comprehension occurs through perception and grounding, but production generation always converges to canonical output targets.
+2. **Language-Independent Semantic/Cognitive Layer**:
+   - The cognitive core, limbic ODE, semantic graph, SDM memory, relational state, and JTMS reasoning remain strictly language-independent.
+   - Under no circumstances does the substrate encode English syntax, Japanese syntax, Vietnamese syntax, or surface lexical tokens.
+   - English and Japanese are **surface realization languages**, NOT cognitive language, semantic substrate, memory language, relationship language, or affective language.
+3. **Decoupled Parallel Realization Branches**:
+   - **Text Realization**: Canonical production target is English (`en`). Realized via `PromptAssembler` natural prose compilation and local SLM, fail-closed guarded by `SemanticFidelityGate` at Stage S14.
+   - **Voice Realization**: Canonical production target is Japanese (`ja`). Realized directly from communicative acts, polarity, and grounded propositions via `realize_japanese_voice_text()`.
+   - Text and voice are **two parallel realization branches** originating from the same authoritative semantic/pragmatic state (`RealizationInputContract`). Neither branch acts as a semantic intermediary for the other.
+4. **Dyadic First-Person Companion Perspective**:
+   - Lucia communicates strictly from a **first-person companion / dyadic perspective** ("I" / "we" / "you").
+   - Third-person narrator or external-observer framing ("two people", "hai người", "二人") during direct dialogue is strictly prohibited.
+   - Architectural implementation follows three distinct tiers:
+     ```text
+     Semantic / pragmatic grounding (Dyadic turn context & honorific roles)
+             ↓
+     Realization guidance (PromptAssembler direct companion directives)
+             ↓
+     Lexical safety guard (SemanticFidelityGate DYADIC_PERSPECTIVE_DRIFT check)
+     ```
+   - The lexical gate check is strictly a **fail-closed safety net**, not the ontological definition of the dyadic relationship.
+5. **P23-D Decision Gate & Verification Audit**:
+   - **Decision Gate**: `PASS WITH NOTES`
+   - **Verification**: `89/89` relevant communication and realization regression tests PASS, `0` regression.
+   - **Architecture Audit**: No Category-C Production Architectural Coupling detected.
+6. **Preserved Notes & Technical Debt**:
+   - **Note A — Japanese Voice Realization Path**: The runtime helper `translate_to_japanese(safe_response)` in `CognitiveOrchestrator` is strictly a **surface-realization convenience path**, NOT semantic architecture. Direct semantic/pragmatic Japanese realization fallback already exists (`realize_japanese_voice_text`). English text is not a semantic intermediate. The long-term architectural direction may migrate to a direct multi-head Japanese renderer; this refactor is outside P23-D current scope.
+   - **Note B — Dead Import Housekeeping**: The unused import `from src.core.language.detection import detect_active_language` in `CognitiveOrchestrator` is recorded as **housekeeping / technical debt**; no implementation task is opened for P23-D.
+
+#### 4. Embodiment Mechanics & Kinematics
 1. **Canonical 15-Dimensional Actuator Vector ($\mathbf{E}_t \in [0, 1]^{15}$)**:
    - Text (3): Warmth, Formality, Verbosity.
    - Prosody (4): Pitch scale, Speaking rate, Breathiness, Energy.
@@ -1045,6 +1125,18 @@ The Cognitive Core contracts accept semantic graphs formed from upstream raw mul
   2. *Natural Prose Compilation*: `PromptAssembler` compiles intent into conversational natural prose directives without injecting counter-productive code/DSL tokens (`ARG0:`, `RULE:`).
   3. *Fail-Closed Semantic Fidelity Gate*: Pure CPU symbolic gate (`SemanticFidelityGate` at Stage S14, $<0.1\text{ ms}$, 0 MB GPU VRAM) intercepts ungrounded generation and falls back to deterministic registry (`FALLBACK_REGISTRY`).
   4. *Ephemeral History Isolation*: Only verified outputs or safe fallbacks are admitted to working history.
+  5. *Canonical Output Language Simplification & Decoupled Realization (P23-D Freeze)*:
+     - Fixed canonical production realization targets:
+       ```python
+       CANONICAL_TEXT_OUTPUT_LANGUAGE  = "en"
+       CANONICAL_VOICE_OUTPUT_LANGUAGE = "ja"
+       ```
+     - Language Independence of Cognitive Substrate: English and Japanese are strictly **surface realization languages**, never cognitive language, semantic substrate, memory language, relationship language, or affective language. Cognitive representations encode zero surface language tokens or syntax.
+     - Multilingual Perception Decoupled: Multilingual input is admitted at the perception boundary; input language does not dictate output language ($\text{input language} \ne \text{output language}$).
+     - Decoupled Parallel Realization: Text (`TextRealization`) and voice (`VoiceRealization`) realize in parallel directly from semantic/pragmatic state (`RealizationOutput`). Neither branch is a semantic intermediate for the other.
+     - Dyadic First-Person Companion Perspective: Grounding $\rightarrow$ Realization guidance $\rightarrow$ Lexical safety guard (safety net, not definition). Narrator/external-observer drift is blocked.
+     - P23-D Audit & Freeze Result: Status `PASS WITH NOTES`, 89/89 communication + realization tests PASS, 0 regression, No Category-C Production Architectural Coupling detected.
+     - Preserved Notes & Technical Debt: Note A: `translate_to_japanese(safe_response)` is a surface-realization convenience path (direct semantic fallback exists; out of P23-D scope); Note B: dead import `detect_active_language` recorded as housekeeping / technical debt.
 
 ---
 
@@ -1142,7 +1234,7 @@ The Cognitive Core contracts accept semantic graphs formed from upstream raw mul
 | **ARCH-033** | Unbounded Euler replay / startup stranger baseline decay | Two-Tier Persistent Life State & Hybrid Downtime Recovery (ADR-033) | Eliminates startup ordering tear (E-01/E-02/E-03) via dependency inversion ($R_t$ injected before recovery); Two-Tier persistent state taxonomy; hybrid short numerical replay ($\Delta t \le 180\text{s}$, $dt=0.2\text{s}$) + intermediate decay + $O(1)$ long-downtime asymptotic recovery ($\Delta t \ge 300\text{s}$) converging to relationally conditioned attractor $s^*_{\text{eff}}(R_t)$; derived PAD contract; `epoch_manifest.json` Commit Barrier and crash-safe `.bak` consistency reconciliation; working memory reseeding from `chat_history.json` tail $K=10$ turns; bit-exact Genesis invariant preservation | F-02 | Implementation Fact |
 | **ARCH-033 (P25)** | Unsynchronized embodiment & unmodeled inter-turn latency | Unilateral Temporal Embodiment & Social Dynamics (DOC-P25-016) | Operationalizes elapsed-time effects, multi-timescale decays, discrete turn dynamics, and bounded relational attunement conditioning P24 prosody; reciprocal feedback C2 blocked; H-B unproven | Phase 25 | Implementation Fact / Frozen |
 | **ARCH-034** | Unenforced instance boundaries / ambiguous Genesis authority | Identity Authority, Instance Lock & Genesis Contract (ADR-034) | Single continuous life OS instance locking (`InstanceLock`), cryptographic root verification, durable Genesis commitment protocol (G1–G4), fail-closed verification, First Activation gate isolation | Genesis Prep | Implementation Fact / Frozen |
-| **ARCH-035** | Open-loop unconstrained text generation with 59.5% semantic loss | Production Realization Boundary & S14 Fail-Closed Gate (ADR-035) | Strongly-typed `RealizationInputContract` carries authoritative intent (act, polarity, epistemic status, ARG roles, provenance); `PromptAssembler` compiles natural prose without code DSL tokens; untrusted `LFM2.5-1.2B` SLM isolated from cognitive state; pure CPU symbolic `SemanticFidelityGate` (<0.1ms) enforces fail-closed containment (`UNCERTAIN -> BLOCK`) with zero-invention deterministic fallback; `_history` stores only approved output or safe fallback | Post-P24 Baseline | Implementation Fact / Frozen |
+| **ARCH-035** | Open-loop unconstrained text generation with 59.5% semantic loss | Production Realization Boundary & S14 Fail-Closed Gate (ADR-035 / P23-D Output Language Freeze) | Strongly-typed `RealizationInputContract` carries authoritative intent (act, polarity, epistemic status, ARG roles, provenance); `PromptAssembler` compiles natural prose without code DSL tokens; untrusted `LFM2.5-1.2B` SLM isolated from cognitive state; pure CPU symbolic `SemanticFidelityGate` (<0.1ms) enforces fail-closed containment (`UNCERTAIN -> BLOCK`) with zero-invention deterministic fallback; `_history` stores only approved output or safe fallback; P23-D simplifies canonical surface outputs (`CANONICAL_TEXT_OUTPUT_LANGUAGE = "en"`, `CANONICAL_VOICE_OUTPUT_LANGUAGE = "ja"`), preserves language-independent cognitive substrate, decouples text and voice into parallel realization branches (`RealizationOutput`), enforces dyadic companion perspective, audited with PASS WITH NOTES (89/89 tests PASS, 0 regression, No Category-C coupling) | Post-P24 Baseline | Implementation Fact / Frozen |
 | **ARCH-036** | Unobservable cognitive turn execution & ungated startup execution | Cognitive Execution Observability & First Activation Gate Controls (ADR-036) | In-memory circular `TraceBuffer` & `CognitiveExecutionTracer` recording allowlisted S1–S16 spans; DAG causal attribution isolating `first_causal_failure_candidate`, downstream propagated, and independent failures; fail-open resilience; 0 turn I/O; deterministic operator CLI (`scripts/run_genesis.py`); gated `POST /profile`; and fail-closed `/process` runtime activation gate | Post-P27 Baseline | Implementation Fact / Verified |
 
 

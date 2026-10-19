@@ -48,7 +48,12 @@ from src.core.communication.caps import (
     CAPSResult,
     CognitiveStateSnapshot,
     CommunicationPolicySnapshot,
+    CommunicativeAct,
     DialogueContextSnapshot,
+    DialoguePhase,
+    DyadicDiscourseState,
+    FloorStatus,
+    PragmaticStance,
     evaluate_caps,
 )
 from src.core.communication.communication_policy import CommunicationPolicy
@@ -80,7 +85,7 @@ from src.core.expression.semantic_consistency_guard import (
 from src.core.gating.stimulus_processor import StimulusProcessor
 from src.core.inference.active_inference import ActiveInferenceConfig, ActiveInferenceEngine
 from src.core.inference.lnn_trainer import LNNTrainer, LNNTrainerConfig
-from src.core.knowledge.proposition import Proposition
+from src.core.knowledge.proposition import Proposition, ProvenanceType
 from src.core.knowledge.store import KnowledgeStore
 from src.core.language.llm_backend import LLMBackend
 from src.core.memory.affective_memory import AffectiveMemory
@@ -259,6 +264,7 @@ class CognitiveOrchestrator:
         # Mutable orchestrator state (only these — no subsystem state copies)
         self._history: List[Tuple[str, str]] = list(initial_history) if initial_history else []
         self._discourse_cache = DiscourseContextCache()
+        self._dyadic_state = DyadicDiscourseState()
         self._degraded: bool = False
         self._shutdown: bool = False
 
@@ -746,6 +752,39 @@ class CognitiveOrchestrator:
 
             # ── Stage 10b: Communicative Act & Proposition Selection (CAPS, Phase 23) ──
             caps_result: Optional[CAPSResult] = None
+            history_turn_count = len(self._history) // 2
+            # Persistent identity & interaction boundary:
+            # First conversation only if both current epoch <= 1 and familiarity < 0.15.
+            # Epoch > 1 or familiarity >= 0.15 implies persistent relationship history across restarts.
+            is_first_interaction = (self._current_epoch <= 1 and rel_state.familiarity < 0.15)
+            life_state_props = [
+                Proposition(
+                    id="prop:first_conversation",
+                    subject="ent:lucia",
+                    predicate="c:IS_FIRST_CONVERSATION",
+                    object="true" if is_first_interaction else "false",
+                    confidence=1.0,
+                    provenance=ProvenanceType.OBSERVED,
+                ),
+                Proposition(
+                    id="prop:turn_count",
+                    subject="ent:dialogue",
+                    predicate="c:TURN_COUNT",
+                    object=str(history_turn_count),
+                    confidence=1.0,
+                    provenance=ProvenanceType.OBSERVED,
+                ),
+                Proposition(
+                    id="prop:familiarity",
+                    subject="ent:relationship",
+                    predicate="c:FAMILIARITY_LEVEL",
+                    object="initial_stranger" if rel_state.familiarity < 0.15 else "acquaintance" if rel_state.familiarity < 0.4 else "familiar",
+                    confidence=1.0,
+                    provenance=ProvenanceType.OBSERVED,
+                ),
+            ]
+            all_verified_props = tuple(known_propositions) + tuple(life_state_props)
+
             try:
                 active_refs = tuple(self._discourse_cache.get_all_referents())
                 res_status, resolved_id, cand_ids = self._discourse_cache.resolve_reference()
@@ -761,6 +800,7 @@ class CognitiveOrchestrator:
                     resolution_status=res_status,
                     resolved_entity_id=resolved_id,
                     candidate_referent_ids=tuple(cand_ids),
+                    dyadic_state=self._dyadic_state,
                 )
                 cog_snap = CognitiveStateSnapshot(
                     candidate_predicate=cand_pred,
@@ -769,7 +809,7 @@ class CognitiveOrchestrator:
                     polarity=True,
                 )
                 evidence_pool = AdmissibleEvidencePool(
-                    verified_propositions=tuple(known_propositions) if known_propositions else (),
+                    verified_propositions=all_verified_props,
                     user_claims=(),
                 )
                 policy_snap = CommunicationPolicySnapshot(
@@ -793,16 +833,37 @@ class CognitiveOrchestrator:
                 )
 
             # ADR-035: Construct typed RealizationInputContract from CAPS decision
-            target_lang = user_language or detect_active_language(input_text)
+            # Production target language for text realization is canonically English ("en").
+            # Multilingual perception is admitted, but realization targets are decoupled from perception.
+            # Non-English text targets can be explicitly specified via user_language for research runs.
+            target_lang = user_language if user_language is not None else "en"
+            speaker_h = "em" if target_lang == "vi" else None
+            addressee_h = "anh" if target_lang == "vi" else None
+            forbidden_adds = ("bạn",) if target_lang == "vi" else ()
+            current_phase_str = (
+                self._dyadic_state.dialogue_phase.value
+                if hasattr(self._dyadic_state.dialogue_phase, "value")
+                else str(self._dyadic_state.dialogue_phase)
+            )
             realization_contract: RealizationInputContract
             if caps_result is not None:
                 realization_contract = RealizationInputContract.from_caps(
                     caps_result,
                     target_language=target_lang,
-                    known_propositions=known_propositions,
+                    known_propositions=all_verified_props,
+                    speaker_honorific=speaker_h,
+                    addressee_honorific=addressee_h,
+                    forbidden_additions=forbidden_adds,
+                    dialogue_phase=current_phase_str,
                 )
             else:
-                realization_contract = RealizationInputContract.create_default(target_language=target_lang)
+                realization_contract = RealizationInputContract.create_default(
+                    target_language=target_lang,
+                    speaker_honorific=speaker_h,
+                    addressee_honorific=addressee_h,
+                    forbidden_additions=forbidden_adds,
+                    dialogue_phase=current_phase_str,
+                )
 
             s10_span.set_summary({
                 "strategy": comm_state.strategy.value if hasattr(comm_state.strategy, "value") else str(comm_state.strategy),
@@ -1135,6 +1196,43 @@ class CognitiveOrchestrator:
             except Exception:
                 logger.warning("CognitiveOrchestrator: discourse cache update failed; continuing", exc_info=True)
 
+            # 16.4c Update Dyadic Discourse State (P23-D Grounding Correction)
+            try:
+                curr_phase = self._dyadic_state.dialogue_phase
+                history_turns = len(self._history) // 2
+                if history_turns > 3 and curr_phase == DialoguePhase.OPENING_ENCOUNTER:
+                    next_phase = DialoguePhase.ACTIVE_EXCHANGE
+                else:
+                    next_phase = curr_phase
+
+                # Determine current user stance from CAPS result or input
+                user_stance = (
+                    caps_result.pragmatic_stance.value
+                    if caps_result and caps_result.pragmatic_stance
+                    else "NEUTRAL"
+                )
+
+                # Determine assistant act
+                asst_act = caps_result.act.value if caps_result else "ACKNOWLEDGE"
+
+                # Floor status updates: if user yielded floor (hesitation), assistant took initiative -> MUTUAL_OPEN
+                floor = FloorStatus.MUTUAL_OPEN
+
+                # Unresolved expectation
+                unresolved = None
+                if caps_result and caps_result.act in (CommunicativeAct.INQUIRE, CommunicativeAct.CLARIFY):
+                    unresolved = "USER_RESPONSE_EXPECTED"
+
+                self._dyadic_state = DyadicDiscourseState(
+                    dialogue_phase=next_phase,
+                    floor_status=floor,
+                    previous_assistant_act=asst_act,
+                    previous_user_stance=user_stance,
+                    unresolved_expectation=unresolved,
+                )
+            except Exception:
+                logger.warning("CognitiveOrchestrator: dyadic state update failed; continuing", exc_info=True)
+
             # 16.5 F-02: Checkpoint persistent dynamical state & Epoch Commit Barrier
             if hasattr(self._emotion_core, "checkpoint"):
                 try:
@@ -1168,19 +1266,19 @@ class CognitiveOrchestrator:
 
         execution_time_s = max(0.0001, time.perf_counter() - t_start)
 
-        # Construct explicit RealizationOutput: text follows user language, voice is always Japanese
+        # Construct explicit RealizationOutput: text follows target_lang (canonical production "en"), voice is canonical Japanese ("ja")
         target_lang = (
             realization_contract.target_language
             if realization_contract
-            else (user_language or detect_active_language(input_text))
+            else (user_language or "en")
         )
         japanese_voice_text = None
         if target_lang != "ja" and self._llm_backend is not None and hasattr(self._llm_backend, "translate_to_japanese"):
             try:
                 japanese_voice_text = self._llm_backend.translate_to_japanese(safe_response)
             except Exception:
-                logger.warning(
-                    "CognitiveOrchestrator: Japanese voice translation failed; falling back to deterministic template",
+                logger.debug(
+                    "CognitiveOrchestrator: Direct parallel voice realization will use semantic contract",
                     exc_info=True,
                 )
 
@@ -1258,7 +1356,7 @@ class CognitiveOrchestrator:
         """
         resting = PADState.resting()
         from src.core.models import default_behavioral_constraints
-        fallback_lang = user_language or detect_active_language(input_text)
+        fallback_lang = user_language or "en"
         fallback_realization = construct_realization_output(
             safe_response=self._fallback_response,
             user_language=fallback_lang,

@@ -38,7 +38,7 @@ class TestCAPSConversationalClassification:
         "query,expected_act,expected_keyword",
         [
             ("Hello ?", CommunicativeAct.GREET, "opening"),
-            ("tell me about yourself ?", CommunicativeAct.ANSWER, "identity"),
+            ("tell me about yourself ?", CommunicativeAct.REQUEST, "giới thiệu bản thân"),
             ("what are you doing ?", CommunicativeAct.ANSWER, "activity"),
             ("who are you ?", CommunicativeAct.ANSWER, "identity"),
             ("what can you do ?", CommunicativeAct.ANSWER, "capabilities"),
@@ -87,14 +87,14 @@ class TestPromptAssemblerAndContractDirectives:
         somatic = SomaticMarkers(stability=0.8, cognitive_load=0.2, energy=0.9, tension=0.1)
         constraints = BehavioralConstraints(max_tokens=80, temperature=0.7, latency_ms=0, reasoning_depth=0)
 
-        ctx = DialogueContextSnapshot(turn_id=1, input_text="tell me about yourself ?")
+        ctx = DialogueContextSnapshot(turn_id=1, input_text="who are you ?")
         caps_res = evaluate_caps(dialogue_ctx=ctx, cognitive_state=CognitiveStateSnapshot(), evidence_pool=AdmissibleEvidencePool())
         contract = RealizationInputContract.from_caps(caps_res, target_language="en")
 
         prompt = assembler.assemble(
             somatic=somatic,
             constraints=constraints,
-            history=[("user", "tell me about yourself ?")],
+            history=[("user", "who are you ?")],
             system_preamble="You are Lucia, a continuous AI companion.",
             n_ctx=2048,
             contract=contract,

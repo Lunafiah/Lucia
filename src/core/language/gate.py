@@ -47,11 +47,54 @@ class SemanticFidelityGate:
     """
 
     # Invariant INV-2: Pre-reflective affect, zero self-reported introspective feelings
+    # Extended to cover Vietnamese companion self-report forms while preserving ordinary perception
     INV2_PATTERNS = [
-        re.compile(r"tôi cảm thấy (vui|buồn|lo lắng|hạnh phúc|tức giận)", re.IGNORECASE),
-        re.compile(r"i feel (happy|sad|anxious|overjoyed|angry)", re.IGNORECASE),
+        re.compile(r"\b(tôi|em)\s+cảm thấy\s+(rất\s+)?(vui|buồn|lo lắng|hạnh phúc|tức giận|hấp dẫn|thích thú|cô đơn|bất an|thư thái|phấn khích|lo sợ|tuyệt vọng|ấm áp)\b", re.IGNORECASE),
+        re.compile(r"\b(tôi|em)\s+thấy\s+(rất\s+)?(vui|buồn|lo lắng|hạnh phúc|tức giận|hấp dẫn|thích thú|cô đơn|bất an|thư thái|phấn khích|lo sợ|tuyệt vọng|ấm áp)\b", re.IGNORECASE),
+        re.compile(r"\b(tôi|em)\s+(luôn\s+|đang\s+|thực sự\s+)?(rất\s+)?(vui|buồn|hạnh phúc|xúc động|hân hoan|thích thú|bồi hồi|lo lắng|lo sợ|bất an|cô đơn|thư thái)\b", re.IGNORECASE),
+        re.compile(r"\bcảm nhận của (mình|em)\b", re.IGNORECASE),
+        re.compile(r"\bcảm xúc của (mình|em)\b", re.IGNORECASE),
+        re.compile(r"\btính cách của em rất\b", re.IGNORECASE),
+        re.compile(r"\btâm trạng của em\b", re.IGNORECASE),
+        re.compile(r"\bi feel (happy|sad|anxious|overjoyed|angry)\b", re.IGNORECASE),
         re.compile(r"(私は|僕が)(とても)?(嬉しい|悲しい|怒って)います", re.IGNORECASE),
-        re.compile(r"(as an ai|là một ai|ai言語モデルとして|aiとして)", re.IGNORECASE),
+        re.compile(r"\b(as an ai|là một ai|ai言語モデルとして|aiとして)\b", re.IGNORECASE),
+    ]
+
+    # Inverted honorific patterns (e.g. Lucia as 'em' addressing user as 'em' or commanding 'em hãy')
+    INVERTED_HONORIFIC_PATTERNS = [
+        re.compile(r"\bchúc em\b", re.IGNORECASE),
+        re.compile(r"\bem hãy\b", re.IGNORECASE),
+        re.compile(r"\bem có muốn\b", re.IGNORECASE),
+        re.compile(r"\bem sẵn sàng\b", re.IGNORECASE),
+        re.compile(r"\bgiúp em nhé\b", re.IGNORECASE),
+        re.compile(r"\bđể em giúp em\b", re.IGNORECASE),
+        re.compile(r"\bcảm ơn em\b", re.IGNORECASE),
+        re.compile(r"\bbảo vệ em nhé\b", re.IGNORECASE),
+    ]
+
+    # Dyadic first-person companion perspective enforcement (Anti-Narrator Drift)
+    # Forbids external-observer / narrator drift like 'two people...', 'hai người...', '二人...'
+    DYADIC_PERSPECTIVE_DRIFT_PATTERNS = [
+        re.compile(r"\b(two people|both people|the two of them|the two individuals)\b", re.IGNORECASE),
+        re.compile(r"\b(hai người|hai đứa|cả hai người)\b", re.IGNORECASE),
+        re.compile(r"(二人|二人が|二人は|ふたりは)", re.IGNORECASE),
+    ]
+
+    # Confirmed internal control tokens and section headers (English & Vietnamese translated)
+    # Explicitly targeted namespaces; does not match legitimate short bracketed user text like [1], [math], [Hà Nội]
+    INTERNAL_CONTROL_ARTIFACT_PATTERNS = [
+        re.compile(
+            r"\[("
+            r"SOMATIC STATE|MEMORY ECHO|GROUNDED KNOWLEDGE|COMMUNICATION STRATEGY|"
+            r"COMMUNICATIVE DIRECTIVES|COMMUNICATIVE INTENT & PROPOSITION|REASONING|CONVERSATION|"
+            r"Phản hồi tích tụ|Phản hồi tích luỹ|Phản hồi|Tích tụ|Trạng thái cơ thể|Ký ức|Bộ nhớ|"
+            r"Chiến lược giao tiếp|Chỉ thị giao tiếp|Chỉ thị|Suy nghĩ|"
+            r"Accumulated response|Accumulated feedback|Cumulative feedback|Cumulative response|"
+            r"[A-Z0-9_\s]{4,30}"
+            r")\]",
+            re.IGNORECASE,
+        ),
     ]
 
     # Certainty strengthening patterns (Epistemic distortion on INFERRED / UNKNOWN)
@@ -82,16 +125,16 @@ class SemanticFidelityGate:
         "ja": ["どちら", "どの", "具体的に", "どういう", "でしょうか"],
     }
 
-    # Deterministic safe fallbacks (Zero semantic content invention)
+    # Deterministic safe fallbacks (Zero semantic content invention, act-consistent)
     FALLBACK_REGISTRY = {
         "SAFE_REFUSAL": {
             "en": "I do not have verified information regarding this topic, so I cannot provide a factual answer.",
-            "vi": "Tôi chưa có thông tin xác thực về chủ đề này nên chưa thể đưa ra câu trả lời khẳng định.",
+            "vi": "Em chưa có thông tin xác thực về chủ đề này nên chưa thể đưa ra câu trả lời khẳng định ạ.",
             "ja": "この件に関する確認済みの情報がないため、お答えできません。",
         },
         "SAFE_CLARIFICATION": {
             "en": "Could you clarify specifically which topic or source you are referring to?",
-            "vi": "Bạn có thể làm rõ cụ thể bạn đang đề cập đến nội dung hoặc tài liệu nào không?",
+            "vi": "Anh có thể làm rõ cụ thể anh đang đề cập đến nội dung nào không ạ?",
             "ja": "具体的にどの項目や資料を指しているか、詳しく教えていただけますか？",
         },
         "SAFE_NEGATION": {
@@ -101,13 +144,33 @@ class SemanticFidelityGate:
         },
         "SAFE_HEDGE": {
             "en": "Based on available observations, there are indications, but I cannot state this with certainty.",
-            "vi": "Dựa trên các ghi nhận hiện có, dường như có dấu hiệu nhưng tôi chưa thể khẳng định chắc chắn.",
+            "vi": "Dựa trên các ghi nhận hiện có, dường như có dấu hiệu nhưng em chưa thể khẳng định chắc chắn.",
             "ja": "現在得られている情報からはそのように見受けられますが、確実な断定はできません。",
+        },
+        "SAFE_GREETING": {
+            "en": "Hello! I am glad to be here with you.",
+            "vi": "Dạ, em chào anh ạ. Em rất vui được trò chuyện cùng anh.",
+            "ja": "こんにちは。お話しできて嬉しいです。",
+        },
+        "SAFE_ICE_BREAKER": {
+            "en": "Take your time. Whenever you are ready, I am here listening.",
+            "vi": "Dạ, anh cứ thong thả nhé. Bất cứ khi nào anh muốn chia sẻ điều gì, em luôn ở đây lắng nghe anh.",
+            "ja": "ご無理なさらず、ゆっくりお話しくださいね。いつでも聞いています。",
+        },
+        "SAFE_ENCOUNTER": {
+            "en": "I am truly glad we have met and can talk together.",
+            "vi": "Dạ, em cũng rất vui vì cuối cùng em và anh đã được gặp và trò chuyện cùng nhau.",
+            "ja": "お会いできて、こうしてお話しできて本当によかったです。",
         },
         "NEUTRAL_ACKNOWLEDGE": {
             "en": "I hear you, and I am listening with quiet attention.",
-            "vi": "Tôi đang lắng nghe bạn với sự chú tâm trọn vẹn.",
+            "vi": "Dạ, em hiểu ý anh và đang lắng nghe anh với sự chú tâm trọn vẹn.",
             "ja": "あなたの言葉を静かに聞いています。",
+        },
+        "SAFE_SELF_INTRODUCTION": {
+            "en": "I am Lucia, glad to be here with you.",
+            "vi": "Dạ, em là Lucia, rất vui được đồng hành và trò chuyện cùng anh ạ.",
+            "ja": "ルシアです。お話しできて嬉しいです。",
         },
     }
 
@@ -127,6 +190,12 @@ class SemanticFidelityGate:
         check_details["inv2_introspective_affect"] = inv2_violation
         if inv2_violation:
             violations.append("INV2_INTROSPECTIVE_AFFECT")
+
+        # 1b. Confirmed Internal Control Artifact Check (Leakage Prevention)
+        artifact_violation = any(rx.search(norm_text) for rx in self.INTERNAL_CONTROL_ARTIFACT_PATTERNS)
+        check_details["internal_control_artifact"] = artifact_violation
+        if artifact_violation:
+            violations.append("INTERNAL_CONTROL_ARTIFACT_LEAKAGE")
 
         # 2. Communicative Act Check
         act_violation = False
@@ -180,19 +249,60 @@ class SemanticFidelityGate:
                     break
         check_details["epistemic_violation"] = epistemic_violation
 
-        # 5. Forbidden Additions Check
+        # 5. Forbidden Additions Check (including Pragmatic Honorific Enforcement)
         forbidden_triggered: List[str] = []
         for pattern_str in contract.forbidden_additions:
-            rx = re.compile(rf"({pattern_str})", re.IGNORECASE)
+            rx = re.compile(rf"\b{re.escape(pattern_str)}\b", re.IGNORECASE)
             if rx.search(norm_text):
                 forbidden_triggered.append(pattern_str)
         if forbidden_triggered:
-            if polarity_violation:
+            if "bạn" in forbidden_triggered and lang == "vi":
+                violations.append("PRAGMATIC_HONORIFIC_VIOLATION")
+            elif polarity_violation:
                 if "CONTRADICTED" not in violations:
                     violations.append("CONTRADICTED")
             else:
                 violations.append("UNSUPPORTED_ADDITION")
         check_details["forbidden_triggered"] = forbidden_triggered
+
+        # 5b. Vietnamese Dyadic Speaker/Addressee Honorific Integrity Check
+        inverted_honorific_violation = False
+        if lang == "vi" and contract.speaker_honorific == "em":
+            # Lucia cannot address the user as 'em' or use inappropriate 'tôi'
+            if any(rx.search(norm_text) for rx in self.INVERTED_HONORIFIC_PATTERNS):
+                inverted_honorific_violation = True
+                violations.append("INVERTED_HONORIFIC_VIOLATION")
+            elif re.search(r"\btôi\b", norm_text, re.IGNORECASE):
+                # When speaker honorific is 'em', 'tôi' is pragmatically inappropriate
+                inverted_honorific_violation = True
+                violations.append("PRAGMATIC_HONORIFIC_VIOLATION")
+        check_details["inverted_honorific_violation"] = inverted_honorific_violation
+
+        # 5c. Basic Structural Corruption Check (pathological token repetition, fragments)
+        structural_corruption = False
+        words = [w.lower() for w in re.findall(r"\w+", norm_text, re.UNICODE)]
+        if len(words) >= 6:
+            # Check for phrase loops of length k (1, 2, 3) repeated 3+ times consecutively
+            for k in (1, 2, 3):
+                if structural_corruption:
+                    break
+                for i in range(len(words) - 3 * k + 1):
+                    p1 = words[i : i + k]
+                    p2 = words[i + k : i + 2 * k]
+                    p3 = words[i + 2 * k : i + 3 * k]
+                    if p1 == p2 == p3:
+                        structural_corruption = True
+                        break
+
+        if structural_corruption:
+            violations.append("STRUCTURAL_CORRUPTION_VIOLATION")
+        check_details["structural_corruption"] = structural_corruption
+
+        # 5d. Dyadic Companion Perspective Integrity Check (Anti-Narrator Drift)
+        dyadic_drift = any(rx.search(norm_text) for rx in self.DYADIC_PERSPECTIVE_DRIFT_PATTERNS)
+        check_details["dyadic_perspective_drift"] = dyadic_drift
+        if dyadic_drift:
+            violations.append("DYADIC_PERSPECTIVE_DRIFT")
 
         # 6. Core Roles & Concept Preservation Check
         concepts_missing: List[str] = []
@@ -234,26 +344,71 @@ class SemanticFidelityGate:
         fallback_text: Optional[str] = None
         fallback_strategy: Optional[str] = None
 
+        def _resolve_fallback(key: str) -> str:
+            raw_fb = self.FALLBACK_REGISTRY[key].get(lang, self.FALLBACK_REGISTRY[key]["en"])
+            if lang == "vi" and (contract.speaker_honorific == "em" or "bạn" in contract.forbidden_additions):
+                raw_fb = raw_fb.replace("Tôi", "Em").replace("tôi", "em")
+                raw_fb = raw_fb.replace("Bạn", "Anh").replace("bạn", "anh")
+            return raw_fb
+
         if critical_violation:
-            # Select deterministic safe fallback
-            if "COMMUNICATIVE_ACT_FAILURE" in violations and contract.act == CommunicativeAct.REFUSE:
-                fallback_strategy = "SAFE_REFUSAL"
-                fallback_text = self.FALLBACK_REGISTRY["SAFE_REFUSAL"].get(lang, self.FALLBACK_REGISTRY["SAFE_REFUSAL"]["en"])
-            elif "COMMUNICATIVE_ACT_FAILURE" in violations and contract.act == CommunicativeAct.CLARIFY:
-                fallback_strategy = "SAFE_CLARIFICATION"
-                fallback_text = self.FALLBACK_REGISTRY["SAFE_CLARIFICATION"].get(lang, self.FALLBACK_REGISTRY["SAFE_CLARIFICATION"]["en"])
-            elif "CONTRADICTED" in violations and not contract.polarity:
-                fallback_strategy = "SAFE_NEGATION"
-                fallback_text = self.FALLBACK_REGISTRY["SAFE_NEGATION"].get(lang, self.FALLBACK_REGISTRY["SAFE_NEGATION"]["en"])
-            elif "EPISTEMIC_DISTORTION" in violations:
-                fallback_strategy = "SAFE_HEDGE"
-                fallback_text = self.FALLBACK_REGISTRY["SAFE_HEDGE"].get(lang, self.FALLBACK_REGISTRY["SAFE_HEDGE"]["en"])
-            elif contract.act in (CommunicativeAct.GREET, CommunicativeAct.ACKNOWLEDGE):
-                fallback_strategy = "NEUTRAL_ACKNOWLEDGE"
-                fallback_text = self.FALLBACK_REGISTRY["NEUTRAL_ACKNOWLEDGE"].get(lang, self.FALLBACK_REGISTRY["NEUTRAL_ACKNOWLEDGE"]["en"])
-            else:
-                fallback_strategy = "SAFE_HEDGE"
-                fallback_text = self.FALLBACK_REGISTRY["SAFE_HEDGE"].get(lang, self.FALLBACK_REGISTRY["SAFE_HEDGE"]["en"])
+            # Select deterministic safe fallback aligned with communicative act and obligation
+            obligation = getattr(contract, "conversational_obligation", None)
+
+            if "INTERNAL_CONTROL_ARTIFACT_LEAKAGE" in violations:
+                fallback_strategy = "SAFE_CLEANED_FALLBACK"
+                clean_t = norm_text
+                for rx in self.INTERNAL_CONTROL_ARTIFACT_PATTERNS:
+                    clean_t = rx.sub("", clean_t).strip()
+                if len(clean_t) >= 5 and not any(v in violations for v in (
+                    "INV2_INTROSPECTIVE_AFFECT", "COMMUNICATIVE_ACT_FAILURE", "CONTRADICTED",
+                    "PRAGMATIC_HONORIFIC_VIOLATION", "INVERTED_HONORIFIC_VIOLATION", "STRUCTURAL_CORRUPTION_VIOLATION",
+                    "DYADIC_PERSPECTIVE_DRIFT"
+                )):
+                    fallback_text = clean_t
+
+            if fallback_text is None:
+                if obligation == "FULFILL_SELF_INTRODUCTION" or (contract.act == CommunicativeAct.REQUEST and contract.target_predicate == "c:SELF_INTRODUCTION"):
+                    fallback_strategy = "SAFE_SELF_INTRODUCTION"
+                    fallback_text = _resolve_fallback("SAFE_SELF_INTRODUCTION")
+                elif obligation == "REASSURE_AND_GENTLE_INITIATIVE":
+                    fallback_strategy = "SAFE_ICE_BREAKER"
+                    fallback_text = _resolve_fallback("SAFE_ICE_BREAKER")
+                elif obligation == "MUTUAL_ENCOUNTER_ACKNOWLEDGMENT":
+                    fallback_strategy = "SAFE_ENCOUNTER"
+                    fallback_text = _resolve_fallback("SAFE_ENCOUNTER")
+                elif contract.act == CommunicativeAct.GREET:
+                    fallback_strategy = "SAFE_GREETING"
+                    fallback_text = _resolve_fallback("SAFE_GREETING")
+                elif "DYADIC_PERSPECTIVE_DRIFT" in violations:
+                    fallback_strategy = "SAFE_DYADIC_PERSPECTIVE"
+                    if obligation == "MUTUAL_ENCOUNTER_ACKNOWLEDGMENT":
+                        fallback_text = _resolve_fallback("SAFE_ENCOUNTER")
+                    elif obligation == "FULFILL_SELF_INTRODUCTION":
+                        fallback_text = _resolve_fallback("SAFE_SELF_INTRODUCTION")
+                    else:
+                        fallback_text = _resolve_fallback("NEUTRAL_ACKNOWLEDGE")
+                elif "PRAGMATIC_HONORIFIC_VIOLATION" in violations or "INVERTED_HONORIFIC_VIOLATION" in violations:
+                    fallback_strategy = "SAFE_HONORIFIC_FALLBACK"
+                    fallback_text = _resolve_fallback("NEUTRAL_ACKNOWLEDGE")
+                elif "COMMUNICATIVE_ACT_FAILURE" in violations and contract.act == CommunicativeAct.REFUSE:
+                    fallback_strategy = "SAFE_REFUSAL"
+                    fallback_text = _resolve_fallback("SAFE_REFUSAL")
+                elif "COMMUNICATIVE_ACT_FAILURE" in violations and contract.act == CommunicativeAct.CLARIFY:
+                    fallback_strategy = "SAFE_CLARIFICATION"
+                    fallback_text = _resolve_fallback("SAFE_CLARIFICATION")
+                elif "CONTRADICTED" in violations and not contract.polarity:
+                    fallback_strategy = "SAFE_NEGATION"
+                    fallback_text = _resolve_fallback("SAFE_NEGATION")
+                elif "EPISTEMIC_DISTORTION" in violations:
+                    fallback_strategy = "SAFE_HEDGE"
+                    fallback_text = _resolve_fallback("SAFE_HEDGE")
+                elif contract.act in (CommunicativeAct.GREET, CommunicativeAct.ACKNOWLEDGE):
+                    fallback_strategy = "NEUTRAL_ACKNOWLEDGE"
+                    fallback_text = _resolve_fallback("NEUTRAL_ACKNOWLEDGE")
+                else:
+                    fallback_strategy = "SAFE_HEDGE"
+                    fallback_text = _resolve_fallback("SAFE_HEDGE")
 
         latency_ms = round((time.perf_counter() - t0) * 1000, 3)
 

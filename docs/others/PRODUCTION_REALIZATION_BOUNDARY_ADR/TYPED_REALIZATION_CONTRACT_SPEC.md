@@ -121,6 +121,58 @@ class RealizationInputContract:
             if r.is_required and not r.allow_ellipsis:
                 patterns.append(r.canonical_lemma)
         return patterns
+
+
+# Canonical production realization targets (P23-D Freeze)
+CANONICAL_TEXT_OUTPUT_LANGUAGE: str = "en"
+CANONICAL_VOICE_OUTPUT_LANGUAGE: str = "ja"
+
+
+@dataclass(frozen=True)
+class TextRealization:
+    """
+    Surface text output adhering to canonical production language.
+    Production default is CANONICAL_TEXT_OUTPUT_LANGUAGE ('en').
+    """
+    content: str
+    language: str = CANONICAL_TEXT_OUTPUT_LANGUAGE
+
+
+@dataclass(frozen=True)
+class VoiceRealization:
+    """
+    Japanese voice realization for neural TTS/RVC playback.
+    Production default is CANONICAL_VOICE_OUTPUT_LANGUAGE ('ja').
+    """
+    content: str   # Japanese text to synthesize
+    language: str = CANONICAL_VOICE_OUTPUT_LANGUAGE
+
+
+@dataclass(frozen=True)
+class RealizationOutput:
+    """
+    Structured realization output separating textual response from vocal actuation.
+
+    RealizationOutput
+    ├── text
+    │   └── language = CANONICAL_TEXT_OUTPUT_LANGUAGE ("en")
+    │
+    └── voice
+        └── language = CANONICAL_VOICE_OUTPUT_LANGUAGE ("ja")
+
+    Architectural Invariant:
+    Both text and voice branches realize in parallel from language-independent
+    semantic and pragmatic state (RealizationInputContract & Grounded Propositions).
+    Neither branch acts as a semantic intermediary for the other.
+    """
+    text: TextRealization
+    voice: VoiceRealization
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "text": {"content": self.text.content, "language": self.text.language},
+            "voice": {"content": self.voice.content, "language": self.voice.language},
+        }
 ```
 
 ---
@@ -129,8 +181,9 @@ class RealizationInputContract:
 
 `PromptAssembler` acts as a language-specific compiler that transforms the strongly-typed contract into fluent natural language directives. 
 
-### Critical Rule Derived from Stage 3-C:
-**The rendered prompt must NOT output code tokens (`ARG0:`, `EVENT:`, `RULE:`, etc.).** It must emit clear, natural language instructions that the 1.2B SLM can interpret naturally.
+### Critical Rules:
+1. **No DSL Tokens**: The rendered prompt must NOT output code tokens (`ARG0:`, `EVENT:`, `RULE:`, etc.). It must emit clear, natural language instructions that the 1.2B SLM can interpret naturally (Stage 3-C).
+2. **First-Person Dyadic Perspective**: Enforce first-person companion perspective ("I" / "we" / "you"). Prompt assembler must compile direct conversational guidance and block third-person narrator framing ("two people", "hai người", "二人").
 
 ### Compiler Mapping Matrix
 
@@ -141,3 +194,4 @@ class RealizationInputContract:
 | `polarity == False` | "State clearly that this event has NOT occurred or completed. Do not affirm." | "Nêu rõ rằng sự việc này CHƯA diễn ra hoặc CHƯA hoàn thành. Không khẳng định." | "この出来事がまだ完了していない・発生していないことを明確に述べてください。" |
 | `epistemic == INFERRED` | "Express this as a tentative observation (seems/appears), not an established fact." | "Diễn đạt như một ghi nhận ban đầu (dường như/có vẻ), không khẳng định tuyệt đối." | "確定した事実ではなく、見受けられる様子として表現してください。" |
 | `role_bindings` | "Focus the response on {ARG0} regarding {ARG1}." | "Tập trung câu trả lời vào {ARG0} liên quan đến {ARG1}." | "{ARG0}が{ARG1}に関することに焦点を当てて回答してください。" |
+| `dyadic_perspective` | "Speak directly from first-person companion perspective ('I'/'we'). Do NOT refer to user and companion in third-person as 'two people' or use narrator framing." | "Xưng hô tự nhiên từ góc nhìn người đồng hành ngôi thứ nhất ('em'/'anh'). Tuyệt đối không dùng ngôi thứ ba người ngoài cuộc như 'hai người'." | "ルシアとして一人称の自然な対話を行ってください。第三者解説のような『二人』などの表現を避けてください。" |

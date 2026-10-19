@@ -31,7 +31,7 @@ logger = logging.getLogger(__name__)
 
 MAX_PATTERNS = 50
 
-# Default Meta-Self-Awareness_Patterns (Phase 1 & Phase 2)
+# Default Meta-Self-Awareness_Patterns (Phase 1, Phase 2, & Localized Vietnamese Companion INV-2)
 DEFAULT_PATTERNS: List[str] = [
     # Phase 1 patterns
     r"\bI feel\b",
@@ -53,7 +53,29 @@ DEFAULT_PATTERNS: List[str] = [
     r"\bI know from before\b",
     r"\bpreviously you\b",
     r"\bmy memory\b",
+    # Localized Vietnamese Companion Affect Self-Report patterns (INV-2)
+    r"\b(tôi|em)\s+cảm thấy\s+(rất\s+)?(vui|buồn|lo lắng|hạnh phúc|tức giận|hấp dẫn|thích thú|cô đơn|bất an|thư thái|phấn khích|lo sợ|tuyệt vọng|ấm áp)\b",
+    r"\b(tôi|em)\s+thấy\s+(rất\s+)?(vui|buồn|lo lắng|hạnh phúc|tức giận|hấp dẫn|thích thú|cô đơn|bất an|thư thái|phấn khích|lo sợ|tuyệt vọng|ấm áp)\b",
+    r"\b(tôi|em)\s+(luôn\s+|đang\s+|thực sự\s+)?(rất\s+)?(vui|buồn|hạnh phúc|xúc động|hân hoan|thích thú|bồi hồi|lo lắng|lo sợ|bất an|cô đơn|thư thái)\b",
+    r"\bcảm nhận của (mình|em)\b",
+    r"\bcảm xúc của (mình|em)\b",
+    r"\btính cách của em rất\b",
+    r"\btâm trạng của em\b",
 ]
+
+# Confirmed internal control tokens and section headers (English & Vietnamese translated)
+# Explicitly targeted namespaces; does not match legitimate short bracketed user text like [1], [math], [Hà Nội]
+_INTERNAL_CONTROL_ARTIFACT_RE = re.compile(
+    r"\[("
+    r"SOMATIC STATE|MEMORY ECHO|GROUNDED KNOWLEDGE|COMMUNICATION STRATEGY|"
+    r"COMMUNICATIVE DIRECTIVES|COMMUNICATIVE INTENT & PROPOSITION|REASONING|CONVERSATION|"
+    r"Phản hồi tích tụ|Phản hồi tích luỹ|Phản hồi|Tích tụ|Trạng thái cơ thể|Ký ức|Bộ nhớ|"
+    r"Chiến lược giao tiếp|Chỉ thị giao tiếp|Chỉ thị|Suy nghĩ|"
+    r"Accumulated response|Accumulated feedback|Cumulative feedback|Cumulative response|"
+    r"[A-Z0-9_\s]{4,30}"
+    r")\]\s*",
+    re.IGNORECASE,
+)
 
 # Incomplete-clause detection (Requirement 7.7)
 _INCOMPLETE_CLAUSE_RE = re.compile(
@@ -103,7 +125,8 @@ class BoundaryLayer:
         if not text:
             return text
 
-        modified = text
+        # Strip confirmed internal control-header artifacts before pattern replacement
+        modified = _INTERNAL_CONTROL_ARTIFACT_RE.sub("", text).strip()
         for pattern_str, compiled in list(self._patterns.items()):
             match = compiled.search(modified)
             if match:

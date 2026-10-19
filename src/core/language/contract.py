@@ -25,6 +25,7 @@ class CommunicativeAct(str, Enum):
     GREET = "GREET"
     FAREWELL = "FAREWELL"
     ACKNOWLEDGE = "ACKNOWLEDGE"
+    REQUEST = "REQUEST"
 
 
 class EpistemicStatus(str, Enum):
@@ -98,6 +99,10 @@ class RealizationInputContract:
     forbidden_additions: Tuple[str, ...] = field(default_factory=tuple)
     somatic_modifiers: Dict[str, float] = field(default_factory=dict)
     directives: Optional[str] = None
+    speaker_honorific: Optional[str] = None
+    addressee_honorific: Optional[str] = None
+    conversational_obligation: Optional[str] = None
+    dialogue_phase: Optional[str] = None
     timestamp: float = field(default_factory=time.time)
 
     def get_role(self, role_name: str) -> Optional[SemanticRoleBinding]:
@@ -121,20 +126,35 @@ class RealizationInputContract:
         target_language: str = "en",
         act: CommunicativeAct = CommunicativeAct.ASSERT,
         directives: Optional[str] = None,
+        speaker_honorific: Optional[str] = None,
+        addressee_honorific: Optional[str] = None,
+        forbidden_additions: Optional[Sequence[str]] = None,
+        conversational_obligation: Optional[str] = None,
+        dialogue_phase: Optional[str] = None,
+        target_predicate: Optional[str] = None,
     ) -> RealizationInputContract:
         """Creates a safe baseline contract when no explicit proposition is active."""
+        spk = speaker_honorific if speaker_honorific is not None else ("em" if target_language == "vi" else None)
+        addr = addressee_honorific if addressee_honorific is not None else ("anh" if target_language == "vi" else None)
+        forbid = list(forbidden_additions) if forbidden_additions else []
+        if target_language == "vi" and "bạn" not in forbid:
+            forbid.append("bạn")
         return cls(
             contract_id=str(uuid.uuid4()),
             target_language=target_language,
             act=act,
             polarity=True,
             epistemic_status=EpistemicStatus.FACT,
-            target_predicate=None,
+            target_predicate=target_predicate,
             role_bindings=(),
             scope_type=SemanticScopeType.ROOT,
             provenance=ProvenanceRecord(origin=ProvenanceOrigin.OBSERVATION),
-            forbidden_additions=(),
+            forbidden_additions=tuple(forbid),
             directives=directives,
+            speaker_honorific=spk,
+            addressee_honorific=addr,
+            conversational_obligation=conversational_obligation,
+            dialogue_phase=dialogue_phase,
             timestamp=time.time(),
         )
 
@@ -145,6 +165,9 @@ class RealizationInputContract:
         target_language: str = "en",
         known_propositions: Optional[Sequence[Any]] = None,
         forbidden_additions: Optional[Sequence[str]] = None,
+        speaker_honorific: Optional[str] = None,
+        addressee_honorific: Optional[str] = None,
+        dialogue_phase: Optional[str] = None,
     ) -> RealizationInputContract:
         """
         Constructs a typed RealizationInputContract from a Stage S10 CAPSResult.
@@ -235,16 +258,13 @@ class RealizationInputContract:
                         )
                     )
 
-        # If roles empty but known propositions provided and act is asserting/answering, populate ARG0 / ARG1
-        if not roles and known_propositions and (act_enum in (CommunicativeAct.ASSERT, CommunicativeAct.ANSWER) or target_predicate):
+        # If roles empty but known propositions provided and target_predicate matches, populate ARG0 / ARG1
+        if not roles and known_propositions and target_predicate:
             matching_kp = None
-            if target_predicate:
-                for p in known_propositions:
-                    if getattr(p, "predicate", None) == target_predicate:
-                        matching_kp = p
-                        break
-            if matching_kp is None and act_enum in (CommunicativeAct.ASSERT, CommunicativeAct.ANSWER):
-                matching_kp = known_propositions[0]
+            for p in known_propositions:
+                if getattr(p, "predicate", None) == target_predicate:
+                    matching_kp = p
+                    break
 
             if matching_kp is not None:
                 if hasattr(matching_kp, "subject") and matching_kp.subject:
@@ -277,8 +297,14 @@ class RealizationInputContract:
                 )
             )
 
-        forbidden_tuple = tuple(forbidden_additions) if forbidden_additions else ()
+        spk = speaker_honorific if speaker_honorific is not None else ("em" if target_language == "vi" else None)
+        addr = addressee_honorific if addressee_honorific is not None else ("anh" if target_language == "vi" else None)
+        forbid_list = list(forbidden_additions) if forbidden_additions else []
+        if target_language == "vi" and "bạn" not in forbid_list:
+            forbid_list.append("bạn")
+        forbidden_tuple = tuple(forbid_list)
         caps_directives = getattr(caps_result, "directives", None) or None
+        obligation = getattr(caps_result, "conversational_obligation", None)
 
         return cls(
             contract_id=str(uuid.uuid4()),
@@ -292,22 +318,37 @@ class RealizationInputContract:
             provenance=prov_rec,
             forbidden_additions=forbidden_tuple,
             directives=caps_directives,
+            speaker_honorific=spk,
+            addressee_honorific=addr,
+            conversational_obligation=obligation,
+            dialogue_phase=dialogue_phase,
             timestamp=time.time(),
         )
 
 
+# Canonical production realization targets (ADR-035 / Phase 23 Production Output Simplification)
+CANONICAL_TEXT_OUTPUT_LANGUAGE: str = "en"
+CANONICAL_VOICE_OUTPUT_LANGUAGE: str = "ja"
+
+
 @dataclass(frozen=True)
 class TextRealization:
-    """Natural language text output adhering to user's active language."""
+    """
+    Surface text output adhering to canonical production language.
+    Production default is CANONICAL_TEXT_OUTPUT_LANGUAGE ('en').
+    """
     content: str
-    language: str  # "en", "vi", "ja"
+    language: str = CANONICAL_TEXT_OUTPUT_LANGUAGE
 
 
 @dataclass(frozen=True)
 class VoiceRealization:
-    """Japanese voice realization for neural TTS/RVC playback."""
+    """
+    Japanese voice realization for neural TTS/RVC playback.
+    Production default is CANONICAL_VOICE_OUTPUT_LANGUAGE ('ja').
+    """
     content: str   # Japanese text to synthesize
-    language: str = "ja"  # Always "ja"
+    language: str = CANONICAL_VOICE_OUTPUT_LANGUAGE
 
 
 @dataclass(frozen=True)
@@ -317,10 +358,15 @@ class RealizationOutput:
 
     RealizationOutput
     ├── text
-    │   └── language = user_active_language
+    │   └── language = CANONICAL_TEXT_OUTPUT_LANGUAGE ("en")
     │
     └── voice
-        └── language = "ja"
+        └── language = CANONICAL_VOICE_OUTPUT_LANGUAGE ("ja")
+
+    Architectural Invariant:
+    Both text and voice branches realize in parallel from language-independent
+    semantic and pragmatic state (RealizationInputContract & Grounded Propositions).
+    Neither branch acts as a semantic intermediary for the other.
     """
     text: TextRealization
     voice: VoiceRealization
@@ -336,4 +382,5 @@ class RealizationOutput:
                 "language": self.voice.language,
             },
         }
+
 

@@ -2,14 +2,19 @@
 src/core/language/realization.py
 
 Realization layer utilities for voice and language alignment.
-Provides deterministic realization of Japanese voice text from RealizationInputContract
-and knowledge representations.
+Provides deterministic realization of Japanese voice text and English text
+from RealizationInputContract and knowledge representations.
 
 Architectural Invariants:
-1. Language belongs to realization, NOT cognition.
-2. Lucia's voice language is ALWAYS Japanese ('ja').
-3. Voice input to TTS must be authentic Japanese realization text, never arbitrary
-   English or Vietnamese text.
+1. Language belongs to realization, NOT cognition or semantic substrate.
+2. Production voice language is CANONICALLY Japanese ('ja').
+3. Production text language is CANONICALLY English ('en').
+4. Multilingual input perception is admitted, but surface realization targets are:
+   - Text: 'en'
+   - Voice: 'ja'
+5. Parallel Decoupling: Voice Japanese realizes directly from semantic/pragmatic state
+   (contract & propositions) or parallel Japanese renderer.
+   English text is NEVER a semantic intermediate language for Japanese voice.
 """
 
 from __future__ import annotations
@@ -18,6 +23,8 @@ import logging
 from typing import Any, Optional, Sequence
 
 from src.core.language.contract import (
+    CANONICAL_TEXT_OUTPUT_LANGUAGE,
+    CANONICAL_VOICE_OUTPUT_LANGUAGE,
     CommunicativeAct,
     EpistemicStatus,
     RealizationInputContract,
@@ -45,7 +52,8 @@ def realize_japanese_voice_text(
     known_propositions: Optional[Sequence[Any]] = None,
 ) -> str:
     """
-    Deterministically realize authentic Japanese voice text for the Japanese neural vocal channel.
+    Deterministically realize authentic Japanese voice text directly from
+    the semantic/pragmatic contract and propositions for the Japanese vocal channel.
 
     Parameters
     ----------
@@ -93,28 +101,32 @@ def realize_japanese_voice_text(
 
 def construct_realization_output(
     safe_response: str,
-    user_language: str,
+    user_language: str = CANONICAL_TEXT_OUTPUT_LANGUAGE,
     contract: Optional[RealizationInputContract] = None,
     known_propositions: Optional[Sequence[Any]] = None,
     japanese_voice_text: Optional[str] = None,
 ) -> RealizationOutput:
     """
     Construct typed RealizationOutput adhering to the Language Contract:
-        text.language = user_active_language
-        voice.language = "ja"
+        text.language = target text language (canonical production: "en")
+        voice.language = canonical voice language ("ja")
+
+    Both branches realize in parallel:
+    - Text branch renders the approved surface response in the target text language.
+    - Voice branch renders authentic Japanese voice text directly from semantic/pragmatic state.
 
     Parameters
     ----------
     safe_response : str
-        Approved textual response in user's active language.
+        Approved textual response in target text language.
     user_language : str
-        ISO 639-1 code of user active language ('en', 'vi', 'ja').
+        ISO 639-1 code of target text language (defaults to "en").
     contract : RealizationInputContract | None
         Authoritative realization contract.
     known_propositions : Sequence[Any] | None
         Grounded propositions.
     japanese_voice_text : str | None
-        Optional translated/synthesized authentic Japanese text for this specific turn.
+        Optional turn-specific Japanese voice realization text.
 
     Returns
     -------
@@ -127,11 +139,10 @@ def construct_realization_output(
     )
 
     if user_language == "ja":
-        # When user text is Japanese, voice text directly uses the verified Japanese response
+        # When text itself is Japanese, voice can directly share verified Japanese prose
         voice_content = safe_response
     else:
-        # When user text is English or Vietnamese, use turn-specific Japanese voice text if available,
-        # otherwise deterministically fall back to authentic communicative act template.
+        # Voice realizes directly from semantic/pragmatic state or parallel renderer
         if japanese_voice_text and japanese_voice_text.strip():
             voice_content = japanese_voice_text.strip()
         else:
@@ -139,10 +150,11 @@ def construct_realization_output(
 
     voice_out = VoiceRealization(
         content=voice_content,
-        language="ja",
+        language=CANONICAL_VOICE_OUTPUT_LANGUAGE,
     )
 
     return RealizationOutput(
         text=text_out,
         voice=voice_out,
     )
+
