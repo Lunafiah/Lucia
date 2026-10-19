@@ -607,6 +607,16 @@ CANONICAL_VOICE_OUTPUT_LANGUAGE = "ja"
 6. **Preserved Notes & Technical Debt**:
    - **Note A — Japanese Voice Realization Path**: The runtime helper `translate_to_japanese(safe_response)` in `CognitiveOrchestrator` is strictly a **surface-realization convenience path**, NOT semantic architecture. Direct semantic/pragmatic Japanese realization fallback already exists (`realize_japanese_voice_text`). English text is not a semantic intermediate. The long-term architectural direction may migrate to a direct multi-head Japanese renderer; this refactor is outside P23-D current scope.
    - **Note B — Dead Import Housekeeping**: The unused import `from src.core.language.detection import detect_active_language` in `CognitiveOrchestrator` is recorded as **housekeeping / technical debt**; no implementation task is opened for P23-D.
+7. **Post-P23-D Scientific & Architectural Gap Review and P23 Closure (`DOC-P23-REVIEW-04`)**:
+   - **Review Verdict**: `P23 CLOSED — NO NEW GAP`.
+   - **Scientific G3 Gap**: `NONE`. Every core contract (P23-C..H, ADR-035) is implemented, evidenced, and verified.
+   - **Roadmap Progression**: No follow-on sub-phases (`P23-J`, `P23-K`) or additional P23 research milestones are justified. Phase 23 is formally frozen and closed.
+   - **Preserved Gap Classifications**:
+     - *G0 (No Gap)*: Substrate neutrality, numeric cognitive projection (`TermArena`), bounded Horn reasoning (JTMS, Strong Kleene $K3$), continuous MT-LNN coexistence, and fail-closed S14 realization are fully implemented and verified.
+     - *G1 (Engineering Debt)*: Japanese voice convenience path helper (`translate_to_japanese`) and dead import (`detect_active_language`) remain documented technical debt; zero architectural contradiction.
+     - *G2 (Bounded Evidence Gap)*: Adapter test coverage is bounded to `{en, vi, ja}`. Open-domain multilingual scaling is an adapter coverage engineering task, not an unresolved semantic substrate limitation.
+     - *G3 (Scientific / Architectural Gap)*: `NONE`.
+   - **P23-I Status**: Preserved as `CLOSED / FALSIFIED / NOT PROMOTED` and permanently absorbed into ARCH-030.1.
 
 #### 4. Embodiment Mechanics & Kinematics
 1. **Canonical 15-Dimensional Actuator Vector ($\mathbf{E}_t \in [0, 1]^{15}$)**:
