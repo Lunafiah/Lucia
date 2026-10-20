@@ -1361,6 +1361,7 @@ def init_server(
     log_level: str = "INFO",
     mode: str = "live",
     lock_path: Optional[Union[str, Path]] = None,
+    warmup_voice: bool = False,
 ) -> None:
     global _orchestrator, _sim_runtime, _scenario_runner, _mode, _instance_lock
     _mode = mode.lower()
@@ -1560,6 +1561,13 @@ def init_server(
         sys.stdout.flush()
         sys.exit(1)
 
+    # Warm up RVC voice pipeline if requested or enabled via environment
+    if warmup_voice or (os.environ.get("LUCIA_WARMUP_RVC") == "1" and mode == "live"):
+        try:
+            _voice_engine.warmup_rvc()
+        except Exception as exc:
+            logger.warning("VoiceEngine: startup warmup skipped or non-fatal error: %s", exc)
+
     # Signal ready to Electron parent process
     sys.stdout.write("LUCIA_BACKEND_READY\n")
     sys.stdout.flush()
@@ -1569,12 +1577,14 @@ def main() -> None:
     args = _parse_args()
     port = int(os.environ.get("LUCIA_PORT", args.port)) if args.port == 8765 else args.port
     mode = os.environ.get("LUCIA_MODE", args.mode)
+    warmup_voice = os.environ.get("LUCIA_WARMUP_RVC", "1") != "0" and mode == "live"
     init_server(
         model_path=args.model_path,
         port=port,
         profile_name=args.profile,
         log_level=args.log_level,
         mode=mode,
+        warmup_voice=warmup_voice,
     )
 
     def shutdown_handler(sig, frame):

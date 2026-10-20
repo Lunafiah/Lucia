@@ -49,6 +49,12 @@ from src.core.cognition.contract.synthesis import (
     SynthesizeIntentGraph,
     SynthesisResult,
 )
+from src.core.cognition.contract.condition import (
+    ConditionStatus,
+    ConditionType,
+    ResolutionSource,
+    UnresolvedCondition,
+)
 from src.core.cognition.contract.terms import (
     BindingSet,
     EntityTerm,
@@ -83,6 +89,11 @@ __all__ = [
     "SCOPE_TYPE_NEGATION",
     "SCOPE_TYPE_MODAL",
     "SCOPE_TYPE_INTENSIONAL",
+    # Condition Contract (Phase 23-D)
+    "UnresolvedCondition",
+    "ConditionType",
+    "ConditionStatus",
+    "ResolutionSource",
     # Memory Arena
     "TermArena",
     "ArenaCapacityExceededError",

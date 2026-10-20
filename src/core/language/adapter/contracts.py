@@ -31,9 +31,10 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from enum import Enum
+from enum import Enum, IntEnum
 from typing import Any, Dict, List, Optional, Set, Tuple
 
+from src.core.cognition.contract.epistemic import EpistemicStatus
 from src.core.knowledge.fortification import (
     EpistemicState,
     ProvenanceRecord,
@@ -79,6 +80,11 @@ class EgressGateBlockedError(LanguageAdapterError):
 
 class EpistemicLeakageError(LanguageAdapterError):
     """Raised when parsing or realization violates epistemic non-escalation invariants."""
+    pass
+
+
+class EpistemicEscalationError(LanguageAdapterError):
+    """Raised when an ungrounded or untrusted candidate attempts to escalate epistemic authority (NEG-02)."""
     pass
 
 
@@ -236,3 +242,94 @@ class LanguageAdapter(ABC):
             CoverageReport detailing coverage metrics.
         """
         ...
+
+
+# ── ADR-038 Grounded Propositional Causal Ingress Contracts ────────────────────
+
+class CausalRelation(IntEnum):
+    """
+    Ratified bounded vocabulary for F15 epistemic ingress causal links.
+    """
+    SPONTANEOUS = 1
+    """User-authored content initiated without assistant prompt or topical seed."""
+
+    SUPPLIED_ANSWER = 2
+    """User-authored content answering an open assistant question (e.g. 'Where do you live?' -> 'Hanoi')."""
+
+    CONFIRMED_ECHO = 3
+    """User passively assenting to or repeating an assistant-seeded closed hypothesis. Downgraded to UNKNOWN."""
+
+    CORRECTED_NEGATION = 4
+    """User explicitly denying, correcting, or refuting an assistant-seeded closed hypothesis."""
+
+    ELABORATED = 5
+    """User confirming an assistant topic while supplying independent, novel evidential propositions."""
+
+
+class IngressSourceClass(str, Enum):
+    """
+    Authority classes distinguishing epistemic origin of candidate assertions.
+    """
+    USER_DISCOURSE = "USER_DISCOURSE"
+    PERCEPTUAL = "PERCEPTUAL"
+    DERIVED = "DERIVED"
+    MEMORY = "MEMORY"
+
+
+@dataclass(frozen=True)
+class IngressCandidateAssertion:
+    """
+    R4 Validated Minimal Epistemic Ingress Candidate Contract (ADR-038).
+    Evaluated by Language Ingress Gate BEFORE admission into P23-H TermArena.
+    NOTE: Does NOT contain epistemic_status (assigned only upon gate certification).
+    """
+    predicate_id: int
+    arg0_id: int
+    arg1_id: int = 0
+    arg2_id: int = 0
+    polarity: bool = True
+    scope_id: int = 1
+    source_class: IngressSourceClass = IngressSourceClass.USER_DISCOURSE
+    causal_relation: CausalRelation = CausalRelation.SPONTANEOUS
+    antecedent_term_id: int = 0
+    rule_id: int = 0
+    supporting_premise_ids: Tuple[int, ...] = ()
+
+
+@dataclass(frozen=True)
+class RetractionDirective:
+    """
+    Typed directive emitted by LanguageIngressGate when user negates an assistant hypothesis.
+    Processed by CognitiveOrchestrator at Stage S10b via JTMS.retract_premise().
+    """
+    target_term_id: int
+    reason: str = "USER_CORRECTED_NEGATION"
+
+
+@dataclass(frozen=True)
+class QualifiedLogicalAssertion:
+    """
+    Certified logical proposition emitted by LanguageIngressGate after epistemic verification.
+    Ready for interning into TermArena and allocation of ProvenanceRecord.
+    """
+    predicate_id: int
+    arg0_id: int
+    arg1_id: int = 0
+    arg2_id: int = 0
+    polarity: bool = True
+    scope_id: int = 1
+    epistemic_status: EpistemicStatus = EpistemicStatus.FACT
+    causal_relation: CausalRelation = CausalRelation.SPONTANEOUS
+    antecedent_term_id: int = 0
+    rule_id: int = 0
+    supporting_premise_ids: Tuple[int, ...] = ()
+
+
+@dataclass(frozen=True)
+class CertificationResult:
+    """
+    Result of evaluating candidate assertions through the Epistemic Ingress Gate.
+    """
+    assertions: Tuple[QualifiedLogicalAssertion, ...] = ()
+    retraction_directives: Tuple[RetractionDirective, ...] = ()
+

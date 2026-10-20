@@ -260,6 +260,40 @@ Every documented artifact in the Lucia repository is registered and classified a
 
 ---
 
+## 11.2 Epistemic Ingress & Causal Attribution Series (ADR-038)
+
+| Doc ID | Title | File Path | Class | Phase | Stage | Status | Authority | Canonical Owner |
+|---|---|---|---|---|---|---|---|---|
+| **DOC-E3-R2-001** | P23-H E3-R2: Epistemic Ingress Contract Falsification | [`docs/others/epistemic_ingress_research/P23H_E3_R2_EPISTEMIC_INGRESS_FALSIFICATION_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/others/epistemic_ingress_research/P23H_E3_R2_EPISTEMIC_INGRESS_FALSIFICATION_REPORT.md) | Research History | P23-H E3 | Falsification | `RESEARCH FALSIFICATION` | `RESEARCH` | Self |
+| **DOC-E3-R3-001** | P23-H E3-R3: Revised Minimal Contract Boundary Review | [`docs/others/epistemic_ingress_research/P23H_E3_R3_CONTRACT_BOUNDARY_REVIEW.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/others/epistemic_ingress_research/P23H_E3_R3_CONTRACT_BOUNDARY_REVIEW.md) | Research History | P23-H E3 | Boundary Review | `RESEARCH REVIEW` | `RESEARCH` | Self |
+| **DOC-E3-R4-001** | P23-H E3-R4: F15 Clause-Level Causal Attribution Boundary Research | [`docs/others/epistemic_ingress_research/P23H_E3_R4_F15_CAUSAL_BOUNDARY_RESEARCH.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/others/epistemic_ingress_research/P23H_E3_R4_F15_CAUSAL_BOUNDARY_RESEARCH.md) | Research History | P23-H E3 | Research Synthesis | `RESEARCH VALIDATED` | `RESEARCH` | Self |
+| **DOC-ADR-038** | ADR-038: Grounded Propositional Causal Ingress Contract | [`docs/others/epistemic_ingress_research/ADR_038_GROUNDED_PROPOSITIONAL_CAUSAL_INGRESS.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/others/epistemic_ingress_research/ADR_038_GROUNDED_PROPOSITIONAL_CAUSAL_INGRESS.md) | Architectural Decision | P23-H E3 | Architectural Decision | `IMPLEMENTED & VERIFIED` | `DECISION` | Self |
+| **DOC-ADR038-IMP-001** | ADR-038 Implementation Boundary Specification | [`docs/others/epistemic_ingress_research/ADR_038_IMPLEMENTATION_BOUNDARY_SPECIFICATION.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/others/epistemic_ingress_research/ADR_038_IMPLEMENTATION_BOUNDARY_SPECIFICATION.md) | Technical Specification | P23-H E3 | Implementation Spec | `IMPLEMENTED` | `SPEC` | Self |
+| **DOC-ADR038-RES-001** | ADR-038 Open Decisions Resolution | [`docs/others/epistemic_ingress_research/ADR_038_OPEN_DECISIONS_RESOLUTION.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/others/epistemic_ingress_research/ADR_038_OPEN_DECISIONS_RESOLUTION.md) | Architecture Decision Resolution | P23-H E3 | Decision Resolution | `IMPLEMENTED & VERIFIED` | `DECISION` | Self |
+
+---
+
+## 11.3 P23-H Integration Research (Identity Boundary Series)
+
+| Doc ID | Title | File Path | Class | Phase | Stage | Status | Authority | Canonical Owner |
+|---|---|---|---|---|---|---|---|---|
+| **DOC-P23H-ID-R2-001** | P23-H Integration Research R2: Identity Boundary Report | [`docs/others/p23h_identity_boundary_research/P23H_IDENTITY_BOUNDARY_RESEARCH_R2.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/others/p23h_identity_boundary_research/P23H_IDENTITY_BOUNDARY_RESEARCH_R2.md) | Research History | P23-H Integration | Research Report | `RESEARCH VALIDATED` | `RESEARCH` | Self |
+| **DOC-P23H-RCS-R1-001** | P23-H Rule Compiler Implementation Specification R1 | [`docs/others/p23h_identity_boundary_research/DOC_P23H_RULE_COMPILER_IMPLEMENTATION_SPEC_R1_001.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/others/p23h_identity_boundary_research/DOC_P23H_RULE_COMPILER_IMPLEMENTATION_SPEC_R1_001.md) | Technical Specification | P23-H Integration | Implementation Spec | `IMPLEMENTED & VERIFIED` | `SPEC` | Self |
+| **DOC-P23H-INT-SPEC-001** | P23-H Bounded Reasoning Substrate Runtime Integration Specification R1 | [`docs/others/p23h_identity_boundary_research/DOC-P23H-RUNTIME-INTEGRATION-SPEC-R1-001.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/others/p23h_identity_boundary_research/DOC-P23H-RUNTIME-INTEGRATION-SPEC-R1-001.md) | Technical Specification | P23-H Integration | Runtime Spec | `READY FOR IMPLEMENTATION` | `SPEC` | Self |
+
+---
+
+## 11.4 P23-D Endogenous Cognition & Cognitive Continuity Series
+
+| Doc ID | Title | File Path | Class | Phase | Stage | Status | Authority | Canonical Owner |
+|---|---|---|---|---|---|---|---|---|
+| **DOC-P23D-ARCH-CONTRACT-R2-001** | P23-D Architecture Contract / R2: Endogenous Cognition & Internal Cognitive Continuity | [`docs/others/p23d_endogenous_cognition/P23D_ARCHITECTURE_CONTRACT_R2.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/others/p23d_endogenous_cognition/P23D_ARCHITECTURE_CONTRACT_R2.md) | Architectural Contract | P23-D | Architecture Contract | `FROZEN & RATIFIED` | `CONTRACT` | Self |
+| **DOC-P23D-R2-ADDENDUM-001** | P23-D R2 Decision Addendum: Resolution of Open Contract Items | [`docs/others/p23d_endogenous_cognition/P23D_R2_DECISION_ADDENDUM.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/others/p23d_endogenous_cognition/P23D_R2_DECISION_ADDENDUM.md) | Architectural Decision | P23-D | Decision Addendum | `FROZEN & RATIFIED` | `DECISION` | Self |
+| **DOC-P23D-IMP-SPEC-V1-001** | P23-D Implementation Specification v1: Endogenous Cognition & Cognitive Continuity | [`docs/others/p23d_endogenous_cognition/P23D_IMPLEMENTATION_SPEC_V1.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/others/p23d_endogenous_cognition/P23D_IMPLEMENTATION_SPEC_V1.md) | Technical Specification | P23-D | Implementation Spec | `FROZEN / IMPLEMENTED` | `SPEC` | Self |
+| **DOC-P23D-FINAL-REPORT-001** | P23-D Finalization & Freeze Report: Endogenous Cognition & Cognitive Continuity | [`docs/others/p23d_endogenous_cognition/P23D_FINAL_REPORT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/others/p23d_endogenous_cognition/P23D_FINAL_REPORT.md) | Implementation Evidence | P23-D | Finalization & Freeze | `FROZEN / PASS` | `CANONICAL CLOSURE` | Self |
+
+---
+
 ## 12. Maintenance & Registration Rules
 
 When authoring any new document, specification, or evaluation report:

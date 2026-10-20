@@ -20,6 +20,11 @@ if TYPE_CHECKING:
     from src.core.cognition.contract.projection import SymbolTable
 
 
+# Reserved metadata keys for ADR-038 Grounded Propositional Causal Ingress
+PROV_KEY_CAUSAL_RELATION: int = 1001
+PROV_KEY_ANTECEDENT_TERM: int = 1002
+
+
 @dataclass(frozen=True)
 class ProvenanceRecord:
     """
@@ -33,6 +38,35 @@ class ProvenanceRecord:
     timestamp: float = 0.0
     confidence: float = 1.0
     metadata: Dict[int, int] = field(default_factory=dict)
+
+    @property
+    def causal_relation(self) -> int:
+        """Return the CausalRelation enum integer value (default 1 = SPONTANEOUS)."""
+        return self.metadata.get(PROV_KEY_CAUSAL_RELATION, 1)
+
+    @property
+    def antecedent_term_id(self) -> int:
+        """Return the antecedent term ID (default 0 = none)."""
+        return self.metadata.get(PROV_KEY_ANTECEDENT_TERM, 0)
+
+    def with_causal_link(
+        self,
+        causal_relation: int,
+        antecedent_term_id: int = 0,
+    ) -> ProvenanceRecord:
+        """Return a new ProvenanceRecord updated with causal link metadata."""
+        new_meta = dict(self.metadata)
+        new_meta[PROV_KEY_CAUSAL_RELATION] = int(causal_relation)
+        new_meta[PROV_KEY_ANTECEDENT_TERM] = int(antecedent_term_id)
+        return ProvenanceRecord(
+            rule_id=self.rule_id,
+            supporting_premise_ids=self.supporting_premise_ids,
+            session_id=self.session_id,
+            turn_id=self.turn_id,
+            timestamp=self.timestamp,
+            confidence=self.confidence,
+            metadata=new_meta,
+        )
 
     def to_dict(self) -> Dict[str, Any]:
         return {

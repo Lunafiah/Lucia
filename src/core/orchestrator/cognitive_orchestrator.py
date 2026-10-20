@@ -39,10 +39,25 @@ import threading
 import time
 import uuid
 from pathlib import Path
-from typing import List, Optional, Tuple, Union
+from typing import List, Optional, Sequence, Tuple, Union
 
 import numpy as np
 
+from src.core.cognition.contract import (
+    EpistemicStatus as CoreEpistemicStatus,
+    KleeneValue,
+    SCOPE_TYPE_MODAL,
+    SymbolTable,
+    TermArena,
+)
+from src.core.cognition.kernel import (
+    GoalResult,
+    InformationSubgoal,
+    ReasoningKernel,
+    RuleIndex,
+)
+from src.core.cognition.kernel.compiler import RuleCompilationReport, compile_rule_set
+from src.core.cognition.service import DerivedResult, EpistemicReasoningService
 from src.core.communication.caps import (
     AdmissibleEvidencePool,
     CAPSResult,
@@ -66,6 +81,12 @@ from src.core.orchestrator.discourse_cache import (
     DiscourseReferent,
     ResolutionStatus,
 )
+from src.core.language.adapter.contracts import (
+    CertificationResult,
+    IngressCandidateAssertion,
+    RetractionDirective,
+)
+from src.core.language.adapter.gate import LanguageIngressGate
 from src.core.config import (
     BoundaryConfig,
     HomeostaticConfig,
@@ -105,6 +126,29 @@ from src.core.emotion.persistence import (
     load_epoch_manifest,
     save_epoch_manifest,
     verify_and_reconcile_stores,
+)
+from src.core.cognition.contract.condition import (
+    CommunicativeAffordance,
+    ConditionStatus,
+    ConditionType,
+    EndogenousTurnResult,
+    ResolutionSource,
+    UnresolvedCondition,
+)
+from src.core.cognition.condition_persistence import (
+    DEFAULT_CONDITIONS_PATH,
+    load_conditions,
+    save_conditions,
+)
+from src.core.cognition.qualification import (
+    CandidateTrigger,
+    QualifiedEndogenousTrigger,
+    TriggerQualificationBoundary,
+)
+from src.core.cognition.referent_adapter import (
+    compute_condition_id,
+    decode_referent_key,
+    encode_referent_key,
 )
 from src.core.orchestrator.prompt_assembler import PromptAssembler
 from src.core.language.contract import (
@@ -193,6 +237,12 @@ class CognitiveOrchestrator:
         temporal_coordinator: Optional[TemporalEmbodimentCoordinator] = None,
         # --- Stage S14 Verification Subsystem (ADR-035) ---
         semantic_gate: Optional[SemanticFidelityGate] = None,
+        # --- Stage Ingress & Reasoning Subsystems (ADR-038) ---
+        term_arena: Optional[TermArena] = None,
+        symbol_table: Optional[SymbolTable] = None,
+        reasoning_kernel: Optional[ReasoningKernel] = None,
+        reasoning_service: Optional[EpistemicReasoningService] = None,
+        ingress_gate: Optional[LanguageIngressGate] = None,
         # --- Stage Execution Observability (Blocker 4) ---
         execution_tracer: Optional[CognitiveExecutionTracer] = None,
         # --- Configuration knobs ---
@@ -201,6 +251,7 @@ class CognitiveOrchestrator:
         max_history_turns: int = 20,
         fallback_response: str = "...",
         epoch_manifest_path: Optional[Union[str, Path]] = None,
+        conditions_path: Optional[Union[str, Path]] = None,
         initial_history: Optional[List[Tuple[str, str]]] = None,
     ) -> None:
         # Subsystems
@@ -239,6 +290,37 @@ class CognitiveOrchestrator:
         # ADR-035: Stage S14 Fail-Closed Semantic Fidelity Gate
         self._semantic_gate = semantic_gate if semantic_gate is not None else SemanticFidelityGate()
         self._latest_gate_decision: Optional[GateDecision] = None
+        # ADR-038 Ingress & In-Session Reasoning State (Decision A, B, C, P23-H)
+        self._term_arena = term_arena if term_arena is not None else TermArena()
+        self._symbol_table = symbol_table if symbol_table is not None else SymbolTable()
+        self._ingress_gate = ingress_gate if ingress_gate is not None else LanguageIngressGate()
+        self._pending_retraction_directives: List[RetractionDirective] = []
+
+        # P23-H RuleIndex lifecycle: constructed by compiler, stored by orchestrator, consumed by kernel
+        self._rule_index: Optional[RuleIndex] = None
+        self._rule_compilation_report: Optional[RuleCompilationReport] = None
+        if reasoning_kernel is not None:
+            self._reasoning_kernel = reasoning_kernel
+            self._rule_index = getattr(reasoning_kernel, "rule_index", None)
+        else:
+            rules = self._knowledge_store.get_all_rules()
+            self._rule_index, self._rule_compilation_report = compile_rule_set(
+                rules, self._symbol_table
+            )
+            self._reasoning_kernel = ReasoningKernel(
+                rule_index=self._rule_index,
+                arena=self._term_arena,
+            )
+
+        self._reasoning_service = (
+            reasoning_service
+            if reasoning_service is not None
+            else EpistemicReasoningService(
+                kernel=self._reasoning_kernel,
+                symbol_table=self._symbol_table,
+                arena=self._term_arena,
+            )
+        )
         # Blocker 4: In-Memory Cognitive Execution Tracer
         self._execution_tracer = (
             execution_tracer if execution_tracer is not None else CognitiveExecutionTracer()
@@ -260,6 +342,16 @@ class CognitiveOrchestrator:
             man = load_epoch_manifest(self._epoch_manifest_path)
             if man is not None:
                 self._current_epoch = man.epoch_id
+
+        # P23-D Cognitive Conditions ledger and persistence authority
+        self._conditions_path = Path(conditions_path) if conditions_path else DEFAULT_CONDITIONS_PATH
+        self._condition_ledger: Dict[str, UnresolvedCondition] = {}
+        if self._conditions_path is not None:
+            loaded_conditions = load_conditions(self._conditions_path)
+            for cond in loaded_conditions:
+                self._condition_ledger[cond.condition_id] = cond
+        self._active_endogenous_depth: int = 0
+        self._pending_communicative_affordance: Optional[CommunicativeAffordance] = None
 
         # Mutable orchestrator state (only these — no subsystem state copies)
         self._history: List[Tuple[str, str]] = list(initial_history) if initial_history else []
@@ -323,6 +415,74 @@ class CognitiveOrchestrator:
         return self._discourse_cache
 
     @property
+    def term_arena(self) -> TermArena:
+        """In-session TermArena for proposition interning (ADR-038)."""
+        return self._term_arena
+
+    @property
+    def symbol_table(self) -> SymbolTable:
+        """In-session SymbolTable for concept interning (ADR-038)."""
+        return self._symbol_table
+
+    @property
+    def reasoning_kernel(self) -> Optional[ReasoningKernel]:
+        """Attached reasoning kernel (Phase 23-H)."""
+        return self._reasoning_kernel
+
+    @property
+    def rule_index(self) -> Optional[RuleIndex]:
+        """Compiled RuleIndex for P23-H reasoning."""
+        return self._rule_index
+
+    @property
+    def rule_compilation_report(self) -> Optional[RuleCompilationReport]:
+        """Diagnostic compilation report for the current RuleIndex."""
+        return self._rule_compilation_report
+
+    @property
+    def reasoning_service(self) -> Optional[EpistemicReasoningService]:
+        """On-demand EpistemicReasoningService coordinator."""
+        return self._reasoning_service
+
+    @property
+    def ingress_gate(self) -> LanguageIngressGate:
+        """Authoritative language ingress verification gate (ADR-038)."""
+        return self._ingress_gate
+
+    @property
+    def pending_retraction_directives(self) -> List[RetractionDirective]:
+        """Pending retraction directives received from ingress boundary."""
+        return list(self._pending_retraction_directives)
+
+    def execute_retraction_directive(self, directive: RetractionDirective) -> List[int]:
+        """
+        Executes a typed RetractionDirective via JTMS without Gate -> JTMS coupling (Decision B).
+        """
+        if self._reasoning_kernel is not None and hasattr(self._reasoning_kernel, "jtms"):
+            invalidated_ids = self._reasoning_kernel.jtms.retract_premise(
+                directive.target_term_id, self._term_arena
+            )
+            return invalidated_ids
+        # If no reasoning kernel is attached, retract directly in arena
+        self._term_arena.retract_term(directive.target_term_id)
+        return [directive.target_term_id]
+
+    def ingest_candidate_assertions(
+        self,
+        candidates: Sequence[IngressCandidateAssertion],
+        confidence: float = 1.0,
+    ) -> CertificationResult:
+        """
+        Certifies candidate assertions at the ingress boundary and dispatches any
+        resulting RetractionDirectives to the cognitive core / JTMS (ADR-038).
+        """
+        cert_result = self._ingress_gate.certify_candidates(candidates, confidence=confidence)
+        for directive in cert_result.retraction_directives:
+            self._pending_retraction_directives.append(directive)
+            self.execute_retraction_directive(directive)
+        return cert_result
+
+    @property
     def execution_tracer(self) -> CognitiveExecutionTracer:
         return self._execution_tracer
 
@@ -336,6 +496,53 @@ class CognitiveOrchestrator:
     def get_trace_buffer(self) -> TraceBuffer:
         """Return the bounded in-memory trace buffer."""
         return self._execution_tracer.buffer
+
+    @property
+    def condition_ledger(self) -> Dict[str, UnresolvedCondition]:
+        """Active cognitive conditions ledger (P23-D)."""
+        return dict(self._condition_ledger)
+
+    @property
+    def pending_communicative_affordance(self) -> Optional[CommunicativeAffordance]:
+        """Buffered communicative affordance awaiting contextual integration (P23-D quarantine)."""
+        return self._pending_communicative_affordance
+
+    def _defer_condition(
+        self,
+        condition_id: str,
+        reason: str = "",
+        trigger: Optional[QualifiedEndogenousTrigger] = None,
+    ) -> None:
+        """Internal helper to transition or register a condition in DEFERRED state."""
+        cond = self._condition_ledger.get(condition_id)
+        if cond is not None:
+            if cond.status != ConditionStatus.RESOLVED:
+                self._condition_ledger[condition_id] = cond.transition_to(
+                    ConditionStatus.DEFERRED,
+                    reason=reason,
+                )
+        elif trigger is not None:
+            self._condition_ledger[condition_id] = UnresolvedCondition(
+                condition_id=trigger.condition_id,
+                condition_type=trigger.condition_type,
+                referent_key=trigger.referent_key,
+                status=ConditionStatus.DEFERRED,
+                resolution_source=trigger.resolution_source,
+                epoch_created=trigger.epoch,
+            )
+
+    def _save_condition_ledger(self) -> None:
+        """Crash-safe commit of condition ledger to authoritative persistent storage."""
+        if self._conditions_path is not None:
+            try:
+                # Retain non-resolved conditions in persistent ledger (prune RESOLVED on disk commit)
+                to_save = [c for c in self._condition_ledger.values() if c.status != ConditionStatus.RESOLVED]
+                save_conditions(to_save, self._conditions_path)
+            except Exception:
+                logger.warning(
+                    "CognitiveOrchestrator: failed to persist cognitive conditions; continuing",
+                    exc_info=True,
+                )
 
     def get_execution_tracer(self) -> CognitiveExecutionTracer:
         """Return the execution tracer instance."""
@@ -439,6 +646,199 @@ class CognitiveOrchestrator:
         self._latest_result = result
         return result
 
+    def process_endogenous(
+        self,
+        trigger: QualifiedEndogenousTrigger,
+    ) -> EndogenousTurnResult:
+        """
+        Execute a bounded endogenous cognitive cycle (Phase 23-D).
+        Operates without external natural language input (u_input = empty).
+        Completes silently by default; never emits autonomous speech.
+        """
+        t_start = time.perf_counter()
+
+        # 1. Non-blocking lock protocol: absolute priority to user turns
+        acquired = self._turn_lock.acquire(blocking=False)
+        if not acquired:
+            self._defer_condition(trigger.condition_id, reason="turn_lock_contention", trigger=trigger)
+            return EndogenousTurnResult(
+                success=False,
+                condition_id=trigger.condition_id,
+                final_status=ConditionStatus.DEFERRED,
+                execution_time_s=max(0.0001, time.perf_counter() - t_start),
+                detail="Deferred due to lock contention",
+            )
+
+        try:
+            # 2. Anti-cascading depth check (Max depth = 1)
+            if self._active_endogenous_depth >= 1:
+                self._defer_condition(trigger.condition_id, reason="max_endogenous_depth_exceeded", trigger=trigger)
+                return EndogenousTurnResult(
+                    success=False,
+                    condition_id=trigger.condition_id,
+                    final_status=ConditionStatus.DEFERRED,
+                    execution_time_s=max(0.0001, time.perf_counter() - t_start),
+                    detail="Deferred due to active endogenous cascade depth >= 1",
+                )
+
+            self._active_endogenous_depth += 1
+
+            # 3. Retrieve or initialize condition in active ledger
+            condition = self._condition_ledger.get(trigger.condition_id)
+            if condition is None:
+                condition = UnresolvedCondition(
+                    condition_id=trigger.condition_id,
+                    condition_type=trigger.condition_type,
+                    referent_key=trigger.referent_key,
+                    status=ConditionStatus.ACTIVE,
+                    resolution_source=trigger.resolution_source,
+                    epoch_created=trigger.epoch,
+                )
+                self._condition_ledger[trigger.condition_id] = condition
+            elif condition.status == ConditionStatus.SUPPRESSED:
+                return EndogenousTurnResult(
+                    success=False,
+                    condition_id=trigger.condition_id,
+                    final_status=ConditionStatus.SUPPRESSED,
+                    execution_time_s=max(0.0001, time.perf_counter() - t_start),
+                    detail="Rejected: condition is suppressed",
+                )
+            elif condition.status == ConditionStatus.RESOLVED:
+                return EndogenousTurnResult(
+                    success=True,
+                    condition_id=trigger.condition_id,
+                    final_status=ConditionStatus.RESOLVED,
+                    execution_time_s=max(0.0001, time.perf_counter() - t_start),
+                    detail="Condition already resolved",
+                )
+            else:
+                condition = condition.transition_to(ConditionStatus.ACTIVE)
+                self._condition_ledger[trigger.condition_id] = condition
+
+            # Decode referent key
+            try:
+                scope, subj, pred, obj = decode_referent_key(trigger.referent_key)
+            except Exception as exc:
+                self._defer_condition(trigger.condition_id, reason=f"malformed_referent: {exc}")
+                return EndogenousTurnResult(
+                    success=False,
+                    condition_id=trigger.condition_id,
+                    final_status=ConditionStatus.DEFERRED,
+                    execution_time_s=max(0.0001, time.perf_counter() - t_start),
+                    detail=f"Malformed referent key: {exc}",
+                )
+
+            # 4. Stage S0: Temporal Embodiment Baseline Advance (user_text="")
+            t_now = time.time()
+            cur_pad = self._emotion_core.get_pad_state()
+            cur_energy = getattr(self._homeostatic_engine, "_energy", 1.0)
+            self._temporal_coordinator.process_turn_start(
+                current_timestamp=t_now,
+                user_text="",
+                current_pad=cur_pad,
+                current_energy=cur_energy,
+            )
+
+            # Stage S1: BYPASSED (No external text)
+
+            # 5. Stage S2: Generative Prior Expectation / Read PAD
+            _ = self._emotion_core.get_pad_state()
+
+            # Stage S3 / S4: BYPASSED (Zero stimulus injected, zero sensory prediction error)
+
+            # 6. Stage S5: Homeostatic Energy Check
+            if cur_energy < 0.20:
+                self._defer_condition(trigger.condition_id, reason="metabolic_energy_depleted")
+                self._save_condition_ledger()
+                return EndogenousTurnResult(
+                    success=False,
+                    condition_id=trigger.condition_id,
+                    final_status=ConditionStatus.DEFERRED,
+                    execution_time_s=max(0.0001, time.perf_counter() - t_start),
+                    detail="Deferred due to metabolic energy < 0.20",
+                )
+
+            # 7. Stage S8: KnowledgeStore Query
+            matched_props = self._knowledge_store.query(
+                subject=subj if subj else None,
+                predicate=pred if pred else None,
+                object_=obj if obj else None,
+                valid_only=True,
+            )
+
+            # 8. P23-H Bounded Reasoning via ReasoningService
+            final_status = ConditionStatus.DEFERRED
+            affordance: Optional[CommunicativeAffordance] = None
+            detail_msg = "Completed endogenous reasoning"
+
+            if self._reasoning_service is not None and pred:
+                try:
+                    all_known = self._knowledge_store.get_all_propositions()
+                    goal_res, derived_res = self._reasoning_service.verify_candidate_goal(
+                        candidate_predicate=pred,
+                        candidate_subject=subj,
+                        candidate_object=obj,
+                        known_propositions=all_known,
+                        polarity=True,
+                    )
+
+                    if goal_res.status in (KleeneValue.TRUE, KleeneValue.FALSE):
+                        final_status = ConditionStatus.RESOLVED
+                        detail_msg = f"Resolved via backward chaining with K3 status {goal_res.status.name}"
+                    elif goal_res.status == KleeneValue.UNKNOWN:
+                        if goal_res.subgoal is not None and trigger.resolution_source == ResolutionSource.EXTERNAL_USER:
+                            # Communicative Affordance Quarantine: buffer for next user turn
+                            affordance = CommunicativeAffordance(
+                                condition_id=trigger.condition_id,
+                                target_predicate_id=getattr(goal_res.subgoal, "target_predicate_id", 0),
+                                arg0_id=getattr(goal_res.subgoal, "arg0_id", 0),
+                                reason_code=getattr(goal_res.subgoal, "reason_code", 1),
+                                predicate=pred or "",
+                                subject=subj or "",
+                                object=obj or "",
+                                resolution_source=trigger.resolution_source,
+                            )
+                            self._pending_communicative_affordance = affordance
+                            final_status = ConditionStatus.DEFERRED
+                            detail_msg = "Epistemic gap requires external user interaction; affordance quarantined"
+                        else:
+                            final_status = ConditionStatus.DEFERRED
+                            detail_msg = "Goal unresolved within compute bound; deferred"
+                except Exception as exc:
+                    logger.warning("CognitiveOrchestrator: endogenous reasoning error: %s", exc, exc_info=True)
+                    final_status = ConditionStatus.DEFERRED
+                    detail_msg = f"Reasoning error: {exc}"
+            else:
+                # If no predicate or reasoning service, check if matched props directly resolve condition
+                if matched_props:
+                    final_status = ConditionStatus.RESOLVED
+                    detail_msg = f"Resolved via {len(matched_props)} matching knowledge propositions"
+                else:
+                    final_status = ConditionStatus.DEFERRED
+                    detail_msg = "No matching knowledge propositions found"
+
+            # Transition condition in ledger
+            self._condition_ledger[trigger.condition_id] = self._condition_ledger[trigger.condition_id].transition_to(
+                final_status,
+                reason=detail_msg,
+            )
+
+            # 9. Stage S16.5: Crash-Safe Persistence Commit
+            self._save_condition_ledger()
+
+            exec_time = max(0.0001, time.perf_counter() - t_start)
+            return EndogenousTurnResult(
+                success=(final_status == ConditionStatus.RESOLVED),
+                condition_id=trigger.condition_id,
+                final_status=final_status,
+                execution_time_s=exec_time,
+                communicative_affordance=affordance,
+                detail=detail_msg,
+            )
+        finally:
+            self._active_endogenous_depth = max(0, self._active_endogenous_depth - 1)
+            self._turn_lock.release()
+
     def shutdown(self) -> None:
         """Stop all background daemons and release the LLM model."""
         self._shutdown = True
@@ -478,10 +878,30 @@ class CognitiveOrchestrator:
             self._affective_memory.clear()
             self._active_inference.reset()
             self._temporal_coordinator.reset()
+            self._discourse_cache.clear()
+            self._dyadic_state = DyadicDiscourseState()
+            self._term_arena = TermArena()
+            self._symbol_table = SymbolTable()
+            self._pending_retraction_directives.clear()
+            rules = self._knowledge_store.get_all_rules()
+            self._rule_index, self._rule_compilation_report = compile_rule_set(
+                rules, self._symbol_table
+            )
+            self._reasoning_kernel = ReasoningKernel(
+                rule_index=self._rule_index,
+                arena=self._term_arena,
+            )
+            self._reasoning_service = EpistemicReasoningService(
+                kernel=self._reasoning_kernel,
+                symbol_table=self._symbol_table,
+                arena=self._term_arena,
+            )
             self._latest_result = None
             self._latest_comm_state = None
             self._latest_expr_state = None
             self._latest_gate_decision = None
+            self._pending_communicative_affordance = None
+            self._active_endogenous_depth = 0
         logger.info("CognitiveOrchestrator: lifecycle reset.")
 
     def get_latest_trace(self) -> Optional[CognitiveTurnTrace]:
@@ -793,6 +1213,43 @@ class CognitiveOrchestrator:
                 cand_subj = known_propositions[0].subject if known_propositions else None
                 cand_obj = known_propositions[0].object if known_propositions else None
 
+                reasoning_subgoals: Optional[Sequence[InformationSubgoal]] = None
+                if self._reasoning_service is not None and cand_pred is not None:
+                    try:
+                        goal_res, derived_res = self._reasoning_service.verify_candidate_goal(
+                            candidate_predicate=cand_pred,
+                            candidate_subject=cand_subj,
+                            candidate_object=cand_obj,
+                            known_propositions=known_propositions,
+                            polarity=True,
+                        )
+                        if goal_res.status == KleeneValue.TRUE and derived_res is not None:
+                            transient_prop = derived_res.to_transient_proposition()
+                            all_verified_props = all_verified_props + (transient_prop,)
+                        elif goal_res.status == KleeneValue.UNKNOWN and goal_res.subgoal is not None:
+                            if isinstance(goal_res.subgoal, InformationSubgoal):
+                                reasoning_subgoals = (goal_res.subgoal,)
+                    except Exception as exc:
+                        logger.warning(
+                            "CognitiveOrchestrator: reasoning service failed; continuing fail-closed: %s",
+                            exc,
+                            exc_info=True,
+                        )
+
+                # P23-D: Contextual integration of buffered communicative affordance (Quarantine release to user turn)
+                if reasoning_subgoals is None and self._pending_communicative_affordance is not None:
+                    # If current turn has no higher-priority reasoning subgoal, integrate pending affordance
+                    if self._pending_communicative_affordance.target_predicate_id > 0:
+                        reasoning_subgoals = (
+                            InformationSubgoal(
+                                target_predicate_id=self._pending_communicative_affordance.target_predicate_id,
+                                arg0_id=self._pending_communicative_affordance.arg0_id,
+                                reason_code=self._pending_communicative_affordance.reason_code,
+                            ),
+                        )
+                    # Clear quarantined affordance once consumed as contextual dialogue bias
+                    self._pending_communicative_affordance = None
+
                 dialogue_snap = DialogueContextSnapshot(
                     turn_id=self._current_epoch,
                     input_text=input_text,
@@ -823,6 +1280,7 @@ class CognitiveOrchestrator:
                     dialogue_ctx=dialogue_snap,
                     cognitive_state=cog_snap,
                     evidence_pool=evidence_pool,
+                    subgoals=reasoning_subgoals,
                     comm_policy=policy_snap,
                     session_id=call_id,
                 )
@@ -864,6 +1322,45 @@ class CognitiveOrchestrator:
                     forbidden_additions=forbidden_adds,
                     dialogue_phase=current_phase_str,
                 )
+
+            # Decision A: Assistant Proposition Semantic Indexing (ADR-038)
+            asst_term_id = 0
+            inquiry_type: Optional[str] = None
+            try:
+                if realization_contract.act == CommunicativeAct.INQUIRE:
+                    inquiry_type = "CLOSED" if realization_contract.target_predicate else "OPEN"
+                elif realization_contract.act == CommunicativeAct.ASSERT:
+                    inquiry_type = "STATEMENT"
+
+                if realization_contract.target_predicate:
+                    pred_id = self._symbol_table.intern_concept(realization_contract.target_predicate)
+                    arg0_id = 0
+                    arg1_id = 0
+                    arg2_id = 0
+                    if realization_contract.role_bindings:
+                        for rb in realization_contract.role_bindings:
+                            cid = self._symbol_table.intern_concept(rb.concept_id or rb.canonical_lemma)
+                            if rb.role in (":ARG0", "ARG0"):
+                                arg0_id = cid
+                            elif rb.role in (":ARG1", "ARG1"):
+                                arg1_id = cid
+                            elif rb.role in (":ARG2", "ARG2"):
+                                arg2_id = cid
+                    if arg0_id == 0:
+                        arg0_id = self._symbol_table.intern_concept("concept:assistant_intent")
+
+                    scope_id = self._term_arena.allocate_scope(scope_type_id=SCOPE_TYPE_MODAL)
+                    asst_term_id = self._term_arena.allocate_term(
+                        predicate_id=pred_id,
+                        arg0_id=arg0_id,
+                        arg1_id=arg1_id,
+                        arg2_id=arg2_id,
+                        scope_id=scope_id,
+                        epistemic_status=CoreEpistemicStatus.UNKNOWN,
+                        polarity=realization_contract.polarity,
+                    )
+            except Exception:
+                logger.warning("CognitiveOrchestrator: assistant seed interning failed; continuing", exc_info=True)
 
             s10_span.set_summary({
                 "strategy": comm_state.strategy.value if hasattr(comm_state.strategy, "value") else str(comm_state.strategy),
@@ -1229,6 +1726,8 @@ class CognitiveOrchestrator:
                     previous_assistant_act=asst_act,
                     previous_user_stance=user_stance,
                     unresolved_expectation=unresolved,
+                    active_assistant_seed_term_id=asst_term_id,
+                    inquiry_type=inquiry_type,
                 )
             except Exception:
                 logger.warning("CognitiveOrchestrator: dyadic state update failed; continuing", exc_info=True)
@@ -1257,6 +1756,9 @@ class CognitiveOrchestrator:
                         "CognitiveOrchestrator: epoch manifest commit failed; continuing",
                         exc_info=True,
                     )
+
+            # P23-D: Crash-safe commit of condition ledger at Stage S16.5
+            self._save_condition_ledger()
 
             s16_span.set_summary({
                 "trace_stored": bool(trace_stored),
@@ -1423,6 +1925,7 @@ def build_cognitive_orchestrator(
     chat_history_path: Optional[Union[str, Path]] = None,
     semantic_gate: Optional[SemanticFidelityGate] = None,
     execution_tracer: Optional[CognitiveExecutionTracer] = None,
+    conditions_path: Optional[Union[str, Path]] = DEFAULT_CONDITIONS_PATH,
 ) -> CognitiveOrchestrator:
     """
     Construct a fully wired CognitiveOrchestrator from a MemoryOrchestratorConfig.
@@ -1532,4 +2035,5 @@ def build_cognitive_orchestrator(
         initial_history=initial_history,
         semantic_gate=semantic_gate,
         execution_tracer=execution_tracer,
+        conditions_path=conditions_path,
     )

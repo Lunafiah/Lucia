@@ -9,6 +9,8 @@ from src.core.cognition.contract import (
     AssertionResult,
     AssertInferredTerm,
     BindingSet,
+    ConditionStatus,
+    ConditionType,
     DisambiguationSubgoal,
     EntityTerm,
     EpistemicStatus,
@@ -21,6 +23,7 @@ from src.core.cognition.contract import (
     ProjectionResult,
     ProvenanceRecord,
     QueryTermPattern,
+    ResolutionSource,
     RetractAndCascadeInvalidate,
     ScopeTerm,
     SymbolTable,
@@ -28,6 +31,7 @@ from src.core.cognition.contract import (
     SynthesisResult,
     TermArena,
     TermQueryPattern,
+    UnresolvedCondition,
     kleene_all,
     kleene_and,
     kleene_any,
@@ -69,6 +73,11 @@ from src.core.cognition.kernel import (
     unify_terms,
     unify_value,
     var_to_index,
+)
+
+from src.core.cognition.service import (
+    DerivedResult,
+    EpistemicReasoningService,
 )
 
 __all__ = [
@@ -136,5 +145,13 @@ __all__ = [
     "InformationSubgoal",
     "GoalResult",
     "ReasoningKernel",
+    # P23-H Service
+    "DerivedResult",
+    "EpistemicReasoningService",
+    # P23-D Condition
+    "UnresolvedCondition",
+    "ConditionType",
+    "ConditionStatus",
+    "ResolutionSource",
 ]
 

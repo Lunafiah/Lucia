@@ -49,6 +49,13 @@ from src.core.cognition.kernel.rules import (
     RuleIndex,
     RulePremise,
 )
+from src.core.cognition.kernel.compiler import (
+    RuleCompilationReport,
+    RuleDiagnostic,
+    RuleDiagnosticCode,
+    compile_rule_set,
+    is_variable_token,
+)
 
 __all__ = [
     # Binding
@@ -74,6 +81,12 @@ __all__ = [
     "RulePremise",
     "InferenceRule",
     "RuleIndex",
+    # Compiler
+    "RuleDiagnosticCode",
+    "RuleDiagnostic",
+    "RuleCompilationReport",
+    "compile_rule_set",
+    "is_variable_token",
     # JTMS
     "Justification",
     "JTMS",

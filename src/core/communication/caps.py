@@ -119,6 +119,8 @@ class DyadicDiscourseState:
     previous_assistant_act: Optional[str] = None
     previous_user_stance: Optional[str] = None
     unresolved_expectation: Optional[str] = None
+    active_assistant_seed_term_id: int = 0
+    inquiry_type: Optional[str] = None  # "OPEN", "CLOSED", "STATEMENT"
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -127,6 +129,8 @@ class DyadicDiscourseState:
             "previous_assistant_act": self.previous_assistant_act,
             "previous_user_stance": self.previous_user_stance,
             "unresolved_expectation": self.unresolved_expectation,
+            "active_assistant_seed_term_id": self.active_assistant_seed_term_id,
+            "inquiry_type": self.inquiry_type,
         }
 
 
@@ -659,8 +663,12 @@ def evaluate_caps(
         pred_sym = matching_prop.predicate
 
         # Epistemic status depends on evidence provenance:
-        # Note: USER_STATED != FACT
-        if matching_prop.provenance == ProvenanceType.USER_STATED:
+        # Note: USER_STATED != FACT; DERIVED / INFERRED != FACT
+        if matching_prop.provenance in (
+            ProvenanceType.USER_STATED,
+            ProvenanceType.DERIVED,
+            ProvenanceType.INFERRED,
+        ):
             epistemic_status = EpistemicState.INFERRED
         else:
             epistemic_status = EpistemicState.FACT
@@ -790,6 +798,25 @@ def evaluate_caps(
             directives="Giới thiệu bản thân một cách ngắn gọn, chân thành, tự nhiên với tư cách là Lucia; xưng em, gọi anh.",
         )
 
+    # Pure punctuation / hesitation check
+    if re.fullmatch(r"[\s\?\!\.\,\…\—\-]+", dialogue_ctx.input_text):
+        return CAPSResult(
+            act=CommunicativeAct.ACKNOWLEDGE,
+            semantic_graph=None,
+            epistemic_metadata=EpistemicMetadata(status=EpistemicState.FACT, is_grounded=False),
+            provenance_metadata=ProvenanceMetadata(origin="CONVERSATIONAL_HESITATION", session_id=session_id),
+            resolution_metadata=ResolutionAdmissibilityMetadata(
+                resolution_status=dialogue_ctx.resolution_status,
+                grounding_status="CONVERSATIONAL_CONTEXT",
+            ),
+            grounded=False,
+            target_predicate="c:CONVERSATIONAL_HESITATION",
+            focus_argument="ent:dialogue",
+            pragmatic_stance=PragmaticStance.FLOOR_YIELD,
+            conversational_obligation="REASSURE_AND_GENTLE_INITIATIVE",
+            directives="Nhẹ nhàng hỏi thăm và gợi mở tự nhiên khi nhận thấy sự bối rối hoặc ngập ngừng từ người dùng; xưng hô phù hợp.",
+        )
+
     # 6.2 Conversational Questions (Inquiries)
     is_question = (
         "?" in dialogue_ctx.input_text
@@ -883,6 +910,38 @@ def evaluate_caps(
                 focus_argument="ent:lucia",
                 directives=directive,
             )
+        elif any(term in input_lower for term in ("how are you", "khỏe không", "thế nào", "how do you feel", "how are things", "how's it going", "how is it going", "how have you been")):
+            directive = "Answer the user's inquiry regarding your current state and presence warmly, engaging with genuine companion attentiveness."
+            return CAPSResult(
+                act=CommunicativeAct.ANSWER,
+                semantic_graph=None,
+                epistemic_metadata=EpistemicMetadata(status=EpistemicState.FACT, is_grounded=True),
+                provenance_metadata=ProvenanceMetadata(origin="COMPANION_STATE", session_id=session_id),
+                resolution_metadata=ResolutionAdmissibilityMetadata(
+                    resolution_status=dialogue_ctx.resolution_status,
+                    grounding_status="CONVERSATIONAL_CONTEXT",
+                ),
+                grounded=True,
+                target_predicate="c:WELLBEING",
+                focus_argument="ent:lucia",
+                directives=directive,
+            )
+        elif any(term in input_lower for term in ("what are you thinking", "what's on your mind", "what is on your mind", "đang nghĩ gì", "nghĩ gì", "suy nghĩ gì")):
+            directive = "Answer the user's question regarding your thoughts, sharing your gentle reflections and attentive presence in this conversation."
+            return CAPSResult(
+                act=CommunicativeAct.ANSWER,
+                semantic_graph=None,
+                epistemic_metadata=EpistemicMetadata(status=EpistemicState.FACT, is_grounded=True),
+                provenance_metadata=ProvenanceMetadata(origin="COMPANION_REFLECTION", session_id=session_id),
+                resolution_metadata=ResolutionAdmissibilityMetadata(
+                    resolution_status=dialogue_ctx.resolution_status,
+                    grounding_status="CONVERSATIONAL_CONTEXT",
+                ),
+                grounded=True,
+                target_predicate="c:THOUGHTS",
+                focus_argument="ent:lucia",
+                directives=directive,
+            )
         else:
             # Ungrounded general inquiry: under Grounding Invariant, fail closed to CLARIFY
             return CAPSResult(
@@ -902,7 +961,8 @@ def evaluate_caps(
     # 6.3 Conversational Statements (ACKNOWLEDGE with preserved semantic context)
     encounter_cues = (
         "gặp em", "gặp nhau", "gặp được", "cuối cùng cũng", "finally met", "finally meet",
-        "nice to meet", "gặp lại", "mới gặp",
+        "nice to meet", "gặp lại", "mới gặp", "hello", "xin chào", "chào em", "chào bạn",
+        "hi lucia", "hey lucia", "good morning", "good afternoon", "good evening",
     )
     if any(cue in input_lower for cue in encounter_cues):
         return CAPSResult(

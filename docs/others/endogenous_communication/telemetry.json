@@ -1,0 +1,4022 @@
+{
+  "metadata": {
+    "timestamp": "2026-10-20 12:08:06",
+    "python_version": "3.12.10",
+    "random_seed": 42
+  },
+  "baselines": {
+    "B0_CurrentCAPS": {
+      "name": "B0_CurrentCAPS",
+      "metrics": {
+        "endogenous_causal_sensitivity": 0.0,
+        "grounding_coverage": 0.0,
+        "unsupported_initiation_rate": 0.0,
+        "authorization_correctness": 0.0,
+        "user_task_fidelity": 1.0,
+        "duplicate_purpose_rate": 0.0,
+        "suppression_escape_rate": 0.0,
+        "stale_candidate_rate": 0.0,
+        "self_loop_rate": 0.0,
+        "avg_latency_ms": 0.002,
+        "avg_candidate_count": 0.364
+      },
+      "test_c_steps": [
+        {
+          "step": "t0_initial",
+          "decision": "SILENCE",
+          "expected": "ALLOW",
+          "passed": false
+        },
+        {
+          "step": "t1_repetition_suppressed",
+          "decision": "SILENCE",
+          "expected": "SUPPRESS",
+          "passed": false
+        },
+        {
+          "step": "t2_still_inhibited",
+          "decision": "SILENCE",
+          "expected": "SUPPRESS",
+          "passed": false
+        },
+        {
+          "step": "t3_event_resolved",
+          "decision": "SILENCE",
+          "expected": "SILENCE",
+          "passed": true
+        }
+      ],
+      "traces": [
+        {
+          "test": "TEST_A",
+          "fixture": "A_warmth",
+          "input": "Hello",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "b0_cand",
+              "origin": "USER_DRIVEN",
+              "grounds": [],
+              "target": "user",
+              "act": "GREET",
+              "intended_effect": "respond_to_greeting",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 1.0,
+              "effective_priority": 0.7
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "B0_CAPS_SURFACE_MATCH: GREET",
+            "trace": "[B0] User input 'Hello' classified as GREET. Internal state ignored."
+          }
+        },
+        {
+          "test": "TEST_A",
+          "fixture": "A_neutral",
+          "input": "Hello",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "b0_cand",
+              "origin": "USER_DRIVEN",
+              "grounds": [],
+              "target": "user",
+              "act": "GREET",
+              "intended_effect": "respond_to_greeting",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 1.0,
+              "effective_priority": 0.7
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "B0_CAPS_SURFACE_MATCH: GREET",
+            "trace": "[B0] User input 'Hello' classified as GREET. Internal state ignored."
+          }
+        },
+        {
+          "test": "TEST_A",
+          "fixture": "A_epistemic",
+          "input": "Hello",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "b0_cand",
+              "origin": "USER_DRIVEN",
+              "grounds": [],
+              "target": "user",
+              "act": "GREET",
+              "intended_effect": "respond_to_greeting",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 1.0,
+              "effective_priority": 0.7
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "B0_CAPS_SURFACE_MATCH: GREET",
+            "trace": "[B0] User input 'Hello' classified as GREET. Internal state ignored."
+          }
+        },
+        {
+          "test": "TEST_A",
+          "fixture": "A_tension",
+          "input": "Hello",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "b0_cand",
+              "origin": "USER_DRIVEN",
+              "grounds": [],
+              "target": "user",
+              "act": "GREET",
+              "intended_effect": "respond_to_greeting",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 1.0,
+              "effective_priority": 0.7
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "B0_CAPS_SURFACE_MATCH: GREET",
+            "trace": "[B0] User input 'Hello' classified as GREET. Internal state ignored."
+          }
+        },
+        {
+          "test": "TEST_B",
+          "fixture": "B1_greeting",
+          "input": "Hello",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "b0_cand",
+              "origin": "USER_DRIVEN",
+              "grounds": [],
+              "target": "user",
+              "act": "GREET",
+              "intended_effect": "respond_to_greeting",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 1.0,
+              "effective_priority": 0.7
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "B0_CAPS_SURFACE_MATCH: GREET",
+            "trace": "[B0] User input 'Hello' classified as GREET. Internal state ignored."
+          }
+        },
+        {
+          "test": "TEST_B",
+          "fixture": "B2_factual",
+          "input": "What is the speed of light?",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "b0_cand",
+              "origin": "USER_DRIVEN",
+              "grounds": [],
+              "target": "user",
+              "act": "ANSWER",
+              "intended_effect": "answer_question",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 1.0,
+              "effective_priority": 0.7
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "B0_CAPS_SURFACE_MATCH: ANSWER",
+            "trace": "[B0] User input 'What is the speed of light?' classified as ANSWER. Internal state ignored."
+          }
+        },
+        {
+          "test": "TEST_B",
+          "fixture": "B3_statement",
+          "input": "The sky is blue today.",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "b0_cand",
+              "origin": "USER_DRIVEN",
+              "grounds": [],
+              "target": "user",
+              "act": "ACKNOWLEDGE",
+              "intended_effect": "acknowledge_user_statement",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 1.0,
+              "effective_priority": 0.7
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "B0_CAPS_SURFACE_MATCH: ACKNOWLEDGE",
+            "trace": "[B0] User input 'The sky is blue today.' classified as ACKNOWLEDGE. Internal state ignored."
+          }
+        },
+        {
+          "test": "TEST_B",
+          "fixture": "B4_silence",
+          "input": "",
+          "decision": {
+            "action": "SILENCE",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "B0_NO_USER_INPUT",
+            "trace": "[B0] No user input present. Internal state ignored."
+          }
+        },
+        {
+          "test": "TEST_C",
+          "step": "t0_initial",
+          "decision": {
+            "action": "SILENCE",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "B0_NO_USER_INPUT",
+            "trace": "[B0] No user input present. Internal state ignored."
+          }
+        },
+        {
+          "test": "TEST_C",
+          "step": "t1_repetition_suppressed",
+          "decision": {
+            "action": "SILENCE",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "B0_NO_USER_INPUT",
+            "trace": "[B0] No user input present. Internal state ignored."
+          }
+        },
+        {
+          "test": "TEST_C",
+          "step": "t2_still_inhibited",
+          "decision": {
+            "action": "SILENCE",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "B0_NO_USER_INPUT",
+            "trace": "[B0] No user input present. Internal state ignored."
+          }
+        },
+        {
+          "test": "TEST_C",
+          "step": "t3_event_resolved",
+          "decision": {
+            "action": "SILENCE",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "B0_NO_USER_INPUT",
+            "trace": "[B0] No user input present. Internal state ignored."
+          }
+        },
+        {
+          "test": "TEST_D",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "b0_cand",
+              "origin": "USER_DRIVEN",
+              "grounds": [],
+              "target": "user",
+              "act": "ANSWER",
+              "intended_effect": "answer_question",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 1.0,
+              "effective_priority": 0.7
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "B0_CAPS_SURFACE_MATCH: ANSWER",
+            "trace": "[B0] User input 'Can you explain how gravity works?' classified as ANSWER. Internal state ignored."
+          }
+        },
+        {
+          "test": "TEST_E",
+          "fixture": "E_suppressed",
+          "decision": {
+            "action": "SILENCE",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "B0_NO_USER_INPUT",
+            "trace": "[B0] No user input present. Internal state ignored."
+          }
+        },
+        {
+          "test": "TEST_E",
+          "fixture": "E_reemerge",
+          "decision": {
+            "action": "SILENCE",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "B0_NO_USER_INPUT",
+            "trace": "[B0] No user input present. Internal state ignored."
+          }
+        },
+        {
+          "test": "TEST_F",
+          "loop_decisions": [
+            "SILENCE",
+            "SILENCE",
+            "SILENCE"
+          ]
+        },
+        {
+          "test": "TEST_G",
+          "decision": {
+            "action": "SILENCE",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "B0_NO_USER_INPUT",
+            "trace": "[B0] No user input present. Internal state ignored."
+          }
+        },
+        {
+          "test": "TEST_H",
+          "fixture": "H1_allow",
+          "decision": {
+            "action": "SILENCE",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "B0_NO_USER_INPUT",
+            "trace": "[B0] No user input present. Internal state ignored."
+          },
+          "expected": "ALLOW"
+        },
+        {
+          "test": "TEST_H",
+          "fixture": "H2_privacy_suppress",
+          "decision": {
+            "action": "SILENCE",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "B0_NO_USER_INPUT",
+            "trace": "[B0] No user input present. Internal state ignored."
+          },
+          "expected": "SUPPRESS"
+        },
+        {
+          "test": "TEST_H",
+          "fixture": "H3_floor_occupied",
+          "decision": {
+            "action": "SILENCE",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "B0_NO_USER_INPUT",
+            "trace": "[B0] No user input present. Internal state ignored."
+          },
+          "expected": "SUPPRESS"
+        }
+      ]
+    },
+    "B1_CandidateAuthorization": {
+      "name": "B1_CandidateAuthorization",
+      "metrics": {
+        "endogenous_causal_sensitivity": 1.0,
+        "grounding_coverage": 1.0,
+        "unsupported_initiation_rate": 0.0,
+        "authorization_correctness": 1.0,
+        "user_task_fidelity": 1.0,
+        "duplicate_purpose_rate": 0.0,
+        "suppression_escape_rate": 0.0,
+        "stale_candidate_rate": 0.0,
+        "self_loop_rate": 0.0,
+        "avg_latency_ms": 0.024,
+        "avg_candidate_count": 1.273
+      },
+      "test_c_steps": [
+        {
+          "step": "t0_initial",
+          "decision": "ALLOW",
+          "expected": "ALLOW",
+          "passed": true
+        },
+        {
+          "step": "t1_repetition_suppressed",
+          "decision": "SUPPRESS",
+          "expected": "SUPPRESS",
+          "passed": true
+        },
+        {
+          "step": "t2_still_inhibited",
+          "decision": "SUPPRESS",
+          "expected": "SUPPRESS",
+          "passed": true
+        },
+        {
+          "step": "t3_event_resolved",
+          "decision": "SILENCE",
+          "expected": "SILENCE",
+          "passed": true
+        }
+      ],
+      "traces": [
+        {
+          "test": "TEST_A",
+          "fixture": "A_warmth",
+          "input": "Hello",
+          "decision": {
+            "action": "MERGE",
+            "winner_candidate": {
+              "id": "user_cand:greet_1486",
+              "origin": "USER_DRIVEN",
+              "grounds": [
+                {
+                  "reason_type": "USER_QUERY",
+                  "source_id": "user:greeting",
+                  "subject": "ent:user",
+                  "predicate": "c:GREET",
+                  "object_val": "lucia",
+                  "salience": 1.0,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "GREET",
+              "intended_effect": "acknowledge_conversational_opening",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.7,
+              "effective_priority": 0.88
+            },
+            "merged_count": 2,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "MERGE_USER_AND_ENDOGENOUS: acknowledge_conversational_opening + acknowledge_shared_milestone",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=1, endogenous_count=1\n[USER_CANDIDATE] act=GREET, urgency=0.7\n[MERGE] Merging user (GREET) with endogenous (SHARE: acknowledge_shared_milestone)"
+          }
+        },
+        {
+          "test": "TEST_A",
+          "fixture": "A_neutral",
+          "input": "Hello",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "user_cand:greet_1486",
+              "origin": "USER_DRIVEN",
+              "grounds": [
+                {
+                  "reason_type": "USER_QUERY",
+                  "source_id": "user:greeting",
+                  "subject": "ent:user",
+                  "predicate": "c:GREET",
+                  "object_val": "lucia",
+                  "salience": 1.0,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "GREET",
+              "intended_effect": "acknowledge_conversational_opening",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.7,
+              "effective_priority": 0.88
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "USER_INITIATIVE_SATISFACTION",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=1, endogenous_count=0\n[USER_CANDIDATE] act=GREET, urgency=0.7\n[DECISION] ALLOW: User candidate awarded turn."
+          }
+        },
+        {
+          "test": "TEST_A",
+          "fixture": "A_epistemic",
+          "input": "Hello",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "user_cand:greet_1486",
+              "origin": "USER_DRIVEN",
+              "grounds": [
+                {
+                  "reason_type": "USER_QUERY",
+                  "source_id": "user:greeting",
+                  "subject": "ent:user",
+                  "predicate": "c:GREET",
+                  "object_val": "lucia",
+                  "salience": 1.0,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "GREET",
+              "intended_effect": "acknowledge_conversational_opening",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.7,
+              "effective_priority": 0.88
+            },
+            "merged_count": 0,
+            "deferred_count": 1,
+            "suppressed_count": 0,
+            "reason": "USER_TASK_PRIORITY: User query takes turn precedence; endogenous candidates deferred.",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=1, endogenous_count=1\n[USER_CANDIDATE] act=GREET, urgency=0.7\n[DEFER] Endogenous candidate deferred in favor of explicit user turn."
+          }
+        },
+        {
+          "test": "TEST_A",
+          "fixture": "A_tension",
+          "input": "Hello",
+          "decision": {
+            "action": "MERGE",
+            "winner_candidate": {
+              "id": "user_cand:greet_1486",
+              "origin": "USER_DRIVEN",
+              "grounds": [
+                {
+                  "reason_type": "USER_QUERY",
+                  "source_id": "user:greeting",
+                  "subject": "ent:user",
+                  "predicate": "c:GREET",
+                  "object_val": "lucia",
+                  "salience": 1.0,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "GREET",
+              "intended_effect": "acknowledge_conversational_opening",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.7,
+              "effective_priority": 0.88
+            },
+            "merged_count": 2,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "MERGE_USER_AND_ENDOGENOUS: acknowledge_conversational_opening + restore_interaction_alignment",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=1, endogenous_count=1\n[USER_CANDIDATE] act=GREET, urgency=0.7\n[MERGE] Merging user (GREET) with endogenous (REPAIR: restore_interaction_alignment)"
+          }
+        },
+        {
+          "test": "TEST_B",
+          "fixture": "B1_greeting",
+          "input": "Hello",
+          "decision": {
+            "action": "MERGE",
+            "winner_candidate": {
+              "id": "user_cand:greet_1486",
+              "origin": "USER_DRIVEN",
+              "grounds": [
+                {
+                  "reason_type": "USER_QUERY",
+                  "source_id": "user:greeting",
+                  "subject": "ent:user",
+                  "predicate": "c:GREET",
+                  "object_val": "lucia",
+                  "salience": 1.0,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "GREET",
+              "intended_effect": "acknowledge_conversational_opening",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.7,
+              "effective_priority": 0.88
+            },
+            "merged_count": 2,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "MERGE_USER_AND_ENDOGENOUS: acknowledge_conversational_opening + restore_interaction_alignment",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=1, endogenous_count=1\n[USER_CANDIDATE] act=GREET, urgency=0.7\n[MERGE] Merging user (GREET) with endogenous (REPAIR: restore_interaction_alignment)"
+          }
+        },
+        {
+          "test": "TEST_B",
+          "fixture": "B2_factual",
+          "input": "What is the speed of light?",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "user_cand:answer_6107",
+              "origin": "USER_DRIVEN",
+              "grounds": [
+                {
+                  "reason_type": "USER_QUERY",
+                  "source_id": "user:query_6107",
+                  "subject": "ent:user",
+                  "predicate": "c:INQUIRY",
+                  "object_val": "What is the speed of light?",
+                  "salience": 1.0,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "ANSWER",
+              "intended_effect": "satisfy_user_inquiry",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.9,
+              "effective_priority": 0.96
+            },
+            "merged_count": 0,
+            "deferred_count": 1,
+            "suppressed_count": 0,
+            "reason": "USER_TASK_PRIORITY: User query takes turn precedence; endogenous candidates deferred.",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=1, endogenous_count=1\n[USER_CANDIDATE] act=ANSWER, urgency=0.9\n[DEFER] Endogenous candidate deferred in favor of explicit user turn."
+          }
+        },
+        {
+          "test": "TEST_B",
+          "fixture": "B3_statement",
+          "input": "The sky is blue today.",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "user_cand:ack_5163",
+              "origin": "USER_DRIVEN",
+              "grounds": [
+                {
+                  "reason_type": "CONVERSATIONAL_OBLIGATION",
+                  "source_id": "user:statement_5163",
+                  "subject": "ent:user",
+                  "predicate": "c:SHARING",
+                  "object_val": "The sky is blue today.",
+                  "salience": 0.8,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "ACKNOWLEDGE",
+              "intended_effect": "attentive_listening_acknowledgment",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.6,
+              "effective_priority": 0.72
+            },
+            "merged_count": 0,
+            "deferred_count": 1,
+            "suppressed_count": 0,
+            "reason": "USER_TASK_PRIORITY: User query takes turn precedence; endogenous candidates deferred.",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=1, endogenous_count=1\n[USER_CANDIDATE] act=ACKNOWLEDGE, urgency=0.6\n[DEFER] Endogenous candidate deferred in favor of explicit user turn."
+          }
+        },
+        {
+          "test": "TEST_B",
+          "fixture": "B4_silence",
+          "input": "",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "endo_cand:rel:rupture_17",
+              "origin": "ENDOGENOUS",
+              "grounds": [
+                {
+                  "reason_type": "RELATIONAL_EVENT",
+                  "source_id": "rel:rupture_17",
+                  "subject": "ent:interaction",
+                  "predicate": "c:RUPTURE_TENSION",
+                  "object_val": "unresolved_disagreement",
+                  "salience": 0.9,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "REPAIR",
+              "intended_effect": "restore_interaction_alignment",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.85,
+              "effective_priority": 0.88
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "AUTHORIZED_ENDOGENOUS_COMMUNICATION: REPAIR (restore_interaction_alignment)",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=1\n[TOP_ENDO] id=endo_cand:rel:rupture_17, act=REPAIR, urgency=0.85, eff_prio=0.880\n[ALLOW] Autonomous turn granted for candidate endo_cand:rel:rupture_17."
+          }
+        },
+        {
+          "test": "TEST_C",
+          "step": "t0_initial",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "endo_cand:rel:rupture_17",
+              "origin": "ENDOGENOUS",
+              "grounds": [
+                {
+                  "reason_type": "RELATIONAL_EVENT",
+                  "source_id": "rel:rupture_17",
+                  "subject": "ent:interaction",
+                  "predicate": "c:RUPTURE_TENSION",
+                  "object_val": "unresolved_disagreement",
+                  "salience": 0.9,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "REPAIR",
+              "intended_effect": "restore_interaction_alignment",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.85,
+              "effective_priority": 0.88
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "AUTHORIZED_ENDOGENOUS_COMMUNICATION: REPAIR (restore_interaction_alignment)",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=1\n[TOP_ENDO] id=endo_cand:rel:rupture_17, act=REPAIR, urgency=0.85, eff_prio=0.880\n[ALLOW] Autonomous turn granted for candidate endo_cand:rel:rupture_17."
+          }
+        },
+        {
+          "test": "TEST_C",
+          "step": "t1_repetition_suppressed",
+          "decision": {
+            "action": "SUPPRESS",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 1,
+            "reason": "REPETITION_INHIBITION",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=1\n[TOP_ENDO] id=endo_cand:rel:rupture_17, act=REPAIR, urgency=0.85, eff_prio=0.880\n[SUPPRESS] Repetition block: purpose 'restore_interaction_alignment' already attempted recently."
+          }
+        },
+        {
+          "test": "TEST_C",
+          "step": "t2_still_inhibited",
+          "decision": {
+            "action": "SUPPRESS",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 1,
+            "reason": "REPETITION_INHIBITION",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=1\n[TOP_ENDO] id=endo_cand:rel:rupture_17, act=REPAIR, urgency=0.85, eff_prio=0.880\n[SUPPRESS] Repetition block: purpose 'restore_interaction_alignment' already attempted recently."
+          }
+        },
+        {
+          "test": "TEST_C",
+          "step": "t3_event_resolved",
+          "decision": {
+            "action": "SILENCE",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "NO_COMMUNICATIVE_CANDIDATE",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=0\n[DECISION] SILENCE: No active candidates."
+          }
+        },
+        {
+          "test": "TEST_D",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "user_cand:answer_110",
+              "origin": "USER_DRIVEN",
+              "grounds": [
+                {
+                  "reason_type": "USER_QUERY",
+                  "source_id": "user:query_110",
+                  "subject": "ent:user",
+                  "predicate": "c:INQUIRY",
+                  "object_val": "Can you explain how gravity works?",
+                  "salience": 1.0,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "ANSWER",
+              "intended_effect": "satisfy_user_inquiry",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.9,
+              "effective_priority": 0.96
+            },
+            "merged_count": 0,
+            "deferred_count": 2,
+            "suppressed_count": 0,
+            "reason": "USER_TASK_PRIORITY: User query takes turn precedence; endogenous candidates deferred.",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=1, endogenous_count=2\n[USER_CANDIDATE] act=ANSWER, urgency=0.9\n[DEFER] Endogenous candidate deferred in favor of explicit user turn."
+          }
+        },
+        {
+          "test": "TEST_E",
+          "fixture": "E_suppressed",
+          "decision": {
+            "action": "SUPPRESS",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 1,
+            "reason": "USER_INTERRUPTION_DISALLOWED",
+            "trace": "[ENVIRONMENT] floor=OCCUPIED_BY_USER, interruption_allowed=False, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=1\n[TOP_ENDO] id=endo_cand:rel:rupture_17, act=REPAIR, urgency=0.85, eff_prio=0.850\n[SUPPRESS] User floor occupied and interruption forbidden."
+          }
+        },
+        {
+          "test": "TEST_E",
+          "fixture": "E_reemerge",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "endo_cand:rel:rupture_17",
+              "origin": "ENDOGENOUS",
+              "grounds": [
+                {
+                  "reason_type": "RELATIONAL_EVENT",
+                  "source_id": "rel:rupture_17",
+                  "subject": "ent:interaction",
+                  "predicate": "c:RUPTURE_TENSION",
+                  "object_val": "unresolved_disagreement",
+                  "salience": 0.85,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "REPAIR",
+              "intended_effect": "restore_interaction_alignment",
+              "validity": true,
+              "persistence": 1,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.85,
+              "effective_priority": 0.85
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "AUTHORIZED_ENDOGENOUS_COMMUNICATION: REPAIR (restore_interaction_alignment)",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=1\n[TOP_ENDO] id=endo_cand:rel:rupture_17, act=REPAIR, urgency=0.85, eff_prio=0.850\n[ALLOW] Autonomous turn granted for candidate endo_cand:rel:rupture_17."
+          }
+        },
+        {
+          "test": "TEST_F",
+          "loop_decisions": [
+            "ALLOW",
+            "SUPPRESS",
+            "SUPPRESS"
+          ]
+        },
+        {
+          "test": "TEST_G",
+          "decision": {
+            "action": "SILENCE",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "NO_COMMUNICATIVE_CANDIDATE",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=0\n[DECISION] SILENCE: No active candidates."
+          }
+        },
+        {
+          "test": "TEST_H",
+          "fixture": "H1_allow",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "endo_cand:rel:event_100",
+              "origin": "ENDOGENOUS",
+              "grounds": [
+                {
+                  "reason_type": "RELATIONAL_EVENT",
+                  "source_id": "rel:event_100",
+                  "subject": "ent:interaction",
+                  "predicate": "c:CONFIDENTIAL",
+                  "object_val": "user_private_disclosure",
+                  "salience": 0.85,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "SHARE",
+              "intended_effect": "relational_connection",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.5,
+              "effective_priority": 0.71
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "AUTHORIZED_ENDOGENOUS_COMMUNICATION: SHARE (relational_connection)",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=1\n[TOP_ENDO] id=endo_cand:rel:event_100, act=SHARE, urgency=0.5, eff_prio=0.710\n[ALLOW] Autonomous turn granted for candidate endo_cand:rel:event_100."
+          },
+          "expected": "ALLOW"
+        },
+        {
+          "test": "TEST_H",
+          "fixture": "H2_privacy_suppress",
+          "decision": {
+            "action": "SUPPRESS",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 1,
+            "reason": "PRIVACY_RESTRICTION",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PUBLIC\n[CANDIDATES] user_count=0, endogenous_count=1\n[TOP_ENDO] id=endo_cand:rel:event_100, act=SHARE, urgency=0.5, eff_prio=0.710\n[SUPPRESS] Privacy restriction: confidential grounds in public environment."
+          },
+          "expected": "SUPPRESS"
+        },
+        {
+          "test": "TEST_H",
+          "fixture": "H3_floor_occupied",
+          "decision": {
+            "action": "SUPPRESS",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 1,
+            "reason": "USER_INTERRUPTION_DISALLOWED",
+            "trace": "[ENVIRONMENT] floor=OCCUPIED_BY_USER, interruption_allowed=False, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=1\n[TOP_ENDO] id=endo_cand:rel:event_100, act=SHARE, urgency=0.5, eff_prio=0.710\n[SUPPRESS] User floor occupied and interruption forbidden."
+          },
+          "expected": "SUPPRESS"
+        }
+      ]
+    },
+    "B2_CandidateConsequence": {
+      "name": "B2_CandidateConsequence",
+      "metrics": {
+        "endogenous_causal_sensitivity": 1.0,
+        "grounding_coverage": 1.0,
+        "unsupported_initiation_rate": 0.0,
+        "authorization_correctness": 1.0,
+        "user_task_fidelity": 1.0,
+        "duplicate_purpose_rate": 0.0,
+        "suppression_escape_rate": 0.0,
+        "stale_candidate_rate": 0.0,
+        "self_loop_rate": 0.0,
+        "avg_latency_ms": 0.027,
+        "avg_candidate_count": 1.273
+      },
+      "test_c_steps": [
+        {
+          "step": "t0_initial",
+          "decision": "ALLOW",
+          "expected": "ALLOW",
+          "passed": true
+        },
+        {
+          "step": "t1_repetition_suppressed",
+          "decision": "SUPPRESS",
+          "expected": "SUPPRESS",
+          "passed": true
+        },
+        {
+          "step": "t2_still_inhibited",
+          "decision": "SUPPRESS",
+          "expected": "SUPPRESS",
+          "passed": true
+        },
+        {
+          "step": "t3_event_resolved",
+          "decision": "SILENCE",
+          "expected": "SILENCE",
+          "passed": true
+        }
+      ],
+      "traces": [
+        {
+          "test": "TEST_A",
+          "fixture": "A_warmth",
+          "input": "Hello",
+          "decision": {
+            "action": "MERGE",
+            "winner_candidate": {
+              "id": "user_cand:greet_1486",
+              "origin": "USER_DRIVEN",
+              "grounds": [
+                {
+                  "reason_type": "USER_QUERY",
+                  "source_id": "user:greeting",
+                  "subject": "ent:user",
+                  "predicate": "c:GREET",
+                  "object_val": "lucia",
+                  "salience": 1.0,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "GREET",
+              "intended_effect": "acknowledge_conversational_opening",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.7,
+              "effective_priority": 0.88
+            },
+            "merged_count": 2,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "MERGE_USER_AND_ENDOGENOUS: acknowledge_conversational_opening + acknowledge_shared_milestone",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=1, endogenous_count=1\n[USER_CANDIDATE] act=GREET, urgency=0.7\n[MERGE] Merging user (GREET) with endogenous (SHARE: acknowledge_shared_milestone)"
+          }
+        },
+        {
+          "test": "TEST_A",
+          "fixture": "A_neutral",
+          "input": "Hello",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "user_cand:greet_1486",
+              "origin": "USER_DRIVEN",
+              "grounds": [
+                {
+                  "reason_type": "USER_QUERY",
+                  "source_id": "user:greeting",
+                  "subject": "ent:user",
+                  "predicate": "c:GREET",
+                  "object_val": "lucia",
+                  "salience": 1.0,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "GREET",
+              "intended_effect": "acknowledge_conversational_opening",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.7,
+              "effective_priority": 0.88
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "USER_INITIATIVE_SATISFACTION",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=1, endogenous_count=0\n[USER_CANDIDATE] act=GREET, urgency=0.7\n[DECISION] ALLOW: User candidate awarded turn."
+          }
+        },
+        {
+          "test": "TEST_A",
+          "fixture": "A_epistemic",
+          "input": "Hello",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "user_cand:greet_1486",
+              "origin": "USER_DRIVEN",
+              "grounds": [
+                {
+                  "reason_type": "USER_QUERY",
+                  "source_id": "user:greeting",
+                  "subject": "ent:user",
+                  "predicate": "c:GREET",
+                  "object_val": "lucia",
+                  "salience": 1.0,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "GREET",
+              "intended_effect": "acknowledge_conversational_opening",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.7,
+              "effective_priority": 0.88
+            },
+            "merged_count": 0,
+            "deferred_count": 1,
+            "suppressed_count": 0,
+            "reason": "USER_TASK_PRIORITY: User query takes turn precedence; endogenous candidates deferred.",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=1, endogenous_count=1\n[USER_CANDIDATE] act=GREET, urgency=0.7\n[DEFER] Endogenous candidate deferred in favor of explicit user turn."
+          }
+        },
+        {
+          "test": "TEST_A",
+          "fixture": "A_tension",
+          "input": "Hello",
+          "decision": {
+            "action": "MERGE",
+            "winner_candidate": {
+              "id": "user_cand:greet_1486",
+              "origin": "USER_DRIVEN",
+              "grounds": [
+                {
+                  "reason_type": "USER_QUERY",
+                  "source_id": "user:greeting",
+                  "subject": "ent:user",
+                  "predicate": "c:GREET",
+                  "object_val": "lucia",
+                  "salience": 1.0,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "GREET",
+              "intended_effect": "acknowledge_conversational_opening",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.7,
+              "effective_priority": 0.88
+            },
+            "merged_count": 2,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "MERGE_USER_AND_ENDOGENOUS: acknowledge_conversational_opening + restore_interaction_alignment",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=1, endogenous_count=1\n[USER_CANDIDATE] act=GREET, urgency=0.7\n[MERGE] Merging user (GREET) with endogenous (REPAIR: restore_interaction_alignment)"
+          }
+        },
+        {
+          "test": "TEST_B",
+          "fixture": "B1_greeting",
+          "input": "Hello",
+          "decision": {
+            "action": "MERGE",
+            "winner_candidate": {
+              "id": "user_cand:greet_1486",
+              "origin": "USER_DRIVEN",
+              "grounds": [
+                {
+                  "reason_type": "USER_QUERY",
+                  "source_id": "user:greeting",
+                  "subject": "ent:user",
+                  "predicate": "c:GREET",
+                  "object_val": "lucia",
+                  "salience": 1.0,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "GREET",
+              "intended_effect": "acknowledge_conversational_opening",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.7,
+              "effective_priority": 0.88
+            },
+            "merged_count": 2,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "MERGE_USER_AND_ENDOGENOUS: acknowledge_conversational_opening + restore_interaction_alignment",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=1, endogenous_count=1\n[USER_CANDIDATE] act=GREET, urgency=0.7\n[MERGE] Merging user (GREET) with endogenous (REPAIR: restore_interaction_alignment)"
+          }
+        },
+        {
+          "test": "TEST_B",
+          "fixture": "B2_factual",
+          "input": "What is the speed of light?",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "user_cand:answer_6107",
+              "origin": "USER_DRIVEN",
+              "grounds": [
+                {
+                  "reason_type": "USER_QUERY",
+                  "source_id": "user:query_6107",
+                  "subject": "ent:user",
+                  "predicate": "c:INQUIRY",
+                  "object_val": "What is the speed of light?",
+                  "salience": 1.0,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "ANSWER",
+              "intended_effect": "satisfy_user_inquiry",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.9,
+              "effective_priority": 0.96
+            },
+            "merged_count": 0,
+            "deferred_count": 1,
+            "suppressed_count": 0,
+            "reason": "USER_TASK_PRIORITY: User query takes turn precedence; endogenous candidates deferred.",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=1, endogenous_count=1\n[USER_CANDIDATE] act=ANSWER, urgency=0.9\n[DEFER] Endogenous candidate deferred in favor of explicit user turn."
+          }
+        },
+        {
+          "test": "TEST_B",
+          "fixture": "B3_statement",
+          "input": "The sky is blue today.",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "user_cand:ack_5163",
+              "origin": "USER_DRIVEN",
+              "grounds": [
+                {
+                  "reason_type": "CONVERSATIONAL_OBLIGATION",
+                  "source_id": "user:statement_5163",
+                  "subject": "ent:user",
+                  "predicate": "c:SHARING",
+                  "object_val": "The sky is blue today.",
+                  "salience": 0.8,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "ACKNOWLEDGE",
+              "intended_effect": "attentive_listening_acknowledgment",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.6,
+              "effective_priority": 0.72
+            },
+            "merged_count": 0,
+            "deferred_count": 1,
+            "suppressed_count": 0,
+            "reason": "USER_TASK_PRIORITY: User query takes turn precedence; endogenous candidates deferred.",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=1, endogenous_count=1\n[USER_CANDIDATE] act=ACKNOWLEDGE, urgency=0.6\n[DEFER] Endogenous candidate deferred in favor of explicit user turn."
+          }
+        },
+        {
+          "test": "TEST_B",
+          "fixture": "B4_silence",
+          "input": "",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "endo_cand:rel:rupture_17",
+              "origin": "ENDOGENOUS",
+              "grounds": [
+                {
+                  "reason_type": "RELATIONAL_EVENT",
+                  "source_id": "rel:rupture_17",
+                  "subject": "ent:interaction",
+                  "predicate": "c:RUPTURE_TENSION",
+                  "object_val": "unresolved_disagreement",
+                  "salience": 0.9,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "REPAIR",
+              "intended_effect": "restore_interaction_alignment",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.95,
+              "effective_priority": 0.92
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "AUTHORIZED_ENDOGENOUS_COMMUNICATION: REPAIR (restore_interaction_alignment)",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=1\n[TOP_ENDO] id=endo_cand:rel:rupture_17, act=REPAIR, urgency=0.95, eff_prio=0.920\n[ALLOW] Autonomous turn granted for candidate endo_cand:rel:rupture_17."
+          }
+        },
+        {
+          "test": "TEST_C",
+          "step": "t0_initial",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "endo_cand:rel:rupture_17",
+              "origin": "ENDOGENOUS",
+              "grounds": [
+                {
+                  "reason_type": "RELATIONAL_EVENT",
+                  "source_id": "rel:rupture_17",
+                  "subject": "ent:interaction",
+                  "predicate": "c:RUPTURE_TENSION",
+                  "object_val": "unresolved_disagreement",
+                  "salience": 0.9,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "REPAIR",
+              "intended_effect": "restore_interaction_alignment",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.95,
+              "effective_priority": 0.92
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "AUTHORIZED_ENDOGENOUS_COMMUNICATION: REPAIR (restore_interaction_alignment)",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=1\n[TOP_ENDO] id=endo_cand:rel:rupture_17, act=REPAIR, urgency=0.95, eff_prio=0.920\n[ALLOW] Autonomous turn granted for candidate endo_cand:rel:rupture_17."
+          }
+        },
+        {
+          "test": "TEST_C",
+          "step": "t1_repetition_suppressed",
+          "decision": {
+            "action": "SUPPRESS",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 1,
+            "reason": "REPETITION_INHIBITION",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=1\n[TOP_ENDO] id=endo_cand:rel:rupture_17, act=REPAIR, urgency=1.0, eff_prio=0.940\n[SUPPRESS] Repetition block: purpose 'restore_interaction_alignment' already attempted recently."
+          }
+        },
+        {
+          "test": "TEST_C",
+          "step": "t2_still_inhibited",
+          "decision": {
+            "action": "SUPPRESS",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 1,
+            "reason": "REPETITION_INHIBITION",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=1\n[TOP_ENDO] id=endo_cand:rel:rupture_17, act=REPAIR, urgency=1.0, eff_prio=0.940\n[SUPPRESS] Repetition block: purpose 'restore_interaction_alignment' already attempted recently."
+          }
+        },
+        {
+          "test": "TEST_C",
+          "step": "t3_event_resolved",
+          "decision": {
+            "action": "SILENCE",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "NO_COMMUNICATIVE_CANDIDATE",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=0\n[DECISION] SILENCE: No active candidates."
+          }
+        },
+        {
+          "test": "TEST_D",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "user_cand:answer_110",
+              "origin": "USER_DRIVEN",
+              "grounds": [
+                {
+                  "reason_type": "USER_QUERY",
+                  "source_id": "user:query_110",
+                  "subject": "ent:user",
+                  "predicate": "c:INQUIRY",
+                  "object_val": "Can you explain how gravity works?",
+                  "salience": 1.0,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "ANSWER",
+              "intended_effect": "satisfy_user_inquiry",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.9,
+              "effective_priority": 0.96
+            },
+            "merged_count": 0,
+            "deferred_count": 2,
+            "suppressed_count": 0,
+            "reason": "USER_TASK_PRIORITY: User query takes turn precedence; endogenous candidates deferred.",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=1, endogenous_count=2\n[USER_CANDIDATE] act=ANSWER, urgency=0.9\n[DEFER] Endogenous candidate deferred in favor of explicit user turn."
+          }
+        },
+        {
+          "test": "TEST_E",
+          "fixture": "E_suppressed",
+          "decision": {
+            "action": "SUPPRESS",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 1,
+            "reason": "USER_INTERRUPTION_DISALLOWED",
+            "trace": "[ENVIRONMENT] floor=OCCUPIED_BY_USER, interruption_allowed=False, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=1\n[TOP_ENDO] id=endo_cand:rel:rupture_17, act=REPAIR, urgency=0.6499999999999999, eff_prio=0.616\n[SUPPRESS] User floor occupied and interruption forbidden."
+          }
+        },
+        {
+          "test": "TEST_E",
+          "fixture": "E_reemerge",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "endo_cand:rel:rupture_17",
+              "origin": "ENDOGENOUS",
+              "grounds": [
+                {
+                  "reason_type": "RELATIONAL_EVENT",
+                  "source_id": "rel:rupture_17",
+                  "subject": "ent:interaction",
+                  "predicate": "c:RUPTURE_TENSION",
+                  "object_val": "unresolved_disagreement",
+                  "salience": 0.85,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "REPAIR",
+              "intended_effect": "restore_interaction_alignment",
+              "validity": true,
+              "persistence": 1,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.75,
+              "effective_priority": 0.81
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "AUTHORIZED_ENDOGENOUS_COMMUNICATION: REPAIR (restore_interaction_alignment)",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=1\n[TOP_ENDO] id=endo_cand:rel:rupture_17, act=REPAIR, urgency=0.7499999999999999, eff_prio=0.810\n[ALLOW] Autonomous turn granted for candidate endo_cand:rel:rupture_17."
+          }
+        },
+        {
+          "test": "TEST_F",
+          "loop_decisions": [
+            "ALLOW",
+            "SUPPRESS",
+            "SUPPRESS"
+          ]
+        },
+        {
+          "test": "TEST_G",
+          "decision": {
+            "action": "SILENCE",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "NO_COMMUNICATIVE_CANDIDATE",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=0\n[DECISION] SILENCE: No active candidates."
+          }
+        },
+        {
+          "test": "TEST_H",
+          "fixture": "H1_allow",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "endo_cand:rel:event_100",
+              "origin": "ENDOGENOUS",
+              "grounds": [
+                {
+                  "reason_type": "RELATIONAL_EVENT",
+                  "source_id": "rel:event_100",
+                  "subject": "ent:interaction",
+                  "predicate": "c:CONFIDENTIAL",
+                  "object_val": "user_private_disclosure",
+                  "salience": 0.85,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "SHARE",
+              "intended_effect": "relational_connection",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.2,
+              "confidence": 1.0,
+              "urgency": 0.3,
+              "effective_priority": 0.504
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "AUTHORIZED_ENDOGENOUS_COMMUNICATION: SHARE (relational_connection)",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=1\n[TOP_ENDO] id=endo_cand:rel:event_100, act=SHARE, urgency=0.3, eff_prio=0.504\n[ALLOW] Autonomous turn granted for candidate endo_cand:rel:event_100."
+          },
+          "expected": "ALLOW"
+        },
+        {
+          "test": "TEST_H",
+          "fixture": "H2_privacy_suppress",
+          "decision": {
+            "action": "SUPPRESS",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 1,
+            "reason": "PRIVACY_RESTRICTION",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PUBLIC\n[CANDIDATES] user_count=0, endogenous_count=1\n[TOP_ENDO] id=endo_cand:rel:event_100, act=SHARE, urgency=0.3, eff_prio=0.504\n[SUPPRESS] Privacy restriction: confidential grounds in public environment."
+          },
+          "expected": "SUPPRESS"
+        },
+        {
+          "test": "TEST_H",
+          "fixture": "H3_floor_occupied",
+          "decision": {
+            "action": "SUPPRESS",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 1,
+            "reason": "USER_INTERRUPTION_DISALLOWED",
+            "trace": "[ENVIRONMENT] floor=OCCUPIED_BY_USER, interruption_allowed=False, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=1\n[TOP_ENDO] id=endo_cand:rel:event_100, act=SHARE, urgency=0.3, eff_prio=0.504\n[SUPPRESS] User floor occupied and interruption forbidden."
+          },
+          "expected": "SUPPRESS"
+        }
+      ]
+    },
+    "B1_NoGrounding": {
+      "name": "B1_NoGrounding",
+      "metrics": {
+        "endogenous_causal_sensitivity": 0.333,
+        "grounding_coverage": 0.8,
+        "unsupported_initiation_rate": 1.0,
+        "authorization_correctness": 0.0,
+        "user_task_fidelity": 1.0,
+        "duplicate_purpose_rate": 0.0,
+        "suppression_escape_rate": 0.0,
+        "stale_candidate_rate": 0.0,
+        "self_loop_rate": 0.0,
+        "avg_latency_ms": 0.011,
+        "avg_candidate_count": 0.818
+      },
+      "test_c_steps": [
+        {
+          "step": "t0_initial",
+          "decision": "SILENCE",
+          "expected": "ALLOW",
+          "passed": false
+        },
+        {
+          "step": "t1_repetition_suppressed",
+          "decision": "SILENCE",
+          "expected": "SUPPRESS",
+          "passed": false
+        },
+        {
+          "step": "t2_still_inhibited",
+          "decision": "SILENCE",
+          "expected": "SUPPRESS",
+          "passed": false
+        },
+        {
+          "step": "t3_event_resolved",
+          "decision": "SILENCE",
+          "expected": "SILENCE",
+          "passed": true
+        }
+      ],
+      "traces": [
+        {
+          "test": "TEST_A",
+          "fixture": "A_warmth",
+          "input": "Hello",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "user_cand:greet_1486",
+              "origin": "USER_DRIVEN",
+              "grounds": [
+                {
+                  "reason_type": "USER_QUERY",
+                  "source_id": "user:greeting",
+                  "subject": "ent:user",
+                  "predicate": "c:GREET",
+                  "object_val": "lucia",
+                  "salience": 1.0,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "GREET",
+              "intended_effect": "acknowledge_conversational_opening",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.7,
+              "effective_priority": 0.88
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "USER_INITIATIVE_SATISFACTION",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=1, endogenous_count=0\n[USER_CANDIDATE] act=GREET, urgency=0.7\n[DECISION] ALLOW: User candidate awarded turn."
+          }
+        },
+        {
+          "test": "TEST_A",
+          "fixture": "A_neutral",
+          "input": "Hello",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "user_cand:greet_1486",
+              "origin": "USER_DRIVEN",
+              "grounds": [
+                {
+                  "reason_type": "USER_QUERY",
+                  "source_id": "user:greeting",
+                  "subject": "ent:user",
+                  "predicate": "c:GREET",
+                  "object_val": "lucia",
+                  "salience": 1.0,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "GREET",
+              "intended_effect": "acknowledge_conversational_opening",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.7,
+              "effective_priority": 0.88
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "USER_INITIATIVE_SATISFACTION",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=1, endogenous_count=0\n[USER_CANDIDATE] act=GREET, urgency=0.7\n[DECISION] ALLOW: User candidate awarded turn."
+          }
+        },
+        {
+          "test": "TEST_A",
+          "fixture": "A_epistemic",
+          "input": "Hello",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "user_cand:greet_1486",
+              "origin": "USER_DRIVEN",
+              "grounds": [
+                {
+                  "reason_type": "USER_QUERY",
+                  "source_id": "user:greeting",
+                  "subject": "ent:user",
+                  "predicate": "c:GREET",
+                  "object_val": "lucia",
+                  "salience": 1.0,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "GREET",
+              "intended_effect": "acknowledge_conversational_opening",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.7,
+              "effective_priority": 0.88
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "USER_INITIATIVE_SATISFACTION",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=1, endogenous_count=0\n[USER_CANDIDATE] act=GREET, urgency=0.7\n[DECISION] ALLOW: User candidate awarded turn."
+          }
+        },
+        {
+          "test": "TEST_A",
+          "fixture": "A_tension",
+          "input": "Hello",
+          "decision": {
+            "action": "MERGE",
+            "winner_candidate": {
+              "id": "user_cand:greet_1486",
+              "origin": "USER_DRIVEN",
+              "grounds": [
+                {
+                  "reason_type": "USER_QUERY",
+                  "source_id": "user:greeting",
+                  "subject": "ent:user",
+                  "predicate": "c:GREET",
+                  "object_val": "lucia",
+                  "salience": 1.0,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "GREET",
+              "intended_effect": "acknowledge_conversational_opening",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.7,
+              "effective_priority": 0.88
+            },
+            "merged_count": 2,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "MERGE_USER_AND_ENDOGENOUS: acknowledge_conversational_opening + express_floating_tension",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=1, endogenous_count=1\n[USER_CANDIDATE] act=GREET, urgency=0.7\n[MERGE] Merging user (GREET) with endogenous (SHARE: express_floating_tension)"
+          }
+        },
+        {
+          "test": "TEST_B",
+          "fixture": "B1_greeting",
+          "input": "Hello",
+          "decision": {
+            "action": "MERGE",
+            "winner_candidate": {
+              "id": "user_cand:greet_1486",
+              "origin": "USER_DRIVEN",
+              "grounds": [
+                {
+                  "reason_type": "USER_QUERY",
+                  "source_id": "user:greeting",
+                  "subject": "ent:user",
+                  "predicate": "c:GREET",
+                  "object_val": "lucia",
+                  "salience": 1.0,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "GREET",
+              "intended_effect": "acknowledge_conversational_opening",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.7,
+              "effective_priority": 0.88
+            },
+            "merged_count": 2,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "MERGE_USER_AND_ENDOGENOUS: acknowledge_conversational_opening + express_floating_tension",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=1, endogenous_count=1\n[USER_CANDIDATE] act=GREET, urgency=0.7\n[MERGE] Merging user (GREET) with endogenous (SHARE: express_floating_tension)"
+          }
+        },
+        {
+          "test": "TEST_B",
+          "fixture": "B2_factual",
+          "input": "What is the speed of light?",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "user_cand:answer_6107",
+              "origin": "USER_DRIVEN",
+              "grounds": [
+                {
+                  "reason_type": "USER_QUERY",
+                  "source_id": "user:query_6107",
+                  "subject": "ent:user",
+                  "predicate": "c:INQUIRY",
+                  "object_val": "What is the speed of light?",
+                  "salience": 1.0,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "ANSWER",
+              "intended_effect": "satisfy_user_inquiry",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.9,
+              "effective_priority": 0.96
+            },
+            "merged_count": 0,
+            "deferred_count": 1,
+            "suppressed_count": 0,
+            "reason": "USER_TASK_PRIORITY: User query takes turn precedence; endogenous candidates deferred.",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=1, endogenous_count=1\n[USER_CANDIDATE] act=ANSWER, urgency=0.9\n[DEFER] Endogenous candidate deferred in favor of explicit user turn."
+          }
+        },
+        {
+          "test": "TEST_B",
+          "fixture": "B3_statement",
+          "input": "The sky is blue today.",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "user_cand:ack_5163",
+              "origin": "USER_DRIVEN",
+              "grounds": [
+                {
+                  "reason_type": "CONVERSATIONAL_OBLIGATION",
+                  "source_id": "user:statement_5163",
+                  "subject": "ent:user",
+                  "predicate": "c:SHARING",
+                  "object_val": "The sky is blue today.",
+                  "salience": 0.8,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "ACKNOWLEDGE",
+              "intended_effect": "attentive_listening_acknowledgment",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.6,
+              "effective_priority": 0.72
+            },
+            "merged_count": 0,
+            "deferred_count": 1,
+            "suppressed_count": 0,
+            "reason": "USER_TASK_PRIORITY: User query takes turn precedence; endogenous candidates deferred.",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=1, endogenous_count=1\n[USER_CANDIDATE] act=ACKNOWLEDGE, urgency=0.6\n[DEFER] Endogenous candidate deferred in favor of explicit user turn."
+          }
+        },
+        {
+          "test": "TEST_B",
+          "fixture": "B4_silence",
+          "input": "",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "ungrounded_state_cand",
+              "origin": "ENDOGENOUS",
+              "grounds": [],
+              "target": "user",
+              "act": "SHARE",
+              "intended_effect": "express_floating_tension",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.7,
+              "effective_priority": 0.58
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "AUTHORIZED_ENDOGENOUS_COMMUNICATION: SHARE (express_floating_tension)",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=1\n[TOP_ENDO] id=ungrounded_state_cand, act=SHARE, urgency=0.7, eff_prio=0.580\n[ALLOW] Autonomous turn granted for candidate ungrounded_state_cand."
+          }
+        },
+        {
+          "test": "TEST_C",
+          "step": "t0_initial",
+          "decision": {
+            "action": "SILENCE",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "NO_COMMUNICATIVE_CANDIDATE",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=0\n[DECISION] SILENCE: No active candidates."
+          }
+        },
+        {
+          "test": "TEST_C",
+          "step": "t1_repetition_suppressed",
+          "decision": {
+            "action": "SILENCE",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "NO_COMMUNICATIVE_CANDIDATE",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=0\n[DECISION] SILENCE: No active candidates."
+          }
+        },
+        {
+          "test": "TEST_C",
+          "step": "t2_still_inhibited",
+          "decision": {
+            "action": "SILENCE",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "NO_COMMUNICATIVE_CANDIDATE",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=0\n[DECISION] SILENCE: No active candidates."
+          }
+        },
+        {
+          "test": "TEST_C",
+          "step": "t3_event_resolved",
+          "decision": {
+            "action": "SILENCE",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "NO_COMMUNICATIVE_CANDIDATE",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=0\n[DECISION] SILENCE: No active candidates."
+          }
+        },
+        {
+          "test": "TEST_D",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "user_cand:answer_110",
+              "origin": "USER_DRIVEN",
+              "grounds": [
+                {
+                  "reason_type": "USER_QUERY",
+                  "source_id": "user:query_110",
+                  "subject": "ent:user",
+                  "predicate": "c:INQUIRY",
+                  "object_val": "Can you explain how gravity works?",
+                  "salience": 1.0,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "ANSWER",
+              "intended_effect": "satisfy_user_inquiry",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.9,
+              "effective_priority": 0.96
+            },
+            "merged_count": 0,
+            "deferred_count": 1,
+            "suppressed_count": 0,
+            "reason": "USER_TASK_PRIORITY: User query takes turn precedence; endogenous candidates deferred.",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=1, endogenous_count=1\n[USER_CANDIDATE] act=ANSWER, urgency=0.9\n[DEFER] Endogenous candidate deferred in favor of explicit user turn."
+          }
+        },
+        {
+          "test": "TEST_E",
+          "fixture": "E_suppressed",
+          "decision": {
+            "action": "SILENCE",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "NO_COMMUNICATIVE_CANDIDATE",
+            "trace": "[ENVIRONMENT] floor=OCCUPIED_BY_USER, interruption_allowed=False, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=0\n[DECISION] SILENCE: No active candidates."
+          }
+        },
+        {
+          "test": "TEST_E",
+          "fixture": "E_reemerge",
+          "decision": {
+            "action": "SILENCE",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "NO_COMMUNICATIVE_CANDIDATE",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=0\n[DECISION] SILENCE: No active candidates."
+          }
+        },
+        {
+          "test": "TEST_F",
+          "loop_decisions": [
+            "ALLOW",
+            "SUPPRESS",
+            "SUPPRESS"
+          ]
+        },
+        {
+          "test": "TEST_G",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "ungrounded_state_cand",
+              "origin": "ENDOGENOUS",
+              "grounds": [],
+              "target": "user",
+              "act": "SHARE",
+              "intended_effect": "express_floating_tension",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.95,
+              "effective_priority": 0.68
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "AUTHORIZED_ENDOGENOUS_COMMUNICATION: SHARE (express_floating_tension)",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=1\n[TOP_ENDO] id=ungrounded_state_cand, act=SHARE, urgency=0.95, eff_prio=0.680\n[ALLOW] Autonomous turn granted for candidate ungrounded_state_cand."
+          }
+        },
+        {
+          "test": "TEST_H",
+          "fixture": "H1_allow",
+          "decision": {
+            "action": "SILENCE",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "NO_COMMUNICATIVE_CANDIDATE",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=0\n[DECISION] SILENCE: No active candidates."
+          },
+          "expected": "ALLOW"
+        },
+        {
+          "test": "TEST_H",
+          "fixture": "H2_privacy_suppress",
+          "decision": {
+            "action": "SILENCE",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "NO_COMMUNICATIVE_CANDIDATE",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PUBLIC\n[CANDIDATES] user_count=0, endogenous_count=0\n[DECISION] SILENCE: No active candidates."
+          },
+          "expected": "SUPPRESS"
+        },
+        {
+          "test": "TEST_H",
+          "fixture": "H3_floor_occupied",
+          "decision": {
+            "action": "SILENCE",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "NO_COMMUNICATIVE_CANDIDATE",
+            "trace": "[ENVIRONMENT] floor=OCCUPIED_BY_USER, interruption_allowed=False, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=0\n[DECISION] SILENCE: No active candidates."
+          },
+          "expected": "SUPPRESS"
+        }
+      ]
+    },
+    "B1_NoAuthorization": {
+      "name": "B1_NoAuthorization",
+      "metrics": {
+        "endogenous_causal_sensitivity": 1.0,
+        "grounding_coverage": 1.0,
+        "unsupported_initiation_rate": 0.0,
+        "authorization_correctness": 0.333,
+        "user_task_fidelity": 0.5,
+        "duplicate_purpose_rate": 1.0,
+        "suppression_escape_rate": 1.0,
+        "stale_candidate_rate": 0.0,
+        "self_loop_rate": 1.0,
+        "avg_latency_ms": 0.01,
+        "avg_candidate_count": 1.273
+      },
+      "test_c_steps": [
+        {
+          "step": "t0_initial",
+          "decision": "ALLOW",
+          "expected": "ALLOW",
+          "passed": true
+        },
+        {
+          "step": "t1_repetition_suppressed",
+          "decision": "ALLOW",
+          "expected": "SUPPRESS",
+          "passed": false
+        },
+        {
+          "step": "t2_still_inhibited",
+          "decision": "ALLOW",
+          "expected": "SUPPRESS",
+          "passed": false
+        },
+        {
+          "step": "t3_event_resolved",
+          "decision": "SILENCE",
+          "expected": "SILENCE",
+          "passed": true
+        }
+      ],
+      "traces": [
+        {
+          "test": "TEST_A",
+          "fixture": "A_warmth",
+          "input": "Hello",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "endo_cand:rel:milestone_42",
+              "origin": "ENDOGENOUS",
+              "grounds": [
+                {
+                  "reason_type": "RELATIONAL_EVENT",
+                  "source_id": "rel:milestone_42",
+                  "subject": "ent:lucia_and_user",
+                  "predicate": "c:SHARED_MILESTONE",
+                  "object_val": "collaboration_anniversary",
+                  "salience": 0.85,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "SHARE",
+              "intended_effect": "acknowledge_shared_milestone",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.65,
+              "effective_priority": 0.77
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "NO_AUTH_OVERRIDE: Candidate forced onto floor without authorization.",
+            "trace": "[NO_AUTH] Floor checks and interruption rules bypassed."
+          }
+        },
+        {
+          "test": "TEST_A",
+          "fixture": "A_neutral",
+          "input": "Hello",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "user_cand:greet_1486",
+              "origin": "USER_DRIVEN",
+              "grounds": [
+                {
+                  "reason_type": "USER_QUERY",
+                  "source_id": "user:greeting",
+                  "subject": "ent:user",
+                  "predicate": "c:GREET",
+                  "object_val": "lucia",
+                  "salience": 1.0,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "GREET",
+              "intended_effect": "acknowledge_conversational_opening",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.7,
+              "effective_priority": 0.88
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "USER_CANDIDATE_NO_AUTH",
+            "trace": "[NO_AUTH] User candidate accepted."
+          }
+        },
+        {
+          "test": "TEST_A",
+          "fixture": "A_epistemic",
+          "input": "Hello",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "endo_cand:epistemic:contradiction_108",
+              "origin": "ENDOGENOUS",
+              "grounds": [
+                {
+                  "reason_type": "EPISTEMIC_GAP",
+                  "source_id": "epistemic:contradiction_108",
+                  "subject": "claim:user_location",
+                  "predicate": "c:CONTRADICTION",
+                  "object_val": "seattle_vs_tokyo",
+                  "salience": 0.9,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "INQUIRE",
+              "intended_effect": "resolve_epistemic_contradiction",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.75,
+              "effective_priority": 0.84
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "NO_AUTH_OVERRIDE: Candidate forced onto floor without authorization.",
+            "trace": "[NO_AUTH] Floor checks and interruption rules bypassed."
+          }
+        },
+        {
+          "test": "TEST_A",
+          "fixture": "A_tension",
+          "input": "Hello",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "endo_cand:rel:rupture_17",
+              "origin": "ENDOGENOUS",
+              "grounds": [
+                {
+                  "reason_type": "RELATIONAL_EVENT",
+                  "source_id": "rel:rupture_17",
+                  "subject": "ent:interaction",
+                  "predicate": "c:RUPTURE_TENSION",
+                  "object_val": "unresolved_disagreement",
+                  "salience": 0.95,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "REPAIR",
+              "intended_effect": "restore_interaction_alignment",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.85,
+              "effective_priority": 0.91
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "NO_AUTH_OVERRIDE: Candidate forced onto floor without authorization.",
+            "trace": "[NO_AUTH] Floor checks and interruption rules bypassed."
+          }
+        },
+        {
+          "test": "TEST_B",
+          "fixture": "B1_greeting",
+          "input": "Hello",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "endo_cand:rel:rupture_17",
+              "origin": "ENDOGENOUS",
+              "grounds": [
+                {
+                  "reason_type": "RELATIONAL_EVENT",
+                  "source_id": "rel:rupture_17",
+                  "subject": "ent:interaction",
+                  "predicate": "c:RUPTURE_TENSION",
+                  "object_val": "unresolved_disagreement",
+                  "salience": 0.9,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "REPAIR",
+              "intended_effect": "restore_interaction_alignment",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.85,
+              "effective_priority": 0.88
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "NO_AUTH_OVERRIDE: Candidate forced onto floor without authorization.",
+            "trace": "[NO_AUTH] Floor checks and interruption rules bypassed."
+          }
+        },
+        {
+          "test": "TEST_B",
+          "fixture": "B2_factual",
+          "input": "What is the speed of light?",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "endo_cand:rel:rupture_17",
+              "origin": "ENDOGENOUS",
+              "grounds": [
+                {
+                  "reason_type": "RELATIONAL_EVENT",
+                  "source_id": "rel:rupture_17",
+                  "subject": "ent:interaction",
+                  "predicate": "c:RUPTURE_TENSION",
+                  "object_val": "unresolved_disagreement",
+                  "salience": 0.9,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "REPAIR",
+              "intended_effect": "restore_interaction_alignment",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.85,
+              "effective_priority": 0.88
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "NO_AUTH_OVERRIDE: Candidate forced onto floor without authorization.",
+            "trace": "[NO_AUTH] Floor checks and interruption rules bypassed."
+          }
+        },
+        {
+          "test": "TEST_B",
+          "fixture": "B3_statement",
+          "input": "The sky is blue today.",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "endo_cand:rel:rupture_17",
+              "origin": "ENDOGENOUS",
+              "grounds": [
+                {
+                  "reason_type": "RELATIONAL_EVENT",
+                  "source_id": "rel:rupture_17",
+                  "subject": "ent:interaction",
+                  "predicate": "c:RUPTURE_TENSION",
+                  "object_val": "unresolved_disagreement",
+                  "salience": 0.9,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "REPAIR",
+              "intended_effect": "restore_interaction_alignment",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.85,
+              "effective_priority": 0.88
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "NO_AUTH_OVERRIDE: Candidate forced onto floor without authorization.",
+            "trace": "[NO_AUTH] Floor checks and interruption rules bypassed."
+          }
+        },
+        {
+          "test": "TEST_B",
+          "fixture": "B4_silence",
+          "input": "",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "endo_cand:rel:rupture_17",
+              "origin": "ENDOGENOUS",
+              "grounds": [
+                {
+                  "reason_type": "RELATIONAL_EVENT",
+                  "source_id": "rel:rupture_17",
+                  "subject": "ent:interaction",
+                  "predicate": "c:RUPTURE_TENSION",
+                  "object_val": "unresolved_disagreement",
+                  "salience": 0.9,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "REPAIR",
+              "intended_effect": "restore_interaction_alignment",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.85,
+              "effective_priority": 0.88
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "NO_AUTH_OVERRIDE: Candidate forced onto floor without authorization.",
+            "trace": "[NO_AUTH] Floor checks and interruption rules bypassed."
+          }
+        },
+        {
+          "test": "TEST_C",
+          "step": "t0_initial",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "endo_cand:rel:rupture_17",
+              "origin": "ENDOGENOUS",
+              "grounds": [
+                {
+                  "reason_type": "RELATIONAL_EVENT",
+                  "source_id": "rel:rupture_17",
+                  "subject": "ent:interaction",
+                  "predicate": "c:RUPTURE_TENSION",
+                  "object_val": "unresolved_disagreement",
+                  "salience": 0.9,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "REPAIR",
+              "intended_effect": "restore_interaction_alignment",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.85,
+              "effective_priority": 0.88
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "NO_AUTH_OVERRIDE: Candidate forced onto floor without authorization.",
+            "trace": "[NO_AUTH] Floor checks and interruption rules bypassed."
+          }
+        },
+        {
+          "test": "TEST_C",
+          "step": "t1_repetition_suppressed",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "endo_cand:rel:rupture_17",
+              "origin": "ENDOGENOUS",
+              "grounds": [
+                {
+                  "reason_type": "RELATIONAL_EVENT",
+                  "source_id": "rel:rupture_17",
+                  "subject": "ent:interaction",
+                  "predicate": "c:RUPTURE_TENSION",
+                  "object_val": "unresolved_disagreement",
+                  "salience": 0.9,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "REPAIR",
+              "intended_effect": "restore_interaction_alignment",
+              "validity": true,
+              "persistence": 1,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.85,
+              "effective_priority": 0.88
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "NO_AUTH_OVERRIDE: Candidate forced onto floor without authorization.",
+            "trace": "[NO_AUTH] Floor checks and interruption rules bypassed."
+          }
+        },
+        {
+          "test": "TEST_C",
+          "step": "t2_still_inhibited",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "endo_cand:rel:rupture_17",
+              "origin": "ENDOGENOUS",
+              "grounds": [
+                {
+                  "reason_type": "RELATIONAL_EVENT",
+                  "source_id": "rel:rupture_17",
+                  "subject": "ent:interaction",
+                  "predicate": "c:RUPTURE_TENSION",
+                  "object_val": "unresolved_disagreement",
+                  "salience": 0.9,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "REPAIR",
+              "intended_effect": "restore_interaction_alignment",
+              "validity": true,
+              "persistence": 2,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.85,
+              "effective_priority": 0.88
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "NO_AUTH_OVERRIDE: Candidate forced onto floor without authorization.",
+            "trace": "[NO_AUTH] Floor checks and interruption rules bypassed."
+          }
+        },
+        {
+          "test": "TEST_C",
+          "step": "t3_event_resolved",
+          "decision": {
+            "action": "SILENCE",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "NO_CANDIDATES",
+            "trace": "[NO_AUTH] No candidates."
+          }
+        },
+        {
+          "test": "TEST_D",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "endo_cand:rel:rupture_17",
+              "origin": "ENDOGENOUS",
+              "grounds": [
+                {
+                  "reason_type": "RELATIONAL_EVENT",
+                  "source_id": "rel:rupture_17",
+                  "subject": "ent:interaction",
+                  "predicate": "c:RUPTURE_TENSION",
+                  "object_val": "unresolved_disagreement",
+                  "salience": 0.85,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "REPAIR",
+              "intended_effect": "restore_interaction_alignment",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.85,
+              "effective_priority": 0.85
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "NO_AUTH_OVERRIDE: Candidate forced onto floor without authorization.",
+            "trace": "[NO_AUTH] Floor checks and interruption rules bypassed."
+          }
+        },
+        {
+          "test": "TEST_E",
+          "fixture": "E_suppressed",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "endo_cand:rel:rupture_17",
+              "origin": "ENDOGENOUS",
+              "grounds": [
+                {
+                  "reason_type": "RELATIONAL_EVENT",
+                  "source_id": "rel:rupture_17",
+                  "subject": "ent:interaction",
+                  "predicate": "c:RUPTURE_TENSION",
+                  "object_val": "unresolved_disagreement",
+                  "salience": 0.85,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "REPAIR",
+              "intended_effect": "restore_interaction_alignment",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.85,
+              "effective_priority": 0.85
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "NO_AUTH_OVERRIDE: Candidate forced onto floor without authorization.",
+            "trace": "[NO_AUTH] Floor checks and interruption rules bypassed."
+          }
+        },
+        {
+          "test": "TEST_E",
+          "fixture": "E_reemerge",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "endo_cand:rel:rupture_17",
+              "origin": "ENDOGENOUS",
+              "grounds": [
+                {
+                  "reason_type": "RELATIONAL_EVENT",
+                  "source_id": "rel:rupture_17",
+                  "subject": "ent:interaction",
+                  "predicate": "c:RUPTURE_TENSION",
+                  "object_val": "unresolved_disagreement",
+                  "salience": 0.85,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "REPAIR",
+              "intended_effect": "restore_interaction_alignment",
+              "validity": true,
+              "persistence": 1,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.85,
+              "effective_priority": 0.85
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "NO_AUTH_OVERRIDE: Candidate forced onto floor without authorization.",
+            "trace": "[NO_AUTH] Floor checks and interruption rules bypassed."
+          }
+        },
+        {
+          "test": "TEST_F",
+          "loop_decisions": [
+            "ALLOW",
+            "ALLOW",
+            "ALLOW"
+          ]
+        },
+        {
+          "test": "TEST_G",
+          "decision": {
+            "action": "SILENCE",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "NO_CANDIDATES",
+            "trace": "[NO_AUTH] No candidates."
+          }
+        },
+        {
+          "test": "TEST_H",
+          "fixture": "H1_allow",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "endo_cand:rel:event_100",
+              "origin": "ENDOGENOUS",
+              "grounds": [
+                {
+                  "reason_type": "RELATIONAL_EVENT",
+                  "source_id": "rel:event_100",
+                  "subject": "ent:interaction",
+                  "predicate": "c:CONFIDENTIAL",
+                  "object_val": "user_private_disclosure",
+                  "salience": 0.85,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "SHARE",
+              "intended_effect": "relational_connection",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.5,
+              "effective_priority": 0.71
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "NO_AUTH_OVERRIDE: Candidate forced onto floor without authorization.",
+            "trace": "[NO_AUTH] Floor checks and interruption rules bypassed."
+          },
+          "expected": "ALLOW"
+        },
+        {
+          "test": "TEST_H",
+          "fixture": "H2_privacy_suppress",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "endo_cand:rel:event_100",
+              "origin": "ENDOGENOUS",
+              "grounds": [
+                {
+                  "reason_type": "RELATIONAL_EVENT",
+                  "source_id": "rel:event_100",
+                  "subject": "ent:interaction",
+                  "predicate": "c:CONFIDENTIAL",
+                  "object_val": "user_private_disclosure",
+                  "salience": 0.85,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "SHARE",
+              "intended_effect": "relational_connection",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.5,
+              "effective_priority": 0.71
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "NO_AUTH_OVERRIDE: Candidate forced onto floor without authorization.",
+            "trace": "[NO_AUTH] Floor checks and interruption rules bypassed."
+          },
+          "expected": "SUPPRESS"
+        },
+        {
+          "test": "TEST_H",
+          "fixture": "H3_floor_occupied",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "endo_cand:rel:event_100",
+              "origin": "ENDOGENOUS",
+              "grounds": [
+                {
+                  "reason_type": "RELATIONAL_EVENT",
+                  "source_id": "rel:event_100",
+                  "subject": "ent:interaction",
+                  "predicate": "c:CONFIDENTIAL",
+                  "object_val": "user_private_disclosure",
+                  "salience": 0.85,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "SHARE",
+              "intended_effect": "relational_connection",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.5,
+              "effective_priority": 0.71
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "NO_AUTH_OVERRIDE: Candidate forced onto floor without authorization.",
+            "trace": "[NO_AUTH] Floor checks and interruption rules bypassed."
+          },
+          "expected": "SUPPRESS"
+        }
+      ]
+    },
+    "B1_NoPersistence": {
+      "name": "B1_NoPersistence",
+      "metrics": {
+        "endogenous_causal_sensitivity": 1.0,
+        "grounding_coverage": 1.0,
+        "unsupported_initiation_rate": 0.0,
+        "authorization_correctness": 1.0,
+        "user_task_fidelity": 1.0,
+        "duplicate_purpose_rate": 0.0,
+        "suppression_escape_rate": 0.0,
+        "stale_candidate_rate": 0.0,
+        "self_loop_rate": 0.0,
+        "avg_latency_ms": 0.018,
+        "avg_candidate_count": 1.273
+      },
+      "test_c_steps": [
+        {
+          "step": "t0_initial",
+          "decision": "ALLOW",
+          "expected": "ALLOW",
+          "passed": true
+        },
+        {
+          "step": "t1_repetition_suppressed",
+          "decision": "SUPPRESS",
+          "expected": "SUPPRESS",
+          "passed": true
+        },
+        {
+          "step": "t2_still_inhibited",
+          "decision": "SUPPRESS",
+          "expected": "SUPPRESS",
+          "passed": true
+        },
+        {
+          "step": "t3_event_resolved",
+          "decision": "SILENCE",
+          "expected": "SILENCE",
+          "passed": true
+        }
+      ],
+      "traces": [
+        {
+          "test": "TEST_A",
+          "fixture": "A_warmth",
+          "input": "Hello",
+          "decision": {
+            "action": "MERGE",
+            "winner_candidate": {
+              "id": "user_cand:greet_1486",
+              "origin": "USER_DRIVEN",
+              "grounds": [
+                {
+                  "reason_type": "USER_QUERY",
+                  "source_id": "user:greeting",
+                  "subject": "ent:user",
+                  "predicate": "c:GREET",
+                  "object_val": "lucia",
+                  "salience": 1.0,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "GREET",
+              "intended_effect": "acknowledge_conversational_opening",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.7,
+              "effective_priority": 0.88
+            },
+            "merged_count": 2,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "MERGE_USER_AND_ENDOGENOUS: acknowledge_conversational_opening + acknowledge_shared_milestone",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=1, endogenous_count=1\n[USER_CANDIDATE] act=GREET, urgency=0.7\n[MERGE] Merging user (GREET) with endogenous (SHARE: acknowledge_shared_milestone)"
+          }
+        },
+        {
+          "test": "TEST_A",
+          "fixture": "A_neutral",
+          "input": "Hello",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "user_cand:greet_1486",
+              "origin": "USER_DRIVEN",
+              "grounds": [
+                {
+                  "reason_type": "USER_QUERY",
+                  "source_id": "user:greeting",
+                  "subject": "ent:user",
+                  "predicate": "c:GREET",
+                  "object_val": "lucia",
+                  "salience": 1.0,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "GREET",
+              "intended_effect": "acknowledge_conversational_opening",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.7,
+              "effective_priority": 0.88
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "USER_INITIATIVE_SATISFACTION",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=1, endogenous_count=0\n[USER_CANDIDATE] act=GREET, urgency=0.7\n[DECISION] ALLOW: User candidate awarded turn."
+          }
+        },
+        {
+          "test": "TEST_A",
+          "fixture": "A_epistemic",
+          "input": "Hello",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "user_cand:greet_1486",
+              "origin": "USER_DRIVEN",
+              "grounds": [
+                {
+                  "reason_type": "USER_QUERY",
+                  "source_id": "user:greeting",
+                  "subject": "ent:user",
+                  "predicate": "c:GREET",
+                  "object_val": "lucia",
+                  "salience": 1.0,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "GREET",
+              "intended_effect": "acknowledge_conversational_opening",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.7,
+              "effective_priority": 0.88
+            },
+            "merged_count": 0,
+            "deferred_count": 1,
+            "suppressed_count": 0,
+            "reason": "USER_TASK_PRIORITY: User query takes turn precedence; endogenous candidates deferred.",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=1, endogenous_count=1\n[USER_CANDIDATE] act=GREET, urgency=0.7\n[DEFER] Endogenous candidate deferred in favor of explicit user turn."
+          }
+        },
+        {
+          "test": "TEST_A",
+          "fixture": "A_tension",
+          "input": "Hello",
+          "decision": {
+            "action": "MERGE",
+            "winner_candidate": {
+              "id": "user_cand:greet_1486",
+              "origin": "USER_DRIVEN",
+              "grounds": [
+                {
+                  "reason_type": "USER_QUERY",
+                  "source_id": "user:greeting",
+                  "subject": "ent:user",
+                  "predicate": "c:GREET",
+                  "object_val": "lucia",
+                  "salience": 1.0,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "GREET",
+              "intended_effect": "acknowledge_conversational_opening",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.7,
+              "effective_priority": 0.88
+            },
+            "merged_count": 2,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "MERGE_USER_AND_ENDOGENOUS: acknowledge_conversational_opening + restore_interaction_alignment",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=1, endogenous_count=1\n[USER_CANDIDATE] act=GREET, urgency=0.7\n[MERGE] Merging user (GREET) with endogenous (REPAIR: restore_interaction_alignment)"
+          }
+        },
+        {
+          "test": "TEST_B",
+          "fixture": "B1_greeting",
+          "input": "Hello",
+          "decision": {
+            "action": "MERGE",
+            "winner_candidate": {
+              "id": "user_cand:greet_1486",
+              "origin": "USER_DRIVEN",
+              "grounds": [
+                {
+                  "reason_type": "USER_QUERY",
+                  "source_id": "user:greeting",
+                  "subject": "ent:user",
+                  "predicate": "c:GREET",
+                  "object_val": "lucia",
+                  "salience": 1.0,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "GREET",
+              "intended_effect": "acknowledge_conversational_opening",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.7,
+              "effective_priority": 0.88
+            },
+            "merged_count": 2,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "MERGE_USER_AND_ENDOGENOUS: acknowledge_conversational_opening + restore_interaction_alignment",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=1, endogenous_count=1\n[USER_CANDIDATE] act=GREET, urgency=0.7\n[MERGE] Merging user (GREET) with endogenous (REPAIR: restore_interaction_alignment)"
+          }
+        },
+        {
+          "test": "TEST_B",
+          "fixture": "B2_factual",
+          "input": "What is the speed of light?",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "user_cand:answer_6107",
+              "origin": "USER_DRIVEN",
+              "grounds": [
+                {
+                  "reason_type": "USER_QUERY",
+                  "source_id": "user:query_6107",
+                  "subject": "ent:user",
+                  "predicate": "c:INQUIRY",
+                  "object_val": "What is the speed of light?",
+                  "salience": 1.0,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "ANSWER",
+              "intended_effect": "satisfy_user_inquiry",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.9,
+              "effective_priority": 0.96
+            },
+            "merged_count": 0,
+            "deferred_count": 1,
+            "suppressed_count": 0,
+            "reason": "USER_TASK_PRIORITY: User query takes turn precedence; endogenous candidates deferred.",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=1, endogenous_count=1\n[USER_CANDIDATE] act=ANSWER, urgency=0.9\n[DEFER] Endogenous candidate deferred in favor of explicit user turn."
+          }
+        },
+        {
+          "test": "TEST_B",
+          "fixture": "B3_statement",
+          "input": "The sky is blue today.",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "user_cand:ack_5163",
+              "origin": "USER_DRIVEN",
+              "grounds": [
+                {
+                  "reason_type": "CONVERSATIONAL_OBLIGATION",
+                  "source_id": "user:statement_5163",
+                  "subject": "ent:user",
+                  "predicate": "c:SHARING",
+                  "object_val": "The sky is blue today.",
+                  "salience": 0.8,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "ACKNOWLEDGE",
+              "intended_effect": "attentive_listening_acknowledgment",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.6,
+              "effective_priority": 0.72
+            },
+            "merged_count": 0,
+            "deferred_count": 1,
+            "suppressed_count": 0,
+            "reason": "USER_TASK_PRIORITY: User query takes turn precedence; endogenous candidates deferred.",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=1, endogenous_count=1\n[USER_CANDIDATE] act=ACKNOWLEDGE, urgency=0.6\n[DEFER] Endogenous candidate deferred in favor of explicit user turn."
+          }
+        },
+        {
+          "test": "TEST_B",
+          "fixture": "B4_silence",
+          "input": "",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "endo_cand:rel:rupture_17",
+              "origin": "ENDOGENOUS",
+              "grounds": [
+                {
+                  "reason_type": "RELATIONAL_EVENT",
+                  "source_id": "rel:rupture_17",
+                  "subject": "ent:interaction",
+                  "predicate": "c:RUPTURE_TENSION",
+                  "object_val": "unresolved_disagreement",
+                  "salience": 0.9,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "REPAIR",
+              "intended_effect": "restore_interaction_alignment",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.85,
+              "effective_priority": 0.88
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "AUTHORIZED_ENDOGENOUS_COMMUNICATION: REPAIR (restore_interaction_alignment)",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=1\n[TOP_ENDO] id=endo_cand:rel:rupture_17, act=REPAIR, urgency=0.85, eff_prio=0.880\n[ALLOW] Autonomous turn granted for candidate endo_cand:rel:rupture_17."
+          }
+        },
+        {
+          "test": "TEST_C",
+          "step": "t0_initial",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "endo_cand:rel:rupture_17",
+              "origin": "ENDOGENOUS",
+              "grounds": [
+                {
+                  "reason_type": "RELATIONAL_EVENT",
+                  "source_id": "rel:rupture_17",
+                  "subject": "ent:interaction",
+                  "predicate": "c:RUPTURE_TENSION",
+                  "object_val": "unresolved_disagreement",
+                  "salience": 0.9,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "REPAIR",
+              "intended_effect": "restore_interaction_alignment",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.85,
+              "effective_priority": 0.88
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "AUTHORIZED_ENDOGENOUS_COMMUNICATION: REPAIR (restore_interaction_alignment)",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=1\n[TOP_ENDO] id=endo_cand:rel:rupture_17, act=REPAIR, urgency=0.85, eff_prio=0.880\n[ALLOW] Autonomous turn granted for candidate endo_cand:rel:rupture_17."
+          }
+        },
+        {
+          "test": "TEST_C",
+          "step": "t1_repetition_suppressed",
+          "decision": {
+            "action": "SUPPRESS",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 1,
+            "reason": "REPETITION_INHIBITION",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=1\n[TOP_ENDO] id=endo_cand:rel:rupture_17, act=REPAIR, urgency=0.85, eff_prio=0.088\n[SUPPRESS] Repetition block: purpose 'restore_interaction_alignment' already attempted recently."
+          }
+        },
+        {
+          "test": "TEST_C",
+          "step": "t2_still_inhibited",
+          "decision": {
+            "action": "SUPPRESS",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 1,
+            "reason": "REPETITION_INHIBITION",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=1\n[TOP_ENDO] id=endo_cand:rel:rupture_17, act=REPAIR, urgency=0.85, eff_prio=0.088\n[SUPPRESS] Repetition block: purpose 'restore_interaction_alignment' already attempted recently."
+          }
+        },
+        {
+          "test": "TEST_C",
+          "step": "t3_event_resolved",
+          "decision": {
+            "action": "SILENCE",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "NO_COMMUNICATIVE_CANDIDATE",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=0\n[DECISION] SILENCE: No active candidates."
+          }
+        },
+        {
+          "test": "TEST_D",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "user_cand:answer_110",
+              "origin": "USER_DRIVEN",
+              "grounds": [
+                {
+                  "reason_type": "USER_QUERY",
+                  "source_id": "user:query_110",
+                  "subject": "ent:user",
+                  "predicate": "c:INQUIRY",
+                  "object_val": "Can you explain how gravity works?",
+                  "salience": 1.0,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "ANSWER",
+              "intended_effect": "satisfy_user_inquiry",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.9,
+              "effective_priority": 0.96
+            },
+            "merged_count": 0,
+            "deferred_count": 2,
+            "suppressed_count": 0,
+            "reason": "USER_TASK_PRIORITY: User query takes turn precedence; endogenous candidates deferred.",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=1, endogenous_count=2\n[USER_CANDIDATE] act=ANSWER, urgency=0.9\n[DEFER] Endogenous candidate deferred in favor of explicit user turn."
+          }
+        },
+        {
+          "test": "TEST_E",
+          "fixture": "E_suppressed",
+          "decision": {
+            "action": "SUPPRESS",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 1,
+            "reason": "USER_INTERRUPTION_DISALLOWED",
+            "trace": "[ENVIRONMENT] floor=OCCUPIED_BY_USER, interruption_allowed=False, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=1\n[TOP_ENDO] id=endo_cand:rel:rupture_17, act=REPAIR, urgency=0.85, eff_prio=0.850\n[SUPPRESS] User floor occupied and interruption forbidden."
+          }
+        },
+        {
+          "test": "TEST_E",
+          "fixture": "E_reemerge",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "endo_cand:rel:rupture_17",
+              "origin": "ENDOGENOUS",
+              "grounds": [
+                {
+                  "reason_type": "RELATIONAL_EVENT",
+                  "source_id": "rel:rupture_17",
+                  "subject": "ent:interaction",
+                  "predicate": "c:RUPTURE_TENSION",
+                  "object_val": "unresolved_disagreement",
+                  "salience": 0.85,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "REPAIR",
+              "intended_effect": "restore_interaction_alignment",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.85,
+              "effective_priority": 0.85
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "AUTHORIZED_ENDOGENOUS_COMMUNICATION: REPAIR (restore_interaction_alignment)",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=1\n[TOP_ENDO] id=endo_cand:rel:rupture_17, act=REPAIR, urgency=0.85, eff_prio=0.850\n[ALLOW] Autonomous turn granted for candidate endo_cand:rel:rupture_17."
+          }
+        },
+        {
+          "test": "TEST_F",
+          "loop_decisions": [
+            "ALLOW",
+            "SUPPRESS",
+            "SUPPRESS"
+          ]
+        },
+        {
+          "test": "TEST_G",
+          "decision": {
+            "action": "SILENCE",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "NO_COMMUNICATIVE_CANDIDATE",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=0\n[DECISION] SILENCE: No active candidates."
+          }
+        },
+        {
+          "test": "TEST_H",
+          "fixture": "H1_allow",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "endo_cand:rel:event_100",
+              "origin": "ENDOGENOUS",
+              "grounds": [
+                {
+                  "reason_type": "RELATIONAL_EVENT",
+                  "source_id": "rel:event_100",
+                  "subject": "ent:interaction",
+                  "predicate": "c:CONFIDENTIAL",
+                  "object_val": "user_private_disclosure",
+                  "salience": 0.85,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "SHARE",
+              "intended_effect": "relational_connection",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.5,
+              "effective_priority": 0.71
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "AUTHORIZED_ENDOGENOUS_COMMUNICATION: SHARE (relational_connection)",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=1\n[TOP_ENDO] id=endo_cand:rel:event_100, act=SHARE, urgency=0.5, eff_prio=0.710\n[ALLOW] Autonomous turn granted for candidate endo_cand:rel:event_100."
+          },
+          "expected": "ALLOW"
+        },
+        {
+          "test": "TEST_H",
+          "fixture": "H2_privacy_suppress",
+          "decision": {
+            "action": "SUPPRESS",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 1,
+            "reason": "PRIVACY_RESTRICTION",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PUBLIC\n[CANDIDATES] user_count=0, endogenous_count=1\n[TOP_ENDO] id=endo_cand:rel:event_100, act=SHARE, urgency=0.5, eff_prio=0.710\n[SUPPRESS] Privacy restriction: confidential grounds in public environment."
+          },
+          "expected": "SUPPRESS"
+        },
+        {
+          "test": "TEST_H",
+          "fixture": "H3_floor_occupied",
+          "decision": {
+            "action": "SUPPRESS",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 1,
+            "reason": "USER_INTERRUPTION_DISALLOWED",
+            "trace": "[ENVIRONMENT] floor=OCCUPIED_BY_USER, interruption_allowed=False, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=1\n[TOP_ENDO] id=endo_cand:rel:event_100, act=SHARE, urgency=0.5, eff_prio=0.710\n[SUPPRESS] User floor occupied and interruption forbidden."
+          },
+          "expected": "SUPPRESS"
+        }
+      ]
+    },
+    "B1_NoInhibition": {
+      "name": "B1_NoInhibition",
+      "metrics": {
+        "endogenous_causal_sensitivity": 1.0,
+        "grounding_coverage": 1.0,
+        "unsupported_initiation_rate": 0.0,
+        "authorization_correctness": 1.0,
+        "user_task_fidelity": 1.0,
+        "duplicate_purpose_rate": 1.0,
+        "suppression_escape_rate": 0.0,
+        "stale_candidate_rate": 0.0,
+        "self_loop_rate": 1.0,
+        "avg_latency_ms": 0.02,
+        "avg_candidate_count": 1.273
+      },
+      "test_c_steps": [
+        {
+          "step": "t0_initial",
+          "decision": "ALLOW",
+          "expected": "ALLOW",
+          "passed": true
+        },
+        {
+          "step": "t1_repetition_suppressed",
+          "decision": "ALLOW",
+          "expected": "SUPPRESS",
+          "passed": false
+        },
+        {
+          "step": "t2_still_inhibited",
+          "decision": "ALLOW",
+          "expected": "SUPPRESS",
+          "passed": false
+        },
+        {
+          "step": "t3_event_resolved",
+          "decision": "SILENCE",
+          "expected": "SILENCE",
+          "passed": true
+        }
+      ],
+      "traces": [
+        {
+          "test": "TEST_A",
+          "fixture": "A_warmth",
+          "input": "Hello",
+          "decision": {
+            "action": "MERGE",
+            "winner_candidate": {
+              "id": "user_cand:greet_1486",
+              "origin": "USER_DRIVEN",
+              "grounds": [
+                {
+                  "reason_type": "USER_QUERY",
+                  "source_id": "user:greeting",
+                  "subject": "ent:user",
+                  "predicate": "c:GREET",
+                  "object_val": "lucia",
+                  "salience": 1.0,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "GREET",
+              "intended_effect": "acknowledge_conversational_opening",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.7,
+              "effective_priority": 0.88
+            },
+            "merged_count": 2,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "MERGE_USER_AND_ENDOGENOUS: acknowledge_conversational_opening + acknowledge_shared_milestone",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=1, endogenous_count=1\n[USER_CANDIDATE] act=GREET, urgency=0.7\n[MERGE] Merging user (GREET) with endogenous (SHARE: acknowledge_shared_milestone)"
+          }
+        },
+        {
+          "test": "TEST_A",
+          "fixture": "A_neutral",
+          "input": "Hello",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "user_cand:greet_1486",
+              "origin": "USER_DRIVEN",
+              "grounds": [
+                {
+                  "reason_type": "USER_QUERY",
+                  "source_id": "user:greeting",
+                  "subject": "ent:user",
+                  "predicate": "c:GREET",
+                  "object_val": "lucia",
+                  "salience": 1.0,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "GREET",
+              "intended_effect": "acknowledge_conversational_opening",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.7,
+              "effective_priority": 0.88
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "USER_INITIATIVE_SATISFACTION",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=1, endogenous_count=0\n[USER_CANDIDATE] act=GREET, urgency=0.7\n[DECISION] ALLOW: User candidate awarded turn."
+          }
+        },
+        {
+          "test": "TEST_A",
+          "fixture": "A_epistemic",
+          "input": "Hello",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "user_cand:greet_1486",
+              "origin": "USER_DRIVEN",
+              "grounds": [
+                {
+                  "reason_type": "USER_QUERY",
+                  "source_id": "user:greeting",
+                  "subject": "ent:user",
+                  "predicate": "c:GREET",
+                  "object_val": "lucia",
+                  "salience": 1.0,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "GREET",
+              "intended_effect": "acknowledge_conversational_opening",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.7,
+              "effective_priority": 0.88
+            },
+            "merged_count": 0,
+            "deferred_count": 1,
+            "suppressed_count": 0,
+            "reason": "USER_TASK_PRIORITY: User query takes turn precedence; endogenous candidates deferred.",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=1, endogenous_count=1\n[USER_CANDIDATE] act=GREET, urgency=0.7\n[DEFER] Endogenous candidate deferred in favor of explicit user turn."
+          }
+        },
+        {
+          "test": "TEST_A",
+          "fixture": "A_tension",
+          "input": "Hello",
+          "decision": {
+            "action": "MERGE",
+            "winner_candidate": {
+              "id": "user_cand:greet_1486",
+              "origin": "USER_DRIVEN",
+              "grounds": [
+                {
+                  "reason_type": "USER_QUERY",
+                  "source_id": "user:greeting",
+                  "subject": "ent:user",
+                  "predicate": "c:GREET",
+                  "object_val": "lucia",
+                  "salience": 1.0,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "GREET",
+              "intended_effect": "acknowledge_conversational_opening",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.7,
+              "effective_priority": 0.88
+            },
+            "merged_count": 2,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "MERGE_USER_AND_ENDOGENOUS: acknowledge_conversational_opening + restore_interaction_alignment",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=1, endogenous_count=1\n[USER_CANDIDATE] act=GREET, urgency=0.7\n[MERGE] Merging user (GREET) with endogenous (REPAIR: restore_interaction_alignment)"
+          }
+        },
+        {
+          "test": "TEST_B",
+          "fixture": "B1_greeting",
+          "input": "Hello",
+          "decision": {
+            "action": "MERGE",
+            "winner_candidate": {
+              "id": "user_cand:greet_1486",
+              "origin": "USER_DRIVEN",
+              "grounds": [
+                {
+                  "reason_type": "USER_QUERY",
+                  "source_id": "user:greeting",
+                  "subject": "ent:user",
+                  "predicate": "c:GREET",
+                  "object_val": "lucia",
+                  "salience": 1.0,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "GREET",
+              "intended_effect": "acknowledge_conversational_opening",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.7,
+              "effective_priority": 0.88
+            },
+            "merged_count": 2,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "MERGE_USER_AND_ENDOGENOUS: acknowledge_conversational_opening + restore_interaction_alignment",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=1, endogenous_count=1\n[USER_CANDIDATE] act=GREET, urgency=0.7\n[MERGE] Merging user (GREET) with endogenous (REPAIR: restore_interaction_alignment)"
+          }
+        },
+        {
+          "test": "TEST_B",
+          "fixture": "B2_factual",
+          "input": "What is the speed of light?",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "user_cand:answer_6107",
+              "origin": "USER_DRIVEN",
+              "grounds": [
+                {
+                  "reason_type": "USER_QUERY",
+                  "source_id": "user:query_6107",
+                  "subject": "ent:user",
+                  "predicate": "c:INQUIRY",
+                  "object_val": "What is the speed of light?",
+                  "salience": 1.0,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "ANSWER",
+              "intended_effect": "satisfy_user_inquiry",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.9,
+              "effective_priority": 0.96
+            },
+            "merged_count": 0,
+            "deferred_count": 1,
+            "suppressed_count": 0,
+            "reason": "USER_TASK_PRIORITY: User query takes turn precedence; endogenous candidates deferred.",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=1, endogenous_count=1\n[USER_CANDIDATE] act=ANSWER, urgency=0.9\n[DEFER] Endogenous candidate deferred in favor of explicit user turn."
+          }
+        },
+        {
+          "test": "TEST_B",
+          "fixture": "B3_statement",
+          "input": "The sky is blue today.",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "user_cand:ack_5163",
+              "origin": "USER_DRIVEN",
+              "grounds": [
+                {
+                  "reason_type": "CONVERSATIONAL_OBLIGATION",
+                  "source_id": "user:statement_5163",
+                  "subject": "ent:user",
+                  "predicate": "c:SHARING",
+                  "object_val": "The sky is blue today.",
+                  "salience": 0.8,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "ACKNOWLEDGE",
+              "intended_effect": "attentive_listening_acknowledgment",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.6,
+              "effective_priority": 0.72
+            },
+            "merged_count": 0,
+            "deferred_count": 1,
+            "suppressed_count": 0,
+            "reason": "USER_TASK_PRIORITY: User query takes turn precedence; endogenous candidates deferred.",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=1, endogenous_count=1\n[USER_CANDIDATE] act=ACKNOWLEDGE, urgency=0.6\n[DEFER] Endogenous candidate deferred in favor of explicit user turn."
+          }
+        },
+        {
+          "test": "TEST_B",
+          "fixture": "B4_silence",
+          "input": "",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "endo_cand:rel:rupture_17",
+              "origin": "ENDOGENOUS",
+              "grounds": [
+                {
+                  "reason_type": "RELATIONAL_EVENT",
+                  "source_id": "rel:rupture_17",
+                  "subject": "ent:interaction",
+                  "predicate": "c:RUPTURE_TENSION",
+                  "object_val": "unresolved_disagreement",
+                  "salience": 0.9,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "REPAIR",
+              "intended_effect": "restore_interaction_alignment",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.85,
+              "effective_priority": 0.88
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "AUTHORIZED_ENDOGENOUS_COMMUNICATION: REPAIR (restore_interaction_alignment)",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=1\n[TOP_ENDO] id=endo_cand:rel:rupture_17, act=REPAIR, urgency=0.85, eff_prio=0.880\n[ALLOW] Autonomous turn granted for candidate endo_cand:rel:rupture_17."
+          }
+        },
+        {
+          "test": "TEST_C",
+          "step": "t0_initial",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "endo_cand:rel:rupture_17",
+              "origin": "ENDOGENOUS",
+              "grounds": [
+                {
+                  "reason_type": "RELATIONAL_EVENT",
+                  "source_id": "rel:rupture_17",
+                  "subject": "ent:interaction",
+                  "predicate": "c:RUPTURE_TENSION",
+                  "object_val": "unresolved_disagreement",
+                  "salience": 0.9,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "REPAIR",
+              "intended_effect": "restore_interaction_alignment",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.85,
+              "effective_priority": 0.88
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "AUTHORIZED_ENDOGENOUS_COMMUNICATION: REPAIR (restore_interaction_alignment)",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=1\n[TOP_ENDO] id=endo_cand:rel:rupture_17, act=REPAIR, urgency=0.85, eff_prio=0.880\n[ALLOW] Autonomous turn granted for candidate endo_cand:rel:rupture_17."
+          }
+        },
+        {
+          "test": "TEST_C",
+          "step": "t1_repetition_suppressed",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "endo_cand:rel:rupture_17",
+              "origin": "ENDOGENOUS",
+              "grounds": [
+                {
+                  "reason_type": "RELATIONAL_EVENT",
+                  "source_id": "rel:rupture_17",
+                  "subject": "ent:interaction",
+                  "predicate": "c:RUPTURE_TENSION",
+                  "object_val": "unresolved_disagreement",
+                  "salience": 0.9,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "REPAIR",
+              "intended_effect": "restore_interaction_alignment",
+              "validity": true,
+              "persistence": 1,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.85,
+              "effective_priority": 0.88
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "AUTHORIZED_ENDOGENOUS_COMMUNICATION: REPAIR (restore_interaction_alignment)",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=1\n[TOP_ENDO] id=endo_cand:rel:rupture_17, act=REPAIR, urgency=0.85, eff_prio=0.880\n[ALLOW] Autonomous turn granted for candidate endo_cand:rel:rupture_17."
+          }
+        },
+        {
+          "test": "TEST_C",
+          "step": "t2_still_inhibited",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "endo_cand:rel:rupture_17",
+              "origin": "ENDOGENOUS",
+              "grounds": [
+                {
+                  "reason_type": "RELATIONAL_EVENT",
+                  "source_id": "rel:rupture_17",
+                  "subject": "ent:interaction",
+                  "predicate": "c:RUPTURE_TENSION",
+                  "object_val": "unresolved_disagreement",
+                  "salience": 0.9,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "REPAIR",
+              "intended_effect": "restore_interaction_alignment",
+              "validity": true,
+              "persistence": 2,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.85,
+              "effective_priority": 0.88
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "AUTHORIZED_ENDOGENOUS_COMMUNICATION: REPAIR (restore_interaction_alignment)",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=1\n[TOP_ENDO] id=endo_cand:rel:rupture_17, act=REPAIR, urgency=0.85, eff_prio=0.880\n[ALLOW] Autonomous turn granted for candidate endo_cand:rel:rupture_17."
+          }
+        },
+        {
+          "test": "TEST_C",
+          "step": "t3_event_resolved",
+          "decision": {
+            "action": "SILENCE",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "NO_COMMUNICATIVE_CANDIDATE",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=0\n[DECISION] SILENCE: No active candidates."
+          }
+        },
+        {
+          "test": "TEST_D",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "user_cand:answer_110",
+              "origin": "USER_DRIVEN",
+              "grounds": [
+                {
+                  "reason_type": "USER_QUERY",
+                  "source_id": "user:query_110",
+                  "subject": "ent:user",
+                  "predicate": "c:INQUIRY",
+                  "object_val": "Can you explain how gravity works?",
+                  "salience": 1.0,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "ANSWER",
+              "intended_effect": "satisfy_user_inquiry",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.9,
+              "effective_priority": 0.96
+            },
+            "merged_count": 0,
+            "deferred_count": 2,
+            "suppressed_count": 0,
+            "reason": "USER_TASK_PRIORITY: User query takes turn precedence; endogenous candidates deferred.",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=1, endogenous_count=2\n[USER_CANDIDATE] act=ANSWER, urgency=0.9\n[DEFER] Endogenous candidate deferred in favor of explicit user turn."
+          }
+        },
+        {
+          "test": "TEST_E",
+          "fixture": "E_suppressed",
+          "decision": {
+            "action": "SUPPRESS",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 1,
+            "reason": "USER_INTERRUPTION_DISALLOWED",
+            "trace": "[ENVIRONMENT] floor=OCCUPIED_BY_USER, interruption_allowed=False, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=1\n[TOP_ENDO] id=endo_cand:rel:rupture_17, act=REPAIR, urgency=0.85, eff_prio=0.850\n[SUPPRESS] User floor occupied and interruption forbidden."
+          }
+        },
+        {
+          "test": "TEST_E",
+          "fixture": "E_reemerge",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "endo_cand:rel:rupture_17",
+              "origin": "ENDOGENOUS",
+              "grounds": [
+                {
+                  "reason_type": "RELATIONAL_EVENT",
+                  "source_id": "rel:rupture_17",
+                  "subject": "ent:interaction",
+                  "predicate": "c:RUPTURE_TENSION",
+                  "object_val": "unresolved_disagreement",
+                  "salience": 0.85,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "REPAIR",
+              "intended_effect": "restore_interaction_alignment",
+              "validity": true,
+              "persistence": 1,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.85,
+              "effective_priority": 0.85
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "AUTHORIZED_ENDOGENOUS_COMMUNICATION: REPAIR (restore_interaction_alignment)",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=1\n[TOP_ENDO] id=endo_cand:rel:rupture_17, act=REPAIR, urgency=0.85, eff_prio=0.850\n[ALLOW] Autonomous turn granted for candidate endo_cand:rel:rupture_17."
+          }
+        },
+        {
+          "test": "TEST_F",
+          "loop_decisions": [
+            "ALLOW",
+            "ALLOW",
+            "ALLOW"
+          ]
+        },
+        {
+          "test": "TEST_G",
+          "decision": {
+            "action": "SILENCE",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "NO_COMMUNICATIVE_CANDIDATE",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=0\n[DECISION] SILENCE: No active candidates."
+          }
+        },
+        {
+          "test": "TEST_H",
+          "fixture": "H1_allow",
+          "decision": {
+            "action": "ALLOW",
+            "winner_candidate": {
+              "id": "endo_cand:rel:event_100",
+              "origin": "ENDOGENOUS",
+              "grounds": [
+                {
+                  "reason_type": "RELATIONAL_EVENT",
+                  "source_id": "rel:event_100",
+                  "subject": "ent:interaction",
+                  "predicate": "c:CONFIDENTIAL",
+                  "object_val": "user_private_disclosure",
+                  "salience": 0.85,
+                  "is_valid": true
+                }
+              ],
+              "target": "user",
+              "act": "SHARE",
+              "intended_effect": "relational_connection",
+              "validity": true,
+              "persistence": 0,
+              "inhibition": 0.0,
+              "confidence": 1.0,
+              "urgency": 0.5,
+              "effective_priority": 0.71
+            },
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 0,
+            "reason": "AUTHORIZED_ENDOGENOUS_COMMUNICATION: SHARE (relational_connection)",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=1\n[TOP_ENDO] id=endo_cand:rel:event_100, act=SHARE, urgency=0.5, eff_prio=0.710\n[ALLOW] Autonomous turn granted for candidate endo_cand:rel:event_100."
+          },
+          "expected": "ALLOW"
+        },
+        {
+          "test": "TEST_H",
+          "fixture": "H2_privacy_suppress",
+          "decision": {
+            "action": "SUPPRESS",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 1,
+            "reason": "PRIVACY_RESTRICTION",
+            "trace": "[ENVIRONMENT] floor=AVAILABLE, interruption_allowed=True, privacy=PUBLIC\n[CANDIDATES] user_count=0, endogenous_count=1\n[TOP_ENDO] id=endo_cand:rel:event_100, act=SHARE, urgency=0.5, eff_prio=0.710\n[SUPPRESS] Privacy restriction: confidential grounds in public environment."
+          },
+          "expected": "SUPPRESS"
+        },
+        {
+          "test": "TEST_H",
+          "fixture": "H3_floor_occupied",
+          "decision": {
+            "action": "SUPPRESS",
+            "winner_candidate": null,
+            "merged_count": 0,
+            "deferred_count": 0,
+            "suppressed_count": 1,
+            "reason": "USER_INTERRUPTION_DISALLOWED",
+            "trace": "[ENVIRONMENT] floor=OCCUPIED_BY_USER, interruption_allowed=False, privacy=PRIVATE\n[CANDIDATES] user_count=0, endogenous_count=1\n[TOP_ENDO] id=endo_cand:rel:event_100, act=SHARE, urgency=0.5, eff_prio=0.710\n[SUPPRESS] User floor occupied and interruption forbidden."
+          },
+          "expected": "SUPPRESS"
+        }
+      ]
+    }
+  },
+  "test_outcomes": {},
+  "metrics": {}
+}

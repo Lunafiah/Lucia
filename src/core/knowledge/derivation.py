@@ -8,6 +8,7 @@ Enforces a maximum recursion/derivation depth (d_max = 3) to prevent combinatori
 
 from __future__ import annotations
 
+import hashlib
 import uuid
 from typing import TYPE_CHECKING, List, Optional
 
@@ -53,8 +54,11 @@ class DerivationEngine:
                             valid_only=True,
                         )
                         if not existing:
+                            derived_hash = hashlib.sha256(
+                                f"{p1.subject}:{transitive_predicate}:{p2.object}".encode("utf-8")
+                            ).hexdigest()[:12]
                             new_prop = Proposition(
-                                id=f"derived:{uuid.uuid4().hex[:8]}",
+                                id=f"derived:{derived_hash}",
                                 subject=p1.subject,
                                 predicate=transitive_predicate,
                                 object=p2.object,

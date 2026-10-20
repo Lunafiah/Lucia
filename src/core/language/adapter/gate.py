@@ -24,16 +24,24 @@ import re
 import time
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Dict, List, Optional, Set
+from typing import Any, Dict, List, Optional, Sequence, Set, Tuple
 
+from src.core.cognition.contract.epistemic import EpistemicStatus
 from src.core.knowledge.fortification import EpistemicState, SemanticGraph
 from src.core.language.adapter.contracts import (
     SUPPORTED_LANGUAGES,
+    CausalRelation,
+    CertificationResult,
     EgressGateBlockedError,
+    EpistemicEscalationError,
     EpistemicLeakageError,
+    IngressCandidateAssertion,
     IngressGateBlockedError,
+    IngressSourceClass,
     ParseResult,
+    QualifiedLogicalAssertion,
     RealizeResult,
+    RetractionDirective,
     SubstrateViolationError,
 )
 from src.core.language.adapter.registry import LanguageDriverRegistry
@@ -165,6 +173,135 @@ class LanguageIngressGate:
                     raise EpistemicLeakageError(
                         f"Epistemic violation: UNKNOWN node '{node_id}' was illegally bound to concrete '{node.concept_symbol}'"
                     )
+
+    def certify_candidate_assertion(
+        self,
+        candidate: IngressCandidateAssertion,
+        confidence: float = 1.0,
+    ) -> Tuple[QualifiedLogicalAssertion, Optional[RetractionDirective]]:
+        """
+        Certify an untrusted IngressCandidateAssertion into a QualifiedLogicalAssertion (ADR-038).
+
+        Enforces non-escalation invariants:
+        1. Invariant NEG-02: Continuous perceptual confidence c >= theta NEVER asserts FACT.
+        2. F15 Anti-Echo Defense: Assistant CONFIRMED_ECHO is assigned EpistemicStatus.UNKNOWN.
+        3. User Correction: CORRECTED_NEGATION outputs polarity=False and emits RetractionDirective.
+        4. User Open Answer / Spontaneous: SUPPLIED_ANSWER and SPONTANEOUS are certified as FACT.
+        5. Inferred Admissibility: DERIVED requires supporting premises and rule ID.
+        6. Untrusted Self-Assertion: Candidate assertions cannot specify their own epistemic_status.
+        """
+        if not isinstance(candidate, IngressCandidateAssertion):
+            raise EpistemicLeakageError(
+                f"Candidate must be an instance of IngressCandidateAssertion, got {type(candidate).__name__}"
+            )
+
+        assigned_polarity: bool = candidate.polarity
+        directive: Optional[RetractionDirective] = None
+
+        # Invariant NEG-02: Continuous confidence cannot assert discrete FACT.
+        # Scalar confidence represents measurement reliability or sensor SNR, not ontological proof.
+        # Any perceptual input or confidence < 1.0 is strictly assigned UNKNOWN.
+        if candidate.source_class == IngressSourceClass.PERCEPTUAL or confidence < 1.0:
+            assigned_status = EpistemicStatus.UNKNOWN
+        elif candidate.source_class == IngressSourceClass.DERIVED:
+            if not candidate.supporting_premise_ids or candidate.rule_id == 0:
+                raise EpistemicEscalationError(
+                    "DERIVED candidate proposition lacks required supporting premises or rule ID"
+                )
+            assigned_status = EpistemicStatus.INFERRED
+        elif candidate.source_class == IngressSourceClass.USER_DISCOURSE:
+            if candidate.causal_relation == CausalRelation.CONFIRMED_ECHO:
+                # F15 Anti-Echo Defense: Assistant echo cannot become external FACT
+                assigned_status = EpistemicStatus.UNKNOWN
+            elif candidate.causal_relation == CausalRelation.CORRECTED_NEGATION:
+                assigned_status = EpistemicStatus.FACT
+                assigned_polarity = False
+                if candidate.antecedent_term_id > 0:
+                    directive = RetractionDirective(
+                        target_term_id=candidate.antecedent_term_id,
+                        reason="USER_CORRECTED_NEGATION",
+                    )
+            elif candidate.causal_relation in (
+                CausalRelation.SPONTANEOUS,
+                CausalRelation.SUPPLIED_ANSWER,
+                CausalRelation.ELABORATED,
+            ):
+                assigned_status = EpistemicStatus.FACT
+            else:
+                assigned_status = EpistemicStatus.FACT
+        elif candidate.source_class == IngressSourceClass.MEMORY:
+            assigned_status = EpistemicStatus.FACT
+        else:
+            assigned_status = EpistemicStatus.UNKNOWN
+
+        qualified = QualifiedLogicalAssertion(
+            predicate_id=candidate.predicate_id,
+            arg0_id=candidate.arg0_id,
+            arg1_id=candidate.arg1_id,
+            arg2_id=candidate.arg2_id,
+            polarity=assigned_polarity,
+            scope_id=candidate.scope_id,
+            epistemic_status=assigned_status,
+            causal_relation=candidate.causal_relation,
+            antecedent_term_id=candidate.antecedent_term_id,
+            rule_id=candidate.rule_id,
+            supporting_premise_ids=candidate.supporting_premise_ids,
+        )
+        return qualified, directive
+
+    def certify_candidates(
+        self,
+        candidates: Sequence[IngressCandidateAssertion],
+        confidence: float = 1.0,
+    ) -> CertificationResult:
+        """
+        Certify a sequence of candidate assertions.
+        """
+        assertions: List[QualifiedLogicalAssertion] = []
+        retractions: List[RetractionDirective] = []
+
+        for cand in candidates:
+            qualified, directive = self.certify_candidate_assertion(cand, confidence=confidence)
+            assertions.append(qualified)
+            if directive is not None:
+                retractions.append(directive)
+
+        return CertificationResult(
+            assertions=tuple(assertions),
+            retraction_directives=tuple(retractions),
+        )
+
+    def attribute_causal_relation(
+        self,
+        has_denial: bool = False,
+        has_affirmation: bool = False,
+        has_novel_content: bool = False,
+        discourse_state: Optional[Any] = None,
+    ) -> Tuple[CausalRelation, int]:
+        """
+        Attribute causal relation and antecedent term ID for a proposition based on discourse state.
+        """
+        seed_id = getattr(discourse_state, "active_assistant_seed_term_id", 0) if discourse_state else 0
+        inquiry_type = getattr(discourse_state, "inquiry_type", None) if discourse_state else None
+        unresolved = getattr(discourse_state, "unresolved_expectation", None) if discourse_state else None
+
+        # Closed assistant inquiry with active seed
+        if seed_id > 0 and inquiry_type == "CLOSED":
+            if has_denial:
+                return CausalRelation.CORRECTED_NEGATION, seed_id
+            if has_affirmation and has_novel_content:
+                return CausalRelation.ELABORATED, seed_id
+            if has_affirmation:
+                return CausalRelation.CONFIRMED_ECHO, seed_id
+            if has_novel_content:
+                return CausalRelation.ELABORATED, seed_id
+
+        # Open inquiry response
+        if inquiry_type == "OPEN" or unresolved == "USER_RESPONSE_EXPECTED":
+            if has_novel_content or has_affirmation or not has_denial:
+                return CausalRelation.SUPPLIED_ANSWER, seed_id
+
+        return CausalRelation.SPONTANEOUS, 0
 
 
 class LanguageEgressGate:

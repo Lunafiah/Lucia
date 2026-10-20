@@ -30,11 +30,28 @@ class KnowledgeStore:
         self._concepts: Dict[str, Concept] = {}
         self._rules: Dict[str, InferenceRule] = {}
         self._revision_history: List[Dict[str, Any]] = []
+        self._spo_index: Dict[Tuple[str, str, str], str] = {}
 
     def store_proposition(self, prop: Proposition) -> str:
-        """Store a proposition in the knowledge store."""
+        """
+        Store a proposition in the knowledge store with idempotent (S, P, O) deduplication.
+        If an identical valid triple with matching provenance exists, returns the existing ID.
+        """
         with self._store_lock:
+            if not prop.valid:
+                self._propositions[prop.id] = prop
+                return prop.id
+
+            key = (prop.subject.strip().lower(), prop.predicate.strip().lower(), prop.object.strip().lower())
+            existing_id = self._spo_index.get(key)
+            if existing_id is not None and existing_id in self._propositions:
+                existing_prop = self._propositions[existing_id]
+                if existing_prop.valid:
+                    # Idempotent deduplication: identical proposition returns existing_id
+                    return existing_id
+
             self._propositions[prop.id] = prop
+            self._spo_index[key] = prop.id
             return prop.id
 
     def get_proposition(self, prop_id: str) -> Optional[Proposition]:
@@ -171,6 +188,13 @@ class KnowledgeStore:
             new_prop.evidence_ids.append(old_prop_id)
             self._propositions[new_prop.id] = new_prop
 
+            old_key = (old_prop.subject.strip().lower(), old_prop.predicate.strip().lower(), old_prop.object.strip().lower())
+            new_key = (new_prop.subject.strip().lower(), new_prop.predicate.strip().lower(), new_prop.object.strip().lower())
+            if self._spo_index.get(old_key) == old_prop_id:
+                del self._spo_index[old_key]
+            if new_prop.valid:
+                self._spo_index[new_key] = new_prop.id
+
             self._revision_history.append({
                 "timestamp": time.time(),
                 "old_id": old_prop_id,
@@ -210,6 +234,9 @@ class KnowledgeStore:
         for p_dict in data.get("propositions", []):
             prop = Proposition.from_dict(p_dict)
             store._propositions[prop.id] = prop
+            if prop.valid:
+                key = (prop.subject.strip().lower(), prop.predicate.strip().lower(), prop.object.strip().lower())
+                store._spo_index[key] = prop.id
         for c_dict in data.get("concepts", []):
             concept = Concept.from_dict(c_dict)
             store._concepts[concept.id] = concept
