@@ -12,6 +12,16 @@ const State = {
   ERROR: 'ERROR'
 };
 
+const PresentationStage = {
+  RESPONSE_READY: 'RESPONSE_READY',
+  TTS_START: 'TTS_START',
+  AUDIO_PLAYING: 'AUDIO_PLAYING',
+  TTS_END: 'TTS_END',
+  TEXT_COMMIT: 'TEXT_COMMIT',
+  TTS_ERROR: 'TTS_ERROR',
+  TTS_CANCEL: 'TTS_CANCEL',
+};
+
 class ChatController {
   constructor() {
     this.currentState = State.WAITING_BACKEND;
@@ -79,11 +89,17 @@ class ChatController {
     this.settingsOutputDeviceSelect = document.getElementById('settings-output-device-select');
     this.saveSettingsBtn = document.getElementById('save-settings-btn');
 
-    // Sub-Phase 7.2: Organic Status & Clear Screen
     this.clearScreenBtn = document.getElementById('clear-screen-btn');
     this.organicStatusLabel = document.getElementById('avatar-status-text');
     this.audioCache = new Map();
     this.currentPAD = { pleasure: 0.2, arousal: 0, dominance: 0.05 };
+
+    // Presentation / Voice-First Response Lifecycle (Stage Tracking & Turn Isolation)
+    this._turnSeq = 0;
+    this._activeTurnId = 0;
+    this._stagedTurn = null;
+    this._lastPresentationStage = null;
+    this.onPresentationEvent = null;
 
     window.chatController = this;
 
@@ -1058,7 +1074,44 @@ class ChatController {
     }
   }
 
+  _recordPresentationStage(stage, detail = {}) {
+    this._lastPresentationStage = stage;
+    const evtData = {
+      stage,
+      timestamp: (typeof performance !== 'undefined' ? performance.now() : Date.now()),
+      ...detail
+    };
+    if (typeof this.onPresentationEvent === 'function') {
+      try {
+        this.onPresentationEvent(evtData);
+      } catch (e) {
+        console.warn('[chat] onPresentationEvent error:', e);
+      }
+    }
+    if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
+      try {
+        window.dispatchEvent(new CustomEvent('lucia:presentation', { detail: evtData }));
+      } catch (_) {}
+    }
+  }
+
+  _cancelActiveTurn() {
+    if (this._stagedTurn) {
+      this._stagedTurn.cancelled = true;
+      if (this._stagedTurn.typingIndicator) {
+        this.removeTypingIndicator(this._stagedTurn.typingIndicator);
+      }
+      this._recordPresentationStage(PresentationStage.TTS_CANCEL, { turnId: this._stagedTurn.turnId });
+      this._stagedTurn = null;
+    }
+    this._activeTurnId = ++this._turnSeq;
+    if (window.avatarRenderer && typeof window.avatarRenderer.stop === 'function') {
+      window.avatarRenderer.stop();
+    }
+  }
+
   clearScreen() {
+    this._cancelActiveTurn();
     if (!this.messagesContainer) return;
     this.messagesContainer.innerHTML = '';
     const notice = document.createElement('div');
@@ -1072,6 +1125,7 @@ class ChatController {
   }
 
   clearPresentation() {
+    this._cancelActiveTurn();
     if (this.messagesContainer) {
       this.messagesContainer.innerHTML = '';
     }
@@ -1247,6 +1301,9 @@ class ChatController {
     const text = (customText !== null ? customText : this.inputArea.value).trim();
     if (!text) return;
 
+    // Interrupt/cancel any previously active or staged turn to prevent stale/delayed text
+    this._cancelActiveTurn();
+
     // Voice Mode: pause listening while processing & speaking to avoid speaker-to-mic feedback loop
     this.isSpeakingOrProcessing = true;
     this._pauseListening();
@@ -1265,9 +1322,10 @@ class ChatController {
 
     try {
       const response = await window.lucia.chat.send(text);
-      this.removeTypingIndicator(typingIndicator);
 
       if (response && response.response) {
+        this._recordPresentationStage(PresentationStage.RESPONSE_READY, { response: response.response });
+
         // Voice & Language Runtime Alignment:
         // Text language follows active user language (response.response)
         // Voice language is ALWAYS Japanese (response.realization.voice.content)
@@ -1300,69 +1358,161 @@ class ChatController {
           voiceOpts.closeness = response.relationship.closeness;
         }
 
-        const messageRow = this.appendMessage('companion', response.response, voiceText, voiceOpts);
-        const replayBtn = messageRow ? messageRow.querySelector('.audio-replay-btn') : null;
+        const turnId = ++this._turnSeq;
+        this._activeTurnId = turnId;
 
-        // Synthesize and play voice if not muted — via IPC (ADR-019 & ADR-032.5) with fetch fallback
-        if (!this.isVoiceMuted && window.avatarRenderer) {
-          try {
-            let audioBlob = null;
-            if (window.lucia && window.lucia.voice && window.lucia.voice.synthesize) {
-              const audioBuffer = await window.lucia.voice.synthesize(voiceText, voiceOpts);
-              if (audioBuffer && audioBuffer.byteLength > 0) {
-                audioBlob = new Blob([audioBuffer], { type: 'audio/mpeg' });
-              }
-            } else {
-              const voiceRes = await fetch('http://127.0.0.1:8765/voice/synthesize', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ text: voiceText, ...voiceOpts }),
-              });
-              if (voiceRes.ok) {
-                audioBlob = await voiceRes.blob();
-              }
-            }
+        const stagedTurn = {
+          turnId,
+          text: response.response,
+          voiceText,
+          voiceOpts,
+          audioBlob: null,
+          committed: false,
+          cancelled: false,
+          typingIndicator,
+        };
+        this._stagedTurn = stagedTurn;
 
-            if (audioBlob) {
-              if (replayBtn) {
-                replayBtn._cachedBlob = audioBlob;
-              }
-              if (!this.audioCache) this.audioCache = new Map();
-              this.audioCache.set(response.response, audioBlob);
-              if (voiceText !== response.response) {
-                this.audioCache.set(voiceText, audioBlob);
-              }
-              window.avatarRenderer.speak(audioBlob, () => {
-                // Audio ended callback: resume listening in Discord mode
-                this.isSpeakingOrProcessing = false;
-                this.updateOrganicStatus();
-                if (this.isMicMode) {
-                  this._resumeListening();
-                }
-              });
-            } else {
-              this.isSpeakingOrProcessing = false;
-              this.updateOrganicStatus();
-              if (this.isMicMode) this._resumeListening();
-            }
-          } catch (vErr) {
-            console.warn('[voice] Voice synthesis playback error:', vErr);
-            this.isSpeakingOrProcessing = false;
-            this.updateOrganicStatus();
-            if (this.isMicMode) this._resumeListening();
+        const commitText = () => {
+          if (stagedTurn.committed || stagedTurn.cancelled || this._activeTurnId !== turnId) {
+            return null;
           }
-        } else {
+          stagedTurn.committed = true;
+          this.removeTypingIndicator(typingIndicator);
+
+          this._recordPresentationStage(PresentationStage.TEXT_COMMIT, { turnId, text: stagedTurn.text });
+          const messageRow = this.appendMessage('companion', stagedTurn.text, stagedTurn.voiceText, stagedTurn.voiceOpts);
+          const replayBtn = messageRow ? messageRow.querySelector('.audio-replay-btn') : null;
+          if (replayBtn && stagedTurn.audioBlob) {
+            replayBtn._cachedBlob = stagedTurn.audioBlob;
+          }
+          return messageRow;
+        };
+
+        // If voice is muted or no avatarRenderer available: immediate commit fallback
+        if (this.isVoiceMuted || !window.avatarRenderer) {
+          commitText();
           this.isSpeakingOrProcessing = false;
           this.updateOrganicStatus();
           if (this.isMicMode) this._resumeListening();
+          this.transitionTo(State.READY);
+          return;
         }
+
+        // Voice synthesis
+        let audioBlob = null;
+        try {
+          if (window.lucia && window.lucia.voice && window.lucia.voice.synthesize) {
+            const audioBuffer = await window.lucia.voice.synthesize(voiceText, voiceOpts);
+            if (audioBuffer && audioBuffer.byteLength > 0) {
+              audioBlob = new Blob([audioBuffer], { type: 'audio/mpeg' });
+            }
+          } else {
+            const voiceRes = await fetch('http://127.0.0.1:8765/voice/synthesize', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ text: voiceText, ...voiceOpts }),
+            });
+            if (voiceRes.ok) {
+              audioBlob = await voiceRes.blob();
+            }
+          }
+        } catch (vErr) {
+          console.warn('[voice] Voice synthesis playback error:', vErr);
+        }
+
+        // Check if turn was cancelled while synthesis was in flight
+        if (stagedTurn.cancelled || this._activeTurnId !== turnId) {
+          return;
+        }
+
+        // If synthesis failed / returned no audio: fallback to immediate text commit
+        if (!audioBlob) {
+          this._recordPresentationStage(PresentationStage.TTS_ERROR, { turnId, reason: 'synthesis_failed' });
+          commitText();
+          this.isSpeakingOrProcessing = false;
+          this.updateOrganicStatus();
+          if (this.isMicMode) this._resumeListening();
+          this.transitionTo(State.READY);
+          return;
+        }
+
+        // Pre-cache audio
+        stagedTurn.audioBlob = audioBlob;
+        if (!this.audioCache) this.audioCache = new Map();
+        this.audioCache.set(response.response, audioBlob);
+        if (voiceText !== response.response) {
+          this.audioCache.set(voiceText, audioBlob);
+        }
+
+        let playbackHandled = false;
+
+        const onTtsStart = () => {
+          if (stagedTurn.cancelled || this._activeTurnId !== turnId) return;
+          this.removeTypingIndicator(typingIndicator);
+          this._recordPresentationStage(PresentationStage.TTS_START, { turnId });
+          this._recordPresentationStage(PresentationStage.AUDIO_PLAYING, { turnId });
+          this.isSpeakingOrProcessing = true;
+          this.updateOrganicStatus();
+        };
+
+        const onTtsEnd = () => {
+          if (playbackHandled) return;
+          playbackHandled = true;
+          this._recordPresentationStage(PresentationStage.TTS_END, { turnId });
+          commitText();
+          this.isSpeakingOrProcessing = false;
+          this.updateOrganicStatus();
+          if (this.isMicMode) this._resumeListening();
+          this.transitionTo(State.READY);
+        };
+
+        const onTtsError = (err) => {
+          if (playbackHandled) return;
+          playbackHandled = true;
+          console.warn('[voice] Voice synthesis playback error event:', err);
+          this._recordPresentationStage(PresentationStage.TTS_ERROR, { turnId, error: err });
+          commitText();
+          this.isSpeakingOrProcessing = false;
+          this.updateOrganicStatus();
+          if (this.isMicMode) this._resumeListening();
+          this.transitionTo(State.READY);
+        };
+
+        const onTtsCancel = () => {
+          if (playbackHandled) return;
+          playbackHandled = true;
+          stagedTurn.cancelled = true;
+          this.removeTypingIndicator(typingIndicator);
+          this._recordPresentationStage(PresentationStage.TTS_CANCEL, { turnId });
+          this.isSpeakingOrProcessing = false;
+          this.updateOrganicStatus();
+          if (this.isMicMode) this._resumeListening();
+          this.transitionTo(State.READY);
+        };
+
+        const playbackCallback = Object.assign(
+          (err) => {
+            if (err) onTtsError(err);
+            else onTtsEnd();
+          },
+          {
+            onStart: onTtsStart,
+            onEnded: onTtsEnd,
+            onError: onTtsError,
+            onCancel: onTtsCancel,
+          }
+        );
+
+        window.avatarRenderer.speak(audioBlob, playbackCallback);
       } else {
+        this.removeTypingIndicator(typingIndicator);
         this.appendMessage('error', 'Received empty response from companion.');
         this.isSpeakingOrProcessing = false;
         this.updateOrganicStatus();
         if (this.isMicMode) this._resumeListening();
+        this.transitionTo(State.READY);
       }
-      this.transitionTo(State.READY);
     } catch (err) {
       console.error('[chat] Send error:', err);
       this.removeTypingIndicator(typingIndicator);
@@ -1533,5 +1683,5 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { ChatController, State };
+  module.exports = { ChatController, State, PresentationStage };
 }

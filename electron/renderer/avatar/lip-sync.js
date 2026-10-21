@@ -16,6 +16,9 @@ class LipSyncProcessor {
     // Smooth interpolated values
     this.mouthOpen = 0.0;
     this.mouthWidth = 1.0;
+
+    this._sessionSeq = 0;
+    this._activeSession = null;
   }
 
   initContext() {
@@ -42,52 +45,148 @@ class LipSyncProcessor {
   /**
    * Play audio buffer/url and process lip-sync data.
    * @param {string|Blob} audioSource URL or Blob of synthesized audio
-   * @param {Function} onEnded Callback when playback finishes
+   * @param {Function|object} callbacks Callback when playback finishes, or lifecycle handlers
    */
-  async playAudio(audioSource, onEnded = null) {
+  async playAudio(audioSource, callbacks = null) {
     this.initContext();
-    if (!this.audioContext) return;
+
+    // Normalizing callbacks: supports function or object { onStart, onEnded, onError, onCancel }
+    const onStart = typeof callbacks === 'function' ? callbacks.onStart : callbacks?.onStart;
+    const onEnded = typeof callbacks === 'function' ? (callbacks.onEnded || callbacks) : callbacks?.onEnded;
+    const onError = typeof callbacks === 'function' ? callbacks.onError : callbacks?.onError;
+    const onCancel = typeof callbacks === 'function' ? callbacks.onCancel : callbacks?.onCancel;
+
+    // Graceful fallback if Web Audio is unsupported
+    if (!this.audioContext) {
+      if (typeof callbacks === 'function') callbacks();
+      else if (onEnded) onEnded();
+      return;
+    }
 
     if (this.audioContext.state === "suspended") {
-      await this.audioContext.resume();
+      try {
+        await this.audioContext.resume();
+      } catch (e) {
+        console.warn('[lip-sync] audioContext.resume() failed:', e);
+      }
+    }
+
+    if (this._activeSession) {
+      this._activeSession.cancel();
+      this._activeSession = null;
     }
 
     if (this.currentAudio) {
-      this.currentAudio.pause();
+      try {
+        this.currentAudio.pause();
+      } catch (_) {}
       this.currentAudio = null;
     }
 
-    const audioUrl = typeof audioSource === "string" ? audioSource : URL.createObjectURL(audioSource);
+    let createdUrl = null;
+    let audioUrl = audioSource;
+    if (typeof audioSource !== "string") {
+      try {
+        createdUrl = URL.createObjectURL(audioSource);
+        audioUrl = createdUrl;
+      } catch (_) {
+        audioUrl = "";
+      }
+    }
+
     const audio = new Audio(audioUrl);
     this.currentAudio = audio;
 
-    const source = this.audioContext.createMediaElementSource(audio);
-    source.connect(this.analyser);
-    this.analyser.connect(this.gainNode);
-    this.gainNode.connect(this.audioContext.destination);
+    try {
+      const source = this.audioContext.createMediaElementSource(audio);
+      source.connect(this.analyser);
+      this.analyser.connect(this.gainNode);
+      this.gainNode.connect(this.audioContext.destination);
+    } catch (e) {
+      console.warn('[lip-sync] MediaElementSource connection warning:', e);
+    }
 
     this.isPlaying = true;
 
-    audio.onended = () => {
+    let completed = false;
+    let started = false;
+
+    const cleanup = () => {
       this.isPlaying = false;
       this.mouthOpen = 0.0;
-      if (onEnded) onEnded();
+      if (this.currentAudio === audio) {
+        this.currentAudio = null;
+      }
+      if (this._activeSession === session) {
+        this._activeSession = null;
+      }
+      if (createdUrl) {
+        try {
+          URL.revokeObjectURL(createdUrl);
+        } catch (_) {}
+        createdUrl = null;
+      }
+    };
+
+    const triggerStart = () => {
+      if (!started && !completed) {
+        started = true;
+        if (onStart) onStart();
+      }
+    };
+
+    const session = {
+      id: ++this._sessionSeq,
+      start: triggerStart,
+      end: () => {
+        if (!completed) {
+          completed = true;
+          cleanup();
+          if (onEnded) onEnded();
+        }
+      },
+      error: (err) => {
+        if (!completed) {
+          completed = true;
+          cleanup();
+          if (onError) onError(err);
+          else if (onEnded) onEnded(err);
+        }
+      },
+      cancel: () => {
+        if (!completed) {
+          completed = true;
+          try {
+            audio.pause();
+          } catch (_) {}
+          cleanup();
+          if (onCancel) onCancel();
+        }
+      }
+    };
+    this._activeSession = session;
+
+    audio.onplay = triggerStart;
+    audio.onplaying = triggerStart;
+
+    audio.onended = () => {
+      session.end();
     };
 
     audio.onerror = (e) => {
       console.warn('[lip-sync] Audio element error:', audio.error ? `code ${audio.error.code} (${audio.error.message || 'unknown'})` : e);
-      this.isPlaying = false;
-      this.mouthOpen = 0.0;
-      if (onEnded) onEnded();
+      session.error(audio.error || e);
     };
 
     try {
-      await audio.play();
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        await playPromise;
+      }
+      triggerStart();
     } catch (playErr) {
       console.warn('[lip-sync] audio.play() rejected:', playErr.message || playErr);
-      this.isPlaying = false;
-      this.mouthOpen = 0.0;
-      if (onEnded) onEnded();
+      session.error(playErr);
     }
   }
 
@@ -125,8 +224,14 @@ class LipSyncProcessor {
   }
 
   stop() {
+    if (this._activeSession) {
+      this._activeSession.cancel();
+      this._activeSession = null;
+    }
     if (this.currentAudio) {
-      this.currentAudio.pause();
+      try {
+        this.currentAudio.pause();
+      } catch (_) {}
       this.currentAudio = null;
     }
     this.isPlaying = false;

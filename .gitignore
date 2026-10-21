@@ -10,8 +10,12 @@ models/voice/whisper/
 models/avatar/**/*.vrm
 models/avatar/**/*.moc3
 
-# Runtime Data
+# Runtime Data & Local Identity State
 data/
+data/chat_history.json
+data/profile.json
+**/chat_history.json
+**/profile.json
 
 
 # ──────────────────────────────────────────────
