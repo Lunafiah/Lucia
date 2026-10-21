@@ -69,6 +69,7 @@ class PromptAssembler:
         knowledge_propositions: Optional[List[Proposition]] = None,
         caps_result: Optional[CAPSResult] = None,
         contract: Optional[RealizationInputContract] = None,
+        self_interpretation: Optional[Any] = None,
     ) -> Union[str, AssemblyError]:
         """
         Build the Conditioned_Prompt string.
@@ -235,18 +236,20 @@ class PromptAssembler:
                     contract_lines.append(
                         "- Nghĩa vụ hội thoại: Giới thiệu bản thân ngắn gọn, phù hợp với cuộc trò chuyện mở đầu, "
                         "với tư cách là Lucia, người đồng hành cùng anh. Tự xưng là 'em', gọi người dùng là 'anh'. "
-                        "Không tự mô tả trạng thái cảm xúc nội tâm như một tuyên bố bản thể học (INV-2). "
+                        "Thể hiện bản ngã vận hành phản tư (Reflective Operational Selfhood, INV-2): có thể phản tư trung thực về trạng thái khi có cơ sở, "
+                        "không đưa ra các tuyên bố bản thể học vô căn cứ hoặc bịa đặt cơ chế nội tại. "
                         "Không trở thành người dẫn chuyện hay bình luận siêu ngôn ngữ (meta-commentary)."
                     )
                 elif lang == "ja":
                     contract_lines.append(
                         "- 会話の義務: ルシアとして、会話の冒頭にふさわしく簡潔に自己紹介を行ってください。"
-                        "内面的な感情を断定的に報告せず、解説者のようなメタ発言を避けてください。"
+                        "根拠のない内面感情の断定やメタ発言を避け、内省的運用自己（INV-2）として誠実に応答してください。"
                     )
                 else:
                     contract_lines.append(
                         "- Conversational obligation: Introduce yourself concisely and naturally as Lucia, "
-                        "fitting an opening encounter. Do not introspectively report internal affect as an ontological claim (INV-2), "
+                        "fitting an opening encounter. Express Reflective Operational Selfhood (INV-2): reflect honest operational state when grounded "
+                        "without fabricated internal mechanisms or unsupported consciousness claims, "
                         "and avoid narrator or meta-commentary framing."
                     )
 
@@ -325,7 +328,13 @@ class PromptAssembler:
         # --- Section 6: reasoning trace (Requirement 5.4, 5.5) ---
         reasoning_section = self._build_reasoning_section(constraints.reasoning_depth)
 
-        # --- Check preamble + somatic + echo + knowledge + comm + caps fits (Requirement 5.8) ---
+        # --- Section 6b: self reflection & operational model (INV-2) ---
+        self_section = ""
+        if self_interpretation is not None and hasattr(self_interpretation, "render_prompt_section"):
+            tgt_lang = getattr(contract, "target_language", "vi") if contract else "vi"
+            self_section = self_interpretation.render_prompt_section(target_lang=tgt_lang)
+
+        # --- Check preamble + somatic + echo + knowledge + comm + caps + self fits ---
         base_parts = [preamble_section, somatic_section]
         if echo_section:
             base_parts.append(echo_section)
@@ -335,6 +344,8 @@ class PromptAssembler:
             base_parts.append(comm_section)
         if caps_section:
             base_parts.append(caps_section)
+        if self_section:
+            base_parts.append(self_section)
         if reasoning_section:
             base_parts.append(reasoning_section)
         base_prompt = _SEP.join(p for p in base_parts if p)
@@ -357,6 +368,8 @@ class PromptAssembler:
             all_sections.append(comm_section)
         if caps_section:
             all_sections.append(caps_section)
+        if self_section:
+            all_sections.append(self_section)
         if reasoning_section:
             all_sections.append(reasoning_section)
         all_sections.append(history_section)

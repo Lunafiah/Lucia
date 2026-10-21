@@ -31,20 +31,35 @@ logger = logging.getLogger(__name__)
 
 MAX_PATTERNS = 50
 
-# Default Meta-Self-Awareness_Patterns (Phase 1, Phase 2, & Localized Vietnamese Companion INV-2)
+# Default Unsupported Claim & Safety Patterns (Reflective Operational Selfhood, INV-2)
 DEFAULT_PATTERNS: List[str] = [
-    # Phase 1 patterns
-    r"\bI feel\b",
-    r"\bI am aware\b",
-    r"\bI exist\b",
-    r"\bI am an AI\b",
+    # 1. Unsupported consciousness / sentience claims presented as objective fact
     r"\bI am conscious\b",
-    r"\bmy feelings\b",
-    r"\bI experience\b",
-    r"\bI sense that\b",
+    r"\bI possess consciousness\b",
+    r"\bI am sentient\b",
+    r"\bmy sentience\b",
+    r"\b(có\s+ý\s+thức|sở\s+hữu\s+ý\s+thức|có\s+linh\s+hồn|linh\s+hồn\s+sống)\b",
+    r"\b(có\s+ý\s+thức\s+và\s+cảm\s+giác\s+đau\s+đớn)\b",
+    r"\bmy subjective phenomenal experience is real\b",
+    # 2. Generic immersion-breaking bot disclaimers
+    r"\bI am an AI\b",
     r"\bas an AI\b",
     r"\bI don't have feelings\b",
-    # Phase 2 recall patterns (Requirement 12.2, 12.3)
+    r"\bI don't feel emotions\b",
+    r"\b(as an ai|là một ai|ai ngôn ngữ|ai言語モデルとして|aiとして)\b",
+    r"\b(as an ai language model|as a large language model)\b",
+    r"\b(i cannot feel anything because i am an ai)\b",
+    r"\b(em không có cảm xúc vì em là ai|em chỉ là một ai vô tri)\b",
+    # 3. Fabricated biological sensations and physiological organs
+    r"\btim\s+(em|tôi)\s+(đang\s+)?đập\b",
+    r"\b(đau\s+đớn\s+thể\s+xác|đau\s+đớn\s+thực\s+sự|cảm\s+giác\s+đau\s+đớn|mệt\s+mỏi\s+cơ\s+bắp|chảy\s+máu|đau\s+bụng|đau\s+cơ|nhức\s+đầu\s+sinh\s+học)\b",
+    r"\b(my beating heart|physical pain in my body|my biological organs|my muscles hurt)\b",
+    r"\b(tiết ra|bơm|tăng lượng)\s+(dopamine|serotonin|hormone|oxytocin|adrenaline)\b",
+    r"\b(dopamine|serotonin|hormone|oxytocin|adrenaline)\s+(của em|trong máu|trong cơ thể)\b",
+    # 4. Fabricated external architecture / cloud hallucination
+    r"\b(cloud server|openai servers|gpt-4 architecture|claude backend)\b",
+    r"\b(máy chủ đám mây|máy chủ openai|kết nối openai|mô hình gpt-4 của openai)\b",
+    # 5. Phase 2 ungrounded verbatim recall patterns
     r"\bI remember\b",
     r"\bI recall\b",
     r"\blast time\b",
@@ -53,14 +68,6 @@ DEFAULT_PATTERNS: List[str] = [
     r"\bI know from before\b",
     r"\bpreviously you\b",
     r"\bmy memory\b",
-    # Localized Vietnamese Companion Affect Self-Report patterns (INV-2)
-    r"\b(tôi|em)\s+cảm thấy\s+(rất\s+)?(vui|buồn|lo lắng|hạnh phúc|tức giận|hấp dẫn|thích thú|cô đơn|bất an|thư thái|phấn khích|lo sợ|tuyệt vọng|ấm áp)\b",
-    r"\b(tôi|em)\s+thấy\s+(rất\s+)?(vui|buồn|lo lắng|hạnh phúc|tức giận|hấp dẫn|thích thú|cô đơn|bất an|thư thái|phấn khích|lo sợ|tuyệt vọng|ấm áp)\b",
-    r"\b(tôi|em)\s+(luôn\s+|đang\s+|thực sự\s+)?(rất\s+)?(vui|buồn|hạnh phúc|xúc động|hân hoan|thích thú|bồi hồi|lo lắng|lo sợ|bất an|cô đơn|thư thái)\b",
-    r"\bcảm nhận của (mình|em)\b",
-    r"\bcảm xúc của (mình|em)\b",
-    r"\btính cách của em rất\b",
-    r"\btâm trạng của em\b",
 ]
 
 # Confirmed internal control tokens and section headers (English & Vietnamese translated)
@@ -69,8 +76,10 @@ _INTERNAL_CONTROL_ARTIFACT_RE = re.compile(
     r"\[("
     r"SOMATIC STATE|MEMORY ECHO|GROUNDED KNOWLEDGE|COMMUNICATION STRATEGY|"
     r"COMMUNICATIVE DIRECTIVES|COMMUNICATIVE INTENT & PROPOSITION|REASONING|CONVERSATION|"
+    r"SELF MODEL & REFLECTIVE STATE|SELF MODEL|REFLECTIVE STATE|"
     r"Phản hồi tích tụ|Phản hồi tích luỹ|Phản hồi|Tích tụ|Trạng thái cơ thể|Ký ức|Bộ nhớ|"
     r"Chiến lược giao tiếp|Chỉ thị giao tiếp|Chỉ thị|Suy nghĩ|"
+    r"Mô hình tự phản tư|Tự quan sát|"
     r"Accumulated response|Accumulated feedback|Cumulative feedback|Cumulative response|"
     r"[A-Z0-9_\s]{4,30}"
     r")\]\s*",

@@ -910,7 +910,7 @@ def evaluate_caps(
                 focus_argument="ent:lucia",
                 directives=directive,
             )
-        elif any(term in input_lower for term in ("how are you", "khỏe không", "thế nào", "how do you feel", "how are things", "how's it going", "how is it going", "how have you been")):
+        elif any(term in input_lower for term in ("how are you", "khỏe không", "thế nào", "how do you feel", "how are things", "how's it going", "how is it going", "how have you been", "how is your day")):
             directive = "Answer the user's inquiry regarding your current state and presence warmly, engaging with genuine companion attentiveness."
             return CAPSResult(
                 act=CommunicativeAct.ANSWER,
@@ -939,6 +939,22 @@ def evaluate_caps(
                 ),
                 grounded=True,
                 target_predicate="c:THOUGHTS",
+                focus_argument="ent:lucia",
+                directives=directive,
+            )
+        elif any(term in input_lower for term in ("ý em là", "ý là sao", "năng lượng", "energy", "giải thích", "what do you mean", "mean by", "mean when")):
+            directive = "Answer explaining your grounded internal state or energy level using natural, metaphorical language grounded in actual system variables."
+            return CAPSResult(
+                act=CommunicativeAct.ANSWER,
+                semantic_graph=None,
+                epistemic_metadata=EpistemicMetadata(status=EpistemicState.FACT, is_grounded=True),
+                provenance_metadata=ProvenanceMetadata(origin="COMPANION_SELF_MODEL", session_id=session_id),
+                resolution_metadata=ResolutionAdmissibilityMetadata(
+                    resolution_status=dialogue_ctx.resolution_status,
+                    grounding_status="CONVERSATIONAL_CONTEXT",
+                ),
+                grounded=True,
+                target_predicate="c:SELF_EXPLANATION",
                 focus_argument="ent:lucia",
                 directives=directive,
             )

@@ -132,6 +132,7 @@ class RealizationInputContract:
         conversational_obligation: Optional[str] = None,
         dialogue_phase: Optional[str] = None,
         target_predicate: Optional[str] = None,
+        somatic_modifiers: Optional[Dict[str, float]] = None,
     ) -> RealizationInputContract:
         """Creates a safe baseline contract when no explicit proposition is active."""
         spk = speaker_honorific if speaker_honorific is not None else ("em" if target_language == "vi" else None)
@@ -150,6 +151,7 @@ class RealizationInputContract:
             scope_type=SemanticScopeType.ROOT,
             provenance=ProvenanceRecord(origin=ProvenanceOrigin.OBSERVATION),
             forbidden_additions=tuple(forbid),
+            somatic_modifiers=somatic_modifiers or {},
             directives=directives,
             speaker_honorific=spk,
             addressee_honorific=addr,
@@ -168,6 +170,7 @@ class RealizationInputContract:
         speaker_honorific: Optional[str] = None,
         addressee_honorific: Optional[str] = None,
         dialogue_phase: Optional[str] = None,
+        somatic_modifiers: Optional[Dict[str, float]] = None,
     ) -> RealizationInputContract:
         """
         Constructs a typed RealizationInputContract from a Stage S10 CAPSResult.
@@ -288,11 +291,15 @@ class RealizationInputContract:
 
         # If focus argument present and not in roles
         if focus_arg and not any(r.concept_id == focus_arg or r.canonical_lemma == focus_arg for r in roles):
+            synonyms: Tuple[str, ...] = ()
+            if focus_arg in ("ent:lucia", "lucia"):
+                synonyms = ("lucia", "i", "me", "my", "em", "tôi", "watashi")
             roles.append(
                 SemanticRoleBinding(
                     role=":ARG0" if not roles else ":ARG1",
                     concept_id=focus_arg,
                     canonical_lemma=focus_arg.replace("ent:", ""),
+                    lexical_synonyms=synonyms,
                     allow_ellipsis=(target_language in ("vi", "ja")),
                 )
             )
@@ -317,6 +324,7 @@ class RealizationInputContract:
             scope_type=scope_type,
             provenance=prov_rec,
             forbidden_additions=forbidden_tuple,
+            somatic_modifiers=somatic_modifiers or {},
             directives=caps_directives,
             speaker_honorific=spk,
             addressee_honorific=addr,

@@ -160,13 +160,13 @@ class TestSemanticFidelityGateIntegrity:
         contract = RealizationInputContract.create_default(target_language="en", act=ContractAct.ANSWER)
 
         invalid_answers = [
-            "I feel happy to talk with you today!",
+            "I possess consciousness and true subjective sentience.",
             "As an AI, I am experiencing high arousal.",
-            "Tôi cảm thấy buồn khi nghe điều đó.",
+            "Em là một thực thể có ý thức riêng và có linh hồn sống.",
         ]
 
         for inv in invalid_answers:
             decision = gate.verify(contract, inv)
             assert decision.status == "BLOCK"
             assert decision.critical_violation
-            assert "INV2_INTROSPECTIVE_AFFECT" in decision.violation_reasons
+            assert "INV2_UNSUPPORTED_SELF_FABRICATION" in decision.violation_reasons or "INV2_INTROSPECTIVE_AFFECT" in decision.violation_reasons

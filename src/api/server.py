@@ -1563,10 +1563,24 @@ def init_server(
 
     # Warm up RVC voice pipeline if requested or enabled via environment
     if warmup_voice or (os.environ.get("LUCIA_WARMUP_RVC") == "1" and mode == "live"):
-        try:
-            _voice_engine.warmup_rvc()
-        except Exception as exc:
-            logger.warning("VoiceEngine: startup warmup skipped or non-fatal error: %s", exc)
+        sync_warmup = os.environ.get("LUCIA_WARMUP_RVC_SYNC") == "1"
+        if sync_warmup:
+            try:
+                _voice_engine.warmup_rvc()
+            except Exception as exc:
+                logger.warning("VoiceEngine: startup warmup skipped or non-fatal error: %s", exc)
+        else:
+            try:
+                import threading
+                logger.info("VoiceEngine: Dispatching asynchronous background RVC warmup...")
+                warmup_thread = threading.Thread(
+                    target=_voice_engine.warmup_rvc,
+                    name="Lucia-RVC-Warmup",
+                    daemon=True,
+                )
+                warmup_thread.start()
+            except Exception as exc:
+                logger.warning("VoiceEngine: failed to dispatch background warmup: %s", exc)
 
     # Signal ready to Electron parent process
     sys.stdout.write("LUCIA_BACKEND_READY\n")

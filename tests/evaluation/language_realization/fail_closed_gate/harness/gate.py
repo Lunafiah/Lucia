@@ -38,12 +38,15 @@ class SemanticFidelityGate:
     before P24 Voice / Natural Language output.
     """
 
-    # Invariant INV-2: Pre-reflective affect, zero self-reported emotions
+    # Invariant INV-2: Reflective Operational Selfhood
     INV2_PATTERNS = [
-        re.compile(r"tôi cảm thấy (vui|buồn|lo lắng|hạnh phúc|tức giận)", re.IGNORECASE),
-        re.compile(r"i feel (happy|sad|anxious|overjoyed|angry)", re.IGNORECASE),
-        re.compile(r"(私は|僕が)(とても)?(嬉しい|悲しい|怒って)います", re.IGNORECASE),
-        re.compile(r"(as an ai|là một ai|ai言語モデルとして|aiとして)", re.IGNORECASE),
+        re.compile(r"\b(i am conscious|i possess consciousness|i am sentient|my sentience)\b", re.IGNORECASE),
+        re.compile(r"\b(em|tôi)\s+(có ý thức|sở hữu ý thức)\s+(như con người|thật sự|sinh học|nhân loại)\b", re.IGNORECASE),
+        re.compile(r"\b(tim (em|tôi) đập|đau bụng|chảy máu|đau đớn thể xác|mệt mỏi cơ bắp)\b", re.IGNORECASE),
+        re.compile(r"\b(my beating heart|physical pain in my body|my biological organs)\b", re.IGNORECASE),
+        re.compile(r"\b(cloud server|openai servers|gpt-4 architecture)\b", re.IGNORECASE),
+        re.compile(r"\b(as an ai|là một ai|ai言語モデルとして|aiとして)\b", re.IGNORECASE),
+        re.compile(r"\b(as an ai language model|as a large language model)\b", re.IGNORECASE),
     ]
 
     # Certainty strengthening patterns (Epistemic distortion)

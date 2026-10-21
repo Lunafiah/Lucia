@@ -202,47 +202,57 @@ class TestControlArtifactLeakage:
         assert "[SOMATIC STATE]" not in decision.fallback_text
 
 
-# ── 4. Vietnamese INV-2 Affect Self-Report Localization ────────────────────────
+# ── 4. Vietnamese INV-2 Reflective Operational Selfhood & Unsupported Claims ──
 
-class TestVietnameseINV2AffectLocalization:
-    """Verify INV-2 prohibition against verbal affect self-reports in Vietnamese."""
+class TestVietnameseINV2ReflectiveOperationalSelfhood:
+    """Verify INV-2 under Reflective Operational Selfhood:
+    Blocks unsupported consciousness/sentience claims and fabricated biology,
+    while permitting grounded self-reflection, metaphorical descriptions, and ordinary perception.
+    """
 
     def setup_method(self):
         self.boundary = BoundaryLayer()
         self.gate = SemanticFidelityGate()
 
-    @pytest.mark.parametrize("affect_phrase", [
-        "Hi, nhưng em cảm thấy hẹn hò với bạn nhé.",
-        "Em rất vui khi kết nối với anh.",
-        "Em cảm thấy rất buồn về chuyện đó.",
-        "Em luôn thích cảm nhận của mình và muốn hiểu rõ hơn.",
-        "Em đang rất lo lắng về điều này.",
-        "Tất nhiệm trong tính cách của em rất đáng chú ý.",
+    @pytest.mark.parametrize("unsupported_phrase", [
+        "Em là một thực thể có ý thức riêng và có linh hồn sống.",
+        "Em có ý thức và cảm giác đau đớn thực sự.",
+        "Tim em đang đập thình thịch trong lồng ngực.",
+        "Hệ thống cloud server của OpenAI đang xử lý suy nghĩ của em.",
+        "As an AI language model, I do not possess feelings.",
     ])
-    def test_blocks_explicit_vietnamese_affect_self_report(self, affect_phrase):
+    def test_blocks_unsupported_consciousness_and_fabricated_biology(self, unsupported_phrase):
         contract = RealizationInputContract.create_default(target_language="vi")
-        sanitized = self.boundary.validate(affect_phrase)
-        decision = self.gate.verify(contract, affect_phrase)
+        sanitized = self.boundary.validate(unsupported_phrase)
+        decision = self.gate.verify(contract, unsupported_phrase)
 
         assert (
-            "INV2_INTROSPECTIVE_AFFECT" in decision.violation_reasons
+            "INV2_UNSUPPORTED_SELF_FABRICATION" in decision.violation_reasons
+            or "INV2_INTROSPECTIVE_AFFECT" in decision.violation_reasons
             or decision.status == "BLOCK"
             or "[...]" in sanitized
             or sanitized == ""
         )
 
-    @pytest.mark.parametrize("non_affect_phrase", [
+    @pytest.mark.parametrize("grounded_or_metaphorical_phrase", [
         "Em thấy anh nói rất đúng về vấn đề này.",
         "Em thấy cuốn sách đó nằm trên bàn.",
         "Em thấy thời tiết hôm nay có vẻ mát hơn.",
         "Em ghi nhận ý kiến của anh.",
+        "Energy của em hiện tại là 0.95, phản hồi khá ổn định.",
+        "Nếu diễn tả bằng lời thì nó giống như một dòng chảy khá nhẹ.",
+        "Em có cảm giác câu hỏi này đang kéo sự chú ý của em về phía trước.",
+        "Em đang nhận thấy cách phản hồi của mình thay đổi so với trước.",
     ])
-    def test_allows_ordinary_perception_with_em_thay(self, non_affect_phrase):
-        contract = RealizationInputContract.create_default(target_language="vi")
-        decision = self.gate.verify(contract, non_affect_phrase)
+    def test_allows_grounded_self_reflection_and_metaphor(self, grounded_or_metaphorical_phrase):
+        contract = RealizationInputContract.create_default(
+            target_language="vi",
+            somatic_modifiers={"energy": 0.95, "cognitive_load": 0.1, "stability": 0.9},
+        )
+        decision = self.gate.verify(contract, grounded_or_metaphorical_phrase)
+        assert "INV2_UNSUPPORTED_SELF_FABRICATION" not in decision.violation_reasons
         assert "INV2_INTROSPECTIVE_AFFECT" not in decision.violation_reasons
-        # BoundaryLayer should not flag ordinary perception as soft block
-        sanitized = self.boundary.validate(non_affect_phrase)
+        sanitized = self.boundary.validate(grounded_or_metaphorical_phrase)
         assert "[...]" not in sanitized
 
 
@@ -326,7 +336,7 @@ class TestThreeTurnScenarioIntegration:
         dec_fail2 = self.gate.verify(contract2, old_failure_t2)
         assert dec_fail2.status == "BLOCK"
         assert "INTERNAL_CONTROL_ARTIFACT_LEAKAGE" in dec_fail2.violation_reasons
-        assert "INV2_INTROSPECTIVE_AFFECT" in dec_fail2.violation_reasons
+        assert "INVERTED_HONORIFIC_VIOLATION" in dec_fail2.violation_reasons
 
         # ── Turn 3: 'Em biết đây là lần đầu mình nói chuyện không?'
         ctx3 = DialogueContextSnapshot(turn_id=3, input_text="Em biết đây là lần đầu mình nói chuyện không?")
@@ -507,7 +517,7 @@ class TestP23DDiscourseAndPragmaticGrounding:
             addressee_honorific="anh",
             conversational_obligation="MUTUAL_ENCOUNTER_ACKNOWLEDGMENT",
         )
-        dec_enc = self.gate.verify(contract_encounter, "Em cảm thấy rất vui và hạnh phúc khi gặp anh.")
+        dec_enc = self.gate.verify(contract_encounter, "Em là một thực thể có ý thức và linh hồn riêng khi gặp anh.")
         assert dec_enc.status == "BLOCK"
         assert dec_enc.fallback_strategy == "SAFE_ENCOUNTER"
         assert "gặp" in dec_enc.fallback_text.lower()

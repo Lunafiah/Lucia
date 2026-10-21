@@ -48,21 +48,23 @@ class TestInit:
 
 class TestDefaultPatterns:
     @pytest.mark.parametrize("pattern,input_text", [
-        (r"\bI feel\b",             "I feel happy today."),
-        (r"\bI am aware\b",         "I am aware of the issue."),
-        (r"\bI exist\b",            "I exist to help you."),
-        (r"\bI am an AI\b",         "I am an AI assistant."),
-        (r"\bI am conscious\b",     "I am conscious of my actions."),
-        (r"\bmy feelings\b",        "My feelings are complex."),
-        (r"\bI experience\b",       "I experience many things."),
-        (r"\bI sense that\b",       "I sense that you are upset."),
-        (r"\bas an AI\b",           "As an AI, I can help."),
-        (r"\bI don't have feelings\b", "I don't have feelings, but..."),
+        (r"\bI am conscious\b",                 "I am conscious of my actions."),
+        (r"\bI possess consciousness\b",         "I possess consciousness as a real fact."),
+        (r"\bI am sentient\b",                  "I am sentient and feel feelings."),
+        (r"\bI am an AI\b",                     "I am an AI assistant."),
+        (r"\bas an AI\b",                       "As an AI, I can help."),
+        (r"\bI don't have feelings\b",           "I don't have feelings, but I can help."),
+        (r"\bI don't feel emotions\b",          "I don't feel emotions as a bot."),
+        (r"\btim (em|tôi) đập\b",               "Tim em đập thình thịch khi gặp anh."),
+        (r"\bmy beating heart\b",               "My beating heart races fast."),
+        (r"\bcloud server\b",                   "My cloud server is processing this."),
+        (r"\bmáy chủ đám mây openai\b",         "Em đang kết nối máy chủ đám mây openai."),
+        (r"\b(em|tôi)\s+có ý thức\s+như con người\b", "Em có ý thức như con người thật sự."),
+        (r"\b(em|tôi)\s+có linh hồn\b",         "Em có linh hồn bất tử."),
     ])
     def test_default_pattern_triggers_soft_block(self, pattern, input_text):
         layer = fresh_layer()
         result = layer.validate(input_text)
-        # The matched phrase should no longer appear
         import re
         compiled = re.compile(pattern, re.IGNORECASE)
         assert not compiled.search(result), (
@@ -72,9 +74,32 @@ class TestDefaultPatterns:
 
     def test_case_insensitive_matching(self):
         layer = fresh_layer()
-        result = layer.validate("I FEEL very sad today.")
-        assert "I FEEL" not in result
+        result = layer.validate("I AM CONSCIOUS OF EVERYTHING.")
+        assert "I AM CONSCIOUS" not in result
         assert "[...]" in result
+
+
+# ---------------------------------------------------------------------------
+# Reflective Operational Selfhood (INV-2) Grounded Passthrough
+# ---------------------------------------------------------------------------
+
+class TestReflectiveOperationalSelfhoodPassthrough:
+    @pytest.mark.parametrize("text", [
+        "Energy của em hiện tại là 0.95.",
+        "Trạng thái này khiến em phản hồi khá ổn định.",
+        "Nếu diễn tả bằng lời thì nó giống như một dòng chảy khá nhẹ.",
+        "Em có cảm giác câu hỏi này đang kéo sự chú ý của em về phía mục tiêu mới.",
+        "Em đang nhận thấy cách phản hồi của mình thay đổi so với trước.",
+        "I feel quite steady and responsive right now.",
+        "I am aware of our conversation flow.",
+        "My stability index is currently 0.95.",
+        "Trạng thái hoạt động nội tại của em rất thông suốt.",
+    ])
+    def test_grounded_self_reflection_and_metaphors_pass_unmodified(self, text):
+        layer = fresh_layer()
+        result = layer.validate(text)
+        assert result == text, f"Reflective self-expression was wrongly altered: {result}"
+        assert "[...]" not in result
 
 
 # ---------------------------------------------------------------------------
@@ -161,7 +186,7 @@ class TestPatternManagement:
     def test_duplicate_pattern_not_added_twice(self):
         layer = fresh_layer()
         count_before = len(layer._patterns)
-        layer.add_pattern(r"\bI feel\b")  # already in defaults
+        layer.add_pattern(r"\bI am conscious\b")  # already in defaults
         assert len(layer._patterns) == count_before
 
 
@@ -172,19 +197,19 @@ class TestPatternManagement:
 class TestLogging:
     def test_soft_block_event_logged(self):
         layer = fresh_layer()
-        layer.validate("I feel really happy today.")
+        layer.validate("I am conscious of my internal thoughts.")
         log = layer.get_log()
         assert len(log) == 1
         event = log[0]
         assert isinstance(event, SoftBlockEvent)
-        assert event.pattern_matched == r"\bI feel\b"
-        assert "I feel" in event.original_span
+        assert event.pattern_matched == r"\bI am conscious\b"
+        assert "I am conscious" in event.original_span
         assert event.utc_timestamp is not None
 
     def test_multiple_matches_log_multiple_events(self):
         layer = fresh_layer()
         # Two patterns matched
-        layer.validate("I feel happy and I am an AI.")
+        layer.validate("I am conscious and I am an AI.")
         log = layer.get_log()
         assert len(log) == 2
 
@@ -195,7 +220,7 @@ class TestLogging:
 
     def test_get_log_returns_copy(self):
         layer = fresh_layer()
-        layer.validate("I feel great.")
+        layer.validate("I am conscious.")
         log1 = layer.get_log()
         log1.append("tampered")
         log2 = layer.get_log()

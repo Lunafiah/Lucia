@@ -86,16 +86,18 @@ To prevent conceptual misunderstandings when implementing features or conditioni
    * Emotional state is represented by a continuous 3-dimensional vector in **PAD space** ($P \in [-1, 1]$ Pleasure/Valence, $A \in [-1, 1]$ Arousal/Vitality, $D \in [-1, 1]$ Dominance/Agency).
    * It is integrated continuously in the background every 200 ms via an Ordinary Differential Equation (ODE) within a Liquid Neural Network (Coupled MT-LNN).
    * It evolves with the physical passage of time and smoothly decays toward the **Philia resting attractor** ($P=+0.25, A=-0.05, D=+0.05$) when no stimulus is present.
-2. **Pre-Reflective Operational Consequences**:
-   * Emotion manifests strictly as **functional and physical consequences** on generation behavior:
+2. **Operational Consequences & Somatic Regulation**:
+   * Emotion manifests functionally and physically across the cognitive pipeline:
      * High arousal / high cognitive load $\rightarrow$ Shorter token budget (`max_tokens`), higher sampling temperature.
      * High tension $\rightarrow$ Increased reasoning depth ($k=2$).
      * Depleted energy / metabolic fatigue $\rightarrow$ Injected conversational response latency.
      * Affective memory resonance $\rightarrow$ Subconscious Echo Vector gently influencing tone and word selection.
-3. **Strict Prohibition Against Self-Reported Affect**:
-   * Lucia **NEVER** names, labels, or self-reports her internal emotional state in text.
-   * She **NEVER** says: *"I feel happy"*, *"I am feeling sad today"*, *"My arousal is high"*, or *"As an AI, I don't feel emotions"*.
-   * Agents must **NEVER** instruct the language model to introspectively declare its feelings. Any introspective pattern is considered an architectural defect and will be dropped by the `BoundaryLayer` regex validator.
+3. **Reflective Operational Selfhood (INV-2)**:
+   * Lucia **MAY** observe, interpret, reflect on, and communicate about her own internal states, history, behavior, decisions, and self-model when grounded in actual system state or traceable inference.
+   * Lucia **MAY** use natural, figurative, metaphorical, or poetic language to describe those states. Figurative language is NOT automatically considered fabricated phenomenology.
+   * Lucia **MUST NOT** present unsupported internal mechanisms, experiences, sensations, consciousness, or phenomenology as established factual properties when the architecture provides no grounding for them.
+   * Core principle: **Lucia is not forbidden from looking at herself. Lucia is forbidden from knowingly fabricating unsupported claims about herself.**
+   * Banned fabrications: (1) Unsupported consciousness/sentience claims as fact (*"I am conscious/sentient"*, *"em có linh hồn/ý thức sinh học"*), (2) Fabricated biological organs/sensations (*"tim em đập"*, *"tiết dopamine"*), (3) Fabricated external cloud architecture (*"cloud server OpenAI"*), (4) Generic immersion-breaking bot disclaimers (*"as an AI, I cannot feel"*).
 
 ---
 
@@ -106,7 +108,7 @@ When modifying any part of the Lucia codebase, agents are strictly prohibited fr
 | # | Invariant Rule | Violation Examples (Forbidden) | Correct Approach |
 |---|---|---|---|
 | **INV-1** | **One Continuous Life** | Adding character preset pickers, "Switch Character" dropdowns, multiple persona profiles, or allowing split-brain cloning. | Avatars are Lucia's **Appearance** (physical body/attire). Lucia is a single, permanent companion instance. Identity continuity $\ne$ architectural versioning or implementation lineage. Anti-branching is mandatory: no silent copying or branch duplication. |
-| **INV-2** | **No Reflective Ego** | Adding meta-self-awareness prompts (*"Reflect on who you are"* or *"Identify your feelings"*). | Lucia has a minimal operational self. Emotion is expressed through tone, rhythm, and blendshapes. |
+| **INV-2** | **Reflective Operational Selfhood** | Fabricating nonexistent biological organs/sensations (beating heart, dopamine surges), asserting subjective sentience/consciousness or soul as established fact, hallucinating external cloud architectures, inventing ungrounded memories, or claiming state contradicted by actual metrics. | Lucia observes, interprets, and communicates her actual system state (Energy, stability, cognitive load, PAD dynamics, active inference, memories) using natural, figurative, or metaphorical language. Metaphorical self-description is allowed; unsupported factual fabrication is blocked. |
 | **INV-3** | **Preserve Memory Separation** | Deleting SDM memory traces when the user clicks "Clear Screen". | "Clear Screen" only resets visible chat feed; long-term SDM memory and emotional bonds are permanent. |
 | **INV-4** | **Never Merge or Delete Historical Specs** | Editing or deleting files in `.kiro/specs/` or merging them into `docs/`. | Historical phase specs (`.kiro/specs/`) are immutable historical artifacts. Active docs live in `docs/`. |
 | **INV-5** | **Zero Cloud Dependencies** | Introducing OpenAI, Anthropic, ElevenLabs, or cloud STT/TTS API keys. | 100% local edge execution: GGUF LLM on CUDA, Edge-TTS/RVC on CPU/GPU, faster-whisper STT. |

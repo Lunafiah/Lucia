@@ -245,9 +245,9 @@ class TestPipeline:
 
     def test_boundary_layer_applied_to_response(self, tmp_path):
         """LLM returns a pattern-matching phrase → Boundary_Layer replaces it."""
-        orch = _make_orchestrator(tmp_path, llm_response="I feel very happy today.")
+        orch = _make_orchestrator(tmp_path, llm_response="I am an AI language model.")
         result = orch.process("How are you?")
-        assert "I feel" not in result
+        assert "I am an AI" not in result
         orch.shutdown()
 
     def test_is_healthy_true_when_running(self, tmp_path):

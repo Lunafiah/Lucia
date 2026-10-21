@@ -11,6 +11,7 @@ import asyncio
 import io
 import logging
 import os
+import threading
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -85,6 +86,7 @@ class VoiceEngine:
         self._cache: Dict[str, bytes] = {}
         self._rvc_result_cache: Dict[str, Optional[Any]] = {}
         self._pipeline: Optional[Any] = None
+        self._pipeline_lock = threading.Lock()
         self._last_rvc_result: Optional[Any] = None
         self._scan_rvc_models()
 
@@ -171,43 +173,47 @@ class VoiceEngine:
         if self._pipeline is not None:
             return self._pipeline
 
-        try:
-            from src.core.voice.rvc_pipeline import RVCPipeline
-        except (ImportError, ModuleNotFoundError) as env_err:
-            logger.warning("VoiceEngine: RVC pipeline unavailable due to missing dependencies: %s", env_err)
-            return None
+        with self._pipeline_lock:
+            if self._pipeline is not None:
+                return self._pipeline
 
-        import torch
-        req_device = self._config.device
-        if req_device is None:
-            target_device = "cuda:0" if torch.cuda.is_available() else "cpu"
-        else:
-            target_device = req_device if (not req_device.startswith("cuda") or torch.cuda.is_available()) else "cpu"
-
-        try:
-            self._pipeline = RVCPipeline(device=target_device)
-            logger.info("VoiceEngine: RVCPipeline initialized with active device: %s", self._pipeline.device)
-            return self._pipeline
-        except (ImportError, ModuleNotFoundError) as env_err:
-            logger.warning("VoiceEngine: RVCPipeline initialization limited by dependencies: %s", env_err)
-            return None
-        except Exception as init_err:
-            if target_device != "cpu":
-                logger.warning(
-                    "VoiceEngine: Failed to initialize RVCPipeline on %s (%s). Attempting CPU fallback...",
-                    target_device,
-                    init_err,
-                )
-                try:
-                    self._pipeline = RVCPipeline(device="cpu")
-                    logger.info("VoiceEngine: RVCPipeline initialized on CPU fallback")
-                    return self._pipeline
-                except Exception as cpu_err:
-                    logger.error("VoiceEngine: CPU fallback also failed: %s", cpu_err, exc_info=True)
-                    return None
-            else:
-                logger.error("VoiceEngine: Failed to initialize RVCPipeline on CPU: %s", init_err, exc_info=True)
+            try:
+                from src.core.voice.rvc_pipeline import RVCPipeline
+            except (ImportError, ModuleNotFoundError) as env_err:
+                logger.warning("VoiceEngine: RVC pipeline unavailable due to missing dependencies: %s", env_err)
                 return None
+
+            import torch
+            req_device = self._config.device
+            if req_device is None:
+                target_device = "cuda:0" if torch.cuda.is_available() else "cpu"
+            else:
+                target_device = req_device if (not req_device.startswith("cuda") or torch.cuda.is_available()) else "cpu"
+
+            try:
+                self._pipeline = RVCPipeline(device=target_device)
+                logger.info("VoiceEngine: RVCPipeline initialized with active device: %s", self._pipeline.device)
+                return self._pipeline
+            except (ImportError, ModuleNotFoundError) as env_err:
+                logger.warning("VoiceEngine: RVCPipeline initialization limited by dependencies: %s", env_err)
+                return None
+            except Exception as init_err:
+                if target_device != "cpu":
+                    logger.warning(
+                        "VoiceEngine: Failed to initialize RVCPipeline on %s (%s). Attempting CPU fallback...",
+                        target_device,
+                        init_err,
+                    )
+                    try:
+                        self._pipeline = RVCPipeline(device="cpu")
+                        logger.info("VoiceEngine: RVCPipeline initialized on CPU fallback")
+                        return self._pipeline
+                    except Exception as cpu_err:
+                        logger.error("VoiceEngine: CPU fallback also failed: %s", cpu_err, exc_info=True)
+                        return None
+                else:
+                    logger.error("VoiceEngine: Failed to initialize RVCPipeline on CPU: %s", init_err, exc_info=True)
+                    return None
 
     def warmup_rvc(self) -> bool:
         """
@@ -229,14 +235,15 @@ class VoiceEngine:
             logger.warning("VoiceEngine: RVC warmup skipped because pipeline could not be initialized")
             return False
 
-        try:
-            pipeline.load_model(model_info.pth_path, model_info.index_path)
-            pipeline._get_or_load_hubert()
-            logger.info("VoiceEngine: RVC pipeline warmed up and connected successfully for %s", model_info.name)
-            return True
-        except Exception as exc:
-            logger.warning("VoiceEngine: RVC warmup encountered non-fatal error: %s", exc)
-            return False
+        with self._pipeline_lock:
+            try:
+                pipeline.load_model(model_info.pth_path, model_info.index_path)
+                pipeline._get_or_load_hubert()
+                logger.info("VoiceEngine: RVC pipeline warmed up and connected successfully for %s", model_info.name)
+                return True
+            except Exception as exc:
+                logger.warning("VoiceEngine: RVC warmup encountered non-fatal error: %s", exc)
+                return False
 
 
     async def synthesize_speech(
@@ -455,15 +462,16 @@ class VoiceEngine:
         )
 
         try:
-            result = self._pipeline.convert(
-                base_audio=base_audio,
-                pth_path=model_info.pth_path,
-                index_path=model_info.index_path,
-                model_name=model_info.name,
-                index_rate=self._config.index_rate,
-                pitch_shift_semitones=pitch_shift,
-                f0_contour=f0_contour,
-            )
+            with self._pipeline_lock:
+                result = self._pipeline.convert(
+                    base_audio=base_audio,
+                    pth_path=model_info.pth_path,
+                    index_path=model_info.index_path,
+                    model_name=model_info.name,
+                    index_rate=self._config.index_rate,
+                    pitch_shift_semitones=pitch_shift,
+                    f0_contour=f0_contour,
+                )
             self._last_rvc_result = result
             if result.rvc_applied and result.execution_status == "success":
                 logger.info("VoiceEngine: RVC conversion succeeded for %s (%d bytes)", model_info.name, len(result.audio_bytes))

@@ -58,6 +58,11 @@ from src.core.cognition.kernel import (
 )
 from src.core.cognition.kernel.compiler import RuleCompilationReport, compile_rule_set
 from src.core.cognition.service import DerivedResult, EpistemicReasoningService
+from src.core.cognition.self_model import (
+    ReflectiveSelfModel,
+    SelfInterpretation,
+    SelfObservationSnapshot,
+)
 from src.core.communication.caps import (
     AdmissibleEvidencePool,
     CAPSResult,
@@ -245,6 +250,8 @@ class CognitiveOrchestrator:
         ingress_gate: Optional[LanguageIngressGate] = None,
         # --- Stage Execution Observability (Blocker 4) ---
         execution_tracer: Optional[CognitiveExecutionTracer] = None,
+        # --- Reflective Operational Selfhood (INV-2) ---
+        reflective_self_model: Optional[ReflectiveSelfModel] = None,
         # --- Configuration knobs ---
         system_preamble: str = "",
         n_ctx: int = 2048,
@@ -325,6 +332,11 @@ class CognitiveOrchestrator:
         self._execution_tracer = (
             execution_tracer if execution_tracer is not None else CognitiveExecutionTracer()
         )
+        # Reflective Operational Selfhood (INV-2)
+        self._reflective_self_model = (
+            reflective_self_model if reflective_self_model is not None else ReflectiveSelfModel()
+        )
+        self._latest_self_interpretation: Optional[SelfInterpretation] = None
 
         # Policy defaults
         self._surprise_policy = surprise_policy or SurpriseModulationPolicy()
@@ -438,6 +450,16 @@ class CognitiveOrchestrator:
     def rule_compilation_report(self) -> Optional[RuleCompilationReport]:
         """Diagnostic compilation report for the current RuleIndex."""
         return self._rule_compilation_report
+
+    @property
+    def reflective_self_model(self) -> ReflectiveSelfModel:
+        """Reflective Operational Selfhood engine (INV-2)."""
+        return self._reflective_self_model
+
+    @property
+    def latest_self_interpretation(self) -> Optional[SelfInterpretation]:
+        """Latest structured self-model interpretation."""
+        return self._latest_self_interpretation
 
     @property
     def reasoning_service(self) -> Optional[EpistemicReasoningService]:
@@ -1203,7 +1225,31 @@ class CognitiveOrchestrator:
                     provenance=ProvenanceType.OBSERVED,
                 ),
             ]
-            all_verified_props = tuple(known_propositions) + tuple(life_state_props)
+
+            current_phase_str = (
+                self._dyadic_state.dialogue_phase.value
+                if hasattr(self._dyadic_state.dialogue_phase, "value")
+                else str(self._dyadic_state.dialogue_phase)
+            )
+
+            # Self-Observation & Self-Model (Reflective Operational Selfhood, INV-2)
+            self_obs = self._reflective_self_model.observe(
+                somatic=markers,
+                pad=pad_final,
+                prediction_error=prediction_error,
+                surprise=float(getattr(self._active_inference, "surprise", prediction_error)),
+                rel_state=rel_state,
+                trace_count=traces_count,
+                echo_active=echo_vector is not None,
+                recollection_active=bool(recollection_result and recollection_result.active),
+                turn_count=history_turn_count,
+                epoch=self._current_epoch,
+                dialogue_phase=current_phase_str,
+            )
+            self_interp = self._reflective_self_model.interpret(self_obs)
+            self._latest_self_interpretation = self_interp
+
+            all_verified_props = tuple(known_propositions) + tuple(life_state_props) + tuple(self_interp.verified_propositions)
 
             try:
                 active_refs = tuple(self._discourse_cache.get_all_referents())
@@ -1303,6 +1349,15 @@ class CognitiveOrchestrator:
                 if hasattr(self._dyadic_state.dialogue_phase, "value")
                 else str(self._dyadic_state.dialogue_phase)
             )
+            somatic_mods = {
+                "energy": markers.energy,
+                "stability": markers.stability,
+                "cognitive_load": markers.cognitive_load,
+                "tension": markers.tension,
+                "pleasure": pad_final.pleasure,
+                "arousal": pad_final.arousal,
+                "dominance": pad_final.dominance,
+            }
             realization_contract: RealizationInputContract
             if caps_result is not None:
                 realization_contract = RealizationInputContract.from_caps(
@@ -1313,6 +1368,7 @@ class CognitiveOrchestrator:
                     addressee_honorific=addressee_h,
                     forbidden_additions=forbidden_adds,
                     dialogue_phase=current_phase_str,
+                    somatic_modifiers=somatic_mods,
                 )
             else:
                 realization_contract = RealizationInputContract.create_default(
@@ -1321,6 +1377,7 @@ class CognitiveOrchestrator:
                     addressee_honorific=addressee_h,
                     forbidden_additions=forbidden_adds,
                     dialogue_phase=current_phase_str,
+                    somatic_modifiers=somatic_mods,
                 )
 
             # Decision A: Assistant Proposition Semantic Indexing (ADR-038)
@@ -1382,6 +1439,7 @@ class CognitiveOrchestrator:
                 knowledge_propositions=known_propositions,
                 caps_result=caps_result,
                 contract=realization_contract,
+                self_interpretation=self_interp,
             )
             if isinstance(prompt_or_err, AssemblyError):
                 logger.warning(
@@ -1667,6 +1725,14 @@ class CognitiveOrchestrator:
             # 16.4 Update dialogue history (ephemeral working memory)
             self._history.append(("user", input_text))
             self._history.append(("assistant", safe_response))
+            # Feedback update to Reflective Self Model (INV-2)
+            try:
+                self._reflective_self_model.update_from_feedback(
+                    user_text=input_text,
+                    assistant_text=safe_response,
+                )
+            except Exception:
+                logger.debug("CognitiveOrchestrator: self model feedback update failed", exc_info=True)
             max_pairs = self._max_history_turns * 2
             if len(self._history) > max_pairs:
                 self._history = self._history[-max_pairs:]
@@ -1993,6 +2059,7 @@ def build_cognitive_orchestrator(
     if llm_backend is None:
         llm_backend = LLMBackend(config.to_llm_config())
     boundary_layer = BoundaryLayer(config.to_boundary_config())
+    reflective_self_model = ReflectiveSelfModel()
 
     # LNN trainer is optional — gracefully disabled when torch is unavailable
     lnn_trainer: Optional[LNNTrainer] = None
@@ -2036,4 +2103,5 @@ def build_cognitive_orchestrator(
         semantic_gate=semantic_gate,
         execution_tracer=execution_tracer,
         conditions_path=conditions_path,
+        reflective_self_model=reflective_self_model,
     )

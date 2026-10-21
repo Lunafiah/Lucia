@@ -236,9 +236,23 @@ class RVCPipeline:
             return self.active_hubert
 
         try:
-            from transformers import HubertModel
+            try:
+                from transformers.models.hubert.modeling_hubert import HubertModel
+            except (ImportError, ModuleNotFoundError):
+                from transformers import HubertModel
+
             logger.info("RVCPipeline: Loading ContentVec / HuBERT feature extractor on %s...", self.device)
-            hubert = HubertModel.from_pretrained('lj1995/VoiceConversionWebUI', subfolder='hubert_base')
+            try:
+                hubert = HubertModel.from_pretrained(
+                    'lj1995/VoiceConversionWebUI',
+                    subfolder='hubert_base',
+                    local_files_only=True,
+                )
+            except Exception:
+                hubert = HubertModel.from_pretrained(
+                    'lj1995/VoiceConversionWebUI',
+                    subfolder='hubert_base',
+                )
             hubert = hubert.float().to(self.device)
             hubert.eval()
             self.active_hubert = hubert

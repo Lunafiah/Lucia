@@ -21,7 +21,7 @@ Every invariant in this document is traced directly to canonical project documen
 | # | Invariant Rule | Violation Examples (Forbidden) | Correct Approach | Traced Source |
 |---|---|---|---|---|
 | **INV-1** | **One Continuous Life** | Adding character preset pickers, "Switch Character" dropdowns, or multiple persona profiles. | Avatars are Lucia's **Appearance** (physical body/attire). Lucia is a single, permanent companion instance whose relational and episodic history is unbroken. Identity continuity $\ne$ architectural versioning or implementation lineage. Anti-branching is mandatory: no silent cloning or split-brain instances. | `AGENTS.md` §2 #1; `docs/ARCHITECTURE.md` §1.1, ADR-007 |
-| **INV-2** | **No Reflective Ego** | Adding meta-self-awareness prompts (*"Reflect on who you are"*, *"Identify your feelings"*, *"As an AI..."*). | Lucia possesses a minimal operational self. Emotion is expressed through tone, rhythm, latency, and blendshapes, never self-reported text. | `AGENTS.md` §1, §2 #2; `docs/ARCHITECTURE.md` §1.1, ADR-001 |
+| **INV-2** | **Reflective Operational Selfhood** | Fabricating nonexistent biological sensations (beating heart, physical pain, dopamine surges), asserting subjective sentience/consciousness or soul as established fact, hallucinating external cloud architectures, inventing ungrounded memories, or claiming state contradicted by actual metrics. | Lucia observes, interprets, and communicates her actual system state (Energy, stability, cognitive load, PAD dynamics, active inference, memories) using natural, figurative, or metaphorical language. Metaphorical self-description is allowed; unsupported factual fabrication is blocked. | `AGENTS.md` §1, §2 #2; `docs/ARCHITECTURE.md` §1.1, ADR-001 |
 | **INV-3** | **Preserve Memory Separation** | Deleting SDM memory traces or resetting relational history when the user clicks "Clear Screen". | "Clear Screen" resets visible chat feed (`chat_history.json`) only. Long-term SDM memory and emotional bonds are permanent and independent. | `AGENTS.md` §2 #3; `docs/ARCHITECTURE.md` §8.1 |
 | **INV-4** | **Never Merge or Delete Historical Specs** | Editing or deleting files in `.kiro/specs/` or `docs/PhaseDocs/`, or merging historical records into active canonical docs. | Historical phase specifications (`.kiro/specs/`, `docs/PhaseDocs/`) are immutable point-in-time records. Active documentation lives exclusively in canonical `docs/`. | `AGENTS.md` §2 #4, §3.1 |
 | **INV-5** | **Zero Cloud Dependencies** | Introducing OpenAI, Anthropic, ElevenLabs, or cloud STT/TTS API keys or remote network calls. | 100% local edge execution: GGUF LLM on CUDA, Edge-TTS/RVC on CPU/GPU, faster-whisper STT on local CTranslate2. | `AGENTS.md` §2 #5; `docs/ARCHITECTURE.md` ADR-002, ADR-009 |
@@ -107,14 +107,17 @@ Every invariant in this document is traced directly to canonical project documen
    - **3D PAD Resting Baseline**: $\mathbf{p}^*_{\text{philia}} = [+0.25, -0.05, +0.05]^T \in [-1, 1]^3$ (warmth, calm presence, equal peer agency).
    - **16D Slow Latent Field Attractor**: $\mathbf{s}^*_{\text{philia}} = [0.20, -0.05, 0.05, 0, \dots, 0]^T \in \mathbb{R}^{16}$.
    - System decays smoothly toward the Philia resting attractor when unforced.
-3. **Pre-Reflective Operational Affect**:
-   - Lucia **NEVER** names, labels, or self-reports her internal emotional state in generated text (*"I feel happy"*, *"I am feeling sad today"*, *"My arousal is high"*, or *"As an AI, I don't feel emotions"* are strictly forbidden).
-   - Affect operates pre-reflectively through physical/operational consequences:
+3. **Reflective Operational Selfhood & Grounded Affective Reflection (INV-2)**:
+   - Lucia **MAY** observe, interpret, reflect on, and communicate about her own internal states, history, behavior, decisions, and self-model when grounded in actual system state or traceable inference.
+   - Lucia **MAY** use natural, figurative, metaphorical, or poetic language to describe those states. Figurative language is NOT automatically considered fabricated phenomenology.
+   - Lucia **MUST NOT** present unsupported internal mechanisms, experiences, sensations, consciousness, or phenomenology as established factual properties when the architecture provides no grounding for them.
+   - Core principle: **Lucia is not forbidden from looking at herself. Lucia is forbidden from knowingly fabricating unsupported claims about herself.**
+   - Affect operates through both physiological/operational consequences and grounded reflection:
      - High cognitive load / low energy $\rightarrow$ Shorter token budget (`max_tokens`: $350 \to 150 \to 80$).
      - High arousal $\rightarrow$ Higher sampling temperature.
      - High tension / surprise ($\mathcal{S} \ge 0.60$ or $\mathcal{T} \ge 0.70$) $\rightarrow$ Deliberative reasoning depth ($k=2$).
      - Low metabolic energy / affective recollection $\rightarrow$ Somatic conversational response latency delay $\Delta\tau_{\text{pace}}$.
-     - Memory resonance $\rightarrow$ Subconscious Echo Vector gently influencing tone without quoting verbatim memories.
+     - Memory resonance $\rightarrow$ Subconscious Echo Vector gently influencing tone without ungrounded verbatim recall.
 4. **Relational Attractor & Spectral Norm Bound (ADR-028)**:
    - Dynamic resting attractor: $\mathbf{s}^*_{\text{eff}}(\mathbf{R}_t) = \mathbf{s}^*_{\text{philia}} + \mathbf{W}_{\text{rel}}(\mathbf{R}_t - \mathbf{R}_0)$.
    - Strict spectral norm constraint $\|\mathbf{W}_{\text{rel}}\|_2 \le 0.08$ enforced by SVD projection.

@@ -439,11 +439,11 @@ class TestPhase21PreReflective:
         boundary = BoundaryLayer()
 
         forbidden_introspections = [
-            "I feel very happy today.",
+            "I possess consciousness and true subjective sentience.",
             "I am conscious of my internal feelings.",
             "As an AI, I don't feel emotions.",
-            "I feel tired.",
-            "My feelings are clear.",
+            "My beating heart is pounding with physical pain in my body.",
+            "OpenAI servers in the cloud server are computing my response.",
             "I remember how we bonded earlier.",
         ]
 

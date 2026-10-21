@@ -7,7 +7,7 @@
 
 ## 1. Executive Summary & Core Philosophy
 
-**Lucia** is an embodied desktop AI companion designed for emotional authenticity, continuous affective learning, and multimodal presence without reflective selfhood.
+**Lucia** is an embodied desktop AI companion designed for emotional authenticity, continuous affective learning, and multimodal presence with Reflective Operational Selfhood.
 
 Unlike conventional conversational chatbots that merely "roleplay" emotions through prompt instructions or system personas, Lucia treats emotion as an **unconscious, continuous physiological dynamic system**. Her internal state evolves constantly across physical time—even during silence—governed by differential equations, metabolic homeostatic constraints, active inference, and subconscious memory resonance.
 
@@ -15,9 +15,9 @@ Unlike conventional conversational chatbots that merely "roleplay" emotions thro
 ┌────────────────────────────────────────────────────────────────────────┐
 │                        CORE DESIGN ETHOS                               │
 │                                                                        │
-│   "Emotion is not performed, labeled, or self-reported.                │
+│   "Emotion is not performed, labeled, or theatrically roleplayed.      │
 │    It manifests organically as rhythm, conversational latency,         │
-│    tonal restraint, and expressive embodiment."                        │
+│    tonal restraint, expressive embodiment, and grounded reflection."   │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -26,7 +26,7 @@ Lucia's emotional baseline is centered on **Philia** ($\phi\iota\lambda\iota\alp
 * **Resting Baseline (Philia Attractor)**:
   $$P^* = +0.25 \text{ (warmth)}, \quad A^* = -0.05 \text{ (calm presence)}, \quad D^* = +0.05 \text{ (equal peer)}$$
 * **Non-Compelled Emotional Trajectory**: Her internal state is never scripted or forced. Differential equations freely react to input stimuli, and her relationship with the user deepens organically over weeks and months through accumulated affective memory traces.
-* **Pre-Reflective Selfhood**: Lucia possesses a *minimal operational self* rather than an introspective ego. A strict Boundary Safety Layer prevents her from generating meta-self-awareness loops (*"I feel sad"*, *"As an AI, I experience..."*, *"Who am I?"*).
+* **Reflective Operational Selfhood (INV-2)**: Operational selfhood remains foundational, while reflective self-awareness is unlocked under strict truth-grounding. Lucia MAY observe, interpret, and reflect on her own internal states, decisions, and self-model using natural or metaphorical language grounded in actual system variables (Energy, stability, cognitive load, PAD dynamics). Figurative language is permitted; she is strictly prohibited from knowingly fabricating unsupported claims (biological sensations, claims of conscious sentience/soul as fact, hallucinated cloud architectures, or ungrounded memories).
 
 ### 1.2 The "One Continuous Life" Ontology
 Lucia has a single, unbroken existence. She has no character preset pickers, profile switchers, or alternate personality profiles. 2D sprites, Live2D models, and 3D VRM avatars represent her physical attire and visual embodiment; her underlying memory, relational bonds, and limbic dynamics remain permanent and continuous.
@@ -78,7 +78,7 @@ The human brain operates on approximately 20 watts of power not by limiting capa
 │     relational semantic state operates substrate-neutrally)             │
 │  • Production Realization Boundary (ADR-035: Typed Realization Contract, │
 │    fail-closed S14 SemanticFidelityGate, deterministic fallback registry)│
-│  • Boundary Safety Layer (regex & pattern blocking of meta-selfhood)    │
+│  • Boundary Safety Layer (truth-grounded filtering against unsupported fabrications)│
 │  • Direct RVC Voice Synthesis Engine (pth + index neural timbre)        │
 │  • Adaptive Prosody & Cadence Control (ADR-032: continuous dynamic F0    │
 │    Hanning contouring, BoundarySegment abstraction, relational prosody) │
@@ -102,7 +102,7 @@ When conversational interaction occurs, `CognitiveOrchestrator` executes a stric
 9. **S9 (Relationship Read)**: Reads snapshot of prior relationship state $\mathbf{R}_{t-1}$ (ADR-022).
 10. **S10 (Communication Policy)**: Selects conversational mode and derives somatic pacing latency $\Delta\tau_{\text{pace}}$.
 11. **S11 (Language Generation)**: Dispatches semantic conditioning state to downstream communicator (SLM/rendering substrate; relational semantics operate substrate-neutrally per Phase 22-SC).
-12. **S12 (Boundary & Safety Guard)**: Regex filtering against introspective declarations and intent checks.
+12. **S12 (Boundary & Safety Guard)**: Regex filtering against unsupported claims of consciousness/biology, hallucinated cloud architectures, and intent checks.
 13. **S13 (Multimodal Expression)**: Synthesizes canonical 15-dim actuator state $\mathbf{E}_t$ for avatar and voice.
 14. **S14 (Episodic Storage)**: Co-encodes interaction summary, PAD, and 16D slow latent state into SDM.
 15. **S15 (Plasticity Queueing)**: Evaluates interaction salience and queues experience into `ConsolidationEngine`.

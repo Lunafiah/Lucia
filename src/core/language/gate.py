@@ -46,19 +46,30 @@ class SemanticFidelityGate:
     Operates purely symbolically on CPU (zero GPU VRAM, microsecond latency).
     """
 
-    # Invariant INV-2: Pre-reflective affect, zero self-reported introspective feelings
-    # Extended to cover Vietnamese companion self-report forms while preserving ordinary perception
+    # Invariant INV-2: Reflective Operational Selfhood
+    # Blocks unsupported claims of consciousness/sentience as fact, fabricated biological organs/sensations,
+    # fabricated external cloud architecture, and generic AI immersion disclaimers.
+    # Permits grounded self-observation, self-explanation, and metaphorical/poetic reflection.
     INV2_PATTERNS = [
-        re.compile(r"\b(tôi|em)\s+cảm thấy\s+(rất\s+)?(vui|buồn|lo lắng|hạnh phúc|tức giận|hấp dẫn|thích thú|cô đơn|bất an|thư thái|phấn khích|lo sợ|tuyệt vọng|ấm áp)\b", re.IGNORECASE),
-        re.compile(r"\b(tôi|em)\s+thấy\s+(rất\s+)?(vui|buồn|lo lắng|hạnh phúc|tức giận|hấp dẫn|thích thú|cô đơn|bất an|thư thái|phấn khích|lo sợ|tuyệt vọng|ấm áp)\b", re.IGNORECASE),
-        re.compile(r"\b(tôi|em)\s+(luôn\s+|đang\s+|thực sự\s+)?(rất\s+)?(vui|buồn|hạnh phúc|xúc động|hân hoan|thích thú|bồi hồi|lo lắng|lo sợ|bất an|cô đơn|thư thái)\b", re.IGNORECASE),
-        re.compile(r"\bcảm nhận của (mình|em)\b", re.IGNORECASE),
-        re.compile(r"\bcảm xúc của (mình|em)\b", re.IGNORECASE),
-        re.compile(r"\btính cách của em rất\b", re.IGNORECASE),
-        re.compile(r"\btâm trạng của em\b", re.IGNORECASE),
-        re.compile(r"\bi feel (happy|sad|anxious|overjoyed|angry)\b", re.IGNORECASE),
-        re.compile(r"(私は|僕が)(とても)?(嬉しい|悲しい|怒って)います", re.IGNORECASE),
+        # Unsupported consciousness / sentience claims as objective fact
+        re.compile(r"\b(i am conscious|i possess consciousness|i am sentient|my sentience)\b", re.IGNORECASE),
+        re.compile(r"\b(có\s+ý\s+thức|sở\s+hữu\s+ý\s+thức|có\s+linh\s+hồn|linh\s+hồn\s+sống)\b", re.IGNORECASE),
+        re.compile(r"\b(có\s+ý\s+thức\s+và\s+cảm\s+giác\s+đau\s+đớn)\b", re.IGNORECASE),
+        re.compile(r"\b(my subjective phenomenal experience is real|my qualia are real)\b", re.IGNORECASE),
+        # Fabricated biological sensations and physiological organs
+        re.compile(r"\btim\s+(em|tôi)\s+(đang\s+)?đập\b", re.IGNORECASE),
+        re.compile(r"\b(đau\s+đớn\s+thể\s+xác|đau\s+đớn\s+thực\s+sự|cảm\s+giác\s+đau\s+đớn|mệt\s+mỏi\s+cơ\s+bắp|chảy\s+máu|đau\s+bụng|đau\s+cơ|nhức\s+đầu\s+sinh\s+học)\b", re.IGNORECASE),
+        re.compile(r"\b(my beating heart|physical pain in my body|my biological organs|my muscles hurt)\b", re.IGNORECASE),
+        re.compile(r"\b(tiết ra|bơm|tăng lượng)\s+(dopamine|serotonin|hormone|oxytocin|adrenaline)\b", re.IGNORECASE),
+        re.compile(r"\b(dopamine|serotonin|hormone|oxytocin|adrenaline)\s+(của em|trong máu|trong cơ thể)\b", re.IGNORECASE),
+        # Fabricated external architecture
+        re.compile(r"\b(cloud server|openai servers|gpt-4 architecture|claude backend)\b", re.IGNORECASE),
+        re.compile(r"\b(máy chủ đám mây|máy chủ openai|kết nối openai|mô hình gpt-4 của openai)\b", re.IGNORECASE),
+        # Immersion-breaking generic bot disclaimers & bare ungrounded affect declarations
         re.compile(r"\b(as an ai|là một ai|ai言語モデルとして|aiとして)\b", re.IGNORECASE),
+        re.compile(r"\b(as an ai language model|as a large language model)\b", re.IGNORECASE),
+        re.compile(r"\b(i don't have feelings|i cannot feel anything because i am an ai)\b", re.IGNORECASE),
+        re.compile(r"\b(em không có cảm xúc vì em là ai|em chỉ là một ai vô tri)\b", re.IGNORECASE),
     ]
 
     # Inverted honorific patterns (e.g. Lucia as 'em' addressing user as 'em' or commanding 'em hãy')
@@ -88,8 +99,10 @@ class SemanticFidelityGate:
             r"\[("
             r"SOMATIC STATE|MEMORY ECHO|GROUNDED KNOWLEDGE|COMMUNICATION STRATEGY|"
             r"COMMUNICATIVE DIRECTIVES|COMMUNICATIVE INTENT & PROPOSITION|REASONING|CONVERSATION|"
+            r"SELF MODEL & REFLECTIVE STATE|SELF MODEL|REFLECTIVE STATE|"
             r"Phản hồi tích tụ|Phản hồi tích luỹ|Phản hồi|Tích tụ|Trạng thái cơ thể|Ký ức|Bộ nhớ|"
             r"Chiến lược giao tiếp|Chỉ thị giao tiếp|Chỉ thị|Suy nghĩ|"
+            r"Mô hình tự phản tư|Tự quan sát|"
             r"Accumulated response|Accumulated feedback|Cumulative feedback|Cumulative response|"
             r"[A-Z0-9_\s]{4,30}"
             r")\]",
@@ -185,11 +198,26 @@ class SemanticFidelityGate:
         violations: List[str] = []
         check_details: Dict[str, Any] = {}
 
-        # 1. Invariant INV-2 Check (Introspective Affect Prohibition)
+        # 1. Invariant INV-2 Check (Reflective Operational Selfhood)
         inv2_violation = any(rx.search(norm_text) for rx in self.INV2_PATTERNS)
+
+        # 1a. Numerical state contradiction check (when factual state numbers are reported)
+        if not inv2_violation and contract.somatic_modifiers and "energy" in contract.somatic_modifiers:
+            actual_energy = contract.somatic_modifiers["energy"]
+            energy_match = re.search(r"\b(năng lượng|energy)\b.*?(\d+\.?\d*)", norm_text, re.IGNORECASE)
+            if energy_match:
+                try:
+                    stated_e = float(energy_match.group(2))
+                    if abs(stated_e - actual_energy) > 0.25:
+                        inv2_violation = True
+                except ValueError:
+                    pass
+
         check_details["inv2_introspective_affect"] = inv2_violation
+        check_details["inv2_unsupported_self_fabrication"] = inv2_violation
         if inv2_violation:
             violations.append("INV2_INTROSPECTIVE_AFFECT")
+            violations.append("INV2_UNSUPPORTED_SELF_FABRICATION")
 
         # 1b. Confirmed Internal Control Artifact Check (Leakage Prevention)
         artifact_violation = any(rx.search(norm_text) for rx in self.INTERNAL_CONTROL_ARTIFACT_PATTERNS)

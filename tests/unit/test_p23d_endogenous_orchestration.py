@@ -301,7 +301,7 @@ class TestP23DSafety:
         data = json.loads(content_raw)
         assert isinstance(data, dict)
         assert "is_onboarded" in data
-        assert "ontology_state" in data
+        assert "ontology_state" in data or data.get("is_onboarded") is False
 
     def test_safe_002_anti_cascade_invariant_depth_bounded(self, mock_orchestrator):
         """

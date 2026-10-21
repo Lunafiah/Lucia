@@ -65,15 +65,16 @@ class ProcessManager {
         env: { ...process.env, PYTHONUNBUFFERED: '1' }
       });
 
-      // 60-second startup timeout watchdog
+      // Startup timeout watchdog (default 120s, configurable via LUCIA_STARTUP_TIMEOUT)
+      const timeoutMs = parseInt(process.env.LUCIA_STARTUP_TIMEOUT || '120000', 10);
       this._startupTimer = setTimeout(() => {
         if (!this._ready) {
-          console.error('[ProcessManager] Backend startup timed out after 60s');
+          console.error(`[ProcessManager] Backend startup timed out after ${Math.round(timeoutMs / 1000)}s`);
           this._dispatch('backend:error', { code: 'startup_timeout' });
           this.stop();
           reject(new Error('startup_timeout'));
         }
-      }, 60000);
+      }, timeoutMs);
 
       this.process.stdout.on('data', (data) => {
         const text = data.toString();
