@@ -129,7 +129,7 @@ describe('Voice-First Presentation Timing & Response Synchronization', () => {
     jest.clearAllMocks();
   });
 
-  test('1. Event ordering: response_ready < tts_start < tts_end <= text_commit', async () => {
+  test('1. Event ordering: text commits immediately upon response_ready while TTS runs asynchronously', async () => {
     const stageEvents = [];
     chat.onPresentationEvent = (evt) => {
       stageEvents.push({ stage: evt.stage, time: evt.timestamp });
@@ -144,9 +144,12 @@ describe('Voice-First Presentation Timing & Response Synchronization', () => {
     // At this point, speakMock has been called and onStart fired
     expect(speakMock).toHaveBeenCalledTimes(1);
 
-    // CRITICAL: While Lucia is speaking, companion text MUST NOT be visible on chat UI
+    // CRITICAL (Section D & E4): Text bubble MUST be visible immediately, not waiting for TTS
     const companionBubblesDuringSpeech = chat.messagesContainer.querySelectorAll('.message-row.companion:not(.typing-row)');
-    expect(companionBubblesDuringSpeech.length).toBe(0);
+    expect(companionBubblesDuringSpeech.length).toBe(1);
+    expect(companionBubblesDuringSpeech[0].querySelector('.bubble-text').textContent).toBe(
+      'Xin chao Luna, em luon o day cung anh.'
+    );
 
     // Authoritative TTS end event triggered
     expect(activeSpeakCallback).not.toBeNull();
@@ -158,31 +161,25 @@ describe('Voice-First Presentation Timing & Response Synchronization', () => {
 
     await sendPromise;
 
-    // Check captured stages sequence
+    // Check captured stages sequence: text commits immediately, then TTS proceeds
     const stageNames = stageEvents.map((e) => e.stage);
     expect(stageNames).toEqual([
       PresentationStage.RESPONSE_READY,
+      PresentationStage.TEXT_COMMIT,
       PresentationStage.TTS_START,
       PresentationStage.AUDIO_PLAYING,
       PresentationStage.TTS_END,
-      PresentationStage.TEXT_COMMIT,
     ]);
 
-    // Check timestamps strictly respect ordering: response_ready < tts_start < tts_end <= text_commit
+    // Check timestamps strictly respect ordering: response_ready <= text_commit <= tts_end
     const tReady = stageEvents.find((e) => e.stage === PresentationStage.RESPONSE_READY).time;
-    const tStart = stageEvents.find((e) => e.stage === PresentationStage.TTS_START).time;
-    const tEnd = stageEvents.find((e) => e.stage === PresentationStage.TTS_END).time;
     const tCommit = stageEvents.find((e) => e.stage === PresentationStage.TEXT_COMMIT).time;
+    const tEnd = stageEvents.find((e) => e.stage === PresentationStage.TTS_END).time;
 
-    expect(tReady).toBeLessThanOrEqual(tStart);
-    expect(tStart).toBeLessThanOrEqual(tEnd);
-    expect(tEnd).toBeLessThanOrEqual(tCommit);
+    expect(tReady).toBeLessThanOrEqual(tCommit);
+    expect(tCommit).toBeLessThanOrEqual(tEnd);
 
-    // Verify minimal latency between tts_end and text_commit (< 15ms in JS microtask)
-    const commitLatency = tCommit - tEnd;
-    expect(commitLatency).toBeLessThan(15);
-
-    // Companion text bubble is committed immediately after TTS ends
+    // TTS completion does NOT cause a second commit
     const companionBubblesAfterEnd = chat.messagesContainer.querySelectorAll('.message-row.companion:not(.typing-row)');
     expect(companionBubblesAfterEnd.length).toBe(1);
     expect(companionBubblesAfterEnd[0].querySelector('.bubble-text').textContent).toBe(
@@ -288,7 +285,7 @@ describe('Voice-First Presentation Timing & Response Synchronization', () => {
     expect(companionBubbles.length).toBe(1);
   });
 
-  test('6. Rapid consecutive turns cancel previous turn without ghost text', async () => {
+  test('6. Rapid consecutive turns preserve turn ordering and commit both text bubbles cleanly', async () => {
     window.lucia.chat.send
       .mockResolvedValueOnce({
         response: 'First reply',
@@ -323,9 +320,10 @@ describe('Voice-First Presentation Timing & Response Synchronization', () => {
     await Promise.all([turn1Promise, turn2Promise]);
 
     const companionBubbles = chat.messagesContainer.querySelectorAll('.message-row.companion:not(.typing-row)');
-    // Only Turn 2 reply should be present; Turn 1 was cancelled
-    expect(companionBubbles.length).toBe(1);
-    expect(companionBubbles[0].querySelector('.bubble-text').textContent).toBe('Second reply');
+    // Both Turn 1 and Turn 2 replies must be present in correct chronological order
+    expect(companionBubbles.length).toBe(2);
+    expect(companionBubbles[0].querySelector('.bubble-text').textContent).toBe('First reply');
+    expect(companionBubbles[1].querySelector('.bubble-text').textContent).toBe('Second reply');
   });
 
   test('7. Empty backend response shows error bubble without hanging', async () => {

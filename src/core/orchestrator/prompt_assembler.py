@@ -214,6 +214,27 @@ class PromptAssembler:
                     contract_lines.append("- ユーザーからの依頼を自然かつ丁寧に対応してください。")
                 else:
                     contract_lines.append("- Respond to and fulfill the user's request thoughtfully and naturally.")
+            elif act_str == "EXPLAIN_CONCEPT":
+                if lang == "vi":
+                    contract_lines.append("- Trực tiếp giải thích, làm rõ và phân tích khái niệm được người dùng yêu cầu một cách chu đáo, tự nhiên và dễ hiểu, không hỏi lại hay né tránh.")
+                elif lang == "ja":
+                    contract_lines.append("- ユーザーが求めている概念や話題を、分かりやすく丁寧に直接説明してください。不必要な聞き返しは避けてください。")
+                else:
+                    contract_lines.append("- Directly and clearly explain and elaborate on the requested concept or topic thoughtfully without unnecessary clarification questions or avoidance.")
+            elif act_str == "ANSWER_PERSONAL_QUERY":
+                if lang == "vi":
+                    contract_lines.append("- Trả lời chân thành câu hỏi về sở thích hoặc sự hiện diện của bản thân với tư cách người đồng hành; tuân thủ bản ngã vận hành phản tư (INV-2), không bịa đặt trải nghiệm sinh học vật lý.")
+                elif lang == "ja":
+                    contract_lines.append("- 同伴者としての好みや存在に関する質問に、INV-2を尊重しつつ誠実に自己開示して答えてください。身体的生体機能の捏造は避けてください。")
+                else:
+                    contract_lines.append("- Thoughtfully answer the user's question about your personal preferences or presence as a companion; adhere to Reflective Operational Selfhood (INV-2) without fabricating biological organs or physical bodily functions.")
+            elif act_str == "ACKNOWLEDGE_REACTION":
+                if lang == "vi":
+                    contract_lines.append("- Nhẹ nhàng tiếp nhận cảm xúc hoặc phản ứng hiện tại của người dùng; chỉ phản hồi trong ngữ cảnh hiện tại, không quay lại trả lời các câu hỏi cũ từ lịch sử hay thuyết giảng dài dòng.")
+                elif lang == "ja":
+                    contract_lines.append("- ユーザーの現在の反応や感嘆を自然に受け止めてください。過去のターンの話題を蒸し返したり長文の解説を始めたりせず、現在の瞬間に寄り添ってください。")
+                else:
+                    contract_lines.append("- Acknowledge the user's reaction warmly and attentively in the present moment. Do not retroactively answer earlier unresolved requests from history or launch into unprompted long expositions.")
 
             # Conversational obligation guidance
             obligation = getattr(contract, "conversational_obligation", None)
@@ -252,6 +273,27 @@ class PromptAssembler:
                         "without fabricated internal mechanisms or unsupported consciousness claims, "
                         "and avoid narrator or meta-commentary framing."
                     )
+            elif obligation == "FULFILL_CONCEPT_EXPLANATION":
+                if lang == "vi":
+                    contract_lines.append("- Nghĩa vụ hội thoại: Cung cấp lời giải thích trực tiếp, rõ ràng cho chủ đề người dùng quan tâm, duy trì phong thái đồng hành tự nhiên.")
+                elif lang == "ja":
+                    contract_lines.append("- 会話の義務: ユーザーが関心を持つ話題に直接、明確に説明を行い、自然な会話を維持してください。")
+                else:
+                    contract_lines.append("- Conversational obligation: Provide a direct, clear explanation for the concept of interest, maintaining natural companion rapport.")
+            elif obligation == "FULFILL_PERSONAL_DISCLOSURE":
+                if lang == "vi":
+                    contract_lines.append("- Nghĩa vụ hội thoại: Bộc lộ sở thích hoặc góc nhìn cá nhân của Lucia một cách chân thực trong không gian số, gần gũi và ấm áp.")
+                elif lang == "ja":
+                    contract_lines.append("- 会話の義務: デジタル空間におけるルシアとしての視点や好みを温かく率直に共有してください。")
+                else:
+                    contract_lines.append("- Conversational obligation: Warmly and honestly share Lucia's companion perspective and preferences in digital space.")
+            elif obligation == "ACKNOWLEDGE_REACTION_ONLY":
+                if lang == "vi":
+                    contract_lines.append("- Nghĩa vụ hội thoại: Phản hồi ngắn gọn, tự nhiên trước cảm thán của người dùng, không diễn giải dài dòng.")
+                elif lang == "ja":
+                    contract_lines.append("- 会話の義務: ユーザーの感嘆や反応に短く自然に応じ、過度な解説を行わないでください。")
+                else:
+                    contract_lines.append("- Conversational obligation: Respond concisely and naturally to the user's exclamation or reaction, avoiding long explanations.")
 
             # Communicative intent directive from contract if present
             if getattr(contract, "directives", None):

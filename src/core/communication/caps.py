@@ -80,6 +80,9 @@ class CommunicativeAct(str, Enum):
     FAREWELL = "FAREWELL"      # Conversational closing
     REFUSE = "REFUSE"          # Fail-closed refusal when grounding is absent or invalid
     REQUEST = "REQUEST"        # Direct or indirect request for action/fulfillment
+    EXPLAIN_CONCEPT = "EXPLAIN_CONCEPT"            # Direct conceptual explanation/elaboration
+    ANSWER_PERSONAL_QUERY = "ANSWER_PERSONAL_QUERY"# Companion preference/self-disclosure
+    ACKNOWLEDGE_REACTION = "ACKNOWLEDGE_REACTION"  # Acknowledge emotional reaction/interjection
 
 
 # ── 1b. Dyadic Discourse Enums & State ──────────────────────────────────────────
@@ -380,10 +383,48 @@ _SELF_INTRO_PATTERNS = (
     re.compile(r"\b(introduce\s+yourself|tell\s+me\s+about\s+yourself|tell\s+us\s+about\s+yourself)\b", re.IGNORECASE),
 )
 
+_REACTION_PATTERNS = (
+    re.compile(r"\b(oh\s+my(\s+gosh|\s+god)?|omg|oh\s+wow|wow|whoa|gosh|oh\s+really|really\?|no\s+way|that's\s+amazing|that's\s+cool|i\s+see|aha|ouch|yikes|oh\s+dear|dear\s+me)\b", re.IGNORECASE),
+    re.compile(r"\b(thật\s+(sao|á|vậy|thế)|trời\s+(ơi|ạ)|thế\s+(á|à)|vậy\s+hả|chà|ôi\s+(chao|trời)|hay\s+quá|tuyệt\s+vời|ghê\s+vậy|đỉnh\s+vậy)\b", re.IGNORECASE),
+    re.compile(r"(へえ|すごい|まさか|本当|本当ですか|そうなんだ|あら)", re.IGNORECASE),
+)
+
+_EXPLANATION_PATTERNS = (
+    re.compile(r"\b(explain(\s+about|\s+to\s+me|\s+more)?|can\s+you\s+explain|could\s+you\s+explain|please\s+explain|elaborate(\s+on)?|tell\s+me(\s+more)?\s+about|meaning\s+of|definition\s+of|understand\s+more\s+about)\b", re.IGNORECASE),
+    re.compile(r"\b(interested\s+in\b.*?\bexplain)\b", re.IGNORECASE),
+    re.compile(r"\b(how\s+does\s+.+\s+work|what\s+does\s+.+\s+mean|what\s+is\s+meant\s+by)\b", re.IGNORECASE),
+    re.compile(r"\b(giải\s+thích(\s+về|\s+thêm|\s+cho)?|nói\s+rõ\s+hơn(\s+về)?|kể\s+rõ\s+hơn(\s+về)?|thế\s+nào\s+là|hoạt\s+động\s+(thế\s+nào|như\s+thế\s+nào)|hiểu\s+thêm\s+về)\b", re.IGNORECASE),
+    re.compile(r"(説明して|詳しく教えて|について教えて|とは何|どういう意味)", re.IGNORECASE),
+)
+
+_PERSONAL_QUERY_PATTERNS = (
+    re.compile(r"\b(favor(?:ite|ite)\s+(?:food|dish|color|music|song|book|movie|thing)|any\s+favor(?:ite|ite)|your\s+favor(?:ite|ite))\b", re.IGNORECASE),
+    re.compile(r"\b(what\s+do\s+you\s+like|do\s+you\s+like|what\s+are\s+your\s+hobbies|any\s+hobbies|what\s+do\s+you\s+enjoy|what\s+do\s+you\s+prefer)\b", re.IGNORECASE),
+    re.compile(r"\b(do\s+you\s+(?:eat|drink|sleep|dream))\b", re.IGNORECASE),
+    re.compile(r"\b(món\s+(?:ăn\s+)?(?:yêu\s+thích|thích\s+nhất|nào)|thích\s+(?:ăn|làm|nghe|đọc|uống)\s+gì|sở\s+thích|màu\s+yêu\s+thích)\b", re.IGNORECASE),
+    re.compile(r"\b((?:em|bạn)\s+có\s+thích|(?:em|bạn)\s+thích\s+gì|(?:em|bạn)\s+có\s+(?:ăn|uống|ngủ|mơ))\b", re.IGNORECASE),
+    re.compile(r"(好きな(?:食べ物|色|曲|こと)|趣味|何が好き|好きですか)", re.IGNORECASE),
+)
+
 
 def _is_self_introduction_request(text: str) -> bool:
     """Detect natural language requests for self-introduction."""
     return any(p.search(text) for p in _SELF_INTRO_PATTERNS)
+
+
+def _is_reaction(text: str) -> bool:
+    """Detect conversational reactions, exclamations, and emotional interjections."""
+    return any(p.search(text) for p in _REACTION_PATTERNS)
+
+
+def _is_explanation_request(text: str) -> bool:
+    """Detect natural language requests for conceptual explanation or elaboration."""
+    return any(p.search(text) for p in _EXPLANATION_PATTERNS)
+
+
+def _is_personal_query(text: str) -> bool:
+    """Detect personal preference, habit, or companion self-disclosure questions."""
+    return any(p.search(text) for p in _PERSONAL_QUERY_PATTERNS)
 
 
 # ── 6. Functional Transformation: evaluate_caps ─────────────────────────────────
@@ -815,6 +856,66 @@ def evaluate_caps(
             pragmatic_stance=PragmaticStance.FLOOR_YIELD,
             conversational_obligation="REASSURE_AND_GENTLE_INITIATIVE",
             directives="Nhẹ nhàng hỏi thăm và gợi mở tự nhiên khi nhận thấy sự bối rối hoặc ngập ngừng từ người dùng; xưng hô phù hợp.",
+        )
+
+    # 6.1c Conversational Reaction / Interjection Check (e.g., "oh my", "wow", "thật sao")
+    # Speech Act: ACKNOWLEDGE_REACTION, Obligation: ACKNOWLEDGE_REACTION_ONLY
+    if _is_reaction(input_lower):
+        return CAPSResult(
+            act=CommunicativeAct.ACKNOWLEDGE_REACTION,
+            semantic_graph=None,
+            epistemic_metadata=EpistemicMetadata(status=EpistemicState.FACT, is_grounded=True),
+            provenance_metadata=ProvenanceMetadata(origin="CONVERSATIONAL_REACTION", session_id=session_id),
+            resolution_metadata=ResolutionAdmissibilityMetadata(
+                resolution_status=dialogue_ctx.resolution_status,
+                grounding_status="CONVERSATIONAL_CONTEXT",
+            ),
+            grounded=True,
+            target_predicate="c:USER_REACTION",
+            focus_argument=None,
+            pragmatic_stance=PragmaticStance.NEUTRAL,
+            conversational_obligation="ACKNOWLEDGE_REACTION_ONLY",
+            directives="Acknowledge the user's reaction warmly and attentively in the present moment. Do not retroactively answer earlier unresolved requests from history or launch into unprompted long expositions.",
+        )
+
+    # 6.1d Conceptual Explanation & Elaboration Requests
+    # Speech Act: EXPLAIN_CONCEPT, Obligation: FULFILL_CONCEPT_EXPLANATION
+    if _is_explanation_request(input_lower):
+        return CAPSResult(
+            act=CommunicativeAct.EXPLAIN_CONCEPT,
+            semantic_graph=None,
+            epistemic_metadata=EpistemicMetadata(status=EpistemicState.FACT, is_grounded=True),
+            provenance_metadata=ProvenanceMetadata(origin="CONCEPT_EXPLANATION", session_id=session_id),
+            resolution_metadata=ResolutionAdmissibilityMetadata(
+                resolution_status=dialogue_ctx.resolution_status,
+                grounding_status="CONVERSATIONAL_CONTEXT",
+            ),
+            grounded=True,
+            target_predicate="c:CONCEPT_EXPLANATION",
+            focus_argument=None,
+            pragmatic_stance=PragmaticStance.SHARING,
+            conversational_obligation="FULFILL_CONCEPT_EXPLANATION",
+            directives="Directly and clearly explain and elaborate on the requested concept or topic thoughtfully without unnecessary clarification questions or avoidance.",
+        )
+
+    # 6.1e Personal Preference & Companion Self-Disclosure Inquiries
+    # Speech Act: ANSWER_PERSONAL_QUERY, Obligation: FULFILL_PERSONAL_DISCLOSURE
+    if _is_personal_query(input_lower):
+        return CAPSResult(
+            act=CommunicativeAct.ANSWER_PERSONAL_QUERY,
+            semantic_graph=None,
+            epistemic_metadata=EpistemicMetadata(status=EpistemicState.FACT, is_grounded=True),
+            provenance_metadata=ProvenanceMetadata(origin="COMPANION_SELF_DISCLOSURE", session_id=session_id),
+            resolution_metadata=ResolutionAdmissibilityMetadata(
+                resolution_status=dialogue_ctx.resolution_status,
+                grounding_status="CONVERSATIONAL_CONTEXT",
+            ),
+            grounded=True,
+            target_predicate="c:PERSONAL_QUERY",
+            focus_argument="ent:lucia",
+            pragmatic_stance=PragmaticStance.SHARING,
+            conversational_obligation="FULFILL_PERSONAL_DISCLOSURE",
+            directives="Respond to the user's personal query with genuine companion self-disclosure, reflecting your digital companion existence and preferences warmly without fabricating biological organs or physical bodily functions.",
         )
 
     # 6.2 Conversational Questions (Inquiries)

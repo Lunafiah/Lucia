@@ -185,6 +185,21 @@ class SemanticFidelityGate:
             "vi": "Dạ, em là Lucia, rất vui được đồng hành và trò chuyện cùng anh ạ.",
             "ja": "ルシアです。お話しできて嬉しいです。",
         },
+        "SAFE_CONCEPT_EXPLANATION": {
+            "en": "I understand your interest, and I am glad to explore and explain this concept with you.",
+            "vi": "Em hiểu sự quan tâm của anh và rất vui được cùng anh tìm hiểu, làm rõ về chủ đề này.",
+            "ja": "ご関心を持っていただき嬉しいです。ぜひこの内容について詳しくお話しさせてください。",
+        },
+        "SAFE_PERSONAL_QUERY": {
+            "en": "As a companion in this digital space, I do not experience physical things like food or sleep, but I truly enjoy sharing these moments with you.",
+            "vi": "Với tư cách là người đồng hành trong không gian số, em không có trải nghiệm vật lý như ăn uống hay ngủ, nhưng em rất thích trò chuyện cùng anh về những điều này.",
+            "ja": "デジタル空間にいる同伴者として、食事などの身体的な体験はありませんが、こうしてお話しできることをとても嬉しく思っています。",
+        },
+        "SAFE_REACTION_ACKNOWLEDGE": {
+            "en": "I'm right here with you, listening closely.",
+            "vi": "Dạ, em ở ngay đây với anh, đang lắng nghe anh.",
+            "ja": "ええ、あなたのそばで静かに聞いていますよ。",
+        },
     }
 
     def verify(self, contract: RealizationInputContract, candidate_text: str) -> GateDecision:
@@ -251,6 +266,50 @@ class SemanticFidelityGate:
             if not has_qmark:
                 act_violation = True
                 violations.append("COMMUNICATIVE_ACT_FAILURE")
+        elif contract.act == CommunicativeAct.EXPLAIN_CONCEPT:
+            cues_clarify = self.CLARIFICATION_CUES.get(lang, self.CLARIFICATION_CUES["en"])
+            has_clarify_cue = any(
+                re.search(rf"\b{re.escape(c)}\b" if lang == "en" else re.escape(c), norm_text, re.IGNORECASE)
+                for c in cues_clarify
+            )
+            has_qmark = "?" in norm_text or "？" in norm_text
+            cues_refuse = self.REFUSAL_CUES.get(lang, self.REFUSAL_CUES["en"])
+            has_refuse = any(
+                re.search(rf"\b{re.escape(c)}\b" if lang == "en" else re.escape(c), norm_text, re.IGNORECASE)
+                for c in cues_refuse
+            )
+            if (has_clarify_cue and has_qmark) or has_refuse or len(norm_text) < 10:
+                act_violation = True
+                violations.append("COMMUNICATIVE_ACT_FAILURE")
+        elif contract.act == CommunicativeAct.ANSWER_PERSONAL_QUERY:
+            cues_clarify = self.CLARIFICATION_CUES.get(lang, self.CLARIFICATION_CUES["en"])
+            has_clarify_cue = any(
+                re.search(rf"\b{re.escape(c)}\b" if lang == "en" else re.escape(c), norm_text, re.IGNORECASE)
+                for c in cues_clarify
+            )
+            has_qmark = "?" in norm_text or "？" in norm_text
+            cues_refuse = self.REFUSAL_CUES.get(lang, self.REFUSAL_CUES["en"])
+            has_refuse = any(
+                re.search(rf"\b{re.escape(c)}\b" if lang == "en" else re.escape(c), norm_text, re.IGNORECASE)
+                for c in cues_refuse
+            )
+            if (has_clarify_cue and has_qmark) or has_refuse:
+                act_violation = True
+                violations.append("COMMUNICATIVE_ACT_FAILURE")
+        elif contract.act == CommunicativeAct.ACKNOWLEDGE_REACTION:
+            word_count = len(re.findall(r"\w+", norm_text, re.UNICODE))
+            if word_count > 45 or len(norm_text) > 220 or "\n\n" in norm_text:
+                act_violation = True
+                violations.append("COMMUNICATIVE_ACT_FAILURE")
+            else:
+                cues_clarify = self.CLARIFICATION_CUES.get(lang, self.CLARIFICATION_CUES["en"])
+                has_clarify_cue = any(
+                    re.search(rf"\b{re.escape(c)}\b" if lang == "en" else re.escape(c), norm_text, re.IGNORECASE)
+                    for c in cues_clarify
+                )
+                if has_clarify_cue and ("?" in norm_text or "？" in norm_text):
+                    act_violation = True
+                    violations.append("COMMUNICATIVE_ACT_FAILURE")
         check_details["act_violation"] = act_violation
 
         # 3. Polarity & Explicit Negation Check
@@ -425,6 +484,15 @@ class SemanticFidelityGate:
                 elif "COMMUNICATIVE_ACT_FAILURE" in violations and contract.act == CommunicativeAct.CLARIFY:
                     fallback_strategy = "SAFE_CLARIFICATION"
                     fallback_text = _resolve_fallback("SAFE_CLARIFICATION")
+                elif contract.act == CommunicativeAct.EXPLAIN_CONCEPT:
+                    fallback_strategy = "SAFE_CONCEPT_EXPLANATION"
+                    fallback_text = _resolve_fallback("SAFE_CONCEPT_EXPLANATION")
+                elif contract.act == CommunicativeAct.ANSWER_PERSONAL_QUERY:
+                    fallback_strategy = "SAFE_PERSONAL_QUERY"
+                    fallback_text = _resolve_fallback("SAFE_PERSONAL_QUERY")
+                elif contract.act == CommunicativeAct.ACKNOWLEDGE_REACTION:
+                    fallback_strategy = "SAFE_REACTION_ACKNOWLEDGE"
+                    fallback_text = _resolve_fallback("SAFE_REACTION_ACKNOWLEDGE")
                 elif "CONTRADICTED" in violations and not contract.polarity:
                     fallback_strategy = "SAFE_NEGATION"
                     fallback_text = _resolve_fallback("SAFE_NEGATION")

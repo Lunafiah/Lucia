@@ -1524,9 +1524,11 @@ class ChatController {
           return messageRow;
         };
 
-        // If voice is muted or no avatarRenderer available: immediate commit fallback
+        // Immediately commit text bubble so presentation does not block on TTS
+        const messageRow = commitText();
+
+        // If voice is muted or no avatarRenderer available: complete turn presentation immediately
         if (this.isVoiceMuted || !window.avatarRenderer) {
-          commitText();
           this.isSpeakingOrProcessing = false;
           this.updateOrganicStatus();
           if (this.isMicMode) this._resumeListening();
@@ -1561,10 +1563,9 @@ class ChatController {
           return;
         }
 
-        // If synthesis failed / returned no audio: fallback to immediate text commit
+        // If synthesis failed / returned no audio: conclude speech lifecycle
         if (!audioBlob) {
           this._recordPresentationStage(PresentationStage.TTS_ERROR, { turnId, reason: 'synthesis_failed' });
-          commitText();
           this.isSpeakingOrProcessing = false;
           this.updateOrganicStatus();
           if (this.isMicMode) this._resumeListening();
@@ -1572,8 +1573,14 @@ class ChatController {
           return;
         }
 
-        // Pre-cache audio
+        // Pre-cache audio & associate with message row replay button
         stagedTurn.audioBlob = audioBlob;
+        if (messageRow) {
+          const replayBtn = messageRow.querySelector('.audio-replay-btn');
+          if (replayBtn) {
+            replayBtn._cachedBlob = audioBlob;
+          }
+        }
         if (!this.audioCache) this.audioCache = new Map();
         this.audioCache.set(response.response, audioBlob);
         if (voiceText !== response.response) {
@@ -1584,7 +1591,6 @@ class ChatController {
 
         const onTtsStart = () => {
           if (stagedTurn.cancelled || this._activeTurnId !== turnId) return;
-          this.removeTypingIndicator(typingIndicator);
           this._recordPresentationStage(PresentationStage.TTS_START, { turnId });
           this._recordPresentationStage(PresentationStage.AUDIO_PLAYING, { turnId });
           this.isSpeakingOrProcessing = true;
@@ -1595,7 +1601,6 @@ class ChatController {
           if (playbackHandled) return;
           playbackHandled = true;
           this._recordPresentationStage(PresentationStage.TTS_END, { turnId });
-          commitText();
           this.isSpeakingOrProcessing = false;
           this.updateOrganicStatus();
           if (this.isMicMode) this._resumeListening();
@@ -1607,7 +1612,6 @@ class ChatController {
           playbackHandled = true;
           console.warn('[voice] Voice synthesis playback error event:', err);
           this._recordPresentationStage(PresentationStage.TTS_ERROR, { turnId, error: err });
-          commitText();
           this.isSpeakingOrProcessing = false;
           this.updateOrganicStatus();
           if (this.isMicMode) this._resumeListening();
@@ -1618,7 +1622,6 @@ class ChatController {
           if (playbackHandled) return;
           playbackHandled = true;
           stagedTurn.cancelled = true;
-          this.removeTypingIndicator(typingIndicator);
           this._recordPresentationStage(PresentationStage.TTS_CANCEL, { turnId });
           this.isSpeakingOrProcessing = false;
           this.updateOrganicStatus();

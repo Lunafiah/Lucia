@@ -9,6 +9,7 @@ models/voice/rvc/**/*.index
 models/voice/whisper/
 models/avatar/**/*.vrm
 models/avatar/**/*.moc3
+models/avatar/live2d/RetrynowMiku/
 
 # Runtime Data & Local Identity State
 data/

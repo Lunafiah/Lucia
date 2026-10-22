@@ -196,14 +196,36 @@ class LLMBackend:
 
         return messages
 
-    def translate_to_japanese(self, text: str, max_tokens: int = 120) -> Optional[str]:
+    def translate_to_japanese(self, text: str, max_tokens: Optional[int] = None) -> Optional[str]:
         """
         Translate conversational text to natural spoken Japanese for voice realization.
-        Bounded, safe, and deterministic. Returns None if translation fails or model not ready.
+
+        Token budget is adaptive: bounded below by 160 tokens and above by the
+        smaller of (n_ctx // 2) and 768, scaled by input character count so that
+        multi-paragraph responses are never silently truncated at a paragraph
+        boundary by an inadequate token ceiling.
+
+        The ``"\n\n"`` paragraph-break stop token has been deliberately removed;
+        generation stops only on the model's end-of-turn markers so the full
+        translated content is captured.
+
+        Returns None if translation fails or the model is not ready.
         """
         if not self._ready or self._llm is None or not text.strip():
             return None
         clean_text = text.strip()
+
+        # --- Adaptive token budget -------------------------------------------
+        # Floor: 160 tokens (sufficient for ~1 short paragraph in Japanese).
+        # Scaling: 3 output tokens per input character is a conservative upper
+        #   bound for English→Japanese (Japanese is typically shorter in chars
+        #   but uses multi-byte; token count stays comparable).
+        # Ceiling: min(n_ctx // 2, 768) — never consume more than half the
+        #   context window, and cap at 768 to prevent runaway generation.
+        if max_tokens is None:
+            n_ctx_ceiling = min(self._config.n_ctx // 2, 768)
+            max_tokens = min(max(160, len(clean_text) * 3), n_ctx_ceiling)
+
         prompt = (
             f"<|im_start|>user\n"
             f"Translate this spoken companion text to natural Japanese:\n"
@@ -216,7 +238,9 @@ class LLMBackend:
                 max_tokens=max_tokens,
                 temperature=0.2,
                 top_p=0.9,
-                stop=["<|im_end|>", "<|endoftext|>", "\n\n"],
+                # "\n\n" deliberately excluded: paragraph breaks must not
+                # terminate generation mid-response (voice truncation bug fix).
+                stop=["<|im_end|>", "<|endoftext|>"],
             )
             out = res["choices"][0]["text"].strip()
             return out if out else None
