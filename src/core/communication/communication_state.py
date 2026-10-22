@@ -23,6 +23,25 @@ class CommStrategy(str, Enum):
     COLLABORATIVE_INQUIRING = "collaborative_inquiring"
 
 
+class ResponseDepth(str, Enum):
+    """
+    Discrete presence & response depth levels produced by CommunicationPolicy.
+    Authoritatively determines how much presence Lucia occupies in the conversational moment.
+    """
+    MINIMAL = "minimal"   # Immediate presence ping / brief greeting (e.g. "Em đây.")
+    SHORT = "short"       # Concise direct answer / check-in / simple query (1-2 sentences)
+    MEDIUM = "medium"     # Balanced explanation / concept / moderate narrative sharing
+    DEEP = "deep"         # Structured in-depth explanation / technical analysis / multi-layered response
+
+
+RESPONSE_DEPTH_BUDGET_MAP: Dict[ResponseDepth, Tuple[int, int]] = {
+    ResponseDepth.MINIMAL: (5, 40),
+    ResponseDepth.SHORT: (20, 100),
+    ResponseDepth.MEDIUM: (80, 220),
+    ResponseDepth.DEEP: (180, 500),
+}
+
+
 @dataclass
 class CommIntent:
     """
@@ -51,7 +70,8 @@ class CommIntent:
 class CommunicationState:
     """
     Formal representation of communicative production state C_t.
-    Holds 10 continuous modulation dimensions and selected communicative strategy.
+    Holds 10 continuous modulation dimensions and selected communicative strategy,
+    along with authoritative response depth and generation budget.
     """
     strategy: CommStrategy = CommStrategy.DIRECT_FACTUAL
     directness: float = 0.50                 # [0.10, 0.95] (1.0 = direct/unbuffered, 0.1 = cushioned)
@@ -65,6 +85,8 @@ class CommunicationState:
     knowledge_context_ref: float = 0.0       # [0.00, 0.50]
     semantic_safe: bool = True
     provenance: str = "CommunicationPolicy/v1"
+    response_depth: ResponseDepth = ResponseDepth.SHORT
+    max_tokens_budget: int = 100
 
     @property
     def contextual_reference(self) -> float:
@@ -111,6 +133,10 @@ class CommunicationState:
             return False
         if not (0.00 <= self.contextual_reference <= 1.00):
             return False
+        if not isinstance(self.response_depth, ResponseDepth):
+            return False
+        if not (1 <= self.max_tokens_budget <= 2048):
+            return False
         return True
 
     def to_dict(self) -> Dict[str, Any]:
@@ -128,10 +154,17 @@ class CommunicationState:
             "contextual_reference": float(self.contextual_reference),
             "semantic_safe": bool(self.semantic_safe),
             "provenance": str(self.provenance),
+            "response_depth": self.response_depth.value if hasattr(self.response_depth, "value") else str(self.response_depth),
+            "max_tokens_budget": int(self.max_tokens_budget),
         }
 
     @classmethod
     def from_dict(cls, d: Dict[str, Any]) -> "CommunicationState":
+        raw_depth = d.get("response_depth", ResponseDepth.SHORT.value)
+        try:
+            depth = ResponseDepth(raw_depth)
+        except (ValueError, TypeError):
+            depth = ResponseDepth.SHORT
         return cls(
             strategy=CommStrategy(d.get("strategy", CommStrategy.DIRECT_FACTUAL.value)),
             directness=float(d.get("directness", 0.5)),
@@ -145,4 +178,6 @@ class CommunicationState:
             knowledge_context_ref=float(d.get("knowledge_context_ref", 0.0)),
             semantic_safe=bool(d.get("semantic_safe", True)),
             provenance=str(d.get("provenance", "from_dict")),
+            response_depth=depth,
+            max_tokens_budget=int(d.get("max_tokens_budget", 100)),
         )

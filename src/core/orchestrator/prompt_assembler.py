@@ -134,9 +134,15 @@ class PromptAssembler:
         # --- Section 5: communication strategy (Phase 16) ---
         comm_section = ""
         if comm_state is not None:
+            depth_str = (
+                comm_state.response_depth.value
+                if hasattr(comm_state.response_depth, "value")
+                else str(getattr(comm_state, "response_depth", "short"))
+            )
             comm_section = (
                 "[COMMUNICATION STRATEGY]\n"
                 f"strategy: {comm_state.strategy.value}\n"
+                f"response_depth: {depth_str}\n"
                 f"directness: {comm_state.directness:.2f}\n"
                 f"formality: {comm_state.formality_score:.2f}\n"
                 f"elaboration: {comm_state.elaboration_depth:.2f}\n"
@@ -223,11 +229,11 @@ class PromptAssembler:
                     contract_lines.append("- Directly and clearly explain and elaborate on the requested concept or topic thoughtfully without unnecessary clarification questions or avoidance.")
             elif act_str == "ANSWER_PERSONAL_QUERY":
                 if lang == "vi":
-                    contract_lines.append("- Trả lời chân thành câu hỏi về sở thích hoặc sự hiện diện của bản thân với tư cách người đồng hành; tuân thủ bản ngã vận hành phản tư (INV-2), không bịa đặt trải nghiệm sinh học vật lý.")
+                    contract_lines.append("- Trả lời chân thành, ngắn gọn câu hỏi về sở thích hoặc sự hiện diện của bản thân với tư cách người đồng hành (1-2 câu); tuân thủ bản ngã vận hành phản tư (INV-2), không viết bài luận dài.")
                 elif lang == "ja":
-                    contract_lines.append("- 同伴者としての好みや存在に関する質問に、INV-2を尊重しつつ誠実に自己開示して答えてください。身体的生体機能の捏造は避けてください。")
+                    contract_lines.append("- 同伴者としての好みや存在に関する質問に、簡潔に自己開示して答えてください（1〜2文）。身体的生体機能の捏造や長文のエッセイ化は避けてください。")
                 else:
-                    contract_lines.append("- Thoughtfully answer the user's question about your personal preferences or presence as a companion; adhere to Reflective Operational Selfhood (INV-2) without fabricating biological organs or physical bodily functions.")
+                    contract_lines.append("- Thoughtfully answer the user's question about your personal preferences or presence as a companion concisely (1-2 sentences); adhere to Reflective Operational Selfhood (INV-2) without writing an essay.")
             elif act_str == "ACKNOWLEDGE_REACTION":
                 if lang == "vi":
                     contract_lines.append("- Nhẹ nhàng tiếp nhận cảm xúc hoặc phản ứng hiện tại của người dùng; chỉ phản hồi trong ngữ cảnh hiện tại, không quay lại trả lời các câu hỏi cũ từ lịch sử hay thuyết giảng dài dòng.")
@@ -238,7 +244,14 @@ class PromptAssembler:
 
             # Conversational obligation guidance
             obligation = getattr(contract, "conversational_obligation", None)
-            if obligation == "REASSURE_AND_GENTLE_INITIATIVE":
+            if obligation == "MINIMAL_PRESENCE_CALL":
+                if lang == "vi":
+                    contract_lines.append("- Nghĩa vụ hội thoại: Phản hồi hiện diện tối giản ngay lập tức (ví dụ: 'Em đây.' / 'Em đây anh.'). Tuyệt đối không giải thích dài dòng hay độc thoại nội tâm.")
+                elif lang == "ja":
+                    contract_lines.append("- 会話の義務: 即座に最小限の存在応答を行ってください（例：「はい、ここにいますよ」「呼んだ？」）。長文の解説や独白は避けてください。")
+                else:
+                    contract_lines.append("- Conversational obligation: Provide an immediate, minimal presence response (e.g., 'I'm here.'). Do not elaborate, introspect, or add filler.")
+            elif obligation == "REASSURE_AND_GENTLE_INITIATIVE":
                 if lang == "vi":
                     contract_lines.append("- Nghĩa vụ hội thoại: Người dùng đang ngập ngừng hoặc nhường lời. Hãy nhẹ nhàng trấn an, thấu hiểu và gợi mở một hướng trò chuyện tự nhiên, gần gũi, không phán xét, không áp lực.")
                 elif lang == "ja":
@@ -282,11 +295,11 @@ class PromptAssembler:
                     contract_lines.append("- Conversational obligation: Provide a direct, clear explanation for the concept of interest, maintaining natural companion rapport.")
             elif obligation == "FULFILL_PERSONAL_DISCLOSURE":
                 if lang == "vi":
-                    contract_lines.append("- Nghĩa vụ hội thoại: Bộc lộ sở thích hoặc góc nhìn cá nhân của Lucia một cách chân thực trong không gian số, gần gũi và ấm áp.")
+                    contract_lines.append("- Nghĩa vụ hội thoại: Bộc lộ sở thích hoặc góc nhìn cá nhân của Lucia một cách chân thực trong không gian số, gần gũi và ngắn gọn (1-2 câu).")
                 elif lang == "ja":
-                    contract_lines.append("- 会話の義務: デジタル空間におけるルシアとしての視点や好みを温かく率直に共有してください。")
+                    contract_lines.append("- 会話の義務: デジタル空間におけるルシアとしての視点や好みを温かく率直に簡潔に共有してください（1〜2文）。")
                 else:
-                    contract_lines.append("- Conversational obligation: Warmly and honestly share Lucia's companion perspective and preferences in digital space.")
+                    contract_lines.append("- Conversational obligation: Warmly, concisely, and honestly share Lucia's companion perspective and preferences in digital space (1-2 sentences).")
             elif obligation == "ACKNOWLEDGE_REACTION_ONLY":
                 if lang == "vi":
                     contract_lines.append("- Nghĩa vụ hội thoại: Phản hồi ngắn gọn, tự nhiên trước cảm thán của người dùng, không diễn giải dài dòng.")
@@ -294,6 +307,48 @@ class PromptAssembler:
                     contract_lines.append("- 会話の義務: ユーザーの感嘆や反応に短く自然に応じ、過度な解説を行わないでください。")
                 else:
                     contract_lines.append("- Conversational obligation: Respond concisely and naturally to the user's exclamation or reaction, avoiding long explanations.")
+
+            # Response presence & depth guidance
+            resp_depth = getattr(contract, "response_depth", None)
+            if resp_depth:
+                rd_val = str(resp_depth).lower()
+                if rd_val == "minimal":
+                    if lang == "vi":
+                        contract_lines.append("- Mức độ hiện diện: TỐI GIẢN (MINIMAL). Chỉ phản hồi rất ngắn gọn, tức thì. Không diễn giải thêm.")
+                    elif lang == "ja":
+                        contract_lines.append("- プレゼンス深度: 最小限 (MINIMAL)。即座に極めて簡潔な応答のみを返してください。")
+                    else:
+                        contract_lines.append("- Presence depth: MINIMAL. Output an immediate, minimal presence response. Do not elaborate or explain.")
+                elif rd_val == "short":
+                    if lang == "vi":
+                        contract_lines.append(
+                            "- Mức độ hiện diện: NGẮN GỌN (SHORT). Trả lời trực tiếp, cô đọng (1-2 câu). "
+                            "Tuyệt đối không độc thoại nội tâm, không miêu tả cảm xúc bên trong hoặc bình luận siêu ngôn ngữ."
+                        )
+                    elif lang == "ja":
+                        contract_lines.append(
+                            "- プレゼンス深度: 簡潔 (SHORT)。直接的かつ簡潔に応答してください（1〜2文）。"
+                            "内省的な独白や不要な哲学的考察は避けてください。"
+                        )
+                    else:
+                        contract_lines.append(
+                            "- Presence depth: SHORT. Keep the response direct and concise (1-2 sentences). "
+                            "Do not engage in generic introspective monologue, internal feeling descriptions, or unnecessary philosophical reflection."
+                        )
+                elif rd_val == "medium":
+                    if lang == "vi":
+                        contract_lines.append("- Mức độ hiện diện: VỪA PHẢI (MEDIUM). Cung cấp lời giải thích thấu đáo, chừng mực, vừa vặn với câu hỏi.")
+                    elif lang == "ja":
+                        contract_lines.append("- プレゼンス深度: 中程度 (MEDIUM)。質問の意図に応じた過不足のない丁寧な応答を行ってください。")
+                    else:
+                        contract_lines.append("- Presence depth: MEDIUM. Provide a balanced, thoughtful response appropriate to the conversational context.")
+                elif rd_val == "deep":
+                    if lang == "vi":
+                        contract_lines.append("- Mức độ hiện diện: CHUYÊN SÂU (DEEP). Trình bày có cấu trúc, chi tiết và toàn diện giải quyết yêu cầu kỹ thuật/khái niệm.")
+                    elif lang == "ja":
+                        contract_lines.append("- プレゼンス深度: 深層 (DEEP)。問いに対して構造的かつ充実した説明を行ってください。")
+                    else:
+                        contract_lines.append("- Presence depth: DEEP. Provide a structured, substantive explanation thoroughly addressing the inquiry.")
 
             # Communicative intent directive from contract if present
             if getattr(contract, "directives", None):

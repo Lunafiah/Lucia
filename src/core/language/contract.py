@@ -106,6 +106,8 @@ class RealizationInputContract:
     addressee_honorific: Optional[str] = None
     conversational_obligation: Optional[str] = None
     dialogue_phase: Optional[str] = None
+    response_depth: Optional[str] = None
+    max_tokens_budget: Optional[int] = None
     timestamp: float = field(default_factory=time.time)
 
     def get_role(self, role_name: str) -> Optional[SemanticRoleBinding]:
@@ -136,6 +138,8 @@ class RealizationInputContract:
         dialogue_phase: Optional[str] = None,
         target_predicate: Optional[str] = None,
         somatic_modifiers: Optional[Dict[str, float]] = None,
+        response_depth: Optional[str] = None,
+        max_tokens_budget: Optional[int] = None,
     ) -> RealizationInputContract:
         """Creates a safe baseline contract when no explicit proposition is active."""
         spk = speaker_honorific if speaker_honorific is not None else ("em" if target_language == "vi" else None)
@@ -160,6 +164,8 @@ class RealizationInputContract:
             addressee_honorific=addr,
             conversational_obligation=conversational_obligation,
             dialogue_phase=dialogue_phase,
+            response_depth=response_depth,
+            max_tokens_budget=max_tokens_budget,
             timestamp=time.time(),
         )
 
@@ -174,6 +180,8 @@ class RealizationInputContract:
         addressee_honorific: Optional[str] = None,
         dialogue_phase: Optional[str] = None,
         somatic_modifiers: Optional[Dict[str, float]] = None,
+        response_depth: Optional[str] = None,
+        max_tokens_budget: Optional[int] = None,
     ) -> RealizationInputContract:
         """
         Constructs a typed RealizationInputContract from a Stage S10 CAPSResult.
@@ -333,6 +341,8 @@ class RealizationInputContract:
             addressee_honorific=addr,
             conversational_obligation=obligation,
             dialogue_phase=dialogue_phase,
+            response_depth=response_depth,
+            max_tokens_budget=max_tokens_budget,
             timestamp=time.time(),
         )
 

@@ -177,6 +177,8 @@ class CommunicationPolicySnapshot:
     formality: float = 0.5
     elaboration: float = 0.5
     supportiveness: float = 0.5
+    response_depth: str = "short"
+    max_tokens_budget: int = 100
 
 
 # ── 3. Metadata Structures ───────────────────────────────────────────────────────
@@ -393,8 +395,18 @@ _EXPLANATION_PATTERNS = (
     re.compile(r"\b(explain(\s+about|\s+to\s+me|\s+more)?|can\s+you\s+explain|could\s+you\s+explain|please\s+explain|elaborate(\s+on)?|tell\s+me(\s+more)?\s+about|meaning\s+of|definition\s+of|understand\s+more\s+about)\b", re.IGNORECASE),
     re.compile(r"\b(interested\s+in\b.*?\bexplain)\b", re.IGNORECASE),
     re.compile(r"\b(how\s+does\s+.+\s+work|what\s+does\s+.+\s+mean|what\s+is\s+meant\s+by)\b", re.IGNORECASE),
+    re.compile(r"\b(why\s+does\b.*?\b(?:separate|use|have|work|operate|rely))\b", re.IGNORECASE),
+    re.compile(r"\b(tại\s+sao\b.*?\b(?:tách|dùng|sử\s+dụng|hoạt\s+động))\b", re.IGNORECASE),
     re.compile(r"\b(giải\s+thích(\s+về|\s+thêm|\s+cho)?|nói\s+rõ\s+hơn(\s+về)?|kể\s+rõ\s+hơn(\s+về)?|thế\s+nào\s+là|hoạt\s+động\s+(thế\s+nào|như\s+thế\s+nào)|hiểu\s+thêm\s+về)\b", re.IGNORECASE),
     re.compile(r"(説明して|詳しく教えて|について教えて|とは何|どういう意味)", re.IGNORECASE),
+)
+
+_VOCATIVE_PRESENCE_PATTERNS = (
+    re.compile(r"^(?:ciah|lucia|em)\s+ơi[\.\?\!\s]*$", re.IGNORECASE),
+    re.compile(r"^ơi\s+(?:ciah|lucia|em)[\.\?\!\s]*$", re.IGNORECASE),
+    re.compile(r"^(?:ciah|lucia)[\?\!\.\s]*$", re.IGNORECASE),
+    re.compile(r"^(?:are\s+you\s+there|you\s+there)[\?\!\.\s]*$", re.IGNORECASE),
+    re.compile(r"^(?:ルシア|ねえルシア|ルシアちゃん)[\?\!\.\s]*$", re.IGNORECASE),
 )
 
 _PERSONAL_QUERY_PATTERNS = (
@@ -425,6 +437,11 @@ def _is_explanation_request(text: str) -> bool:
 def _is_personal_query(text: str) -> bool:
     """Detect personal preference, habit, or companion self-disclosure questions."""
     return any(p.search(text) for p in _PERSONAL_QUERY_PATTERNS)
+
+
+def _is_vocative_presence_call(text: str) -> bool:
+    """Detect minimal vocative social presence pings (e.g., 'Ciah ơi.', 'Lucia ơi')."""
+    return any(p.search(text) for p in _VOCATIVE_PRESENCE_PATTERNS)
 
 
 # ── 6. Functional Transformation: evaluate_caps ─────────────────────────────────
@@ -614,6 +631,25 @@ def evaluate_caps(
         and any(w in input_lower for w in ("what", "who", "where", "why", "how", "when", "gì", "ai", "đâu", "sao", "không"))
     )
     has_substantive_clause = has_substantive_encounter or has_meta_inquiry or has_substantive_question or has_action_request
+
+    # Vocative presence call check (e.g., "Ciah ơi.", "Lucia ơi", "ơi em")
+    if _is_vocative_presence_call(input_lower) and not has_substantive_clause:
+        return CAPSResult(
+            act=CommunicativeAct.ACKNOWLEDGE,
+            semantic_graph=None,
+            epistemic_metadata=EpistemicMetadata(status=EpistemicState.FACT, is_grounded=True),
+            provenance_metadata=ProvenanceMetadata(origin="VOCATIVE_PRESENCE_CALL", session_id=session_id),
+            resolution_metadata=ResolutionAdmissibilityMetadata(
+                resolution_status=dialogue_ctx.resolution_status,
+                grounding_status="CONVERSATIONAL_CONTEXT",
+            ),
+            grounded=True,
+            target_predicate="c:PRESENCE_PING",
+            focus_argument="ent:lucia",
+            pragmatic_stance=PragmaticStance.GREET_AND_MEET,
+            conversational_obligation="MINIMAL_PRESENCE_CALL",
+            directives="Acknowledge the user's presence call with immediate, minimal presence (e.g., 'Em đây.' / 'I'm here.'). Do not elaborate, introspect, or explain.",
+        )
 
     # Lexical boundary-safe greeting check (prevents English 'hi' matching inside Vietnamese 'thiệu')
     if _GREETING_REGEX.search(input_lower):

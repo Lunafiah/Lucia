@@ -1508,6 +1508,7 @@ class ChatController {
         };
         this._stagedTurn = stagedTurn;
 
+        let messageRow = null;
         const commitText = () => {
           if (stagedTurn.committed || stagedTurn.cancelled || this._activeTurnId !== turnId) {
             return null;
@@ -1516,7 +1517,7 @@ class ChatController {
           this.removeTypingIndicator(typingIndicator);
 
           this._recordPresentationStage(PresentationStage.TEXT_COMMIT, { turnId, text: stagedTurn.text });
-          const messageRow = this.appendMessage('companion', stagedTurn.text, stagedTurn.voiceText, stagedTurn.voiceOpts);
+          messageRow = this.appendMessage('companion', stagedTurn.text, stagedTurn.voiceText, stagedTurn.voiceOpts);
           const replayBtn = messageRow ? messageRow.querySelector('.audio-replay-btn') : null;
           if (replayBtn && stagedTurn.audioBlob) {
             replayBtn._cachedBlob = stagedTurn.audioBlob;
@@ -1524,11 +1525,9 @@ class ChatController {
           return messageRow;
         };
 
-        // Immediately commit text bubble so presentation does not block on TTS
-        const messageRow = commitText();
-
         // If voice is muted or no avatarRenderer available: complete turn presentation immediately
         if (this.isVoiceMuted || !window.avatarRenderer) {
+          commitText();
           this.isSpeakingOrProcessing = false;
           this.updateOrganicStatus();
           if (this.isMicMode) this._resumeListening();
@@ -1536,7 +1535,7 @@ class ChatController {
           return;
         }
 
-        // Voice synthesis
+        // Voice synthesis (TTS preparation phase)
         let audioBlob = null;
         try {
           if (window.lucia && window.lucia.voice && window.lucia.voice.synthesize) {
@@ -1563,8 +1562,9 @@ class ChatController {
           return;
         }
 
-        // If synthesis failed / returned no audio: conclude speech lifecycle
+        // If synthesis failed / returned no audio: commit text as fallback and conclude speech lifecycle
         if (!audioBlob) {
+          commitText();
           this._recordPresentationStage(PresentationStage.TTS_ERROR, { turnId, reason: 'synthesis_failed' });
           this.isSpeakingOrProcessing = false;
           this.updateOrganicStatus();
@@ -1575,12 +1575,6 @@ class ChatController {
 
         // Pre-cache audio & associate with message row replay button
         stagedTurn.audioBlob = audioBlob;
-        if (messageRow) {
-          const replayBtn = messageRow.querySelector('.audio-replay-btn');
-          if (replayBtn) {
-            replayBtn._cachedBlob = audioBlob;
-          }
-        }
         if (!this.audioCache) this.audioCache = new Map();
         this.audioCache.set(response.response, audioBlob);
         if (voiceText !== response.response) {
@@ -1595,11 +1589,15 @@ class ChatController {
           this._recordPresentationStage(PresentationStage.AUDIO_PLAYING, { turnId });
           this.isSpeakingOrProcessing = true;
           this.updateOrganicStatus();
+          // Synchronize: commit verified text exactly when audio playback actually starts
+          commitText();
         };
 
         const onTtsEnd = () => {
           if (playbackHandled) return;
           playbackHandled = true;
+          // Ensure text committed if playback completed abnormally without onStart
+          commitText();
           this._recordPresentationStage(PresentationStage.TTS_END, { turnId });
           this.isSpeakingOrProcessing = false;
           this.updateOrganicStatus();
@@ -1612,6 +1610,8 @@ class ChatController {
           playbackHandled = true;
           console.warn('[voice] Voice synthesis playback error event:', err);
           this._recordPresentationStage(PresentationStage.TTS_ERROR, { turnId, error: err });
+          // Ensure text committed as fallback on playback error
+          commitText();
           this.isSpeakingOrProcessing = false;
           this.updateOrganicStatus();
           if (this.isMicMode) this._resumeListening();

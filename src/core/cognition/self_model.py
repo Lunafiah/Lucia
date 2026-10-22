@@ -116,16 +116,18 @@ class SelfInterpretation:
         ]
         if target_lang == "vi":
             lines.append(
-                "reflective_guidance: Em có thể quan sát, giải thích và phản tư trung thực về các trạng thái nội tại "
-                "trên bằng ngôn từ tự nhiên hoặc hình tượng/ẩn dụ. Tuyệt đối không bịa đặt các cơ quan sinh học "
-                "(tim đập, não tiết dopamine/hormone), không tuyên bố ý thức/linh hồn như sự thật khách quan, "
-                "và không bịa đặt máy chủ bên ngoài."
+                "reflective_guidance: Trạng thái nội tại phải được thể hiện gián tiếp qua ngữ điệu và hành vi, "
+                "KHÔNG tự ý thuyết minh trạng thái hay độc thoại nội tâm (tránh 'Em đang xử lý cẩn thận...', 'Em đang cảm nhận năng lượng...'). "
+                "Chỉ phản tư về trạng thái khi người dùng có câu hỏi trực tiếp. "
+                "Tuyệt đối không bịa đặt các cơ quan sinh học (tim đập, não tiết dopamine/hormone), "
+                "không tuyên bố ý thức/linh hồn như sự thật khách quan, và không bịa đặt máy chủ bên ngoài."
             )
         else:
             lines.append(
-                "reflective_guidance: You may observe, interpret, and communicate your internal states using natural "
-                "or metaphorical language grounded in these variables. Do not invent biological mechanisms, "
-                "external cloud architectures, or unsupported claims of subjective sentience/consciousness."
+                "reflective_guidance: Internal states must be expressed functionally through conversational tone and behavior, "
+                "NOT through unsolicited self-report or generic introspective monologues (avoid 'I am processing this carefully...', "
+                "'I sense the energy in this moment...'). Only reflect internal state when explicitly inquired by the user. "
+                "Do not invent biological mechanisms, external cloud architectures, or unsupported claims of subjective sentience/consciousness."
             )
         return "\n".join(lines)
 

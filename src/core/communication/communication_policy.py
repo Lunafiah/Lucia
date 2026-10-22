@@ -15,7 +15,9 @@ Pre-Reflective Operational Invariant:
 from __future__ import annotations
 
 import logging
-from typing import Any, Dict, Optional
+import logging
+import re
+from typing import Any, Dict, Optional, Sequence, Tuple, Union
 
 import numpy as np
 
@@ -23,6 +25,7 @@ from src.core.communication.communication_state import (
     CommIntent,
     CommunicationState,
     CommStrategy,
+    ResponseDepth,
 )
 from src.core.models import PADState, SomaticMarkers
 
@@ -33,6 +36,8 @@ class CommunicationPolicy:
     """
     Evaluates CommunicationState from multi-subsystem internal state:
     C_t = CommunicationPolicy(A_t, S_t, R_t, K_t, M_t).
+    Authoritative decision point for strategy, elaboration depth, presence depth,
+    and bounded generation budget.
     """
 
     def __init__(self, smoothing_factor: float = 0.25) -> None:
@@ -57,6 +62,180 @@ class CommunicationPolicy:
             knowledge_context_ref=0.0,
             semantic_safe=True,
             provenance="ActuatorNeutralBaseline",
+            response_depth=ResponseDepth.SHORT,
+            max_tokens_budget=100,
+        )
+
+    def evaluate_response_depth(
+        self,
+        *,
+        communicative_act: Optional[Any] = None,
+        conversational_obligation: Optional[str] = None,
+        target_predicate: Optional[str] = None,
+        user_input_text: Optional[str] = None,
+        knowledge_available: bool = False,
+        somatic: Optional[SomaticMarkers] = None,
+        pad: Optional[PADState] = None,
+        relationship: Optional[Dict[str, float]] = None,
+        history: Optional[Sequence[Any]] = None,
+    ) -> Tuple[ResponseDepth, int]:
+        """
+        Authoritative response-depth and bounded generation-budget decision.
+        Evaluates presence required by the conversational moment without brittle heuristics.
+        """
+        act_str = (
+            communicative_act.value
+            if hasattr(communicative_act, "value")
+            else str(communicative_act or "").upper()
+        )
+        ob_str = str(conversational_obligation or "").strip()
+        pred_str = str(target_predicate or "").strip()
+        user_text = (user_input_text or "").strip()
+        text_lower = user_text.lower()
+
+        # 1. Authoritative check: Minimal social / presence ping ("Ciah ơi.", "Lucia ơi", "ơi em")
+        if (
+            ob_str == "MINIMAL_PRESENCE_CALL"
+            or pred_str == "c:PRESENCE_PING"
+            or bool(re.match(r"^(?:ciah|lucia|em)\s+ơi[\.\?\!\s]*$", text_lower))
+            or bool(re.match(r"^ơi\s+(?:ciah|lucia|em)[\.\?\!\s]*$", text_lower))
+            or bool(re.match(r"^(?:ciah|lucia)[\?\!\.\s]*$", text_lower))
+        ):
+            return ResponseDepth.MINIMAL, 35
+
+        # 2. Bare greeting without inquiry or encounter details
+        if act_str == "GREET" and ob_str in ("GREET_BACK", ""):
+            return ResponseDepth.MINIMAL, 40
+
+        # 3. Concept explanation or deep technical / architectural inquiry
+        if act_str == "EXPLAIN_CONCEPT" or ob_str == "FULFILL_CONCEPT_EXPLANATION":
+            tech_cues = (
+                "active inference", "language generation", "cognitive orchestrator",
+                "architecture", "tách", "nguyên lý", "cơ chế", "tại sao", "why does",
+                "how does", "tổng quan kiến trúc", "kernel", "kleene", "caps"
+            )
+            is_technical_deep = any(cue in text_lower for cue in tech_cues)
+            if is_technical_deep:
+                depth, budget = ResponseDepth.DEEP, 380
+            else:
+                depth, budget = ResponseDepth.MEDIUM, 180
+            if somatic and (somatic.energy <= 0.20 or somatic.cognitive_load >= 0.75):
+                budget = int(budget * 0.8)
+            return depth, budget
+
+        # 4. Deep technical question routed through ANSWER
+        if act_str == "ANSWER":
+            tech_cues = (
+                "active inference", "language generation", "cognitive orchestrator",
+                "architecture", "nguyên lý", "cơ chế", "tại sao tách", "why does lucia separate"
+            )
+            if any(cue in text_lower for cue in tech_cues):
+                depth, budget = ResponseDepth.DEEP, 350
+                if somatic and (somatic.energy <= 0.20 or somatic.cognitive_load >= 0.75):
+                    budget = int(budget * 0.8)
+                return depth, budget
+
+        # 5. Companion Personal Query / Self-Disclosure
+        if (
+            act_str == "ANSWER_PERSONAL_QUERY"
+            or ob_str == "FULFILL_PERSONAL_DISCLOSURE"
+            or pred_str == "c:PERSONAL_QUERY"
+        ):
+            return ResponseDepth.SHORT, 95
+
+        # 6. Action Requests (Self-Introduction)
+        if ob_str == "FULFILL_SELF_INTRODUCTION" or pred_str == "c:SELF_INTRODUCTION":
+            return ResponseDepth.SHORT, 90
+
+        # 7. Reaction / Interjection Acknowledgment
+        if act_str == "ACKNOWLEDGE_REACTION" or ob_str == "ACKNOWLEDGE_REACTION_ONLY":
+            return ResponseDepth.SHORT, 60
+
+        # 8. Conversational Hesitation / Floor-Yield Reassurance
+        if ob_str == "REASSURE_AND_GENTLE_INITIATIVE" or pred_str == "c:CONVERSATIONAL_HESITATION":
+            return ResponseDepth.SHORT, 75
+
+        # 9. Refusals & Clarifications (Fail-closed epistemic boundaries)
+        if act_str in ("REFUSE", "CLARIFY"):
+            return ResponseDepth.SHORT, 70
+
+        # 10. Long emotionally layered user turn / rich narrative
+        # Detect multi-sentence personal narrative or multi-clause sharing
+        sentences = [s.strip() for s in re.split(r"[\.\?\!\;\n]+", user_text) if len(s.strip()) > 10]
+        if len(user_text) >= 120 and len(sentences) >= 2:
+            depth, budget = ResponseDepth.MEDIUM, 200
+            if len(sentences) >= 4 and len(user_text) >= 250:
+                depth, budget = ResponseDepth.DEEP, 320
+            if somatic and (somatic.energy <= 0.20 or somatic.cognitive_load >= 0.75):
+                budget = int(budget * 0.8)
+            return depth, budget
+
+        # 11. Simple Direct Question (Activity / Presence / Identity / Attention)
+        if act_str == "ANSWER" and pred_str in (
+            "c:ACTIVITY", "c:PRESENCE", "c:IDENTITY", "c:ATTENTION", "c:WELLBEING", "c:THOUGHTS"
+        ):
+            return ResponseDepth.SHORT, 70
+
+        # 12. Short supportive check-in (Fatigue / daily sharing)
+        fatigue_cues = ("mệt", "tired", "kiệt sức", "exhausted", "hôm nay mệt", "so tired")
+        if any(cue in text_lower for cue in fatigue_cues):
+            return ResponseDepth.SHORT, 75
+
+        # 13. Default Conversational Presence
+        budget = 85
+        depth = ResponseDepth.SHORT
+        if somatic and somatic.energy <= 0.20:
+            budget = 60
+        return depth, budget
+
+    def attune_depth_to_act(
+        self,
+        state: CommunicationState,
+        act: Any,
+        obligation: Optional[str] = None,
+        target_predicate: Optional[str] = None,
+        user_input_text: Optional[str] = None,
+        history: Optional[Sequence[Any]] = None,
+        somatic: Optional[SomaticMarkers] = None,
+    ) -> CommunicationState:
+        """
+        Attunes CommunicationState response_depth and max_tokens_budget to the authoritative
+        communicative act and obligation produced by CAPS.
+        """
+        depth, budget = self.evaluate_response_depth(
+            communicative_act=act,
+            conversational_obligation=obligation,
+            target_predicate=target_predicate,
+            user_input_text=user_input_text,
+            knowledge_available=state.knowledge_context_ref > 0,
+            somatic=somatic,
+            history=history,
+        )
+
+        elaboration_targets = {
+            ResponseDepth.MINIMAL: 0.15,
+            ResponseDepth.SHORT: 0.35,
+            ResponseDepth.MEDIUM: 0.65,
+            ResponseDepth.DEEP: 0.85,
+        }
+        target_elab = elaboration_targets.get(depth, state.elaboration_depth)
+        new_elab = float(np.clip(0.4 * state.elaboration_depth + 0.6 * target_elab, 0.10, 1.00))
+
+        return CommunicationState(
+            strategy=state.strategy,
+            directness=state.directness,
+            elaboration_depth=new_elab,
+            supportiveness=state.supportiveness,
+            formality_score=state.formality_score,
+            acknowledgement_level=state.acknowledgement_level,
+            question_frequency=state.question_frequency,
+            injected_pacing_latency_ms=state.injected_pacing_latency_ms,
+            memory_context_ref=state.memory_context_ref,
+            knowledge_context_ref=state.knowledge_context_ref,
+            semantic_safe=state.semantic_safe,
+            provenance="CommunicationPolicy/AttunedDepth",
+            response_depth=depth,
+            max_tokens_budget=budget,
         )
 
     def compute(
@@ -73,6 +252,11 @@ class CommunicationPolicy:
         relationship_enabled: bool = True,
         recollection_enabled: bool = True,
         knowledge_enabled: bool = True,
+        communicative_act: Optional[Any] = None,
+        conversational_obligation: Optional[str] = None,
+        target_predicate: Optional[str] = None,
+        user_input_text: Optional[str] = None,
+        history: Optional[Sequence[Any]] = None,
     ) -> CommunicationState:
         """
         Pure, bounded evaluation of the communication policy.
@@ -126,6 +310,19 @@ class CommunicationPolicy:
         mem_ref = float(0.50 * m_avail)
         know_ref = float(0.50 * k_avail)
 
+        # Evaluate contextual response depth & generation budget
+        resp_depth, max_tokens = self.evaluate_response_depth(
+            communicative_act=communicative_act,
+            conversational_obligation=conversational_obligation,
+            target_predicate=target_predicate,
+            user_input_text=user_input_text,
+            knowledge_available=(k_avail > 0),
+            somatic=somatic,
+            pad=pad,
+            relationship=relationship,
+            history=history,
+        )
+
         # Strategy classification based on dominant factor
         if energy <= 0.20 or cog_load >= 0.70:
             strategy = CommStrategy.CONCISE_RESERVED
@@ -151,6 +348,8 @@ class CommunicationPolicy:
             knowledge_context_ref=know_ref,
             semantic_safe=True,
             provenance="CommunicationPolicy/Computed",
+            response_depth=resp_depth,
+            max_tokens_budget=max_tokens,
         )
 
         if prev_state is not None:
@@ -176,6 +375,8 @@ class CommunicationPolicy:
             knowledge_context_ref=lerp(prev.knowledge_context_ref, target.knowledge_context_ref),
             semantic_safe=target.semantic_safe,
             provenance="CommunicationPolicy/Smoothed",
+            response_depth=target.response_depth,
+            max_tokens_budget=target.max_tokens_budget,
         )
 
     def render_surface_message(

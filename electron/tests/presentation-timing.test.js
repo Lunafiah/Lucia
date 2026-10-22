@@ -129,7 +129,7 @@ describe('Voice-First Presentation Timing & Response Synchronization', () => {
     jest.clearAllMocks();
   });
 
-  test('1. Event ordering: text commits immediately upon response_ready while TTS runs asynchronously', async () => {
+  test('1. Event ordering: voice playback start triggers text commit (response_ready < voice_start <= text_commit < voice_end)', async () => {
     const stageEvents = [];
     chat.onPresentationEvent = (evt) => {
       stageEvents.push({ stage: evt.stage, time: evt.timestamp });
@@ -144,7 +144,7 @@ describe('Voice-First Presentation Timing & Response Synchronization', () => {
     // At this point, speakMock has been called and onStart fired
     expect(speakMock).toHaveBeenCalledTimes(1);
 
-    // CRITICAL (Section D & E4): Text bubble MUST be visible immediately, not waiting for TTS
+    // Text bubble MUST be visible once audio starts speaking
     const companionBubblesDuringSpeech = chat.messagesContainer.querySelectorAll('.message-row.companion:not(.typing-row)');
     expect(companionBubblesDuringSpeech.length).toBe(1);
     expect(companionBubblesDuringSpeech[0].querySelector('.bubble-text').textContent).toBe(
@@ -161,22 +161,24 @@ describe('Voice-First Presentation Timing & Response Synchronization', () => {
 
     await sendPromise;
 
-    // Check captured stages sequence: text commits immediately, then TTS proceeds
+    // Check captured stages sequence: voice starts speaking, text commits at that exact moment
     const stageNames = stageEvents.map((e) => e.stage);
     expect(stageNames).toEqual([
       PresentationStage.RESPONSE_READY,
-      PresentationStage.TEXT_COMMIT,
       PresentationStage.TTS_START,
       PresentationStage.AUDIO_PLAYING,
+      PresentationStage.TEXT_COMMIT,
       PresentationStage.TTS_END,
     ]);
 
-    // Check timestamps strictly respect ordering: response_ready <= text_commit <= tts_end
+    // Check timestamps strictly respect ordering: response_ready <= voice_start <= text_commit <= tts_end
     const tReady = stageEvents.find((e) => e.stage === PresentationStage.RESPONSE_READY).time;
+    const tStart = stageEvents.find((e) => e.stage === PresentationStage.TTS_START).time;
     const tCommit = stageEvents.find((e) => e.stage === PresentationStage.TEXT_COMMIT).time;
     const tEnd = stageEvents.find((e) => e.stage === PresentationStage.TTS_END).time;
 
-    expect(tReady).toBeLessThanOrEqual(tCommit);
+    expect(tReady).toBeLessThanOrEqual(tStart);
+    expect(tStart).toBeLessThanOrEqual(tCommit);
     expect(tCommit).toBeLessThanOrEqual(tEnd);
 
     // TTS completion does NOT cause a second commit
@@ -185,6 +187,45 @@ describe('Voice-First Presentation Timing & Response Synchronization', () => {
     expect(companionBubblesAfterEnd[0].querySelector('.bubble-text').textContent).toBe(
       'Xin chao Luna, em luon o day cung anh.'
     );
+  });
+
+  test('1b. Synchronization guarantee: text does NOT appear until voice playback start is triggered', async () => {
+    // Custom speak mock where onStart is delayed rather than synchronous
+    let delayedStartCallback = null;
+    window.avatarRenderer.speak = jest.fn((blob, callback) => {
+      delayedStartCallback = callback;
+    });
+
+    chat.inputArea.value = 'Chao em';
+    const sendPromise = chat.sendMessage();
+
+    await new Promise((r) => setTimeout(r, 0));
+
+    // Synthesis complete, speak invoked, but voice playback has NOT started yet
+    expect(window.avatarRenderer.speak).toHaveBeenCalledTimes(1);
+    expect(delayedStartCallback).not.toBeNull();
+
+    // Text bubble MUST NOT be visible yet (only typing indicator)
+    const bubblesBeforeVoiceStart = chat.messagesContainer.querySelectorAll('.message-row.companion:not(.typing-row)');
+    expect(bubblesBeforeVoiceStart.length).toBe(0);
+
+    // Now actual voice playback START occurs
+    delayedStartCallback.onStart();
+
+    // Text bubble MUST now be visible immediately upon voice start
+    const bubblesAfterVoiceStart = chat.messagesContainer.querySelectorAll('.message-row.companion:not(.typing-row)');
+    expect(bubblesAfterVoiceStart.length).toBe(1);
+    expect(bubblesAfterVoiceStart[0].querySelector('.bubble-text').textContent).toBe(
+      'Xin chao Luna, em luon o day cung anh.'
+    );
+
+    // Audio playback finishes naturally
+    delayedStartCallback.onEnded();
+    await sendPromise;
+
+    // Guaranteed single commit (no duplication)
+    const bubblesFinal = chat.messagesContainer.querySelectorAll('.message-row.companion:not(.typing-row)');
+    expect(bubblesFinal.length).toBe(1);
   });
 
   test('2. TTS Error (synthesis rejection) triggers immediate text commit fallback without hanging', async () => {

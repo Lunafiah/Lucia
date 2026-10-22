@@ -34,6 +34,7 @@ Requirements: Phase 9 — Cognitive Unification
 
 from __future__ import annotations
 
+import dataclasses
 import logging
 import threading
 import time
@@ -1336,6 +1337,27 @@ class CognitiveOrchestrator:
                     exc_info=True,
                 )
 
+            # Attune response depth and token budget in CommunicationPolicy based on communicative act & context
+            if caps_result is not None:
+                try:
+                    comm_state = self._comm_policy.attune_depth_to_act(
+                        comm_state,
+                        act=caps_result.act,
+                        obligation=caps_result.conversational_obligation,
+                        target_predicate=caps_result.target_predicate,
+                        user_input_text=input_text,
+                        history=self._history,
+                        somatic=markers,
+                        rel_state=rel_state.to_dict() if hasattr(rel_state, "to_dict") else None,
+                        knowledge=k_dict,
+                    )
+                    self._latest_comm_state = comm_state
+                except Exception:
+                    logger.warning(
+                        "CognitiveOrchestrator: depth attunement failed; retaining base comm_state",
+                        exc_info=True,
+                    )
+
             # ADR-035: Construct typed RealizationInputContract from CAPS decision
             # Production target language for text realization is canonically English ("en").
             # Multilingual perception is admitted, but realization targets are decoupled from perception.
@@ -1369,6 +1391,8 @@ class CognitiveOrchestrator:
                     forbidden_additions=forbidden_adds,
                     dialogue_phase=current_phase_str,
                     somatic_modifiers=somatic_mods,
+                    response_depth=comm_state.response_depth.value if hasattr(comm_state.response_depth, "value") else str(comm_state.response_depth),
+                    max_tokens_budget=comm_state.max_tokens_budget,
                 )
             else:
                 realization_contract = RealizationInputContract.create_default(
@@ -1378,6 +1402,8 @@ class CognitiveOrchestrator:
                     forbidden_additions=forbidden_adds,
                     dialogue_phase=current_phase_str,
                     somatic_modifiers=somatic_mods,
+                    response_depth=comm_state.response_depth.value if hasattr(comm_state.response_depth, "value") else str(comm_state.response_depth),
+                    max_tokens_budget=comm_state.max_tokens_budget,
                 )
 
             # Decision A: Assistant Proposition Semantic Indexing (ADR-038)
@@ -1424,6 +1450,8 @@ class CognitiveOrchestrator:
                 "directness": comm_state.directness,
                 "formality": comm_state.formality_score,
                 "caps_active": caps_result is not None,
+                "response_depth": comm_state.response_depth.value if hasattr(comm_state.response_depth, "value") else str(comm_state.response_depth),
+                "max_tokens_budget": comm_state.max_tokens_budget,
             })
 
         # ── Stage 11: Contextual Prompt Assembly (formerly Stage 7: Prompt Assembly) ──
@@ -1506,7 +1534,15 @@ class CognitiveOrchestrator:
 
         # ── Stage 13: LLM Generation & Boundary Layer ────────────────────
         with self._trace_span("S13", "LanguageGeneration", module_id="LLMBackend", causal_parent="S11") as s13_span:
-            raw_response = self._llm_backend.generate(prompt, constraints)
+            effective_max_tokens = min(
+                constraints.max_tokens,
+                comm_state.max_tokens_budget,
+            )
+            generation_constraints = dataclasses.replace(
+                constraints,
+                max_tokens=effective_max_tokens,
+            )
+            raw_response = self._llm_backend.generate(prompt, generation_constraints)
             if raw_response is None:
                 logger.warning(
                     "CognitiveOrchestrator: LLM returned None (call_id=%s)", call_id
