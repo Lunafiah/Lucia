@@ -73,6 +73,8 @@ class ChatController {
     this.birthdayBadgeText = document.getElementById('birthday-badge-text');
     this.profileBornDateDisplay = document.getElementById('profile-born-date-display');
     this.profileDaysCountDisplay = document.getElementById('profile-days-count-display');
+    this.lifecycleStatus = null;
+    this.isTerminalLifecycle = false;
 
     // System Settings & Hardware Scalability Modal
     this.openSettingsBtn = document.getElementById('open-settings-btn');
@@ -783,25 +785,42 @@ class ChatController {
       let awakenRes = null;
       let awakenData = {};
       try {
-        awakenRes = await fetch('http://127.0.0.1:8765/lifecycle/awaken', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            user_name: userName || 'Friend',
-            companion_name: finalCompanionName,
-            confirm_ceremony: true,
-          }),
-        });
-        if (awakenRes.ok) {
-          awakenData = await awakenRes.json();
+        const payload = {
+          user_name: userName || 'Friend',
+          companion_name: finalCompanionName,
+          confirm_ceremony: true,
+        };
+        if (window.lucia && window.lucia.lifecycle && window.lucia.lifecycle.awaken) {
+          awakenData = await window.lucia.lifecycle.awaken(payload);
+          awakenRes = { ok: true };
         } else {
-          awakenData = await awakenRes.json().catch(() => ({}));
+          const res = await fetch('http://127.0.0.1:8765/lifecycle/awaken', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+          awakenRes = res;
+          if (res.ok) {
+            awakenData = await res.json();
+          } else {
+            awakenData = await res.json().catch(() => ({}));
+          }
         }
       } catch (err) {
-        awakenData = { detail: err.message || 'Network error reaching backend' };
+        awakenData = { detail: err.message || err.detail || 'Network error reaching backend' };
       }
 
       if (awakenRes && awakenRes.ok && (awakenData.status === 'awakened' || awakenData.status === 'activated' || awakenData.status === 'already_active')) {
+        this.lifecycleStatus = {
+          outcome: 'VERIFIED_BORN',
+          ontology_state: 'BORN',
+          runtime_state: 'ACTIVE',
+          is_onboarded: true,
+          companion_name: finalCompanionName,
+          user_name: userName || 'Friend',
+          born_at: awakenData.born_at || new Date().toISOString(),
+        };
+
         // Progress stage updates
         if (this.genesisIntroText) {
           if (awakenData.status === 'awakened') {
@@ -814,10 +833,10 @@ class ChatController {
 
         let profile = null;
         if (window.lucia && window.lucia.system && window.lucia.system.getUserProfile) {
-          profile = await window.lucia.system.getUserProfile();
+          profile = await window.lucia.system.getUserProfile().catch(() => null);
         } else {
-          const res = await fetch('http://127.0.0.1:8765/profile');
-          if (res.ok) profile = await res.json();
+          const res = await fetch('http://127.0.0.1:8765/profile').catch(() => null);
+          if (res && res.ok) profile = await res.json().catch(() => null);
         }
 
         const finalProfile = profile || {
@@ -866,34 +885,142 @@ class ChatController {
     }
   }
 
+  /**
+   * Reconcile canonical lifecycle status (GET /lifecycle/status).
+   * Governed by ADR-034 / ADR-037 tripartite lifecycle contracts:
+   *   NOT_BORN        -> show Genesis First Awakening UI
+   *   BORN + INACTIVE -> instance exists; hide Genesis modal; invoke Awakening boundary; reconcile ACTIVE
+   *   BORN + ACTIVE   -> hide Genesis modal; normal chat
+   *   ENDED           -> terminal state; hide Genesis modal; disable interactions
+   *   Network failure -> WAITING_BACKEND; retry with bounded backoff; NEVER assume NOT_BORN
+   */
+  async reconcileLifecycleStatus(maxRetries = 5, initialDelayMs = 200) {
+    let status = null;
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        if (window.lucia && window.lucia.lifecycle && window.lucia.lifecycle.getStatus) {
+          status = await window.lucia.lifecycle.getStatus();
+        } else {
+          const res = await fetch('http://127.0.0.1:8765/lifecycle/status');
+          if (res.ok) {
+            status = await res.json();
+          } else {
+            throw new Error(`HTTP ${res.status}`);
+          }
+        }
+        if (status && status.ontology_state) {
+          break;
+        }
+      } catch (err) {
+        console.warn(`[lifecycle] Reconcile attempt ${attempt}/${maxRetries} failed:`, err.message || err);
+        if (attempt < maxRetries) {
+          await new Promise((r) => setTimeout(r, initialDelayMs * Math.pow(1.5, attempt - 1)));
+        }
+      }
+    }
+
+    if (!status || !status.ontology_state) {
+      console.error('[lifecycle] Could not obtain lifecycle status after retries. Entering WAITING_BACKEND.');
+      this.transitionTo(State.WAITING_BACKEND);
+      if (this.organicStatusLabel) {
+        this.organicStatusLabel.textContent = 'Connecting to Lucia...';
+      }
+      return null;
+    }
+
+    this.lifecycleStatus = status;
+    const { ontology_state, runtime_state } = status;
+    console.log(`[lifecycle] Reconciled canonical state: ${ontology_state} + ${runtime_state}`);
+
+    // Case D: ENDED -> Terminal state. Never show Genesis UI, never awaken.
+    if (ontology_state === 'ENDED') {
+      this.isTerminalLifecycle = true;
+      if (this.genesisModal) {
+        this.genesisModal.classList.remove('active', 'fade-out');
+      }
+      this.transitionTo(State.ERROR, 'Lifecycle Ended');
+      if (this.stateLabel) {
+        this.stateLabel.textContent = "Lucia's Life Has Ended";
+      }
+      if (this.organicStatusLabel) {
+        this.organicStatusLabel.textContent = "Lucia rests in eternal peace";
+      }
+      return status;
+    }
+
+    // Case A: NOT_BORN -> First-time Genesis Awakening UI
+    if (ontology_state === 'NOT_BORN') {
+      if (this.genesisModal) {
+        this.genesisModal.classList.add('active');
+        if (this.genesisUserNameInput && status.user_name) {
+          this.genesisUserNameInput.value = status.user_name;
+        }
+        if (this.genesisCompanionNameInput) {
+          this.genesisCompanionNameInput.value = status.companion_name || 'Lucia';
+        }
+        this._updateGenesisAwakenButton();
+        this._startGenesisAtmosphere();
+      }
+      this.transitionTo(State.READY);
+      return status;
+    }
+
+    // Cases B & C: BORN
+    if (ontology_state === 'BORN') {
+      // Instance exists! NEVER show First-Birth Genesis modal!
+      if (this.genesisModal) {
+        this.genesisModal.classList.remove('active', 'fade-out');
+      }
+
+      // Case B: BORN + INACTIVE (Cold restart) -> Reconcile to ACTIVE via canonical Awakening boundary
+      if (runtime_state === 'INACTIVE') {
+        console.log('[lifecycle] Existing instance is BORN + INACTIVE. Awakening runtime...');
+        if (this.organicStatusLabel) {
+          this.organicStatusLabel.textContent = 'Lucia is awakening...';
+        }
+        try {
+          let awakenData = null;
+          if (window.lucia && window.lucia.lifecycle && window.lucia.lifecycle.awaken) {
+            awakenData = await window.lucia.lifecycle.awaken({ confirm_ceremony: true });
+          } else {
+            const res = await fetch('http://127.0.0.1:8765/lifecycle/awaken', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ confirm_ceremony: true }),
+            });
+            if (res.ok) awakenData = await res.json();
+          }
+
+          if (awakenData && (awakenData.status === 'activated' || awakenData.status === 'already_active' || awakenData.status === 'awakened')) {
+            console.log('[lifecycle] Successfully reconciled runtime to ACTIVE');
+            this.lifecycleStatus.runtime_state = 'ACTIVE';
+          }
+        } catch (awakenErr) {
+          console.error('[lifecycle] Failed to activate runtime for BORN instance:', awakenErr);
+        }
+      }
+
+      // Case C (or resolved Case B): BORN + ACTIVE -> Normal chat
+      this.transitionTo(State.READY);
+      return status;
+    }
+
+    return status;
+  }
+
   async _loadProfile() {
     try {
       let profile = null;
       if (window.lucia && window.lucia.system && window.lucia.system.getUserProfile) {
-        profile = await window.lucia.system.getUserProfile();
+        profile = await window.lucia.system.getUserProfile().catch(() => null);
       } else {
-        const res = await fetch('http://127.0.0.1:8765/profile');
-        if (res.ok) {
-          profile = await res.json();
+        const res = await fetch('http://127.0.0.1:8765/profile').catch(() => null);
+        if (res && res.ok) {
+          profile = await res.json().catch(() => null);
         }
       }
       if (profile) {
         this._renderProfile(profile);
-        if (!profile.is_onboarded && this.genesisModal) {
-          // Un-onboarded / Genesis-ready: show Genesis Awakening modal
-          this.genesisModal.classList.add('active');
-          if (this.genesisUserNameInput && profile.user_name) {
-            this.genesisUserNameInput.value = profile.user_name;
-          }
-          if (this.genesisCompanionNameInput) {
-            this.genesisCompanionNameInput.value = profile.companion_name || 'Lucia';
-          }
-          this._updateGenesisAwakenButton();
-          this._startGenesisAtmosphere();
-        } else if (this.genesisModal) {
-          // Already onboarded: skip Genesis modal
-          this.genesisModal.classList.remove('active');
-        }
       }
     } catch (e) {
       console.warn('[profile] Could not load profile:', e);
@@ -1207,7 +1334,7 @@ class ChatController {
     if (window.lucia && window.lucia.on) {
       window.lucia.on('backend:ready', async () => {
         console.log('[chat] Backend ready event received');
-        this.transitionTo(State.READY);
+        await this.reconcileLifecycleStatus();
         this._loadVoiceModels();
         this._loadAvatarModels();
         this._loadProfile();
@@ -1291,7 +1418,10 @@ class ChatController {
           this.organicStatusLabel.textContent = 'Lucia is resting';
         }
         if (this.splashOverlay) {
-          document.getElementById('splash-status').textContent = `Startup error: ${errorDetail}`;
+          const splashStatus = document.getElementById('splash-status');
+          if (splashStatus) {
+            splashStatus.textContent = `Startup error: ${errorDetail}`;
+          }
         }
         break;
     }
@@ -1300,6 +1430,11 @@ class ChatController {
   async sendMessage(customText = null) {
     const text = (customText !== null ? customText : this.inputArea.value).trim();
     if (!text) return;
+
+    if (this.isTerminalLifecycle) {
+      this.appendMessage('error', "Lucia's lifecycle has ended (terminal state). Conversations cannot continue.");
+      return;
+    }
 
     // Interrupt/cancel any previously active or staged turn to prevent stale/delayed text
     this._cancelActiveTurn();

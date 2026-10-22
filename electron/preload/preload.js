@@ -77,6 +77,19 @@ contextBridge.exposeInMainWorld('lucia', {
     setUserProfile: (data) =>
       ipcRenderer.invoke('system:set-user-profile', { data })
   },
+  lifecycle: {
+    /**
+     * Canonical lifecycle status introspection (GET /lifecycle/status)
+     * @returns {Promise<{ outcome: string, ontology_state: string, runtime_state: string, is_onboarded: boolean, born_at: string|null, companion_name: string, user_name: string }>}
+     */
+    getStatus: () => ipcRenderer.invoke('lifecycle:get-status'),
+    /**
+     * User-facing Awakening ceremony orchestrator (POST /lifecycle/awaken)
+     * @param {{ user_name?: string, companion_name?: string, confirm_ceremony?: boolean }} [payload]
+     * @returns {Promise<{ status: string, ontology_state: string, runtime_state: string, message: string, born_at: string, companion_name: string, user_name: string, genesis_performed: boolean, activation_performed: boolean }>}
+     */
+    awaken: (payload = {}) => ipcRenderer.invoke('lifecycle:awaken', payload)
+  },
   runtime: {
     getDescriptor: () => ipcRenderer.invoke('runtime:descriptor'),
     getSnapshot: () => ipcRenderer.invoke('runtime:snapshot')

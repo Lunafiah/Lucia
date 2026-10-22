@@ -595,6 +595,88 @@ function registerHandlers(port = 8765, isPreview = false, getMascotManager = nul
   // system:get-hardware-profile — alias to system:get-hardware
   ipcMain.handle('system:get-hardware-profile', handleGetHardware);
 
+  // lifecycle:get-status — canonical lifecycle status introspection (GET /lifecycle/status)
+  ipcMain.handle('lifecycle:get-status', async () => {
+    if (isPreview) {
+      return {
+        outcome: 'NOT_FOUND',
+        ontology_state: 'NOT_BORN',
+        runtime_state: 'INACTIVE',
+        is_onboarded: false,
+        born_at: null,
+        companion_name: 'Lucia',
+        user_name: 'Friend',
+      };
+    }
+    try {
+      const res = await fetch(`${baseUrl}/lifecycle/status`, {
+        signal: AbortSignal.timeout(3000),
+      });
+      if (res.ok) {
+        return await res.json();
+      }
+      const errData = await res.json().catch(() => ({}));
+      throw {
+        code: `http_${res.status}`,
+        status: res.status,
+        message: errData.detail || `HTTP ${res.status}`,
+      };
+    } catch (err) {
+      console.warn('[ipc-bridge] lifecycle:get-status error:', err.message || err);
+      throw {
+        code: err.code || 'network_error',
+        message: err.message || 'Failed to fetch /lifecycle/status',
+      };
+    }
+  });
+
+  // lifecycle:awaken — canonical Awakening ceremony orchestration (POST /lifecycle/awaken)
+  ipcMain.handle('lifecycle:awaken', async (_event, payload = {}) => {
+    if (isPreview) {
+      return {
+        status: 'awakened',
+        ontology_state: 'BORN',
+        runtime_state: 'ACTIVE',
+        message: 'Lucia successfully awakened (preview mode)',
+        born_at: new Date().toISOString(),
+        companion_name: payload.companion_name || 'Lucia',
+        user_name: payload.user_name || 'Friend',
+        genesis_performed: true,
+        activation_performed: true,
+      };
+    }
+    try {
+      const res = await fetch(`${baseUrl}/lifecycle/awaken`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_name: payload.user_name || 'Friend',
+          companion_name: payload.companion_name || 'Lucia',
+          confirm_ceremony: Boolean(payload.confirm_ceremony !== false),
+        }),
+        signal: AbortSignal.timeout(15000),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw {
+          code: `http_${res.status}`,
+          status: res.status,
+          message: data.detail || `Awakening ceremony failed: HTTP ${res.status}`,
+          detail: data.detail || `HTTP ${res.status}`,
+        };
+      }
+      return data;
+    } catch (err) {
+      console.warn('[ipc-bridge] lifecycle:awaken error:', err.message || err);
+      if (err.code || err.status) throw err;
+      throw {
+        code: 'network_error',
+        message: err.message || 'Failed to reach /lifecycle/awaken',
+        detail: err.message || 'Network error reaching backend',
+      };
+    }
+  });
+
   // system:get-user-profile — fetch user/companion profile
   ipcMain.handle('system:get-user-profile', async () => {
     if (isPreview) {
@@ -605,10 +687,12 @@ function registerHandlers(port = 8765, isPreview = false, getMascotManager = nul
         signal: AbortSignal.timeout(2000)
       });
       if (res.ok) return await res.json();
+      const errData = await res.json().catch(() => ({}));
+      throw { code: `http_${res.status}`, message: errData.detail || `HTTP ${res.status}` };
     } catch (err) {
       console.warn('[ipc-bridge] system:get-user-profile error:', err.message);
+      throw { code: err.code || 'network_error', message: err.message || 'Failed to fetch user profile' };
     }
-    return { user_name: 'Friend', companion_name: 'Lucia', is_onboarded: false };
   });
 
   // system:set-user-profile — save user/companion profile fields

@@ -199,11 +199,22 @@ class StateSnapshot(BaseModel):
 
 _turn_admission_lock: asyncio.Lock = asyncio.Lock()
 _turn_queue_depth: int = 0  # number of requests currently admitted (0, 1, or 2)
+_backend_ready_emitted: bool = False
+
+
+def emit_backend_ready() -> None:
+    """Emit the canonical readiness signal once to stdout."""
+    global _backend_ready_emitted
+    if not _backend_ready_emitted:
+        sys.stdout.write("LUCIA_BACKEND_READY\n")
+        sys.stdout.flush()
+        _backend_ready_emitted = True
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Lifespan manager: clean up instance authority upon server shutdown."""
+    """Lifespan manager: signals readiness when HTTP server is accepting requests and cleans up on shutdown."""
+    emit_backend_ready()
     yield
     global _instance_lock
     if _instance_lock is not None and _instance_lock.is_locked:
@@ -1362,6 +1373,7 @@ def init_server(
     mode: str = "live",
     lock_path: Optional[Union[str, Path]] = None,
     warmup_voice: bool = False,
+    emit_ready: bool = True,
 ) -> None:
     global _orchestrator, _sim_runtime, _scenario_runner, _mode, _instance_lock
     _mode = mode.lower()
@@ -1385,9 +1397,9 @@ def init_server(
             sys.stdout.flush()
             sys.exit(1)
 
-        # Signal ready to Electron parent process
-        sys.stdout.write("LUCIA_BACKEND_READY\n")
-        sys.stdout.flush()
+        # Signal ready to Electron parent process (if not deferred to ASGI server lifespan)
+        if emit_ready:
+            emit_backend_ready()
         return
 
     # Live mode execution — acquire exclusive instance authority before any state mutation
@@ -1582,9 +1594,9 @@ def init_server(
             except Exception as exc:
                 logger.warning("VoiceEngine: failed to dispatch background warmup: %s", exc)
 
-    # Signal ready to Electron parent process
-    sys.stdout.write("LUCIA_BACKEND_READY\n")
-    sys.stdout.flush()
+    # Signal ready to Electron parent process (if not deferred to ASGI server lifespan)
+    if emit_ready:
+        emit_backend_ready()
 
 
 def main() -> None:
@@ -1599,6 +1611,7 @@ def main() -> None:
         log_level=args.log_level,
         mode=mode,
         warmup_voice=warmup_voice,
+        emit_ready=False,
     )
 
     def shutdown_handler(sig, frame):

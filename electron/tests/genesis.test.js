@@ -7,6 +7,8 @@ describe('Phase 7.7 Genesis Awakening Tests', () => {
   let ChatController;
   let chat;
   let fetchMock;
+  let chatModule;
+  let State;
 
   beforeEach(() => {
     // Set up DOM matching index.html with Genesis modal
@@ -135,6 +137,20 @@ describe('Phase 7.7 Genesis Awakening Tests', () => {
       if (urlStr.includes('/system/hardware')) {
         return Promise.resolve({ ok: true, json: () => Promise.resolve({ device_name: 'Host CPU', cuda_available: false, vram_mb: 0, backend: 'cpu' }) });
       }
+      if (urlStr.includes('/lifecycle/status')) {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({
+            outcome: 'VERIFIED_BORN',
+            ontology_state: 'BORN',
+            runtime_state: 'ACTIVE',
+            is_onboarded: true,
+            born_at: currentProfile.born_at || new Date().toISOString(),
+            companion_name: currentProfile.companion_name,
+            user_name: currentProfile.user_name,
+          }),
+        });
+      }
       if (urlStr.includes('/lifecycle/awaken')) {
         return Promise.resolve({
           ok: true,
@@ -183,8 +199,9 @@ describe('Phase 7.7 Genesis Awakening Tests', () => {
     });
     global.fetch = fetchMock;
 
-    const chatModule = require('../renderer/chat/chat.js');
+    chatModule = require('../renderer/chat/chat.js');
     ChatController = chatModule.ChatController;
+    State = chatModule.State;
     chat = new ChatController();
   });
 
@@ -192,52 +209,189 @@ describe('Phase 7.7 Genesis Awakening Tests', () => {
     jest.clearAllMocks();
   });
 
-  test('Test 1: Genesis modal visibility when /profile reports is_onboarded = false', async () => {
-    fetchMock.mockImplementationOnce((url) => {
-      if (url.includes('/profile')) {
+  test('Test 1 (Case A — First birth): Genesis modal visibility when /lifecycle/status reports NOT_BORN', async () => {
+    fetchMock.mockImplementation((url) => {
+      const urlStr = typeof url === 'string' ? url : (url?.url || '');
+      if (urlStr.includes('/lifecycle/status')) {
         return Promise.resolve({
           ok: true,
           json: () => Promise.resolve({
-            version: 1,
-            user_name: 'Friend',
-            companion_name: 'Lucia',
+            outcome: 'NOT_FOUND',
+            ontology_state: 'NOT_BORN',
+            runtime_state: 'INACTIVE',
             is_onboarded: false,
             born_at: null,
+            companion_name: 'Lucia',
+            user_name: 'Friend',
           }),
         });
       }
       return Promise.resolve({ ok: true, json: () => Promise.resolve({}) });
     });
 
-    await chat._loadProfile();
+    await chat.reconcileLifecycleStatus();
 
     const genesisModal = document.getElementById('genesis-modal');
     expect(genesisModal.classList.contains('active')).toBe(true);
     expect(chat.genesisUserNameInput.value).toBe('Friend');
     expect(chat.genesisCompanionNameInput.value).toBe('Lucia');
+
+    // Invariant: No false automatic activation occurs for NOT_BORN
+    const awakenCall = fetchMock.mock.calls.find(call => call[0].includes('/lifecycle/awaken') && call[1]?.method === 'POST');
+    expect(awakenCall).toBeUndefined();
   });
 
-  test('Test 2: Genesis is skipped when is_onboarded = true', async () => {
-    fetchMock.mockImplementationOnce((url) => {
-      if (url.includes('/profile')) {
+  test('Test 2 (Case B — Cold restart): Existing instance in BORN + INACTIVE reconciles to ACTIVE without Genesis modal', async () => {
+    fetchMock.mockImplementation((url) => {
+      const urlStr = typeof url === 'string' ? url : (url?.url || '');
+      if (urlStr.includes('/lifecycle/status')) {
         return Promise.resolve({
           ok: true,
           json: () => Promise.resolve({
-            version: 1,
-            user_name: 'Luna',
-            companion_name: 'Lucia',
+            outcome: 'VERIFIED_BORN',
+            ontology_state: 'BORN',
+            runtime_state: 'INACTIVE',
             is_onboarded: true,
             born_at: '2026-09-01T12:00:00.000Z',
+            companion_name: 'Lucia',
+            user_name: 'Luna',
+          }),
+        });
+      }
+      if (urlStr.includes('/lifecycle/awaken')) {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({
+            status: 'activated',
+            ontology_state: 'BORN',
+            runtime_state: 'ACTIVE',
+            message: 'Lucia runtime activated',
+            born_at: '2026-09-01T12:00:00.000Z',
+            companion_name: 'Lucia',
+            user_name: 'Luna',
+            genesis_performed: false,
+            activation_performed: true,
           }),
         });
       }
       return Promise.resolve({ ok: true, json: () => Promise.resolve({}) });
     });
 
-    await chat._loadProfile();
+    await chat.reconcileLifecycleStatus();
 
     const genesisModal = document.getElementById('genesis-modal');
     expect(genesisModal.classList.contains('active')).toBe(false);
+
+    // Verify canonical awakening boundary was invoked to activate runtime
+    const awakenCall = fetchMock.mock.calls.find(call => call[0].includes('/lifecycle/awaken') && call[1]?.method === 'POST');
+    expect(awakenCall).toBeDefined();
+
+    // Verify final state is ACTIVE
+    expect(chat.lifecycleStatus.runtime_state).toBe('ACTIVE');
+    expect(chat.lifecycleStatus.ontology_state).toBe('BORN');
+  });
+
+  test('Test 2B (Case C — Already active): Instance in BORN + ACTIVE skips Genesis and unnecessary awakening', async () => {
+    fetchMock.mockImplementation((url) => {
+      const urlStr = typeof url === 'string' ? url : (url?.url || '');
+      if (urlStr.includes('/lifecycle/status')) {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({
+            outcome: 'VERIFIED_BORN',
+            ontology_state: 'BORN',
+            runtime_state: 'ACTIVE',
+            is_onboarded: true,
+            born_at: '2026-09-01T12:00:00.000Z',
+            companion_name: 'Lucia',
+            user_name: 'Luna',
+          }),
+        });
+      }
+      return Promise.resolve({ ok: true, json: () => Promise.resolve({}) });
+    });
+
+    await chat.reconcileLifecycleStatus();
+
+    const genesisModal = document.getElementById('genesis-modal');
+    expect(genesisModal.classList.contains('active')).toBe(false);
+
+    // No redundant awakening call needed when already ACTIVE
+    const awakenCall = fetchMock.mock.calls.find(call => call[0].includes('/lifecycle/awaken') && call[1]?.method === 'POST');
+    expect(awakenCall).toBeUndefined();
+    expect(chat.currentState).toBe(chatModule.State.READY);
+  });
+
+  test('Test 2C (Case D — Ended): Instance in ENDED state enters terminal decommissioned UI and never awakens', async () => {
+    fetchMock.mockImplementation((url) => {
+      const urlStr = typeof url === 'string' ? url : (url?.url || '');
+      if (urlStr.includes('/lifecycle/status')) {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({
+            outcome: 'VERIFIED_BORN',
+            ontology_state: 'ENDED',
+            runtime_state: 'INACTIVE',
+            is_onboarded: false,
+            born_at: '2026-09-01T12:00:00.000Z',
+            companion_name: 'Lucia',
+            user_name: 'Luna',
+          }),
+        });
+      }
+      return Promise.resolve({ ok: true, json: () => Promise.resolve({}) });
+    });
+
+    await chat.reconcileLifecycleStatus();
+
+    const genesisModal = document.getElementById('genesis-modal');
+    expect(genesisModal.classList.contains('active')).toBe(false);
+
+    // Must be flagged as terminal
+    expect(chat.isTerminalLifecycle).toBe(true);
+    expect(chat.currentState).toBe(chatModule.State.ERROR);
+
+    // No awakening call allowed
+    const awakenCall = fetchMock.mock.calls.find(call => call[0].includes('/lifecycle/awaken'));
+    expect(awakenCall).toBeUndefined();
+  });
+
+  test('Test 2D (Case E — Backend startup race): Temporary failure stays in WAITING_BACKEND without false Genesis modal', async () => {
+    let callCount = 0;
+    fetchMock.mockImplementation((url) => {
+      const urlStr = typeof url === 'string' ? url : (url?.url || '');
+      if (urlStr.includes('/lifecycle/status')) {
+        callCount++;
+        if (callCount === 1) {
+          // First attempt: simulate ECONNREFUSED
+          return Promise.reject(new Error('ECONNREFUSED'));
+        }
+        // Second attempt: succeeds
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({
+            outcome: 'VERIFIED_BORN',
+            ontology_state: 'BORN',
+            runtime_state: 'ACTIVE',
+            is_onboarded: true,
+            born_at: '2026-09-01T12:00:00.000Z',
+            companion_name: 'Lucia',
+            user_name: 'Luna',
+          }),
+        });
+      }
+      return Promise.resolve({ ok: true, json: () => Promise.resolve({}) });
+    });
+
+    const genesisModal = document.getElementById('genesis-modal');
+    expect(genesisModal.classList.contains('active')).toBe(false);
+
+    await chat.reconcileLifecycleStatus(3, 10);
+
+    // After retry succeeds, BORN + ACTIVE is reconciled without ever flashing Genesis modal
+    expect(genesisModal.classList.contains('active')).toBe(false);
+    expect(chat.currentState).toBe(chatModule.State.READY);
+    expect(callCount).toBe(2);
   });
 
   test('Test 3: User name submission and POST /profile preferences without direct onboarding', async () => {
