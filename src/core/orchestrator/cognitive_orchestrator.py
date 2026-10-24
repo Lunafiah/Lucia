@@ -90,11 +90,19 @@ from src.core.orchestrator.discourse_cache import (
     ResolutionStatus,
 )
 from src.core.language.adapter.contracts import (
+    AdmissionDisposition,
+    CausalRelation,
     CertificationResult,
     IngressCandidateAssertion,
+    IngressSourceClass,
     RetractionDirective,
+    StagedCandidate,
 )
-from src.core.language.adapter.gate import LanguageIngressGate
+from src.core.language.adapter.gate import (
+    LanguageIngressGate,
+    classify_predicate_domain,
+    evaluate_admission_disposition,
+)
 from src.core.config import (
     BoundaryConfig,
     HomeostaticConfig,
@@ -282,6 +290,8 @@ class CognitiveOrchestrator:
         self._knowledge_store = (
             knowledge_store if knowledge_store is not None else bootstrap_verified_knowledge(KnowledgeStore())
         )
+        if self._knowledge_store is not None:
+            self._knowledge_store.register_revision_callback(self._handle_knowledge_store_revision)
         self._relationship_updater = (
             relationship_updater if relationship_updater is not None else RelationshipUpdater()
         )
@@ -522,6 +532,251 @@ class CognitiveOrchestrator:
             self._pending_retraction_directives.append(directive)
             self.execute_retraction_directive(directive)
         return cert_result
+
+    def _handle_knowledge_store_revision(self, old_prop_id: str, new_prop_id: str) -> None:
+        """
+        KnowledgeStore -> JTMS Revision Bridge.
+        Translates a non-destructive KnowledgeStore proposition revision into a JTMS retraction directive.
+        """
+        term_id = self._symbol_table.get_term_id_for_symbol(old_prop_id)
+        if term_id is None or term_id <= 0:
+            # Inactive or unprojected proposition: graceful no-op
+            return
+
+        directive = RetractionDirective(
+            target_term_id=term_id,
+            reason=f"KNOWLEDGE_STORE_REVISION:{old_prop_id}->{new_prop_id}",
+        )
+        self.execute_retraction_directive(directive)
+
+    def reset_lifecycle(self) -> None:
+        """
+        Resets transient lifecycle state: clears ephemeral candidate staging,
+        pending retraction directives, and discourse caches.
+        """
+        if self._knowledge_store is not None:
+            self._knowledge_store.clear_staging()
+        self._pending_retraction_directives.clear()
+        self._history.clear()
+        self._discourse_cache.clear()
+        self._dyadic_state = DyadicDiscourseState()
+
+    def _extract_candidate_triples_from_text(self, text: str) -> List[Tuple[str, str, str]]:
+        """
+        Extract candidate (S, P, O) assertions from user discourse.
+        """
+        triples: List[Tuple[str, str, str]] = []
+        raw = text.strip()
+        lower = raw.lower()
+
+        # Preference patterns: e.g. "I prefer oolong tea", "Tôi thích trà ô long"
+        pref_m = re.search(r"\b(?:i prefer|i like)\s+([^.!?]+)", lower)
+        if pref_m:
+            item = pref_m.group(1).strip()
+            triples.append(("ent:user", "c:prefers", f"val:{item.replace(' ', '_')}"))
+        vi_pref_m = re.search(r"\b(?:tôi thích|em thích|mình thích)\s+([^.!?]+)", lower)
+        if vi_pref_m:
+            item = vi_pref_m.group(1).strip()
+            triples.append(("ent:user", "c:prefers", f"val:{item.replace(' ', '_')}"))
+
+        # Affect / somatic patterns: e.g. "I feel tired", "Tôi cảm thấy mệt"
+        if "feel tired" in lower or "cảm thấy mệt" in lower or "tôi mệt" in lower:
+            triples.append(("ent:user", "c:feels", "val:tired"))
+        elif "feel happy" in lower or "cảm thấy vui" in lower or "tôi vui" in lower:
+            triples.append(("ent:user", "c:feels", "val:happy"))
+
+        # Biography patterns: e.g. "I was born in Hanoi", "Tôi sinh ra ở Hà Nội"
+        bio_born_m = re.search(r"\b(?:i was born in|sinh ra ở)\s+([^.!?]+)", lower)
+        if bio_born_m:
+            place = bio_born_m.group(1).strip()
+            triples.append(("ent:user", "c:born_in", f"ent:{place.replace(' ', '_')}"))
+        bio_live_m = re.search(r"\b(?:i live in|sống ở)\s+([^.!?]+)", lower)
+        if bio_live_m:
+            place = bio_live_m.group(1).strip()
+            triples.append(("ent:user", "c:lives_in", f"ent:{place.replace(' ', '_')}"))
+
+        # World claims: e.g. "Water boils at 90C", "Water boils at 100C", "Nước sôi ở 90C"
+        boil_m = re.search(r"\b(?:water boils at|nước sôi ở)\s+([0-9]+(?:\.[0-9]+)?\s*c?)", lower)
+        if boil_m:
+            temp = boil_m.group(1).strip().replace(" ", "")
+            triples.append(("ent:water", "c:boils_at", f"val:{temp}"))
+
+        # Third party attribution: e.g. "Bob claims that the earth is flat"
+        tp_m = re.search(r"\b(\w+)\s+(?:claims that|says that)\s+([^.!?]+)", lower)
+        if tp_m and tp_m.group(1).lower() not in ("i", "tôi", "em"):
+            who = tp_m.group(1).strip()
+            claim = tp_m.group(2).strip()
+            triples.append((f"ent:{who}", "c:claims_that", f"claim:{claim.replace(' ', '_')}"))
+
+        return triples
+
+    def _admit_extracted_proposition(
+        self,
+        subj: str,
+        pred: str,
+        obj: str,
+        source_class: IngressSourceClass | str = IngressSourceClass.USER_DISCOURSE,
+        causal_rel: CausalRelation = CausalRelation.SPONTANEOUS,
+        antecedent_id: Optional[int] = None,
+        confidence: float = 1.0,
+    ) -> Tuple[AdmissionDisposition, Optional[str]]:
+        """
+        Admit an extracted candidate proposition according to the ratified
+        Authority x Domain policy (Blocker D).
+        """
+        domain = classify_predicate_domain(pred)
+
+        cand_id = f"prop:user_{uuid.uuid4().hex[:8]}"
+        temp_prop = Proposition(
+            id=cand_id,
+            subject=subj,
+            predicate=pred,
+            object=obj,
+            confidence=confidence,
+            provenance=ProvenanceType.USER_STATED,
+            scope_id="scope:root",
+        )
+
+        conflicts = self._knowledge_store.detect_contradiction(temp_prop)
+        is_conflict = len(conflicts) > 0
+
+        disposition, target_scope = evaluate_admission_disposition(
+            source_class=source_class,
+            domain=domain,
+            causal_relation=causal_rel,
+            is_conflict=is_conflict,
+            confidence=confidence,
+        )
+
+        if disposition == AdmissionDisposition.REJECT:
+            logger.info("Admission Disposition: REJECT for (%s, %s, %s)", subj, pred, obj)
+            return disposition, None
+
+        elif disposition == AdmissionDisposition.STAGE:
+            logger.info("Admission Disposition: STAGE for (%s, %s, %s) in %s", subj, pred, obj, target_scope)
+            staged_id = f"cand_{uuid.uuid4().hex[:8]}"
+            conflict_id = conflicts[0].id if conflicts else None
+            reason = "CONTRADICTION_WITH_ACTIVE_ROOT" if is_conflict else "UNCLASSIFIED_DOMAIN"
+            staged = StagedCandidate(
+                candidate_id=staged_id,
+                subject=subj,
+                predicate=pred,
+                object=obj,
+                scope_id=target_scope,
+                source=str(source_class),
+                confidence=confidence,
+                reason=reason,
+                conflict_with_id=conflict_id,
+            )
+            self._knowledge_store.stage_candidate(staged)
+            return disposition, staged_id
+
+        elif disposition in (AdmissionDisposition.ROOT_ADMIT, AdmissionDisposition.MODAL_ADMIT):
+            logger.info(
+                "Admission Disposition: %s for (%s, %s, %s) in %s",
+                disposition.value, subj, pred, obj, target_scope,
+            )
+            admitted_prop = Proposition(
+                id=cand_id,
+                subject=subj,
+                predicate=pred,
+                object=obj,
+                confidence=confidence,
+                provenance=ProvenanceType.USER_STATED,
+                scope_id=target_scope,
+                causal_relation=causal_rel.name if hasattr(causal_rel, "name") else str(causal_rel),
+                antecedent_id=str(antecedent_id) if antecedent_id else None,
+            )
+            prop_id = self._knowledge_store.store_proposition(admitted_prop)
+            self._reasoning_service.project_propositions([admitted_prop])
+            return disposition, prop_id
+
+        return disposition, None
+
+    def admit_candidate_assertion(
+        self,
+        subj: str,
+        pred: str,
+        obj: str,
+        source_class: IngressSourceClass | str = IngressSourceClass.USER_DISCOURSE,
+        causal_rel: CausalRelation = CausalRelation.SPONTANEOUS,
+        antecedent_id: Optional[int] = None,
+        confidence: float = 1.0,
+    ) -> Tuple[AdmissionDisposition, Optional[str]]:
+        """
+        Public method to evaluate and admit a candidate assertion through the epistemic admission boundary.
+        """
+        return self._admit_extracted_proposition(
+            subj=subj,
+            pred=pred,
+            obj=obj,
+            source_class=source_class,
+            causal_rel=causal_rel,
+            antecedent_id=antecedent_id,
+            confidence=confidence,
+        )
+
+    def _execute_ingress_hook_s1b_s1c(
+        self, input_text: str, user_language: Optional[str] = None
+    ) -> None:
+        """
+        Hook S1b (Propositional Ingress / Anti-Echo) & Hook S1c (Epistemic Admission).
+        Orchestration hooks invoked between S1 (Sensory Encoding) and S2 (Generative Prior).
+        Does NOT alter canonical 16-stage numbering.
+        """
+        norm_text = input_text.strip().lower()
+        if not norm_text:
+            return
+
+        # 1. Surface dialogue detection (affirmation / denial / novel)
+        affirmatory_patterns = {
+            "yes", "yep", "yeah", "đúng", "đúng rồi", "chính xác", "phải", "chuẩn", "ừ", "vâng", "ha", "uh"
+        }
+        denial_patterns = {
+            "no", "nope", "không", "sai", "sai rồi", "không phải", "không đúng", "chưa đúng"
+        }
+
+        tokens = re.findall(r"[\w\u00C0-\u1EF9]+", norm_text)
+        has_affirmation = any(t in affirmatory_patterns for t in tokens) or norm_text in affirmatory_patterns
+        has_denial = any(t in denial_patterns for t in tokens) or norm_text in denial_patterns
+
+        substantive_tokens = [t for t in tokens if t not in affirmatory_patterns and t not in denial_patterns]
+        has_novel_content = len(substantive_tokens) > 0
+
+        causal_rel, ant_id = self._ingress_gate.attribute_causal_relation(
+            has_denial=has_denial,
+            has_affirmation=has_affirmation,
+            has_novel_content=has_novel_content,
+            discourse_state=self._dyadic_state,
+        )
+
+        # ── S1b: Anti-Echo & Retraction Processing ──
+        if causal_rel == CausalRelation.CONFIRMED_ECHO:
+            logger.info("Ingress Hook S1b: Confirmed Echo detected. Status=UNKNOWN, Disposition=REJECT. Zero mutation.")
+            return
+
+        if causal_rel == CausalRelation.CORRECTED_NEGATION:
+            if ant_id > 0:
+                logger.info("Ingress Hook S1b: Corrected Negation detected for antecedent %d. Emitting retraction.", ant_id)
+                directive = RetractionDirective(
+                    target_term_id=ant_id,
+                    reason="USER_CORRECTED_NEGATION",
+                )
+                self._pending_retraction_directives.append(directive)
+                self.execute_retraction_directive(directive)
+            return
+
+        # ── S1c: Epistemic Admission Evaluation ──
+        extracted_triples = self._extract_candidate_triples_from_text(input_text)
+        for subj, pred, obj in extracted_triples:
+            self._admit_extracted_proposition(
+                subj=subj,
+                pred=pred,
+                obj=obj,
+                source_class=IngressSourceClass.USER_DISCOURSE,
+                causal_rel=causal_rel,
+                antecedent_id=ant_id if ant_id > 0 else None,
+            )
 
     @property
     def execution_tracer(self) -> CognitiveExecutionTracer:
@@ -997,6 +1252,12 @@ class CognitiveOrchestrator:
                 "stimulus_dim": int(stimulus.shape[0]),
                 "stimulus_norm": float(np.linalg.norm(stimulus)),
             })
+
+        # ── Hooks S1b & S1c: Ingress Anti-Echo & Epistemic Admission ─────
+        try:
+            self._execute_ingress_hook_s1b_s1c(input_text, user_language=user_language)
+        except Exception as exc:
+            logger.warning("CognitiveOrchestrator: ingress hook S1b/S1c error (fail-open): %s", exc)
 
         # ── Stage 2: Generative Prior Expectation ────────────────────────
         with self._trace_span("S2", "GenerativePriorExpectation", module_id="ActiveInferenceEngine") as s2_span:

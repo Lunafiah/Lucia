@@ -150,9 +150,17 @@ class EpistemicReasoningService:
             a0_id = self._symbol_table.intern_concept(prop.subject)
             a1_id = self._symbol_table.intern_concept(prop.object) if prop.object else 0
 
+            # Resolve scope identifier through symbol table
+            scope_str = getattr(prop, "scope_id", "scope:root") or "scope:root"
+            if scope_str == "scope:root":
+                sc_id = 1
+            else:
+                sc_id = self._symbol_table.intern_scope(scope_str)
+
             # Check if matching term already exists in arena
-            existing = self._find_matching_term(pred_id, a0_id, a1_id, assigned_status)
+            existing = self._find_matching_term(pred_id, a0_id, a1_id, assigned_status, polarity=True, scope_id=sc_id)
             if existing is not None:
+                self._symbol_table.register_term_id(existing.term_id, prop.id)
                 allocated_ids.append(existing.term_id)
                 continue
 
@@ -161,9 +169,11 @@ class EpistemicReasoningService:
                     predicate_id=pred_id,
                     arg0_id=a0_id,
                     arg1_id=a1_id,
+                    scope_id=sc_id,
                     epistemic_status=assigned_status,
                     polarity=True,
                 )
+                self._symbol_table.register_term_id(tid, prop.id)
                 allocated_ids.append(tid)
             except Exception as exc:
                 logger.warning("EpistemicReasoningService: failed to allocate term: %s", exc)

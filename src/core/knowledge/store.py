@@ -11,9 +11,12 @@ import json
 import logging
 import threading
 import time
-from typing import Any, Dict, List, Optional, Set
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Set, Tuple
 
 from src.core.knowledge.proposition import Concept, InferenceRule, Proposition, ProvenanceType
+
+if TYPE_CHECKING:
+    from src.core.language.adapter.contracts import StagedCandidate
 
 logger = logging.getLogger(__name__)
 
@@ -30,11 +33,48 @@ class KnowledgeStore:
         self._concepts: Dict[str, Concept] = {}
         self._rules: Dict[str, InferenceRule] = {}
         self._revision_history: List[Dict[str, Any]] = []
-        self._spo_index: Dict[Tuple[str, str, str], str] = {}
+        self._spo_index: Dict[Tuple[str, str, str, str], str] = {}
+        self._staging: Dict[str, StagedCandidate] = {}
+        self._on_revision_callbacks: List[Callable[[str, str], None]] = []
+
+    def is_bootstrap_proposition(self, prop: Proposition) -> bool:
+        """
+        Check if a proposition is immutable bootstrap architecture knowledge.
+        """
+        if prop.id.startswith("prop:arch_") or prop.id.startswith("prop:bootstrap_") or prop.id.startswith("peano:"):
+            return True
+        for ev in prop.evidence_ids:
+            if ev.startswith("docs/") or "ARCHITECTURE.md" in ev or "INVARIANTS.md" in ev:
+                return True
+        return False
+
+    def register_revision_callback(self, callback: Callable[[str, str], None]) -> None:
+        """Register an observer callback (old_prop_id, new_prop_id) triggered on revision."""
+        with self._store_lock:
+            if callback not in self._on_revision_callbacks:
+                self._on_revision_callbacks.append(callback)
+
+    def stage_candidate(self, candidate: StagedCandidate) -> str:
+        """Stage an ephemeral candidate assertion pre-admission. Never persisted to disk."""
+        with self._store_lock:
+            self._staging[candidate.candidate_id] = candidate
+            return candidate.candidate_id
+
+    def get_staged_candidate(self, candidate_id: str) -> Optional[StagedCandidate]:
+        with self._store_lock:
+            return self._staging.get(candidate_id)
+
+    def get_all_staged(self) -> List[StagedCandidate]:
+        with self._store_lock:
+            return list(self._staging.values())
+
+    def clear_staging(self) -> None:
+        with self._store_lock:
+            self._staging.clear()
 
     def store_proposition(self, prop: Proposition) -> str:
         """
-        Store a proposition in the knowledge store with idempotent (S, P, O) deduplication.
+        Store a proposition in the knowledge store with idempotent (Scope, S, P, O) deduplication.
         If an identical valid triple with matching provenance exists, returns the existing ID.
         """
         with self._store_lock:
@@ -42,7 +82,7 @@ class KnowledgeStore:
                 self._propositions[prop.id] = prop
                 return prop.id
 
-            key = (prop.subject.strip().lower(), prop.predicate.strip().lower(), prop.object.strip().lower())
+            key = (prop.scope_id.strip().lower(), prop.subject.strip().lower(), prop.predicate.strip().lower(), prop.object.strip().lower())
             existing_id = self._spo_index.get(key)
             if existing_id is not None and existing_id in self._propositions:
                 existing_prop = self._propositions[existing_id]
@@ -101,6 +141,7 @@ class KnowledgeStore:
         subject: Optional[str] = None,
         predicate: Optional[str] = None,
         object_: Optional[str] = None,
+        scope_id: Optional[str] = None,
         valid_only: bool = True,
     ) -> List[Proposition]:
         """
@@ -111,6 +152,8 @@ class KnowledgeStore:
             results = []
             for prop in self._propositions.values():
                 if valid_only and not prop.valid:
+                    continue
+                if scope_id is not None and prop.scope_id != scope_id:
                     continue
                 if subject is not None and prop.subject != subject:
                     continue
@@ -169,15 +212,18 @@ class KnowledgeStore:
         differing objects with the same subject and predicate constitute a contradiction.
         """
         single_valued_predicates = {
-            "equals", "has_shape", "has_color", "capital_of", "successor_of", "father_of"
+            "equals", "has_shape", "has_color", "capital_of", "successor_of", "father_of",
+            "boils_at", "freezes_at"
         }
         with self._store_lock:
             conflicts = []
+            cand_pred_clean = candidate.predicate.lower().replace("c:", "").strip()
             for existing in self._propositions.values():
                 if not existing.valid:
                     continue
-                if existing.subject == candidate.subject and existing.predicate == candidate.predicate:
-                    if existing.predicate in single_valued_predicates and existing.object != candidate.object:
+                exist_pred_clean = existing.predicate.lower().replace("c:", "").strip()
+                if existing.subject.strip().lower() == candidate.subject.strip().lower() and exist_pred_clean == cand_pred_clean:
+                    if exist_pred_clean in single_valued_predicates and existing.object.strip().lower() != candidate.object.strip().lower():
                         conflicts.append(existing)
             return conflicts
 
@@ -192,6 +238,9 @@ class KnowledgeStore:
             if old_prop is None:
                 raise KeyError(f"Proposition {old_prop_id} not found for revision")
 
+            if self.is_bootstrap_proposition(old_prop):
+                raise PermissionError(f"Cannot revise immutable bootstrap proposition {old_prop_id}")
+
             old_prop.valid = False
             old_prop.provenance = ProvenanceType.CONTRADICTED
             old_prop.superseded_by = new_prop.id
@@ -199,8 +248,8 @@ class KnowledgeStore:
             new_prop.evidence_ids.append(old_prop_id)
             self._propositions[new_prop.id] = new_prop
 
-            old_key = (old_prop.subject.strip().lower(), old_prop.predicate.strip().lower(), old_prop.object.strip().lower())
-            new_key = (new_prop.subject.strip().lower(), new_prop.predicate.strip().lower(), new_prop.object.strip().lower())
+            old_key = (old_prop.scope_id.strip().lower(), old_prop.subject.strip().lower(), old_prop.predicate.strip().lower(), old_prop.object.strip().lower())
+            new_key = (new_prop.scope_id.strip().lower(), new_prop.subject.strip().lower(), new_prop.predicate.strip().lower(), new_prop.object.strip().lower())
             if self._spo_index.get(old_key) == old_prop_id:
                 del self._spo_index[old_key]
             if new_prop.valid:
@@ -214,6 +263,14 @@ class KnowledgeStore:
                 "previous_tuple": old_prop.to_tuple(),
                 "new_tuple": new_prop.to_tuple(),
             })
+
+            # Notify observers (e.g. CognitiveOrchestrator JTMS retraction bridge)
+            for cb in list(self._on_revision_callbacks):
+                try:
+                    cb(old_prop_id, new_prop.id)
+                except Exception as ex:
+                    logger.warning("Error in revision callback: %s", ex)
+
             return new_prop.id
 
     def to_json(self) -> str:
@@ -246,7 +303,7 @@ class KnowledgeStore:
             prop = Proposition.from_dict(p_dict)
             store._propositions[prop.id] = prop
             if prop.valid:
-                key = (prop.subject.strip().lower(), prop.predicate.strip().lower(), prop.object.strip().lower())
+                key = (prop.scope_id.strip().lower(), prop.subject.strip().lower(), prop.predicate.strip().lower(), prop.object.strip().lower())
                 store._spo_index[key] = prop.id
         for c_dict in data.get("concepts", []):
             concept = Concept.from_dict(c_dict)

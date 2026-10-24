@@ -30,6 +30,7 @@ from src.core.cognition.contract.epistemic import EpistemicStatus
 from src.core.knowledge.fortification import EpistemicState, SemanticGraph
 from src.core.language.adapter.contracts import (
     SUPPORTED_LANGUAGES,
+    AdmissionDisposition,
     CausalRelation,
     CertificationResult,
     EgressGateBlockedError,
@@ -42,11 +43,97 @@ from src.core.language.adapter.contracts import (
     QualifiedLogicalAssertion,
     RealizeResult,
     RetractionDirective,
+    StagedCandidate,
     SubstrateViolationError,
 )
 from src.core.language.adapter.registry import LanguageDriverRegistry
 
 logger = logging.getLogger(__name__)
+
+
+def classify_predicate_domain(predicate: str) -> str:
+    """
+    Classify a predicate into its epistemic authority domain.
+    """
+    pred = predicate.strip().lower()
+    if pred.startswith("c:"):
+        pred = pred[2:]
+
+    affect_predicates = {
+        "feels", "is_tired", "is_happy", "is_sad", "has_affect", "is_exhausted",
+        "is_calm", "is_angry", "somatic_state", "current_mood"
+    }
+    pref_predicates = {
+        "prefers", "likes", "dislikes", "has_preference", "loves", "hates", "enjoys",
+        "favors", "taste_in"
+    }
+    bio_predicates = {
+        "born_in", "lives_in", "name_is", "works_at", "has_job", "resides_in",
+        "speaks_language", "is_citizen_of", "studied_at", "age_is", "has_pet"
+    }
+    world_predicates = {
+        "boils_at", "freezes_at", "capital_of", "distance_between", "orbits",
+        "has_color", "has_shape", "equals", "is_a", "successor_of", "father_of"
+    }
+    third_party_predicates = {
+        "claims_that", "believes_that", "stated_by_third_party", "hears_that"
+    }
+
+    if pred in affect_predicates or any(p in pred for p in ("affect", "feel", "mood", "somatic")):
+        return "USER_AFFECT_SOMATIC"
+    if pred in pref_predicates or any(p in pred for p in ("prefer", "like", "dislike", "favor")):
+        return "USER_PREFERENCE"
+    if pred in bio_predicates or any(p in pred for p in ("born", "live", "work", "job", "bio", "citizen", "reside")):
+        return "USER_BIOGRAPHY"
+    if pred in third_party_predicates or any(p in pred for p in ("claims", "hears", "third_party")):
+        return "THIRD_PARTY"
+    if pred in world_predicates or any(p in pred for p in ("boil", "freeze", "capital", "orbit")):
+        return "OBJECTIVE_WORLD"
+
+    return "UNKNOWN"
+
+
+def evaluate_admission_disposition(
+    source_class: IngressSourceClass | str,
+    domain: str,
+    causal_relation: CausalRelation = CausalRelation.SPONTANEOUS,
+    is_conflict: bool = False,
+    confidence: float = 1.0,
+) -> Tuple[AdmissionDisposition, str]:
+    """
+    Deterministic Epistemic Admission Policy (Blocker D).
+    Returns (AdmissionDisposition, scope_id).
+    """
+    src_str = source_class.value if isinstance(source_class, IngressSourceClass) else str(source_class)
+
+    # 1. Assistant / LLM source or Confirmed Echo -> REJECT
+    if causal_relation == CausalRelation.CONFIRMED_ECHO:
+        return AdmissionDisposition.REJECT, "scope:root"
+
+    if src_str in ("LLM_PROPOSED", "ASSISTANT", "LLM"):
+        return AdmissionDisposition.REJECT, "scope:root"
+
+    # 2. Conflict with active root -> STAGE
+    if is_conflict:
+        return AdmissionDisposition.STAGE, "scope:modal:unclassified"
+
+    # 3. Unknown predicate / domain -> STAGE
+    if domain == "UNKNOWN":
+        return AdmissionDisposition.STAGE, "scope:modal:unclassified"
+
+    # 4. User source
+    if src_str in ("USER_DISCOURSE", "USER_STATED"):
+        if domain in ("USER_AFFECT_SOMATIC", "USER_PREFERENCE", "USER_BIOGRAPHY"):
+            return AdmissionDisposition.ROOT_ADMIT, "scope:root"
+        elif domain in ("OBJECTIVE_WORLD", "EXTERNAL_WORLD", "THIRD_PARTY"):
+            return AdmissionDisposition.MODAL_ADMIT, "scope:modal:user_claim"
+
+    # 5. Deduction engine (sound derivation)
+    if src_str == "DERIVED":
+        return AdmissionDisposition.ROOT_ADMIT, "scope:root"
+
+    # Fallback safe default
+    return AdmissionDisposition.STAGE, "scope:modal:unclassified"
 
 
 class GateVerdict(str, Enum):

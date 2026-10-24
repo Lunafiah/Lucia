@@ -29,6 +29,7 @@ Invariants:
 
 from __future__ import annotations
 
+import time
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from enum import Enum, IntEnum
@@ -54,6 +55,37 @@ class SupportedLanguage(str, Enum):
     EN = "en"
     VI = "vi"
     JA = "ja"
+
+
+class AdmissionDisposition(str, Enum):
+    """
+    Epistemic admission routing dispositions.
+    Keeps admission disposition distinct from EpistemicStatus.
+    """
+    REJECT = "REJECT"
+    MODAL_ADMIT = "MODAL_ADMIT"
+    ROOT_ADMIT = "ROOT_ADMIT"
+    STAGE = "STAGE"
+
+
+@dataclass(frozen=True)
+class StagedCandidate:
+    """
+    Pre-admission ingress candidate staged ephemerally before admission decision.
+    Never enters canonical disk knowledge storage.
+    """
+    candidate_id: str
+    subject: str
+    predicate: str
+    object: str
+    scope_id: str = "scope:modal:unclassified"
+    source: str = "USER_DISCOURSE"
+    confidence: float = 0.5
+    encounter_count: int = 1
+    reason: str = ""
+    conflict_with_id: Optional[str] = None
+    created_at: float = field(default_factory=time.time)
+    metadata: Dict[str, Any] = field(default_factory=dict)
 
 
 # ── Exceptions ─────────────────────────────────────────────────────────────────

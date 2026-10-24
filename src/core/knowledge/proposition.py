@@ -44,6 +44,11 @@ class Proposition:
     created_at: float = field(default_factory=time.time)
     valid: bool = True                 # Invalidation flag for belief revision
     superseded_by: Optional[str] = None
+    scope_id: str = "scope:root"
+    causal_relation: Optional[str] = None
+    antecedent_id: Optional[str] = None
+    rule_id: Optional[str] = None
+    supporting_premise_ids: List[str] = field(default_factory=list)
 
     def to_tuple(self) -> Tuple[str, str, str]:
         return (self.subject, self.predicate, self.object)
@@ -57,6 +62,16 @@ class Proposition:
     def from_dict(cls, d: Dict[str, Any]) -> "Proposition":
         d_copy = d.copy()
         d_copy["provenance"] = ProvenanceType(d_copy["provenance"])
+        if "scope_id" not in d_copy:
+            d_copy["scope_id"] = "scope:root"
+        if "causal_relation" not in d_copy:
+            d_copy["causal_relation"] = None
+        if "antecedent_id" not in d_copy:
+            d_copy["antecedent_id"] = None
+        if "rule_id" not in d_copy:
+            d_copy["rule_id"] = None
+        if "supporting_premise_ids" not in d_copy:
+            d_copy["supporting_premise_ids"] = []
         return cls(**d_copy)
 
 
