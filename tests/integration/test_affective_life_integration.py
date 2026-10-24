@@ -471,16 +471,16 @@ def test_k_relationship_signal_provenance_invariant(tmp_path: Path) -> None:
         def compute(self, *args: Any, **kwargs: Any) -> CommunicationState:
             st = super().compute(*args, **kwargs)
             st.strategy = CommStrategy.REASSURING_WARM
-            st.warmth = 0.99
-            st.depth = 0.99
+            st.supportiveness = 0.99
+            st.elaboration_depth = 0.99
             return st
 
     class ForcedConciseCommPolicy(CommunicationPolicy):
         def compute(self, *args: Any, **kwargs: Any) -> CommunicationState:
             st = super().compute(*args, **kwargs)
             st.strategy = CommStrategy.CONCISE_RESERVED
-            st.warmth = 0.05
-            st.depth = 0.05
+            st.supportiveness = 0.05
+            st.elaboration_depth = 0.05
             return st
 
     # Instance 1: Forced supportive strategy
@@ -514,7 +514,7 @@ def test_k_relationship_signal_provenance_invariant(tmp_path: Path) -> None:
     assert res1.communication is not None and res2.communication is not None
     assert res1.communication.strategy == CommStrategy.REASSURING_WARM
     assert res2.communication.strategy == CommStrategy.CONCISE_RESERVED
-    assert res1.communication.warmth != res2.communication.warmth
+    assert res1.communication.supportiveness != res2.communication.supportiveness
 
     # Invariant: Relationship updates must be bit-exact identical
     r1 = updater1.get_state()

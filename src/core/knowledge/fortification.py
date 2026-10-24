@@ -61,8 +61,10 @@ class EpistemicState(str, Enum):
     Four-state epistemic classification for all semantic nodes.
     Mandatory safety invariant: Fortification MUST NOT increase epistemic commitment.
     """
-    FACT = "FACT"              # Established ground truth or directly observed fact
+    FACT = "FACT"              # Established ground truth or directly observed fact (KNOWN)
+    KNOWN = "FACT"             # Explicit alias for KNOWN
     INFERRED = "INFERRED"      # Derived knowledge requiring explicit supporting premises & rule ID
+    PARTIAL = "PARTIAL"        # Partially verified knowledge; supported portion known, uncertain portion bound
     AMBIGUOUS = "AMBIGUOUS"    # Multiple interpretations; must not be resolved by Fortification
     UNKNOWN = "UNKNOWN"        # Explicit ungrounded or missing referent; must never be promoted
 

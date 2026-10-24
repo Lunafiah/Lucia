@@ -28,6 +28,11 @@ from src.core.communication.semantic_consistency_guard import (
     CommSemanticValidationResult,
     SemanticConsistencyGuard,
 )
+from src.core.communication.response_completion_planner import (
+    CompletionPlan,
+    LanguageDensityProfile,
+    ResponseCompletionPlanner,
+)
 
 __all__ = [
     "CommStrategy",
@@ -48,4 +53,7 @@ __all__ = [
     "build_inquire_graph",
     "build_assertion_graph",
     "evaluate_caps",
+    "ResponseCompletionPlanner",
+    "CompletionPlan",
+    "LanguageDensityProfile",
 ]

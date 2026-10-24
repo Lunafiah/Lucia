@@ -88,7 +88,13 @@ class LLMBackend:
 
         self._executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="LLMBackend")
         self._ready = True
+        self._last_finish_reason: Optional[str] = None
         logger.info("LLMBackend: model loaded and ready.")
+
+    @property
+    def last_finish_reason(self) -> Optional[str]:
+        """Expose stop reason ('stop', 'length', etc.) from the most recent generation."""
+        return self._last_finish_reason
 
     # ------------------------------------------------------------------
     # Public API
@@ -110,6 +116,7 @@ class LLMBackend:
             logger.warning("LLMBackend.generate() called but backend is not ready")
             return None
 
+        self._last_finish_reason = None
         max_tokens = 512
         temperature = 0.7
         if constraints is not None:
@@ -137,7 +144,12 @@ class LLMBackend:
                             max_tokens=max_tokens,
                             temperature=temperature,
                         )
-                        return result["choices"][0]["message"]["content"]
+                        choices = result.get("choices", [{}]) if isinstance(result, dict) else [{}]
+                        if choices and isinstance(choices[0], dict):
+                            self._last_finish_reason = choices[0].get("finish_reason")
+                        content = result["choices"][0]["message"]["content"]
+                        self._last_raw_response = content
+                        return content
 
                 result = self._llm(
                     prompt,
@@ -145,7 +157,12 @@ class LLMBackend:
                     temperature=temperature,
                     echo=False,
                 )
-                return result["choices"][0]["text"]
+                choices = result.get("choices", [{}]) if isinstance(result, dict) else [{}]
+                if choices and isinstance(choices[0], dict):
+                    self._last_finish_reason = choices[0].get("finish_reason")
+                content = result["choices"][0]["text"]
+                self._last_raw_response = content
+                return content
             except Exception as exc:
                 logger.error("LLMBackend: generation failed: %s", exc)
                 return None

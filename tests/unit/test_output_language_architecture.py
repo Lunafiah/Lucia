@@ -133,11 +133,9 @@ class TestOutputLanguageArchitecture:
             assert isinstance(result, CognitiveTurnResult)
             assert result.realization is not None
 
-            # Production Text target is ALWAYS English
-            assert result.realization.text.language == "en"
+            # Part B: Language contract follows active conversational perception
+            assert result.realization.text.language == source_lang
             assert len(result.realization.text.content) > 0
-            # Ensure text is not Vietnamese or Japanese
-            assert not any("\u3040" <= c <= "\u309f" for c in result.realization.text.content)
 
             # Production Voice target is ALWAYS Japanese
             assert result.realization.voice.language == "ja"
@@ -150,8 +148,8 @@ class TestOutputLanguageArchitecture:
             )
             assert has_japanese, f"Expected Japanese voice text, got: {voice_content}"
 
-            # Contract target_language in cognitive pipeline was 'en'
-            assert result.realization_contract.target_language == "en"
+            # Contract target_language in cognitive pipeline was source_lang
+            assert result.realization_contract.target_language == source_lang
 
     def test_direct_parallel_voice_realization_independent_of_english(self):
         """
@@ -296,8 +294,8 @@ class TestOutputLanguageArchitecture:
         assert result.realization.text.language == "vi"
         assert result.realization.voice.language == "ja"
 
-        # Subsequent call without user_language returns to canonical 'en' production target
+        # Subsequent call with English input returns canonical 'en' production target
         mock_llm.generate.return_value = "Hello! I am glad to be here with you."
-        res_prod = orch.process("Chào em")
+        res_prod = orch.process("Hello Lucia")
         assert res_prod.realization.text.language == "en"
         assert res_prod.realization.voice.language == "ja"

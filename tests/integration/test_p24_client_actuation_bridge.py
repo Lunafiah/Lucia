@@ -38,6 +38,7 @@ class TestClientActuationBridge:
             assert resp.content == b"fake_wav_audio_data"
             mock_synth.assert_awaited_once_with(
                 "Hello world, this is Lucia.",
+                language="ja",
                 rate="+10%",
                 volume="+5%",
                 pitch=None,
@@ -65,6 +66,7 @@ class TestClientActuationBridge:
             # pitch_hz clamped to 30.0, closeness clamped to 1.0
             mock_synth.assert_awaited_once_with(
                 "Testing clamps",
+                language="ja",
                 rate=None,
                 volume=None,
                 pitch=None,
@@ -135,6 +137,7 @@ class TestClientActuationBridge:
             # Confirm zero parameter drop
             mock_synth.assert_awaited_once_with(
                 chat_response["response"],
+                language="ja",
                 rate="+5%",
                 volume="+0%",
                 pitch=None,

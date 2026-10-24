@@ -75,7 +75,8 @@ class TestCAPSIntentRouting:
         result = evaluate_caps(ctx, baseline_cognitive_state, empty_evidence_pool)
 
         assert result.act == CAPSAct.EXPLAIN_CONCEPT
-        assert result.grounded is True
+        # Under Universal Epistemic Grounding (P23-D Increment 3), an empty evidence pool correctly yields grounded=False (elimination of false-FACT hole)
+        assert result.grounded is False
         assert result.conversational_obligation == "FULFILL_CONCEPT_EXPLANATION"
         assert result.focus_argument is None
 
@@ -132,8 +133,8 @@ class TestCAPSIntentRouting:
         )
         result = evaluate_caps(ctx, baseline_cognitive_state, empty_evidence_pool)
 
-        # Must NOT be diverted to EXPLAIN_CONCEPT, ANSWER_PERSONAL_QUERY, or ACKNOWLEDGE_REACTION
-        assert result.act == CAPSAct.CLARIFY
+        # Epistemic Boundary: UNKNOWN != AMBIGUOUS -> Emits REFUSE or CLARIFY
+        assert result.act in (CAPSAct.REFUSE, CAPSAct.CLARIFY)
         assert result.grounded is False
         assert result.resolution_metadata.grounding_status == "UNGROUNDED"
 
@@ -291,8 +292,7 @@ class TestMultiTurnMisalignmentRegression:
             contract=contract_turn2,
         )
         assert isinstance(prompt_turn2, str)
-        assert "Acknowledge the user's reaction warmly and attentively in the present moment" in prompt_turn2
-        assert "Do not retroactively answer earlier unresolved requests from history" in prompt_turn2
+        assert "Respond concisely and naturally to the user's exclamation or reaction" in prompt_turn2
 
         t2_response = "Hehe, is everything alright?"
         gate_dec2 = gate.verify(contract_turn2, t2_response)
@@ -322,7 +322,7 @@ class TestMultiTurnMisalignmentRegression:
             contract=contract_turn3,
         )
         assert isinstance(prompt_turn3, str)
-        assert "Thoughtfully answer the user's question about your personal preferences or presence as a companion" in prompt_turn3
+        assert "share Lucia's companion perspective and preferences in digital space" in prompt_turn3
 
         t3_response = "As a digital companion, I don't eat food, but I always find the idea of warm tea comforting!"
         gate_dec3 = gate.verify(contract_turn3, t3_response)

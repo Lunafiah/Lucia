@@ -62,6 +62,7 @@ from src.core.knowledge.fortification import (
     SemanticNode,
 )
 from src.core.knowledge.proposition import Proposition, ProvenanceType
+from src.core.language.detection import detect_active_language
 from src.core.orchestrator.discourse_cache import DiscourseReferent, ResolutionStatus
 
 
@@ -114,6 +115,57 @@ class PragmaticStance(str, Enum):
     REQUEST_ACTION = "REQUEST_ACTION"
 
 
+# ── 1c. Conversational Obligations ──────────────────────────────────────────
+
+class ConversationalObligation(str, Enum):
+    """
+    Explicit typed conversational fulfillment obligations.
+    Guarantees that an ANSWER or substantive speech act carries an unambiguous performance mandate.
+    """
+    # Existing obligations
+    MINIMAL_PRESENCE_CALL = "MINIMAL_PRESENCE_CALL"
+    GREET_BACK = "GREET_BACK"
+    FAREWELL = "FAREWELL"
+    FULFILL_SELF_INTRODUCTION = "FULFILL_SELF_INTRODUCTION"
+    REASSURE_AND_GENTLE_INITIATIVE = "REASSURE_AND_GENTLE_INITIATIVE"
+    ACKNOWLEDGE_REACTION_ONLY = "ACKNOWLEDGE_REACTION_ONLY"
+    FULFILL_CONCEPT_EXPLANATION = "FULFILL_CONCEPT_EXPLANATION"
+    FULFILL_PERSONAL_DISCLOSURE = "FULFILL_PERSONAL_DISCLOSURE"
+    MUTUAL_ENCOUNTER_ACKNOWLEDGMENT = "MUTUAL_ENCOUNTER_ACKNOWLEDGMENT"
+    ATTENTIVE_LISTENING = "ATTENTIVE_LISTENING"
+
+    # Typed obligations for ANSWER branches
+    ANSWER_ACTIVITY = "ANSWER_ACTIVITY"
+    ANSWER_SELF_EXPLANATION = "ANSWER_SELF_EXPLANATION"
+    ANSWER_CAPABILITY = "ANSWER_CAPABILITY"
+    ANSWER_IDENTITY = "ANSWER_IDENTITY"
+    ANSWER_PRESENCE = "ANSWER_PRESENCE"
+    ANSWER_LISTENING = "ANSWER_LISTENING"
+    ANSWER_THOUGHTS = "ANSWER_THOUGHTS"
+    ANSWER_GENERAL = "ANSWER_GENERAL"
+
+
+@dataclass
+class PendingUserObligation:
+    """
+    Minimal explicit cross-turn conversational obligation state tracking.
+    Enforces bounded lifetime (TTL) and non-revival of arbitrary old requests.
+    """
+    obligation_type: str
+    originating_turn: int
+    target_topic: Optional[str] = None
+    completed: bool = False
+    ttl_turns: int = 2
+
+    @property
+    def is_actionable(self) -> bool:
+        return not self.completed and self.ttl_turns > 0
+
+    def step_turn(self) -> None:
+        if self.ttl_turns > 0:
+            self.ttl_turns -= 1
+
+
 @dataclass(frozen=True)
 class DyadicDiscourseState:
     """Tracks dynamic interactive stance and floor relations across turns in a session."""
@@ -149,6 +201,8 @@ class DialogueContextSnapshot:
     resolved_entity_id: Optional[str] = None
     candidate_referent_ids: Sequence[str] = field(default_factory=tuple)
     dyadic_state: Optional[DyadicDiscourseState] = None
+    previous_assistant_utterance: Optional[str] = None
+    pending_user_obligation: Optional[PendingUserObligation] = None
 
 
 @dataclass(frozen=True)
@@ -399,6 +453,18 @@ _EXPLANATION_PATTERNS = (
     re.compile(r"\b(tại\s+sao\b.*?\b(?:tách|dùng|sử\s+dụng|hoạt\s+động))\b", re.IGNORECASE),
     re.compile(r"\b(giải\s+thích(\s+về|\s+thêm|\s+cho)?|nói\s+rõ\s+hơn(\s+về)?|kể\s+rõ\s+hơn(\s+về)?|thế\s+nào\s+là|hoạt\s+động\s+(thế\s+nào|như\s+thế\s+nào)|hiểu\s+thêm\s+về)\b", re.IGNORECASE),
     re.compile(r"(説明して|詳しく教えて|について教えて|とは何|どういう意味)", re.IGNORECASE),
+    # Case E: Comparative and conceptual difference questions
+    re.compile(r"\b(khác\s+nhau\s+(?:thế\s+nào|như\s+thế\s+nào|ra\s+sao)|sự\s+khác\s+nhau\s+(?:giữa|của)?|so\s+sánh\b|phân\s+biệt\b)", re.IGNORECASE),
+    re.compile(r"\b(what\s+is\s+the\s+difference\s+between|how\s+(?:are|do)\s+.+?\s+differ(?:ent)?|difference\s+between|compare\b)", re.IGNORECASE),
+    re.compile(r"\b((?:kiến\s+trúc|hệ\s+thống|cơ\s+chế|mô\s+hình)\b.*?\b(?:như\s+thế\s+nào|ra\s+sao|thế\s+nào))\b", re.IGNORECASE),
+    re.compile(r"\b(how\s+is\s+.+?\s+(?:structured|architected|organized)|what\s+is\s+the\s+architecture\s+of)\b", re.IGNORECASE),
+    re.compile(r"(違いは何|どう違|比較して)", re.IGNORECASE),
+)
+
+_CONTINUATION_PATTERNS = (
+    re.compile(r"\b(bắt\s+đầu(\s+đi|\s+nào|\s+nhé)?|tiếp\s+tục(\s+đi|\s+nào|\s+nhé)?|nói\s+tiếp(\s+đi|\s+nào)?|tiếp\s+đi|triển\s+khai\s+đi|nói\s+đi)\b", re.IGNORECASE),
+    re.compile(r"\b(go\s+ahead|let['’]?s\s+start|start\s+please|continue(\s+please)?|begin|go\s+on|please\s+start)\b", re.IGNORECASE),
+    re.compile(r"(始めて|続けて|さあ始めて|どうぞ)", re.IGNORECASE),
 )
 
 _VOCATIVE_PRESENCE_PATTERNS = (
@@ -424,6 +490,11 @@ def _is_self_introduction_request(text: str) -> bool:
     return any(p.search(text) for p in _SELF_INTRO_PATTERNS)
 
 
+def _is_continuation_cue(text: str) -> bool:
+    """Detect natural conversational continuation cues (e.g. 'Vậy bắt đầu đi', 'Go ahead')."""
+    return any(p.search(text) for p in _CONTINUATION_PATTERNS)
+
+
 def _is_reaction(text: str) -> bool:
     """Detect conversational reactions, exclamations, and emotional interjections."""
     return any(p.search(text) for p in _REACTION_PATTERNS)
@@ -442,6 +513,87 @@ def _is_personal_query(text: str) -> bool:
 def _is_vocative_presence_call(text: str) -> bool:
     """Detect minimal vocative social presence pings (e.g., 'Ciah ơi.', 'Lucia ơi')."""
     return any(p.search(text) for p in _VOCATIVE_PRESENCE_PATTERNS)
+
+
+_WELLBEING_PATTERNS: Tuple[re.Pattern, ...] = (
+    re.compile(r"\b(how\s+are\s+you|how\s+do\s+you\s+feel|how\s+are\s+things|how['’]s\s+it\s+going|how\s+is\s+it\s+going|how\s+have\s+you\s+been|how\s+is\s+your\s+day)\b", re.IGNORECASE),
+    re.compile(r"\b(khỏe\s+không|có\s+khỏe\s+không|dạo\s+này\s+khỏe\s+không)\b", re.IGNORECASE),
+    re.compile(r"\b(hôm\s+nay|dạo\s+này|sức\s+khỏe|tâm\s+trạng|mọi\s+chuyện|mọi\s+việc)\s+.*?\b(thế\s+nào|ra\s+sao)\b", re.IGNORECASE),
+    re.compile(r"\b(em|anh|bạn|mình)\s+.*?\b(thế\s+nào|ra\s+sao)\b", re.IGNORECASE),
+    re.compile(r"\b(cảm\s+thấy|trong\s+người)\s+(thế\s+nào|ra\s+sao)\b", re.IGNORECASE),
+    re.compile(r"\b(thế\s+nào|ra\s+sao)\s+rồi\b", re.IGNORECASE),
+    re.compile(r"^(?:em|anh|bạn)?\s*(?:thế\s+nào|ra\s+sao)[\?\!\.\s]*$", re.IGNORECASE),
+)
+
+_ANALYTICAL_EXCLUSION_PATTERNS: Tuple[re.Pattern, ...] = (
+    re.compile(r"\b(cân\s+bằng|giải\s+quyết|xử\s+lý|vận\s+hành|hoạt\s+động|tính\s+toán|thực\s+hiện|phát\s+triển|thiết\s+kế)\b", re.IGNORECASE),
+    re.compile(r"\b(làm\s+(?:sao|thế\s+nào)|nhìn\s+nhận\s+(?:thế\s+nào|ra\s+sao)|hiểu\s+(?:thế\s+nào|ra\s+sao))\b", re.IGNORECASE),
+)
+
+
+def _is_wellbeing_inquiry(text: str) -> bool:
+    """Detect personal or relational wellbeing inquiries without capturing analytical 'thế nào'."""
+    if any(p.search(text) for p in _ANALYTICAL_EXCLUSION_PATTERNS):
+        return False
+    return any(p.search(text) for p in _WELLBEING_PATTERNS)
+
+
+def _evaluate_concept_coverage(
+    target_concept: Optional[str],
+    input_text: str,
+    evidence_pool: AdmissibleEvidencePool,
+) -> Tuple[EpistemicState, bool, int]:
+    """
+    Evaluates factual knowledge availability and coverage for a requested concept.
+    Separates conversational request routing from epistemic grounding.
+
+    Returns:
+        (EpistemicState, is_grounded, matching_proposition_count)
+    """
+    if not evidence_pool or not evidence_pool.verified_propositions:
+        return EpistemicState.UNKNOWN, False, 0
+
+    target_norm = (target_concept or "").strip().lower()
+    matching_props = []
+
+    if target_norm in ("ent:lucia_architecture", "lucia_architecture"):
+        # Explicit matching for Lucia architecture propositions
+        for p in evidence_pool.verified_propositions:
+            subj = getattr(p, "subject", "").lower()
+            obj = getattr(p, "object", "").lower()
+            if subj == "ent:lucia_architecture" or obj == "ent:lucia_architecture":
+                matching_props.append(p)
+            elif "lucia_architecture" in subj:
+                matching_props.append(p)
+
+        distinct_predicates = {getattr(p, "predicate", "") for p in matching_props}
+        facet_count = len(distinct_predicates)
+
+        if facet_count == 0:
+            return EpistemicState.UNKNOWN, False, 0
+        elif facet_count <= 2:
+            return EpistemicState.PARTIAL, True, facet_count
+        else:
+            return EpistemicState.FACT, True, facet_count
+    else:
+        # General concept: inspect verified propositions for matching subject/object
+        text_lower = input_text.lower()
+        for p in evidence_pool.verified_propositions:
+            subj_clean = getattr(p, "subject", "").lower().replace("ent:", "")
+            obj_clean = getattr(p, "object", "").lower().replace("ent:", "").replace("concept:", "")
+            # Skip generic conversational/somatic propositions
+            if subj_clean in ("dialogue", "relationship", "somatic") or obj_clean in ("true", "false"):
+                continue
+            if (subj_clean and subj_clean in text_lower) or (obj_clean and obj_clean in text_lower):
+                matching_props.append(p)
+
+        count = len(matching_props)
+        if count == 0:
+            return EpistemicState.UNKNOWN, False, 0
+        elif count <= 2:
+            return EpistemicState.PARTIAL, True, count
+        else:
+            return EpistemicState.FACT, True, count
 
 
 # ── 6. Functional Transformation: evaluate_caps ─────────────────────────────────
@@ -687,7 +839,15 @@ def evaluate_caps(
         )
 
     # ── Priority 5: Candidate Proposition Grounding Invariant (Gate R2) ───────────
-    if cognitive_state.candidate_predicate:
+    has_explanation_or_continuation = (
+        _is_explanation_request(input_lower)
+        or (
+            dialogue_ctx.pending_user_obligation is not None
+            and dialogue_ctx.pending_user_obligation.is_actionable
+            and _is_continuation_cue(input_lower)
+        )
+    )
+    if cognitive_state.candidate_predicate and not has_explanation_or_continuation:
         # Candidate proposition proposed for assertion/answer
         matching_prop: Optional[Proposition] = None
         for p in evidence_pool.verified_propositions:
@@ -894,6 +1054,44 @@ def evaluate_caps(
             directives="Nhẹ nhàng hỏi thăm và gợi mở tự nhiên khi nhận thấy sự bối rối hoặc ngập ngừng từ người dùng; xưng hô phù hợp.",
         )
 
+    # 6.1c-0 Continuation of Pending User Obligation (e.g., "Vậy bắt đầu đi", "Go ahead")
+    if dialogue_ctx.pending_user_obligation and dialogue_ctx.pending_user_obligation.is_actionable:
+        if _is_continuation_cue(input_lower):
+            pending_ob = dialogue_ctx.pending_user_obligation
+            topic_str = f" regarding {pending_ob.target_topic}" if pending_ob.target_topic else ""
+            is_pending_arch = bool(
+                pending_ob.target_topic
+                and any(k in pending_ob.target_topic.lower() for k in ("kiến trúc", "architecture"))
+            )
+            focus_arg = "ent:lucia_architecture" if is_pending_arch else None
+            target_concept = focus_arg or pending_ob.target_topic
+            ep_status, is_gr, _ = _evaluate_concept_coverage(
+                target_concept=target_concept,
+                input_text=pending_ob.target_topic or input_lower,
+                evidence_pool=evidence_pool,
+            )
+            return CAPSResult(
+                act=CommunicativeAct.EXPLAIN_CONCEPT if ("EXPLAN" in pending_ob.obligation_type) else CommunicativeAct.ANSWER,
+                semantic_graph=None,
+                epistemic_metadata=EpistemicMetadata(status=ep_status, is_grounded=is_gr),
+                provenance_metadata=ProvenanceMetadata(origin="PENDING_OBLIGATION_CONTINUATION", session_id=session_id),
+                resolution_metadata=ResolutionAdmissibilityMetadata(
+                    resolution_status=dialogue_ctx.resolution_status,
+                    grounding_status="CONVERSATIONAL_CONTEXT" if is_gr else "UNGROUNDED",
+                    failure_reason=None if is_gr else "Pending concept explanation lacks verified grounding in knowledge base.",
+                ),
+                grounded=is_gr,
+                target_predicate="c:CONCEPT_EXPLANATION" if ("EXPLAN" in pending_ob.obligation_type) else "c:CONTINUATION",
+                focus_argument=focus_arg,
+                pragmatic_stance=PragmaticStance.SHARING,
+                conversational_obligation=pending_ob.obligation_type,
+                directives=(
+                    f"Directly begin and fulfill the pending substantive explanation requested by the user{topic_str}. "
+                    "Deliver the substantive explanation immediately; do NOT merely acknowledge, do NOT ask what to focus on, "
+                    "and do NOT ask the user to restate the topic."
+                ),
+            )
+
     # 6.1c Conversational Reaction / Interjection Check (e.g., "oh my", "wow", "thật sao")
     # Speech Act: ACKNOWLEDGE_REACTION, Obligation: ACKNOWLEDGE_REACTION_ONLY
     if _is_reaction(input_lower):
@@ -911,27 +1109,88 @@ def evaluate_caps(
             focus_argument=None,
             pragmatic_stance=PragmaticStance.NEUTRAL,
             conversational_obligation="ACKNOWLEDGE_REACTION_ONLY",
-            directives="Acknowledge the user's reaction warmly and attentively in the present moment. Do not retroactively answer earlier unresolved requests from history or launch into unprompted long expositions.",
+            directives="Acknowledge the user's reaction warmly and attentively in the present moment without unprompted long expositions, unless actively continuing an established conversational topic.",
         )
 
     # 6.1d Conceptual Explanation & Elaboration Requests
     # Speech Act: EXPLAIN_CONCEPT, Obligation: FULFILL_CONCEPT_EXPLANATION
     if _is_explanation_request(input_lower):
+        active_lang = detect_active_language(dialogue_ctx.input_text)
+        has_arch_kw = any(k in input_lower for k in ("kiến trúc", "architecture", "toàn bộ kiến trúc", "アーキテクチャ"))
+        has_self_ref = any(k in input_lower for k in ("lucia", "em", "your", "toàn bộ kiến trúc", "của em"))
+        is_arch = has_arch_kw and has_self_ref
+        focus_arg = "ent:lucia_architecture" if is_arch else None
+
+        ep_status, is_gr, cov_count = _evaluate_concept_coverage(
+            target_concept=focus_arg,
+            input_text=dialogue_ctx.input_text,
+            evidence_pool=evidence_pool,
+        )
+
+        if ep_status == EpistemicState.FACT:
+            if is_arch:
+                if active_lang == "vi":
+                    directives = "Giải thích trực tiếp, rõ ràng và mạch lạc về kiến trúc và các tầng nhận thức chính của Lucia một cách chu đáo, không hỏi lại hay né tránh."
+                else:
+                    directives = "Directly and clearly explain the architecture and cognitive pipeline of Lucia thoughtfully without unnecessary clarification questions or avoidance."
+            else:
+                if active_lang == "vi":
+                    directives = (
+                        "Trực tiếp giải thích và so sánh khách quan, chính xác khái niệm được yêu cầu dựa trên kiến thức xác thực đã có. "
+                        "Preserve the user's semantic target without artificially framing general concepts around Lucia's personal architecture, games, or gameplay unless specifically requested by the user."
+                    )
+                else:
+                    directives = (
+                        "Directly, objectively, and accurately explain and compare the requested concept in its own right based on verified knowledge. "
+                        "Preserve the user's semantic target without artificially framing general concepts around Lucia's personal architecture, games, or gameplay unless specifically requested by the user."
+                    )
+        elif ep_status == EpistemicState.PARTIAL:
+            if is_arch:
+                if active_lang == "vi":
+                    directives = "Giải thích các tầng nhận thức đã được xác thực của Lucia, và nêu rõ các khía cạnh còn lại chưa đủ thông tin để khẳng định. Tuyệt đối không bịa đặt."
+                else:
+                    directives = "Explain the verified cognitive layers of Lucia based on available evidence, and clearly state what remains unconfirmed. Do not fabricate."
+            else:
+                if active_lang == "vi":
+                    directives = (
+                        "Giải thích các phần đã được xác thực của khái niệm này dựa trên kiến thức hiện có, và nêu rõ những phần còn lại chưa có đủ thông tin xác thực. Tuyệt đối không bịa đặt."
+                    )
+                else:
+                    directives = (
+                        "Explain the verified portions of this concept based on available evidence, and clearly state what remains unconfirmed. Do not fabricate."
+                    )
+        else:  # UNKNOWN
+            if is_arch:
+                if active_lang == "vi":
+                    directives = "Nêu rõ ràng và chân thành rằng em chưa có thông tin xác thực để giải thích về kiến trúc này. Tuyệt đối không bịa đặt, và không hỏi lại làm rõ vì câu hỏi đã rõ nghĩa."
+                else:
+                    directives = "Politely and honestly state that you do not have verified knowledge about this architecture. Do not fabricate, and do not ask for clarification."
+            else:
+                if active_lang == "vi":
+                    directives = (
+                        "Nêu rõ ràng và chân thành rằng em chưa có thông tin xác thực trong cơ sở tri thức để giải thích hoặc so sánh về khái niệm này. Tuyệt đối không bịa đặt, không suy đoán và không hỏi lại làm rõ vì câu hỏi đã rõ nghĩa."
+                    )
+                else:
+                    directives = (
+                        "Politely and honestly state that you do not have verified knowledge in your knowledge base to explain or compare this concept. Do not fabricate, do not speculate, and do not ask for clarification."
+                    )
+
         return CAPSResult(
             act=CommunicativeAct.EXPLAIN_CONCEPT,
             semantic_graph=None,
-            epistemic_metadata=EpistemicMetadata(status=EpistemicState.FACT, is_grounded=True),
+            epistemic_metadata=EpistemicMetadata(status=ep_status, is_grounded=is_gr),
             provenance_metadata=ProvenanceMetadata(origin="CONCEPT_EXPLANATION", session_id=session_id),
             resolution_metadata=ResolutionAdmissibilityMetadata(
                 resolution_status=dialogue_ctx.resolution_status,
-                grounding_status="CONVERSATIONAL_CONTEXT",
+                grounding_status="CONVERSATIONAL_CONTEXT" if is_gr else "UNGROUNDED",
+                failure_reason=None if is_gr else "Concept lacks verified grounding in knowledge base.",
             ),
-            grounded=True,
+            grounded=is_gr,
             target_predicate="c:CONCEPT_EXPLANATION",
-            focus_argument=None,
+            focus_argument=focus_arg,
             pragmatic_stance=PragmaticStance.SHARING,
             conversational_obligation="FULFILL_CONCEPT_EXPLANATION",
-            directives="Directly and clearly explain and elaborate on the requested concept or topic thoughtfully without unnecessary clarification questions or avoidance.",
+            directives=directives,
         )
 
     # 6.1e Personal Preference & Companion Self-Disclosure Inquiries
@@ -982,9 +1241,10 @@ def evaluate_caps(
                 target_predicate="c:IDENTITY",
                 focus_argument="ent:lucia",
                 directives=directive,
+                conversational_obligation=ConversationalObligation.ANSWER_IDENTITY.value,
             )
         elif any(term in input_lower for term in ("doing", "làm gì", "đang làm")):
-            directive = "Answer the user's question about your current activity and presence with the user."
+            directive = "Answer the user's question about your current activity and presence with the user directly and warmly."
             return CAPSResult(
                 act=CommunicativeAct.ANSWER,
                 semantic_graph=None,
@@ -998,6 +1258,7 @@ def evaluate_caps(
                 target_predicate="c:ACTIVITY",
                 focus_argument="ent:lucia",
                 directives=directive,
+                conversational_obligation=ConversationalObligation.ANSWER_ACTIVITY.value,
             )
         elif any(term in input_lower for term in ("what can you do", "có thể làm gì", "giúp được gì")):
             directive = "Answer the user's question about your capabilities and ways you can engage together."
@@ -1014,6 +1275,7 @@ def evaluate_caps(
                 target_predicate="c:CAPABILITY",
                 focus_argument="ent:lucia",
                 directives=directive,
+                conversational_obligation=ConversationalObligation.ANSWER_CAPABILITY.value,
             )
         elif any(term in input_lower for term in ("where are you", "ở đâu")):
             directive = "Answer the user's question regarding your presence in this companion space."
@@ -1030,6 +1292,7 @@ def evaluate_caps(
                 target_predicate="c:PRESENCE",
                 focus_argument="ent:lucia",
                 directives=directive,
+                conversational_obligation=ConversationalObligation.ANSWER_PRESENCE.value,
             )
         elif any(term in input_lower for term in ("listening", "nghe không", "đang nghe")):
             directive = "Answer confirming your active presence and attentive listening to the user."
@@ -1046,8 +1309,9 @@ def evaluate_caps(
                 target_predicate="c:ATTENTION",
                 focus_argument="ent:lucia",
                 directives=directive,
+                conversational_obligation=ConversationalObligation.ANSWER_LISTENING.value,
             )
-        elif any(term in input_lower for term in ("how are you", "khỏe không", "thế nào", "how do you feel", "how are things", "how's it going", "how is it going", "how have you been", "how is your day")):
+        elif _is_wellbeing_inquiry(input_lower):
             directive = "Answer the user's inquiry regarding your current state and presence warmly, engaging with genuine companion attentiveness."
             return CAPSResult(
                 act=CommunicativeAct.ANSWER,
@@ -1062,8 +1326,13 @@ def evaluate_caps(
                 target_predicate="c:WELLBEING",
                 focus_argument="ent:lucia",
                 directives=directive,
+                conversational_obligation=ConversationalObligation.ANSWER_GENERAL.value,
             )
-        elif any(term in input_lower for term in ("what are you thinking", "what's on your mind", "what is on your mind", "đang nghĩ gì", "nghĩ gì", "suy nghĩ gì")):
+        elif any(term in input_lower for term in (
+            "what are you thinking", "what's on your mind", "what is on your mind",
+            "đang nghĩ gì", "nghĩ gì", "suy nghĩ gì", "nghĩ sao", "thấy sao",
+            "quan điểm", "cân bằng", "nhìn nhận", "nghĩ thế nào", "thấy thế nào"
+        )):
             directive = "Answer the user's question regarding your thoughts, sharing your gentle reflections and attentive presence in this conversation."
             return CAPSResult(
                 act=CommunicativeAct.ANSWER,
@@ -1078,9 +1347,19 @@ def evaluate_caps(
                 target_predicate="c:THOUGHTS",
                 focus_argument="ent:lucia",
                 directives=directive,
+                conversational_obligation=ConversationalObligation.ANSWER_THOUGHTS.value,
             )
-        elif any(term in input_lower for term in ("ý em là", "ý là sao", "năng lượng", "energy", "giải thích", "what do you mean", "mean by", "mean when")):
-            directive = "Answer explaining your grounded internal state or energy level using natural, metaphorical language grounded in actual system variables."
+        elif any(term in input_lower for term in ("ý em là", "ý là sao", "what do you mean", "mean by", "mean when")):
+            if dialogue_ctx.previous_assistant_utterance:
+                prev_text = dialogue_ctx.previous_assistant_utterance.strip()
+                directive = (
+                    f"The user is asking what you meant by your previous statement: \"{prev_text}\". "
+                    "Directly clarify and explain what you meant by that statement warmly, clearly, and thoughtfully without meta-commentary about the question itself."
+                )
+                pred_label = "c:UTTERANCE_CLARIFICATION"
+            else:
+                directive = "Answer explaining your grounded internal state or prior statement using natural, thoughtful language grounded in actual system context without meta-commentary."
+                pred_label = "c:SELF_EXPLANATION"
             return CAPSResult(
                 act=CommunicativeAct.ANSWER,
                 semantic_graph=None,
@@ -1091,25 +1370,59 @@ def evaluate_caps(
                     grounding_status="CONVERSATIONAL_CONTEXT",
                 ),
                 grounded=True,
-                target_predicate="c:SELF_EXPLANATION",
+                target_predicate=pred_label,
                 focus_argument="ent:lucia",
                 directives=directive,
+                conversational_obligation=ConversationalObligation.ANSWER_SELF_EXPLANATION.value,
             )
         else:
-            # Ungrounded general inquiry: under Grounding Invariant, fail closed to CLARIFY
-            return CAPSResult(
-                act=CommunicativeAct.CLARIFY,
-                semantic_graph=None,
-                epistemic_metadata=EpistemicMetadata(status=EpistemicState.UNKNOWN, confidence=None, is_grounded=False),
-                provenance_metadata=ProvenanceMetadata(origin="UNGROUNDED_INQUIRY", session_id=session_id),
-                resolution_metadata=ResolutionAdmissibilityMetadata(
-                    resolution_status=dialogue_ctx.resolution_status,
-                    grounding_status="UNGROUNDED",
-                    failure_reason="Factual inquiry lacks verified grounding in knowledge base or life-state.",
-                ),
-                grounded=False,
-                directives="Ask a clarifying question because this inquiry has no verified factual grounding.",
+            # Epistemic Boundary (Part F): UNKNOWN != AMBIGUOUS.
+            # Check if this inquiry is genuinely ambiguous (competing referents/interpretations) vs unknown factual query.
+            is_ambiguous = (
+                dialogue_ctx.resolution_status == ResolutionStatus.AMBIGUOUS
+                or (dialogue_ctx.candidate_referent_ids and len(dialogue_ctx.candidate_referent_ids) > 1)
+                or bool(re.search(r"\b(hay là|hay|hoặc|or|which one|cái nào)\b", input_lower) and ("?" in dialogue_ctx.input_text or "？" in dialogue_ctx.input_text))
             )
+            active_lang = detect_active_language(dialogue_ctx.input_text)
+            if is_ambiguous:
+                dir_msg = (
+                    "Hỏi câu làm rõ ngắn gọn nhất để xác định người dùng đang hỏi về khía cạnh hay đối tượng cụ thể nào trong các khả năng. Tuyệt đối không tự ý bịa đặt câu trả lời."
+                    if active_lang == "vi"
+                    else "Ask the minimum clarification required to identify which specific interpretation or referent the user is asking about. Do NOT fabricate an answer."
+                )
+                return CAPSResult(
+                    act=CommunicativeAct.CLARIFY,
+                    semantic_graph=None,
+                    epistemic_metadata=EpistemicMetadata(status=EpistemicState.AMBIGUOUS, confidence=None, is_grounded=False),
+                    provenance_metadata=ProvenanceMetadata(origin="DISCOURSE_AMBIGUITY", session_id=session_id),
+                    resolution_metadata=ResolutionAdmissibilityMetadata(
+                        resolution_status=ResolutionStatus.AMBIGUOUS,
+                        grounding_status="NOT_REQUIRED",
+                    ),
+                    grounded=False,
+                    directives=dir_msg,
+                )
+            else:
+                # UNKNOWN: Question is unambiguous, but verified grounding is absent in knowledge base.
+                # Must NOT route to CLARIFY. Emit REFUSE / truthful epistemic boundary statement.
+                dir_msg = (
+                    "Nêu rõ ràng, chân thực và từ tốn rằng em chưa có thông tin xác thực để trả lời câu hỏi này. Tuyệt đối không bịa đặt, và không hỏi lại làm rõ vì câu hỏi đã rõ nghĩa."
+                    if active_lang == "vi"
+                    else "State clearly, thoughtfully, and truthfully that you do not have sufficient verified information to answer this question. Do NOT fabricate, and do NOT ask for clarification since the question is unambiguous."
+                )
+                return CAPSResult(
+                    act=CommunicativeAct.REFUSE,
+                    semantic_graph=None,
+                    epistemic_metadata=EpistemicMetadata(status=EpistemicState.UNKNOWN, confidence=None, is_grounded=False),
+                    provenance_metadata=ProvenanceMetadata(origin="UNGROUNDED_INQUIRY", session_id=session_id),
+                    resolution_metadata=ResolutionAdmissibilityMetadata(
+                        resolution_status=dialogue_ctx.resolution_status,
+                        grounding_status="UNGROUNDED",
+                        failure_reason="Factual inquiry lacks verified grounding in knowledge base or life-state.",
+                    ),
+                    grounded=False,
+                    directives=dir_msg,
+                )
 
     # 6.3 Conversational Statements (ACKNOWLEDGE with preserved semantic context)
     encounter_cues = (

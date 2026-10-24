@@ -36,11 +36,12 @@ from __future__ import annotations
 
 import dataclasses
 import logging
+import re
 import threading
 import time
 import uuid
 from pathlib import Path
-from typing import List, Optional, Sequence, Tuple, Union
+from typing import List, Optional, Sequence, Set, Tuple, Union
 
 import numpy as np
 
@@ -74,6 +75,7 @@ from src.core.communication.caps import (
     DialoguePhase,
     DyadicDiscourseState,
     FloorStatus,
+    PendingUserObligation,
     PragmaticStance,
     evaluate_caps,
 )
@@ -112,7 +114,8 @@ from src.core.expression.semantic_consistency_guard import (
 from src.core.gating.stimulus_processor import StimulusProcessor
 from src.core.inference.active_inference import ActiveInferenceConfig, ActiveInferenceEngine
 from src.core.inference.lnn_trainer import LNNTrainer, LNNTrainerConfig
-from src.core.knowledge.proposition import Proposition, ProvenanceType
+from src.core.knowledge.bootstrap import bootstrap_verified_knowledge
+from src.core.knowledge.proposition import Concept, Proposition, ProvenanceType
 from src.core.knowledge.store import KnowledgeStore
 from src.core.language.llm_backend import LLMBackend
 from src.core.memory.affective_memory import AffectiveMemory
@@ -276,7 +279,9 @@ class CognitiveOrchestrator:
         self._lnn_trainer = lnn_trainer
 
         # Phase 16 Promoted Subsystems
-        self._knowledge_store = knowledge_store if knowledge_store is not None else KnowledgeStore()
+        self._knowledge_store = (
+            knowledge_store if knowledge_store is not None else bootstrap_verified_knowledge(KnowledgeStore())
+        )
         self._relationship_updater = (
             relationship_updater if relationship_updater is not None else RelationshipUpdater()
         )
@@ -298,6 +303,9 @@ class CognitiveOrchestrator:
         # ADR-035: Stage S14 Fail-Closed Semantic Fidelity Gate
         self._semantic_gate = semantic_gate if semantic_gate is not None else SemanticFidelityGate()
         self._latest_gate_decision: Optional[GateDecision] = None
+        self._latest_prompt: Optional[str] = None
+        self._latest_raw_response: Optional[str] = None
+        self._latest_realization_contract: Optional[RealizationInputContract] = None
         # ADR-038 Ingress & In-Session Reasoning State (Decision A, B, C, P23-H)
         self._term_arena = term_arena if term_arena is not None else TermArena()
         self._symbol_table = symbol_table if symbol_table is not None else SymbolTable()
@@ -370,6 +378,7 @@ class CognitiveOrchestrator:
         self._history: List[Tuple[str, str]] = list(initial_history) if initial_history else []
         self._discourse_cache = DiscourseContextCache()
         self._dyadic_state = DyadicDiscourseState()
+        self._pending_user_obligation: Optional[PendingUserObligation] = None
         self._degraded: bool = False
         self._shutdown: bool = False
 
@@ -402,6 +411,15 @@ class CognitiveOrchestrator:
     def latest_gate_decision(self) -> Optional[GateDecision]:
         """Most recent Stage S14 verification gate decision."""
         return self._latest_gate_decision
+
+    @property
+    def pending_user_obligation(self) -> Optional[PendingUserObligation]:
+        """Current active pending user conversational obligation across turns."""
+        return self._pending_user_obligation
+
+    @pending_user_obligation.setter
+    def pending_user_obligation(self, value: Optional[PendingUserObligation]) -> None:
+        self._pending_user_obligation = value
 
     @property
     def knowledge_store(self) -> KnowledgeStore:
@@ -955,6 +973,11 @@ class CognitiveOrchestrator:
         All exceptions propagate to process(), which enters Degraded_State.
         """
 
+        self._latest_prompt = None
+        self._latest_realization_contract = None
+        self._latest_raw_response = None
+        self._latest_gate_decision = None
+
         # ── Stage 0: Temporal Embodiment & Social Observation (P25) ──────
         t_now = time.time()
         cur_pad = self._emotion_core.get_pad_state()
@@ -1125,9 +1148,40 @@ class CognitiveOrchestrator:
         # ── Stage 8: Structured Knowledge Retrieval ──────────────────────
         with self._trace_span("S8", "KnowledgeRetrieval", module_id="KnowledgeStore", causal_parent="S1") as s8_span:
             known_propositions: List[Proposition] = []
+            known_concepts: List[Concept] = []
             try:
                 if self._knowledge_store is not None:
-                    known_propositions = self._knowledge_store.query_relevant(input_text, max_results=5)
+                    known_propositions = self._knowledge_store.query_relevant(input_text, max_results=6)
+                    if (
+                        not known_propositions
+                        and self._pending_user_obligation is not None
+                        and self._pending_user_obligation.is_actionable
+                        and self._pending_user_obligation.target_topic
+                    ):
+                        known_propositions = self._knowledge_store.query_relevant(
+                            self._pending_user_obligation.target_topic, max_results=6
+                        )
+
+                    # Retrieve associated verified concepts for grounded explanation material
+                    seen_cids: Set[str] = set()
+                    for p in known_propositions:
+                        cands = [p.object, p.subject]
+                        if p.subject.startswith("ent:"):
+                            cands.append(p.subject.replace("ent:", "concept:"))
+                        if p.object.startswith("ent:"):
+                            cands.append(p.object.replace("ent:", "concept:"))
+                        for cid in cands:
+                            if isinstance(cid, str) and cid.startswith("concept:") and cid not in seen_cids:
+                                seen_cids.add(cid)
+                                c = self._knowledge_store.get_concept(cid)
+                                if c is not None:
+                                    known_concepts.append(c)
+                                    for sub_cid in c.relations.get("has_subsystem", []):
+                                        if sub_cid not in seen_cids:
+                                            seen_cids.add(sub_cid)
+                                            sub_c = self._knowledge_store.get_concept(sub_cid)
+                                            if sub_c is not None:
+                                                known_concepts.append(sub_c)
             except Exception as exc:
                 logger.error("CognitiveOrchestrator: knowledge retrieval failed", exc_info=True)
                 s8_span.record_contract(
@@ -1135,7 +1189,10 @@ class CognitiveOrchestrator:
                     failure_class=ExecutionFailureClass.HARD_EXECUTION_FAILURE,
                     detail=str(exc),
                 )
-            s8_span.set_summary({"propositions_count": len(known_propositions)})
+            s8_span.set_summary({
+                "propositions_count": len(known_propositions),
+                "concepts_count": len(known_concepts),
+            })
 
         # ── Stage 9: Relationship Read (Read-Only Pre-Turn State) ────────
         with self._trace_span("S9", "RelationshipRead", module_id="RelationshipUpdater", causal_parent=None) as s9_span:
@@ -1256,9 +1313,9 @@ class CognitiveOrchestrator:
                 active_refs = tuple(self._discourse_cache.get_all_referents())
                 res_status, resolved_id, cand_ids = self._discourse_cache.resolve_reference()
 
-                cand_pred = known_propositions[0].predicate if known_propositions else None
-                cand_subj = known_propositions[0].subject if known_propositions else None
-                cand_obj = known_propositions[0].object if known_propositions else None
+                cand_pred = None
+                cand_subj = None
+                cand_obj = None
 
                 reasoning_subgoals: Optional[Sequence[InformationSubgoal]] = None
                 if self._reasoning_service is not None and cand_pred is not None:
@@ -1297,6 +1354,12 @@ class CognitiveOrchestrator:
                     # Clear quarantined affordance once consumed as contextual dialogue bias
                     self._pending_communicative_affordance = None
 
+                prev_asst_text: Optional[str] = None
+                for role, text in reversed(self._history):
+                    if role == "assistant":
+                        prev_asst_text = text
+                        break
+
                 dialogue_snap = DialogueContextSnapshot(
                     turn_id=self._current_epoch,
                     input_text=input_text,
@@ -1305,6 +1368,8 @@ class CognitiveOrchestrator:
                     resolved_entity_id=resolved_id,
                     candidate_referent_ids=tuple(cand_ids),
                     dyadic_state=self._dyadic_state,
+                    previous_assistant_utterance=prev_asst_text,
+                    pending_user_obligation=self._pending_user_obligation,
                 )
                 cog_snap = CognitiveStateSnapshot(
                     candidate_predicate=cand_pred,
@@ -1337,32 +1402,47 @@ class CognitiveOrchestrator:
                     exc_info=True,
                 )
 
+            # Part B: Language contract follows active conversational perception
+            active_lang = user_language
+            if active_lang is None:
+                active_lang = detect_active_language(input_text)
+                # Contextual language continuity: If input is a short continuation cue without distinct English syntax,
+                # inherit the active conversational language from recent history.
+                CONTINUATION_CUES = {
+                    "ok", "okay", "yes", "ừ", "uhm", "uh", "tiếp", "tiep", "bắt đầu", "bat dau",
+                    "continue", "go on", "yep", "sure", "được", "rồi", "tiếp tục", "tiếp đi", "tiep di"
+                }
+                clean_inp = input_text.strip().lower().rstrip(".,!?~ ")
+                if active_lang == "en" and clean_inp in CONTINUATION_CUES and self._history:
+                    for role, u_text in reversed(self._history):
+                        if role == "user":
+                            prev_lang = detect_active_language(u_text)
+                            if prev_lang in ("vi", "ja"):
+                                active_lang = prev_lang
+                            break
+            target_lang = active_lang
+
             # Attune response depth and token budget in CommunicationPolicy based on communicative act & context
             if caps_result is not None:
-                try:
-                    comm_state = self._comm_policy.attune_depth_to_act(
-                        comm_state,
-                        act=caps_result.act,
-                        obligation=caps_result.conversational_obligation,
-                        target_predicate=caps_result.target_predicate,
-                        user_input_text=input_text,
-                        history=self._history,
-                        somatic=markers,
-                        rel_state=rel_state.to_dict() if hasattr(rel_state, "to_dict") else None,
-                        knowledge=k_dict,
-                    )
-                    self._latest_comm_state = comm_state
-                except Exception:
-                    logger.warning(
-                        "CognitiveOrchestrator: depth attunement failed; retaining base comm_state",
-                        exc_info=True,
-                    )
-
-            # ADR-035: Construct typed RealizationInputContract from CAPS decision
-            # Production target language for text realization is canonically English ("en").
-            # Multilingual perception is admitted, but realization targets are decoupled from perception.
-            # Non-English text targets can be explicitly specified via user_language for research runs.
-            target_lang = user_language if user_language is not None else "en"
+                is_cont = False
+                if caps_result.provenance_metadata and caps_result.provenance_metadata.origin == "PENDING_OBLIGATION_CONTINUATION":
+                    is_cont = True
+                comm_state = self._comm_policy.attune_depth_to_act(
+                    comm_state,
+                    act=caps_result.act,
+                    obligation=caps_result.conversational_obligation,
+                    target_predicate=caps_result.target_predicate,
+                    user_input_text=input_text,
+                    history=self._history,
+                    somatic=markers,
+                    caps_result=caps_result,
+                    known_propositions=all_verified_props,
+                    target_language=target_lang,
+                    n_ctx=self._n_ctx,
+                    focus_argument=caps_result.focus_argument,
+                    is_continuation=is_cont,
+                )
+                self._latest_comm_state = comm_state
             speaker_h = "em" if target_lang == "vi" else None
             addressee_h = "anh" if target_lang == "vi" else None
             forbidden_adds = ("bạn",) if target_lang == "vi" else ()
@@ -1393,6 +1473,7 @@ class CognitiveOrchestrator:
                     somatic_modifiers=somatic_mods,
                     response_depth=comm_state.response_depth.value if hasattr(comm_state.response_depth, "value") else str(comm_state.response_depth),
                     max_tokens_budget=comm_state.max_tokens_budget,
+                    response_shape=comm_state.response_shape,
                 )
             else:
                 realization_contract = RealizationInputContract.create_default(
@@ -1404,6 +1485,7 @@ class CognitiveOrchestrator:
                     somatic_modifiers=somatic_mods,
                     response_depth=comm_state.response_depth.value if hasattr(comm_state.response_depth, "value") else str(comm_state.response_depth),
                     max_tokens_budget=comm_state.max_tokens_budget,
+                    response_shape=comm_state.response_shape,
                 )
 
             # Decision A: Assistant Proposition Semantic Indexing (ADR-038)
@@ -1465,9 +1547,11 @@ class CognitiveOrchestrator:
                 echo_vector=echo_vector,
                 comm_state=comm_state,
                 knowledge_propositions=known_propositions,
+                knowledge_concepts=known_concepts,
                 caps_result=caps_result,
                 contract=realization_contract,
                 self_interpretation=self_interp,
+                planned_completion_capacity=comm_state.max_tokens_budget,
             )
             if isinstance(prompt_or_err, AssemblyError):
                 logger.warning(
@@ -1494,6 +1578,8 @@ class CognitiveOrchestrator:
                 )
 
             prompt: str = prompt_or_err
+            self._latest_prompt = prompt
+            self._latest_realization_contract = realization_contract
             s11_span.set_summary({
                 "prompt_len": len(prompt),
                 "contract_enforced": realization_contract is not None,
@@ -1534,15 +1620,17 @@ class CognitiveOrchestrator:
 
         # ── Stage 13: LLM Generation & Boundary Layer ────────────────────
         with self._trace_span("S13", "LanguageGeneration", module_id="LLMBackend", causal_parent="S11") as s13_span:
-            effective_max_tokens = min(
-                constraints.max_tokens,
-                comm_state.max_tokens_budget,
-            )
+            # Authoritative planned completion capacity from ResponseCompletionPlanner
+            effective_max_tokens = comm_state.max_tokens_budget
+            # Homeostatic constraint acts as acute floor under critical metabolic exhaustion (energy <= 0.10)
+            if constraints.max_tokens < 70:
+                effective_max_tokens = min(constraints.max_tokens, comm_state.max_tokens_budget)
             generation_constraints = dataclasses.replace(
                 constraints,
                 max_tokens=effective_max_tokens,
             )
             raw_response = self._llm_backend.generate(prompt, generation_constraints)
+            self._latest_raw_response = raw_response
             if raw_response is None:
                 logger.warning(
                     "CognitiveOrchestrator: LLM returned None (call_id=%s)", call_id
@@ -1568,7 +1656,12 @@ class CognitiveOrchestrator:
 
         # ── Stage 14: Fail-Closed Semantic Fidelity Gate (ADR-035) ──────────────
         with self._trace_span("S14", "SemanticFidelityGate", module_id="SemanticFidelityGate", causal_parent="S13") as s14_span:
-            gate_decision = self._semantic_gate.verify(realization_contract, raw_response)
+            finish_reason = getattr(self._llm_backend, "last_finish_reason", None)
+            gate_decision = self._semantic_gate.verify(
+                realization_contract,
+                raw_response,
+                finish_reason=finish_reason,
+            )
             self._latest_gate_decision = gate_decision
             if gate_decision.status in ("BLOCK", "UNCERTAIN"):
                 logger.warning(
@@ -1773,6 +1866,53 @@ class CognitiveOrchestrator:
             if len(self._history) > max_pairs:
                 self._history = self._history[-max_pairs:]
 
+            # 16.4d Update pending user conversational obligation lifecycle
+            try:
+                # If an existing pending obligation was being tracked
+                if self._pending_user_obligation is not None:
+                    is_continuation = bool(
+                        caps_result
+                        and caps_result.provenance_metadata
+                        and caps_result.provenance_metadata.origin == "PENDING_OBLIGATION_CONTINUATION"
+                    )
+                    if is_continuation:
+                        # Completed once continuation turn is executed (unless gate blocked without substantive fallback)
+                        if gate_decision.status == "PASS" or (
+                            gate_decision.fallback_strategy and "ARCHITECTURE" in gate_decision.fallback_strategy
+                        ):
+                            self._pending_user_obligation.completed = True
+                            self._pending_user_obligation = None
+                    elif caps_result and caps_result.act in (
+                        CommunicativeAct.REQUEST,
+                        CommunicativeAct.ANSWER,
+                        CommunicativeAct.EXPLAIN_CONCEPT,
+                    ):
+                        # A new substantive user inquiry superseded the older obligation
+                        self._pending_user_obligation = None
+
+                    if self._pending_user_obligation is not None:
+                        self._pending_user_obligation.step_turn()
+                        if not self._pending_user_obligation.is_actionable:
+                            self._pending_user_obligation = None
+
+                # If current turn created a conceptual explanation request, establish pending obligation
+                if caps_result and caps_result.conversational_obligation == "FULFILL_CONCEPT_EXPLANATION":
+                    origin = getattr(caps_result.provenance_metadata, "origin", "") if caps_result.provenance_metadata else ""
+                    if origin != "PENDING_OBLIGATION_CONTINUATION":
+                        topic = input_text.strip()
+                        for pfx in ("giải thích", "hãy giải thích", "can you explain", "explain", "nói về", "cho anh"):
+                            topic = re.sub(rf"^{pfx}\s+", "", topic, flags=re.IGNORECASE)
+                        eff_topic = caps_result.focus_argument if caps_result.focus_argument else topic[:60]
+                        self._pending_user_obligation = PendingUserObligation(
+                            obligation_type="FULFILL_CONCEPT_EXPLANATION",
+                            originating_turn=self._current_epoch,
+                            target_topic=eff_topic,
+                            completed=False,
+                            ttl_turns=2,
+                        )
+            except Exception:
+                logger.warning("CognitiveOrchestrator: pending user obligation update failed", exc_info=True)
+
             # 16.4b Update Discourse Context Cache (Phase 23)
             try:
                 mentioned = []
@@ -1960,7 +2100,7 @@ class CognitiveOrchestrator:
         """
         resting = PADState.resting()
         from src.core.models import default_behavioral_constraints
-        fallback_lang = user_language or "en"
+        fallback_lang = user_language or detect_active_language(input_text)
         fallback_realization = construct_realization_output(
             safe_response=self._fallback_response,
             user_language=fallback_lang,

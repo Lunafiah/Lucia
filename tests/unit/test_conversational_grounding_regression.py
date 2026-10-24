@@ -91,7 +91,7 @@ class TestConversationalGrounding:
         assert result.epistemic_metadata.status == EpistemicState.UNKNOWN
 
     def test_generic_inquiry_without_evidence_fails_closed(self):
-        """General factual questions without grounding fail closed to CLARIFY."""
+        """General factual questions without grounding fail closed to REFUSE (UNKNOWN != AMBIGUOUS)."""
         dialogue_ctx = DialogueContextSnapshot(
             turn_id=1,
             input_text="Thủ đô của nước Pháp là gì?",
@@ -101,9 +101,11 @@ class TestConversationalGrounding:
 
         result = evaluate_caps(dialogue_ctx, cog_state, empty_evidence)
 
-        assert result.act == CommunicativeAct.CLARIFY
+        # Part F: UNKNOWN must route to REFUSE (truthful knowledge boundary), not CLARIFY
+        assert result.act == CommunicativeAct.REFUSE
         assert result.grounded is False
         assert result.resolution_metadata.grounding_status == "UNGROUNDED"
+        assert result.epistemic_metadata.status == EpistemicState.UNKNOWN
 
     def test_encounter_preserves_semantic_context(self):
         """Utterances like 'Cuối cùng cũng gặp em rồi.' must retain semantic encounter context

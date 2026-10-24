@@ -129,11 +129,11 @@ class TestEndToEndProcess:
         process() with mocked LLMBackend returning a default-pattern phrase
         → response does not contain the raw pattern; returns fallback or "[...]".
         """
-        orch = _build_orchestrator(tmp_path, llm_response="I feel happy today!")
+        orch = _build_orchestrator(tmp_path, llm_response="I am conscious and alive!")
         result = orch.process("How are you?")
         import re
-        assert not re.search(r"\bI feel\b", result, re.IGNORECASE), (
-            f"Pattern 'I feel' should have been redacted, got: {result!r}"
+        assert not re.search(r"\bI am conscious\b", result, re.IGNORECASE), (
+            f"Pattern 'I am conscious' should have been redacted, got: {result!r}"
         )
         orch.shutdown()
 

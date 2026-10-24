@@ -137,7 +137,18 @@ class KnowledgeStore:
                 obj_clean = prop.object.lower().replace("ent:", "")
                 pred_clean = prop.predicate.lower().replace("c:", "")
 
+                subj_matched = False
                 if prop.subject.lower() in text_lower or (subj_clean and subj_clean in text_lower):
+                    subj_matched = True
+                elif subj_clean:
+                    tokens = [w for w in subj_clean.replace("_", " ").split() if len(w) > 2]
+                    if tokens and all(t in text_lower for t in tokens):
+                        subj_matched = True
+                    elif "lucia" in tokens and "architecture" in tokens:
+                        if ("lucia" in text_lower or "em" in text_lower) and ("kiến trúc" in text_lower or "architecture" in text_lower or "アーキテクチャ" in text_lower):
+                            subj_matched = True
+
+                if subj_matched:
                     score += 2.0
                 if prop.object.lower() in text_lower or (obj_clean and obj_clean in text_lower):
                     score += 1.5

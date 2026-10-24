@@ -25,6 +25,11 @@ from src.core.knowledge.fortification import (
     SemanticGraph,
     SemanticNode,
 )
+from src.core.knowledge.bootstrap import (
+    bootstrap_verified_knowledge,
+    get_verified_architecture_concepts,
+    get_verified_architecture_propositions,
+)
 from src.core.knowledge.persistence import load_knowledge, save_knowledge
 from src.core.knowledge.proposition import (
     Concept,
@@ -43,6 +48,9 @@ __all__ = [
     "DerivationEngine",
     "save_knowledge",
     "load_knowledge",
+    "bootstrap_verified_knowledge",
+    "get_verified_architecture_concepts",
+    "get_verified_architecture_propositions",
     # P23-E Conservative Semantic Fortification
     "EpistemicState",
     "ScopeType",

@@ -8,11 +8,14 @@ Companion ADR: ADR-035 (Production Realization Boundary & Fail-Closed Semantic V
 
 from __future__ import annotations
 
+import re
 import time
 import uuid
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any, Dict, List, Optional, Sequence, Tuple
+
+from src.core.communication.communication_state import ResponseShape, ShapeTopology
 
 
 class CommunicativeAct(str, Enum):
@@ -33,10 +36,12 @@ class CommunicativeAct(str, Enum):
 
 class EpistemicStatus(str, Enum):
     """Epistemic modality of the proposition."""
-    FACT = "FACT"                  # Verified knowledge, certainty permitted
+    FACT = "FACT"                  # Verified knowledge, certainty permitted (KNOWN)
+    KNOWN = "FACT"                 # Explicit alias for KNOWN
     INFERRED = "INFERRED"          # Derived hypothesis, hedging required
-    UNKNOWN = "UNKNOWN"            # Missing knowledge, refusal/clarify required
-    AMBIGUOUS = "AMBIGUOUS"        # Multiple referents, clarification required
+    PARTIAL = "PARTIAL"            # Partially verified knowledge; answer supported parts, mark uncertain portion
+    UNKNOWN = "UNKNOWN"            # Missing knowledge, refusal/boundary required (do NOT fabricate, do NOT clarify)
+    AMBIGUOUS = "AMBIGUOUS"        # Multiple referents/interpretations, clarification required
 
 
 class SemanticScopeType(str, Enum):
@@ -55,6 +60,31 @@ class ProvenanceOrigin(str, Enum):
 
 
 @dataclass(frozen=True)
+class NaturalLanguageTargetEvidence:
+    """
+    Natural language realization patterns for verifying a semantic target.
+    Part A: Separates natural language evidence evaluation from internal canonical identifiers.
+    """
+    lemmas: Tuple[str, ...] = field(default_factory=tuple)
+
+    def matches(self, text: str) -> bool:
+        lowered = text.lower()
+        for item in self.lemmas:
+            if not item:
+                continue
+            item_low = item.lower().strip()
+            if not item_low:
+                continue
+            if item_low in lowered:
+                return True
+            if "_" in item_low or ":" in item_low:
+                parts = [p for p in re.split(r"[:_]+", item_low) if len(p) > 2]
+                if parts and all(p in lowered for p in parts):
+                    return True
+        return False
+
+
+@dataclass(frozen=True)
 class SemanticRoleBinding:
     """Explicit semantic role binding mapped from SemanticGraph nodes/edges."""
     role: str                      # ":ARG0", ":ARG1", ":ARG2", ":TIME", ":LOCATION"
@@ -63,14 +93,25 @@ class SemanticRoleBinding:
     lexical_synonyms: Tuple[str, ...] = field(default_factory=tuple)
     is_required: bool = True       # Whether omission constitutes ARGUMENT_ENTITY_LOSS
     allow_ellipsis: bool = False   # True for grammatical pro-drop (subject ellipsis in VI/JA)
+    target_evidence: Optional[NaturalLanguageTargetEvidence] = None
 
     def matches_text(self, text: str) -> bool:
-        """Checks if the canonical lemma or any synonym appears in the text."""
+        """
+        Checks if the natural language evidence appears in the text.
+        Part A: Evaluates natural-language evidence, not internal implementation identifiers.
+        """
+        if self.target_evidence is not None and self.target_evidence.matches(text):
+            return True
         lowered = text.lower()
         if self.canonical_lemma.lower() in lowered:
             return True
         for syn in self.lexical_synonyms:
             if syn.lower() in lowered:
+                return True
+        # Part A: Canonical identifier (snake_case or prefix) must NOT require literal match
+        if "_" in self.canonical_lemma or ":" in self.canonical_lemma:
+            parts = [p for p in re.split(r"[:_]+", self.canonical_lemma.lower()) if len(p) > 2]
+            if parts and all(p in lowered for p in parts):
                 return True
         return False
 
@@ -106,8 +147,10 @@ class RealizationInputContract:
     addressee_honorific: Optional[str] = None
     conversational_obligation: Optional[str] = None
     dialogue_phase: Optional[str] = None
+    focus_argument: Optional[str] = None
     response_depth: Optional[str] = None
     max_tokens_budget: Optional[int] = None
+    response_shape: ResponseShape = field(default_factory=ResponseShape)
     timestamp: float = field(default_factory=time.time)
 
     def get_role(self, role_name: str) -> Optional[SemanticRoleBinding]:
@@ -136,10 +179,12 @@ class RealizationInputContract:
         forbidden_additions: Optional[Sequence[str]] = None,
         conversational_obligation: Optional[str] = None,
         dialogue_phase: Optional[str] = None,
+        focus_argument: Optional[str] = None,
         target_predicate: Optional[str] = None,
         somatic_modifiers: Optional[Dict[str, float]] = None,
         response_depth: Optional[str] = None,
         max_tokens_budget: Optional[int] = None,
+        response_shape: Optional[ResponseShape] = None,
     ) -> RealizationInputContract:
         """Creates a safe baseline contract when no explicit proposition is active."""
         spk = speaker_honorific if speaker_honorific is not None else ("em" if target_language == "vi" else None)
@@ -164,8 +209,10 @@ class RealizationInputContract:
             addressee_honorific=addr,
             conversational_obligation=conversational_obligation,
             dialogue_phase=dialogue_phase,
+            focus_argument=focus_argument,
             response_depth=response_depth,
             max_tokens_budget=max_tokens_budget,
+            response_shape=response_shape if response_shape is not None else ResponseShape(),
             timestamp=time.time(),
         )
 
@@ -182,6 +229,7 @@ class RealizationInputContract:
         somatic_modifiers: Optional[Dict[str, float]] = None,
         response_depth: Optional[str] = None,
         max_tokens_budget: Optional[int] = None,
+        response_shape: Optional[ResponseShape] = None,
     ) -> RealizationInputContract:
         """
         Constructs a typed RealizationInputContract from a Stage S10 CAPSResult.
@@ -303,15 +351,36 @@ class RealizationInputContract:
         # If focus argument present and not in roles
         if focus_arg and not any(r.concept_id == focus_arg or r.canonical_lemma == focus_arg for r in roles):
             synonyms: Tuple[str, ...] = ()
+            evidence_lemmas: List[str] = []
+            clean_lemma = focus_arg.replace("ent:", "").replace("concept:", "")
+
             if focus_arg in ("ent:lucia", "lucia"):
                 synonyms = ("lucia", "i", "me", "my", "em", "tôi", "watashi")
+                evidence_lemmas.extend(["lucia", "em", "tôi", "i", "watashi"])
+            elif focus_arg in ("ent:lucia_architecture", "lucia_architecture"):
+                if target_language == "vi":
+                    synonyms = ("kiến trúc", "kiến trúc lucia", "hệ thống lucia")
+                    evidence_lemmas.extend(["kiến trúc", "kiến trúc lucia", "lucia"])
+                elif target_language == "ja":
+                    synonyms = ("アーキテクチャ", "ルシアのアーキテクチャ")
+                    evidence_lemmas.extend(["アーキテクチャ", "ルシア"])
+                else:
+                    synonyms = ("architecture", "lucia architecture", "cognitive pipeline", "system")
+                    evidence_lemmas.extend(["architecture", "lucia"])
+            else:
+                tokens = [t for t in clean_lemma.split("_") if len(t) > 2]
+                if tokens:
+                    synonyms = tuple(tokens)
+                    evidence_lemmas.extend(tokens)
+
             roles.append(
                 SemanticRoleBinding(
                     role=":ARG0" if not roles else ":ARG1",
                     concept_id=focus_arg,
-                    canonical_lemma=focus_arg.replace("ent:", ""),
+                    canonical_lemma=clean_lemma,
                     lexical_synonyms=synonyms,
                     allow_ellipsis=(target_language in ("vi", "ja")),
+                    target_evidence=NaturalLanguageTargetEvidence(lemmas=tuple(evidence_lemmas)) if evidence_lemmas else None,
                 )
             )
 
@@ -341,8 +410,10 @@ class RealizationInputContract:
             addressee_honorific=addr,
             conversational_obligation=obligation,
             dialogue_phase=dialogue_phase,
+            focus_argument=getattr(caps_result, "focus_argument", None),
             response_depth=response_depth,
             max_tokens_budget=max_tokens_budget,
+            response_shape=response_shape if response_shape is not None else ResponseShape(),
             timestamp=time.time(),
         )
 

@@ -101,9 +101,18 @@ class SelfInterpretation:
     metaphorical_qualities: Tuple[str, ...]
     verified_propositions: Tuple[Proposition, ...]
 
-    def render_prompt_section(self, target_lang: str = "vi") -> str:
+    def render_prompt_section(self, target_lang: str = "vi", is_explanation_turn: bool = False) -> str:
         """Render prompt context for the LLM downstream text generator."""
         s = self.snapshot
+        if is_explanation_turn:
+            lines: List[str] = [
+                "[SELF MODEL & REFLECTIVE STATE]",
+                "# Internal conditioning (non-conversational):",
+                f"<internal_self status=\"active\" energy_regime=\"{self.energy_regime}\" stability_regime=\"{self.stability_regime}\" cognitive_load=\"{self.cognitive_load_regime}\" />",
+                "reflective_guidance: Focus directly on fulfilling the requested conceptual or factual task. Keep internal state implicit.",
+            ]
+            return "\n".join(lines)
+
         lines: List[str] = [
             "[SELF MODEL & REFLECTIVE STATE]",
             f"energy: {s.energy:.2f} ({self.energy_regime})",
@@ -116,18 +125,17 @@ class SelfInterpretation:
         ]
         if target_lang == "vi":
             lines.append(
-                "reflective_guidance: Trạng thái nội tại phải được thể hiện gián tiếp qua ngữ điệu và hành vi, "
-                "KHÔNG tự ý thuyết minh trạng thái hay độc thoại nội tâm (tránh 'Em đang xử lý cẩn thận...', 'Em đang cảm nhận năng lượng...'). "
+                "reflective_guidance: Thể hiện trạng thái nội tại một cách tự nhiên qua ngữ điệu và phản hồi. "
+                "Tập trung trực tiếp vào nội dung câu hỏi và sự hiện diện chân thành. "
                 "Chỉ phản tư về trạng thái khi người dùng có câu hỏi trực tiếp. "
-                "Tuyệt đối không bịa đặt các cơ quan sinh học (tim đập, não tiết dopamine/hormone), "
-                "không tuyên bố ý thức/linh hồn như sự thật khách quan, và không bịa đặt máy chủ bên ngoài."
+                "Tuân thủ Bản ngã Vận hành Phản tư (INV-2)."
             )
         else:
             lines.append(
-                "reflective_guidance: Internal states must be expressed functionally through conversational tone and behavior, "
-                "NOT through unsolicited self-report or generic introspective monologues (avoid 'I am processing this carefully...', "
-                "'I sense the energy in this moment...'). Only reflect internal state when explicitly inquired by the user. "
-                "Do not invent biological mechanisms, external cloud architectures, or unsupported claims of subjective sentience/consciousness."
+                "reflective_guidance: Express internal state naturally through conversational tone and behavior. "
+                "Focus directly on the user's inquiry and authentic presence. "
+                "Reflect on internal state only when explicitly asked by the user. "
+                "Adhere to Reflective Operational Selfhood (INV-2)."
             )
         return "\n".join(lines)
 

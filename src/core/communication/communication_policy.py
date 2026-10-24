@@ -15,6 +15,7 @@ Pre-Reflective Operational Invariant:
 from __future__ import annotations
 
 import logging
+import dataclasses
 import logging
 import re
 from typing import Any, Dict, Optional, Sequence, Tuple, Union
@@ -26,6 +27,12 @@ from src.core.communication.communication_state import (
     CommunicationState,
     CommStrategy,
     ResponseDepth,
+    ResponseShape,
+    ShapeTopology,
+)
+from src.core.communication.response_completion_planner import (
+    CompletionPlan,
+    ResponseCompletionPlanner,
 )
 from src.core.models import PADState, SomaticMarkers
 
@@ -40,8 +47,13 @@ class CommunicationPolicy:
     and bounded generation budget.
     """
 
-    def __init__(self, smoothing_factor: float = 0.25) -> None:
+    def __init__(
+        self,
+        smoothing_factor: float = 0.25,
+        completion_planner: Optional[ResponseCompletionPlanner] = None,
+    ) -> None:
         self.smoothing_factor = float(smoothing_factor)
+        self._completion_planner = completion_planner or ResponseCompletionPlanner()
 
     @classmethod
     def get_neutral_actuator_baseline(cls) -> CommunicationState:
@@ -78,6 +90,8 @@ class CommunicationPolicy:
         pad: Optional[PADState] = None,
         relationship: Optional[Dict[str, float]] = None,
         history: Optional[Sequence[Any]] = None,
+        focus_argument: Optional[str] = None,
+        is_continuation: bool = False,
     ) -> Tuple[ResponseDepth, int]:
         """
         Authoritative response-depth and bounded generation-budget decision.
@@ -109,16 +123,20 @@ class CommunicationPolicy:
 
         # 3. Concept explanation or deep technical / architectural inquiry
         if act_str == "EXPLAIN_CONCEPT" or ob_str == "FULFILL_CONCEPT_EXPLANATION":
+            is_arch = (focus_argument in ("ent:lucia_architecture", "lucia_architecture")) or is_continuation
             tech_cues = (
                 "active inference", "language generation", "cognitive orchestrator",
-                "architecture", "tách", "nguyên lý", "cơ chế", "tại sao", "why does",
-                "how does", "tổng quan kiến trúc", "kernel", "kleene", "caps"
+                "architecture", "kiến trúc", "tách", "nguyên lý", "cơ chế", "tại sao", "why does",
+                "how does", "tổng quan kiến trúc", "kernel", "kleene", "caps",
+                "khác nhau", "difference", "different", "so sánh", "compare", "phân biệt",
+                "vram", "ram", "gpu", "cpu", "hardware", "bộ nhớ", "memory",
+                "bắt đầu", "bắt đầu đi", "go ahead", "tiếp tục", "continue", "start"
             )
-            is_technical_deep = any(cue in text_lower for cue in tech_cues)
+            is_technical_deep = is_arch or any(cue in text_lower for cue in tech_cues)
             if is_technical_deep:
-                depth, budget = ResponseDepth.DEEP, 380
+                depth, budget = ResponseDepth.DEEP, 600
             else:
-                depth, budget = ResponseDepth.MEDIUM, 180
+                depth, budget = ResponseDepth.MEDIUM, 220
             if somatic and (somatic.energy <= 0.20 or somatic.cognitive_load >= 0.75):
                 budget = int(budget * 0.8)
             return depth, budget
@@ -188,6 +206,113 @@ class CommunicationPolicy:
             budget = 60
         return depth, budget
 
+    def evaluate_response_shape(
+        self,
+        *,
+        communicative_act: Optional[Any] = None,
+        conversational_obligation: Optional[str] = None,
+        response_depth: ResponseDepth = ResponseDepth.SHORT,
+        target_predicate: Optional[str] = None,
+        user_input_text: Optional[str] = None,
+    ) -> ResponseShape:
+        """
+        Authoritative evaluation of structural response shape (HOW to realize response).
+        Binds topology, utterance bounds, initiative, and topic expansion constraints.
+        """
+        act_str = (
+            communicative_act.value
+            if hasattr(communicative_act, "value")
+            else str(communicative_act or "").upper()
+        )
+        ob_str = str(conversational_obligation or "").strip()
+        pred_str = str(target_predicate or "").strip()
+        user_text = (user_input_text or "").strip()
+        text_lower = user_text.lower()
+
+        # 1. Presence ping / vocative call
+        if (
+            ob_str == "MINIMAL_PRESENCE_CALL"
+            or pred_str == "c:PRESENCE_PING"
+            or bool(re.match(r"^(?:ciah|lucia|em)\s+ơi[\.\?\!\s]*$", text_lower))
+            or bool(re.match(r"^ơi\s+(?:ciah|lucia|em)[\.\?\!\s]*$", text_lower))
+            or bool(re.match(r"^(?:ciah|lucia)[\?\!\.\s]*$", text_lower))
+            or response_depth == ResponseDepth.MINIMAL
+        ):
+            return ResponseShape(
+                topology=ShapeTopology.MINIMAL_PING,
+                max_sentences=1,
+                allow_follow_up_question=False,
+                prohibit_topic_expansion=True,
+                answer_first_required=False,
+            )
+
+        # 2. Companion Personal Query / Self-Disclosure
+        if (
+            act_str == "ANSWER_PERSONAL_QUERY"
+            or ob_str == "FULFILL_PERSONAL_DISCLOSURE"
+            or pred_str == "c:PERSONAL_QUERY"
+        ):
+            return ResponseShape(
+                topology=ShapeTopology.BOUNDED_ANSWER,
+                max_sentences=2,
+                allow_follow_up_question=False,
+                prohibit_topic_expansion=True,
+                answer_first_required=True,
+            )
+
+        # 3. Conversational Reaction / Interjection
+        if act_str == "ACKNOWLEDGE_REACTION" or ob_str == "ACKNOWLEDGE_REACTION_ONLY":
+            return ResponseShape(
+                topology=ShapeTopology.BOUNDED_ANSWER,
+                max_sentences=1,
+                allow_follow_up_question=False,
+                prohibit_topic_expansion=True,
+                answer_first_required=False,
+            )
+
+        # 4. Simple Direct Question (Activity / Presence / Identity / Attention)
+        if act_str == "ANSWER" and (
+            pred_str in ("c:ACTIVITY", "c:PRESENCE", "c:IDENTITY", "c:ATTENTION", "c:WELLBEING", "c:CAPABILITY", "c:LISTENING")
+            or ob_str in ("ANSWER_ACTIVITY", "ANSWER_PRESENCE", "ANSWER_IDENTITY", "ANSWER_CAPABILITY", "ANSWER_LISTENING", "ANSWER_GENERAL")
+        ):
+            return ResponseShape(
+                topology=ShapeTopology.BOUNDED_ANSWER,
+                max_sentences=2,
+                allow_follow_up_question=False,
+                prohibit_topic_expansion=True,
+                answer_first_required=True,
+            )
+
+        # 5. Conceptual Explanation
+        if act_str == "EXPLAIN_CONCEPT" or ob_str == "FULFILL_CONCEPT_EXPLANATION":
+            is_continuation = any(cue in text_lower for cue in ("bắt đầu", "bắt đầu đi", "go ahead", "tiếp tục", "continue", "start"))
+            return ResponseShape(
+                topology=ShapeTopology.STRUCTURED_EXPLANATION,
+                max_sentences=None,
+                allow_follow_up_question=not is_continuation,
+                prohibit_topic_expansion=False,
+                answer_first_required=True,
+            )
+
+        # 6. Deep Reflection / Substantive inquiry
+        if response_depth == ResponseDepth.DEEP or pred_str in ("c:THOUGHTS", "c:SELF_EXPLANATION"):
+            return ResponseShape(
+                topology=ShapeTopology.DEEP_REFLECTION,
+                max_sentences=None,
+                allow_follow_up_question=True,
+                prohibit_topic_expansion=False,
+                answer_first_required=False,
+            )
+
+        # 7. Default Conversational Exchange
+        return ResponseShape(
+            topology=ShapeTopology.CONVERSATIONAL_EXCHANGE,
+            max_sentences=None,
+            allow_follow_up_question=True,
+            prohibit_topic_expansion=False,
+            answer_first_required=False,
+        )
+
     def attune_depth_to_act(
         self,
         state: CommunicationState,
@@ -197,20 +322,91 @@ class CommunicationPolicy:
         user_input_text: Optional[str] = None,
         history: Optional[Sequence[Any]] = None,
         somatic: Optional[SomaticMarkers] = None,
+        *,
+        caps_result: Optional[Any] = None,
+        known_propositions: Optional[Sequence[Any]] = None,
+        target_language: str = "en",
+        n_ctx: Optional[int] = None,
+        focus_argument: Optional[str] = None,
+        is_continuation: bool = False,
     ) -> CommunicationState:
         """
-        Attunes CommunicationState response_depth and max_tokens_budget to the authoritative
-        communicative act and obligation produced by CAPS.
+        Attunes CommunicationState response_depth, structural response_shape, and max_tokens_budget
+        to the authoritative communicative act and obligation produced by CAPS and ResponseCompletionPlanner.
         """
-        depth, budget = self.evaluate_response_depth(
+        focus_arg = focus_argument or (getattr(caps_result, "focus_argument", None) if caps_result else None)
+        origin = getattr(getattr(caps_result, "provenance_metadata", None), "origin", "") if caps_result else ""
+        continuation_flag = is_continuation or (origin == "PENDING_OBLIGATION_CONTINUATION")
+
+        depth, legacy_budget = self.evaluate_response_depth(
             communicative_act=act,
             conversational_obligation=obligation,
             target_predicate=target_predicate,
             user_input_text=user_input_text,
-            knowledge_available=state.knowledge_context_ref > 0,
+            knowledge_available=state.knowledge_context_ref > 0 or bool(known_propositions),
             somatic=somatic,
             history=history,
+            focus_argument=focus_arg,
+            is_continuation=continuation_flag,
         )
+
+        shape = self.evaluate_response_shape(
+            communicative_act=act,
+            conversational_obligation=obligation,
+            response_depth=depth,
+            target_predicate=target_predicate,
+            user_input_text=user_input_text,
+        )
+
+        # Epistemic status & facet coverage determination
+        ep_status = "FACT"
+        if caps_result is not None and getattr(caps_result, "epistemic_metadata", None):
+            ep_status = caps_result.epistemic_metadata.status
+
+        available_facets = 0
+        required_facets = 0
+        if focus_arg in ("ent:lucia_architecture", "lucia_architecture"):
+            if known_propositions:
+                preds = {
+                    getattr(p, "predicate", "")
+                    for p in known_propositions
+                    if "lucia_architecture" in getattr(p, "subject", "")
+                }
+                available_facets = len(preds)
+            required_facets = 5
+        elif known_propositions:
+            available_facets = len(known_propositions)
+            required_facets = available_facets
+        elif depth == ResponseDepth.DEEP:
+            text_l = (user_input_text or "").lower()
+            tech_cues = (
+                "active inference", "language generation", "cognitive orchestrator",
+                "architecture", "kiến trúc", "tách", "nguyên lý", "cơ chế",
+                "khác nhau", "difference", "different", "so sánh", "compare",
+                "vram", "ram"
+            )
+            matched_cues = [c for c in tech_cues if c in text_l]
+            if len(matched_cues) >= 2 or "separate" in text_l or "tách" in text_l:
+                available_facets = 3
+                required_facets = 3
+
+        # Plan authoritative completion capacity via ResponseCompletionPlanner
+        plan = self._completion_planner.plan(
+            epistemic_status=ep_status,
+            available_facets=available_facets,
+            required_facets=required_facets,
+            response_shape=shape,
+            response_depth=depth,
+            conversational_obligation=obligation,
+            target_language=target_language,
+            context_headroom=n_ctx,
+            somatic_markers=somatic,
+            focus_argument=focus_arg,
+            is_continuation=continuation_flag,
+        )
+        budget = plan.completion_capacity
+        if plan.recommended_max_sentences and shape.max_sentences is None:
+            shape = dataclasses.replace(shape, max_sentences=plan.recommended_max_sentences)
 
         elaboration_targets = {
             ResponseDepth.MINIMAL: 0.15,
@@ -236,6 +432,7 @@ class CommunicationPolicy:
             provenance="CommunicationPolicy/AttunedDepth",
             response_depth=depth,
             max_tokens_budget=budget,
+            response_shape=shape,
         )
 
     def compute(
@@ -335,6 +532,10 @@ class CommunicationPolicy:
         else:
             strategy = CommStrategy.DIRECT_FACTUAL
 
+        resp_shape = self.evaluate_response_shape(
+            response_depth=resp_depth,
+        )
+
         target = CommunicationState(
             strategy=strategy,
             directness=directness,
@@ -350,6 +551,7 @@ class CommunicationPolicy:
             provenance="CommunicationPolicy/Computed",
             response_depth=resp_depth,
             max_tokens_budget=max_tokens,
+            response_shape=resp_shape,
         )
 
         if prev_state is not None:
@@ -377,6 +579,7 @@ class CommunicationPolicy:
             provenance="CommunicationPolicy/Smoothed",
             response_depth=target.response_depth,
             max_tokens_budget=target.max_tokens_budget,
+            response_shape=target.response_shape,
         )
 
     def render_surface_message(

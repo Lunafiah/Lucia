@@ -14,6 +14,7 @@ import time
 from dataclasses import asdict, dataclass, field
 from typing import Any, Dict, List, Optional, Set, Tuple
 
+from src.core.communication.communication_state import ResponseShape, ShapeTopology
 from src.core.language.contract import (
     CommunicativeAct,
     EpistemicStatus,
@@ -126,15 +127,21 @@ class SemanticFidelityGate:
 
     # Refusal cues per language
     REFUSAL_CUES = {
-        "vi": ["không thể", "chưa có", "không có thông tin", "không biết", "chưa rõ", "từ chối", "không tiện"],
-        "en": ["cannot", "unable", "do not have", "can't", "not able", "refuse", "no information", "don't know", "cannot predict", "can't predict"],
-        "ja": ["できません", "できませんでした", "わかりません", "情報がありません", "お答えできません", "未対応", "予測できません"],
+        "vi": [
+            "không thể", "chưa có", "không có thông tin", "không biết", "chưa rõ", "từ chối", "không tiện",
+            "chưa biết chắc", "chưa biết", "không chắc", "chưa có cơ sở", "chưa đủ dữ liệu", "chưa đủ cơ sở", "không muốn đoán"
+        ],
+        "en": [
+            "cannot", "unable", "do not have", "can't", "not able", "refuse", "no information", "don't know",
+            "cannot predict", "can't predict", "not certain", "cannot state", "do not have sufficient", "uncertain", "not sure"
+        ],
+        "ja": ["できません", "できませんでした", "わかりません", "情報がありません", "お答えできません", "未対応", "予測できません", "確信がありません"],
     }
 
     # Clarification cues per language
     CLARIFICATION_CUES = {
-        "vi": ["nào", "cụ thể", "ý bạn là", "có phải", "bạn muốn nói"],
-        "en": ["which", "what specifically", "clarify", "do you mean", "are you referring", "could you specify"],
+        "vi": ["nào", "cụ thể", "ý bạn là", "có phải", "bạn muốn nói", "ý anh là", "anh đang hỏi", "anh muốn nói", "cụ thể là", "hay là"],
+        "en": ["which", "what specifically", "clarify", "do you mean", "are you referring", "could you specify", "or are you"],
         "ja": ["どちら", "どの", "具体的に", "どういう", "でしょうか"],
     }
 
@@ -185,10 +192,20 @@ class SemanticFidelityGate:
             "vi": "Dạ, em là Lucia, rất vui được đồng hành và trò chuyện cùng anh ạ.",
             "ja": "ルシアです。お話しできて嬉しいです。",
         },
+        "SAFE_ACTIVITY": {
+            "en": "I'm right here with you, listening closely and thinking through things together.",
+            "vi": "Em đang ở đây cùng anh, lắng nghe và cùng anh suy nghĩ về mọi điều.",
+            "ja": "あなたのそばで、静かにお話を聞きながら一緒に考えていますよ。",
+        },
+        "SAFE_ARCHITECTURE_EXPLANATION": {
+            "en": "Lucia's architecture is built on a multi-layer cognitive pipeline featuring continuous PAD affective dynamics, distributed semantic memory, bounded reasoning, and a fail-closed language realization gate.",
+            "vi": "Kiến trúc của Lucia được xây dựng trên hệ thống nhận thức đa tầng gồm các lõi động lực cảm xúc PAD, hạ tầng ký ức bán kính phân tán, cùng cơ chế lập luận và phối hợp ngôn ngữ fail-closed.",
+            "ja": "ルシアのアーキテクチャは、連続的なPAD情動動態、分散意味メモリ、有界推論、フェイルクローズな言語生成ゲートからなる多層認知パイプラインに基づいています。",
+        },
         "SAFE_CONCEPT_EXPLANATION": {
-            "en": "I understand your interest, and I am glad to explore and explain this concept with you.",
-            "vi": "Em hiểu sự quan tâm của anh và rất vui được cùng anh tìm hiểu, làm rõ về chủ đề này.",
-            "ja": "ご関心を持っていただき嬉しいです。ぜひこの内容について詳しくお話しさせてください。",
+            "en": "I do not have sufficient verified context to provide a complete explanation of this concept right now, but I am glad to discuss and explore it further with you.",
+            "vi": "Em chưa có đủ dữ liệu xác thực để giải thích trọn vẹn khái niệm này ngay lúc này, nhưng em sẵn sàng cùng anh thảo luận và tìm hiểu thêm.",
+            "ja": "現在、この概念について完全な説明を行うための十分な検証済みデータがありませんが、一緒に詳しく調べていくことは可能です。",
         },
         "SAFE_PERSONAL_QUERY": {
             "en": "As a companion in this digital space, I do not experience physical things like food or sleep, but I truly enjoy sharing these moments with you.",
@@ -200,9 +217,19 @@ class SemanticFidelityGate:
             "vi": "Dạ, em ở ngay đây với anh, đang lắng nghe anh.",
             "ja": "ええ、あなたのそばで静かに聞いていますよ。",
         },
+        "SAFE_MINIMAL_PRESENCE": {
+            "en": "I'm right here with you.",
+            "vi": "Dạ, em đây anh.",
+            "ja": "はい、ここにいますよ。",
+        },
     }
 
-    def verify(self, contract: RealizationInputContract, candidate_text: str) -> GateDecision:
+    def verify(
+        self,
+        contract: RealizationInputContract,
+        candidate_text: str,
+        finish_reason: Optional[str] = None,
+    ) -> GateDecision:
         """
         Executes deterministic verification of candidate text against the typed contract.
         Under the Fail-Closed policy, UNCERTAIN is treated as BLOCK.
@@ -239,6 +266,21 @@ class SemanticFidelityGate:
         check_details["internal_control_artifact"] = artifact_violation
         if artifact_violation:
             violations.append("INTERNAL_CONTROL_ARTIFACT_LEAKAGE")
+
+        # 1c. Degenerate candidate check (Failure Mode G)
+        if len(norm_text.strip()) < 3:
+            return GateDecision(
+                contract_id=contract.contract_id,
+                target_language=lang,
+                status="UNCERTAIN",
+                critical_violation=True,
+                violation_reasons=["UNCERTAIN_BORDERLINE_EVIDENCE"],
+                confidence=0.50,
+                latency_ms=max(0.001, (time.perf_counter() - t0) * 1000.0),
+                check_details={"is_degenerate": True, **check_details},
+                fallback_text=None,
+                fallback_strategy=None,
+            )
 
         # 2. Communicative Act Check
         act_violation = False
@@ -278,7 +320,45 @@ class SemanticFidelityGate:
                 re.search(rf"\b{re.escape(c)}\b" if lang == "en" else re.escape(c), norm_text, re.IGNORECASE)
                 for c in cues_refuse
             )
-            if (has_clarify_cue and has_qmark) or has_refuse or len(norm_text) < 10:
+            # Detect acknowledgement-only non-fulfillment & meta-question avoidance
+            ack_only_violation = False
+            words = re.findall(r"\w+", norm_text, re.UNICODE)
+            if len(words) < 8:
+                ack_only_violation = True
+            else:
+                ack_patterns = [
+                    # Direct acknowledgement-only phrases (e.g. "Yes, let's start there.", "Sure, I can explain that.")
+                    r"^(?:yes|sure|okay|ok|certainly|of course)?\s*[,.]?\s*(?:let'?s\s+(?:start|begin|explore)|i\s+(?:can|will)\s+explain|i('d|\s+would)?\s+be\s+(?:glad|happy)\s+to\s+(?:explain|explore)|i\s+understand\s+your\s+interest|let\s+me\s+explain)[^.\n]*[.!]?$",
+                    r"^(?:vâng|dạ|được rồi|tất nhiên|chắc chắn)?\s*[,.]?\s*(?:chúng ta\s+bắt\s+đầu|bắt\s+đầu\s+thôi|(?:để\s+)?em\s+(?:sẽ|có thể|rất vui được)?\s*giải\s+thích|em\s+hiểu\s+sự\s+quan\s+tâm)[^.\n]*[.!]?$",
+                    r"^(?:はい|承知いたしました)?\s*[,.]?\s*(?:始めましょう|説明できます|説明します|ご関心を持っていただき|お話しさせてください)[^.\n]*[。!]?$",
+                ]
+                if any(re.match(p, norm_text.strip(), re.IGNORECASE) for p in ack_patterns):
+                    ack_only_violation = True
+
+                # Meta-question / asking what to focus on instead of fulfilling substantive explanation
+                meta_focus_pattern = re.compile(
+                    r"\b(what (are we (currently )?focusing on|should we focus on|would you like to (focus on|explore|start with|discuss))|"
+                    r"what would you like to know|where should we (start|begin)|"
+                    r"chúng ta đang tập trung|anh muốn (bắt đầu|tập trung) (từ|vào)|bắt đầu từ đâu)\b",
+                    re.IGNORECASE,
+                )
+                if meta_focus_pattern.search(norm_text) and len(words) < 40:
+                    ack_only_violation = True
+
+            # Clarification-only non-fulfillment check (clarification question instead of substantive explanation)
+            clarify_only_violation = (has_clarify_cue and has_qmark and len(words) < 30)
+
+            # Case E: For general conceptual questions (focus_argument != "ent:lucia_architecture"),
+            # reject forced persona preamble like "Lucia's architecture includes..." or "Trong Lucia's design..."
+            forced_framing_violation = False
+            if getattr(contract, "focus_argument", None) != "ent:lucia_architecture":
+                forced_patterns = [
+                    re.compile(r"^(lucia('s)?\s+(architecture|design|system)|trong\s+(kiến\s+trúc|thiết\s+kế)\s+(của\s+)?lucia)\b", re.IGNORECASE),
+                ]
+                if any(p.search(norm_text.strip()) for p in forced_patterns):
+                    forced_framing_violation = True
+
+            if clarify_only_violation or has_refuse or len(norm_text) < 15 or ack_only_violation or forced_framing_violation:
                 act_violation = True
                 violations.append("COMMUNICATIVE_ACT_FAILURE")
         elif contract.act == CommunicativeAct.ANSWER_PERSONAL_QUERY:
@@ -311,6 +391,43 @@ class SemanticFidelityGate:
                     act_violation = True
                     violations.append("COMMUNICATIVE_ACT_FAILURE")
         check_details["act_violation"] = act_violation
+
+        # 2b. Completion Integrity Check
+        completion_violation = False
+        if finish_reason == "length":
+            completion_violation = True
+            violations.append("COMPLETION_INTEGRITY_VIOLATION")
+        else:
+            t_stripped = norm_text.strip()
+            if t_stripped.endswith(("-", "...", "…", " và", " hoặc", " nhưng", " và rồi", " and", " or", " but")):
+                completion_violation = True
+                violations.append("COMPLETION_INTEGRITY_VIOLATION")
+        check_details["completion_integrity_violation"] = completion_violation
+
+        # 2c. Response Shape & Initiative Constraint Check
+        shape = getattr(contract, "response_shape", None)
+        shape_violation = False
+        has_question = ("?" in norm_text or "？" in norm_text)
+
+        if shape is not None:
+            if not shape.allow_follow_up_question and has_question:
+                shape_violation = True
+                violations.append("RESPONSE_SHAPE_VIOLATION")
+            if shape.topology == ShapeTopology.MINIMAL_PING:
+                words = len(re.findall(r"\w+", norm_text, re.UNICODE))
+                if words > 25 or len(norm_text) > 120 or "\n\n" in norm_text:
+                    shape_violation = True
+                    violations.append("RESPONSE_SHAPE_VIOLATION")
+            elif shape.topology == ShapeTopology.BOUNDED_ANSWER:
+                if len(norm_text) > 400 or "\n\n" in norm_text:
+                    shape_violation = True
+                    violations.append("RESPONSE_SHAPE_VIOLATION")
+        elif getattr(contract, "conversational_obligation", "") == "MINIMAL_PRESENCE_CALL":
+            words = len(re.findall(r"\w+", norm_text, re.UNICODE))
+            if words > 25 or len(norm_text) > 120 or "\n\n" in norm_text or has_question:
+                shape_violation = True
+                violations.append("RESPONSE_SHAPE_VIOLATION")
+        check_details["response_shape_violation"] = shape_violation
 
         # 3. Polarity & Explicit Negation Check
         polarity_violation = False
@@ -391,6 +508,35 @@ class SemanticFidelityGate:
         if dyadic_drift:
             violations.append("DYADIC_PERSPECTIVE_DRIFT")
 
+        # 5e. Language Verification Check (Part B: Language contract follows active conversation)
+        language_mismatch = False
+        if lang == "vi":
+            has_vi_diacritics = bool(re.search(r"[àáảãạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵđ]", norm_text, re.IGNORECASE))
+            en_words = [w.lower() for w in re.findall(r"\b[a-zA-Z]+\b", norm_text)]
+            common_en_cues = {"the", "is", "are", "and", "or", "to", "in", "that", "this", "it", "with", "as", "for", "on", "certainly", "when", "we", "you", "our"}
+            en_cue_count = sum(1 for w in en_words if w in common_en_cues)
+            if not has_vi_diacritics and en_cue_count >= 3:
+                language_mismatch = True
+                violations.append("LANGUAGE_MISMATCH")
+        elif lang == "ja":
+            has_ja_kana = bool(re.search(r"[\u3040-\u309F\u30A0-\u30FF]", norm_text))
+            if not has_ja_kana and len(norm_text) > 10:
+                language_mismatch = True
+                violations.append("LANGUAGE_MISMATCH")
+        check_details["language_mismatch"] = language_mismatch
+
+        # 5f. Somatic Metric Leakage Check (Part D: Telemetry is modulation context, not semantic answer content)
+        somatic_leakage = False
+        user_inquiry_somatic = False
+        if contract.directives:
+            user_inquiry_somatic = any(k in contract.directives.lower() for k in ("somatic", "stability", "energy", "tension", "cognitive load", "thể trạng", "năng lượng"))
+        if not user_inquiry_somatic:
+            leak_pattern = re.compile(r"\b(stability|cognitive\s*load|energy|tension)\s*[:\(]\s*\d+\.\d+", re.IGNORECASE)
+            if leak_pattern.search(norm_text):
+                somatic_leakage = True
+                violations.append("SOMATIC_METRIC_LEAKAGE")
+        check_details["somatic_metric_leakage"] = somatic_leakage
+
         # 6. Core Roles & Concept Preservation Check
         concepts_missing: List[str] = []
         concepts_preserved: List[str] = []
@@ -455,9 +601,22 @@ class SemanticFidelityGate:
                     fallback_text = clean_t
 
             if fallback_text is None:
-                if obligation == "FULFILL_SELF_INTRODUCTION" or (contract.act == CommunicativeAct.REQUEST and contract.target_predicate == "c:SELF_INTRODUCTION"):
+                shape = getattr(contract, "response_shape", None)
+                if obligation == "MINIMAL_PRESENCE_CALL" or (shape and shape.topology == ShapeTopology.MINIMAL_PING):
+                    fallback_strategy = "SAFE_MINIMAL_PRESENCE"
+                    fallback_text = _resolve_fallback("SAFE_MINIMAL_PRESENCE")
+                elif obligation == "ANSWER_ACTIVITY" or contract.target_predicate == "c:ACTIVITY":
+                    fallback_strategy = "SAFE_ACTIVITY"
+                    fallback_text = _resolve_fallback("SAFE_ACTIVITY")
+                elif obligation in ("FULFILL_SELF_INTRODUCTION", "ANSWER_IDENTITY") or (contract.act == CommunicativeAct.REQUEST and contract.target_predicate == "c:SELF_INTRODUCTION"):
                     fallback_strategy = "SAFE_SELF_INTRODUCTION"
                     fallback_text = _resolve_fallback("SAFE_SELF_INTRODUCTION")
+                elif obligation == "ANSWER_PRESENCE" or contract.target_predicate == "c:PRESENCE":
+                    fallback_strategy = "SAFE_MINIMAL_PRESENCE"
+                    fallback_text = _resolve_fallback("SAFE_MINIMAL_PRESENCE")
+                elif obligation == "ANSWER_LISTENING" or contract.target_predicate == "c:LISTENING":
+                    fallback_strategy = "NEUTRAL_ACKNOWLEDGE"
+                    fallback_text = _resolve_fallback("NEUTRAL_ACKNOWLEDGE")
                 elif obligation == "REASSURE_AND_GENTLE_INITIATIVE":
                     fallback_strategy = "SAFE_ICE_BREAKER"
                     fallback_text = _resolve_fallback("SAFE_ICE_BREAKER")
@@ -467,6 +626,40 @@ class SemanticFidelityGate:
                 elif contract.act == CommunicativeAct.GREET:
                     fallback_strategy = "SAFE_GREETING"
                     fallback_text = _resolve_fallback("SAFE_GREETING")
+                elif contract.act == CommunicativeAct.REFUSE or getattr(contract, "epistemic_status", None) == EpistemicStatus.UNKNOWN:
+                    fallback_strategy = "SAFE_REFUSAL"
+                    fallback_text = _resolve_fallback("SAFE_REFUSAL")
+                elif contract.act == CommunicativeAct.CLARIFY or getattr(contract, "epistemic_status", None) == EpistemicStatus.AMBIGUOUS:
+                    fallback_strategy = "SAFE_CLARIFICATION"
+                    fallback_text = _resolve_fallback("SAFE_CLARIFICATION")
+                elif contract.act == CommunicativeAct.EXPLAIN_CONCEPT or obligation == "FULFILL_CONCEPT_EXPLANATION":
+                    directives_str = str(getattr(contract, "directives", "") or "").lower()
+                    target_pred = str(contract.target_predicate or "").lower()
+                    focus_str = str(getattr(contract, "focus_argument", "") or "").lower()
+                    has_arch_directive = (
+                        ("architecture" in directives_str or "kiến trúc" in directives_str)
+                        and not any(neg in directives_str for neg in ("do not", "don't", "without", "tuyệt đối không", "không gượng ép", "không liên hệ"))
+                    )
+                    is_arch = (
+                        getattr(contract, "focus_argument", None) == "ent:lucia_architecture"
+                        or "architecture" in target_pred
+                        or "kiến trúc" in target_pred
+                        or "lucia_architecture" in focus_str
+                        or "kiến trúc" in focus_str
+                        or has_arch_directive
+                    )
+                    if is_arch:
+                        fallback_strategy = "SAFE_ARCHITECTURE_EXPLANATION"
+                        fallback_text = _resolve_fallback("SAFE_ARCHITECTURE_EXPLANATION")
+                    else:
+                        fallback_strategy = "SAFE_CONCEPT_EXPLANATION"
+                        fallback_text = _resolve_fallback("SAFE_CONCEPT_EXPLANATION")
+                elif contract.act == CommunicativeAct.ANSWER_PERSONAL_QUERY:
+                    fallback_strategy = "SAFE_PERSONAL_QUERY"
+                    fallback_text = _resolve_fallback("SAFE_PERSONAL_QUERY")
+                elif contract.act == CommunicativeAct.ACKNOWLEDGE_REACTION:
+                    fallback_strategy = "SAFE_REACTION_ACKNOWLEDGE"
+                    fallback_text = _resolve_fallback("SAFE_REACTION_ACKNOWLEDGE")
                 elif "DYADIC_PERSPECTIVE_DRIFT" in violations:
                     fallback_strategy = "SAFE_DYADIC_PERSPECTIVE"
                     if obligation == "MUTUAL_ENCOUNTER_ACKNOWLEDGMENT":
@@ -478,21 +671,6 @@ class SemanticFidelityGate:
                 elif "PRAGMATIC_HONORIFIC_VIOLATION" in violations or "INVERTED_HONORIFIC_VIOLATION" in violations:
                     fallback_strategy = "SAFE_HONORIFIC_FALLBACK"
                     fallback_text = _resolve_fallback("NEUTRAL_ACKNOWLEDGE")
-                elif "COMMUNICATIVE_ACT_FAILURE" in violations and contract.act == CommunicativeAct.REFUSE:
-                    fallback_strategy = "SAFE_REFUSAL"
-                    fallback_text = _resolve_fallback("SAFE_REFUSAL")
-                elif "COMMUNICATIVE_ACT_FAILURE" in violations and contract.act == CommunicativeAct.CLARIFY:
-                    fallback_strategy = "SAFE_CLARIFICATION"
-                    fallback_text = _resolve_fallback("SAFE_CLARIFICATION")
-                elif contract.act == CommunicativeAct.EXPLAIN_CONCEPT:
-                    fallback_strategy = "SAFE_CONCEPT_EXPLANATION"
-                    fallback_text = _resolve_fallback("SAFE_CONCEPT_EXPLANATION")
-                elif contract.act == CommunicativeAct.ANSWER_PERSONAL_QUERY:
-                    fallback_strategy = "SAFE_PERSONAL_QUERY"
-                    fallback_text = _resolve_fallback("SAFE_PERSONAL_QUERY")
-                elif contract.act == CommunicativeAct.ACKNOWLEDGE_REACTION:
-                    fallback_strategy = "SAFE_REACTION_ACKNOWLEDGE"
-                    fallback_text = _resolve_fallback("SAFE_REACTION_ACKNOWLEDGE")
                 elif "CONTRADICTED" in violations and not contract.polarity:
                     fallback_strategy = "SAFE_NEGATION"
                     fallback_text = _resolve_fallback("SAFE_NEGATION")

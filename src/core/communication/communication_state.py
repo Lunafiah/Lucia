@@ -66,12 +66,60 @@ class CommIntent:
         return cls(**d)
 
 
+class ShapeTopology(str, Enum):
+    """Structural realization topology governing utterance shape and initiative."""
+    MINIMAL_PING = "MINIMAL_PING"                    # Single short utterance (presence ping, immediate check-in)
+    BOUNDED_ANSWER = "BOUNDED_ANSWER"                # Direct 1-2 sentence response without unsolicited expansion
+    STRUCTURED_EXPLANATION = "STRUCTURED_EXPLANATION"# Balanced or structured multi-sentence explanation
+    DEEP_REFLECTION = "DEEP_REFLECTION"              # Substantive multi-sentence reflection or exploration
+    CONVERSATIONAL_EXCHANGE = "CONVERSATIONAL_EXCHANGE" # Default turn-taking interaction
+
+
+@dataclass(frozen=True)
+class ResponseShape:
+    """
+    Structural realization constraints (HOW to respond) bridging CommunicativeAct (WHAT)
+    and ResponseDepth (HOW MUCH).
+    """
+    topology: ShapeTopology = ShapeTopology.CONVERSATIONAL_EXCHANGE
+    max_sentences: Optional[int] = None
+    allow_follow_up_question: bool = True
+    prohibit_topic_expansion: bool = False
+    answer_first_required: bool = False
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "topology": self.topology.value if hasattr(self.topology, "value") else str(self.topology),
+            "max_sentences": self.max_sentences,
+            "allow_follow_up_question": self.allow_follow_up_question,
+            "prohibit_topic_expansion": self.prohibit_topic_expansion,
+            "answer_first_required": self.answer_first_required,
+        }
+
+    @classmethod
+    def from_dict(cls, d: Optional[Dict[str, Any]]) -> "ResponseShape":
+        if not d:
+            return cls()
+        raw_topo = d.get("topology", ShapeTopology.CONVERSATIONAL_EXCHANGE.value)
+        try:
+            topo = ShapeTopology(raw_topo)
+        except (ValueError, TypeError):
+            topo = ShapeTopology.CONVERSATIONAL_EXCHANGE
+        return cls(
+            topology=topo,
+            max_sentences=d.get("max_sentences"),
+            allow_follow_up_question=bool(d.get("allow_follow_up_question", True)),
+            prohibit_topic_expansion=bool(d.get("prohibit_topic_expansion", False)),
+            answer_first_required=bool(d.get("answer_first_required", False)),
+        )
+
+
 @dataclass
 class CommunicationState:
     """
     Formal representation of communicative production state C_t.
     Holds 10 continuous modulation dimensions and selected communicative strategy,
-    along with authoritative response depth and generation budget.
+    along with authoritative response depth, structural shape, and generation budget.
     """
     strategy: CommStrategy = CommStrategy.DIRECT_FACTUAL
     directness: float = 0.50                 # [0.10, 0.95] (1.0 = direct/unbuffered, 0.1 = cushioned)
@@ -87,6 +135,7 @@ class CommunicationState:
     provenance: str = "CommunicationPolicy/v1"
     response_depth: ResponseDepth = ResponseDepth.SHORT
     max_tokens_budget: int = 100
+    response_shape: ResponseShape = field(default_factory=ResponseShape)
 
     @property
     def contextual_reference(self) -> float:
@@ -156,6 +205,7 @@ class CommunicationState:
             "provenance": str(self.provenance),
             "response_depth": self.response_depth.value if hasattr(self.response_depth, "value") else str(self.response_depth),
             "max_tokens_budget": int(self.max_tokens_budget),
+            "response_shape": self.response_shape.to_dict(),
         }
 
     @classmethod
@@ -165,6 +215,8 @@ class CommunicationState:
             depth = ResponseDepth(raw_depth)
         except (ValueError, TypeError):
             depth = ResponseDepth.SHORT
+        shape_dict = d.get("response_shape")
+        shape = ResponseShape.from_dict(shape_dict) if shape_dict else ResponseShape()
         return cls(
             strategy=CommStrategy(d.get("strategy", CommStrategy.DIRECT_FACTUAL.value)),
             directness=float(d.get("directness", 0.5)),
@@ -180,4 +232,5 @@ class CommunicationState:
             provenance=str(d.get("provenance", "from_dict")),
             response_depth=depth,
             max_tokens_budget=int(d.get("max_tokens_budget", 100)),
+            response_shape=shape,
         )
