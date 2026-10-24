@@ -91,7 +91,7 @@ The human brain operates on approximately 20 watts of power not by limiting capa
 
 ### 2.1 The Canonical S1–S16 Cognitive Turn Cycle
 When conversational interaction occurs, `CognitiveOrchestrator` executes a strictly ordered 16-stage pipeline, monitored non-intrusively by the in-memory `CognitiveExecutionTracer` (Blocker 4, zero turn I/O, fail-open):
-1. **S1 (Sensory Gating)**: Extracts lexical valence, punctuation arousal, and semantic density.
+1. **S1 (Sensory Gating)**: Extracts lexical valence, punctuation arousal, and semantic density. *(Note: Sub-stage orchestration hooks S1b Propositional Ingress / Anti-Echo Firewall [ADR-038] and S1c Epistemic Admission Policy [ADR-039] execute between S1 and S2, prior to S8 Knowledge Retrieval, without creating new canonical stages).*
 2. **S2 (Limbic Integration)**: Ingests stimulus vector into MT-LNN ODE and commits PAD transition.
 3. **S3 (Homeostatic Assessment)**: Evaluates metabolic energy, cognitive load, and somatic tension.
 4. **S4 (Active Inference)**: Compares committed PAD with prediction to calculate Free Energy Surprise $\mathcal{S}$.

@@ -297,6 +297,14 @@ Every documented artifact in the Lucia repository is registered and classified a
 
 ---
 
+## 11.5 Epistemic Admission Contract Series (ADR-039)
+
+| Doc ID | Title | File Path | Class | Phase | Stage | Status | Authority | Canonical Owner |
+|---|---|---|---|---|---|---|---|---|
+| **DOC-ADR-039** | ADR-039: Epistemic Admission Contract — Bounded Schema & Ingress Wiring Extension | [`docs/others/epistemic_admission_contract/ADR_039_EPISTEMIC_ADMISSION_CONTRACT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/others/epistemic_admission_contract/ADR_039_EPISTEMIC_ADMISSION_CONTRACT.md) | Architectural Decision | Post-P27 Baseline | Architectural Decision | `IMPLEMENTED & VERIFIED` | `DECISION` | Self |
+
+---
+
 ## 12. Maintenance & Registration Rules
 
 When authoring any new document, specification, or evaluation report:

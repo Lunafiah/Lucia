@@ -249,6 +249,14 @@ Each phase represents an independent developmental milestone with its own distin
   5. *Note A (Japanese Voice Convenience Path)*: `translate_to_japanese(safe_response)` at the realization layer is a surface convenience path; direct semantic realization fallback exists; English text is not a semantic intermediate. Long-term multi-head Japanese renderer is out of P23-D current scope.
   6. *Note B (Unused Import Housekeeping)*: Dead import `detect_active_language` in `CognitiveOrchestrator` recorded as housekeeping / technical debt; no implementation task opened for P23-D.
 
+### Cross-Cutting Track: Epistemic Admission Contract (ADR-039) `[IMPLEMENTED / VERIFIED / CLOSED]`
+
+* **Purpose**: Bounded schema and ingress wiring extension establishing scope-relative epistemic truth, Authority × Domain deterministic admission policy, `USER_STATED ≠ BELIEVES`, ephemeral candidate staging, and KnowledgeStore → JTMS belief revision bridge.
+* **Current Status**: `IMPLEMENTED / VERIFIED / CLOSED` (Post-P27 Operational Baseline, Outcome B — Bounded Schema/Wiring Extension)
+* **Governing Decision**: ADR-039 ([`docs/others/epistemic_admission_contract/ADR_039_EPISTEMIC_ADMISSION_CONTRACT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/others/epistemic_admission_contract/ADR_039_EPISTEMIC_ADMISSION_CONTRACT.md)), ARCH-039
+* **Governance Boundary**: No new phase / no Phase 28; no new cognitive subsystem; no new `EpistemicState`; no reopening of P23-D or P23-I; S1b and S1c are internal orchestration hooks preceding S8, not new canonical cognitive stages; First Activation gate remains locked (`data/profile.json == {"is_onboarded": false}`).
+* **Verification Evidence**: 11/11 contract unit tests PASS (`tests/unit/test_epistemic_admission_contract.py`); 163/163 relevant regression tests PASS across knowledge, reasoning, and cognition suites.
+
 ### Roadmap Governance & Future Phase Rules
 
 The canonical progression sequence is:

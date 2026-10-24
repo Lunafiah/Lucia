@@ -1193,6 +1193,27 @@ The Cognitive Core contracts accept semantic graphs formed from upstream raw mul
 
 ---
 
+### ADR-039: Epistemic Admission Contract — Bounded Schema & Ingress Wiring Extension
+* **Status**: **ACCEPTED & PRODUCTION IMPLEMENTED / VERIFIED** (Outcome B, Canonical ADR: [`docs/others/epistemic_admission_contract/ADR_039_EPISTEMIC_ADMISSION_CONTRACT.md`](file:///c:/Users/Lunafiah/Desktop/My_project/Lucia/docs/others/epistemic_admission_contract/ADR_039_EPISTEMIC_ADMISSION_CONTRACT.md); Suite: `test_epistemic_admission_contract.py` 11/11 PASS, 163/163 Regression PASS)
+* **Context**: Prior to ADR-039, non-root propositions projected from `KnowledgeStore` into `TermArena` were hardcoded into root scope (`scope_id=1`), causing modal/unverified assertions to leak into universal root reasoning. Furthermore, `Proposition` lacked persistence tracking for causal relations, antecedents, and rules; `LanguageIngressGate` (ADR-038) was unwired from the live turn loop; and `KnowledgeStore.revise()` did not propagate premise retractions to `JTMS`.
+* **Decision**: Implement the ratified Final Epistemic Admission Contract as a bounded schema and wiring extension (Outcome B):
+  1. *Scope-Relative Epistemic Truth*: `scope:root` denotes the primary reasoning namespace, not universally verified objective truth. Non-root propositions remain isolated in modal containers (`scope:modal:user_claim`, `scope:modal:unclassified`). In `TermArena`, modal scopes intern to distinct IDs ($\ge 2$); goals in root scope (`scope_id=1`) strictly evaluate to `KleeneValue.UNKNOWN` against modal terms.
+  2. *Authority × Domain Deterministic Admission Policy*:
+     - User affect/preference/biography $\to$ `ROOT_ADMIT` (`scope:root`, `provenance=USER_STATED`).
+     - Unsupported user external-world claims and third-party attributions $\to$ `MODAL_ADMIT` (`scope:modal:user_claim`).
+     - Assistant/LLM claims $\to$ `REJECT` (zero epistemic authority).
+     - Confirmed echoes (`CONFIRMED_ECHO`) $\to$ `status=UNKNOWN`, `disposition=REJECT` (zero mutation, zero staging).
+     - Sound derivation (`DERIVED`) $\to$ `ROOT_ADMIT` (`scope:root`).
+     - Unknown predicates/domains $\to$ `STAGE` (`scope:modal:unclassified`).
+     - Conflicts with active root propositions $\to$ `STAGE` (`scope:modal:unclassified`, non-destructive).
+  3. *`USER_STATED ≠ BELIEVES`*: User-originated root admissions retain `ProvenanceType.USER_STATED` and preserve the asserted predicate. The system strictly forbids synthesizing or converting `USER_STATED(p) → BELIEVES(user, p)`.
+  4. *Ephemeral Candidate Staging*: Pre-admission assertions fail closed to in-memory staging (`KnowledgeStore.stage_candidate()`). Staged candidates are never serialized to disk and are cleared on lifecycle reset (`reset_lifecycle()`). No arbitrary TTL is enforced.
+  5. *KnowledgeStore → JTMS Revision Bridge*: `KnowledgeStore.revise()` invalidates old propositions and notifies registered callbacks. `CognitiveOrchestrator` resolves proposition IDs to numeric term IDs via `SymbolTable` and dispatches `RetractionDirective` to `JTMS.retract_premise()`. Dependent inferences cascade to inactive, while independent alternative justifications survive. Bootstrap knowledge is immutable (`PermissionError`).
+  6. *Invariant NEG-02*: Continuous confidence $< 1.0$ (e.g. `0.999`) never independently yields discrete `EpistemicStatus.FACT`.
+  7. *Live Ingress Orchestration (Hooks S1b & S1c)*: Canonical cognitive turn sequence preserves 16 stages ($S_1 \dots S_{16}$). S1b (Propositional Ingress / Anti-Echo) and S1c (Epistemic Admission) execute as internal orchestration hooks between $S_1$ and $S_2$, preceding Stage $S_8$ (Knowledge Retrieval).
+
+---
+
 ### 8.1 Reconciliation of Outdated Specs & Conflicting Decisions
 
 | Dimension | Outdated / Preliminary Spec | Authoritative Implemented Reality | Resolution & Rationale |
@@ -1250,6 +1271,9 @@ The Cognitive Core contracts accept semantic graphs formed from upstream raw mul
 | **ARCH-034** | Unenforced instance boundaries / ambiguous Genesis authority | Identity Authority, Instance Lock & Genesis Contract (ADR-034) | Single continuous life OS instance locking (`InstanceLock`), cryptographic root verification, durable Genesis commitment protocol (G1–G4), fail-closed verification, First Activation gate isolation | Genesis Prep | Implementation Fact / Frozen |
 | **ARCH-035** | Open-loop unconstrained text generation with 59.5% semantic loss | Production Realization Boundary & S14 Fail-Closed Gate (ADR-035 / P23-D Realization Increments 1–5 Frozen) | Strongly-typed `RealizationInputContract` carries authoritative intent; `PromptAssembler` compiles natural prose without code DSL tokens; untrusted `LFM2.5-1.2B` SLM isolated from cognitive state; pure CPU symbolic `SemanticFidelityGate` (<0.1ms) enforces fail-closed containment (`UNCERTAIN -> BLOCK`) with zero-invention deterministic fallback; `ResponseCompletionPlanner` decouples presence depth from completion tokens (`DENSITY_PROFILES`); universal epistemic grounding clamps ungrounded queries; explanatory concept expansion (`bootstrap.py`); prompt hierarchy re-anchored with compact state fencing; dyadic companion perspective; Increments 1–5 frozen; PASS (85/85 tests PASS, 0 regression). | Post-P24 Baseline | Implementation Fact / Frozen |
 | **ARCH-036** | Unobservable cognitive turn execution & ungated startup execution | Cognitive Execution Observability & First Activation Gate Controls (ADR-036) | In-memory circular `TraceBuffer` & `CognitiveExecutionTracer` recording allowlisted S1–S16 spans; DAG causal attribution isolating `first_causal_failure_candidate`, downstream propagated, and independent failures; fail-open resilience; 0 turn I/O; deterministic operator CLI (`scripts/run_genesis.py`); gated `POST /profile`; and fail-closed `/process` runtime activation gate | Post-P27 Baseline | Implementation Fact / Verified |
+| **ARCH-037** | Low-level /activate direct UI invocation failure | Lifecycle Awakening Orchestration Boundary (`POST /lifecycle/awaken`, ADR-037) | Safe sequential coordination of Birth and Activation; isolates status via `GET /lifecycle/status`; UI invokes `/awaken` | Post-P27 Baseline | Implementation Fact / Verified |
+| **ARCH-038** | Ungrounded proposition ingress & F15 echo loops | Grounded Propositional Causal Ingress Contract (ADR-038) | Bounded 5-state causal links, anti-echo firewall, and in-session semantic term indexing | P23-H E3 | Implementation Fact / Verified |
+| **ARCH-039** | Modal scope flattening, unwired ingress, & detached belief revision | Epistemic Admission Contract: Bounded Schema & Wiring Extension (ADR-039) | Scope-relative truth (`scope:root` primary namespace), Authority × Domain policy, `USER_STATED ≠ BELIEVES`, ephemeral staging, KnowledgeStore → JTMS revision bridge | Post-P27 Baseline | Implementation Fact / Verified |
 
 
 
